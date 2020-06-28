@@ -1,4 +1,9 @@
+# Copyright (C) 2020 Nicotine+ Team
 # Copyright (C) 2007 daelstorm. All rights reserved.
+# Copyright (c) 2003-2004 Hyriand. All rights reserved.
+#
+# Based on code from PySoulSeek, original copyright note:
+# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,18 +17,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Previous copyright below
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
-#
-# Based on code from PySoulSeek, original copyright note:
-# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
 
 """
-This module implements SoulSeek networking protocol.
+This module implements Soulseek networking protocol.
 """
 
-import codecs
 import select
 import selectors
 import socket
@@ -57,8 +55,8 @@ from pynicotine.slskmessages import DistribAliveInterval
 from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
-from pynicotine.slskmessages import DistribMessage9
 from pynicotine.slskmessages import DistribSearch
+from pynicotine.slskmessages import DistribServerSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileError
@@ -90,9 +88,6 @@ from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MinParentsInCache
-from pynicotine.slskmessages import Msg85
-from pynicotine.slskmessages import Msg89
-from pynicotine.slskmessages import Msg12547
 from pynicotine.slskmessages import NetInfo
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import OutConn
@@ -132,6 +127,7 @@ from pynicotine.slskmessages import Recommendations
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import RemoveThingILike
+from pynicotine.slskmessages import RemoveUser
 from pynicotine.slskmessages import RoomAdded
 from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import RoomRemoved
@@ -160,7 +156,7 @@ from pynicotine.slskmessages import SimilarUsers
 from pynicotine.slskmessages import TransferRequest
 from pynicotine.slskmessages import TransferResponse
 from pynicotine.slskmessages import TunneledMessage
-from pynicotine.slskmessages import Unknown6
+from pynicotine.slskmessages import Unknown
 from pynicotine.slskmessages import UploadFailed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadQueueNotification
@@ -267,7 +263,7 @@ class SlskProtoThread(threading.Thread):
         SetWaitPort: 2,
         GetPeerAddress: 3,
         AddUser: 5,
-        Unknown6: 6,
+        RemoveUser: 6,
         GetUserStatus: 7,
         SayChatroom: 13,
         JoinRoom: 14,
@@ -280,10 +276,10 @@ class SlskProtoThread(threading.Thread):
         FileSearch: 26,
         SetStatus: 28,
         ServerPing: 32,
-        SendSpeed: 34,
+        SendSpeed: 34,  # Depreciated
         SharedFoldersFiles: 35,
         GetUserStats: 36,
-        QueuedDownloads: 40,
+        QueuedDownloads: 40,  # Depreciated
         Relogged: 41,
         UserSearch: 42,
         AddThingILike: 51,
@@ -291,25 +287,23 @@ class SlskProtoThread(threading.Thread):
         Recommendations: 54,
         GlobalRecommendations: 56,
         UserInterests: 57,
-        PlaceInLineResponse: 60,  # Depreciated?
-        RoomAdded: 62,
-        RoomRemoved: 63,
+        PlaceInLineResponse: 60,  # Depreciated
+        RoomAdded: 62,  # Depreciated
+        RoomRemoved: 63,  # Depreciated
         RoomList: 64,
-        ExactFileSearch: 65,
+        ExactFileSearch: 65,  # Depreciated
         AdminMessage: 66,
-        GlobalUserList: 67,  # Depreciated?
-        TunneledMessage: 68,  # Depreciated?
+        GlobalUserList: 67,  # Depreciated
+        TunneledMessage: 68,  # Depreciated
         PrivilegedUsers: 69,
         HaveNoParent: 71,
         SearchParent: 73,
-        ParentMinSpeed: 83,
-        ParentSpeedRatio: 84,
-        Msg85: 85,
-        ParentInactivityTimeout: 86,
-        SearchInactivityTimeout: 87,
-        MinParentsInCache: 88,
-        Msg89: 89,
-        DistribAliveInterval: 90,
+        ParentMinSpeed: 83,  # Unused
+        ParentSpeedRatio: 84,  # Unused
+        ParentInactivityTimeout: 86,  # Depreciated
+        SearchInactivityTimeout: 87,  # Depreciated
+        MinParentsInCache: 88,  # Depreciated
+        DistribAliveInterval: 90,  # Depreciated
         AddToPrivileged: 91,
         CheckPrivileges: 92,
         SearchRequest: 93,
@@ -332,10 +326,9 @@ class SlskProtoThread(threading.Thread):
         GivePrivileges: 123,
         NotifyPrivileges: 124,
         AckNotifyPrivileges: 125,
-        BranchLevel: 126,
-        BranchRoot: 127,
-        ChildDepth: 129,
-        # AnotherStatus: 10,
+        BranchLevel: 126,  # Unimplemented
+        BranchRoot: 127,  # Unimplemented
+        ChildDepth: 129,  # Unimplemented
         PrivateRoomUsers: 133,
         PrivateRoomAddUser: 134,
         PrivateRoomRemoveUser: 135,
@@ -354,7 +347,7 @@ class SlskProtoThread(threading.Thread):
         JoinPublicRoom: 150,
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
-        CantConnectToPeer: 1001,
+        CantConnectToPeer: 1001
     }
 
     peercodes = {
@@ -369,23 +362,23 @@ class SlskProtoThread(threading.Thread):
         FolderContentsResponse: 37,
         TransferRequest: 40,
         TransferResponse: 41,
-        PlaceholdUpload: 42,
+        PlaceholdUpload: 42,  # Depreciated
         QueueUpload: 43,
         PlaceInQueue: 44,
         UploadFailed: 46,
         QueueFailed: 50,
         PlaceInQueueRequest: 51,
         UploadQueueNotification: 52,
-        Msg12547: 12547
+        Unknown: 12547
     }
 
     distribclasses = {
         0: DistribAlive,
         3: DistribSearch,
-        4: DistribBranchLevel,
-        5: DistribBranchRoot,
-        7: DistribChildDepth,
-        9: DistribMessage9
+        4: DistribBranchLevel,  # Unimplemented
+        5: DistribBranchRoot,  # Unimplemented
+        7: DistribChildDepth,  # Unimplemented
+        93: DistribServerSearch
     }
 
     IN_PROGRESS_STALE_AFTER = 30
@@ -888,7 +881,7 @@ class SlskProtoThread(threading.Thread):
     def parseOffset(self, conn, msgBuffer):
         offset = None
         if len(msgBuffer) >= 8:
-            offset = struct.unpack("<i", msgBuffer[:4])[0]
+            offset = struct.unpack("<Q", msgBuffer[:8])[0]
             msgBuffer = msgBuffer[8:]
         return offset, msgBuffer
 
@@ -1185,11 +1178,9 @@ class SlskProtoThread(threading.Thread):
                 elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
                     conns[msgObj.conn].filedown = msgObj
 
-                    # struct.pack("<i", number) was used here before, but was replaced due to integer limits
-                    # see https://github.com/Nicotine-Plus/nicotine-plus/issues/100
                     conns[msgObj.conn].obuf = conns[msgObj.conn].obuf \
-                        + codecs.decode('%%0%dx' % (4 << 1) % msgObj.offset, 'hex')[::-1] \
-                        + codecs.decode('%%0%dx' % (4 << 1) % 0, 'hex')[::-1]
+                        + struct.pack("<Q", msgObj.offset) \
+                        + struct.pack("<i", 0)
                     conns[msgObj.conn].bytestoread = msgObj.filesize - msgObj.offset
                     self._ui_callback([DownloadFile(msgObj.conn, 0, msgObj.file)])
                 elif msgObj.__class__ is UploadFile and msgObj.conn in conns:

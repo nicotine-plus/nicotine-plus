@@ -192,12 +192,12 @@ class NetworkEventProcessor:
             slskmessages.ChangePassword: self.ChangePassword,
             slskmessages.MessageUser: self.MessageUser,
             slskmessages.PMessageUser: self.PMessageUser,
-            slskmessages.ExactFileSearch: self.ExactFileSearch,
+            slskmessages.ExactFileSearch: self.DummyMessage,
             slskmessages.UserJoinedRoom: self.UserJoinedRoom,
             slskmessages.SayChatroom: self.SayChatRoom,
             slskmessages.JoinRoom: self.JoinRoom,
             slskmessages.UserLeftRoom: self.UserLeftRoom,
-            slskmessages.QueuedDownloads: self.QueuedDownloads,
+            slskmessages.QueuedDownloads: self.DummyMessage,
             slskmessages.GetPeerAddress: self.GetPeerAddress,
             slskmessages.OutConn: self.OutConn,
             slskmessages.UserInfoReply: self.UserInfoReply,
@@ -236,12 +236,9 @@ class NetworkEventProcessor:
             slskmessages.ServerPing: self.DummyMessage,
             slskmessages.ParentMinSpeed: self.DummyMessage,
             slskmessages.ParentSpeedRatio: self.DummyMessage,
-            slskmessages.Msg85: self.DummyMessage,
-            slskmessages.Msg12547: self.Msg12547,
-            slskmessages.ParentInactivityTimeout: self.ParentInactivityTimeout,
-            slskmessages.SearchInactivityTimeout: self.SearchInactivityTimeout,
-            slskmessages.MinParentsInCache: self.MinParentsInCache,
-            slskmessages.Msg89: self.DummyMessage,
+            slskmessages.ParentInactivityTimeout: self.DummyMessage,
+            slskmessages.SearchInactivityTimeout: self.DummyMessage,
+            slskmessages.MinParentsInCache: self.DummyMessage,
             slskmessages.WishlistInterval: self.WishlistInterval,
             slskmessages.DistribAliveInterval: self.DummyMessage,
             slskmessages.ChildDepth: self.ChildDepth,
@@ -250,11 +247,10 @@ class NetworkEventProcessor:
             slskmessages.DistribChildDepth: self.DistribChildDepth,
             slskmessages.DistribBranchLevel: self.DistribBranchLevel,
             slskmessages.DistribBranchRoot: self.DistribBranchRoot,
-            slskmessages.DistribMessage9: self.DistribMessage9,
             slskmessages.AdminMessage: self.AdminMessage,
             slskmessages.TunneledMessage: self.TunneledMessage,
             slskmessages.IncConn: self.IncConn,
-            slskmessages.PlaceholdUpload: self.PlaceholdUpload,
+            slskmessages.PlaceholdUpload: self.DummyMessage,
             slskmessages.PlaceInQueueRequest: self.PlaceInQueueRequest,
             slskmessages.UploadQueueNotification: self.UploadQueueNotification,
             slskmessages.SearchRequest: self.SearchRequest,
@@ -262,8 +258,9 @@ class NetworkEventProcessor:
             slskmessages.RoomSearch: self.RoomSearchRequest,
             slskmessages.UserSearch: self.SearchRequest,
             slskmessages.NetInfo: self.NetInfo,
-            slskmessages.DistribAlive: self.DistribAlive,
+            slskmessages.DistribAlive: self.DummyMessage,
             slskmessages.DistribSearch: self.DistribSearch,
+            slskmessages.DistribServerSearch: self.DistribSearch,
             ConnectToPeerTimeout: self.ConnectToPeerTimeout,
             RespondToDistributedSearchesTimeout: self.ToggleRespondDistributed,
             transfers.TransferTimeout: self.TransferTimeout,
@@ -299,6 +296,7 @@ class NetworkEventProcessor:
             slskmessages.PrivateRoomAddOperator: self.PrivateRoomAddOperator,
             slskmessages.PrivateRoomRemoveOperator: self.PrivateRoomRemoveOperator,
             slskmessages.PublicRoomMessage: self.PublicRoomMessage,
+            slskmessages.Unknown: self.DummyMessage,
         }
 
     def ProcessRequestToPeer(self, user, message, window=None, address=None):
@@ -426,6 +424,9 @@ class NetworkEventProcessor:
         self.setStatus(_(msg.title))
         self.frame.PopupMessage(msg)
 
+    def DummyMessage(self, msg):
+        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
+
     def DebugMessage(self, msg):
         self.logMessage(msg.msg, msg.debugLevel)
 
@@ -525,7 +526,18 @@ class NetworkEventProcessor:
             slskmessages.Login(
                 self.config.sections["server"]["login"],
                 self.config.sections["server"]["passw"],
-                157  # 155, 156, 157, 180
+
+                # Afaik, the client version was set to 157 ns at some point in the past
+                # to support distributed searches properly. Probably no reason to mess
+                # with this (yet)
+
+                # Soulseek client version; 155, 156, 157, 180, 181, 183
+                157,
+
+                # Soulseek client minor version
+                # 17 stands for 157 ns 13c, 19 for 157 ns 13e
+                # For client versions newer than 157, the minor version is probably 1
+                19,
             )
         )
         if self.waitport is not None:
@@ -903,8 +915,6 @@ class NetworkEventProcessor:
 
         if msg.files is not None:
             self.GetUserStats(msg)
-        elif msg.userexists and msg.files is None:
-            self.queue.put(slskmessages.GetUserStats(msg.user))
 
     def PrivilegedUsers(self, msg):
 
@@ -912,7 +922,7 @@ class NetworkEventProcessor:
             self.transfers.setPrivilegedUsers(msg.users)
             self.logMessage(_("%i privileged users") % (len(msg.users)))
             self.queue.put(slskmessages.HaveNoParent(1))
-            self.queue.put(slskmessages.GetUserStats(self.config.sections["server"]["login"]))
+            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
             self.frame.pluginhandler.ServerConnectNotification()
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -949,47 +959,28 @@ class NetworkEventProcessor:
         self.logMessage("%s" % (msg.msg))
 
     def ChildDepth(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def BranchLevel(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def BranchRoot(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribChildDepth(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribBranchLevel(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribBranchRoot(self, msg):
-        # TODO: Distributed search messages need to implemented
+        # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def DistribMessage9(self, msg):
-        # TODO: Distributed search messages need to implemented
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def DummyMessage(self, msg):
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def Msg12547(self, msg):
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def ParentInactivityTimeout(self, msg):
-        pass
-
-    def SearchInactivityTimeout(self, msg):
-        pass
-
-    def MinParentsInCache(self, msg):
-        pass
 
     def WishlistInterval(self, msg):
         if self.search is not None:
@@ -1080,9 +1071,6 @@ class NetworkEventProcessor:
             self.chatrooms.roomsctrl.UserLeftRoom(msg)
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def QueuedDownloads(self, msg):
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def GetPeerAddress(self, msg):
 
@@ -1581,9 +1569,6 @@ class NetworkEventProcessor:
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def PlaceholdUpload(self, msg):
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
     def PlaceInQueueRequest(self, msg):
         if self.transfers is not None:
             self.transfers.PlaceInQueueRequest(msg)
@@ -1666,15 +1651,6 @@ class NetworkEventProcessor:
         else:
             self.logMessage(_("Unknown tunneled message: %s") % (vars(msg)), 4)
 
-    def ExactFileSearch(self, msg):
-        ''' Depreciated '''
-
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-        for i in self.peerconns:
-            if i.conn == msg.conn.conn:
-                user = i.username
-                self.shares.processExactSearchRequest(msg.searchterm, user, msg.searchid, direct=1, checksum=msg.checksum)
-
     def FileSearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
         for i in self.peerconns:
@@ -1743,9 +1719,6 @@ class NetworkEventProcessor:
 
                 self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def DistribAlive(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def GetDistribConn(self):

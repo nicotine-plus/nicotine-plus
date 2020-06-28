@@ -12,6 +12,7 @@ Changes
  * Ported from GTK2 to GTK3 (PyGTK to PyGObject)
  * Support for HiDPI displays
  * Search results and transfers can now be grouped by folder
+ * Support for transfers larger than 2 GB in size
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
  * Added unit and DEP-8 continuous integration testing
@@ -74,6 +75,7 @@ Bugs closed in GitHub
  * wait a minute, only spellchecker is missing ? (#190)
  * userlist for myself does not display files number (#192)
  * AttributeError in changecolour(): PrivateChat object has no attribute 'tag_log' (#194)
+ * Add support for >2GB downloads (#201)
  * IndexError at start on Debian Buster (#202)
  * Speed up program startup times (#215)
  * custom tray icons not respected (#239)
@@ -88,6 +90,7 @@ Bugs closed in GitHub
  * twice downloaded same folder, aborted duplicate files, remove aborted does not remove (#305)
  * downloading folder from user browse doesn't work (#311)
  * cannot connect (#312)
+ * Distrib message type 93 unknown (#322)
 
 Version 1.4.3 (unstable)
 -----------------------------

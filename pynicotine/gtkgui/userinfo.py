@@ -101,7 +101,6 @@ class UserTabs(IconNotebook):
 
         if user in self.users:
             self.users[user].conn = conn
-            self.frame.np.queue.put(slskmessages.GetUserStats(user))
         else:
             w = self.subwindow(self, user, conn)
             self.append_page(w.Main, user[:15], w.OnClose)

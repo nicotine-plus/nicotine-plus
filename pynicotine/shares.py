@@ -324,10 +324,6 @@ class Shares:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def processExactSearchRequest(self, searchterm, user, searchid, direct=0, checksum=None):
-        print(searchterm, user, searchid, checksum)
-        pass
-
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
 
         if not self.config.sections["searches"]["search_results"]:

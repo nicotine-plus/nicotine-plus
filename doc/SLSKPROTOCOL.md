@@ -1,4 +1,8 @@
-# The Soulseek Protocol
+# Soulseek Protocol Documentation
+
+Last updated on 27 June 2020
+
+## Sections
 
 - [Packing](#packing)
 - [Server Messages](#server-messages)
@@ -68,7 +72,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 2    | [Set Listen Port](#server-code-2)                 |
 | 3    | [Get Peer Address](#server-code-3)                |
 | 5    | [Add User](#server-code-5)                        |
-| 6    | [Unknown](#server-code-6)                         |
+| 6    | [Remove User](#server-code-6)                     |
 | 7    | [Get Status](#server-code-7)                      |
 | 13   | [Say in Chat Room](#server-code-13)               |
 | 14   | [Join Room](#server-code-14)                      |
@@ -92,14 +96,18 @@ and callbacks for the messages are set in pynicotine.py.
 | 54   | [Get Recommendations](#server-code-54)            |
 | 56   | [Get Global Recommendations](#server-code-56)     |
 | 57   | [Get User Interests](#server-code-57)             |
+| 60   | [Place In Line Response](#server-code-60)         |
+| 62   | [Room Added](#server-code-62)                     |
+| 63   | [Room Removed](#server-code-63)                   |
 | 64   | [Room List](#server-code-64)                      |
 | 65   | [Exact File Search](#server-code-65)              |
 | 66   | [Global/Admin Message](#server-code-66)           |
+| 67   | [Global User List](#server-code-67)               |
 | 69   | [Privileged Users](#server-code-69)               |
 | 71   | [Have No Parents](#server-code-71)                |
 | 73   | [Parent's IP](#server-code-73)                    |
-| 83   | [ParentMinSpeed](#server-code-83)                 |
-| 84   | [ParentSpeedRatio](#server-code-84)               |
+| 83   | [Parent Min Speed](#server-code-83)               |
+| 84   | [Parent Speed Ratio](#server-code-84)             |
 | 86   | [Parent Inactivity Timeout](#server-code-86)      |
 | 87   | [Search Inactivity Timeout](#server-code-87)      |
 | 88   | [Minimum Parents In Cache](#server-code-88)       |
@@ -138,7 +146,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 139  | [Private Room Added](#server-code-139)            |
 | 140  | [Private Room Removed](#server-code-140)          |
 | 141  | [Private Room Toggle](#server-code-141)           |
-| 142  | [New Password](#server-code-142)     |
+| 142  | [New Password](#server-code-142)                  |
 | 143  | [Private Room Add Operator](#server-code-143)     |
 | 144  | [Private Room Remove Operator](#server-code-144)  |
 | 145  | [Private Room Operator Added](#server-code-145)   |
@@ -147,7 +155,8 @@ and callbacks for the messages are set in pynicotine.py.
 | 149  | [Message Users](#server-code-149)                 |
 | 150  | [Ask Public Chat](#server-code-150)               |
 | 151  | [Stop Public Chat](#server-code-151)              |
-| 152  | [Public Chat](#server-code-152)                   |
+| 152  | [Public Chat Message](#server-code-152)           |
+| 153  | [Related Searches](#server-code-153)              |
 | 1001 | [Cannot Connect](#server-code-1001)               |
 
 ### Server Code 1
@@ -157,7 +166,7 @@ and callbacks for the messages are set in pynicotine.py.
 #### Function Names
 
 Museekd: SLogin  
-Nicotine: **Login**
+Nicotine: Login
 
 #### Description
 
@@ -172,10 +181,10 @@ Send your username, password, and client version.
 
 *Message, continued*
 
-| Description | Version     | Length      | Hash                                                                                            | Number      |
-| ----------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ----------- |
-| Human       | 181         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1           |
-| Hex         | b5 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00 |
+| Description | Version     | Length      | Hash                                                                                            | Minor Version |
+| ----------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
+| Human       | 157         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 19            |
+| Hex         | b5 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 13 00 00 00   |
 
 *Message as a Hex Stream* **48 00 00 00 01 00 00 00 08 00 00 00 75 73 65
 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 b5 00 00 00 20 00 00
@@ -188,8 +197,8 @@ Send your username, password, and client version.
     1.  **string** <ins>username</ins>
     2.  **string** <ins>password</ins> **A non-empty
         string is required**
-    3.  **uint32** <ins>version number</ins> *182*
-        for Museek+ *181* for Nicotine+
+    3.  **uint32** <ins>version number</ins> *183*
+        for Museek+ *157* for Nicotine+
     4.  **string** <ins>MD5 hex digest of
         concatenated username & password</ins>
     5.  **uint32** <ins>minor version</ins> Minor
@@ -224,7 +233,7 @@ Nicotine: SetWaitPort
 
 #### Description
 
-The port you listen for connections on (2234 by default)
+We send this to the server to indicate the port number that we listen on (2234 by default).
 
 #### Data Order
 
@@ -244,7 +253,7 @@ Nicotine: GetPeerAddress
 
 #### Description
 
-A server for a user's IP Address and port
+We send this to the server to ask for a peer's address (IP address and port), given the peer's username.
 
 #### Data Order
 
@@ -266,7 +275,7 @@ Nicotine: AddUser
 
 #### Description
 
-Watch this user's status
+Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a GetUserStats response message with the new user stats.
 
 #### Data Order
 
@@ -290,16 +299,16 @@ Watch this user's status
 
 ### Server Code 6
 
-**Unknown**
+**Add User**
 
 #### Function Names
 
-Museekd: Not implemented  
-Nicotine: **Not implemented**
+Museekd: Unimplemented  
+Nicotine: RemoveUser
 
 #### Description
 
-Something to do with user status. Usually sent just after SAddUser
+Used when we no longer want to be kept updated about a user's stats.
 
 #### Data Order
 
@@ -318,6 +327,8 @@ Museekd: SGetStatus
 Nicotine: GetUserStatus
 
 #### Description
+
+The server tells us if a user has gone away or has returned.
 
 #### Data Order
 
@@ -340,6 +351,8 @@ Nicotine: SayChatroom
 
 #### Description
 
+Either we want to say something in the chatroom, or someone else did.
+
 #### Data Order
 
   - Send
@@ -360,6 +373,8 @@ Museekd: SJoinRoom
 Nicotine: JoinRoom
 
 #### Description
+
+Server sends us this message when we join a room. Contains users list with data on everyone.
 
 #### Data Order
 
@@ -412,11 +427,13 @@ Nicotine: LeaveRoom
 
 #### Description
 
+We send this to the server when we want to leave a room.
+
 #### Data Order
 
-  - Send (leave room)
+  - Send
     1.  **string** <ins>room</ins>
-  - Receive (left room)
+  - Receive
     1.  **string** <ins>room</ins>
 
 ### Server Code 16
@@ -429,6 +446,8 @@ Museekd: SUserJoinedRoom
 Nicotine: UserJoinedRoom
 
 #### Description
+
+The server tells us someone has just joined a room we're in.
 
 #### Data Order
 
@@ -457,7 +476,7 @@ Nicotine: UserLeftRoom
 
 #### Description
 
-A user (not you) left a room you are in.
+The server tells us someone has just left a room we're in.
 
 #### Data Order
 
@@ -478,8 +497,9 @@ Nicotine: ConnectToPeer
 
 #### Description
 
-A message you send to the server to notify a client that you want to
-connect to it, after direct connection has failed. See also: [Peer
+Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
+
+See also: [Peer
 Connection Message
 Order](#peer-connection-message-order)
 
@@ -511,6 +531,8 @@ Nicotine: MessageUser
 
 #### Description
 
+Chat phrase sent to someone or received by us in private.
+
 #### Data Order
 
   - Send
@@ -522,7 +544,7 @@ Nicotine: MessageUser
     3.  **string** <ins>username</ins>
     4.  **string** <ins>message</ins>
     5.  **bool** <ins>isAdmin</ins> **1 if sent by
-        server, elsenot present**
+        server, else not present**
 
 ### Server Code 23
 
@@ -535,9 +557,9 @@ Nicotine: MessageAcked
 
 #### Description
 
-Acknowledge that you received a Private message. If we do not send it,
-the server will keep sending the chat phrase to us. (Museekd also Reset
-timestamps to account for server-time bugginess)
+We send this to the server to confirm that we received a private message. If we don't send it, the server will keep sending the chat phrase to us.
+
+Museekd also resets timestamps to account for server-time bugginess.
 
 #### Data Order
 
@@ -548,13 +570,18 @@ timestamps to account for server-time bugginess)
 
 ### Server Code 26
 
-**File Search** Museekd: SFileSearch  
+**File Search**
+
+#### Function Names
+
+Museekd: SFileSearch  
 Nicotine: FileSearch
 
 #### Description
 
-The ticket is a random number generated by the client and used to track
-the search results.
+We send this to the server when we search for something. Alternatively, the server sends this message to tell us that someone is searching for something.
+
+The ticket/search id is a random number generated by the client and is used to track the search results.
 
 #### Data Order
 
@@ -577,8 +604,12 @@ Nicotine: SetStatus
 
 #### Description
 
-Status is a way to define whether you're available or busy. *1 = Away
-and 2 = Online*
+We send our new status to the server. Status is a way to define whether you're available or busy. 
+
+*-1 = Unknown  
+0 = Offline  
+1 = Away  
+2 = Online*
 
 #### Data Order
 
@@ -598,7 +629,7 @@ Nicotine: ServerPing
 
 #### Description
 
-Test if server responds
+We test if the server responds.
 
 #### Data Order
 
@@ -620,6 +651,8 @@ Nicotine: SendSpeed
 
 **DEPRECIATED**
 
+We used to send this after a finished download to let the server update the speed statistics for a user.
+
 #### Data Order
 
   - Send *average transfer speed*
@@ -639,6 +672,8 @@ Nicotine: SharedFoldersFiles
 
 #### Description
 
+We send this to server to indicate the number of folder and files that we share.
+
 #### Data Order
 
   - Send
@@ -649,9 +684,16 @@ Nicotine: SharedFoldersFiles
 
 ### Server Code 36
 
-**Get User Stats** Museekd: SGetUserStats  
-Nicotine: GetUserStats **This is
-deprecated, see SAddUser.**
+**Get User Stats**
+
+#### Function Names
+
+Museekd: SGetUserStats  
+Nicotine: GetUserStats
+
+#### Description
+
+The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in AddUser previously. A user's stats can also be requested by sending a GetUserStats message to the server, but AddUser should be used instead.
 
 #### Data Order
 
@@ -670,12 +712,14 @@ deprecated, see SAddUser.**
 
 #### Function Names
 
-Museekd: **Not implemented**  
+Museekd: Unimplemented  
 Nicotine: QueuedDownloads
 
 #### Description
 
 **DEPRECIATED**
+
+The server sends this to indicate if someone has download slots available or not.
 
 #### Data Order
 
@@ -693,20 +737,16 @@ Nicotine: QueuedDownloads
 #### Function Names
 
 Museekd: SKicked  
-Nicotine: \!Relogged
+Nicotine: Relogged
 
 #### Description
 
-You were disconnected (probably by another user with your name
-connecting to the Server) so don't try to reconnect automatically.
+The server sends this if someone else logged in under our nickname, and then disconnects us.
 
 #### Data Order
 
   - Send
-      - Empty Message
-
-<!-- end list -->
-
+      - *No Message*
   - Receive
       - Empty Message
 
@@ -721,7 +761,7 @@ Nicotine: UserSearch
 
 #### Description
 
-Search a specific user's shares
+We send this to the server when we search a specific user's shares. The ticket/search id is a random number generated by the client and is used to track the search results.
 
 #### Data Order
 
@@ -739,9 +779,11 @@ Search a specific user's shares
 #### Function Names
 
 Museekd: SInterestAdd  
-Nicotine: **AddThingILike**
+Nicotine: AddThingILike
 
 #### Description
+
+We send this to the server when we add an item to our likes list.
 
 #### Data Order
 
@@ -757,9 +799,11 @@ Nicotine: **AddThingILike**
 #### Function Names
 
 Museekd: SInterestRemove  
-Nicotine: **RemoveThingILike**
+Nicotine: RemoveThingILike
 
 #### Description
+
+We send this to the server when we remove an item from our likes list.
 
 #### Data Order
 
@@ -775,11 +819,11 @@ Nicotine: **RemoveThingILike**
 #### Function Names
 
 Museekd: SGetRecommendations  
-Nicotine: **Recommendations**
+Nicotine: Recommendations
 
 #### Description
 
-List of recommendations and a number for each
+The server sends us a list of personal recommendations and a number for each.
 
 #### Data Order
 
@@ -812,7 +856,7 @@ Nicotine: GlobalRecommendations
 
 #### Description
 
-List of recommendations and a number for each
+The server sends us a list of global recommendations and a number for each.
 
 #### Data Order
 
@@ -840,12 +884,12 @@ List of recommendations and a number for each
 
 #### Function Names
 
-Museekd:  
+Museekd: SUserInterests  
 Nicotine: UserInterests
 
 #### Description
 
-Get a User's Liked and Hated Interests
+We ask the server for a user's liked and hated interests. The server responds with a list of interests.
 
 #### Data Order
 
@@ -862,6 +906,76 @@ Get a User's Liked and Hated Interests
         interests</ins>
         1.  **string** <ins>interest</ins>
 
+### Server Code 60
+
+**Place In Line Response**
+
+#### Description
+
+**DEPRECIATED**
+
+The server tells us a new room has been added.
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: PlaceInLineResponse
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>user</ins>
+    2.  **int** <ins>req</ins>
+    3.  **int** <ins>place</ins>
+  - Receive
+    1.  **string** <ins>user</ins>
+    2.  **int** <ins>req</ins>
+    3.  **int** <ins>place</ins>
+
+### Server Code 62
+
+**Room Added**
+
+#### Description
+
+**DEPRECIATED**
+
+The server tells us a new room has been added.
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: RoomAdded
+
+#### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+    1.  **string** <ins>room</ins>
+
+### Server Code 63
+
+**Room Removed**
+
+#### Description
+
+**DEPRECIATED**
+
+The server tells us a room has been removed.
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: RoomRemoved
+
+#### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+    1.  **string** <ins>room</ins>
+
 ### Server Code 64
 
 **Room List**
@@ -873,9 +987,7 @@ Nicotine: RoomList
 
 #### Description
 
-List of rooms and the number of users in them. Soulseek has a room size
-requirement of about 50 users when first connecting. Refreshing the list
-will download all rooms.
+The server tells us a list of rooms and the number of users in them. Soulseek has a room size requirement of about 50 users when first connecting. Refreshing the list will download all rooms.
 
 #### Data Order
 
@@ -935,7 +1047,9 @@ Nicotine: ExactFileSearch
 
 #### Description
 
-SEEMS BROKEN (no results even with official client)
+**DEPRECIATED (no results even with official client)**
+
+Someone is searching for a file with an exact name.
 
 #### Data Order
 
@@ -960,7 +1074,7 @@ Nicotine: AdminMessage
 
 #### Description
 
-Admins send this message to all users
+A global message from the server admin has arrived.
 
 #### Data Order
 
@@ -968,6 +1082,46 @@ Admins send this message to all users
       - *No Message*
   - Receive
     1.  **string** <ins>message</ins>
+
+### Server Code 67
+
+**Global User List**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: GlobalUserList
+
+#### Description
+
+**DEPRECIATED**
+
+We send this to get a global list of all users online.
+
+#### Data Order
+
+  - Send
+      - Empty Message
+  - Receive
+    1.  **int** <ins>number of users in room</ins>
+    2.  Iterate the <ins>number of users</ins>
+        1.  **string** <ins>user</ins>
+    3.  **int** <ins>number of userdata</ins>
+    4.  Iterate the <ins>number of users</ins>
+        1.  **int** <ins>status</ins>
+    5.  **int** <ins>number of userdata</ins>
+    6.  Iterate the <ins>userdata</ins>
+        1.  **int** <ins>avgspeed</ins>
+        2.  **off\_t** <ins>downloadnum</ins>
+        3.  **int** <ins>files</ins>
+        4.  **int** <ins>dirs</ins>
+    7.  **int** <ins>number of slotsfree</ins>
+    8.  Iterate thru number of slotsfree
+        1.  **int** <ins>slotsfree</ins>
+    9. **int** <ins>number of usercountries</ins>
+    10. Iterate thru number of usercountries
+        1.  **string** <ins>countrycode</ins>
+            **Uppercase country code**
 
 ### Server Code 69
 
@@ -980,7 +1134,7 @@ Nicotine: PrivilegedUsers
 
 #### Description
 
-List of privileged users
+The server sends us a list of privileged users, a.k.a. users who have donated.
 
 #### Data Order
 
@@ -1002,6 +1156,8 @@ Nicotine: HaveNoParent
 
 #### Description
 
+We inform the server if we have a distributed parent or not. If not, the server eventually sends us a NetInfo message with a list of 10 possible parents to connect to.
+
 #### Data Order
 
   - Send
@@ -1016,11 +1172,12 @@ Nicotine: HaveNoParent
 
 #### Function Names
 
-Museekd: SParentIP
+Museekd: SParentIP  
+Nicotine: SearchParent
 
 #### Description
 
-Send our parent's IP to the server
+We send the IP address of our parent to the server.
 
 #### Data Order
 
@@ -1031,11 +1188,16 @@ Send our parent's IP to the server
 
 ### Server Code 83
 
-ParentMinSpeed
+**Parent Min Speed**
 
 #### Description
 
-Unknown Purpose
+Unknown purpose
+
+#### Function Names
+
+Museekd: SParentMinSpeed  
+Nicotine: ParentMinSpeed (unused)
 
 #### Data Order
 
@@ -1046,11 +1208,16 @@ Unknown Purpose
 
 ### Server Code 84
 
-ParentSpeedRatio
+**Parent Speed Ratio**
 
 #### Description
 
-Unknown Purpose.
+Unknown purpose
+
+#### Function Names
+
+Museekd: SParentSpeedRatio  
+Nicotine: ParentSpeedRatio (unused)
 
 #### Data Order
 
@@ -1072,8 +1239,6 @@ Unknown Purpose.
 Museekd: SParentInactivityTimeout  
 Nicotine: ParentInactivityTimeout
 
-#### Description
-
 #### Data Order
 
   - Send
@@ -1093,8 +1258,6 @@ Nicotine: ParentInactivityTimeout
 
 Museekd: SSearchInactivityTimeout  
 Nicotine: SearchInactivityTimeout
-
-#### Description
 
 #### Data Order
 
@@ -1158,7 +1321,7 @@ Nicotine: AddToPrivileged
 
 #### Description
 
-Add a new privileged user to your list of global privileged users
+The server sends us the username of a new privileged user, which we add to our list of global privileged users.
 
 #### Data Order
 
@@ -1178,6 +1341,8 @@ Nicotine: CheckPrivileges
 
 #### Description
 
+We ask the server how much time we have left of our privileges. The server responds with the remaining time, in seconds.
+
 #### Data Order
 
   - Send
@@ -1191,16 +1356,17 @@ Nicotine: CheckPrivileges
 
 #### Description
 
-The server sends us search requests from other users
+The server sends us search requests from other users.
 
 #### Function Names
 
-Museekd: SSearchRequest
+Museekd: SSearchRequest  
+Nicotine: SearchRequest
 
 #### Data Order
 
   - Send
-      - No Message
+      - *No Message*
   - Receive
     1.  **uint8** <ins>distributed code
         (DSearchRequest)</ins>
@@ -1215,24 +1381,27 @@ Museekd: SSearchRequest
 
 #### Description
 
-Tell the server if we want to have some children
+We tell the server if we want to accept child nodes.
 
 #### Function Names
 
-Museekd: SAcceptChildren
+Museekd: SAcceptChildren  
+Nicotine: AcceptChildren (not yet used)
 
 #### Data Order
 
   - Send
     1.  **bool** <ins>accept</ins>
   - Receive
-      - No Message
+      - *No Message*
 
 ### Server Code 102
 
 **Net Info**
 
 #### Description
+
+The server send us information about what nodes have been added/removed in the network. The list contains 10 possible distributed parents to connect to.
 
 #### Function Names
 
@@ -1242,7 +1411,7 @@ Nicotine: NetInfo
 #### Data Order
 
   - Send
-      - Empty Message
+      - *No Message*
   - Receive *list of search parents*
     1.  **int** <ins>number of parents</ins>
     2.  Iterate for <ins>number of parents</ins>
@@ -1298,6 +1467,8 @@ Nicotine: SimilarUsers
 
 #### Description
 
+The server sends us a list of similar users related to our interests.
+
 #### Data Order
 
   - Send
@@ -1318,6 +1489,8 @@ Museekd: SGetItemRecommendations
 Nicotine: ItemRecommendations
 
 #### Description
+
+The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
 
 #### Data Order
 
@@ -1344,6 +1517,8 @@ Nicotine: ItemSimilarUsers
 
 #### Description
 
+The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
+
 #### Data Order
 
   - Send
@@ -1365,6 +1540,10 @@ Museekd: SRoomTickers
 Nicotine: RoomTickerState
 
 #### Description
+
+The server returns a list of tickers in a chat room.
+
+Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
 
 #### Data Order
 
@@ -1388,6 +1567,10 @@ Nicotine: RoomTickerAdd
 
 #### Description
 
+The server sends us a new ticker that was added to a chat room.
+
+Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+
 #### Data Order
 
   - Send
@@ -1408,6 +1591,10 @@ Nicotine: RoomTickerRemove
 
 #### Description
 
+The server informs us that a ticker was removed from a chat room.
+
+Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+
 #### Data Order
 
   - Send
@@ -1426,6 +1613,10 @@ Museekd: SSetRoomTicker
 Nicotine: RoomTickerSet
 
 #### Description
+
+We send this to the server when we change our own ticker in a chat room.
+
+Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
 
 #### Data Order
 
@@ -1446,6 +1637,8 @@ Nicotine: AddThingIHate
 
 #### Description
 
+We send this to the server when we add an item to our hate list.
+
 #### Data Order
 
   - Send
@@ -1463,6 +1656,8 @@ Museekd: SInterestHatedRemove
 Nicotine: RemoveThingIHate
 
 #### Description
+
+We send this to the server when we remove an item from our hate list.
 
 #### Data Order
 
@@ -1497,10 +1692,12 @@ Nicotine: RoomSearch
 
 #### Function Names
 
-Museekd: **SSendUploadSpeed**  
+Museekd: SSendUploadSpeed  
 Nicotine: SendUploadSpeed
 
 #### Description
+
+We send this after a finished upload to let the server update the speed statistics for ourselves.
 
 #### Data Order
 
@@ -1511,14 +1708,16 @@ Nicotine: SendUploadSpeed
 
 ### Server Code 122
 
-**A user's Soulseek Privileges**
+**User Privileges**
 
 #### Function Names
 
-Museekd: **SUserPrivileges**  
-Nicotine: Not implemented
+Museekd: SUserPrivileges  
+Nicotine: UserPrivileged
 
 #### Description
+
+We ask the server whether a user is privileged or not.
 
 #### Data Order
 
@@ -1531,7 +1730,7 @@ Nicotine: Not implemented
 
 ### Server Code 123
 
-**Give Soulseek Privileges to user**
+**Give Privileges**
 
 #### Function Names
 
@@ -1539,6 +1738,8 @@ Museekd: SGivePrivileges
 Nicotine: GivePrivileges
 
 #### Description
+
+We give (part of) our privileges, specified in days, to another user on the network.
 
 #### Data Order
 
@@ -1550,7 +1751,7 @@ Nicotine: GivePrivileges
 
 ### Server Code 124
 
-**Server sends us a Notification about our privileges**
+**Notify Privileges**
 
 #### Function Names
 
@@ -1558,13 +1759,16 @@ Nicotine: NotifyPrivileges
 
 #### Description
 
+The server sends us a notification about our privileges.
+
 #### Data Order
 
   - Send
     1.  **int** <ins>token</ins>
     2.  **string** <ins>user</ins>
   - Receive
-      - *No Message*
+    1.  **int** <ins>token</ins>
+    2.  **string** <ins>user</ins>
 
 ### Server Code 125
 
@@ -1579,7 +1783,7 @@ Nicotine: AckNotifyPrivileges
 #### Data Order
 
   - Send
-      - *No Message*
+    1.  **int** <ins>token</ins>
   - Receive
     1.  **int** <ins>token</ins>
 
@@ -1593,7 +1797,8 @@ Tell the server what is our position in our branch (xth generation)
 
 #### Function Names
 
-Museekd: **SBranchLevel**
+Museekd: SBranchLevel
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -1612,7 +1817,8 @@ Tell the server the username of the root of the branch we're in
 
 #### Function Names
 
-Museekd: **SBranchRoot**
+Museekd: SBranchRoot  
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -1631,7 +1837,8 @@ Tell the server the maximum number of generation of children we have.
 
 #### Function Names
 
-Museekd: **SChildDepth**
+Museekd: SChildDepth  
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -1642,11 +1849,11 @@ Museekd: **SChildDepth**
 
 ### Server Code 133
 
-**Private Room Users that we can (dis)op/dismember**
+**Private Room Users**
 
 #### Description
 
-We get this when we've created a private room
+The server sends us a list of room users that we can alter (add operator abilities / dismember).
 
 #### Function Names
 
@@ -1669,7 +1876,7 @@ Nicotine: PrivateRoomUsers
 
 #### Description
 
-We get / receive this when we add a user to a private room.
+We send this to inform the server that we've added a user to a private room.
 
 #### Function Names
 
@@ -1691,7 +1898,7 @@ Nicotine: PrivateRoomAddUser
 
 #### Description
 
-We get / send this when we remove a user from a private room
+We send this to inform the server that we've removed a user from a private room.
 
 #### Function Names
 
@@ -1713,7 +1920,7 @@ Nicotine: PrivateRoomRemoveUser
 
 #### Description
 
-We do this to remove our own membership of a private room.
+We send this to the server to remove our own membership of a private room.
 
 #### Function Names
 
@@ -1724,7 +1931,8 @@ Nicotine: PrivateRoomDismember
 
   - Send
     1.  **string** <ins>room</ins>
-  - Not received
+  - Receive
+      - *No Message*
 
 ### Server Code 137
 
@@ -1732,7 +1940,7 @@ Nicotine: PrivateRoomDismember
 
 #### Description
 
-We do this to stop owning a private room.
+We send this to the server to stop owning a private room.
 
 #### Function Names
 
@@ -1743,7 +1951,8 @@ Nicotine: PrivateRoomDisown
 
   - Send
     1.  **string** <ins>room</ins>
-  - Not received
+  - Receive
+      - *No Message*
 
 ### Server Code 138
 
@@ -1751,7 +1960,7 @@ Nicotine: PrivateRoomDisown
 
 #### Description
 
-Undocumented
+Unknown purporse
 
 #### Function Names
 
@@ -1771,7 +1980,7 @@ Nicotine: PrivateRoomSomething
 
 #### Description
 
-We receive this when we are added to a private room.
+The server sends us this message when we are added to a private room.
 
 #### Function Names
 
@@ -1780,7 +1989,8 @@ Nicotine: PrivateRoomAdded
 
 #### Data Order
 
-  - Not sent
+  - Send
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1790,7 +2000,7 @@ Nicotine: PrivateRoomAdded
 
 #### Description
 
-We receive this when we are removed from a private room.
+The server sends us this message when we are removed from a private room.
 
 #### Function Names
 
@@ -1799,7 +2009,8 @@ Nicotine: PrivateRoomRemoved
 
 #### Data Order
 
-  - Not sent
+  - Send
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1809,8 +2020,7 @@ Nicotine: PrivateRoomRemoved
 
 #### Description
 
-We send this when we want to enable or disable invitations to private
-rooms
+We send this when we want to enable or disable invitations to private rooms.
 
 #### Function Names
 
@@ -1830,12 +2040,12 @@ Nicotine: PrivateRoomToggle
 
 #### Description
 
-Send the new password. Server sent it back to confirm.
+We send this to the server to change our password. We receive a response if our password changes.
 
 #### Function Names
 
 Museekd: SNewPassword  
-Nicotine: Unimplemented
+Nicotine: ChangePassword
 
 #### Data Order
 
@@ -1850,7 +2060,7 @@ Nicotine: Unimplemented
 
 #### Description
 
-We send this to add private room operator abilities to a user
+We send this to the server to add private room operator abilities to a user.
 
 #### Function Names
 
@@ -1872,11 +2082,11 @@ Nicotine: PrivateRoomAddOperator
 
 #### Description
 
-We send this to remove privateroom operator abilities from a user
+We send this to the server to remove private room operator abilities from a user.
 
 #### Function Names
 
-Museekd: Unimplemented  
+Museekd: SPrivRoomRemoveOperator  
 Nicotine: PrivateRoomRemoveOperator
 
 #### Data Order
@@ -1892,7 +2102,7 @@ Nicotine: PrivateRoomRemoveOperator
 
 #### Description
 
-We receive this when given private room operator abilities
+The server send us this message when we're given operator abilities in a private room.
 
 #### Function Names
 
@@ -1902,7 +2112,7 @@ Nicotine: PrivateRoomOperatorAdded
 #### Data Order
 
   - Send
-    1.  **string** <ins>room</ins>
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1912,7 +2122,7 @@ Nicotine: PrivateRoomOperatorAdded
 
 #### Description
 
-We receive this when privateroom operator abilities are removed
+The server send us this message when our operator abilities are removed in a private room.
 
 #### Function Names
 
@@ -1921,7 +2131,8 @@ Nicotine: PrivateRoomOperatorRemoved
 
 #### Data Order
 
-  - Not sent
+  - Send
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
 
@@ -1931,7 +2142,7 @@ Nicotine: PrivateRoomOperatorRemoved
 
 #### Description
 
-List of operators of a specific room, that we can disop.
+The server sends us a list of operators in a specific room, that we can remove operator abilities from.
 
 #### Function Names
 
@@ -1940,7 +2151,8 @@ Nicotine: PrivateRoomOwned
 
 #### Data Order
 
-  - Not sent
+  - Send
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
     2.  **int** <ins>number of operators in
@@ -1970,6 +2182,8 @@ Nicotine: Unimplemented
         **museekd uses a vector of strings**
         1.  **string** <ins>user</ins>
     3.  **string** <ins>message</ins>
+  - Receive
+      - *No Message*
 
 ### Server Code 150
 
@@ -1977,17 +2191,19 @@ Nicotine: Unimplemented
 
 #### Description
 
-Ask the server to send us public chat.
+We ask the server to send us messages from all public rooms, also known as public chat.
 
 #### Function Names
 
 Museekd: SAskPublicChat  
-Nicotine: Unimplemented
+Nicotine: JoinPublicRoom
 
 #### Data Order
 
   - Send
       - Empty Message
+  - Receive
+      - *No Message*
 
 ### Server Code 151
 
@@ -1995,38 +2211,65 @@ Nicotine: Unimplemented
 
 #### Description
 
-Ask the server to stop sending us public chat.
+We ask the server to stop sending us messages from all public rooms, also known as public chat.
 
 #### Function Names
 
 Museekd: SStopPublicChat  
-Nicotine: Unimplemented
+Nicotine: LeavePublicRoom
 
 #### Data Order
 
   - Send
       - Empty Message
+  - Receive
+      - *No Message*
 
 ### Server Code 152
 
-**Private Chat**
+**Public Chat Message**
 
 #### Description
 
-Public chat sent by the server (ie every single line written in every
-public room).
+The server sends this when a new message has been written in a public room (every single line written in every public room).
 
 #### Function Names
 
 Museekd: SPublicChat  
-Nicotine: Unimplemented
+Nicotine: PublicRoomMessage
 
 #### Data Order
 
+  - Send
+      - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
     2.  **string** <ins>user</ins>
     3.  **string** <ins>message</ins>
+
+### Server Code 153
+
+**Related Searches**
+
+#### Description
+
+The server returns a list of related search terms for a search query.
+
+#### Function Names
+
+Museekd: SRelatedSearch  
+Nicotine: Unimplemented
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>query</ins>
+  - Receive
+    1.  **string** <ins>query</ins>
+    2.  **int** <ins>number of terms</ins>
+    3.  Iterate for <ins>number of term</ins>
+        1.  **string** <ins>term</ins>
+        2.  **int** <ins>score</ins>
 
 ### Server Code 1001
 
@@ -2034,10 +2277,12 @@ Nicotine: Unimplemented
 
 #### Function Names
 
-Museekd: **SCannotConnect**  
+Museekd: SCannotConnect  
 Nicotine: CantConnectToPeer
 
 #### Description
+
+We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
 See also: [Peer Connection Message
 Order](#peer-connection-message-order)
@@ -2061,6 +2306,8 @@ Order](#peer-connection-message-order)
 In museekd 0.1.13, these messages are sent and received in
 Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh. Since
 museekd 0.2, they are defined in museekd/peermessages.h.
+
+In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
 #### The Peer Init Message format
 
@@ -2097,7 +2344,11 @@ museekd 0.2, they are defined in museekd/peermessages.h.
 
 #### Function Names
 
+Nicotine: PierceFireWall
+
 #### Description
+
+This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so. The token is taken from the ConnectToPeer server message.
 
 See also: [Peer Connection Message
 Order](#peer-connection-message-order)
@@ -2115,7 +2366,11 @@ Order](#peer-connection-message-order)
 
 #### Function Names
 
+Nicotine: PeerInit
+
 #### Description
+
+This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
 
 See also: [Peer Connection Message
 Order](#peer-connection-message-order)
@@ -2147,8 +2402,8 @@ Order](#peer-connection-message-order)
 | 5    | [Shares Reply](#peer-code-5)               |
 | 8    | [Search Request](#peer-code-8)             |
 | 9    | [Search Reply](#peer-code-9)               |
-| 15   | [Info Request](#peer-code-15)              |
-| 16   | [Info Reply](#peer-code-16)                |
+| 15   | [User Info Request](#peer-code-15)         |
+| 16   | [User Info Reply](#peer-code-16)           |
 | 36   | [Folder Contents Request](#peer-code-36)   |
 | 37   | [Folder Contents Reply](#peer-code-37)     |
 | 40   | [Transfer Request](#peer-code-40)          |
@@ -2174,6 +2429,8 @@ Nicotine: GetShareFileList
 
 #### Description
 
+We send this to a peer to ask for a list of shared files.
+
 #### Data Order
 
   - Send
@@ -2191,6 +2448,8 @@ Museekd: PSharesReply
 Nicotine: SharedFileList
 
 #### Description
+
+A peer responds with a list of shared files when we've sent a GetSharedFileList.
 
 #### Data Order
 
@@ -2229,6 +2488,8 @@ Nicotine: FileSearchRequest
 
 #### Description
 
+We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
+
 #### Data Order
 
   - Send
@@ -2248,6 +2509,8 @@ Museekd: PSearchReply
 Nicotine: FileSearchResult
 
 #### Description
+
+The peer sends this when it has a file search match. The token/ticket is taken from original FileSearchRequest message.
 
 #### Data Order
 
@@ -2291,7 +2554,7 @@ Nicotine: FileSearchResult
 
 ### Peer Code 15
 
-**Info Request**
+**User Info Request**
 
 #### Function Names
 
@@ -2299,6 +2562,8 @@ Museekd: PInfoRequest
 Nicotine: UserInfoRequest
 
 #### Description
+
+We ask the other peer to send us their user information, picture and all.
 
 #### Data Order
 
@@ -2309,7 +2574,7 @@ Nicotine: UserInfoRequest
 
 ### Peer Code 16
 
-**Info Reply**
+**User Info Reply**
 
 #### Function Names
 
@@ -2317,6 +2582,8 @@ Museekd: PInfoReply
 Nicotine: UserInfoReply
 
 #### Description
+
+A peer responds with this when we've sent a UserInfoRequest.
 
 #### Data Order
 
@@ -2354,6 +2621,8 @@ Nicotine: FolderContentsRequest
 
 #### Description
 
+We ask the peer to send us the contents of a single folder.
+
 #### Data Order
 
   - Send
@@ -2379,6 +2648,8 @@ Museekd: PFolderContentsReply
 Nicotine: FolderContentsResponse
 
 #### Description
+
+A peer responds with the contents of a particular folder (with all subfolders) when we've sent a FolderContentsRequest.
 
 #### Data Order
 
@@ -2425,6 +2696,8 @@ Nicotine: TransferRequest
 
 #### Description
 
+We request a file from a peer, or tell a peer that we want to send a file to them.
+
 #### Data Order
 
   - Send
@@ -2453,6 +2726,8 @@ Nicotine: TransferResponse
 
 #### Description
 
+Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+
 #### Data Order
 
   - Send
@@ -2477,6 +2752,8 @@ Nicotine: TransferResponse
 
 #### Description
 
+Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+
 #### Data Order
 
   - Send
@@ -2498,6 +2775,8 @@ Museekd: PTransferReply
 Nicotine: TransferResponse
 
 #### Description
+
+Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
 
 #### Data Order
 
@@ -2633,7 +2912,7 @@ Nicotine: PlaceInQueueRequest
 #### Function Names
 
 Museekd: PUploadQueueNotification  
-Nicotine: **Not implemented**
+Nicotine: UploadQueueNotification
 
 #### Description
 
@@ -2654,6 +2933,8 @@ In museekd 0.1.13, these messages are sent and received in
 Museek/DistribConnection.cc and defined in Museek/DistribMessages.hh.
 Since museekd 0.2, they are defined in museekd/distributedmessages.h.
 
+In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+
 #### The Message format
 
 | Message Length | Code   | Message Contents |
@@ -2662,13 +2943,14 @@ Since museekd 0.2, they are defined in museekd/distributedmessages.h.
 
 #### Message Index
 
-| Code | Message                               |
-| ---- | ------------------------------------- |
-| 0    | [Ping](#distributed-code-0)           |
-| 3    | [Search Request](#distributed-code-3) |
-| 4    | [Branch Level](#distributed-code-4)   |
-| 5    | [Branch Root](#distributed-code-5)    |
-| 7    | [Child Depth](#distributed-code-7)    |
+| Code | Message                                      |
+| ---- | -------------------------------------------- |
+| 0    | [Ping](#distributed-code-0)                  |
+| 3    | [Search Request](#distributed-code-3)        |
+| 4    | [Branch Level](#distributed-code-4)          |
+| 5    | [Branch Root](#distributed-code-5)           |
+| 7    | [Child Depth](#distributed-code-7)           |
+| 93   | [Server Search Request](#distributed-code-93)|
 
 ### Distributed Code 0
 
@@ -2680,7 +2962,7 @@ Send it every 60 sec.
 
 #### Function Names
 
-Museekd: **DPing**  
+Museekd: DPing  
 Nicotine: DistribAlive
 
 #### Data Order
@@ -2696,26 +2978,27 @@ Nicotine: DistribAlive
 
 #### Description
 
-Transmit the search requests to our children. (Search requests are sent
-to us by the server using SSearchRequest if we're a branch root, or by
-our parent using DSearchRequest)
+Search request that arrives through the distributed network. 
+We transmit the search request to our children.
+
+Search requests are sent to us by the server using SearchRequest if we're a branch root, or by our parent using DistribSearch.
 
 #### Function Names
 
-Museekd: **DSearchRequest**  
+Museekd: DSearchRequest  
 Nicotine: DistribSearch
 
 #### Data Order
 
   - Send
-    1.  **uint32** <ins>unknown</ins>
+    1.  **int** <ins>unknown</ins>
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
   - Receive
-    1.  **uint32** <ins>unknown</ins>
+    1.  **int** <ins>unknown</ins>
     2.  **string** <ins>user</ins>
-    3.  **uint32** <ins>ticket</ins>
+    3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
 ### Distributed Code 4
@@ -2728,8 +3011,8 @@ See SBranchLevel
 
 #### Function Names
 
-Museekd: **DBranchLevel**  
-Nicotine: DistribUnknown
+Museekd: DBranchLevel  
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -2748,7 +3031,8 @@ See SBranchRoot
 
 #### Function Names
 
-Museekd: **DBranchRoot**
+Museekd: DBranchRoot  
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -2767,7 +3051,8 @@ See SChildDepth
 
 #### Function Names
 
-Museekd: **DChildDepth**
+Museekd: DChildDepth  
+Nicotine: Unimplemented
 
 #### Data Order
 
@@ -2775,6 +3060,35 @@ Museekd: **DChildDepth**
     1.  **uint32** <ins>child\_depth</ins>
   - Receive
     1.  **uint32** <ins>child\_depth</ins>
+
+### Distributed Code 93
+
+**Server Search Request**
+
+#### Description
+
+Search request that arrives through the distributed network. 
+We transmit the search request to our children.
+
+Search requests are sent to us by the server using SearchRequest if we're a branch root, or by our parent using DistribSearch.
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: DistribServerSearch
+
+#### Data Order
+
+  - Send
+    1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
+    2.  **string** <ins>user</ins>
+    3.  **int** <ins>ticket</ins>
+    4.  **string** <ins>query</ins>
+  - Receive
+    1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
+    2.  **string** <ins>user</ins>
+    3.  **int** <ins>ticket</ins>
+    4.  **string** <ins>query</ins>
 
 ## Museek Data Types
 
