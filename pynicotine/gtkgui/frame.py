@@ -1801,7 +1801,7 @@ class NicotineFrame:
             for i in self.np.config.sections["server"]["userlist"]:
                 if user == i[0] and i[6] is not None:
                     return i[6]
-            return None
+            return "flag_"
         else:
             return self.flag_users[user]
 
