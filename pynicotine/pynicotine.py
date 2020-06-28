@@ -1141,10 +1141,12 @@ class NetworkEventProcessor:
                 del self.ipignore_requested[msg.user]
                 return
 
-            import socket
-            cn = self.geoip.get_all(msg.ip).country_short
-            if cn != "-":
-                self.frame.HasUserFlag(msg.user, "flag_" + cn)
+            cc = self.geoip.get_all(msg.ip).country_short
+
+            if cc == "-":
+                cc = ""
+
+            self.frame.HasUserFlag(msg.user, "flag_" + cc)
 
             # From this point on all paths should call
             # self.frame.pluginhandler.UserResolveNotification precisely once
@@ -1156,29 +1158,15 @@ class NetworkEventProcessor:
 
             self.ip_requested.remove(msg.user)
 
-            cc = self.geoip.get_all(msg.ip).country_short
-
-            if cc != "-":
+            if cc != "":
                 cc = " (%s)" % cc
-            else:
-                cc = ""
 
-            try:
-                hostname = socket.gethostbyaddr(msg.ip)[0]
-                message = _("IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s") % {
-                    'user': msg.user,
-                    'ip': msg.ip,
-                    'host': hostname,
-                    'port': msg.port,
-                    'country': cc
-                }
-            except Exception:
-                message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") % {
-                    'user': msg.user,
-                    'ip': msg.ip,
-                    'port': msg.port,
-                    'country': cc
-                }
+            message = _("IP address of %(user)s is %(ip)s, port %(port)i%(country)s") % {
+                'user': msg.user,
+                'ip': msg.ip,
+                'port': msg.port,
+                'country': cc
+            }
 
             self.logMessage(message)
             self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
