@@ -72,6 +72,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 2    | [Set Listen Port](#server-code-2)                 |
 | 3    | [Get Peer Address](#server-code-3)                |
 | 5    | [Add User](#server-code-5)                        |
+| 6    | [Remove User](#server-code-6)                     |
 | 7    | [Get Status](#server-code-7)                      |
 | 13   | [Say in Chat Room](#server-code-13)               |
 | 14   | [Join Room](#server-code-14)                      |
@@ -295,6 +296,26 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
         5.  **int** <ins>dirs</ins>
         6.  **string** <ins>Country Code</ins> (may
             not be implemented)
+
+### Server Code 6
+
+**Add User**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: RemoveUser
+
+#### Description
+
+Used when we no longer want to be kept updated about a user's stats.
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>username</ins>
+  - Receive
+      - *No Message*
 
 ### Server Code 7
 
