@@ -13,6 +13,7 @@ Changes
  * Support for HiDPI displays
  * Search results and transfers can now be grouped by folder
  * Support for transfers larger than 2 GB in size
+ * Transfers and search results now support drag-select
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
  * Added unit and DEP-8 continuous integration testing

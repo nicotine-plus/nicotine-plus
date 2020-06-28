@@ -908,8 +908,6 @@ class NicotineFrame:
         cols[0].set_sort_column_id(0)
         self.LikesList.set_model(self.likeslist)
 
-        self.RecommendationsList.set_property("rules-hint", True)
-        self.RecommendationUsersList.set_property("rules-hint", True)
         self.RecommendationUsersList.enable_model_drag_source(
             Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY
         )

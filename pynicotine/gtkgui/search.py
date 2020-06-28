@@ -586,8 +586,8 @@ class Search:
         self.selected_users = []
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
-        self.ResultsList.set_property("show-expanders", self.directoryGroup.get_active())
-        self.ResultsList.set_property("rules-hint", True)
+        self.ResultsList.set_rubber_banding(True)
+        self.ResultsList.set_show_expanders(self.directoryGroup.get_active())
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
@@ -1528,7 +1528,7 @@ class Search:
 
         self.OnRefilter(widget)
 
-        self.ResultsList.set_property("show-expanders", widget.get_active())
+        self.ResultsList.set_show_expanders(widget.get_active())
 
         self.frame.np.config.sections["searches"]["group_searches"] = self.directoryGroup.get_active()
 

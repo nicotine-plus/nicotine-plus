@@ -149,7 +149,6 @@ class UserList:
             render.connect('edited', self.cell_edited_callback, self.UserList, 9)
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.set_property("rules-hint", True)
         self.privileged = []
         self.notify = []
         self.trusted = []

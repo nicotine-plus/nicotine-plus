@@ -210,7 +210,7 @@ class UserBrowse:
 
         self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
-        self.FileTreeView.set_property("rules-hint", True)
+        self.FileTreeView.set_rubber_banding(True)
 
         self.file_popup_menu = PopupMenu(self.frame)
 
