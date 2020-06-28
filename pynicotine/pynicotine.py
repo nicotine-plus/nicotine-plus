@@ -526,7 +526,18 @@ class NetworkEventProcessor:
             slskmessages.Login(
                 self.config.sections["server"]["login"],
                 self.config.sections["server"]["passw"],
-                157  # 155, 156, 157, 180
+
+                # Afaik, the client version was set to 157 ns at some point in the past
+                # to support distributed searches properly. Probably no reason to mess
+                # with this (yet)
+
+                # Soulseek client version; 155, 156, 157, 180, 181, 183
+                157,
+
+                # Soulseek client minor version
+                # 17 stands for 157 ns 13c, 19 for 157 ns 13e
+                # For client versions newer than 157, the minor version is probably 1
+                19,
             )
         )
         if self.waitport is not None:

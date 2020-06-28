@@ -326,10 +326,11 @@ class Login(ServerMessage):
     """ We sent this to the server right after the connection has been
     established. Server responds with the greeting message. """
 
-    def __init__(self, username=None, passwd=None, version=None):
+    def __init__(self, username=None, passwd=None, version=None, minorversion=None):
         self.username = username
         self.passwd = passwd
         self.version = version
+        self.minorversion = minorversion
         self.ip = None
 
     def __repr__(self):
@@ -338,7 +339,7 @@ class Login(ServerMessage):
     def makeNetworkMessage(self):
         payload = self.username + self.passwd
         md5hash = hashlib.md5(payload.encode()).hexdigest()
-        message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(17)
+        message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(self.minorversion)
         return message
 
     def parseNetworkMessage(self, message):
