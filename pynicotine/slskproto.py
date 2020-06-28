@@ -127,6 +127,7 @@ from pynicotine.slskmessages import Recommendations
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import RemoveThingILike
+from pynicotine.slskmessages import RemoveUser
 from pynicotine.slskmessages import RoomAdded
 from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import RoomRemoved
@@ -155,6 +156,7 @@ from pynicotine.slskmessages import SimilarUsers
 from pynicotine.slskmessages import TransferRequest
 from pynicotine.slskmessages import TransferResponse
 from pynicotine.slskmessages import TunneledMessage
+from pynicotine.slskmessages import Unknown
 from pynicotine.slskmessages import UploadFailed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadQueueNotification
@@ -261,6 +263,7 @@ class SlskProtoThread(threading.Thread):
         SetWaitPort: 2,
         GetPeerAddress: 3,
         AddUser: 5,
+        RemoveUser: 6,
         GetUserStatus: 7,
         SayChatroom: 13,
         JoinRoom: 14,
@@ -344,7 +347,7 @@ class SlskProtoThread(threading.Thread):
         JoinPublicRoom: 150,
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
-        CantConnectToPeer: 1001,
+        CantConnectToPeer: 1001
     }
 
     peercodes = {
@@ -365,7 +368,8 @@ class SlskProtoThread(threading.Thread):
         UploadFailed: 46,
         QueueFailed: 50,
         PlaceInQueueRequest: 51,
-        UploadQueueNotification: 52
+        UploadQueueNotification: 52,
+        Unknown: 12547
     }
 
     distribclasses = {
