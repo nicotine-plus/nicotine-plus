@@ -477,7 +477,14 @@ class Transfers:
         for i in self.downloads:
             if i.filename == msg.file and user == i.user and i.status == "Queued":
                 # Remote peer is signalling a tranfer is ready, attempting to download it
-                i.size = msg.filesize
+
+                """ If the file is larger than 2GB, the SoulseekQt client seems to
+                send a malformed file size (0 bytes) in the TransferRequest response.
+                In that case, we rely on the cached, correct file size we received when
+                we initially added the download. """
+                if msg.filesize > 0:
+                    i.size = msg.filesize
+
                 i.req = msg.req
                 i.status = "Waiting for download"
                 transfertimeout = TransferTimeout(i.req, self.eventprocessor.frame.callback)
