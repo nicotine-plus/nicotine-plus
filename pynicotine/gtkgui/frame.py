@@ -345,11 +345,8 @@ class NicotineFrame:
         self.now = None
         self.settingswindow = None
 
-        self.is_mapped = True
-
         if start_hidden:
-            self.MainWindow.unmap()
-            self.is_mapped = False
+            self.MainWindow.hide()
 
         self.minimized = False
         self.HiddenTabs = {}
@@ -749,9 +746,8 @@ class NicotineFrame:
             return False
 
         if self.TrayApp.IsTrayIconVisible() and self.np.config.sections["ui"]["exitdialog"] == 2:
-            if self.is_mapped:
-                self.MainWindow.unmap()
-                self.is_mapped = False
+            if self.MainWindow.get_property("visible"):
+                self.MainWindow.hide()
             return True
 
         if self.TrayApp.IsTrayIconVisible():
@@ -1093,9 +1089,8 @@ class NicotineFrame:
         elif response == gtk.ResponseType.REJECT:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 2
-            if self.is_mapped:
-                self.MainWindow.unmap()
-                self.is_mapped = False
+            if self.MainWindow.get_property("visible"):
+                self.MainWindow.hide()
 
     def on_clear_response(self, dialog, response, direction):
         dialog.destroy()

@@ -252,7 +252,7 @@ class PrivateChats(IconNotebook):
             # the tab is not selected, or the main window isn't mapped
             if self.get_current_page() != self.page_num(chat.Main) or \
                self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
-               not self.frame.is_mapped:
+               not self.frame.MainWindow.get_property("visible"):
                 self.frame.Notifications.Add("private", msg.user)
 
         # SEND CLIENT VERSION to user if the following string is sent
