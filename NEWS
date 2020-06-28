@@ -11,6 +11,7 @@ Changes
  * Ported from Python 2 to Python 3
  * Ported from GTK2 to GTK3 (PyGTK to PyGObject)
  * Support for HiDPI displays
+ * Search results and transfers can now be grouped by folder
  * Support for transfers larger than 2 GB in size
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
@@ -26,6 +27,7 @@ Changes
 
 Bugs closed in GitHub
  * Columns Position Not Being Maintained (#8)
+ * Add "Group by folder" option to search results (#17)
  * send to player does not work. (#53)
  * Segfault When Getting User Info (#57)
  * Segmentation fault on Ubuntu Gnome 17.04 (#60)

@@ -121,8 +121,8 @@ class Config:
                 "friendsnolimits": 0,
                 "enablebuddyshares": 0,
                 "enabletransferbuttons": 1,
-                "groupdownloads": 0,
-                "groupuploads": 1,
+                "groupdownloads": True,
+                "groupuploads": True,
                 "geoblock": 0,
                 "geopanic": 0,
                 "geoblockcc": [""],
@@ -221,16 +221,18 @@ class Config:
                 "userlist_widths": [0, 25, 120, 0, 0, 0, 0, 0, 160, 0],
                 "chatrooms": {},
                 "chatrooms_widths": {},
-                "downloads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "downloads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 0],
-                "uploads_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "uploads_widths": [100, 250, 140, 50, 70, 170, 90, 140, 120, 0],
-                "search": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "search_widths": [50, 100, 250, 100, 90, 50, 20, 50, 50, 25, 0],
+                "download_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "download_widths": [200, 250, 250, 140, 50, 70, 170, 90, 140, 0],
+                "upload_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "upload_widths": [200, 250, 250, 140, 50, 70, 170, 90, 140, 0],
+                "filesearch_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "filesearch_widths": [50, 200, 25, 20, 90, 50, 400, 400, 100, 50, 0],
                 "hideflags": False
             },
 
             "searches": {
+                "expand_searches": True,
+                "group_searches": True,
                 "maxresults": 50,
                 "re_filter": 0,
                 "history": [],
@@ -245,7 +247,7 @@ class Config:
                 "distrib_timer": 0,
                 "distrib_ignore": 60,
                 "search_results": 1,
-                "max_displayed_results": 500,
+                "max_displayed_results": 1000,
                 "max_stored_results": 1500
             },
 
@@ -514,6 +516,14 @@ class Config:
 
         # Remove soundcommand config, replaced by GSound (1.4.3)
         self.removeOldOption("ui", "soundcommand")
+
+        # Remove old column widths in preparation for "group by folder"-feature
+        self.removeOldOption("columns", "search")
+        self.removeOldOption("columns", "search_widths")
+        self.removeOldOption("columns", "downloads_columns")
+        self.removeOldOption("columns", "downloads_widths")
+        self.removeOldOption("columns", "uploads_columns")
+        self.removeOldOption("columns", "uploads_widths")
 
         # Checking for unknown section/options
         unknown1 = [

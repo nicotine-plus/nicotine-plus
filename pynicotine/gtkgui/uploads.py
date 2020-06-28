@@ -47,7 +47,7 @@ class Uploads(TransferList):
 
     def __init__(self, frame):
 
-        TransferList.__init__(self, frame, frame.UploadList, type='uploads')
+        TransferList.__init__(self, frame, frame.UploadList, type='upload')
         self.myvbox = self.frame.uploadsvbox
         self.frame.UploadList.set_property("rules-hint", True)
 
@@ -91,7 +91,7 @@ class Uploads(TransferList):
                     parent.connect("button_press_event", PressHeader)
 
                 # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["uploads_columns"][i])
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["upload_columns"][i])
         except IndexError:
             # Column count in config is probably incorrect (outdated?), don't crash
             pass
@@ -123,8 +123,8 @@ class Uploads(TransferList):
             columns.append(column.get_visible())
             widths.append(column.get_width())
 
-        self.frame.np.config.sections["columns"]["uploads_columns"] = columns
-        self.frame.np.config.sections["columns"]["uploads_widths"] = widths
+        self.frame.np.config.sections["columns"]["upload_columns"] = columns
+        self.frame.np.config.sections["columns"]["upload_widths"] = widths
 
     def OnTryClearQueued(self, widget):
 
@@ -153,21 +153,9 @@ class Uploads(TransferList):
         else:
             executeCommand(filemanager, incompletedir)
 
-    def OnFileSearch(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.ChangeMainPage(None, "search")
-            break
-
-    def expandcollapse(self, path):
-
-        if self.frame.ExpandUploads.get_active():
-            self.frame.UploadList.expand_row(path, True)
-        else:
-            self.frame.UploadList.collapse_row(path)
+    def expand(self, path):
+        if self.frame.ExpandDownloads.get_active():
+            self.frame.UploadList.expand_to_path(path)
 
     def OnExpandUploads(self, widget):
 
@@ -197,28 +185,6 @@ class Uploads(TransferList):
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()
-
-    def RebuildTransfers(self):
-
-        if self.frame.np.transfers is None:
-            return
-
-        self.Clear()
-        self.update()
-
-    def select_transfers(self):
-
-        self.selected_transfers = []
-        self.selected_users = []
-
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-    def OnBan(self, widget):
-
-        self.select_transfers()
-
-        for user in self.selected_users:
-            self.frame.BanUser(user)
 
     def OnAbortUser(self, widget):
 

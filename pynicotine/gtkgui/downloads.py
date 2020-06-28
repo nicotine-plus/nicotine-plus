@@ -49,7 +49,7 @@ class Downloads(TransferList):
 
     def __init__(self, frame):
 
-        TransferList.__init__(self, frame, frame.DownloadList, type='downloads')
+        TransferList.__init__(self, frame, frame.DownloadList, type='download')
         self.myvbox = self.frame.downloadsvbox
         self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
@@ -98,7 +98,7 @@ class Downloads(TransferList):
                     parent.connect("button_press_event", PressHeader)
 
                 # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["downloads_columns"][i])
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["download_columns"][i])
         except IndexError:
             # Column count in config is probably incorrect (outdated?), don't crash
             pass
@@ -128,8 +128,8 @@ class Downloads(TransferList):
         for column in self.frame.DownloadList.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
-        self.frame.np.config.sections["columns"]["downloads_columns"] = columns
-        self.frame.np.config.sections["columns"]["downloads_widths"] = widths
+        self.frame.np.config.sections["columns"]["download_columns"] = columns
+        self.frame.np.config.sections["columns"]["download_widths"] = widths
 
     def OnToggleAutoRetry(self, widget):
         self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
@@ -143,12 +143,9 @@ class Downloads(TransferList):
         win.set_icon(self.frame.images["n"])
         win.show()
 
-    def expandcollapse(self, path):
-
+    def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
-            self.frame.DownloadList.expand_row(path, True)
-        else:
-            self.frame.DownloadList.collapse_row(path)
+            self.frame.DownloadList.expand_to_path(path)
 
     def OnExpandDownloads(self, widget):
 
@@ -191,7 +188,7 @@ class Downloads(TransferList):
             return
 
         user = model.get_value(iter, 0)
-        filename = model.get_value(iter, 1)
+        filename = model.get_value(iter, 2)
         fullname = model.get_value(iter, 10)
         size = speed = "0"
         length = bitrate = None  # noqa: F841
@@ -258,24 +255,6 @@ class Downloads(TransferList):
             executeCommand(filemanager, complete_path)
         else:
             executeCommand(filemanager, incompletedir)
-
-    def RebuildTransfers(self):
-
-        if self.frame.np.transfers is None:
-            return
-
-        self.Clear()
-        self.update()
-
-    def select_transfers(self):
-        self.selected_transfers = []
-        self.selected_users = []
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
-
-    def OnBan(self, widgets):
-        self.select_transfers()
-        for user in self.selected_users:
-            self.frame.BanUser(user)
 
     def OnSelectAbortTransfer(self, widget):
         self.select_transfers()
@@ -451,9 +430,9 @@ class Downloads(TransferList):
 
         items = self.popup_menu.get_children()
         if users:
-            items[7].set_sensitive(True)  # Users Menu
+            items[8].set_sensitive(True)  # Users Menu
         else:
-            items[7].set_sensitive(False)  # Users Menu
+            items[8].set_sensitive(False)  # Users Menu
 
         if files:
             act = True
@@ -464,7 +443,7 @@ class Downloads(TransferList):
         items[4].set_sensitive(act)  # Send to player
         items[5].set_sensitive(act)  # View Meta
         items[6].set_sensitive(act)  # File manager
-        items[8].set_sensitive(act)  # Search filename
+        items[7].set_sensitive(act)  # Search filename
 
         act = False
         if not multi_files and files:
@@ -506,15 +485,6 @@ class Downloads(TransferList):
             if i.status != "Queued":
                 continue
             self.frame.np.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
-
-    def OnFileSearch(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.ChangeMainPage(None, "search")
-            break
 
     def OnRetryTransfer(self, widget):
 

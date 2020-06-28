@@ -894,7 +894,7 @@
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="ToggleTreeDownloads">
-                                <property name="label" translatable="yes">Group by Users</property>
+                                <property name="label" translatable="yes">Group by folder</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -1416,7 +1416,7 @@
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="ToggleTreeUploads">
-                                <property name="label" translatable="yes">Group by Users</property>
+                                <property name="label" translatable="yes">Group by folder</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>

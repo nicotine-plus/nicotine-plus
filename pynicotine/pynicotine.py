@@ -1309,12 +1309,13 @@ class NetworkEventProcessor:
         if peerconn is None:
             return
 
-        for i in self.peerconns[:]:
-            if i.conn == peerconn:
-                if not self.protothread.socketStillActive(i.conn):
-                    self.queue.put(slskmessages.ConnClose(i.conn))
+        if not self.protothread.socketStillActive(peerconn):
+            self.queue.put(slskmessages.ConnClose(peerconn))
+
+            for i in self.peerconns:
+                if i.conn == peerconn:
                     self.peerconns.remove(i)
-                break
+                    break
 
     def UserInfoReply(self, msg):
         for i in self.peerconns:
@@ -1428,21 +1429,17 @@ class NetworkEventProcessor:
                     self.userbrowse.ShowInfo(i.username, msg)
 
     def FileSearchResult(self, msg):
-        for i in self.peerconns:
+        if self.search is not None:
+            if msg.conn.addr:
+                country = self.geoip.get_all(msg.conn.addr[0]).country_short
+            else:
+                country = ""
 
-            if i.conn is msg.conn.conn and self.search is not None:
+            if country == "-":
+                country = ""
 
-                if i.addr:
-                    country = self.geoip.get_all(i.addr[0]).country_short
-                else:
-                    country = ""
-
-                if country == "-":
-                    country = ""
-
-                self.search.ShowResult(msg, i.username, country)
-
-                self.ClosePeerConnection(i.conn)
+            self.search.ShowResult(msg, msg.user, country)
+            self.ClosePeerConnection(msg.conn.conn)
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 

@@ -330,6 +330,9 @@ class Searches(IconNotebook):
 
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+            if search is not None:
+                del search
+
             return
 
         search[2].AddResult(msg, username, country)
@@ -511,24 +514,32 @@ class Search:
         self.mode = mode
         self.remember = remember
         self.usersiters = {}
-        self.users = []
+        self.directoryiters = {}
+        self.users = set()
         self.resultslimit = 2000
+        self.numvisibleresults = 0
         self.QueryLabel.set_text(text)
+
+        self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
+        self.directoryGroup.connect("toggled", self.OnGroup)
+
+        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
+        self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
 
         self.all_data = []
         self.filters = None
         self.COLUMN_TYPES = [
-            int,  # num
+            str,  # num
             str,  # user
-            str,  # filename
-            str,  # h_size
+            gobject.TYPE_OBJECT,  # self.get_flag(user, country)
+            str,  # immediatedl
             str,  # h_speed
             str,  # h_queue
-            str,  # immediatedl
+            str,  # directory
+            str,  # filename
+            str,  # h_size
             str,  # h_bitrate
             str,  # length
-            gobject.TYPE_OBJECT,  # self.get_flag(user, country)
-            str,  # directory
             int,  # bitrate
             str,  # fullpath
             str,  # country
@@ -575,26 +586,31 @@ class Search:
         self.selected_users = []
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
-        self.ResultsList.set_property("show-expanders", False)
+        self.ResultsList.set_property("show-expanders", self.directoryGroup.get_active())
         self.ResultsList.set_property("rules-hint", True)
-        widths = self.frame.np.config.sections["columns"]["search_widths"]
+
+        widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
             [_("Number"), widths[0], "text", self.CellDataFunc],
             [_("User"), widths[1], "text", self.CellDataFunc],
-            [_("Filename"), widths[2], "text", self.CellDataFunc],
-            [_("Size"), widths[3], "text", self.CellDataFunc],
+            [_("Country"), widths[2], "pixbuf"],
+            [_("Immediate Download"), widths[3], "text", self.CellDataFunc],
             [_("Speed"), widths[4], "text", self.CellDataFunc],
             [_("In queue"), widths[5], "text", self.CellDataFunc],
-            [_("Immediate Download"), widths[6], "text", self.CellDataFunc],
-            [_("Bitrate"), widths[7], "text", self.CellDataFunc],
-            [_("Length"), widths[8], "text", self.CellDataFunc],
-            [_("Country"), widths[9], "pixbuf"],
-            [_("Directory"), widths[10], "text", self.CellDataFunc]
+            [_("Directory"), widths[6], "text", self.CellDataFunc],
+            [_("Filename"), widths[7], "text", self.CellDataFunc],
+            [_("Size"), widths[8], "text", self.CellDataFunc],
+            [_("Bitrate"), widths[9], "text", self.CellDataFunc],
+            [_("Length"), widths[10], "text", self.CellDataFunc]
         )
 
-        self.col_num, self.col_user, self.col_file, self.col_size, self.col_speed, self.col_queue, self.col_immediate, self.col_bitrate, self.col_length, self.col_country, self.col_directory = cols
+        self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
         cols[0].get_widget().hide()
+
+        if self.directoryGroup.get_active():
+            self.ResultsList.get_columns()[0].set_visible(False)
+            self.ExpandButton.show()
 
         for i in range(11):
 
@@ -603,21 +619,21 @@ class Search:
                 parent.connect('button_press_event', PressHeader)
 
             # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["search"][i])
+            cols[i].set_visible(self.frame.np.config.sections["columns"]["filesearch_columns"][i])
 
         self.ResultsList.set_model(self.resultsmodel)
 
         self.col_num.set_sort_column_id(0)
         self.col_user.set_sort_column_id(1)
-        self.col_file.set_sort_column_id(2)
+        self.col_file.set_sort_column_id(7)
         self.col_size.set_sort_column_id(14)
         self.col_speed.set_sort_column_id(15)
         self.col_queue.set_sort_column_id(16)
-        self.col_immediate.set_sort_column_id(6)
+        self.col_immediate.set_sort_column_id(3)
         self.col_bitrate.set_sort_column_id(11)
-        self.col_length.set_sort_column_id(8)
+        self.col_length.set_sort_column_id(10)
         self.col_country.set_sort_column_id(13)
-        self.col_directory.set_sort_column_id(10)
+        self.col_directory.set_sort_column_id(6)
 
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
@@ -627,8 +643,8 @@ class Search:
         popup.setup(
             ("#" + _("_Download file(s)"), self.OnDownloadFiles),
             ("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo),
-            ("#" + _("Download containing _folder(s)"), self.OnDownloadFolders),
-            ("#" + _("Download containing f_older(s) to..."), self.OnDownloadFoldersTo),
+            ("#" + _("Download _folder(s)"), self.OnDownloadFolders),
+            ("#" + _("Download f_older(s) to..."), self.OnDownloadFoldersTo),
             ("#" + _("View Metadata of file(s)"), self.OnSearchMeta),
             ("", None),
             ("#" + _("Copy _URL"), self.OnCopyURL),
@@ -744,7 +760,7 @@ class Search:
             if user == self.frame.np.config.sections["server"]["login"]:
                 self.Searches.users[user] = 1
 
-        self.users.append(user)
+        self.users.add(user)
 
         results = []
         counter = len(self.all_data) + 1
@@ -843,24 +859,11 @@ class Search:
             if status is None:
                 status = 0
 
-            results.append([counter, user, name, h_size, h_speed, h_queue, imdl, bitrate, length, self.get_flag(user, country), dir, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
+            results.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
             counter += 1
 
         if results:
-            self._realaddresults(results)
-
-    def _realaddresults(self, results):
-
-        # Append the data
-        self.append(results)
-
-        # Update the displayed count
-        self.CountResults()
-
-        # Update tab notification
-        self.frame.Searches.request_changed(self.Main)
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+            self.append(results)
 
     def get_flag(self, user, flag=None):
 
@@ -876,26 +879,66 @@ class Search:
 
         for row in results:
 
-            counter, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, flag, directory, bitrate, fullpath, country, size, speed, queue, status = row
-
-            if self.usersGroup.get_active() and user not in self.usersiters:
-                self.usersiters[user] = self.resultsmodel.append(
-                    None,
-                    [0, user, "", "", h_speed, h_queue, immediatedl, "", "", flag, "", 0, "", country, 0, speed, queue, status]
-                )
-
             self.all_data.append(row)
 
-            if (len(self.resultsmodel) < self.frame.np.config.sections['searches']["max_displayed_results"]) and (not self.filters or self.check_filter(row)):
-                self._add_to_model(user, row)
+            if not self.check_filter(row):
+                continue
 
-    def _add_to_model(self, user, row):
+            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+                break
+
+            iter = self.AddRowToModel(row)
+
+            if self.directoryGroup.get_active():
+                if self.ExpandButton.get_active():
+                    path = None
+
+                    if iter is not None:
+                        path = self.resultsmodel.get_path(iter)
+
+                    if path is not None:
+                        self.ResultsList.expand_to_path(path)
+                else:
+                    self.collapse_all()
+
+        # Update counter
+        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+
+        # Update tab notification
+        self.frame.Searches.request_changed(self.Main)
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+
+    def AddRowToModel(self, row):
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
+
+        if user in self.Searches.users and status != self.Searches.users[user]:
+            status = self.Searches.users[user]
+
+        if self.directoryGroup.get_active():
+            if user not in self.usersiters:
+                self.usersiters[user] = self.resultsmodel.append(
+                    None,
+                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
+                )
+
+            if directory not in self.directoryiters:
+                self.directoryiters[directory] = self.resultsmodel.append(
+                    self.usersiters[user],
+                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                )
 
         try:
-            if user in self.usersiters:
-                iter = self.resultsmodel.append(self.usersiters[user], row)
-            else:
-                iter = self.resultsmodel.append(None, row)
+            parent = None
+
+            if self.directoryGroup.get_active():
+                parent = self.directoryiters[directory]
+                row = row[:]
+                row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
+
+            iter = self.resultsmodel.append(parent, row)
+
+            self.numvisibleresults += 1
         except Exception as e:
             types = []
             for i in row:
@@ -903,54 +946,58 @@ class Search:
             print("Search row error:", e, row)
             iter = None
 
-        if self.usersGroup.get_active() and self.ExpandButton.get_active():
-            path = None
-
-            if iter is not None:
-                path = self.resultsmodel.get_path(iter)
-
-            if path is not None:
-                self.ResultsList.expand_to_path(path)
+        return iter
 
     def updateStatus(self, user, status):
 
         self.Searches.users[user] = status
         pos = 0
 
+        groupresults = self.directoryGroup.get_active()
+        maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
+
         for r in self.all_data:
             if user == r[1]:
                 self.all_data[pos][17] = status
+
+                if not groupresults and pos < maxdisplayedresults:
+                    iter = self.resultsmodel.get_iter_from_string(str(pos))
+                    self.resultsmodel.set_value(iter, 17, status)
+
             pos += 1
 
-        iter = self.resultsmodel.get_iter_first()
+        if groupresults:
+            useriter = self.resultsmodel.get_iter_first()
 
-        while iter is not None:
+            while useriter is not None:
+                selected_user = self.resultsmodel.get_value(useriter, 1)
 
-            selected_user = self.resultsmodel.get_value(iter, 1)
+                if selected_user == user:
+                    self.resultsmodel.set_value(useriter, 17, status)
 
-            if selected_user == user:
-                self.resultsmodel.set_value(iter, 17, status)
+                    diriter = self.resultsmodel.iter_children(useriter)
 
-            if self.resultsmodel.iter_has_child(iter):
+                    while diriter is not None:
+                        self.resultsmodel.set_value(diriter, 17, status)
 
-                child = self.resultsmodel.iter_children(iter)
+                        fileiter = self.resultsmodel.iter_children(diriter)
 
-                while child is not None:
+                        while fileiter is not None:
+                            self.resultsmodel.set_value(fileiter, 17, status)
 
-                    selected_user = self.resultsmodel.get_value(child, 1)
-                    if selected_user == user:
-                        self.resultsmodel.set_value(child, 17, status)
+                            fileiter = self.resultsmodel.iter_next(fileiter)
 
-                    child = self.resultsmodel.iter_next(child)
+                        diriter = self.resultsmodel.iter_next(diriter)
+                    return
 
-            iter = self.resultsmodel.iter_next(iter)
+                useriter = self.resultsmodel.iter_next(useriter)
 
     def sort(self):
 
         col = self.sort_col
         order = self.sort_order
 
-        if col == 3:
+        if col == 8:
             col = 14
         elif col == 4:
             col = 15
@@ -1027,7 +1074,7 @@ class Search:
         if filters[3] and not self.checkDigit(filters[3], row[11], False):
             return False
 
-        if filters[4] and row[6] != "Y":
+        if filters[4] and row[3] != "Y":
             return False
 
         if filters[5]:
@@ -1077,55 +1124,18 @@ class Search:
             self.filters[5] = country.upper().split(" ")
 
         self.usersiters.clear()
+        self.directoryiters.clear()
         self.resultsmodel.clear()
+        self.numvisibleresults = 0
 
-        displaycounter = 0
         for row in self.all_data:
-
-            if self.check_filter(row):
-
-                ix, user, filename, h_size, h_speed, h_queue, immediatedl, h_bitrate, length, flag, directory, bitrate, fullpath, country, size, speed, queue, status = row
-
-                if user in self.Searches.users and status != self.Searches.users[user]:
-                    status = self.Searches.users[user]
-
-                if self.usersGroup.get_active() and user not in self.usersiters:
-                    self.usersiters[user] = self.resultsmodel.append(
-                        None,
-                        [0, user, "", "", h_speed, h_queue, immediatedl, "", "", self.get_flag(user, country), "", 0, "", country, 0, speed, queue, status]
-                    )
-
-                try:
-                    if user in self.usersiters:
-                        iter = self.resultsmodel.append(self.usersiters[user], row)
-                    else:
-                        iter = self.resultsmodel.append(None, row)  # noqa: F841
-                except Exception as e:
-                    print("Filters: Search row error:", e)
-                    for i in row:
-                        print(i, type(i), end=' ')
-
-                displaycounter += 1
-
-            if displaycounter >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
                 break
 
-        self.CountResults()
+            if self.check_filter(row):
+                self.AddRowToModel(row)
 
-    def CountResults(self):
-
-        if self.usersGroup.get_active():
-
-            iter_count = 0
-            user_count = self.resultsmodel.iter_n_children(None)
-
-            for i in range(user_count):
-                iters = self.resultsmodel.iter_nth_child(None, i)
-                iter_count += self.resultsmodel.iter_n_children(iters)
-
-            self.Counter.set_text("Results: %d/%d" % (iter_count, len(self.all_data)))
-        else:
-            self.Counter.set_text("Results: %d/%d" % (self.resultsmodel.iter_n_children(None), len(self.all_data)))
+        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
     def OnPopupMenuUsers(self, widget):
 
@@ -1199,33 +1209,23 @@ class Search:
         sel.unselect_all()
         iter = self.resultsmodel.get_iter_first()
 
-        while iter is not None:
-
-            user = self.resultsmodel.get_value(iter, 1)
-
-            if selected_user == user:
-
-                fn = self.resultsmodel.get_value(iter, 11)
-
-                if fn == "" or self.resultsmodel.iter_has_child(iter):
-
-                    child = self.resultsmodel.iter_children(iter)
-
-                    while child is not None:
-
-                        user = self.resultsmodel.get_value(child, 1)
-
-                        if selected_user == user:
-                            sel.select_path(fmodel.get_path(child),)
-
-                        child = self.resultsmodel.iter_next(child)
-                else:
-                    ix = fmodel.get_path(iter)
-                    sel.select_path(ix,)
-
-            iter = self.resultsmodel.iter_next(iter)
+        self.UserRowIter(fmodel, sel, selected_user, iter)
 
         self.select_results()
+
+    def UserRowIter(self, fmodel, sel, selected_user, iter):
+        child = self.resultsmodel.iter_children(iter)
+
+        while child is not None:
+
+            user = self.resultsmodel.get_value(child, 1)
+
+            if selected_user == user:
+                sel.select_path(fmodel.get_path(child),)
+
+            self.UserRowIter(fmodel, sel, selected_user, child)
+
+            child = self.resultsmodel.iter_next(child)
 
     def select_results(self):
 
@@ -1233,6 +1233,16 @@ class Search:
         self.selected_users = []
 
         self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
+
+    def collapse_all(self):
+        self.ResultsList.collapse_all()
+
+        iter = self.resultsmodel.get_iter_first()
+
+        while iter is not None:
+            path = self.resultsmodel.get_path(iter)
+            self.ResultsList.expand_to_path(path)
+            iter = self.resultsmodel.iter_next(iter)
 
     def ChangeColours(self):
 
@@ -1271,25 +1281,16 @@ class Search:
             columns.append(column.get_visible())
             widths.append(column.get_width())
 
-        self.frame.np.config.sections["columns"]["search"] = columns
-        self.frame.np.config.sections["columns"]["search_widths"] = widths
+        self.frame.np.config.sections["columns"]["filesearch_columns"] = columns
+        self.frame.np.config.sections["columns"]["filesearch_widths"] = widths
 
     def SelectedResultsCallback(self, model, path, iter):
 
-        num = model.get_value(iter, 0)
         user = model.get_value(iter, 1)
+        dir = model.get_value(iter, 6)
+        file = model.get_value(iter, 7)
         fn = None
-
-        for r in self.all_data:
-
-            if num != r[0] or user != r[1]:
-                continue
-
-            fn = r[12]
-            size = r[14]
-            bitrate = r[7]
-            length = r[8]
-            break
+        isdirectory = False
 
         if user is None:
             return
@@ -1297,10 +1298,25 @@ class Search:
         if user not in self.selected_users:
             self.selected_users.append(user)
 
-        if fn is None or fn == "":
-            return
+        for r in self.all_data:
 
-        self.selected_results.append((user, fn, size, bitrate, length))
+            if (file != "" and file != r[7]) or (dir != "" and dir != r[6]) or user != r[1]:
+                continue
+
+            if file == "":
+                if dir == "":
+                    # Result is not a file or directory, don't add it
+                    return
+                else:
+                    isdirectory = True
+
+            fn = r[12]
+            size = r[14]
+            bitrate = r[9]
+            length = r[10]
+            break
+
+        self.selected_results.append((user, fn, size, bitrate, length, isdirectory))
 
     def OnListClicked(self, widget, event):
 
@@ -1329,9 +1345,20 @@ class Search:
         for i in range(0, 5):
             items[i].set_sensitive(files)
 
-        items[6].set_sensitive(files)
+        items[0].set_sensitive(False)
+        items[1].set_sensitive(False)
+        items[4].set_sensitive(False)
+        items[6].set_sensitive(False)
         items[7].set_sensitive(files)
         items[8].set_sensitive(users)
+
+        for result in self.selected_results:
+            if result[5] is False:
+                # At least one selected result is a file, activate file-related items
+                items[0].set_sensitive(True)
+                items[1].set_sensitive(True)
+                items[4].set_sensitive(True)
+                items[6].set_sensitive(True)
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
         widget.stop_emission_by_name("button_press_event")
@@ -1341,7 +1368,7 @@ class Search:
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         status = model.get_value(iter, 17)
-        imdl = model.get_value(iter, 6)
+        imdl = model.get_value(iter, 3)
         color = imdl == "Y" and "search" or "searchq"
         colour = None
 
@@ -1369,33 +1396,36 @@ class Search:
 
     def SelectedResultsAllData(self, model, path, iter, data):
 
-        num = model.get_value(iter, 0)
-        filename = model.get_value(iter, 2)
-        user = model.get_value(iter, 1)
-        size = model.get_value(iter, 3)
-        speed = model.get_value(iter, 4)
-        queue = model.get_value(iter, 5)
-        immediate = model.get_value(iter, 6)
-        bitratestr = model.get_value(iter, 7)
-        length = model.get_value(iter, 8)
-        directory = model.get_value(iter, 10)
-        fn = model.get_value(iter, 12)
-        country = model.get_value(iter, 13)
+        filename = model.get_value(iter, 7)
 
-        data[len(data)] = {
-            "user": user,
-            "fn": fn,
-            "position": num,
-            "filename": filename,
-            "directory": directory,
-            "size": size,
-            "speed": speed,
-            "queue": queue,
-            "immediate": immediate,
-            "bitrate": bitratestr,
-            "length": length,
-            "country": country
-        }
+        # We only want to see the metadata of files, not directories
+        if filename != "":
+            num = model.get_value(iter, 0)
+            user = model.get_value(iter, 1)
+            immediate = model.get_value(iter, 3)
+            speed = model.get_value(iter, 4)
+            queue = model.get_value(iter, 5)
+            directory = model.get_value(iter, 6)
+            size = model.get_value(iter, 8)
+            bitratestr = model.get_value(iter, 9)
+            length = model.get_value(iter, 10)
+            fn = model.get_value(iter, 12)
+            country = model.get_value(iter, 13)
+
+            data[len(data)] = {
+                "user": user,
+                "fn": fn,
+                "position": num,
+                "filename": filename,
+                "directory": directory,
+                "size": size,
+                "speed": speed,
+                "queue": queue,
+                "immediate": immediate,
+                "bitrate": bitratestr,
+                "length": length,
+                "country": country
+            }
 
     def OnSearchMeta(self, widget):
 
@@ -1414,7 +1444,9 @@ class Search:
             return
 
         for file in self.selected_results:
-            self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
+            # Make sure the selected result is not a directory
+            if file[5] is False:
+                self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def OnDownloadFilesTo(self, widget):
 
@@ -1498,6 +1530,8 @@ class Search:
 
         self.ResultsList.set_property("show-expanders", widget.get_active())
 
+        self.frame.np.config.sections["searches"]["group_searches"] = self.directoryGroup.get_active()
+
         if widget.get_active():
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
@@ -1507,12 +1541,16 @@ class Search:
 
     def OnToggleExpandAll(self, widget):
 
-        if self.ExpandButton.get_active():
+        active = self.ExpandButton.get_active()
+
+        if active:
             self.ResultsList.expand_all()
             self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
         else:
-            self.ResultsList.collapse_all()
+            self.collapse_all()
             self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
+
+        self.frame.np.config.sections["searches"]["expand_searches"] = active
 
     def OnToggleFilters(self, widget):
 
@@ -1525,11 +1563,11 @@ class Search:
             self.set_filters(0, None, None, None, None, None, "")
             self.ResultsList.set_model(self.resultsmodel)
 
-        if self.usersGroup.get_active():
+        if self.directoryGroup.get_active():
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.ResultsList.collapse_all()
+                self.collapse_all()
 
     def OnIgnore(self, widget):
 
@@ -1544,6 +1582,7 @@ class Search:
     def OnClear(self, widget):
         self.all_data = []
         self.usersiters.clear()
+        self.directoryiters.clear()
         self.resultsmodel.clear()
 
     def OnClose(self, widget):
@@ -1591,11 +1630,11 @@ class Search:
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
         self.ResultsList.set_model(self.resultsmodel)
 
-        if self.usersGroup.get_active():
+        if self.directoryGroup.get_active():
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.ResultsList.collapse_all()
+                self.collapse_all()
 
 
 class WishList(gtk.Dialog):
