@@ -46,29 +46,6 @@ class TransferList:
     MINIMUM_GUI_DELAY = 1  # in seconds
     MINIMUM_GUI_DELAY_SLEEP = int(ceil(MINIMUM_GUI_DELAY * 2000))  # in ms
 
-    status_tab = [
-        _("Getting status"),
-        _("Waiting for download"),
-        _("Waiting for upload"),
-        _("Getting address"),
-        _("Connecting"),
-        _("Waiting for peer to connect"),
-        _("Cannot connect"),
-        _("User logged off"),
-        _("Requesting file"),
-        _("Initializing transfer"),
-        _("Filtered"),
-        _("Download directory error"),
-        _("Local file error"),
-        _("Remote file error"),
-        _("File not shared"),
-        _("Aborted"),
-        _("Paused"),
-        _("Queued"),
-        _("Transferring"),
-        _("Finished")
-    ]
-
     def __init__(self, frame, widget, type):
         self.frame = frame
         self.widget = widget
@@ -86,22 +63,22 @@ class TransferList:
         widget.set_rubber_banding(True)
 
         columntypes = [
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_UINT64,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT,
-            gobject.TYPE_UINT64,
-            gobject.TYPE_UINT64,
-            gobject.TYPE_BOOLEAN,
-            gobject.TYPE_STRING
+            gobject.TYPE_STRING,  # user
+            gobject.TYPE_STRING,  # path
+            gobject.TYPE_STRING,  # file name
+            gobject.TYPE_STRING,  # status
+            gobject.TYPE_STRING,  # queue position
+            gobject.TYPE_UINT64,  # percent
+            gobject.TYPE_STRING,  # hsize
+            gobject.TYPE_STRING,  # hspeed
+            gobject.TYPE_STRING,  # time elapsed
+            gobject.TYPE_STRING,  # time left
+            gobject.TYPE_STRING,  # path
+            gobject.TYPE_STRING,  # status (non-translated)
+            gobject.TYPE_UINT64,  # size
+            gobject.TYPE_UINT64,  # current bytes
+            gobject.TYPE_BOOLEAN, # percent visible (?)
+            gobject.TYPE_STRING   # speed
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -159,16 +136,6 @@ class TransferList:
             colour = None
 
         cellrenderer.set_property("foreground", colour)
-
-    def get_status_index(self, val):
-
-        try:
-            return int(val)
-        except Exception:
-            if val in self.status_tab:
-                return self.status_tab.index(val)
-            else:
-                return -len(self.status_tab)
 
     def status_sort_func(self, model, iter1, iter2, column):
 
@@ -393,9 +360,9 @@ class TransferList:
                 for f in range(files):
 
                     iter = self.transfersmodel.iter_nth_child(pathiter, f)
-                    status = self.transfersmodel.get_value(iter, 3)
+                    status = self.transfersmodel.get_value(iter, 11)
 
-                    if salientstatus in ('', _("Finished"), _("Filtered")):  # we prefer anything over ''/finished
+                    if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
                         salientstatus = status
 
                     filename = self.transfersmodel.get_value(iter, 10)
@@ -412,22 +379,22 @@ class TransferList:
                         # We don't want to count filtered files when calculating the progress
                         continue
 
-                    for transfer in self.list:
-                        if transfer.user == path and transfer.filename == filename and transfer.timeelapsed is not None:
+                    """ for transfer in self.list:
+                        if transfer.timeelapsed is not None and transfer.user == path and transfer.filename == filename:
                             elap += transfer.timeelapsed
-                            break
+                            break """
 
                     totalsize += self.transfersmodel.get_value(iter, 12)
                     position += self.transfersmodel.get_value(iter, 13)
 
-                    if status == _("Transferring"):
+                    if status == "Transferring":
                         str_speed = self.transfersmodel.get_value(iter, 15)
                         if str_speed != "":
                             ispeed += float(str_speed)
 
                         left = self.transfersmodel.get_value(iter, 9)
 
-                    if status in (_("Transferring"), _("Banned"), _("Getting address"), _("Establishing connection")):
+                    if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
                         salientstatus = status
 
                 try:
@@ -457,7 +424,7 @@ class TransferList:
                 self.transfersmodel.set(
                     pathiter,
                     2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
-                    3, salientstatus,
+                    3, self.TranslateStatus(salientstatus),
                     5, percent,
                     6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
                     7, HumanSpeed(speed),
@@ -477,9 +444,6 @@ class TransferList:
 
     def update_specific(self, transfer=None):
 
-        if transfer not in self.list:
-            return
-
         fn = transfer.filename
         user = transfer.user
         shortfn = fn.split("\\")[-1]
@@ -492,7 +456,6 @@ class TransferList:
         key = (user, fn)
 
         status = self.TranslateStatus(transfer.status)
-        istatus = self.get_status_index(transfer.status)
 
         try:
             size = int(transfer.size)
@@ -561,7 +524,7 @@ class TransferList:
                 7, HumanSpeed(speed),
                 8, elap,
                 9, left,
-                11, istatus,
+                11, transfer.status,
                 12, size,
                 13, currentbytes,
                 15, str(speed)
@@ -575,7 +538,7 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
+                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, ""]
                     )
 
                 """ Paths can be empty if files are downloaded individually, make sure we
@@ -585,7 +548,7 @@ class TransferList:
                 if path not in self.paths:
                     self.paths[path] = self.transfersmodel.append(
                         self.users[user],
-                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
+                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, ""]
                     )
 
                 parent = self.paths[path]
@@ -600,7 +563,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, istatus, size, icurrentbytes, True, str(speed))
+                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, transfer.status, size, icurrentbytes, True, str(speed))
             )
 
             # Expand path
