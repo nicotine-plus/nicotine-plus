@@ -61,6 +61,7 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
+    __slots__ = ("addr", "username", "conn", "msgs", "token", "init", "conntimer", "tryaddr")
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
         self.username = username
@@ -591,7 +592,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns[:]:
                 if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
+                    self.logMessage(_("Connection closed by peer: %s") % dir(i), debugLevel=3)
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -622,6 +623,7 @@ class NetworkEventProcessor:
         if msg.success:
 
             self.setStatus(_("Logged in, getting the list of rooms..."))
+            print(len(conf["transfers"]["downloads"]))
             self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
 
             if msg.ip is not None:

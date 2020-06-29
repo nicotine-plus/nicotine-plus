@@ -55,6 +55,11 @@ win32 = sys.platform.startswith("win")
 class Transfer(object):
     """ This class holds information about a single transfer. """
 
+    __slots__ = ("conn", "user", "realfilename", "filename",
+        "path", "req", "size", "file", "starttime", "lasttime",
+        "offset", "currentbytes", "lastbytes", "speed", "timeelapsed",
+        "timeleft", "timequeued", "transfertimer", "requestconn",
+        "modifier", "place", "bitrate", "length", "iter", "__status", "laststatuschange")
     def __init__(
         self, conn=None, user=None, realfilename=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
@@ -118,8 +123,8 @@ class Transfers:
         self.peerconns = peerconns
         self.queue = queue
         self.eventprocessor = eventprocessor
-        self.downloads = set()
-        self.uploads = set()
+        self.downloads = []
+        self.uploads = []
         self.privilegedusers = []
         self.RequestedUploadQueue = []
         getstatus = {}
@@ -156,7 +161,7 @@ class Transfers:
             else:
                 status = "Getting status"
 
-            self.downloads.add(
+            self.downloads.append(
                 Transfer(
                     user=i[0], filename=i[1], path=i[2], status=status,
                     size=size, currentbytes=currentbytes, bitrate=bitrate,
@@ -170,7 +175,7 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i))
             self.queue.put(slskmessages.GetUserStatus(i))
 
-        self.SaveDownloads()
+        self.SaveDownloads(None)
         self.users = users
         self.downloadspanel = None
         self.uploadspanel = None
@@ -239,11 +244,11 @@ class Transfers:
     def getFile(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
         path = utils.CleanPath(path, absolute=True)
 
-        if checkduplicate:
+        """if checkduplicate:
             for i in self.downloads:
                 if i.user == user and i.filename == filename and i.path == path:
                     # Don't add duplicate downloads
-                    return
+                    return"""
 
         self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 
@@ -263,8 +268,8 @@ class Transfers:
             )
 
             if direction == 0:
-                self.downloads.add(transfer)
-                self.SaveDownloads()
+                self.downloads.append(transfer)
+                self.SaveDownloads(transfer)
             else:
                 self._updateOrAppendUpload(user, filename, transfer)
         else:
@@ -285,7 +290,7 @@ class Transfers:
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
                     # In order to remove the filtered files from the saved download queue.
-                    self.SaveDownloads()
+                    self.SaveDownloads(transfer)
             except Exception:
                 pass
 
@@ -507,8 +512,8 @@ class Transfers:
                     user=user, filename=msg.file, path=path,
                     status="Getting status", size=msg.filesize, req=msg.req
                 )
-                self.downloads.add(transfer)
-                self.SaveDownloads()
+                self.downloads.append(transfer)
+                self.SaveDownloads(transfer)
 
                 if user not in self.eventprocessor.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
@@ -614,7 +619,7 @@ class Transfers:
             self.uploads[index] = transferobj
             self.uploadspanel.replace(existing, transferobj)
         except KeyError:
-            self.uploads.add(transferobj)
+            self.uploads.append(transferobj)
 
     def fileIsUploadQueued(self, user, filename):
 
@@ -881,7 +886,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads | self.uploads):
+            for i in (self.downloads + self.uploads):
 
                 if i.req != msg.req:
                     continue
@@ -940,7 +945,7 @@ class Transfers:
 
     def TransferTimeout(self, msg):
 
-        for i in (self.downloads | self.uploads):
+        for i in (self.downloads + self.uploads):
 
             if i.req != msg.req:
                 continue
@@ -1707,7 +1712,21 @@ class Transfers:
 
     def ConnClose(self, conn, addr):
         """ The remote user has closed the connection either because
+<<<<<<< HEAD
         he logged off, or because there's a network problem. """
+=======
+        he logged off, or because there's a network problem."""
+
+        for i in self.downloads + self.uploads:
+
+            if i.requestconn == conn and i.status == "Requesting file":
+                i.requestconn = None
+                i.status = "Connection closed by peer"
+                i.req = None
+                self.downloadspanel.update(i)
+                self.uploadspanel.update(i)
+                self.checkUploadQueue()
+>>>>>>> f9eb591b... Additional fixes
 
         for i in self.downloads:
             if i.conn != conn:
@@ -1819,7 +1838,7 @@ class Transfers:
     def FileError(self, msg):
         """ Networking thread encountered a local file error"""
 
-        for i in self.downloads | self.uploads:
+        for i in self.downloads + self.uploads:
 
             if i.conn != msg.conn.conn:
                 continue
@@ -1925,7 +1944,7 @@ class Transfers:
     def AbortTransfers(self):
         """ Stop all transfers """
 
-        for i in self.downloads | self.uploads:
+        for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
                 self.AbortTransfer(i)
                 i.status = "Paused"
@@ -1970,11 +1989,17 @@ class Transfers:
                     1
                 )
 
-    def GetDownloads(self):
+    def GetAllDownloads(self):
         """ Get a list of incomplete and not aborted downloads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
 
-    def SaveDownloads(self):
+    def SaveDownloads(self, transfer):
         """ Save list of files to be downloaded """
-        self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
-        self.eventprocessor.config.writeDownloadQueue()
+        transferlist = self.eventprocessor.config.sections["transfers"]["downloads"]
+
+        if transferlist is None:
+            transferlist = self.GetAllDownloads()
+        elif transfer not in transferlist:
+            transferlist.append(transfer)
+
+        #self.eventprocessor.config.writeDownloadQueue()
