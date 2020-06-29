@@ -46,7 +46,6 @@ from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
-from pynicotine.temporary import HybridListDictionaryTransferMonstrosity
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
 
@@ -118,8 +117,8 @@ class Transfers:
         self.peerconns = peerconns
         self.queue = queue
         self.eventprocessor = eventprocessor
-        self.downloads = HybridListDictionaryTransferMonstrosity()
-        self.uploads = HybridListDictionaryTransferMonstrosity()
+        self.downloads = set()
+        self.uploads = set()
         self.privilegedusers = []
         self.RequestedUploadQueue = []
         getstatus = {}
@@ -156,7 +155,7 @@ class Transfers:
             else:
                 status = "Getting status"
 
-            self.downloads.append(
+            self.downloads.add(
                 Transfer(
                     user=i[0], filename=i[1], path=i[2], status=status,
                     size=size, currentbytes=currentbytes, bitrate=bitrate,
@@ -222,7 +221,7 @@ class Transfers:
                         i.status = "User logged off"
                         self.downloadspanel.update(i)
 
-        for i in self.uploads[:]:
+        for i in self.uploads:
             if msg.user == i.user and i.status != "Finished":
                 if msg.status != 0:
                     if i.status == "Getting status":
@@ -263,7 +262,7 @@ class Transfers:
             )
 
             if direction == 0:
-                self.downloads.append(transfer)
+                self.downloads.add(transfer)
                 self.SaveDownloads()
             else:
                 self._updateOrAppendUpload(user, filename, transfer)
@@ -507,7 +506,7 @@ class Transfers:
                     user=user, filename=msg.file, path=path,
                     status="Getting status", size=msg.filesize, req=msg.req
                 )
-                self.downloads.append(transfer)
+                self.downloads.add(transfer)
                 self.SaveDownloads()
 
                 if user not in self.eventprocessor.watchedusers:
@@ -614,7 +613,7 @@ class Transfers:
             self.uploads[index] = transferobj
             self.uploadspanel.replace(existing, transferobj)
         except KeyError:
-            self.uploads.append(transferobj)
+            self.uploads.add(transferobj)
 
     def fileIsUploadQueued(self, user, filename):
 
@@ -881,7 +880,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads + self.uploads)[:]:
+            for i in (self.downloads | self.uploads):
 
                 if i.req != msg.req:
                     continue
@@ -940,7 +939,7 @@ class Transfers:
 
     def TransferTimeout(self, msg):
 
-        for i in (self.downloads + self.uploads)[:]:
+        for i in (self.downloads | self.uploads):
 
             if i.req != msg.req:
                 continue
@@ -1819,7 +1818,7 @@ class Transfers:
     def FileError(self, msg):
         """ Networking thread encountered a local file error"""
 
-        for i in self.downloads + self.uploads:
+        for i in self.downloads | self.uploads:
 
             if i.conn != msg.conn.conn:
                 continue
@@ -1925,7 +1924,7 @@ class Transfers:
     def AbortTransfers(self):
         """ Stop all transfers """
 
-        for i in self.downloads + self.uploads:
+        for i in self.downloads | self.uploads:
             if i.status in ("Aborted", "Paused"):
                 self.AbortTransfer(i)
                 i.status = "Paused"

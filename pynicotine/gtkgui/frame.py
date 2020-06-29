@@ -1408,7 +1408,7 @@ class NicotineFrame:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
             else:
-                self.logMessage("No handler for class %s %s" % (i.__class__, vars(i)))
+                self.logMessage("No handler for class %s %s" % (i.__class__, dir(i)))
 
     def callback(self, msgs):
         if len(msgs) > 0:
@@ -1957,18 +1957,18 @@ class NicotineFrame:
         def _calc(line):
             bandwidth = 0.0
             users = 0  # noqa: F841
-            line = [i for i in line if i.conn is not None]  # noqa: E741
+            line = set(i for i in line if i.conn is not None)  # noqa: E741
             for i in line:
                 if i.speed is not None:
                     bandwidth = bandwidth + i.speed
             return len(line), bandwidth
 
         def _num_users(line):
-            users = []
+            users = set()
 
             for i in line:
                 if i.user not in users:
-                    users.append(i.user)
+                    users.add(i.user)
             return len(users), len(line)
 
         if self.np.transfers is not None:

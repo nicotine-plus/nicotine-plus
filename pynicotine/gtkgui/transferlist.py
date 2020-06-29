@@ -73,7 +73,7 @@ class TransferList:
         self.frame = frame
         self.widget = widget
         self.type = type
-        self.transfers = []
+        self.transfers = set()
         self.list = None
         self.selected_transfers = []
         self.selected_users = []
@@ -209,7 +209,7 @@ class TransferList:
         self.list = None
         self.Clear()
         self.transfersmodel.clear()
-        self.transfers = []
+        self.transfers.clear()
         self.users.clear()
         self.paths.clear()
         self.selected_transfers = []
@@ -352,9 +352,7 @@ class TransferList:
             self.update_specific(transfer)
         elif self.list is not None:
 
-            # This seems to me to be O(n^2), perhaps constructing a temp. dict
-            # from self.list would be better?
-            for i in self.transfers[:]:
+            for i in self.transfers.copy():
                 for j in self.list:
                     if [j.user, j.filename] == i[0]:
                         break
@@ -415,7 +413,7 @@ class TransferList:
                         continue
 
                     for transfer in self.list:
-                        if [transfer.user, transfer.filename] == [path, filename] and transfer.timeelapsed is not None:
+                        if transfer.user == path and transfer.filename == filename and transfer.timeelapsed is not None:
                             elap += transfer.timeelapsed
                             break
 
@@ -491,9 +489,9 @@ class TransferList:
         if currentbytes is None:
             currentbytes = 0
 
-        key = [user, fn]
+        key = (user, fn)
 
-        status = HumanSize(self.TranslateStatus(transfer.status))
+        status = self.TranslateStatus(transfer.status)
         istatus = self.get_status_index(transfer.status)
 
         try:
@@ -602,11 +600,11 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                [user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, istatus, size, icurrentbytes, True, str(speed)]
+                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, istatus, size, icurrentbytes, True, str(speed))
             )
 
             # Expand path
-            self.transfers.append([key, iter, transfer])
+            self.transfers.add((key, iter, transfer))
 
             if parent is not None:
                 path = self.transfersmodel.get_path(iter)
@@ -615,7 +613,7 @@ class TransferList:
     def Clear(self):
         self.users.clear()
         self.paths.clear()
-        self.transfers = []
+        self.transfers.clear()
         self.selected_transfers = []
         self.selected_users = []
         self.transfersmodel.clear()
