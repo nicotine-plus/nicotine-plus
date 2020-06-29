@@ -175,7 +175,6 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i))
             self.queue.put(slskmessages.GetUserStatus(i))
 
-        self.SaveDownloads(None)
         self.users = users
         self.downloadspanel = None
         self.uploadspanel = None
@@ -269,7 +268,6 @@ class Transfers:
 
             if direction == 0:
                 self.downloads.append(transfer)
-                self.SaveDownloads(transfer)
             else:
                 self._updateOrAppendUpload(user, filename, transfer)
         else:
@@ -289,8 +287,6 @@ class Transfers:
                     self.AbortTransfer(transfer)
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
-                    # In order to remove the filtered files from the saved download queue.
-                    self.SaveDownloads(transfer)
             except Exception:
                 pass
 
@@ -513,7 +509,6 @@ class Transfers:
                     status="Getting status", size=msg.filesize, req=msg.req
                 )
                 self.downloads.append(transfer)
-                self.SaveDownloads(transfer)
 
                 if user not in self.eventprocessor.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
@@ -1712,21 +1707,7 @@ class Transfers:
 
     def ConnClose(self, conn, addr):
         """ The remote user has closed the connection either because
-<<<<<<< HEAD
         he logged off, or because there's a network problem. """
-=======
-        he logged off, or because there's a network problem."""
-
-        for i in self.downloads + self.uploads:
-
-            if i.requestconn == conn and i.status == "Requesting file":
-                i.requestconn = None
-                i.status = "Connection closed by peer"
-                i.req = None
-                self.downloadspanel.update(i)
-                self.uploadspanel.update(i)
-                self.checkUploadQueue()
->>>>>>> f9eb591b... Additional fixes
 
         for i in self.downloads:
             if i.conn != conn:
@@ -1991,15 +1972,9 @@ class Transfers:
 
     def GetAllDownloads(self):
         """ Get a list of incomplete and not aborted downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
+        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads]
 
-    def SaveDownloads(self, transfer):
+    def SaveDownloads(self):
         """ Save list of files to be downloaded """
-        transferlist = self.eventprocessor.config.sections["transfers"]["downloads"]
-
-        if transferlist is None:
-            transferlist = self.GetAllDownloads()
-        elif transfer not in transferlist:
-            transferlist.append(transfer)
-
-        #self.eventprocessor.config.writeDownloadQueue()
+        self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetAllDownloads()
+        self.eventprocessor.config.writeDownloadQueue()

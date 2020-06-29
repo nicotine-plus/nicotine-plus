@@ -330,6 +330,9 @@ class TransferList:
 
         self.lastupdate = time()  # ...we're working...
 
+        # Save downloads to file
+        self.frame.np.transfers.SaveDownloads()
+
         # Remove empty parent rows
         for (path, pathiter) in [x for x in self.paths.items()]:
 

@@ -472,8 +472,6 @@ class Downloads(TransferList):
     def update(self, transfer=None, forced=False):
 
         TransferList.update(self, transfer, forced)
-        if transfer is None and self.frame.np.transfers is not None:
-            self.frame.np.transfers.SaveDownloads(transfer)
 
     def OnGetPlaceInQueue(self, widget):
 
@@ -495,7 +493,6 @@ class Downloads(TransferList):
 
             self.frame.np.transfers.AbortTransfer(transfer)
             self.frame.np.transfers.getFile(transfer.user, transfer.filename, transfer.path, transfer)
-            self.frame.np.transfers.SaveDownloads(transfer)
 
     def OnAbortRemoveTransfer(self, widget):
         self.select_transfers()
