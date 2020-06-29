@@ -1957,9 +1957,8 @@ class NicotineFrame:
         def _calc(line):
             bandwidth = 0.0
             users = 0  # noqa: F841
-            line = set(i for i in line if i.conn is not None)  # noqa: E741
             for i in line:
-                if i.speed is not None:
+                if i.conn is not None and i.speed is not None:
                     bandwidth = bandwidth + i.speed
             return len(line), bandwidth
 

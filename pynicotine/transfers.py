@@ -60,7 +60,7 @@ class Transfer(object):
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
         timeleft=None, timequeued=None, transfertimer=None, requestconn=None,
-        modifier=None, place=0, bitrate=None, length=None
+        modifier=None, place=0, bitrate=None, length=None, iter=None
     ):
         self.user = user
         self.realfilename = realfilename  # Sent as is to the user announcing what file we're sending
@@ -85,6 +85,7 @@ class Transfer(object):
         self.place = place  # Queue position
         self.bitrate = bitrate
         self.length = length
+        self.iter = iter
         self.setstatus(status)
 
     def setstatus(self, status):

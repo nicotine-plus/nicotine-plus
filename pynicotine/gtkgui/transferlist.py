@@ -50,7 +50,6 @@ class TransferList:
         self.frame = frame
         self.widget = widget
         self.type = type
-        self.transfers = set()
         self.list = None
         self.selected_transfers = []
         self.selected_users = []
@@ -176,7 +175,6 @@ class TransferList:
         self.list = None
         self.Clear()
         self.transfersmodel.clear()
-        self.transfers.clear()
         self.users.clear()
         self.paths.clear()
         self.selected_transfers = []
@@ -288,16 +286,6 @@ class TransferList:
 
         return False  # Stopping timeout
 
-    def replace(self, oldtransfer, newtransfer):
-
-        for i in self.transfers:
-            if i[2] == oldtransfer:
-                i[2] = newtransfer
-                self.update_specific(newtransfer)
-                return
-        else:
-            print(("WARNING: Could not find transfer %s." % oldtransfer))
-
     def update(self, transfer=None, forced=False):
 
         current_page = self.frame.MainNotebook.get_current_page()
@@ -306,7 +294,7 @@ class TransferList:
         if (current_page == my_page):
             self._update(transfer, forced)
 
-        self.frame.UpdateBandwidth()
+        #self.frame.UpdateBandwidth()
 
     def _update(self, transfer=None, forced=True):
 
@@ -318,15 +306,6 @@ class TransferList:
         if transfer is not None:
             self.update_specific(transfer)
         elif self.list is not None:
-
-            for i in self.transfers.copy():
-                for j in self.list:
-                    if [j.user, j.filename] == i[0]:
-                        break
-                else:
-                    # Remove transfers from treeview that aren't in the transfer list
-                    self.transfersmodel.remove(i[1])
-                    self.transfers.remove(i)
 
             for i in self.list:
                 self.update_specific(i)
@@ -379,10 +358,10 @@ class TransferList:
                         # We don't want to count filtered files when calculating the progress
                         continue
 
-                    """ for transfer in self.list:
+                    """for transfer in self.list:
                         if transfer.timeelapsed is not None and transfer.user == path and transfer.filename == filename:
                             elap += transfer.timeelapsed
-                            break """
+                            break"""
 
                     totalsize += self.transfersmodel.get_value(iter, 12)
                     position += self.transfersmodel.get_value(iter, 13)
@@ -453,8 +432,6 @@ class TransferList:
         if currentbytes is None:
             currentbytes = 0
 
-        key = (user, fn)
-
         status = self.TranslateStatus(transfer.status)
 
         try:
@@ -500,21 +477,14 @@ class TransferList:
             percent = 0
 
         # Modify old transfer
-        for i in self.transfers:
-
-            if i[0] != key:
-                continue
-
-            if i[2] != transfer:
-                continue
-
+        if transfer.iter is not None:
             if self.TreeUsers:
                 path = None
             else:
                 path = transfer.path
 
             self.transfersmodel.set(
-                i[1],
+                transfer.iter,
                 1, path,
                 2, shortfn,
                 3, status,
@@ -529,8 +499,6 @@ class TransferList:
                 13, currentbytes,
                 15, str(speed)
             )
-
-            break
         else:
             if self.TreeUsers:
                 if user not in self.users:
@@ -567,7 +535,7 @@ class TransferList:
             )
 
             # Expand path
-            self.transfers.add((key, iter, transfer))
+            transfer.iter = iter
 
             if parent is not None:
                 path = self.transfersmodel.get_path(iter)
@@ -576,7 +544,6 @@ class TransferList:
     def Clear(self):
         self.users.clear()
         self.paths.clear()
-        self.transfers.clear()
         self.selected_transfers = []
         self.selected_users = []
         self.transfersmodel.clear()
