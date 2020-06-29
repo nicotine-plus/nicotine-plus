@@ -286,6 +286,16 @@ class TransferList:
 
         return False  # Stopping timeout
 
+    def replace(self, oldtransfer, newtransfer):
+
+        for i in self.transfers:
+            if i[2] == oldtransfer:
+                i[2] = newtransfer
+                self.update_specific(newtransfer)
+                return
+        else:
+            print(("WARNING: Could not find transfer %s." % oldtransfer))
+
     def update(self, transfer=None, forced=False):
 
         current_page = self.frame.MainNotebook.get_current_page()
@@ -574,6 +584,7 @@ class TransferList:
 
             if clear:
                 self.list.remove(i)
+                self.transfersmodel.remove(i.iter)
 
         self.update()
 
@@ -582,11 +593,12 @@ class TransferList:
 
     def ClearTransfers(self, status):
 
-        for i in self.list[:]:
+        for i in self.list.copy():
             if i.status in status:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
                 self.list.remove(i)
+                self.transfersmodel.remove(i.iter)
 
         self.update()
 
