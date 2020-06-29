@@ -29,6 +29,7 @@ Changes
 Bugs closed in GitHub
  * Columns Position Not Being Maintained (#8)
  * Add "Group by folder" option to search results (#17)
+ * Downloads tab hanging when adding a lot of files (#34)
  * send to player does not work. (#53)
  * Segfault When Getting User Info (#57)
  * Segmentation fault on Ubuntu Gnome 17.04 (#60)

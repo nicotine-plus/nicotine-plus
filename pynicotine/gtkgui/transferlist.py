@@ -62,22 +62,23 @@ class TransferList:
         widget.set_rubber_banding(True)
 
         columntypes = [
-            gobject.TYPE_STRING,  # user
-            gobject.TYPE_STRING,  # path
-            gobject.TYPE_STRING,  # file name
-            gobject.TYPE_STRING,  # status
-            gobject.TYPE_STRING,  # queue position
-            gobject.TYPE_UINT64,  # percent
-            gobject.TYPE_STRING,  # hsize
-            gobject.TYPE_STRING,  # hspeed
-            gobject.TYPE_STRING,  # time elapsed
-            gobject.TYPE_STRING,  # time left
-            gobject.TYPE_STRING,  # path
-            gobject.TYPE_STRING,  # status (non-translated)
-            gobject.TYPE_UINT64,  # size
-            gobject.TYPE_UINT64,  # current bytes
-            gobject.TYPE_BOOLEAN, # percent visible (?)
-            gobject.TYPE_STRING   # speed
+            gobject.TYPE_STRING,   # user
+            gobject.TYPE_STRING,   # path
+            gobject.TYPE_STRING,   # file name
+            gobject.TYPE_STRING,   # status
+            gobject.TYPE_STRING,   # queue position
+            gobject.TYPE_UINT64,   # percent
+            gobject.TYPE_STRING,   # hsize
+            gobject.TYPE_STRING,   # hspeed
+            gobject.TYPE_STRING,   # htime elapsed
+            gobject.TYPE_STRING,   # time left
+            gobject.TYPE_STRING,   # path
+            gobject.TYPE_STRING,   # status (non-translated)
+            gobject.TYPE_UINT64,   # size
+            gobject.TYPE_UINT64,   # current bytes
+            gobject.TYPE_BOOLEAN,  # percent visible (?)
+            gobject.TYPE_STRING,   # speed
+            gobject.TYPE_UINT64    # time elapsed
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -345,8 +346,8 @@ class TransferList:
                 files = self.transfersmodel.iter_n_children(pathiter)
                 ispeed = 0.0
                 percent = totalsize = position = 0
-                elapsed = left = ""
-                elap = 0
+                helapsed = left = ""
+                elapsed = 0
                 salientstatus = ""
                 extensions = {}
 
@@ -372,11 +373,7 @@ class TransferList:
                         # We don't want to count filtered files when calculating the progress
                         continue
 
-                    for transfer in self.list:
-                        if transfer.timeelapsed is not None and transfer.user == path and transfer.filename == filename:
-                            elap += transfer.timeelapsed
-                            break
-
+                    elapsed += self.transfersmodel.get_value(iter, 16)
                     totalsize += self.transfersmodel.get_value(iter, 12)
                     position += self.transfersmodel.get_value(iter, 13)
 
@@ -403,7 +400,7 @@ class TransferList:
                 else:
                     left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
 
-                elapsed = self.frame.np.transfers.getTime(elap)
+                helapsed = self.frame.np.transfers.getTime(elapsed)
 
                 if len(extensions) == 0:
                     extensions = "Unknown"
@@ -421,11 +418,12 @@ class TransferList:
                     5, percent,
                     6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
                     7, HumanSpeed(speed),
-                    8, elapsed,
+                    8, helapsed,
                     9, left,
                     12, ispeed,
                     14, True,
-                    15, speed
+                    15, speed,
+                    16, elapsed
                 )
 
         for (username, useriter) in [x for x in self.users.items()]:
@@ -463,7 +461,7 @@ class TransferList:
         except TypeError:
             speed = str(transfer.speed)
 
-        elap = transfer.timeelapsed
+        elapsed = transfer.timeelapsed
         left = str(transfer.timeleft)
 
         if speed == "None":
@@ -472,10 +470,10 @@ class TransferList:
             # transfer.speed is in KB
             speed = float(speed) * 1024
 
-        if elap is None:
-            elap = 0
+        if elapsed is None:
+            elapsed = 0
 
-        elap = self.frame.np.transfers.getTime(elap)
+        helapsed = self.frame.np.transfers.getTime(elapsed)
 
         if left == "None":
             left = ""
@@ -506,12 +504,13 @@ class TransferList:
                 5, percent,
                 6, str(hsize),
                 7, HumanSpeed(speed),
-                8, elap,
+                8, helapsed,
                 9, left,
                 11, transfer.status,
                 12, size,
                 13, currentbytes,
-                15, str(speed)
+                15, str(speed),
+                16, elapsed
             )
         else:
             if self.TreeUsers:
@@ -520,7 +519,7 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, ""]
+                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0]
                     )
 
                 """ Paths can be empty if files are downloaded individually, make sure we
@@ -530,7 +529,7 @@ class TransferList:
                 if path not in self.paths:
                     self.paths[path] = self.transfersmodel.append(
                         self.users[user],
-                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, ""]
+                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0]
                     )
 
                 parent = self.paths[path]
@@ -545,7 +544,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), elap, left, fn, transfer.status, size, icurrentbytes, True, str(speed))
+                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, True, str(speed), elapsed)
             )
 
             # Expand path
@@ -597,7 +596,7 @@ class TransferList:
 
     def ClearTransfers(self, status):
 
-        for i in self.list.copy():
+        for i in self.list[:]:
             if i.status in status:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()

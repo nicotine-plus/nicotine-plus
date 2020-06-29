@@ -1979,7 +1979,7 @@ class NicotineFrame:
             total_usersup, filesup = _users(self.np.transfers.uploads)
         else:
             down = up = 0.0
-            filesup = filesdown = total_usersdown = total_usersup = usersdown = usersup = 0
+            filesup = filesdown = total_usersdown = total_usersup = 0
 
         self.DownloadUsers.set_text(_("Users: %s") % total_usersdown)
         self.UploadUsers.set_text(_("Users: %s") % total_usersup)

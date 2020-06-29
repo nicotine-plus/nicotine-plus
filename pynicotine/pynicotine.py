@@ -62,6 +62,7 @@ class PeerConnection:
     """
 
     __slots__ = ("addr", "username", "conn", "msgs", "token", "init", "conntimer", "tryaddr")
+
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
         self.username = username
