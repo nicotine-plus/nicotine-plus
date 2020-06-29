@@ -1970,11 +1970,11 @@ class Transfers:
                     1
                 )
 
-    def GetAllDownloads(self):
+    def GetDownloads(self):
         """ Get a list of incomplete and not aborted downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads]
+        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
 
     def SaveDownloads(self):
         """ Save list of files to be downloaded """
-        self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetAllDownloads()
+        self.eventprocessor.config.sections["transfers"]["downloads"] = self.GetDownloads()
         self.eventprocessor.config.writeDownloadQueue()
