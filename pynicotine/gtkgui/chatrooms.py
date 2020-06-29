@@ -1059,7 +1059,6 @@ class ChatRoom:
         self.UserList.set_model(self.usersmodel)
         self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.drag_data_get_data)
-        self.UserList.set_property("rules-hint", True)
 
         self.popup_menu_privaterooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)

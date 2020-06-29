@@ -49,7 +49,6 @@ class Uploads(TransferList):
 
         TransferList.__init__(self, frame, frame.UploadList, type='upload')
         self.myvbox = self.frame.uploadsvbox
-        self.frame.UploadList.set_property("rules-hint", True)
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)

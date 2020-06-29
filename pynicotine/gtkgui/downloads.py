@@ -51,7 +51,6 @@ class Downloads(TransferList):
 
         TransferList.__init__(self, frame, frame.DownloadList, type='download')
         self.myvbox = self.frame.downloadsvbox
-        self.frame.DownloadList.set_property("rules-hint", True)
         self.accel_group = gtk.AccelGroup()
 
         self.popup_menu_users = PopupMenu(self.frame, False)

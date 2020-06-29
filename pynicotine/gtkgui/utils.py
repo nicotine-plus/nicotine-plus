@@ -217,7 +217,7 @@ def InitialiseColumns(treeview, *args):
         if len(c) > 3 and type(c[3]) is not list:
             column.set_cell_data_func(renderer, c[3])
 
-        column.set_reorderable(True)
+        column.set_reorderable(False)
         column.set_widget(gtk.Label.new(c[0]))
         column.get_widget().show()
 
