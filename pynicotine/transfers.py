@@ -243,11 +243,11 @@ class Transfers:
     def getFile(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
         path = utils.CleanPath(path, absolute=True)
 
-        """if checkduplicate:
+        if checkduplicate:
             for i in self.downloads:
                 if i.user == user and i.filename == filename and i.path == path:
                     # Don't add duplicate downloads
-                    return"""
+                    return
 
         self.transferFile(0, user, filename, path, transfer, size, bitrate, length)
 

@@ -624,7 +624,6 @@ class NetworkEventProcessor:
         if msg.success:
 
             self.setStatus(_("Logged in, getting the list of rooms..."))
-            print(len(conf["transfers"]["downloads"]))
             self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
 
             if msg.ip is not None:
@@ -1078,7 +1077,7 @@ class NetworkEventProcessor:
     def GetPeerAddress(self, msg):
 
         for i in self.peerconns:
-            if i.username == msg.user and i.addr is "in_progress":
+            if i.username == msg.user and i.addr == "in_progress":
                 if msg.port != 0 or i.tryaddr == 10:
                     if i.tryaddr == 10:
                         self.logMessage(

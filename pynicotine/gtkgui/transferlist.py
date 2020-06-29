@@ -304,7 +304,7 @@ class TransferList:
         if (current_page == my_page):
             self._update(transfer, forced)
 
-        #self.frame.UpdateBandwidth()
+        self.frame.UpdateBandwidth()
 
     def _update(self, transfer=None, forced=True):
 
@@ -331,7 +331,8 @@ class TransferList:
         self.lastupdate = time()  # ...we're working...
 
         # Save downloads to file
-        self.frame.np.transfers.SaveDownloads()
+        if self.frame.np.transfers is not None:
+            self.frame.np.transfers.SaveDownloads()
 
         # Remove empty parent rows
         for (path, pathiter) in [x for x in self.paths.items()]:
@@ -371,10 +372,10 @@ class TransferList:
                         # We don't want to count filtered files when calculating the progress
                         continue
 
-                    """for transfer in self.list:
+                    for transfer in self.list:
                         if transfer.timeelapsed is not None and transfer.user == path and transfer.filename == filename:
                             elap += transfer.timeelapsed
-                            break"""
+                            break
 
                     totalsize += self.transfersmodel.get_value(iter, 12)
                     position += self.transfersmodel.get_value(iter, 13)
