@@ -1057,16 +1057,21 @@ class Transfers:
 
                     f.seek(0, 2)
                     size = f.tell()
-                    self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
+
                     i.currentbytes = size
-                    i.status = "Transferring"
                     i.file = f
                     i.place = 0
                     i.offset = size
                     i.starttime = time.time()
-                    self.eventprocessor.logMessage(_("Download started: %s") % ("%s" % f.name), 5)
 
-                    self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
+                    if i.size > size:
+                        i.status = "Transferring"
+                        self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
+                        self.eventprocessor.logMessage(_("Download started: %s") % ("%s" % f.name), 5)
+
+                        self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
+                    else:
+                        self.DownloadFinished(f, i)
 
             self.SetIconDownloads()
             self.downloadspanel.update(i)
@@ -1076,7 +1081,7 @@ class Transfers:
                 'user': i.user,
                 'file': i.filename
             }, 1)
-            i.conn = None
+
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _FileRequestUpload(self, msg, i):
@@ -1123,7 +1128,6 @@ class Transfers:
                 'file': i.filename
             }, 1)
 
-            i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def SetIconDownloads(self):
@@ -1156,7 +1160,6 @@ class Transfers:
         """ A file download is in progress"""
 
         needupdate = True
-        config = self.eventprocessor.config.sections
 
         for i in self.downloads:
 
@@ -1169,15 +1172,7 @@ class Transfers:
                     i.transfertimer.cancel()
                 curtime = time.time()
 
-                try:
-                    i.currentbytes = msg.file.tell()
-                except Exception:
-                    if win32:
-                        msg.file = open("%s" % msg.file.name, 'ab+')
-                    else:
-                        msg.file = open(msg.file.name, 'ab+')
-
-                    i.currentbytes = msg.file.tell()
+                i.currentbytes = msg.file.tell()
 
                 if i.lastbytes is None:
                     i.lastbytes = i.currentbytes
@@ -1208,115 +1203,7 @@ class Transfers:
                         needupdate = False
                     i.status = "Transferring"
                 else:
-                    msg.file.close()
-                    basename = CleanFile(i.filename.split('\\')[-1])
-                    downloaddir = config["transfers"]["downloaddir"]
-
-                    if i.path and i.path[0] == '/':
-                        folder = utils.CleanPath(i.path)
-                    else:
-                        folder = os.path.join(downloaddir, i.path)
-
-                    if not os.access(folder, os.F_OK):
-                        os.makedirs(folder)
-
-                    (newname, identicalfile) = self.getRenamed(os.path.join(folder, basename), msg.file.name)
-
-                    if newname:
-                        try:
-                            shutil.move(msg.file.name, newname)
-                        except (IOError, OSError) as inst:  # noqa: F841
-                            try:
-                                shutil.move(msg.file.name, "%s" % newname)
-                            except (IOError, OSError) as inst:
-                                log.addwarning(
-                                    _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                                        'tempfile': msg.file.name,
-                                        'file': newname,
-                                        'error': inst
-                                    }
-                                )
-
-                    i.status = "Finished"
-
-                    if newname:
-                        self.eventprocessor.logMessage(
-                            _("Download finished: %(file)s") % {
-                                'file': newname
-                            },
-                            5
-                        )
-                        self.eventprocessor.logTransfer(
-                            _("Download finished: user %(user)s, file %(file)s") % {
-                                'user': i.user,
-                                'file': i.filename
-                            },
-                            1
-                        )
-                    else:
-                        self.eventprocessor.logMessage(
-                            _("File %(file)s is identical to %(identical)s, not saving.") % {
-                                'file': msg.file.name,
-                                'identical': identicalfile
-                            },
-                            1
-                        )
-                        self.eventprocessor.logTransfer(
-                            _("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {
-                                'user': i.user,
-                                'file': i.filename
-                            },
-                            1
-                        )
-
-                    self.queue.put(slskmessages.ConnClose(msg.conn))
-                    i.conn = None
-
-                    if newname:
-                        if win32:
-                            self.addToShared("%s" % newname)
-                        else:
-                            self.addToShared(newname)
-                        self.eventprocessor.shares.sendNumSharedFoldersFiles()
-
-                        if config["transfers"]["shownotification"]:
-                            self.eventprocessor.frame.NewNotification(
-                                _("%(file)s downloaded from %(user)s") % {
-                                    'user': i.user,
-                                    'file': newname.rsplit(os.sep, 1)[1]
-                                },
-                                title=_("Nicotine+ :: file downloaded")
-                            )
-
-                    self.SaveDownloads()
-                    self.downloadspanel.update(i)
-
-                    if newname and config["transfers"]["afterfinish"]:
-                        if not executeCommand(config["transfers"]["afterfinish"], newname):
-                            self.eventprocessor.logMessage(_("Trouble executing '%s'") % config["transfers"]["afterfinish"])
-                        else:
-                            self.eventprocessor.logMessage(_("Executed: %s") % config["transfers"]["afterfinish"])
-
-                    if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
-
-                        # walk through downloads and break if any file in the same folder exists, else execute
-                        for ia in self.downloads:
-                            if ia.status not in ["Finished", "Aborted", "Paused", "Filtered"] and ia.path and ia.path == i.path:
-                                break
-                        else:
-                            if config["transfers"]["shownotificationperfolder"]:
-                                self.eventprocessor.frame.NewNotification(
-                                    _("%(folder)s downloaded from %(user)s") % {
-                                        'user': i.user,
-                                        'folder': folder
-                                    },
-                                    title=_("Nicotine+ :: directory completed")
-                                )
-                            if config["transfers"]["afterfolder"]:
-                                if not executeCommand(config["transfers"]["afterfolder"], folder):
-                                    self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
-                                else:
-                                    self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
+                    self.DownloadFinished(msg.file, i)
             except IOError as strerror:
                 self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                 i.status = "Local file error"
@@ -1329,6 +1216,118 @@ class Transfers:
 
             if needupdate:
                 self.downloadspanel.update(i)
+
+    def DownloadFinished(self, file, i):
+        file.close()
+        basename = CleanFile(i.filename.split('\\')[-1])
+        config = self.eventprocessor.config.sections
+        downloaddir = config["transfers"]["downloaddir"]
+
+        if i.path and i.path[0] == '/':
+            folder = utils.CleanPath(i.path)
+        else:
+            folder = os.path.join(downloaddir, i.path)
+
+        if not os.access(folder, os.F_OK):
+            os.makedirs(folder)
+
+        (newname, identicalfile) = self.getRenamed(os.path.join(folder, basename), file.name)
+
+        if newname:
+            try:
+                shutil.move(file.name, newname)
+            except (IOError, OSError) as inst:  # noqa: F841
+                try:
+                    shutil.move(file.name, "%s" % newname)
+                except (IOError, OSError) as inst:
+                    log.addwarning(
+                        _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+                            'tempfile': file.name,
+                            'file': newname,
+                            'error': inst
+                        }
+                    )
+
+        i.status = "Finished"
+
+        if newname:
+            self.eventprocessor.logMessage(
+                _("Download finished: %(file)s") % {
+                    'file': newname
+                },
+                5
+            )
+            self.eventprocessor.logTransfer(
+                _("Download finished: user %(user)s, file %(file)s") % {
+                    'user': i.user,
+                    'file': i.filename
+                },
+                1
+            )
+        else:
+            self.eventprocessor.logMessage(
+                _("File %(file)s is identical to %(identical)s, not saving.") % {
+                    'file': file.name,
+                    'identical': identicalfile
+                },
+                1
+            )
+            self.eventprocessor.logTransfer(
+                _("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {
+                    'user': i.user,
+                    'file': i.filename
+                },
+                1
+            )
+
+        self.queue.put(slskmessages.ConnClose(i.conn))
+        i.conn = None
+
+        if newname:
+            if win32:
+                self.addToShared("%s" % newname)
+            else:
+                self.addToShared(newname)
+            self.eventprocessor.shares.sendNumSharedFoldersFiles()
+
+            if config["transfers"]["shownotification"]:
+                self.eventprocessor.frame.NewNotification(
+                    _("%(file)s downloaded from %(user)s") % {
+                        'user': i.user,
+                        'file': newname.rsplit(os.sep, 1)[1]
+                    },
+                    title=_("Nicotine+ :: file downloaded")
+                )
+
+        self.SaveDownloads()
+        self.downloadspanel.update(i)
+
+        if newname and config["transfers"]["afterfinish"]:
+            if not executeCommand(config["transfers"]["afterfinish"], newname):
+                self.eventprocessor.logMessage(_("Trouble executing '%s'") % config["transfers"]["afterfinish"])
+            else:
+                self.eventprocessor.logMessage(_("Executed: %s") % config["transfers"]["afterfinish"])
+
+        if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
+
+            # walk through downloads and break if any file in the same folder exists, else execute
+            for ia in self.downloads:
+                if ia.status not in ["Finished", "Aborted", "Paused", "Filtered"] and ia.path and ia.path == i.path:
+                    break
+            else:
+                if config["transfers"]["shownotificationperfolder"]:
+                    self.eventprocessor.frame.NewNotification(
+                        _("%(folder)s downloaded from %(user)s") % {
+                            'user': i.user,
+                            'folder': folder
+                        },
+                        title=_("Nicotine+ :: directory completed")
+                    )
+                if config["transfers"]["afterfolder"]:
+                    if not executeCommand(config["transfers"]["afterfolder"], folder):
+                        self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
+                    else:
+                        self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
 
     def addToShared(self, name):
         """ Add a file to the normal shares database """
@@ -1726,6 +1725,7 @@ class Transfers:
                 if j.user == i.user:
                     j.timequeued = curtime
 
+            i.conn = None
             self.downloadspanel.update(i)
             self.uploadspanel.update(i)
             self.checkUploadQueue()
