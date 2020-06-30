@@ -39,6 +39,7 @@ import sys
 import threading
 import time
 from gettext import gettext as _
+from gi.repository import GLib
 from time import sleep
 
 from pynicotine import slskmessages
@@ -179,6 +180,9 @@ class Transfers:
         self.usersqueued = {}
         self.privusersqueued = {}
         self.geoip = self.eventprocessor.geoip
+
+        # Check for failed downloads if option is enabled (1 min delay)
+        self.startCheckDownloadQueueTimer()
 
     def setTransferPanels(self, downloads, uploads):
         self.downloadspanel = downloads
@@ -1440,11 +1444,13 @@ class Transfers:
             self.eventprocessor.config.sections["server"]["banlist"].append(user)
             self.eventprocessor.config.writeConfig()
 
+    def startCheckDownloadQueueTimer(self):
+        GLib.timeout_add(60000, self.checkDownloadQueue)
+
     # Find failed downloads and attempt to queue them
     def checkDownloadQueue(self):
 
         if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
-            changed = False
             statuslist = self.FAILED_TRANSFERS + ["Getting address", "Waiting for peer to connect", "Initializing transfer"]
 
             for transfer in self.downloads:
@@ -1452,10 +1458,8 @@ class Transfers:
                     self.AbortTransfer(transfer)
                     transfer.req = None
                     self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
-                    changed = True
 
-            if changed:
-                self.SaveDownloads()
+        self.startCheckDownloadQueueTimer()
 
     # Find next file to upload
     def checkUploadQueue(self):
