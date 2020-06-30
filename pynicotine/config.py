@@ -129,7 +129,6 @@ class Config:
                 "remotedownloads": 1,
                 "uploadallowed": 2,
                 "autoclear_uploads": 0,
-                "autoretry_downloads": 1,
                 "downloads": [],
                 "sharedfiles": {},
                 "sharedfilesstreams": {},
@@ -524,6 +523,9 @@ class Config:
         self.removeOldOption("columns", "downloads_widths")
         self.removeOldOption("columns", "uploads_columns")
         self.removeOldOption("columns", "uploads_widths")
+
+        # Remove auto-retry failed downloads-option, this is now default behavior
+        self.removeOldOption("transfers", "autoretry_downloads")
 
         # Checking for unknown section/options
         unknown1 = [

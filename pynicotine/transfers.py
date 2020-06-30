@@ -108,7 +108,7 @@ class TransferTimeout:
 
 class Transfers:
     """ This is the transfers manager"""
-    FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error"]
+    FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
     COMPLETED_TRANSFERS = ["Finished", "Filtered", "Aborted", "Cancelled"]
     PRE_TRANSFER = ["Queued"]
     TRANSFER = ["Requesting file", "Initializing transfer", "Transferring"]
@@ -1455,13 +1455,12 @@ class Transfers:
     # Find failed downloads and attempt to queue them
     def checkDownloadQueue(self):
 
-        if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
-            statuslist = self.FAILED_TRANSFERS + ["Getting address", "Connecting", "Waiting for peer to connect", "Initializing transfer"]
+        statuslist = self.FAILED_TRANSFERS + ["Getting address", "Connecting", "Waiting for peer to connect", "Initializing transfer"]
 
-            for transfer in self.downloads:
-                if transfer.status in statuslist:
-                    self.AbortTransfer(transfer)
-                    self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
+        for transfer in self.downloads:
+            if transfer.status in statuslist:
+                self.AbortTransfer(transfer)
+                self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
 
         self.startCheckDownloadQueueTimer()
 
