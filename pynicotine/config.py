@@ -128,6 +128,7 @@ class Config:
                 "geoblockcc": [""],
                 "remotedownloads": 1,
                 "uploadallowed": 2,
+                "autoclear_downloads": 0,
                 "autoclear_uploads": 0,
                 "downloads": [],
                 "sharedfiles": {},

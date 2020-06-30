@@ -1300,7 +1300,13 @@ class Transfers:
                 )
 
         self.SaveDownloads()
-        self.downloadspanel.update(i)
+
+        # Autoclear this download
+        if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
+            self.downloads.remove(i)
+            self.downloadspanel.update()
+        else:
+            self.downloadspanel.update(i)
 
         if newname and config["transfers"]["afterfinish"]:
             if not executeCommand(config["transfers"]["afterfinish"], newname):
@@ -1718,6 +1724,8 @@ class Transfers:
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
+                    if i in self.downloads:
+                        self.getFile(i.user, i.filename, i.path, i)
 
             curtime = time.time()
             for j in self.uploads:

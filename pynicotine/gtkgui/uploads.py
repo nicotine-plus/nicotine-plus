@@ -102,8 +102,8 @@ class Uploads(TransferList):
         frame.banUploadButton.connect("clicked", self.OnBan)
         frame.UploadList.expand_all()
 
-        self.frame.ToggleAutoclear.set_active(self.frame.np.config.sections["transfers"]["autoclear_uploads"])
-        frame.ToggleAutoclear.connect("toggled", self.OnToggleAutoclear)
+        self.frame.ToggleAutoclearUploads.set_active(self.frame.np.config.sections["transfers"]["autoclear_uploads"])
+        frame.ToggleAutoclearUploads.connect("toggled", self.OnToggleAutoclear)
         self.frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
         frame.ToggleTreeUploads.connect("toggled", self.OnToggleTree)
 
@@ -171,7 +171,7 @@ class Uploads(TransferList):
         self.frame.np.config.writeConfiguration()
 
     def OnToggleAutoclear(self, widget):
-        self.frame.np.config.sections["transfers"]["autoclear_uploads"] = self.frame.ToggleAutoclear.get_active()
+        self.frame.np.config.sections["transfers"]["autoclear_uploads"] = self.frame.ToggleAutoclearUploads.get_active()
 
     def OnToggleTree(self, widget):
 
