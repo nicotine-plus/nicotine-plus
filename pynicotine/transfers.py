@@ -1076,6 +1076,7 @@ class Transfers:
                 'user': i.user,
                 'file': i.filename
             }, 1)
+            i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _FileRequestUpload(self, msg, i):
@@ -1122,6 +1123,7 @@ class Transfers:
                 'file': i.filename
             }, 1)
 
+            i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def SetIconDownloads(self):
@@ -1166,7 +1168,16 @@ class Transfers:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
                 curtime = time.time()
-                i.currentbytes = msg.file.tell()
+
+                try:
+                    i.currentbytes = msg.file.tell()
+                except Exception:
+                    if win32:
+                        msg.file = open("%s" % msg.file.name, 'ab+')
+                    else:
+                        msg.file = open(msg.file.name, 'ab+')
+
+                    i.currentbytes = msg.file.tell()
 
                 if i.lastbytes is None:
                     i.lastbytes = i.currentbytes
@@ -1446,7 +1457,7 @@ class Transfers:
     def checkDownloadQueue(self):
 
         if self.eventprocessor.config.sections["transfers"]["autoretry_downloads"]:
-            statuslist = self.FAILED_TRANSFERS + ["Getting address", "Waiting for peer to connect", "Initializing transfer"]
+            statuslist = self.FAILED_TRANSFERS + ["Getting address", "Connecting", "Waiting for peer to connect", "Initializing transfer"]
 
             for transfer in self.downloads:
                 if transfer.status in statuslist:
@@ -1715,7 +1726,6 @@ class Transfers:
                 if j.user == i.user:
                     j.timequeued = curtime
 
-            i.conn = None
             self.downloadspanel.update(i)
             self.uploadspanel.update(i)
             self.checkUploadQueue()
