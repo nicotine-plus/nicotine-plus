@@ -495,7 +495,6 @@ class Downloads(TransferList):
                 continue
 
             self.frame.np.transfers.AbortTransfer(transfer)
-            transfer.req = None
             self.frame.np.transfers.getFile(transfer.user, transfer.filename, transfer.path, transfer)
 
         self.frame.np.transfers.SaveDownloads()

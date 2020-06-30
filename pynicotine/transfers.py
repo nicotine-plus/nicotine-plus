@@ -326,14 +326,6 @@ class Transfers:
                     1
                 )
                 break
-        else:
-            self.eventprocessor.logTransfer(
-                _("Failed download: user %(user)s, file %(file)s") % {
-                    'user': user,
-                    'file': msg.file
-                },
-                1
-            )
 
     def gettingAddress(self, req):
 
@@ -1247,20 +1239,23 @@ class Transfers:
                             _("Download finished: user %(user)s, file %(file)s") % {
                                 'user': i.user,
                                 'file': i.filename
-                            }
+                            },
+                            1
                         )
                     else:
                         self.eventprocessor.logMessage(
                             _("File %(file)s is identical to %(identical)s, not saving.") % {
                                 'file': msg.file.name,
                                 'identical': identicalfile
-                            }
+                            },
+                            1
                         )
                         self.eventprocessor.logTransfer(
                             _("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {
                                 'user': i.user,
                                 'file': i.filename
-                            }
+                            },
+                            1
                         )
 
                     self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1456,7 +1451,6 @@ class Transfers:
             for transfer in self.downloads:
                 if transfer.status in statuslist:
                     self.AbortTransfer(transfer)
-                    transfer.req = None
                     self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
 
         self.startCheckDownloadQueueTimer()
@@ -1692,7 +1686,7 @@ class Transfers:
 
     def ConnClose(self, conn, addr):
         """ The remote user has closed the connection either because
-        he logged off, or because there's a network problem."""
+        he logged off, or because there's a network problem. """
 
         for i in self.downloads + self.uploads:
 
@@ -1715,16 +1709,6 @@ class Transfers:
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
-                    if i in self.downloads:
-                        self.eventprocessor.logTransfer(
-                            _("Retrying failed download: %(user)s, file %(file)s") % {
-                                'user': i.user,
-                                'file': i.filename
-                            },
-                            1
-                        )
-
-                        self.getFile(i.user, i.filename, i.path, i)
 
             curtime = time.time()
             for j in self.uploads:
@@ -1917,6 +1901,8 @@ class Transfers:
 
     def AbortTransfer(self, transfer, remove=0):
 
+        transfer.req = None
+
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
@@ -1931,19 +1917,24 @@ class Transfers:
                     os.remove(transfer.file.name)
             except Exception:
                 pass
+
+            transfer.file = None
+
             if transfer in self.uploads:
                 self.eventprocessor.logTransfer(
                     _("Upload aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
                         'file': transfer.filename
-                    }
+                    },
+                    1
                 )
             else:
                 self.eventprocessor.logTransfer(
                     _("Download aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
                         'file': transfer.filename
-                    }
+                    },
+                    1
                 )
 
     def GetDownloads(self):

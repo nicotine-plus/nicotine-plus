@@ -129,7 +129,7 @@ class Config:
                 "remotedownloads": 1,
                 "uploadallowed": 2,
                 "autoclear_uploads": 0,
-                "autoretry_downloads": 0,
+                "autoretry_downloads": 1,
                 "downloads": [],
                 "sharedfiles": {},
                 "sharedfilesstreams": {},
