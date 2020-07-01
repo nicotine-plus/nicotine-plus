@@ -576,13 +576,17 @@ class TransferList:
                         [user, "", "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
                     )
 
-                if transfer.path not in self.paths:
-                    self.paths[transfer.path] = self.transfersmodel.append(
+                """ Paths can be empty if files are downloaded individually, make sure we
+                don't add files to the wrong user in the TreeView """
+                path = user + transfer.path
+
+                if path not in self.paths:
+                    self.paths[path] = self.transfersmodel.append(
                         self.users[user],
                         [user, transfer.path, "", "", "", 0, "", "", "", "", "", 0, 0, 0, False, ""]
                     )
 
-                parent = self.paths[transfer.path]
+                parent = self.paths[path]
             else:
                 parent = None
 
