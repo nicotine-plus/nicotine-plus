@@ -1430,7 +1430,7 @@
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="ToggleAutoclearUploads">
-                                <property name="label" translatable="yes">Autoclear finished</property>
+                                <property name="label" translatable="yes">Autoclear finished / aborted</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>

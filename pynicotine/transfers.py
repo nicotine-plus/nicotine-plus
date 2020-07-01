@@ -906,6 +906,9 @@ class Transfers:
 
                     if i in self.downloads:
                         self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+                elif msg.reason == "Cancelled":
+                    if i in self.uploads:
+                        self.AutoClearUpload(i)
 
                 self.checkUploadQueue()
 
@@ -1419,14 +1422,17 @@ class Transfers:
                 self.uploadspanel.update(i)
 
                 # Autoclear this upload
-                if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
-                    self.uploads.remove(i)
-                    self.calcUploadQueueSizes()
-                    self.checkUploadQueue()
-                    self.uploadspanel.update()
+                self.AutoClearUpload(i)
 
             if needupdate:
                 self.uploadspanel.update(i)
+
+    def AutoClearUpload(self, i):
+        if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
+            self.uploads.remove(i)
+            self.calcUploadQueueSizes()
+            self.checkUploadQueue()
+            self.uploadspanel.update()
 
     def BanUser(self, user, ban_message=None):
         """
@@ -1703,39 +1709,50 @@ class Transfers:
         """ The remote user has closed the connection either because
         he logged off, or because there's a network problem. """
 
-        for i in self.downloads + self.uploads:
-
-            if i.requestconn == conn and i.status == "Requesting file":
-                i.requestconn = None
-                i.status = "Connection closed by peer"
-                i.req = None
-                self.downloadspanel.update(i)
-                self.uploadspanel.update(i)
-                self.checkUploadQueue()
-
+        for i in self.downloads:
             if i.conn != conn:
                 continue
 
-            if i.file is not None:
-                i.file.close()
+            self._ConnClose(conn, addr, i, "download")
 
-            if i.status != "Finished":
-                if i.user in self.users and self.users[i.user].status == 0:
-                    i.status = "User logged off"
-                else:
-                    i.status = "Connection closed by peer"
-                    if i in self.downloads:
-                        self.getFile(i.user, i.filename, i.path, i)
+        for i in self.uploads:
+            if i.conn != conn:
+                continue
 
-            curtime = time.time()
-            for j in self.uploads:
-                if j.user == i.user:
-                    j.timequeued = curtime
+            self._ConnClose(conn, addr, i, "upload")
 
-            i.conn = None
+    def _ConnClose(self, conn, addr, i, type):
+        if i.requestconn == conn and i.status == "Requesting file":
+            i.requestconn = None
+            i.status = "Connection closed by peer"
+            i.req = None
             self.downloadspanel.update(i)
             self.uploadspanel.update(i)
             self.checkUploadQueue()
+
+        if i.file is not None:
+            i.file.close()
+
+        if i.status != "Finished":
+            if i.user in self.users and self.users[i.user].status == 0:
+                i.status = "User logged off"
+            elif type == "download":
+                i.status = "Connection closed by peer"
+                self.getFile(i.user, i.filename, i.path, i)
+            elif type == "upload":
+                i.status = "Cancelled"
+                self.AbortTransfer(i)
+                self.AutoClearUpload(i)
+
+        curtime = time.time()
+        for j in self.uploads:
+            if j.user == i.user:
+                j.timequeued = curtime
+
+        i.conn = None
+        self.downloadspanel.update(i)
+        self.uploadspanel.update(i)
+        self.checkUploadQueue()
 
     def getRenamed(self, name, originalfile):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
@@ -1942,8 +1959,7 @@ class Transfers:
                     _("Upload aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
                         'file': transfer.filename
-                    },
-                    1
+                    }
                 )
             else:
                 self.eventprocessor.logTransfer(
