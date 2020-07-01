@@ -81,6 +81,7 @@ class TransferList:
         self.lastupdate = 0
         self.finalupdatetimerid = None
         widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        widget.set_enable_tree_lines(True)
         widget.set_rubber_banding(True)
 
         columntypes = [
