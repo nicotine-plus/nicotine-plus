@@ -906,7 +906,7 @@ class SlskProtoThread(threading.Thread):
                     self._ui_callback([FileError(conn, conn.filedown.file, strerror)])
                 except ValueError:
                     pass
-                self._ui_callback([DownloadFile(conn.conn, len(msgBuffer[:leftbytes]), conn.filedown.file)])
+            self._ui_callback([DownloadFile(conn.conn, len(msgBuffer[:leftbytes]), conn.filedown.file)])
             conn.filereadbytes = conn.filereadbytes + len(msgBuffer[:leftbytes])
             msgBuffer = msgBuffer[leftbytes:]
         elif conn.fileupl is not None:

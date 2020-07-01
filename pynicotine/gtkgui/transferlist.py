@@ -60,6 +60,7 @@ class TransferList:
         _("Filtered"),
         _("Download directory error"),
         _("Local file error"),
+        _("Remote file error"),
         _("File not shared"),
         _("Aborted"),
         _("Paused"),
@@ -297,6 +298,8 @@ class TransferList:
             newstatus = _("Download directory error")
         elif status == "Local file error":
             newstatus = _("Local file error")
+        elif status == "Remote file error":
+            newstatus = _("Remote file error")
         else:
             newstatus = status
 
@@ -671,7 +674,7 @@ class TransferList:
         self.ClearTransfers(statuslist)
 
     def OnClearFailed(self, widget):
-        statuslist = ["Cannot connect", "Connection closed by peer", "Local file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
+        statuslist = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
         self.ClearTransfers(statuslist)
 
     def OnClearPaused(self, widget):
@@ -683,7 +686,7 @@ class TransferList:
         self.ClearTransfers(statuslist)
 
     def OnClearFinishedErred(self, widget):
-        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error"]
+        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
         self.ClearTransfers(statuslist)
 
     def OnClearQueued(self, widget):

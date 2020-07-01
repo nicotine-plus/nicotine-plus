@@ -110,9 +110,8 @@ class Downloads(TransferList):
         frame.banDownloadButton.connect("clicked", self.OnBan)
         frame.DownloadList.expand_all()
 
-        self.frame.ToggleAutoRetry.set_active(self.frame.np.config.sections["transfers"]["autoretry_downloads"])
-        frame.ToggleAutoRetry.connect("toggled", self.OnToggleAutoRetry)
-
+        self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
+        frame.ToggleAutoclearDownloads.connect("toggled", self.OnToggleAutoclear)
         self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
         frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
         self.OnToggleTree(None)
@@ -129,9 +128,6 @@ class Downloads(TransferList):
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["download_columns"] = columns
         self.frame.np.config.sections["columns"]["download_widths"] = widths
-
-    def OnToggleAutoRetry(self, widget):
-        self.frame.np.config.sections["transfers"]["autoretry_downloads"] = self.frame.ToggleAutoRetry.get_active()
 
     def OnTryClearQueued(self, widget):
 
@@ -159,6 +155,9 @@ class Downloads(TransferList):
 
         self.frame.np.config.sections["transfers"]["downloadsexpanded"] = expanded
         self.frame.np.config.writeConfiguration()
+
+    def OnToggleAutoclear(self, widget):
+        self.frame.np.config.sections["transfers"]["autoclear_downloads"] = self.frame.ToggleAutoclearDownloads.get_active()
 
     def OnToggleTree(self, widget):
 
@@ -495,7 +494,6 @@ class Downloads(TransferList):
                 continue
 
             self.frame.np.transfers.AbortTransfer(transfer)
-            transfer.req = None
             self.frame.np.transfers.getFile(transfer.user, transfer.filename, transfer.path, transfer)
 
         self.frame.np.transfers.SaveDownloads()
