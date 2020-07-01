@@ -765,8 +765,11 @@ class Search:
         results = []
         counter = len(self.all_data) + 1
 
+        inqueue = msg.inqueue
+
         if msg.freeulslots:
             imdl = "Y"
+            inqueue = 0
         else:
             imdl = "N"
 
@@ -780,7 +783,7 @@ class Search:
 
             h_size = HumanSize(int(result[2]))
             h_speed = HumanSpeed(msg.ulspeed)
-            h_queue = Humanize(msg.inqueue)
+            h_queue = Humanize(inqueue)
 
             bitrate = ""
             length = ""
@@ -859,7 +862,7 @@ class Search:
             if status is None:
                 status = 0
 
-            results.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, msg.inqueue, status])
+            results.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, inqueue, status])
             counter += 1
 
         if results:
