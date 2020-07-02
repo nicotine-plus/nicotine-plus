@@ -38,6 +38,7 @@ from gi.repository import Gtk as gtk
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
@@ -519,8 +520,9 @@ class Search:
         self.resultslimit = 2000
         self.numvisibleresults = 0
 
-        self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
-        self.directoryGroup.connect("toggled", self.OnGroup)
+        FillFileGroupingCombobox(self.ResultGrouping)
+        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
+        self.ResultGrouping.connect("changed", self.OnGroup)
 
         self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
         self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
@@ -586,7 +588,11 @@ class Search:
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_rubber_banding(True)
-        self.ResultsList.set_show_expanders(self.directoryGroup.get_active())
+
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
+            self.ResultsList.set_show_expanders(True)
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
@@ -607,7 +613,9 @@ class Search:
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
         cols[0].get_widget().hide()
 
-        if self.directoryGroup.get_active():
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
 
@@ -891,7 +899,9 @@ class Search:
 
             iter = self.AddRowToModel(row)
 
-            if self.directoryGroup.get_active():
+            if self.ResultGrouping.get_active() > 0:
+                # Group by folder or user
+
                 if self.ExpandButton.get_active():
                     path = None
 
@@ -917,27 +927,34 @@ class Search:
         if user in self.Searches.users and status != self.Searches.users[user]:
             status = self.Searches.users[user]
 
-        if self.directoryGroup.get_active():
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
                     ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
                 )
 
-            if directory not in self.directoryiters:
-                self.directoryiters[directory] = self.resultsmodel.append(
-                    self.usersiters[user],
-                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
-                )
+            parent = self.usersiters[user]
 
-        try:
-            parent = None
+            if self.ResultGrouping.get_active() == 1:
+                # Group by folder
 
-            if self.directoryGroup.get_active():
-                parent = self.directoryiters[directory]
+                if directory not in self.directoryiters:
+                    self.directoryiters[directory] = self.resultsmodel.append(
+                        self.usersiters[user],
+                        ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                    )
+
                 row = row[:]
                 row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
 
+                parent = self.directoryiters[directory]
+        else:
+            parent = None
+
+        try:
             iter = self.resultsmodel.append(parent, row)
 
             self.numvisibleresults += 1
@@ -955,20 +972,23 @@ class Search:
         self.Searches.users[user] = status
         pos = 0
 
-        groupresults = self.directoryGroup.get_active()
         maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
 
         for r in self.all_data:
             if user == r[1]:
                 self.all_data[pos][17] = status
 
-                if not groupresults and pos < maxdisplayedresults:
+                if self.ResultGrouping.get_active() == 0 and pos < maxdisplayedresults:
+                    # No grouping
+
                     iter = self.resultsmodel.get_iter_from_string(str(pos))
                     self.resultsmodel.set_value(iter, 17, status)
 
             pos += 1
 
-        if groupresults:
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
             useriter = self.resultsmodel.get_iter_first()
 
             while useriter is not None:
@@ -1239,12 +1259,15 @@ class Search:
     def collapse_all(self):
         self.ResultsList.collapse_all()
 
-        iter = self.resultsmodel.get_iter_first()
+        if self.ResultGrouping.get_active() == 1:
+            # Group by folder
 
-        while iter is not None:
-            path = self.resultsmodel.get_path(iter)
-            self.ResultsList.expand_to_path(path)
-            iter = self.resultsmodel.iter_next(iter)
+            iter = self.resultsmodel.get_iter_first()
+
+            while iter is not None:
+                path = self.resultsmodel.get_path(iter)
+                self.ResultsList.expand_to_path(path)
+                iter = self.resultsmodel.iter_next(iter)
 
     def ChangeColours(self):
 
@@ -1532,7 +1555,7 @@ class Search:
 
         self.ResultsList.set_show_expanders(widget.get_active())
 
-        self.frame.np.config.sections["searches"]["group_searches"] = self.directoryGroup.get_active()
+        self.frame.np.config.sections["searches"]["group_searches"] = self.ResultGrouping.get_active()
 
         if widget.get_active():
             self.ResultsList.get_columns()[0].set_visible(False)
@@ -1565,7 +1588,9 @@ class Search:
             self.set_filters(0, None, None, None, None, None, "")
             self.ResultsList.set_model(self.resultsmodel)
 
-        if self.directoryGroup.get_active():
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
@@ -1632,7 +1657,9 @@ class Search:
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
         self.ResultsList.set_model(self.resultsmodel)
 
-        if self.directoryGroup.get_active():
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
+
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:

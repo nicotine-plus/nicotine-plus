@@ -35,6 +35,7 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.entrydialog import MetaDialog
 from pynicotine.gtkgui.entrydialog import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
@@ -113,21 +114,8 @@ class Downloads(TransferList):
         self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
         frame.ToggleAutoclearDownloads.connect("toggled", self.OnToggleAutoclear)
 
-        grouplist = gtk.ListStore(str)        
-        groups = [
-            "No grouping",
-            "Group by folder",
-            "Group by user",
-        ]
-        for group in groups:
-            grouplist.append([group])
-
-        frame.ToggleTreeDownloads.set_model(grouplist)
-        renderer_text = gtk.CellRendererText()
-        frame.ToggleTreeDownloads.pack_start(renderer_text, True)
-        frame.ToggleTreeDownloads.add_attribute(renderer_text, "text", 0)
+        FillFileGroupingCombobox(frame.ToggleTreeDownloads)
         frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
-
         frame.ToggleTreeDownloads.connect("changed", self.OnToggleTree)
         self.OnToggleTree(None)
 

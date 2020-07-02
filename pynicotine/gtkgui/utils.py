@@ -165,6 +165,23 @@ def recode2(s):
         return s
 
 
+def FillFileGroupingCombobox(combobox):
+    grouplist = gtk.ListStore(str)
+    groups = [
+        "No grouping",
+        "Group by folder",
+        "Group by user",
+    ]
+
+    for group in groups:
+        grouplist.append([group])
+
+    combobox.set_model(grouplist)
+    renderer_text = gtk.CellRendererText()
+    combobox.pack_start(renderer_text, True)
+    combobox.add_attribute(renderer_text, "text", 0)
+
+
 def InitialiseColumns(treeview, *args):
 
     i = 0

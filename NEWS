@@ -94,6 +94,7 @@ Bugs closed in GitHub
  * cannot connect (#312)
  * Distrib message type 93 unknown (#322)
  * Window decorator close button doesn't work (#330)
+ * Question: group by folders vs group by users (#335)
  * #312 continued, cannot connect (#336)
 
 Version 1.4.3 (unstable)

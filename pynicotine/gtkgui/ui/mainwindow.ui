@@ -910,8 +910,8 @@
                             <child>
                               <object class="GtkComboBox" id="ToggleTreeDownloads">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Grouping mode</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">File grouping mode</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1428,8 +1428,8 @@
                             <child>
                               <object class="GtkComboBox" id="ToggleTreeUploads">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Grouping mode</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">File grouping mode</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

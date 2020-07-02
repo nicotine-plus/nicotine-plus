@@ -527,7 +527,7 @@ class TransferList:
                 16, elapsed
             )
         else:
-            if self.TreeUsers == 1 or self.TreeUsers == 2:
+            if self.TreeUsers > 0:
                 # Group by folder or user
 
                 if user not in self.users:

@@ -34,6 +34,7 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.entrydialog import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
@@ -105,21 +106,8 @@ class Uploads(TransferList):
         self.frame.ToggleAutoclearUploads.set_active(self.frame.np.config.sections["transfers"]["autoclear_uploads"])
         frame.ToggleAutoclearUploads.connect("toggled", self.OnToggleAutoclear)
 
-        grouplist = gtk.ListStore(str)        
-        groups = [
-            "No grouping",
-            "Group by folder",
-            "Group by user",
-        ]
-        for group in groups:
-            grouplist.append([group])
-
-        frame.ToggleTreeUploads.set_model(grouplist)
-        renderer_text = gtk.CellRendererText()
-        frame.ToggleTreeUploads.pack_start(renderer_text, True)
-        frame.ToggleTreeUploads.add_attribute(renderer_text, "text", 0)
+        FillFileGroupingCombobox(frame.ToggleTreeUploads)
         frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
-
         frame.ToggleTreeUploads.connect("changed", self.OnToggleTree)
         self.OnToggleTree(None)
 
