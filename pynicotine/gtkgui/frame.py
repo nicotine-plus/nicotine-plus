@@ -1964,19 +1964,14 @@ class NicotineFrame:
 
             return bandwidth
 
-        def _users(line):
-            users = []
-
-            for i in line:
-                if i.user not in users:
-                    users.append(i.user)
-            return len(users), len(line)
+        def _users(transfers, users):
+            return len(users), len(transfers)
 
         if self.np.transfers is not None:
             down = _bandwidth(self.np.transfers.downloads)
             up = _bandwidth(self.np.transfers.uploads)
-            total_usersdown, filesdown = _users(self.np.transfers.downloads)
-            total_usersup, filesup = _users(self.np.transfers.uploads)
+            total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
+            total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
         else:
             down = up = 0.0
             filesup = filesdown = total_usersdown = total_usersup = 0

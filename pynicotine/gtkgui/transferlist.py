@@ -345,11 +345,12 @@ class TransferList:
                 self.update_parent_row(pathiter)
 
         for (username, useriter) in [x for x in self.users.items()]:
-            if not self.transfersmodel.iter_has_child(useriter):
-                self.transfersmodel.remove(useriter)
-                del self.users[username]
-            else:
-                self.update_parent_row(useriter)
+            if useriter != 0:
+                if not self.transfersmodel.iter_has_child(useriter):
+                    self.transfersmodel.remove(useriter)
+                    del self.users[username]
+                else:
+                    self.update_parent_row(useriter)
 
         self.lastupdate = time()  # ...and we're done
 
@@ -453,7 +454,8 @@ class TransferList:
         if currentbytes is None:
             currentbytes = 0
 
-        status = self.TranslateStatus(transfer.status)
+        status = transfer.status
+        hstatus = self.TranslateStatus(status)
 
         try:
             size = int(transfer.size)
@@ -510,14 +512,14 @@ class TransferList:
                 transfer.iter,
                 1, path,
                 2, shortfn,
-                3, status,
+                3, hstatus,
                 4, str(place),
                 5, percent,
                 6, str(hsize),
                 7, HumanSpeed(speed),
                 8, helapsed,
                 9, left,
-                11, transfer.status,
+                11, status,
                 12, size,
                 13, currentbytes,
                 15, str(speed),
@@ -545,6 +547,10 @@ class TransferList:
 
                 parent = self.paths[path]
             else:
+                if user not in self.users:
+                    # Insert dummy value. We use this list to get the total number of users
+                    self.users[user] = 0
+
                 parent = None
 
             # Add a new transfer
@@ -571,6 +577,9 @@ class TransferList:
         self.selected_transfers = []
         self.selected_users = []
         self.transfersmodel.clear()
+
+        for i in self.list:
+            i.iter = None
 
     def OnCopyURL(self, widget):
         i = self.selected_transfers[0]
