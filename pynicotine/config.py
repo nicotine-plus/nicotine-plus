@@ -115,7 +115,7 @@ class Config:
                 "usecustomban": 0,
                 "limitby": 1,
                 "customban": "Banned, don't bother retrying",
-                "queuelimit": 100,
+                "queuelimit": 10000,
                 "filelimit": 1000,
                 "friendsonly": 0,
                 "friendsnolimits": 0,
