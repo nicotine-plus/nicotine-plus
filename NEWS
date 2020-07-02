@@ -29,6 +29,7 @@ Changes
 Bugs closed in GitHub
  * Columns Position Not Being Maintained (#8)
  * Add "Group by folder" option to search results (#17)
+ * Downloads tab hanging when adding a lot of files (#34)
  * send to player does not work. (#53)
  * Segfault When Getting User Info (#57)
  * Segmentation fault on Ubuntu Gnome 17.04 (#60)
@@ -93,6 +94,7 @@ Bugs closed in GitHub
  * cannot connect (#312)
  * Distrib message type 93 unknown (#322)
  * Window decorator close button doesn't work (#330)
+ * Question: group by folders vs group by users (#335)
  * #312 continued, cannot connect (#336)
 
 Version 1.4.3 (unstable)

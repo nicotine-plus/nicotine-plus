@@ -351,6 +351,7 @@ class NetworkEventProcessor:
             if firewalled:
                 if addr is None:
                     self.queue.put(slskmessages.GetPeerAddress(user))
+                    addr = "in_progress"
                 elif behindfw is None:
                     self.queue.put(slskmessages.OutConn(None, addr))
                 else:
@@ -1075,7 +1076,7 @@ class NetworkEventProcessor:
     def GetPeerAddress(self, msg):
 
         for i in self.peerconns:
-            if i.username == msg.user and i.addr is None:
+            if i.username == msg.user and i.addr == "in_progress":
                 if msg.port != 0 or i.tryaddr == 10:
                     if i.tryaddr == 10:
                         self.logMessage(
@@ -1095,6 +1096,7 @@ class NetworkEventProcessor:
 
                     i.addr = (msg.ip, msg.port)
                     i.tryaddr = None
+
                     self.queue.put(slskmessages.OutConn(None, i.addr))
 
                     for j in i.msgs:

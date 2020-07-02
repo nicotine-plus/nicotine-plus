@@ -517,11 +517,10 @@ class NicotineFrame:
         self.RoomSearchCombo.set_entry_text_column(0)
 
         self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-        for i in [""]:
-            self.SearchMethod_List.append([i])
-
         self.SearchMethod.set_model(self.SearchMethod_List)
-        self.SearchMethod.set_entry_text_column(0)
+        renderer_text = gtk.CellRendererText()
+        self.SearchMethod.pack_start(renderer_text, True)
+        self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
         self.Searches = self.SearchNotebook
         self.Searches.show()
@@ -1408,7 +1407,7 @@ class NicotineFrame:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
             else:
-                self.logMessage("No handler for class %s %s" % (i.__class__, vars(i)))
+                self.logMessage("No handler for class %s %s" % (i.__class__, dir(i)))
 
     def callback(self, msgs):
         if len(msgs) > 0:
@@ -1954,31 +1953,27 @@ class NicotineFrame:
 
     def UpdateBandwidth(self):
 
-        def _calc(line):
+        def _bandwidth(line):
             bandwidth = 0.0
-            users = 0  # noqa: F841
-            line = [i for i in line if i.conn is not None]  # noqa: E741
-            for i in line:
-                if i.speed is not None:
-                    bandwidth = bandwidth + i.speed
-            return len(line), bandwidth
-
-        def _num_users(line):
-            users = []
 
             for i in line:
-                if i.user not in users:
-                    users.append(i.user)
-            return len(users), len(line)
+                speed = i.speed
+                if speed is not None:
+                    bandwidth = bandwidth + speed
+
+            return bandwidth
+
+        def _users(transfers, users):
+            return len(users), len(transfers)
 
         if self.np.transfers is not None:
-            usersdown, down = _calc(self.np.transfers.downloads)
-            usersup, up = _calc(self.np.transfers.uploads)
-            total_usersdown, filesdown = _num_users(self.np.transfers.downloads)
-            total_usersup, filesup = _num_users(self.np.transfers.uploads)
+            down = _bandwidth(self.np.transfers.downloads)
+            up = _bandwidth(self.np.transfers.uploads)
+            total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
+            total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
         else:
             down = up = 0.0
-            filesup = filesdown = total_usersdown = total_usersup = usersdown = usersup = 0
+            filesup = filesdown = total_usersdown = total_usersup = 0
 
         self.DownloadUsers.set_text(_("Users: %s") % total_usersdown)
         self.UploadUsers.set_text(_("Users: %s") % total_usersup)
@@ -1987,8 +1982,8 @@ class NicotineFrame:
 
         self.DownStatus.pop(self.down_context_id)
         self.UpStatus.pop(self.up_context_id)
-        self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num': usersdown, 'speed': down})
-        self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num': usersup, 'speed': up})
+        self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num': total_usersdown, 'speed': down})
+        self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num': total_usersup, 'speed': up})
 
         self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
 

@@ -46,7 +46,6 @@ from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
-from pynicotine.temporary import HybridListDictionaryTransferMonstrosity
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
 
@@ -56,12 +55,18 @@ win32 = sys.platform.startswith("win")
 class Transfer(object):
     """ This class holds information about a single transfer. """
 
+    __slots__ = ("conn", "user", "realfilename", "filename",
+                 "path", "req", "size", "file", "starttime", "lasttime",
+                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed",
+                 "timeleft", "timequeued", "transfertimer", "requestconn",
+                 "modifier", "place", "bitrate", "length", "iter", "__status", "laststatuschange")
+
     def __init__(
         self, conn=None, user=None, realfilename=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
         timeleft=None, timequeued=None, transfertimer=None, requestconn=None,
-        modifier=None, place=0, bitrate=None, length=None
+        modifier=None, place=0, bitrate=None, length=None, iter=None
     ):
         self.user = user
         self.realfilename = realfilename  # Sent as is to the user announcing what file we're sending
@@ -86,6 +91,7 @@ class Transfer(object):
         self.place = place  # Queue position
         self.bitrate = bitrate
         self.length = length
+        self.iter = iter
         self.setstatus(status)
 
     def setstatus(self, status):
@@ -118,8 +124,8 @@ class Transfers:
         self.peerconns = peerconns
         self.queue = queue
         self.eventprocessor = eventprocessor
-        self.downloads = HybridListDictionaryTransferMonstrosity()
-        self.uploads = HybridListDictionaryTransferMonstrosity()
+        self.downloads = []
+        self.uploads = []
         self.privilegedusers = []
         self.RequestedUploadQueue = []
         getstatus = {}
@@ -170,7 +176,6 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i))
             self.queue.put(slskmessages.GetUserStatus(i))
 
-        self.SaveDownloads()
         self.users = users
         self.downloadspanel = None
         self.uploadspanel = None
@@ -264,7 +269,6 @@ class Transfers:
 
             if direction == 0:
                 self.downloads.append(transfer)
-                self.SaveDownloads()
             else:
                 self._updateOrAppendUpload(user, filename, transfer)
         else:
@@ -284,8 +288,6 @@ class Transfers:
                     self.AbortTransfer(transfer)
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
-                    # In order to remove the filtered files from the saved download queue.
-                    self.SaveDownloads()
             except Exception:
                 pass
 
@@ -508,7 +510,6 @@ class Transfers:
                     status="Getting status", size=msg.filesize, req=msg.req
                 )
                 self.downloads.append(transfer)
-                self.SaveDownloads()
 
                 if user not in self.eventprocessor.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
@@ -608,23 +609,21 @@ class Transfers:
 
     def _updateOrAppendUpload(self, user, file, transferobj):
 
-        try:
-            existing = self.uploads[(user, file)]
-            index = self.uploads.index(existing)
-            self.uploads[index] = transferobj
-            self.uploadspanel.replace(existing, transferobj)
-        except KeyError:
-            self.uploads.append(transferobj)
+        for i in self.uploads:
+            if i.user == user and i.filename == file:
+                self.uploadspanel.replace(i, transferobj)
+                i = transferobj
+                return
+
+        self.uploads.append(transferobj)
 
     def fileIsUploadQueued(self, user, filename):
 
-        key = (user, filename)
-        try:
-            transfer = self.uploads[key]
-            if transfer.status in self.PRE_TRANSFER + self.TRANSFER:
+        for i in self.uploads:
+            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
                 return True
-        except KeyError:
-            return False
+
+        return False
 
     def queueLimitReached(self, user):
 
@@ -881,7 +880,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads + self.uploads)[:]:
+            for i in (self.downloads + self.uploads):
 
                 if i.req != msg.req:
                     continue
@@ -940,7 +939,7 @@ class Transfers:
 
     def TransferTimeout(self, msg):
 
-        for i in (self.downloads + self.uploads)[:]:
+        for i in (self.downloads + self.uploads):
 
             if i.req != msg.req:
                 continue

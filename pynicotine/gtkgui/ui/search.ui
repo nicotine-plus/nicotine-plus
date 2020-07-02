@@ -16,21 +16,6 @@
             <property name="spacing">5</property>
             <property name="border_width">5</property>
             <child>
-              <object class="GtkLabel" id="QueryLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="xpad">3</property>
-                <property name="label" translatable="yes">Query</property>
-                <property name="wrap">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="Counter">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -38,9 +23,10 @@
                 <property name="label" translatable="yes">Results: 0/0</property>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="padding">5</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -62,22 +48,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="directoryGroup">
-                <property name="label" translatable="yes">Group by folder</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -93,7 +64,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">4</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -110,7 +81,19 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">5</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBox" id="ResultGrouping">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Result grouping mode</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -131,7 +114,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">6</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -185,7 +168,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">7</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
@@ -239,7 +222,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="position">7</property>
               </packing>
             </child>
           </object>

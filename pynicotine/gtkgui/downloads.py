@@ -35,6 +35,8 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.entrydialog import MetaDialog
 from pynicotine.gtkgui.entrydialog import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import CollapseTreeview
+from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
@@ -112,8 +114,10 @@ class Downloads(TransferList):
 
         self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
         frame.ToggleAutoclearDownloads.connect("toggled", self.OnToggleAutoclear)
-        self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
-        frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
+
+        FillFileGroupingCombobox(frame.ToggleTreeDownloads)
+        frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
+        frame.ToggleTreeDownloads.connect("changed", self.OnToggleTree)
         self.OnToggleTree(None)
 
         self.frame.ExpandDownloads.set_active(self.frame.np.config.sections["transfers"]["downloadsexpanded"])
@@ -141,6 +145,8 @@ class Downloads(TransferList):
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
             self.frame.DownloadList.expand_to_path(path)
+        else:
+            CollapseTreeview(self.frame.DownloadList, self.TreeUsers)
 
     def OnExpandDownloads(self, widget):
 
@@ -150,7 +156,7 @@ class Downloads(TransferList):
             self.frame.DownloadList.expand_all()
             self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
         else:
-            self.frame.DownloadList.collapse_all()
+            CollapseTreeview(self.frame.DownloadList, self.TreeUsers)
             self.frame.ExpandDownloadsImage.set_from_stock(gtk.STOCK_ADD, 4)
 
         self.frame.np.config.sections["transfers"]["downloadsexpanded"] = expanded
@@ -160,11 +166,10 @@ class Downloads(TransferList):
         self.frame.np.config.sections["transfers"]["autoclear_downloads"] = self.frame.ToggleAutoclearDownloads.get_active()
 
     def OnToggleTree(self, widget):
-
         self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
         self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
 
-        if not self.TreeUsers:
+        if self.TreeUsers == 0:
             self.frame.ExpandDownloads.hide()
         else:
             self.frame.ExpandDownloads.show()
@@ -472,8 +477,6 @@ class Downloads(TransferList):
     def update(self, transfer=None, forced=False):
 
         TransferList.update(self, transfer, forced)
-        if transfer is None and self.frame.np.transfers is not None:
-            self.frame.np.transfers.SaveDownloads()
 
     def OnGetPlaceInQueue(self, widget):
 
@@ -495,8 +498,6 @@ class Downloads(TransferList):
 
             self.frame.np.transfers.AbortTransfer(transfer)
             self.frame.np.transfers.getFile(transfer.user, transfer.filename, transfer.path, transfer)
-
-        self.frame.np.transfers.SaveDownloads()
 
     def OnAbortRemoveTransfer(self, widget):
         self.select_transfers()
