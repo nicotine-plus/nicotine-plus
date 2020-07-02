@@ -337,101 +337,106 @@ class TransferList:
 
         # Remove empty parent rows
         for (path, pathiter) in [x for x in self.paths.items()]:
-
             if not self.transfersmodel.iter_has_child(pathiter):
                 self.transfersmodel.remove(pathiter)
                 del self.paths[path]
             else:
-
-                files = self.transfersmodel.iter_n_children(pathiter)
-                ispeed = 0.0
-                percent = totalsize = position = 0
-                helapsed = left = ""
-                elapsed = 0
-                salientstatus = ""
-                extensions = {}
-
-                for f in range(files):
-
-                    iter = self.transfersmodel.iter_nth_child(pathiter, f)
-                    status = self.transfersmodel.get_value(iter, 11)
-
-                    if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
-                        salientstatus = status
-
-                    filename = self.transfersmodel.get_value(iter, 10)
-                    parts = filename.rsplit('.', 1)
-
-                    if len(parts) == 2:
-                        ext = parts[1]
-                        try:
-                            extensions[ext.lower()] += 1
-                        except KeyError:
-                            extensions[ext.lower()] = 1
-
-                    if status == _("Filtered"):
-                        # We don't want to count filtered files when calculating the progress
-                        continue
-
-                    elapsed += self.transfersmodel.get_value(iter, 16)
-                    totalsize += self.transfersmodel.get_value(iter, 12)
-                    position += self.transfersmodel.get_value(iter, 13)
-
-                    if status == "Transferring":
-                        str_speed = self.transfersmodel.get_value(iter, 15)
-                        if str_speed != "":
-                            ispeed += float(str_speed)
-
-                        left = self.transfersmodel.get_value(iter, 9)
-
-                    if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
-                        salientstatus = status
-
-                try:
-                    speed = "%.1f" % ispeed
-                except TypeError:
-                    speed = str(ispeed)
-
-                if totalsize > 0:
-                    percent = ((100 * position) / totalsize)
-
-                if ispeed <= 0.0:
-                    left = "∞"
-                else:
-                    left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
-
-                helapsed = self.frame.np.transfers.getTime(elapsed)
-
-                if len(extensions) == 0:
-                    extensions = "Unknown"
-                elif len(extensions) == 1:
-                    extensions = _("All %(ext)s") % {'ext': list(extensions.keys())[0]}
-                else:
-                    extensionlst = [(extensions[key], key) for key in extensions]
-                    extensionlst.sort(reverse=True)
-                    extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
-
-                self.transfersmodel.set(
-                    pathiter,
-                    2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
-                    3, self.TranslateStatus(salientstatus),
-                    5, percent,
-                    6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
-                    7, HumanSpeed(speed),
-                    8, helapsed,
-                    9, left,
-                    12, ispeed,
-                    14, True,
-                    15, speed,
-                    16, elapsed
-                )
+                self.update_parent_row(pathiter)
 
         for (username, useriter) in [x for x in self.users.items()]:
             if not self.transfersmodel.iter_has_child(useriter):
                 self.transfersmodel.remove(useriter)
                 del self.users[username]
+            else:
+                self.update_parent_row(useriter)
 
         self.lastupdate = time()  # ...and we're done
+
+    def update_parent_row(self, initer):
+        files = self.transfersmodel.iter_n_children(initer)
+        ispeed = 0.0
+        percent = totalsize = position = 0
+        helapsed = left = ""
+        elapsed = 0
+        salientstatus = ""
+        extensions = {}
+
+        for f in range(files):
+
+            iter = self.transfersmodel.iter_nth_child(initer, f)
+            status = self.transfersmodel.get_value(iter, 11)
+
+            if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
+                salientstatus = status
+
+            filename = self.transfersmodel.get_value(iter, 10)
+            parts = filename.rsplit('.', 1)
+
+            if len(parts) == 2:
+                ext = parts[1]
+                try:
+                    extensions[ext.lower()] += 1
+                except KeyError:
+                    extensions[ext.lower()] = 1
+
+            if status == "Filtered":
+                # We don't want to count filtered files when calculating the progress
+                continue
+
+            elapsed += self.transfersmodel.get_value(iter, 16)
+            totalsize += self.transfersmodel.get_value(iter, 12)
+            position += self.transfersmodel.get_value(iter, 13)
+
+            if status == "Transferring":
+                str_speed = self.transfersmodel.get_value(iter, 15)
+                if str_speed != "":
+                    ispeed += float(str_speed)
+
+                left = self.transfersmodel.get_value(iter, 9)
+
+            if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
+                salientstatus = status
+
+        try:
+            speed = "%.1f" % ispeed
+        except TypeError:
+            speed = str(ispeed)
+
+        if totalsize > 0:
+            percent = ((100 * position) / totalsize)
+
+        if ispeed <= 0.0:
+            left = "∞"
+        else:
+            left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
+
+        helapsed = self.frame.np.transfers.getTime(elapsed)
+
+        if len(extensions) == 0:
+            extensions = "Unknown"
+        elif len(extensions) == 1:
+            extensions = _("All %(ext)s") % {'ext': list(extensions.keys())[0]}
+        else:
+            extensionlst = [(extensions[key], key) for key in extensions]
+            extensionlst.sort(reverse=True)
+            extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
+
+        self.transfersmodel.set(
+            initer,
+            2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
+            3, self.TranslateStatus(salientstatus),
+            5, percent,
+            6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
+            7, HumanSpeed(speed),
+            8, helapsed,
+            9, left,
+            11, salientstatus,
+            12, totalsize,
+            13, position,
+            14, True,
+            15, speed,
+            16, elapsed
+        )
 
     def update_specific(self, transfer=None):
 
