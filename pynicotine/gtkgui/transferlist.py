@@ -78,7 +78,8 @@ class TransferList:
             gobject.TYPE_UINT64,   # current bytes
             gobject.TYPE_BOOLEAN,  # percent visible (?)
             gobject.TYPE_STRING,   # speed
-            gobject.TYPE_UINT64    # time elapsed
+            gobject.TYPE_UINT64,   # time elapsed
+            gobject.TYPE_UINT64,   # file count
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -358,6 +359,7 @@ class TransferList:
         percent = totalsize = position = 0
         helapsed = left = ""
         elapsed = 0
+        filecount = 0
         salientstatus = ""
         extensions = {}
 
@@ -386,6 +388,7 @@ class TransferList:
             elapsed += self.transfersmodel.get_value(iter, 16)
             totalsize += self.transfersmodel.get_value(iter, 12)
             position += self.transfersmodel.get_value(iter, 13)
+            filecount += self.transfersmodel.get_value(iter, 17)
 
             if status == "Transferring":
                 str_speed = self.transfersmodel.get_value(iter, 15)
@@ -413,17 +416,17 @@ class TransferList:
         helapsed = self.frame.np.transfers.getTime(elapsed)
 
         if len(extensions) == 0:
-            extensions = "Unknown"
+            extensions = ""
         elif len(extensions) == 1:
-            extensions = _("All %(ext)s") % {'ext': list(extensions.keys())[0]}
+            extensions = " (" + _("All %(ext)s") % {'ext': list(extensions.keys())[0]} + ")"
         else:
             extensionlst = [(extensions[key], key) for key in extensions]
             extensionlst.sort(reverse=True)
-            extensions = ", ".join([str(count) + " " + ext for (count, ext) in extensionlst])
+            extensions = " (" + ", ".join([str(count) + " " + ext for (count, ext) in extensionlst]) + ")"
 
         self.transfersmodel.set(
             initer,
-            2, _("%(number)2s files ") % {'number': files} + " (" + extensions + ")",
+            2, _("%(number)2s files ") % {'number': filecount} + extensions,
             3, self.TranslateStatus(salientstatus),
             5, percent,
             6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
@@ -435,7 +438,8 @@ class TransferList:
             13, position,
             14, True,
             15, speed,
-            16, elapsed
+            16, elapsed,
+            17, filecount,
         )
 
     def update_specific(self, transfer=None):
@@ -493,6 +497,8 @@ class TransferList:
             icurrentbytes = 0
             percent = 0
 
+        filecount = 1
+
         # Modify old transfer
         if transfer.iter is not None:
             if self.TreeUsers:
@@ -524,7 +530,7 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0]
+                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
                     )
 
                 """ Paths can be empty if files are downloaded individually, make sure we
@@ -534,7 +540,7 @@ class TransferList:
                 if path not in self.paths:
                     self.paths[path] = self.transfersmodel.append(
                         self.users[user],
-                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0]
+                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
                     )
 
                 parent = self.paths[path]
@@ -549,7 +555,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, True, str(speed), elapsed)
+                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, True, str(speed), elapsed, filecount)
             )
 
             # Expand path
