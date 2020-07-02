@@ -517,11 +517,10 @@ class NicotineFrame:
         self.RoomSearchCombo.set_entry_text_column(0)
 
         self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-        for i in [""]:
-            self.SearchMethod_List.append([i])
-
         self.SearchMethod.set_model(self.SearchMethod_List)
-        self.SearchMethod.set_entry_text_column(0)
+        renderer_text = gtk.CellRendererText()
+        self.SearchMethod.pack_start(renderer_text, True)
+        self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
         self.Searches = self.SearchNotebook
         self.Searches.show()

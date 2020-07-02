@@ -518,7 +518,6 @@ class Search:
         self.users = set()
         self.resultslimit = 2000
         self.numvisibleresults = 0
-        self.QueryLabel.set_text(text)
 
         self.directoryGroup.set_active(self.frame.np.config.sections["searches"]["group_searches"])
         self.directoryGroup.connect("toggled", self.OnGroup)

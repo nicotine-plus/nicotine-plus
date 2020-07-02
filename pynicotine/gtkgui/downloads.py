@@ -112,8 +112,23 @@ class Downloads(TransferList):
 
         self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
         frame.ToggleAutoclearDownloads.connect("toggled", self.OnToggleAutoclear)
-        self.frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
-        frame.ToggleTreeDownloads.connect("toggled", self.OnToggleTree)
+
+        grouplist = gtk.ListStore(str)        
+        groups = [
+            "No grouping",
+            "Group by folder",
+            "Group by user",
+        ]
+        for group in groups:
+            grouplist.append([group])
+
+        frame.ToggleTreeDownloads.set_model(grouplist)
+        renderer_text = gtk.CellRendererText()
+        frame.ToggleTreeDownloads.pack_start(renderer_text, True)
+        frame.ToggleTreeDownloads.add_attribute(renderer_text, "text", 0)
+        frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
+
+        frame.ToggleTreeDownloads.connect("changed", self.OnToggleTree)
         self.OnToggleTree(None)
 
         self.frame.ExpandDownloads.set_active(self.frame.np.config.sections["transfers"]["downloadsexpanded"])
@@ -160,11 +175,10 @@ class Downloads(TransferList):
         self.frame.np.config.sections["transfers"]["autoclear_downloads"] = self.frame.ToggleAutoclearDownloads.get_active()
 
     def OnToggleTree(self, widget):
-
         self.TreeUsers = self.frame.ToggleTreeDownloads.get_active()
         self.frame.np.config.sections["transfers"]["groupdownloads"] = self.TreeUsers
 
-        if not self.TreeUsers:
+        if self.TreeUsers == 0:
             self.frame.ExpandDownloads.hide()
         else:
             self.frame.ExpandDownloads.show()

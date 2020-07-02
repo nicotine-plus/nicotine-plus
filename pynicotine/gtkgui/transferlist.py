@@ -503,7 +503,8 @@ class TransferList:
 
         # Modify old transfer
         if transfer.iter is not None:
-            if self.TreeUsers:
+            if self.TreeUsers == 1:
+                # Group by folder, path not visible
                 path = None
             else:
                 path = transfer.path
@@ -526,7 +527,9 @@ class TransferList:
                 16, elapsed
             )
         else:
-            if self.TreeUsers:
+            if self.TreeUsers == 1 or self.TreeUsers == 2:
+                # Group by folder or user
+
                 if user not in self.users:
                     # Create Parent if it doesn't exist
                     # ProgressRender not visible (last column sets 4th column)
@@ -535,18 +538,25 @@ class TransferList:
                         [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
                     )
 
-                """ Paths can be empty if files are downloaded individually, make sure we
-                don't add files to the wrong user in the TreeView """
-                path = user + transfer.path
+                parent = self.users[user]
 
-                if path not in self.paths:
-                    self.paths[path] = self.transfersmodel.append(
-                        self.users[user],
-                        [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
-                    )
+                if self.TreeUsers == 1:
+                    # Group by folder
 
-                parent = self.paths[path]
+                    """ Paths can be empty if files are downloaded individually, make sure we
+                    don't add files to the wrong user in the TreeView """
+                    path = user + transfer.path
+
+                    if path not in self.paths:
+                        self.paths[path] = self.transfersmodel.append(
+                            self.users[user],
+                            [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
+                        )
+
+                    parent = self.paths[path]
             else:
+                # No grouping
+
                 if user not in self.users:
                     # Insert dummy value. We use this list to get the total number of users
                     self.users[user] = 0
@@ -554,7 +564,8 @@ class TransferList:
                 parent = None
 
             # Add a new transfer
-            if self.TreeUsers:
+            if self.TreeUsers == 1:
+                # Group by folder, path not visible
                 path = None
             else:
                 path = transfer.path
@@ -578,8 +589,9 @@ class TransferList:
         self.selected_users = []
         self.transfersmodel.clear()
 
-        for i in self.list:
-            i.iter = None
+        if self.list is not None:
+            for i in self.list:
+                i.iter = None
 
     def OnCopyURL(self, widget):
         i = self.selected_transfers[0]

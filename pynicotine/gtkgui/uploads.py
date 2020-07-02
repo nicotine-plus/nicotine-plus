@@ -104,9 +104,23 @@ class Uploads(TransferList):
 
         self.frame.ToggleAutoclearUploads.set_active(self.frame.np.config.sections["transfers"]["autoclear_uploads"])
         frame.ToggleAutoclearUploads.connect("toggled", self.OnToggleAutoclear)
-        self.frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
-        frame.ToggleTreeUploads.connect("toggled", self.OnToggleTree)
 
+        grouplist = gtk.ListStore(str)        
+        groups = [
+            "No grouping",
+            "Group by folder",
+            "Group by user",
+        ]
+        for group in groups:
+            grouplist.append([group])
+
+        frame.ToggleTreeUploads.set_model(grouplist)
+        renderer_text = gtk.CellRendererText()
+        frame.ToggleTreeUploads.pack_start(renderer_text, True)
+        frame.ToggleTreeUploads.add_attribute(renderer_text, "text", 0)
+        frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
+
+        frame.ToggleTreeUploads.connect("changed", self.OnToggleTree)
         self.OnToggleTree(None)
 
         self.frame.ExpandUploads.set_active(self.frame.np.config.sections["transfers"]["uploadsexpanded"])
@@ -180,7 +194,7 @@ class Uploads(TransferList):
 
         self.RebuildTransfers()
 
-        if not self.TreeUsers:
+        if not self.TreeUsers == 0:
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()

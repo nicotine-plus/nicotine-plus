@@ -893,8 +893,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="ToggleTreeDownloads">
-                                <property name="label" translatable="yes">Group by folder</property>
+                              <object class="GtkCheckButton" id="ToggleAutoclearDownloads">
+                                <property name="label" translatable="yes">Autoclear finished</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -908,13 +908,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="ToggleAutoclearDownloads">
-                                <property name="label" translatable="yes">Autoclear finished</property>
+                              <object class="GtkComboBox" id="ToggleTreeDownloads">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Grouping mode</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1414,8 +1411,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="ToggleTreeUploads">
-                                <property name="label" translatable="yes">Group by folder</property>
+                              <object class="GtkCheckButton" id="ToggleAutoclearUploads">
+                                <property name="label" translatable="yes">Autoclear finished / aborted</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -1429,13 +1426,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="ToggleAutoclearUploads">
-                                <property name="label" translatable="yes">Autoclear finished / aborted</property>
+                              <object class="GtkComboBox" id="ToggleTreeUploads">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Grouping mode</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1960,7 +1954,6 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Search scope</property>
-                                <property name="has_entry">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
