@@ -38,6 +38,7 @@ from gi.repository import Gtk as gtk
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
@@ -911,7 +912,7 @@ class Search:
                     if path is not None:
                         self.ResultsList.expand_to_path(path)
                 else:
-                    self.collapse_all()
+                    CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
         # Update counter
         self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
@@ -1256,19 +1257,6 @@ class Search:
 
         self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
 
-    def collapse_all(self):
-        self.ResultsList.collapse_all()
-
-        if self.ResultGrouping.get_active() == 1:
-            # Group by folder
-
-            iter = self.resultsmodel.get_iter_first()
-
-            while iter is not None:
-                path = self.resultsmodel.get_path(iter)
-                self.ResultsList.expand_to_path(path)
-                iter = self.resultsmodel.iter_next(iter)
-
     def ChangeColours(self):
 
         self.frame.SetTextBG(self.ResultsList)
@@ -1572,7 +1560,7 @@ class Search:
             self.ResultsList.expand_all()
             self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
         else:
-            self.collapse_all()
+            CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
             self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
 
         self.frame.np.config.sections["searches"]["expand_searches"] = active
@@ -1594,7 +1582,7 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.collapse_all()
+                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
     def OnIgnore(self, widget):
 
@@ -1663,7 +1651,7 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                self.collapse_all()
+                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
 
 class WishList(gtk.Dialog):

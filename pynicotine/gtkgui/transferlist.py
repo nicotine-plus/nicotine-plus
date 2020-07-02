@@ -574,10 +574,9 @@ class TransferList:
                 parent,
                 (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, True, str(speed), elapsed, filecount)
             )
-
-            # Expand path
             transfer.iter = iter
 
+            # Expand path
             if parent is not None:
                 path = self.transfersmodel.get_path(iter)
                 self.expand(path)

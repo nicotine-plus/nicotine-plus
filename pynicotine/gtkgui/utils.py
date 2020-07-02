@@ -182,6 +182,21 @@ def FillFileGroupingCombobox(combobox):
     combobox.add_attribute(renderer_text, "text", 0)
 
 
+def CollapseTreeview(treeview, groupingmode):
+    treeview.collapse_all()
+
+    if groupingmode == 1:
+        # Group by folder
+
+        model = treeview.get_model()
+        iter = model.get_iter_first()
+
+        while iter is not None:
+            path = model.get_path(iter)
+            treeview.expand_to_path(path)
+            iter = model.iter_next(iter)
+
+
 def InitialiseColumns(treeview, *args):
 
     i = 0

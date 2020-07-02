@@ -34,6 +34,7 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.entrydialog import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
@@ -157,6 +158,8 @@ class Uploads(TransferList):
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
             self.frame.UploadList.expand_to_path(path)
+        else:
+            CollapseTreeview(self.frame.UploadList, self.TreeUsers)
 
     def OnExpandUploads(self, widget):
 
@@ -166,7 +169,7 @@ class Uploads(TransferList):
             self.frame.UploadList.expand_all()
             self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
         else:
-            self.frame.UploadList.collapse_all()
+            CollapseTreeview(self.frame.UploadList, self.TreeUsers)
             self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_ADD, 4)
 
         self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
