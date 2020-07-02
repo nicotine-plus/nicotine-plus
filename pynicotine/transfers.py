@@ -609,23 +609,21 @@ class Transfers:
 
     def _updateOrAppendUpload(self, user, file, transferobj):
 
-        try:
-            existing = self.uploads[(user, file)]
-            index = self.uploads.index(existing)
-            self.uploads[index] = transferobj
-            self.uploadspanel.replace(existing, transferobj)
-        except KeyError:
-            self.uploads.append(transferobj)
+        for i in self.uploads:
+            if i.user == user and i.filename == file:
+                self.uploadspanel.replace(i, transferobj)
+                i = transferobj
+                return
+
+        self.uploads.append(transferobj)
 
     def fileIsUploadQueued(self, user, filename):
 
-        key = (user, filename)
-        try:
-            transfer = self.uploads[key]
-            if transfer.status in self.PRE_TRANSFER + self.TRANSFER:
+        for i in self.uploads:
+            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
                 return True
-        except KeyError:
-            return False
+
+        return False
 
     def queueLimitReached(self, user):
 
