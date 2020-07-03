@@ -1011,7 +1011,7 @@ class Transfers:
                 i.status = "Download directory error"
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
-                self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Nicotine+ :: Directory download error"))
+                self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Folder download error"))
 
             else:
                 # also check for a windows-style incomplete transfer
@@ -1298,7 +1298,7 @@ class Transfers:
                         'user': i.user,
                         'file': newname.rsplit(os.sep, 1)[1]
                     },
-                    title=_("Nicotine+ :: file downloaded")
+                    title=_("File downloaded")
                 )
 
         self.SaveDownloads()
@@ -1329,7 +1329,7 @@ class Transfers:
                             'user': i.user,
                             'folder': folder
                         },
-                        title=_("Nicotine+ :: directory completed")
+                        title=_("Folder downloaded")
                     )
                 if config["transfers"]["afterfolder"]:
                     if not executeCommand(config["transfers"]["afterfolder"], folder):
