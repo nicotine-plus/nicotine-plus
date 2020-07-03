@@ -37,7 +37,6 @@ table = [
     ["empty.png", "empty"],
     ["hilite.png", "hilite"],
     ["hilite3.png", "hilite3"],
-    ["plugin.png", "plugin"],
     ["n.png", "n"],
     ["notify.png", "notify"]
 ]
