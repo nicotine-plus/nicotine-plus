@@ -22,7 +22,7 @@
 ##### French
  * Michael Labouebe (2016-2017) < gfarmerfr (at) free.fr >
  * ManWell (2007)
- * \><((((\*> (2007)
+ * zniavre (2007)
  * flashfr
  * systr
 
