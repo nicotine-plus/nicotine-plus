@@ -493,24 +493,6 @@
                   <object class="GtkMenu" id="help1_menu">
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="ProjectWebsite">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Project _Website</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnProjectWebsite" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="ProjectGithubPage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Project _Github Page</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="onProjectGithubPage" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkSeparatorMenuItem" id="separator1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -559,7 +541,7 @@
                       <object class="GtkMenuItem" id="check_latest1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Check _latest</property>
+                        <property name="label" translatable="yes">Check _latest version</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnCheckLatest" swapped="no"/>
                       </object>
