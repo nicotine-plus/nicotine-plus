@@ -171,31 +171,30 @@ from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
 
 
-# Set our artificial file limit to prevent freezing the GUI
-# TODO: investigate if we can improve the performance somehow
-# and bump this limit
-MAXFILELIMIT = 1024
-
-
 # Set our actual file limit to the OS's hard limit as a failsafe
-# If this limit is set too close to our artificial
-# 1024 limit, Nicotine+ will freak out due to too many
-# open files
+# If this limit is set too close to our artificial MAXFILELIMIT
+# limit, Nicotine+ will freak out due to too many open files
 if sys.platform == "win32":
     from pynicotine.multiselect import multiselect
     import ctypes
+
     ctypes.cdll.msvcrt._setmaxstdio(8192)
+
+    MAXFILELIMIT = 1024
 else:
     import resource
     softlimit, hardlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
 
-    if hardlimit <= 1700:
-        MAXFILELIMIT = 512
-
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (hardlimit, hardlimit))
     except Exception:
-        MAXFILELIMIT = 512
+        pass
+
+    # Set our artificial file limit to prevent freezing the GUI
+    # The max is 1024, but can be lower if the hard limit is too low
+    # TODO: investigate if we can improve the performance somehow
+    # and bump this limit
+    MAXFILELIMIT = min(max(int(hardlimit * 0.75), 50), 1024)
 
 
 class Connection:
