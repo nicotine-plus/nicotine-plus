@@ -790,6 +790,7 @@ class NicotineFrame:
 
         if self.notifyBox is None:
             self.notifyBox = self.notify.Notification.new(title, message)
+            self.notifyBox.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
             self.notifyBox.set_image_from_pixbuf(self.images["notify"])
         else:
             self.notifyBox.update(title, message)
