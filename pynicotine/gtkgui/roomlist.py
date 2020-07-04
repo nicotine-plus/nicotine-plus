@@ -28,6 +28,7 @@ from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
 
+
 class RoomList:
 
     def __init__(self, frame):
