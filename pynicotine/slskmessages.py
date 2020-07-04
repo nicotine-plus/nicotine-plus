@@ -206,7 +206,9 @@ class Notify(InternalMessage):
         self.msg = msg
 
 
-class InternalData(InternalMessage):
+class SetCurrentConnectionCount(InternalMessage):
+    """ Sent by networking thread to update the number of current
+    connections shown in the GUI. """
     def __init__(self, msg):
         self.msg = msg
 

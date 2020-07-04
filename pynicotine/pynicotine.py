@@ -268,7 +268,7 @@ class NetworkEventProcessor:
             slskmessages.RescanBuddyShares: self.shares.RescanBuddyShares,
             str: self.Notify,
             slskmessages.PopupMessage: self.PopupMessage,
-            slskmessages.InternalData: self.DisplaySockets,
+            slskmessages.SetCurrentConnectionCount: self.SetCurrentConnectionCount,
             slskmessages.DebugMessage: self.DebugMessage,
             slskmessages.GlobalRecommendations: self.GlobalRecommendations,
             slskmessages.Recommendations: self.Recommendations,
@@ -431,7 +431,7 @@ class NetworkEventProcessor:
     def DebugMessage(self, msg):
         self.logMessage(msg.msg, msg.debugLevel)
 
-    def DisplaySockets(self, msg):
+    def SetCurrentConnectionCount(self, msg):
         self.frame.SetSocketStatus(msg.msg)
 
     def ConnectError(self, msg):

@@ -76,7 +76,6 @@ from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
 from pynicotine.slskmessages import IncPort
-from pynicotine.slskmessages import InternalData
 from pynicotine.slskmessages import InternalMessage
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
@@ -145,6 +144,7 @@ from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import ServerConn
 from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
+from pynicotine.slskmessages import SetCurrentConnectionCount
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetGeoBlock
 from pynicotine.slskmessages import SetStatus
@@ -578,7 +578,7 @@ class SlskProtoThread(threading.Thread):
                     numsockets += 1
                 numsockets += len(conns) + len(connsinprogress)
 
-                self._ui_callback([InternalData(numsockets)])
+                self._ui_callback([SetCurrentConnectionCount(numsockets)])
             # print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
             except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
