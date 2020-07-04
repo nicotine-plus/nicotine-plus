@@ -2211,6 +2211,10 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.SetDownloadLimit(config["transfers"]["downloadlimit"]))
         self.np.ToggleRespondDistributed(None, settings=True)
 
+        if self.SearchNotebook:
+            self.SearchNotebook.maxdisplayedresults = config["searches"]["max_displayed_results"]
+            self.SearchNotebook.maxstoredresultsa = config["searches"]["max_stored_results"]
+
         # Modify GUI
         self.UpdateDownloadFilters()
         self.np.config.writeConfiguration()
