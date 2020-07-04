@@ -53,7 +53,7 @@
               <object class="GtkLabel" id="label10">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Create: </property>
+                <property name="label" translatable="yes">Create room: </property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -79,12 +79,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="HideRoomList">
+              <object class="GtkButton" id="CreateRoom">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="tooltip_text" translatable="yes">Hide room list</property>
+                <property name="tooltip_text" translatable="yes">Create public room</property>
+                <signal name="clicked" handler="OnCreateRoom" swapped="no"/>
                 <child>
                   <object class="GtkAlignment" id="alignment27">
                     <property name="visible">True</property>
@@ -95,7 +96,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="stock">gtk-remove</property>
+                        <property name="stock">gtk-add</property>
                       </object>
                     </child>
                   </object>
@@ -124,7 +125,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Search: </property>
+                <property name="label" translatable="yes">Find room: </property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -156,7 +157,8 @@
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">Hide room list</property>
+                <property name="tooltip_text" translatable="yes">Search for room</property>
+                <signal name="clicked" handler="OnSearchRoom" swapped="no"/>
                 <child>
                   <object class="GtkAlignment" id="alignment1">
                     <property name="visible">True</property>

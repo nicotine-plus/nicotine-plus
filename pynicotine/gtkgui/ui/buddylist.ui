@@ -81,16 +81,17 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="MoveList">
+              <object class="GtkButton" id="AddUser">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnMoveList" swapped="no"/>
+                <property name="tooltip_text" translatable="yes">Add</property>
+                <signal name="clicked" handler="OnAddUser" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="image1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="stock">gtk-jump-to</property>
+                    <property name="stock">gtk-add</property>
                   </object>
                 </child>
               </object>
