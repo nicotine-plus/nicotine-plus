@@ -3185,7 +3185,7 @@ class PluginFrame(buildFrame):
 
         cols = InitialiseColumns(
             self.PluginTreeView,
-            [_("Plugins"), 400, "text"],
+            [_("Plugins"), 380, "text"],
             [_("Enabled"), 40, "toggle"]
         )
 
@@ -3227,12 +3227,7 @@ class PluginFrame(buildFrame):
         self.PluginDescription.get_buffer().set_text("%(description)s" % {"description": info['Description'].replace(r'\n', "\n")})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
 
-        settings = self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
-
-        if settings is not None:
-            self.PluginProperties.set_sensitive(True)
-        else:
-            self.PluginProperties.set_sensitive(False)
+        self.CheckPropertiesButton(self.selected_plugin)
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
@@ -3240,6 +3235,7 @@ class PluginFrame(buildFrame):
         plugin = self.pluginlist.get_value(iter, 2)
         value = self.pluginlist.get_value(iter, 1)
         self.pluginlist.set(iter, pos, not value)
+
         if not value:
             if not self.frame.pluginhandler.enable_plugin(plugin):
                 log.add(_('Could not enable plugin.'))
@@ -3248,6 +3244,16 @@ class PluginFrame(buildFrame):
             if not self.frame.pluginhandler.disable_plugin(plugin):
                 log.add(_('Could not disable plugin.'))
                 return
+
+        self.CheckPropertiesButton(plugin)
+
+    def CheckPropertiesButton(self, plugin):
+        settings = self.frame.pluginhandler.get_plugin_settings(plugin)
+
+        if settings is not None:
+            self.PluginProperties.set_sensitive(True)
+        else:
+            self.PluginProperties.set_sensitive(False)
 
     def SetSettings(self, config):
 
