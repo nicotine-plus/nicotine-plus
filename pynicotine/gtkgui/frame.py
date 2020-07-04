@@ -304,6 +304,9 @@ class NicotineFrame:
             except TypeError:
                 pass
 
+        # Disable a few elements until we're logged in (search field, download buttons etc.)
+        self.SetWidgetOnlineStatus(False)
+
         self.MainWindow.set_title(_("Nicotine+") + " " + version)
         self.MainWindow.set_default_icon(self.images["n"])
         self.MainWindow.set_icon(self.images["n"])
