@@ -185,7 +185,7 @@ class Uploads(TransferList):
 
         self.RebuildTransfers()
 
-        if not self.TreeUsers == 0:
+        if self.TreeUsers == 0:
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()
