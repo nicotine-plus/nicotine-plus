@@ -70,6 +70,8 @@ class Searches(IconNotebook):
         self.users = {}
         self.timer = None
         self.disconnected = 0
+        self.maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
+        self.maxstoredresults = self.frame.np.config.sections['searches']["max_stored_results"]
 
         ui = self.frame.np.config.sections["ui"]
 
@@ -331,13 +333,13 @@ class Searches(IconNotebook):
         counter = len(search[2].all_data) + 1
 
         # No more things to add because we've reached the max_stored_results limit
-        if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
+        if counter > self.maxstoredresults:
             if search is not None:
                 del search
 
             return
 
-        search[2].AddResult(msg, username, country)
+        search[2].AddUserResults(msg, username, country)
 
     def RemoveAutoSearch(self, id):
 
@@ -752,7 +754,7 @@ class Search:
             }
         )
 
-    def AddResult(self, msg, user, country):
+    def AddUserResults(self, msg, user, country):
 
         if user in self.users:
             return
@@ -770,10 +772,11 @@ class Search:
 
         self.users.add(user)
 
-        results = []
         counter = len(self.all_data) + 1
 
         inqueue = msg.inqueue
+        ulspeed = msg.ulspeed
+        h_speed = HumanSpeed(ulspeed)
 
         if msg.freeulslots:
             imdl = "Y"
@@ -781,17 +784,22 @@ class Search:
         else:
             imdl = "N"
 
+        h_queue = Humanize(inqueue)
+
+        status = self.Searches.users[user]
+
+        if status is None:
+            status = 0
+
         for result in msg.list:
 
-            if counter > self.frame.np.config.sections['searches']["max_stored_results"]:
-                return
+            if counter > self.Searches.maxstoredresults:
+                break
 
             name = result[1].split('\\')[-1]
             dir = result[1][:-len(name)]
 
-            h_size = HumanSize(int(result[2]))
-            h_speed = HumanSpeed(msg.ulspeed)
-            h_queue = Humanize(inqueue)
+            h_size = HumanSize(result[2])
 
             bitrate = ""
             length = ""
@@ -865,16 +873,16 @@ class Search:
 
                     length = '%i:%02i' % (a[1] / 60, a[1] % 60)
 
-            status = self.Searches.users[user]
-
-            if status is None:
-                status = 0
-
-            results.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], msg.ulspeed, inqueue, status])
+            self.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], ulspeed, inqueue, status])
             counter += 1
 
-        if results:
-            self.append(results)
+        # Update counter
+        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+
+        # Update tab notification
+        self.frame.Searches.request_changed(self.Main)
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
@@ -886,41 +894,31 @@ class Search:
 
         return self.frame.GetFlagImage(flag)
 
-    def append(self, results):
+    def append(self, row):
 
-        for row in results:
+        self.all_data.append(row)
 
-            self.all_data.append(row)
+        if self.numvisibleresults >= self.Searches.maxdisplayedresults:
+            return
 
-            if not self.check_filter(row):
-                continue
+        if not self.check_filter(row):
+            return
 
-            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
-                break
+        iter = self.AddRowToModel(row)
 
-            iter = self.AddRowToModel(row)
+        if self.ResultGrouping.get_active() > 0:
+            # Group by folder or user
 
-            if self.ResultGrouping.get_active() > 0:
-                # Group by folder or user
+            if self.ExpandButton.get_active():
+                path = None
 
-                if self.ExpandButton.get_active():
-                    path = None
+                if iter is not None:
+                    path = self.resultsmodel.get_path(iter)
 
-                    if iter is not None:
-                        path = self.resultsmodel.get_path(iter)
-
-                    if path is not None:
-                        self.ResultsList.expand_to_path(path)
-                else:
-                    CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
-
-        # Update counter
-        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
-
-        # Update tab notification
-        self.frame.Searches.request_changed(self.Main)
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+                if path is not None:
+                    self.ResultsList.expand_to_path(path)
+            else:
+                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
     def AddRowToModel(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
@@ -973,13 +971,11 @@ class Search:
         self.Searches.users[user] = status
         pos = 0
 
-        maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
-
         for r in self.all_data:
             if user == r[1]:
                 self.all_data[pos][17] = status
 
-                if self.ResultGrouping.get_active() == 0 and pos < maxdisplayedresults:
+                if self.ResultGrouping.get_active() == 0 and pos < self.Searches.maxdisplayedresults:
                     # No grouping
 
                     iter = self.resultsmodel.get_iter_from_string(str(pos))
@@ -1152,7 +1148,7 @@ class Search:
         self.numvisibleresults = 0
 
         for row in self.all_data:
-            if self.numvisibleresults >= self.frame.np.config.sections['searches']["max_displayed_results"]:
+            if self.numvisibleresults >= self.Searches.maxdisplayedresults:
                 break
 
             if self.check_filter(row):
@@ -1379,7 +1375,6 @@ class Search:
         return True
 
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
-
         status = model.get_value(iter, 17)
         imdl = model.get_value(iter, 3)
         color = imdl == "Y" and "search" or "searchq"

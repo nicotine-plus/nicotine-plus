@@ -23,6 +23,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import locale
+import math
 import os
 import re
 import sys
@@ -1406,44 +1407,28 @@ def fixpath(path):
         return path
 
 
-def HumanSize(number):
-
+def HumanSize(filesize):
     try:
-        s = float(int(number))
+        if (filesize <= 0):
+            return "0 Bytes"
 
-        if s >= 1024 * 1024 * 1024:
-            r = _("%.2f GB") % (s / (1024.0 * 1024.0 * 1024.0))
-        elif s >= 1024 * 1024:
-            r = _("%.2f MB") % (s / (1024.0 * 1024.0))
-        elif s >= 1024:
-            r = _("%.2f KB") % (s / 1024.0)
-        else:
-            r = _("%d Bytes") % s
+        p = int(math.floor(math.log(filesize, 2) / 10))
 
-        return r
-
-    except Exception as e:  # noqa: F841
-        return number
+        return "%0.2f %s" % (filesize / math.pow(1024, p), ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][p])
+    except TypeError:
+        return filesize
 
 
-def HumanSpeed(number):
-
+def HumanSpeed(filesize):
     try:
-        s = float(number)
+        if (filesize <= 0):
+            return "0 B/s"
 
-        if s >= 1024 * 1024 * 1024:
-            r = _("%.2f GB/s") % (s / (1024.0 * 1024.0 * 1024.0))
-        elif s >= 1024 * 1024:
-            r = _("%.2f MB/s") % (s / (1024.0 * 1024.0))
-        elif s >= 1024:
-            r = _("%.2f KB/s") % (s / 1024.0)
-        else:
-            r = _("%d B/s") % s
+        p = int(math.floor(math.log(filesize, 2) / 10))
 
-        return r
-
-    except Exception as e:  # noqa: F841
-        return number
+        return "%0.2f %s" % (filesize / math.pow(1024, p), ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s', 'PB/s', 'EB/s', 'ZB/s', 'YB/s'][p])
+    except TypeError:
+        return filesize
 
 
 def Humanize(number):
