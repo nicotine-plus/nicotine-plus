@@ -1313,6 +1313,7 @@ class NetworkEventProcessor:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
                     self.userinfo.ShowInfo(i.username, msg)
+                    break
 
     def UserInfoRequest(self, msg):
 
@@ -1417,6 +1418,7 @@ class NetworkEventProcessor:
             if i.conn is msg.conn.conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
                     self.userbrowse.ShowInfo(i.username, msg)
+                    break
 
     def FileSearchResult(self, msg):
         if self.search is not None:
@@ -1487,6 +1489,7 @@ class NetworkEventProcessor:
                 for j in i.msgs:
                     if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
                         self.transfers.gotCantConnect(j.req)
+                break
 
     def ConnectToPeerTimeout(self, msg):
 
@@ -1504,6 +1507,7 @@ class NetworkEventProcessor:
                 for j in i.msgs:
                     if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
                         self.transfers.gotCantConnect(j.req)
+                break
 
     def TransferTimeout(self, msg):
         if self.transfers is not None:
@@ -1646,6 +1650,7 @@ class NetworkEventProcessor:
             if i.conn == msg.conn.conn:
                 user = i.username
                 self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, direct=1)
+                break
 
     def SearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)

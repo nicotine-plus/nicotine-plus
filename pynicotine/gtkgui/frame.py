@@ -2981,7 +2981,7 @@ class NicotineFrame:
     def SimilarUsers(self, msg):
         self.recommendationuserslist.clear()
         self.recommendationusers = {}
-        for user in list(msg.users.keys()):
+        for user in msg.users:
             iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
             self.recommendationusers[user] = iter
             self.np.queue.put(slskmessages.AddUser(user))
