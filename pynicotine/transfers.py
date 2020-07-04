@@ -1844,12 +1844,13 @@ class Transfers:
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 username = i.username
+                break
 
         if username is None:
             return
 
-        for i in list(msg.list.keys()):
-            for directory in list(msg.list[i].keys()):
+        for i in list(msg.list):
+            for directory in list(msg.list[i]):
 
                 if os.path.commonprefix([i, directory]) == directory:
                     priorityfiles = []

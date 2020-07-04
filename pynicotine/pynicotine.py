@@ -268,7 +268,7 @@ class NetworkEventProcessor:
             slskmessages.RescanBuddyShares: self.shares.RescanBuddyShares,
             str: self.Notify,
             slskmessages.PopupMessage: self.PopupMessage,
-            slskmessages.InternalData: self.DisplaySockets,
+            slskmessages.SetCurrentConnectionCount: self.SetCurrentConnectionCount,
             slskmessages.DebugMessage: self.DebugMessage,
             slskmessages.GlobalRecommendations: self.GlobalRecommendations,
             slskmessages.Recommendations: self.Recommendations,
@@ -431,7 +431,7 @@ class NetworkEventProcessor:
     def DebugMessage(self, msg):
         self.logMessage(msg.msg, msg.debugLevel)
 
-    def DisplaySockets(self, msg):
+    def SetCurrentConnectionCount(self, msg):
         self.frame.SetSocketStatus(msg.msg)
 
     def ConnectError(self, msg):
@@ -1313,6 +1313,7 @@ class NetworkEventProcessor:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
                     self.userinfo.ShowInfo(i.username, msg)
+                    break
 
     def UserInfoRequest(self, msg):
 
@@ -1417,6 +1418,7 @@ class NetworkEventProcessor:
             if i.conn is msg.conn.conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
                     self.userbrowse.ShowInfo(i.username, msg)
+                    break
 
     def FileSearchResult(self, msg):
         if self.search is not None:
@@ -1487,6 +1489,7 @@ class NetworkEventProcessor:
                 for j in i.msgs:
                     if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
                         self.transfers.gotCantConnect(j.req)
+                break
 
     def ConnectToPeerTimeout(self, msg):
 
@@ -1504,6 +1507,7 @@ class NetworkEventProcessor:
                 for j in i.msgs:
                     if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
                         self.transfers.gotCantConnect(j.req)
+                break
 
     def TransferTimeout(self, msg):
         if self.transfers is not None:
@@ -1582,20 +1586,14 @@ class NetworkEventProcessor:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def FolderContentsResponse(self, msg):
-
         if self.transfers is not None:
-
-            for i in self.peerconns:
-                if i.conn is msg.conn.conn:
-                    username = i.username
-
             # Check for a large number of files
             many = False
             folder = ""
             files = []
 
-            for i in list(msg.list.keys()):
-                for j in list(msg.list[i].keys()):
+            for i in list(msg.list):
+                for j in list(msg.list[i]):
                     if os.path.commonprefix([i, j]) == j:
                         files = msg.list[i][j]
                         numfiles = len(files)
@@ -1604,6 +1602,11 @@ class NetworkEventProcessor:
                             folder = j
 
             if many:
+                for i in self.peerconns:
+                    if i.conn is msg.conn.conn:
+                        username = i.username
+                        break
+
                 self.frame.download_large_folder(username, folder, files, numfiles, msg)
             else:
                 self.transfers.FolderContentsResponse(msg)
@@ -1647,6 +1650,7 @@ class NetworkEventProcessor:
             if i.conn == msg.conn.conn:
                 user = i.username
                 self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, direct=1)
+                break
 
     def SearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)

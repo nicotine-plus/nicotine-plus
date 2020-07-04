@@ -76,7 +76,6 @@ from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
 from pynicotine.slskmessages import IncPort
-from pynicotine.slskmessages import InternalData
 from pynicotine.slskmessages import InternalMessage
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
@@ -145,6 +144,7 @@ from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import ServerConn
 from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
+from pynicotine.slskmessages import SetCurrentConnectionCount
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetGeoBlock
 from pynicotine.slskmessages import SetStatus
@@ -171,25 +171,30 @@ from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
 
 
-# Set our actual file limit to 2048 as a failsafe
-# If this limit is set too close to our artificial
-# 1024 limit, Nicotine+ will freak out due to too many
-# open files
+# Set our actual file limit to the OS's hard limit as a failsafe
+# If this limit is set too close to our artificial MAXFILELIMIT
+# limit, Nicotine+ will freak out due to too many open files
 if sys.platform == "win32":
     from pynicotine.multiselect import multiselect
     import ctypes
-    ctypes.cdll.msvcrt._setmaxstdio(2048)
+
+    ctypes.cdll.msvcrt._setmaxstdio(8192)
+
+    MAXFILELIMIT = 1024
 else:
+    import resource
+    softlimit, hardlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
+
     try:
-        import resource
-        resource.setrlimit(resource.RLIMIT_NOFILE, (2048, 2048))
+        resource.setrlimit(resource.RLIMIT_NOFILE, (hardlimit, hardlimit))
     except Exception:
         pass
 
-# Set our artificial file limit to prevent freezing the GUI
-# TODO: investigate if we can improve the performance somehow
-# and bump this limit
-MAXFILELIMIT = 1024
+    # Set our artificial file limit to prevent freezing the GUI
+    # The max is 1024, but can be lower if the hard limit is too low
+    # TODO: investigate if we can improve the performance somehow
+    # and bump this limit
+    MAXFILELIMIT = min(max(int(hardlimit * 0.75), 50), 1024)
 
 
 class Connection:
@@ -573,7 +578,7 @@ class SlskProtoThread(threading.Thread):
                     numsockets += 1
                 numsockets += len(conns) + len(connsinprogress)
 
-                self._ui_callback([InternalData(numsockets)])
+                self._ui_callback([SetCurrentConnectionCount(numsockets)])
             # print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
             except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
