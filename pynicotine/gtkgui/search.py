@@ -833,7 +833,16 @@ class Search:
 
                     length = '%i:%02i' % (a[2] / 60, a[2] % 60)
 
-                # But one thing for sure the bitrate is always on first position
+                # Lossless audio, length is in first position
+                elif a[2] > 1:
+
+                    # Bitrate = sample rate (Hz) * word length (bits) * channel count
+                    # Bitrate = 44100 * 16 * 2
+                    br = (a[1] * a[2] * 2) / 1000
+                    bitrate = str(br)
+
+                    length = '%i:%02i' % (a[0] / 60, a[0] % 60)
+
                 else:
 
                     bitrate = str(a[0]) + bitrate
