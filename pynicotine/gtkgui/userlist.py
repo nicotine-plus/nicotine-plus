@@ -226,32 +226,13 @@ class UserList:
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
         return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
 
-    def OnMoveList(self, widget):
-
-        tab = always = chatrooms = False
-
-        if self.frame.buddylist_in_tab.get_active():
-            tab = True
-        if self.frame.buddylist_always_visible.get_active():
-            always = True
-        if self.frame.buddylist_in_chatrooms1.get_active():
-            chatrooms = True
-
-        if tab:
-            self.frame.buddylist_in_chatrooms1.set_active(True)
-            self.frame.OnChatRooms(None)
-        if always:
-            self.frame.buddylist_in_tab.set_active(True)
-        if chatrooms:
-            self.frame.buddylist_always_visible.set_active(True)
-
     def OnAddUser(self, widget):
 
-        text = widget.get_text()
+        text = self.AddUserEntry.get_text()
         if not text:
             return
 
-        widget.set_text("")
+        self.AddUserEntry.set_text("")
         self.AddToList(text)
 
     def UpdateColours(self):

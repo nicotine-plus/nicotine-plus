@@ -37,6 +37,7 @@ from gettext import gettext as _
 import gi
 from gi.repository import Gdk
 from gi.repository import GLib
+from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
@@ -460,6 +461,51 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         GLib.idle_add(ScrollBottom, scrolledwindow)
 
     return linenr
+
+
+class BuddiesComboBox:
+
+    def __init__(self, frame, ComboBox):
+
+        self.frame = frame
+
+        self.items = {}
+
+        self.combobox = ComboBox
+
+        self.store = gtk.ListStore(gobject.TYPE_STRING)
+        self.combobox.set_model(self.store)
+        self.combobox.set_entry_text_column(0)
+
+        self.store.set_default_sort_func(lambda *args: -1)
+        self.store.set_sort_column_id(-1, gtk.SortType.ASCENDING)
+
+        self.combobox.show()
+
+    def Fill(self):
+
+        self.items.clear()
+        self.store.clear()
+
+        self.items[""] = self.store.append([""])
+
+        for user in self.frame.np.config.sections["server"]["userlist"]:
+            self.items[user[0]] = self.store.append([user[0]])
+
+        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+
+    def Append(self, item):
+
+        if item in self.items:
+            return
+
+        self.items[item] = self.combobox.get_model().append([item])
+
+    def Remove(self, item):
+
+        if item in self.items:
+            self.combobox.get_model().remove(self.items[item])
+            del self.items[item]
 
 
 class ImageLabel(gtk.HBox):

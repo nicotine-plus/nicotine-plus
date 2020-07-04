@@ -63,6 +63,7 @@ from pynicotine.gtkgui.entrydialog import QuitBox
 from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.privatechat import PrivateChats
+from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import SettingsWindow
 from pynicotine.gtkgui.uploads import Uploads
@@ -71,6 +72,7 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import BuddiesComboBox
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import ImageLabel
@@ -87,123 +89,6 @@ from pynicotine.utils import version
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-
-
-class roomlist:
-
-    def __init__(self, frame):
-
-        # Build the window
-        self.frame = frame
-
-        builder = gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
-
-        self.RoomList = builder.get_object("RoomList")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.RoomList.remove(self.vbox2)
-        self.RoomList.destroy()
-
-        # self.RoomsList is the TreeView
-        builder.connect_signals(self)
-
-        self.search_iter = None
-        self.query = ""
-        self.room_model = self.RoomsList.get_model()
-
-        self.FindRoom.connect("clicked", self.OnSearchRoom)
-
-    def OnCreateRoom(self, widget):
-
-        room = widget.get_text()
-        if not room:
-            return
-
-        self.frame.np.queue.put(slskmessages.JoinRoom(room))
-        widget.set_text("")
-
-    def OnSearchRoom(self, widget):
-
-        if self.room_model is not self.RoomsList.get_model():
-            self.room_model = self.RoomsList.get_model()
-            self.search_iter = self.room_model.get_iter_first()
-
-        room = self.SearchRooms.get_text().lower()
-
-        if not room:
-            return
-
-        if self.query == room:
-            if self.search_iter is None:
-                self.search_iter = self.room_model.get_iter_first()
-            else:
-                self.search_iter = self.room_model.iter_next(self.search_iter)
-        else:
-            self.search_iter = self.room_model.get_iter_first()
-            self.query = room
-
-        while self.search_iter:
-
-            room_match, size = self.room_model.get(self.search_iter, 0, 1)
-            if self.query in room_match.lower():
-                path = self.room_model.get_path(self.search_iter)
-                self.RoomsList.set_cursor(path)
-                break
-
-            self.search_iter = self.room_model.iter_next(self.search_iter)
-
-
-class BuddiesComboBox:
-
-    def __init__(self, frame, ComboBox):
-
-        self.frame = frame
-
-        self.items = {}
-
-        self.combobox = ComboBox
-
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
-        self.combobox.set_model(self.store)
-        self.combobox.set_entry_text_column(0)
-
-        self.store.set_default_sort_func(lambda *args: -1)
-        self.store.set_sort_column_id(-1, gtk.SortType.ASCENDING)
-
-        self.combobox.show()
-
-    def Fill(self):
-
-        self.items.clear()
-        self.store.clear()
-
-        self.items[""] = self.store.append([""])
-
-        for user in self.frame.np.config.sections["server"]["userlist"]:
-            self.items[user[0]] = self.store.append([user[0]])
-
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
-
-    def Append(self, item):
-
-        if item in self.items:
-            return
-
-        self.items[item] = self.combobox.get_model().append([item])
-
-    def Remove(self, item):
-
-        if item in self.items:
-            self.combobox.get_model().remove(self.items[item])
-            del self.items[item]
 
 
 class NicotineFrame:
@@ -290,7 +175,7 @@ class NicotineFrame:
         self.LoadIcons()
 
         self.accel_group = gtk.AccelGroup()
-        self.roomlist = roomlist(self)
+        self.roomlist = RoomList(self)
 
         # Import GtkBuilder widgets
         builder = gtk.Builder()
@@ -2706,13 +2591,8 @@ class NicotineFrame:
             if not chatrooms:
                 self.vpaned3.hide()
 
-        # Reinitialize the userlist to avoid an error that freeze the UI on recent GTK versions
-        # Warning: invalid cast from 'GailPaned' to 'GailNotebook'
-        self.userlist = None
-        self.userlist = UserList(self)
-
         if tab:
-            self.BuddiesTabLabel = ImageLabel(_("Buddy List"), self.images["empty"])
+            self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
             self.BuddiesTabLabel.show()
 
             if self.userlist.userlistvbox not in self.MainNotebook.get_children():

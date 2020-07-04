@@ -151,8 +151,6 @@ class RoomsControl:
         self.frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
-        self.frame.roomlist.HideRoomList.connect("clicked", self.OnHideRoomList)
-
         self.ChatNotebook.Notebook.connect("switch-page", self.OnSwitchPage)
         self.ChatNotebook.Notebook.connect("page-reordered", self.OnReorderedPage)
 
@@ -276,9 +274,6 @@ class RoomsControl:
         for name, room in list(self.users.items()):
             if room.Main == page:
                 self.frame.Notifications.Clear("rooms", name)
-
-    def OnHideRoomList(self, widget):
-        self.frame.show_room_list1.set_active(0)
 
     def OnListClicked(self, widget, event):
 
