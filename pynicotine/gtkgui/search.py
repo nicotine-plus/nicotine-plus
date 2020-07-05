@@ -53,6 +53,7 @@ from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
 from pynicotine.utils import cmp
+from pynicotine.utils import GetResultBitrateLength
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
@@ -800,90 +801,11 @@ class Search:
             name = result[1].split('\\')[-1]
             dir = result[1][:-len(name)]
 
-            h_size = HumanSize(result[2])
+            size = result[2]
+            h_size = HumanSize(size)
+            h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
-            bitrate = ""
-            length = ""
-
-            br = 0
-
-            # If there are 3 entries in the last column
-            if len(result[4]) == 3:
-
-                a = result[4]
-
-                # Sometimes the vbr indicator is in third position
-                if a[2] == 0 or a[2] == 1:
-
-                    if a[2] == 1:
-                        bitrate = " (vbr)"
-
-                    bitrate = str(a[0]) + bitrate
-                    br = a[0]
-
-                    length = '%i:%02i' % (a[1] / 60, a[1] % 60)
-
-                # Sometimes the vbr indicator is in second position
-                elif a[1] == 0 or a[1] == 1:
-
-                    if a[1] == 1:
-                        bitrate = " (vbr)"
-
-                    bitrate = str(a[0]) + bitrate
-                    br = a[0]
-
-                    length = '%i:%02i' % (a[2] / 60, a[2] % 60)
-
-                # Lossless audio, length is in first position
-                elif a[2] > 1:
-
-                    # Bitrate = sample rate (Hz) * word length (bits) * channel count
-                    # Bitrate = 44100 * 16 * 2
-                    br = (a[1] * a[2] * 2) / 1000
-                    bitrate = str(br)
-
-                    length = '%i:%02i' % (a[0] / 60, a[0] % 60)
-
-                else:
-
-                    bitrate = str(a[0]) + bitrate
-                    br = a[0]
-
-            # If there are 2 entries in the last column
-            elif len(result[4]) == 2:
-
-                a = result[4]
-
-                # Sometimes the vbr indicator is in second position
-                if a[1] == 0 or a[1] == 1:
-
-                    # If it's a vbr file we can't deduce the length
-                    if a[1] == 1:
-
-                        bitrate = " (vbr)"
-                        bitrate = str(a[0]) + bitrate
-                        br = a[0]
-
-                    # If it's a constant bitrate we can deduce the length
-                    else:
-
-                        bitrate = str(a[0]) + bitrate
-                        br = a[0]
-
-                        # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                        l = result[2] / (br / 8 * 1000)  # noqa: E741
-
-                        length = '%i:%02i' % (l / 60, l % 60)
-
-                # Sometimes the bitrate is in first position and the length in second position
-                else:
-
-                    bitrate = str(a[0]) + bitrate
-                    br = a[0]
-
-                    length = '%i:%02i' % (a[1] / 60, a[1] % 60)
-
-            self.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, bitrate, length, br, result[1], country, result[2], ulspeed, inqueue, status])
+            self.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, result[1], country, result[2], ulspeed, inqueue, status])
             counter += 1
 
         # Update counter

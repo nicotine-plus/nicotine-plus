@@ -35,6 +35,7 @@ from gi.repository import Gtk as gtk
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import Humanize
+from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
@@ -78,7 +79,7 @@ class UserTabs(IconNotebook):
 
         if msg.user in self.users:
             tab = self.users[msg.user]
-            tab.speed.set_text(_("Speed: %s") % Humanize(msg.avgspeed))
+            tab.speed.set_text(_("Speed: %s") % HumanSpeed(msg.avgspeed))
             tab.filesshared.set_text(_("Files: %s") % Humanize(msg.files))
             tab.dirsshared.set_text(_("Directories: %s") % Humanize(msg.dirs))
 
