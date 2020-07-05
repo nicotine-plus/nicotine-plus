@@ -35,10 +35,8 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
-from pynicotine.gtkgui.utils import float_sort_func
-from pynicotine.gtkgui.utils import int_sort_func
-from pynicotine.utils import cmp
 
 gi.require_version('Gtk', '3.0')
 
@@ -59,29 +57,30 @@ class TransferList:
         self.paths = {}
         self.lastupdate = 0
         self.finalupdatetimerid = None
+
         widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         widget.set_enable_tree_lines(True)
         widget.set_rubber_banding(True)
 
         columntypes = [
-            gobject.TYPE_STRING,   # user
-            gobject.TYPE_STRING,   # path
-            gobject.TYPE_STRING,   # file name
-            gobject.TYPE_STRING,   # status
-            gobject.TYPE_STRING,   # queue position
-            gobject.TYPE_UINT64,   # percent
-            gobject.TYPE_STRING,   # hsize
-            gobject.TYPE_STRING,   # hspeed
-            gobject.TYPE_STRING,   # htime elapsed
-            gobject.TYPE_STRING,   # time left
-            gobject.TYPE_STRING,   # path
-            gobject.TYPE_STRING,   # status (non-translated)
-            gobject.TYPE_UINT64,   # size
-            gobject.TYPE_UINT64,   # current bytes
-            gobject.TYPE_BOOLEAN,  # percent visible (?)
-            gobject.TYPE_STRING,   # speed
-            gobject.TYPE_UINT64,   # time elapsed
-            gobject.TYPE_UINT64,   # file count
+            str,                   # (0)  user
+            str,                   # (1)  path
+            str,                   # (2)  file name
+            str,                   # (3)  status
+            str,                   # (4)  hqueue position
+            gobject.TYPE_UINT64,   # (5)  percent
+            str,                   # (6)  hsize
+            str,                   # (7)  hspeed
+            str,                   # (8)  htime elapsed
+            str,                   # (9)  time left
+            str,                   # (10) path
+            str,                   # (11) status (non-translated)
+            gobject.TYPE_UINT64,   # (12) size
+            gobject.TYPE_UINT64,   # (13) current bytes
+            gobject.TYPE_UINT64,   # (14) speed
+            gobject.TYPE_UINT64,   # (15) time elapsed
+            gobject.TYPE_UINT64,   # (16) file count
+            gobject.TYPE_UINT64,   # (17) queue position
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -103,28 +102,34 @@ class TransferList:
 
         self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
 
+        try:
+            for i in range(len(cols)):
+
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect("button_press_event", PressHeader)
+
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(self.frame.np.config.sections["columns"][self.type + "_columns"][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
+
         self.col_user.set_sort_column_id(0)
         self.col_path.set_sort_column_id(1)
         self.col_filename.set_sort_column_id(2)
-        self.col_status.set_sort_column_id(3)
-
-        # Only view progress renderer on transfers, not user tree parents
-        self.transfersmodel.set_sort_func(3, self.status_sort_func, 3)
-        self.col_position.set_sort_column_id(4)
-        self.transfersmodel.set_sort_func(4, int_sort_func, 4)
-        self.col_percent.set_sort_column_id(11)
-
-        self.col_percent.set_attributes(self.col_percent.get_cells()[0], value=5, visible=14)
-
+        self.col_status.set_sort_column_id(11)
+        self.col_position.set_sort_column_id(17)
+        self.col_percent.set_sort_column_id(5)
         self.col_human_size.set_sort_column_id(12)
-        self.col_human_speed.set_sort_column_id(7)
+        self.col_human_speed.set_sort_column_id(14)
         self.col_time_elapsed.set_sort_column_id(8)
         self.col_time_left.set_sort_column_id(9)
 
-        self.transfersmodel.set_sort_func(11, self.progress_sort_func, 5)
-        self.transfersmodel.set_sort_func(7, float_sort_func, 7)
-
         widget.set_model(self.transfersmodel)
+
+        widget.connect("button_press_event", self.OnPopupMenu, "mouse")
+        widget.connect("key-press-event", self.on_key_press_event)
 
         self.UpdateColours()
 
@@ -151,35 +156,6 @@ class TransferList:
 
         cellrenderer.set_property("foreground", colour)
 
-    def status_sort_func(self, model, iter1, iter2, column):
-
-        val1 = self.get_status_index(model.get_value(iter1, column))
-        val2 = self.get_status_index(model.get_value(iter2, column))
-
-        return cmp(val1, val2)
-
-    def progress_sort_func(self, model, iter1, iter2, column):
-
-        # We want 0% to be always below anything else,
-        # so we have to look up whether we are ascending or descending
-        ascending = True
-        if model.get_sort_column_id()[1] == gtk.SortType.DESCENDING:
-            ascending = False
-
-        val1 = self.get_status_index(model.get_value(iter1, column))
-        val2 = self.get_status_index(model.get_value(iter2, column))
-
-        if val1 == 0 and val2 == 0:
-            return 0
-
-        if val1 == 0:
-            return -1 + (ascending * 2)
-
-        if val2 == 0:
-            return 1 - (ascending * 2)
-
-        return cmp(val1, val2)
-
     def InitInterface(self, list):
         self.list = list
         self.update()
@@ -189,11 +165,6 @@ class TransferList:
         self.widget.set_sensitive(False)
         self.list = None
         self.Clear()
-        self.transfersmodel.clear()
-        self.users.clear()
-        self.paths.clear()
-        self.selected_transfers = []
-        self.selected_users = []
 
     def select_transfers(self):
         self.selected_transfers = []
@@ -364,9 +335,9 @@ class TransferList:
 
     def update_parent_row(self, initer):
         files = self.transfersmodel.iter_n_children(initer)
-        ispeed = 0.0
+        speed = 0.0
         percent = totalsize = position = 0
-        helapsed = left = ""
+        hspeed = helapsed = left = ""
         elapsed = 0
         filecount = 0
         salientstatus = ""
@@ -394,35 +365,27 @@ class TransferList:
                 # We don't want to count filtered files when calculating the progress
                 continue
 
-            elapsed += self.transfersmodel.get_value(iter, 16)
+            elapsed += self.transfersmodel.get_value(iter, 15)
             totalsize += self.transfersmodel.get_value(iter, 12)
             position += self.transfersmodel.get_value(iter, 13)
-            filecount += self.transfersmodel.get_value(iter, 17)
+            filecount += self.transfersmodel.get_value(iter, 16)
 
             if status == "Transferring":
-                str_speed = self.transfersmodel.get_value(iter, 15)
-                if str_speed != "":
-                    ispeed += float(str_speed)
-
+                speed += float(self.transfersmodel.get_value(iter, 14))
                 left = self.transfersmodel.get_value(iter, 9)
 
             if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
                 salientstatus = status
 
-        try:
-            speed = "%.1f" % ispeed
-        except TypeError:
-            speed = str(ispeed)
-
         if totalsize > 0:
             percent = ((100 * position) / totalsize)
 
-        if ispeed <= 0.0:
-            left = "∞"
-        else:
-            left = self.frame.np.transfers.getTime((totalsize - position) / ispeed / 1024)
+        if speed > 0:
+            hspeed = HumanSpeed(speed)
+            left = self.frame.np.transfers.getTime((totalsize - position) / speed / 1024)
 
-        helapsed = self.frame.np.transfers.getTime(elapsed)
+        if elapsed > 0:
+            helapsed = self.frame.np.transfers.getTime(elapsed)
 
         if len(extensions) == 0:
             extensions = ""
@@ -439,16 +402,15 @@ class TransferList:
             3, self.TranslateStatus(salientstatus),
             5, percent,
             6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
-            7, HumanSpeed(speed),
+            7, hspeed,
             8, helapsed,
             9, left,
             11, salientstatus,
             12, totalsize,
             13, position,
-            14, True,
-            15, speed,
-            16, elapsed,
-            17, filecount,
+            14, speed,
+            15, elapsed,
+            16, filecount,
         )
 
     def update_specific(self, transfer=None):
@@ -458,6 +420,8 @@ class TransferList:
         shortfn = fn.split("\\")[-1]
         currentbytes = transfer.currentbytes
         place = transfer.place
+
+        hspeed = helapsed = ""
 
         if currentbytes is None:
             currentbytes = 0
@@ -475,27 +439,17 @@ class TransferList:
         if transfer.modifier:
             hsize += " (%s)" % transfer.modifier
 
-        try:
-            speed = "%.1f" % transfer.speed
-        except TypeError:
-            speed = str(transfer.speed)
+        speed = transfer.speed or 0
+        elapsed = transfer.timeelapsed or 0
+        left = transfer.timeleft
 
-        elapsed = transfer.timeelapsed
-        left = str(transfer.timeleft)
-
-        if speed == "None":
-            speed = ""
-        else:
+        if speed > 0:
             # transfer.speed is in KB
             speed = float(speed) * 1024
+            hspeed = HumanSpeed(speed)
 
-        if elapsed is None:
-            elapsed = 0
-
-        helapsed = self.frame.np.transfers.getTime(elapsed)
-
-        if left == "None":
-            left = ""
+        if elapsed > 0:
+            helapsed = self.frame.np.transfers.getTime(elapsed)
 
         try:
             icurrentbytes = int(currentbytes)
@@ -503,7 +457,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception as e:  # noqa: F841
+        except Exception:
             icurrentbytes = 0
             percent = 0
 
@@ -525,14 +479,15 @@ class TransferList:
                 4, str(place),
                 5, percent,
                 6, str(hsize),
-                7, HumanSpeed(speed),
+                7, hspeed,
                 8, helapsed,
                 9, left,
                 11, status,
                 12, size,
                 13, currentbytes,
-                15, str(speed),
-                16, elapsed
+                14, speed,
+                15, elapsed,
+                17, place
             )
         else:
             if self.TreeUsers > 0:
@@ -543,7 +498,7 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
+                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
                     )
 
                 parent = self.users[user]
@@ -558,7 +513,7 @@ class TransferList:
                     if path not in self.paths:
                         self.paths[path] = self.transfersmodel.append(
                             self.users[user],
-                            [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, False, "", 0, filecount]
+                            [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
                         )
 
                     parent = self.paths[path]
@@ -580,7 +535,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                (user, path, shortfn, status, str(place), percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, True, str(speed), elapsed, filecount)
+                (user, path, shortfn, status, str(place), percent, str(hsize), hspeed, helapsed, left, fn, transfer.status, size, icurrentbytes, speed, elapsed, filecount, place)
             )
             transfer.iter = iter
 
@@ -698,9 +653,9 @@ class TransferList:
 
         for i in transfers:
 
-            self.frame.np.transfers.AbortTransfer(i, remove)
-            i.status = "Aborted"
-            i.req = None
+            if i.status != "Finished":
+                self.frame.np.transfers.AbortTransfer(i, remove)
+                i.status = "Aborted"
 
             if clear:
                 self.list.remove(i)

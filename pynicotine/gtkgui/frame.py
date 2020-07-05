@@ -2213,7 +2213,7 @@ class NicotineFrame:
 
         if self.SearchNotebook:
             self.SearchNotebook.maxdisplayedresults = config["searches"]["max_displayed_results"]
-            self.SearchNotebook.maxstoredresultsa = config["searches"]["max_stored_results"]
+            self.SearchNotebook.maxstoredresults = config["searches"]["max_stored_results"]
 
         # Modify GUI
         self.UpdateDownloadFilters()

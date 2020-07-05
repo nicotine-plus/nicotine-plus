@@ -44,7 +44,6 @@ from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.countrycodes import code2name
-from pynicotine.utils import cmp
 from pynicotine.utils import executeCommand
 
 gi.require_version('Pango', '1.0')
@@ -1364,33 +1363,6 @@ def InputDialog(parent, title, message, default=""):
     dlg.destroy()
 
     return result
-
-
-def int_sort_func(model, iter1, iter2, column):
-    try:
-        val1 = int(model.get_value(iter1, column))
-    except Exception:
-        val1 = 0
-    try:
-        val2 = int(model.get_value(iter2, column))
-    except Exception:
-        val2 = 0
-    return cmp(val1, val2)
-
-
-def float_sort_func(model, iter1, iter2, column):
-
-    try:
-        val1 = float(model.get_value(iter1, column))
-    except Exception:
-        val1 = 0.0
-
-    try:
-        val2 = float(model.get_value(iter2, column))
-    except Exception:
-        val2 = 0.0
-
-    return cmp(val1, val2)
 
 
 def WriteLog(logsdir, fn, msg):
