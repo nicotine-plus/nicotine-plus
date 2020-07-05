@@ -165,11 +165,6 @@ class TransferList:
         self.widget.set_sensitive(False)
         self.list = None
         self.Clear()
-        self.transfersmodel.clear()
-        self.users.clear()
-        self.paths.clear()
-        self.selected_transfers = []
-        self.selected_users = []
 
     def select_transfers(self):
         self.selected_transfers = []
