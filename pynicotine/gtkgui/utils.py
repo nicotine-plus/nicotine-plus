@@ -184,6 +184,20 @@ def FillFileGroupingCombobox(combobox):
     combobox.add_attribute(renderer_text, "text", 0)
 
 
+def SelectUserRowIter(fmodel, sel, user_index, selected_user, iter):
+    while iter is not None:
+        user = fmodel.get_value(iter, user_index)
+
+        if selected_user == user:
+            sel.select_path(fmodel.get_path(iter),)
+
+        child = fmodel.iter_children(iter)
+
+        SelectUserRowIter(fmodel, sel, user_index, selected_user, child)
+
+        iter = fmodel.iter_next(iter)
+
+
 def CollapseTreeview(treeview, groupingmode):
     treeview.collapse_all()
 

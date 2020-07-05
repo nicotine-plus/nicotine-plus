@@ -270,7 +270,7 @@ class Transfers:
             if direction == 0:
                 self.downloads.append(transfer)
             else:
-                self._updateOrAppendUpload(user, filename, transfer)
+                self._appendUpload(user, filename, transfer)
         else:
             transfer.status = "Getting status"
 
@@ -584,7 +584,7 @@ class Transfers:
                 timequeued=time.time(), size=self.getFileSize(realpath),
                 place=len(self.uploads)
             )
-            self._updateOrAppendUpload(user, msg.file, newupload)
+            self._appendUpload(user, msg.file, newupload)
             self.uploadspanel.update(newupload)
             self.addQueued(user, realpath)
             return response
@@ -600,20 +600,19 @@ class Transfers:
             req=msg.req, size=size, place=len(self.uploads)
         )
 
-        self._updateOrAppendUpload(user, msg.file, transferobj)
+        self._appendUpload(user, msg.file, transferobj)
         transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
         transferobj.transfertimer.setDaemon(True)
         transferobj.transfertimer.start()
         self.uploadspanel.update(transferobj)
         return response
 
-    def _updateOrAppendUpload(self, user, file, transferobj):
+    def _appendUpload(self, user, filename, transferobj):
 
         for i in self.uploads:
-            if i.user == user and i.filename == file:
-                self.uploadspanel.replace(i, transferobj)
-                i = transferobj
-                return
+            if i.user == user and i.filename == filename:
+                self.uploads.remove(i)
+                self.uploadspanel.remove(i)
 
         self.uploads.append(transferobj)
 
@@ -697,7 +696,7 @@ class Transfers:
                     path=os.path.dirname(realpath), status="Queued",
                     timequeued=time.time(), size=self.getFileSize(realpath)
                 )
-                self._updateOrAppendUpload(user, msg.file, newupload)
+                self._appendUpload(user, msg.file, newupload)
                 self.uploadspanel.update(newupload)
                 self.addQueued(user, msg.file)
                 self.eventprocessor.frame.pluginhandler.UploadQueuedNotification(user, msg.file, realpath)
