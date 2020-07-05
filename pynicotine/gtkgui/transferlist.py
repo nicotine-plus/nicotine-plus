@@ -67,7 +67,7 @@ class TransferList:
             str,                   # (1)  path
             str,                   # (2)  file name
             str,                   # (3)  status
-            gobject.TYPE_UINT64,   # (4)  queue position
+            str,                   # (4)  hqueue position
             gobject.TYPE_UINT64,   # (5)  percent
             str,                   # (6)  hsize
             str,                   # (7)  hspeed
@@ -80,6 +80,7 @@ class TransferList:
             gobject.TYPE_UINT64,   # (14) speed
             gobject.TYPE_UINT64,   # (15) time elapsed
             gobject.TYPE_UINT64,   # (16) file count
+            gobject.TYPE_UINT64,   # (17) queue position
         ]
 
         self.transfersmodel = gtk.TreeStore(*columntypes)
@@ -118,10 +119,10 @@ class TransferList:
         self.col_path.set_sort_column_id(1)
         self.col_filename.set_sort_column_id(2)
         self.col_status.set_sort_column_id(11)
-        self.col_position.set_sort_column_id(4)
+        self.col_position.set_sort_column_id(17)
         self.col_percent.set_sort_column_id(5)
         self.col_human_size.set_sort_column_id(12)
-        self.col_human_speed.set_sort_column_id(7)
+        self.col_human_speed.set_sort_column_id(14)
         self.col_time_elapsed.set_sort_column_id(8)
         self.col_time_left.set_sort_column_id(9)
 
@@ -341,7 +342,7 @@ class TransferList:
         files = self.transfersmodel.iter_n_children(initer)
         speed = 0.0
         percent = totalsize = position = 0
-        helapsed = left = ""
+        hspeed = helapsed = left = ""
         elapsed = 0
         filecount = 0
         salientstatus = ""
@@ -384,12 +385,12 @@ class TransferList:
         if totalsize > 0:
             percent = ((100 * position) / totalsize)
 
-        if speed <= 0.0:
-            left = "∞"
-        else:
+        if speed > 0:
+            hspeed = HumanSpeed(speed)
             left = self.frame.np.transfers.getTime((totalsize - position) / speed / 1024)
 
-        helapsed = self.frame.np.transfers.getTime(elapsed)
+        if elapsed > 0:
+            helapsed = self.frame.np.transfers.getTime(elapsed)
 
         if len(extensions) == 0:
             extensions = ""
@@ -406,7 +407,7 @@ class TransferList:
             3, self.TranslateStatus(salientstatus),
             5, percent,
             6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
-            7, HumanSpeed(speed),
+            7, hspeed,
             8, helapsed,
             9, left,
             11, salientstatus,
@@ -425,6 +426,8 @@ class TransferList:
         currentbytes = transfer.currentbytes
         place = transfer.place
 
+        hspeed = helapsed = ""
+
         if currentbytes is None:
             currentbytes = 0
 
@@ -441,24 +444,17 @@ class TransferList:
         if transfer.modifier:
             hsize += " (%s)" % transfer.modifier
 
-        speed = transfer.speed
+        speed = transfer.speed or 0
+        elapsed = transfer.timeelapsed or 0
+        left = transfer.timeleft
 
-        elapsed = transfer.timeelapsed
-        left = str(transfer.timeleft)
-
-        if speed is None:
-            speed = 0
-        else:
+        if speed > 0:
             # transfer.speed is in KB
             speed = float(speed) * 1024
+            hspeed = HumanSpeed(speed)
 
-        if elapsed is None:
-            elapsed = 0
-
-        helapsed = self.frame.np.transfers.getTime(elapsed)
-
-        if left == "None":
-            left = ""
+        if elapsed > 0:
+            helapsed = self.frame.np.transfers.getTime(elapsed)
 
         try:
             icurrentbytes = int(currentbytes)
@@ -466,7 +462,7 @@ class TransferList:
                 percent = 100
             else:
                 percent = ((100 * icurrentbytes) / int(size))
-        except Exception as e:  # noqa: F841
+        except Exception:
             icurrentbytes = 0
             percent = 0
 
@@ -485,17 +481,18 @@ class TransferList:
                 1, path,
                 2, shortfn,
                 3, hstatus,
-                4, place,
+                4, str(place),
                 5, percent,
                 6, str(hsize),
-                7, HumanSpeed(speed),
+                7, hspeed,
                 8, helapsed,
                 9, left,
                 11, status,
                 12, size,
                 13, currentbytes,
                 14, speed,
-                15, elapsed
+                15, elapsed,
+                17, place
             )
         else:
             if self.TreeUsers > 0:
@@ -506,7 +503,7 @@ class TransferList:
                     # ProgressRender not visible (last column sets 4th column)
                     self.users[user] = self.transfersmodel.append(
                         None,
-                        [user, "", "", "", 0, 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount]
+                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
                     )
 
                 parent = self.users[user]
@@ -521,7 +518,7 @@ class TransferList:
                     if path not in self.paths:
                         self.paths[path] = self.transfersmodel.append(
                             self.users[user],
-                            [user, transfer.path, "", "", 0, 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount]
+                            [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
                         )
 
                     parent = self.paths[path]
@@ -543,7 +540,7 @@ class TransferList:
 
             iter = self.transfersmodel.append(
                 parent,
-                (user, path, shortfn, status, place, percent, str(hsize), HumanSpeed(speed), helapsed, left, fn, transfer.status, size, icurrentbytes, speed, elapsed, filecount)
+                (user, path, shortfn, status, str(place), percent, str(hsize), hspeed, helapsed, left, fn, transfer.status, size, icurrentbytes, speed, elapsed, filecount, place)
             )
             transfer.iter = iter
 

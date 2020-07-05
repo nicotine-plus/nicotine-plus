@@ -1189,7 +1189,7 @@ class Transfers:
 
                 if curtime > i.starttime and i.currentbytes > i.offset:
                     try:
-                        i.speed = (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024
+                        i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
                     except ZeroDivisionError:
                         i.speed = 0
                     if i.speed <= 0.0:
@@ -1251,6 +1251,8 @@ class Transfers:
                     )
 
         i.status = "Finished"
+        i.speed = 0
+        i.timeleft = ""
 
         if newname:
             self.eventprocessor.logMessage(
@@ -1370,7 +1372,7 @@ class Transfers:
 
             if curtime > i.starttime and i.currentbytes > i.offset:
                 try:
-                    i.speed = (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024
+                    i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
                 except ZeroDivisionError:
                     i.speed = lastspeed  # too fast!
 
@@ -1402,6 +1404,8 @@ class Transfers:
             else:
                 msg.file.close()
                 i.status = "Finished"
+                i.speed = 0
+                i.timeleft = ""
 
                 if i.speed is not None:
                     self.queue.put(slskmessages.SendUploadSpeed(int(i.speed * 1024)))
@@ -1926,6 +1930,8 @@ class Transfers:
     def AbortTransfer(self, transfer, remove=0):
 
         transfer.req = None
+        transfer.speed = 0
+        transfer.timeleft = ""
 
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))

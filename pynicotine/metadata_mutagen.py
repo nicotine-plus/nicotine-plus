@@ -33,7 +33,7 @@ from mutagen.oggvorbis import OggVorbisInfo
 
 
 def detect(path):
-    print(path)
+
     try:
         audio = mutagen.File(path)
     except IOError:
@@ -47,7 +47,7 @@ def detect(path):
     except Exception:
         # mutagen didn't think the file was audio
         return None
-    print(type(audio.info))
+
     if type(audio.info) == MPEGInfo:
         return processMPEG(audio)
     elif type(audio.info) == StreamInfo:
