@@ -34,7 +34,6 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.entrydialog import input_box
-from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
@@ -44,6 +43,7 @@ from pynicotine.utils import CleanFile
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
 from pynicotine.utils import GetUserDirectories
+from pynicotine.utils import GetResultBitrateLength
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
@@ -539,38 +539,16 @@ class UserBrowse:
             except ValueError:
                 size = 0
 
-            f = [file[1], Humanize(size)]
+            f = [file[1], HumanSize(size)]
 
-            if file[3] == "":
-                f += ["", ""]
-            else:
-                # file[4] is for file types such as 'mp3'
-                attrs = file[4]
-                if attrs != [] and type(attrs) is list:
-
-                    if len(attrs) >= 3:
-
-                        br = str(attrs[0])
-                        if attrs[2]:
-                            br = br + " (vbr)"
-
-                        try:
-                            rl = int(attrs[1])
-                        except ValueError:
-                            rl = 0
-
-                        l = "%i:%02i" % (rl / 60, rl % 60)  # noqa: E741
-                        f += [br, l]
-                    else:
-                        f += ["", ""]
-                else:
-                    f += ["", ""]
+            h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
+            f += [h_bitrate, h_length]
 
             f += [int(size), rl, file[1]]
 
             try:
                 self.files[f[0]] = self.FileStore.append(f)
-            except Exception as error:  # noqa: F841
+            except Exception:
                 displayTraceback()
 
     def OnSave(self, widget):
@@ -732,23 +710,9 @@ class UserBrowse:
 
                 path = "\\".join([dir, file[1]])
                 size = file[2]
-                length = bitrate = None
-                attrs = file[4]
+                h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
-                if attrs != []:
-
-                    bitrate = str(attrs[0])
-                    if len(attrs) > 2 and attrs[2]:
-                        bitrate += " (vbr)"
-
-                    try:
-                        rl = int(attrs[1])
-                    except ValueError:
-                        rl = 0
-
-                    length = "%i:%02i" % (int(rl // 60), rl % 60)
-
-                self.frame.np.transfers.getFile(self.user, path, ldir, size=size, bitrate=bitrate, length=length, checkduplicate=True)
+                self.frame.np.transfers.getFile(self.user, path, ldir, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
 
         if not recurse:
             return
@@ -775,24 +739,10 @@ class UserBrowse:
 
                 path = "\\".join([dir, file[1]])
                 size = file[2]
-                length = bitrate = None
-                attrs = file[4]
-
-                if attrs != []:
-
-                    bitrate = str(attrs[0])
-                    if len(attrs) > 2 and attrs[2]:
-                        bitrate += " (vbr)"
-
-                    try:
-                        rl = int(attrs[1])
-                    except ValueError:
-                        rl = 0
-
-                    length = "%i:%02i" % (int(rl // 60), rl % 60)
+                h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
                 # Get the file
-                self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=bitrate, length=length, checkduplicate=True)
+                self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
 
             # We have found the wanted directory: we can break out of the loop
             break

@@ -48,6 +48,7 @@ from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
+from pynicotine.utils import GetResultBitrateLength
 
 win32 = sys.platform.startswith("win")
 
@@ -1871,27 +1872,17 @@ class Transfers:
                         normalfiles = [x for junk, x in deco]
 
                     for file in priorityfiles + normalfiles:
-                        length = bitrate = None
-                        attrs = file[4]
-
-                        if attrs != []:
-                            bitrate = str(attrs[0])
-                            if attrs[2]:
-                                bitrate += " (vbr)"
-                            try:
-                                rl = int(attrs[1])
-                            except Exception:
-                                rl = 0
-                            length = "%i:%02i" % (rl // 60, rl % 60)
+                        size = file[2]
+                        h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
                         if directory[-1] == '\\':
                             self.getFile(
                                 username,
                                 directory + file[1],
                                 self.FolderDestination(username, directory),
-                                size=file[2],
-                                bitrate=bitrate,
-                                length=length,
+                                size=size,
+                                bitrate=h_bitrate,
+                                length=h_length,
                                 checkduplicate=True
                             )
                         else:
@@ -1899,9 +1890,9 @@ class Transfers:
                                 username,
                                 directory + '\\' + file[1],
                                 self.FolderDestination(username, directory),
-                                size=file[2],
-                                bitrate=bitrate,
-                                length=length,
+                                size=size,
+                                bitrate=h_bitrate,
+                                length=h_length,
                                 checkduplicate=True
                             )
 
