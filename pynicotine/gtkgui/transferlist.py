@@ -34,6 +34,8 @@ from gi.repository import Gtk as gtk
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import SelectUserRowIter
 from pynicotine.gtkgui.utils import float_sort_func
 from pynicotine.gtkgui.utils import int_sort_func
 from pynicotine.utils import cmp
@@ -126,6 +128,17 @@ class TransferList:
 
         self.UpdateColours()
 
+    def saveColumns(self):
+        columns = []
+        widths = []
+
+        for column in self.widget.get_columns():
+            columns.append(column.get_visible())
+            widths.append(column.get_width())
+
+        self.frame.np.config.sections["columns"][self.type + "_columns"] = columns
+        self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
+
     def UpdateColours(self):
         self.frame.SetTextBG(self.widget)
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
@@ -185,6 +198,7 @@ class TransferList:
     def select_transfers(self):
         self.selected_transfers = []
         self.selected_users = []
+
         self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
     def OnBan(self, widget):
@@ -288,15 +302,9 @@ class TransferList:
 
         return False  # Stopping timeout
 
-    def replace(self, oldtransfer, newtransfer):
+    def remove(self, transfer):
 
-        for i in self.transfers:
-            if i[2] == oldtransfer:
-                i[2] = newtransfer
-                self.update_specific(newtransfer)
-                return
-        else:
-            print(("WARNING: Could not find transfer %s." % oldtransfer))
+        self.transfersmodel.remove(transfer.iter)
 
     def update(self, transfer=None, forced=False):
 
@@ -591,6 +599,84 @@ class TransferList:
         if self.list is not None:
             for i in self.list:
                 i.iter = None
+
+    def OnPopupMenuUsers(self, widget):
+
+        self.select_transfers()
+
+        self.popup_menu_users.clear()
+
+        if len(self.selected_users) > 0:
+
+            items = []
+            self.selected_users.sort(key=str.lower)
+
+            for user in self.selected_users:
+
+                popup = PopupMenu(self.frame, False)
+                popup.setup(
+                    ("#" + _("Send _message"), popup.OnSendMessage),
+                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
+                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
+                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
+                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+                    ("", None),
+                    ("$" + _("_Add user to list"), popup.OnAddToList),
+                    ("$" + _("_Ban this user"), popup.OnBanUser),
+                    ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+                    ("#" + _("Select User's Transfers"), self.OnSelectUserTransfers)
+                )
+                popup.set_user(user)
+
+                items.append((1, user, popup, self.OnPopupMenuUser, popup))
+
+            self.popup_menu_users.setup(*items)
+
+        return True
+
+    def OnPopupMenuUser(self, widget, popup=None):
+
+        if popup is None:
+            return
+
+        menu = popup
+        user = menu.user
+        items = menu.get_children()
+
+        act = False
+        if len(self.selected_users) >= 1:
+            act = True
+
+        items[0].set_sensitive(act)
+        items[1].set_sensitive(act)
+        items[2].set_sensitive(act)
+        items[3].set_sensitive(act)
+
+        items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+        items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+
+        for i in range(4, 9):
+            items[i].set_sensitive(act)
+
+        return True
+
+    def OnSelectUserTransfers(self, widget):
+
+        if len(self.selected_users) == 0:
+            return
+
+        selected_user = widget.get_parent().user
+
+        sel = self.widget.get_selection()
+        fmodel = self.widget.get_model()
+        sel.unselect_all()
+
+        iter = fmodel.get_iter_first()
+
+        SelectUserRowIter(fmodel, sel, 0, selected_user, iter)
+
+        self.select_transfers()
 
     def OnCopyURL(self, widget):
         i = self.selected_transfers[0]

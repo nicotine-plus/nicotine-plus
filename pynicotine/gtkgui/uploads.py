@@ -117,17 +117,6 @@ class Uploads(TransferList):
 
         self.OnExpandUploads(None)
 
-    def saveColumns(self):
-
-        columns = []
-        widths = []
-        for column in self.frame.UploadList.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"]["upload_columns"] = columns
-        self.frame.np.config.sections["columns"]["upload_widths"] = widths
-
     def OnTryClearQueued(self, widget):
 
         direction = "up"
@@ -221,26 +210,6 @@ class Uploads(TransferList):
 
         self.frame.np.transfers.checkUploadQueue()
 
-    def OnSelectUserTransfer(self, widet):
-
-        if len(self.selected_users) != 1:
-            return
-
-        selected_user = self.selected_users[0]
-
-        sel = self.frame.UploadList.get_selection()
-        fmodel = self.frame.UploadList.get_model()
-        sel.unselect_all()
-
-        for item in self.transfers:
-            user_file, iter, transfer = item
-            user, filepath = user_file
-            if selected_user == user:
-                ix = fmodel.get_path(iter)
-                sel.select_path(ix,)
-
-        self.select_transfers()
-
     def on_key_press_event(self, widget, event):
 
         key = Gdk.keyval_name(event.keyval)
@@ -275,66 +244,6 @@ class Uploads(TransferList):
             file = fn.filename.replace("\\", os.sep)
             if os.path.exists(file):
                 executeCommand(executable, file, background=False)
-
-    def OnPopupMenuUsers(self, widget):
-
-        self.select_transfers()
-
-        self.popup_menu_users.clear()
-
-        if len(self.selected_users) > 0:
-
-            items = []
-            self.selected_users.sort(key=str.lower)
-
-            for user in self.selected_users:
-                popup = PopupMenu(self.frame, False)
-                popup.setup(
-                    ("#" + _("Send _message"), popup.OnSendMessage),
-                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
-                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
-                    ("", None),
-                    ("$" + _("_Add user to list"), popup.OnAddToList),
-                    ("$" + _("_Ban this user"), popup.OnBanUser),
-                    ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-                    ("#" + _("Select User's Transfers"), self.OnSelectUserTransfer)
-                )
-                popup.set_user(user)
-
-                items.append((1, user, popup, self.OnPopupMenuUser, popup))
-
-            self.popup_menu_users.setup(*items)
-
-        return True
-
-    def OnPopupMenuUser(self, widget, popup=None):
-
-        if popup is None:
-            return
-
-        menu = popup
-        user = menu.user
-        items = menu.get_children()
-
-        act = False
-        if len(self.selected_users) >= 1:
-            act = True
-
-        items[0].set_sensitive(act)
-        items[1].set_sensitive(act)
-        items[2].set_sensitive(act)
-        items[3].set_sensitive(act)
-
-        items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-        items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
-        for i in range(4, 9):
-            items[i].set_sensitive(act)
-
-        return True
 
     def OnPopupMenu(self, widget, event, kind):
 

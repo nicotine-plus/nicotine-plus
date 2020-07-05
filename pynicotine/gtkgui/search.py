@@ -48,6 +48,7 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
+from pynicotine.gtkgui.utils import SelectUserRowIter
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
@@ -1235,25 +1236,12 @@ class Search:
         sel = self.ResultsList.get_selection()
         fmodel = self.ResultsList.get_model()
         sel.unselect_all()
-        iter = self.resultsmodel.get_iter_first()
 
-        self.UserRowIter(fmodel, sel, selected_user, iter)
+        iter = fmodel.get_iter_first()
+
+        SelectUserRowIter(fmodel, sel, 1, selected_user, iter)
 
         self.select_results()
-
-    def UserRowIter(self, fmodel, sel, selected_user, iter):
-        child = self.resultsmodel.iter_children(iter)
-
-        while child is not None:
-
-            user = self.resultsmodel.get_value(child, 1)
-
-            if selected_user == user:
-                sel.select_path(fmodel.get_path(child),)
-
-            self.UserRowIter(fmodel, sel, selected_user, child)
-
-            child = self.resultsmodel.iter_next(child)
 
     def select_results(self):
 

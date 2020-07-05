@@ -14,6 +14,7 @@ Changes
  * Search results and transfers can now be grouped by folder
  * Support for transfers larger than 2 GB in size
  * Transfers and search results now support drag-select
+ * Performance improvements in downloads, uploads and search views
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
  * Added unit and DEP-8 continuous integration testing
@@ -96,6 +97,7 @@ Bugs closed in GitHub
  * Window decorator close button doesn't work (#330)
  * Question: group by folders vs group by users (#335)
  * #312 continued, cannot connect (#336)
+ * AttributeError: 'Uploads' object has no attribute 'transfers' (#360)
 
 Version 1.4.3 (unstable)
 -----------------------------
