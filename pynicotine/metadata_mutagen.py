@@ -33,7 +33,7 @@ from mutagen.oggvorbis import OggVorbisInfo
 
 
 def detect(path):
-
+    print(path)
     try:
         audio = mutagen.File(path)
     except IOError:
@@ -47,7 +47,7 @@ def detect(path):
     except Exception:
         # mutagen didn't think the file was audio
         return None
-
+    print(type(audio.info))
     if type(audio.info) == MPEGInfo:
         return processMPEG(audio)
     elif type(audio.info) == StreamInfo:
@@ -112,19 +112,10 @@ def processMPEG(audio):
 
 def processFlac(audio):
 
-    filesize = os.path.getsize(audio.filename)
-
-    duration = audio.info.length
-
-    if duration > 0:
-        bitrate = filesize / duration * 8 / 1000
-    else:
-        bitrate = None
-
     return {
-        "bitrate": bitrate,
+        "bitrate": (audio.info.bitrate / 1000),
         "vbr": False,
-        "time": duration,
+        "time": audio.info.length,
     }
 
 

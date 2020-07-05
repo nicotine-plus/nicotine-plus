@@ -52,7 +52,6 @@ from pynicotine.gtkgui.utils import SelectUserRowIter
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
-from pynicotine.utils import cmp
 from pynicotine.utils import GetResultBitrateLength
 
 gi.require_version('Gtk', '3.0')
@@ -495,6 +494,34 @@ class Search:
 
         builder.connect_signals(self)
 
+        self.text = text
+        self.id = id
+        self.mode = mode
+        self.remember = remember
+        self.selected_results = []
+        self.selected_users = []
+        self.usersiters = {}
+        self.directoryiters = {}
+        self.users = set()
+        self.all_data = []
+        self.filters = None
+        self.resultslimit = 2000
+        self.numvisibleresults = 0
+
+        FillFileGroupingCombobox(self.ResultGrouping)
+        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
+        self.ResultGrouping.connect("changed", self.OnGroup)
+
+        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
+        self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
+
+        if mode > 0:
+            self.RememberCheckButton.set_sensitive(False)
+
+        self.RememberCheckButton.set_active(remember)
+
+        """ Filters """
+
         self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterBitrate.set_model(self.FilterBitrate_List)
         self.FilterBitrate.set_entry_text_column(0)
@@ -514,53 +541,6 @@ class Search:
         self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
         self.FilterOut.set_model(self.FilterOut_List)
         self.FilterOut.set_entry_text_column(0)
-
-        self.text = text
-        self.id = id
-        self.mode = mode
-        self.remember = remember
-        self.usersiters = {}
-        self.directoryiters = {}
-        self.users = set()
-        self.resultslimit = 2000
-        self.numvisibleresults = 0
-
-        FillFileGroupingCombobox(self.ResultGrouping)
-        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
-        self.ResultGrouping.connect("changed", self.OnGroup)
-
-        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
-        self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
-
-        self.all_data = []
-        self.filters = None
-        self.COLUMN_TYPES = [
-            str,  # num
-            str,  # user
-            gobject.TYPE_OBJECT,  # self.get_flag(user, country)
-            str,  # immediatedl
-            str,  # h_speed
-            str,  # h_queue
-            str,  # directory
-            str,  # filename
-            str,  # h_size
-            str,  # h_bitrate
-            str,  # length
-            int,  # bitrate
-            str,  # fullpath
-            str,  # country
-            gobject.TYPE_UINT64,  # size
-            int,  # speed
-            int,  # queue
-            int   # status
-        ]
-
-        self.resultsmodel = gtk.TreeStore(* self.COLUMN_TYPES)
-
-        if mode > 0:
-            self.RememberCheckButton.set_sensitive(False)
-
-        self.RememberCheckButton.set_active(remember)
 
         self.PopulateFilters()
 
@@ -588,16 +568,40 @@ class Search:
         self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
         self.FilterCountry.get_child().connect("activate", self.OnRefilter)
 
-        self.selected_results = []
-        self.selected_users = []
+        """ Columns """
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.ResultsList.set_enable_tree_lines(True)
+        self.ResultsList.set_headers_clickable(True)
         self.ResultsList.set_rubber_banding(True)
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
 
             self.ResultsList.set_show_expanders(True)
+
+        self.COLUMN_TYPES = [
+            gobject.TYPE_UINT64,  # (0)  num
+            str,                  # (1)  user
+            gobject.TYPE_OBJECT,  # (2)  flag
+            str,                  # (3)  immediatedl
+            str,                  # (4)  h_speed
+            str,                  # (5)  h_queue
+            str,                  # (6)  directory
+            str,                  # (7)  filename
+            str,                  # (8)  h_size
+            str,                  # (9)  h_bitrate
+            str,                  # (10) length
+            gobject.TYPE_UINT64,  # (11) bitrate
+            str,                  # (12) fullpath
+            str,                  # (13) country
+            gobject.TYPE_UINT64,  # (14) size
+            gobject.TYPE_UINT64,  # (15) speed
+            gobject.TYPE_UINT64,  # (16) queue
+            gobject.TYPE_INT64    # (17) status
+        ]
+
+        self.resultsmodel = gtk.TreeStore(*self.COLUMN_TYPES)
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
@@ -616,7 +620,7 @@ class Search:
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
-        cols[0].get_widget().hide()
+        self.col_num.get_widget().hide()
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -624,31 +628,38 @@ class Search:
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
 
-        for i in range(11):
+        try:
+            for i in range(len(cols)):
 
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
-            if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent = cols[i].get_widget().get_ancestor(gtk.Button)
+                if parent:
+                    parent.connect('button_press_event', PressHeader)
 
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(self.frame.np.config.sections["columns"]["filesearch_columns"][i])
-
-        self.ResultsList.set_model(self.resultsmodel)
+                # Read Show / Hide column settings from last session
+                cols[i].set_visible(self.frame.np.config.sections["columns"]["filesearch_columns"][i])
+        except IndexError:
+            # Column count in config is probably incorrect (outdated?), don't crash
+            pass
 
         self.col_num.set_sort_column_id(0)
         self.col_user.set_sort_column_id(1)
-        self.col_file.set_sort_column_id(7)
-        self.col_size.set_sort_column_id(14)
+        self.col_country.set_sort_column_id(13)
+        self.col_immediate.set_sort_column_id(3)
         self.col_speed.set_sort_column_id(15)
         self.col_queue.set_sort_column_id(16)
-        self.col_immediate.set_sort_column_id(3)
+        self.col_directory.set_sort_column_id(6)
+        self.col_file.set_sort_column_id(7)
+        self.col_size.set_sort_column_id(14)
         self.col_bitrate.set_sort_column_id(11)
         self.col_length.set_sort_column_id(10)
-        self.col_country.set_sort_column_id(13)
-        self.col_directory.set_sort_column_id(6)
 
-        self.ResultsList.set_enable_tree_lines(True)
-        self.ResultsList.set_headers_clickable(True)
+        self.ResultsList.set_model(self.resultsmodel)
+
+        self.ResultsList.connect("button_press_event", self.OnListClicked)
+
+        self.ChangeColours()
+
+        """ Popup """
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
@@ -664,10 +675,6 @@ class Search:
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
         )
-
-        self.ResultsList.connect("button_press_event", self.OnListClicked)
-
-        self.ChangeColours()
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
         return showCountryTooltip(widget, x, y, tooltip, 13, stripprefix='')
@@ -805,7 +812,7 @@ class Search:
             h_size = HumanSize(size)
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
-            self.append([str(counter), user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, result[1], country, result[2], ulspeed, inqueue, status])
+            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, result[1], country, result[2], ulspeed, inqueue, status])
             counter += 1
 
         # Update counter
@@ -864,7 +871,7 @@ class Search:
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
                 )
 
             parent = self.usersiters[user]
@@ -875,7 +882,7 @@ class Search:
                 if directory not in self.directoryiters:
                     self.directoryiters[directory] = self.resultsmodel.append(
                         self.usersiters[user],
-                        ["", user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
                     )
 
                 row = row[:]
@@ -942,28 +949,6 @@ class Search:
                     return
 
                 useriter = self.resultsmodel.iter_next(useriter)
-
-    def sort(self):
-
-        col = self.sort_col
-        order = self.sort_order
-
-        if col == 8:
-            col = 14
-        elif col == 4:
-            col = 15
-        elif col == 5:
-            col = 16
-
-        if self.COLUMN_TYPES[col] == gobject.TYPE_STRING:
-            compare = locale.strcoll
-        else:
-            compare = cmp
-
-        if order == gtk.SortType.ASCENDING:
-            self.all_data.sort(lambda r1, r2: compare(r1[col], r2[col]))
-        else:
-            self.all_data.sort(lambda r2, r1: compare(r1[col], r2[col]))
 
     def checkDigit(self, filter, value, factorize=True):
 

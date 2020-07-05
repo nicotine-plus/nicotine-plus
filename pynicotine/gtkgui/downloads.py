@@ -39,7 +39,6 @@ from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
 
@@ -53,7 +52,6 @@ class Downloads(TransferList):
 
         TransferList.__init__(self, frame, frame.DownloadList, type='download')
         self.myvbox = self.frame.downloadsvbox
-        self.accel_group = gtk.AccelGroup()
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
@@ -86,23 +84,6 @@ class Downloads(TransferList):
             ("", None),
             (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
-
-        frame.DownloadList.connect("button_press_event", self.OnPopupMenu, "mouse")
-        frame.DownloadList.connect("key-press-event", self.on_key_press_event)
-        cols = frame.DownloadList.get_columns()
-
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["download_columns"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
 
         frame.clearFinishedAbortedButton.connect("clicked", self.OnClearFinishedAborted)
         frame.clearQueuedButton.connect("clicked", self.OnTryClearQueued)

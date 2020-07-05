@@ -37,7 +37,6 @@ from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
 
@@ -78,24 +77,6 @@ class Uploads(TransferList):
             ("", None),
             (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
-
-        frame.UploadList.connect("button_press_event", self.OnPopupMenu, "mouse")
-        frame.UploadList.connect("key-press-event", self.on_key_press_event)
-
-        cols = frame.UploadList.get_columns()
-
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["upload_columns"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
 
         frame.clearUploadFinishedErredButton.connect("clicked", self.OnClearFinishedErred)
         frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
