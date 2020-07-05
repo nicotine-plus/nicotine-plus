@@ -1221,6 +1221,8 @@ class Transfers:
 
     def DownloadFinished(self, file, i):
         file.close()
+        i.file = None
+
         basename = CleanFile(i.filename.split('\\')[-1])
         config = self.eventprocessor.config.sections
         downloaddir = config["transfers"]["downloaddir"]

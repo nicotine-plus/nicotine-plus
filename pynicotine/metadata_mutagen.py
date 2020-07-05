@@ -112,10 +112,19 @@ def processMPEG(audio):
 
 def processFlac(audio):
 
+    filesize = os.path.getsize(audio.filename)
+
+    duration = audio.info.length
+
+    if duration > 0:
+        bitrate = filesize / duration * 8 / 1000
+    else:
+        bitrate = None
+
     return {
-        "bitrate": (audio.info.bitrate / 1000),
+        "bitrate": bitrate,
         "vbr": False,
-        "time": audio.info.length,
+        "time": duration,
     }
 
 

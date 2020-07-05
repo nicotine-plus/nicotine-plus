@@ -653,9 +653,9 @@ class TransferList:
 
         for i in transfers:
 
-            self.frame.np.transfers.AbortTransfer(i, remove)
-            i.status = "Aborted"
-            i.req = None
+            if i.status != "Finished":
+                self.frame.np.transfers.AbortTransfer(i, remove)
+                i.status = "Aborted"
 
             if clear:
                 self.list.remove(i)
