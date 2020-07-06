@@ -880,7 +880,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads + self.uploads):
+            for i in self.downloads:
 
                 if i.req != msg.req:
                     continue
@@ -888,6 +888,25 @@ class Transfers:
                 i.status = msg.reason
                 i.req = None
                 self.downloadspanel.update(i)
+
+                if msg.reason == "Queued":
+
+                    if i.user not in self.users or self.users[i.user].status is None:
+                        if i.user not in self.eventprocessor.watchedusers:
+                            self.queue.put(slskmessages.AddUser(i.user))
+                        self.queue.put(slskmessages.GetUserStatus(i.user))
+
+                    self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+
+                self.checkUploadQueue()
+
+            for i in self.uploads:
+
+                if i.req != msg.req:
+                    continue
+
+                i.status = msg.reason
+                i.req = None
                 self.uploadspanel.update(i)
 
                 if msg.reason == "Queued":
@@ -897,17 +916,15 @@ class Transfers:
                             self.queue.put(slskmessages.AddUser(i.user))
                         self.queue.put(slskmessages.GetUserStatus(i.user))
 
-                    if i in self.uploads:
-                        if i.transfertimer is not None:
-                            i.transfertimer.cancel()
-                        self.uploads.remove(i)
-                        self.uploadspanel.update()
+                    if i.transfertimer is not None:
+                        i.transfertimer.cancel()
 
-                    if i in self.downloads:
-                        self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+                    self.uploads.remove(i)
+                    self.uploadspanel.update()
+
                 elif msg.reason == "Cancelled":
-                    if i in self.uploads:
-                        self.AutoClearUpload(i)
+
+                    self.AutoClearUpload(i)
 
                 self.checkUploadQueue()
 
@@ -959,8 +976,12 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i.user))
 
             self.queue.put(slskmessages.GetUserStatus(i.user))
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if i in self.downloads:
+                self.downloadspanel.update(i)
+
+            if i in self.uploads:
+                self.uploadspanel.update(i)
 
         self.checkUploadQueue()
 
@@ -1838,8 +1859,13 @@ class Transfers:
             i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn.conn))
             self.eventprocessor.logMessage(_("I/O error: %s") % msg.strerror)
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if i in self.downloads:
+                self.downloadspanel.update(i)
+
+            if i in self.uploads:
+                self.uploadspanel.update(i)
+
             self.checkUploadQueue()
 
     def FolderContentsResponse(self, msg):
