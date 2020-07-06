@@ -296,7 +296,7 @@ class NetworkEventProcessor:
             slskmessages.PrivateRoomAddOperator: self.PrivateRoomAddOperator,
             slskmessages.PrivateRoomRemoveOperator: self.PrivateRoomRemoveOperator,
             slskmessages.PublicRoomMessage: self.PublicRoomMessage,
-            slskmessages.Unknown: self.DummyMessage,
+            slskmessages.UnknownPeerMessage: self.DummyMessage,
         }
 
     def ProcessRequestToPeer(self, user, message, window=None, address=None):
@@ -419,7 +419,7 @@ class NetworkEventProcessor:
     # @param self NetworkEventProcessor (Class)
     # @param string a string containing an error message
     def Notify(self, string):
-        self.logMessage("%s" % string)
+        self.logMessage("%s" % string, 4)
 
     def PopupMessage(self, msg):
         self.setStatus(_(msg.title))
