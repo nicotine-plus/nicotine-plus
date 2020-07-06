@@ -365,10 +365,6 @@ class Downloads(TransferList):
 
         return True
 
-    def update(self, transfer=None, forced=False):
-
-        TransferList.update(self, transfer, forced)
-
     def OnGetPlaceInQueue(self, widget):
 
         self.select_transfers()

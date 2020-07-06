@@ -273,17 +273,17 @@ class TransferList:
 
         return False  # Stopping timeout
 
-    def update(self, transfer=None, forced=False):
+    def update(self, transfer=None, forced=False, nochildupdate=False):
 
         current_page = self.frame.MainNotebook.get_current_page()
         my_page = self.frame.MainNotebook.page_num(self.myvbox)
 
         if (current_page == my_page):
-            self._update(transfer, forced)
+            self._update(transfer, forced, nochildupdate)
 
         self.frame.UpdateBandwidth()
 
-    def _update(self, transfer=None, forced=True):
+    def _update(self, transfer=None, forced=True, nochildupdate=False):
 
         now = time()
 
@@ -292,7 +292,7 @@ class TransferList:
 
         if transfer is not None:
             self.update_specific(transfer)
-        elif self.list is not None:
+        elif not nochildupdate and self.list is not None:
 
             for i in self.list:
                 self.update_specific(i)
@@ -544,7 +544,10 @@ class TransferList:
         if not cleartreeviewonly:
             self.list.remove(transfer)
 
-        self.transfersmodel.remove(transfer.iter)
+        if transfer.iter is not None:
+            self.transfersmodel.remove(transfer.iter)
+
+        self.update(nochildupdate=True)
 
     def Clear(self):
         self.users.clear()
@@ -658,11 +661,10 @@ class TransferList:
             if i.status != "Finished":
                 self.frame.np.transfers.AbortTransfer(i, remove)
                 i.status = "Aborted"
+                self.update(i)
 
             if clear:
                 self.remove_specific(i)
-
-        self.update()
 
     def OnClearTransfer(self, widget):
         self.OnAbortTransfer(widget, False, True)
@@ -674,8 +676,6 @@ class TransferList:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
                 self.remove_specific(i)
-
-        self.update()
 
     def OnClearFinished(self, widget):
         self.ClearTransfers(["Finished"])
