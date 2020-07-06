@@ -419,7 +419,7 @@ class NetworkEventProcessor:
     # @param self NetworkEventProcessor (Class)
     # @param string a string containing an error message
     def Notify(self, string):
-        self.logMessage("%s" % string)
+        self.logMessage("%s" % string, 4)
 
     def PopupMessage(self, msg):
         self.setStatus(_(msg.title))
