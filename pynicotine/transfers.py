@@ -979,8 +979,7 @@ class Transfers:
 
             if i in self.downloads:
                 self.downloadspanel.update(i)
-
-            if i in self.uploads:
+            elif i in self.uploads:
                 self.uploadspanel.update(i)
 
         self.checkUploadQueue()
@@ -1752,8 +1751,12 @@ class Transfers:
             i.requestconn = None
             i.status = "Connection closed by peer"
             i.req = None
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if type == "download":
+                self.downloadspanel.update(i)
+            elif type == "upload":
+                self.uploadspanel.update(i)
+
             self.checkUploadQueue()
 
         if i.file is not None:
@@ -1776,8 +1779,12 @@ class Transfers:
                 j.timequeued = curtime
 
         i.conn = None
-        self.downloadspanel.update(i)
-        self.uploadspanel.update(i)
+
+        if type == "download":
+            self.downloadspanel.update(i)
+        elif type == "upload":
+            self.uploadspanel.update(i)
+
         self.checkUploadQueue()
 
     def getRenamed(self, name, originalfile):
@@ -1862,8 +1869,7 @@ class Transfers:
 
             if i in self.downloads:
                 self.downloadspanel.update(i)
-
-            if i in self.uploads:
+            elif i in self.uploads:
                 self.uploadspanel.update(i)
 
             self.checkUploadQueue()
