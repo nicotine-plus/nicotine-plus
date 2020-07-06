@@ -156,7 +156,7 @@ from pynicotine.slskmessages import SimilarUsers
 from pynicotine.slskmessages import TransferRequest
 from pynicotine.slskmessages import TransferResponse
 from pynicotine.slskmessages import TunneledMessage
-from pynicotine.slskmessages import Unknown
+from pynicotine.slskmessages import UnknownPeerMessage
 from pynicotine.slskmessages import UploadFailed
 from pynicotine.slskmessages import UploadFile
 from pynicotine.slskmessages import UploadQueueNotification
@@ -374,7 +374,7 @@ class SlskProtoThread(threading.Thread):
         QueueFailed: 50,
         PlaceInQueueRequest: 51,
         UploadQueueNotification: 52,
-        Unknown: 12547
+        UnknownPeerMessage: 12547
     }
 
     distribclasses = {

@@ -2144,9 +2144,12 @@ class UploadQueueNotification(PeerMessage):
         return b""
 
 
-class Unknown(PeerMessage):
+class UnknownPeerMessage(PeerMessage):
     """ Peer code: 12547 """
     """ UNKNOWN """
+    def __init__(self, conn):
+        self.conn = conn
+
     def parseNetworkMessage(self, message):
         pass
 

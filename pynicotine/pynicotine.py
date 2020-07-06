@@ -296,7 +296,7 @@ class NetworkEventProcessor:
             slskmessages.PrivateRoomAddOperator: self.PrivateRoomAddOperator,
             slskmessages.PrivateRoomRemoveOperator: self.PrivateRoomRemoveOperator,
             slskmessages.PublicRoomMessage: self.PublicRoomMessage,
-            slskmessages.Unknown: self.DummyMessage,
+            slskmessages.UnknownPeerMessage: self.DummyMessage,
         }
 
     def ProcessRequestToPeer(self, user, message, window=None, address=None):
