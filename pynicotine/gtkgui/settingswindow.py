@@ -3136,6 +3136,22 @@ class buildDialog(gtk.Dialog):
                 self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
+            elif data['type'] in ('textview'):
+                self.tw["box%d" % c] = gtk.HBox(False, 5)
+                self.tw["label%d" % c] = self.GenerateLabel(data["description"])
+                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
+
+                self.tw[name] = gtk.TextView()
+                self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+
+                self.tw["scrolledwindow%d" % c] = gtk.ScrolledWindow()
+                self.tw["scrolledwindow%d" % c].set_min_content_height(100)
+                self.tw["scrolledwindow%d" % c].set_min_content_width(400)
+                self.tw["scrolledwindow%d" % c].set_shadow_type(gtk.ShadowType.IN)
+                self.tw["scrolledwindow%d" % c].add(self.tw[name])
+
+                self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], False, False, 0)
+                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("list string",):
                 self.GenerateTreeView(name, data["description"], value, c)
             else:
@@ -3546,6 +3562,10 @@ class SettingsWindow:
 
         if type(widget) is gtk.Entry:
             return widget.get_text()
+        elif type(widget) is gtk.TextView:
+            buffer = widget.get_buffer()
+            start, end = buffer.get_bounds()
+            return widget.get_buffer().get_text(start, end, True)
         elif type(widget) is gtk.SpinButton:
             return int(widget.get_value())
         elif type(widget) is gtk.CheckButton:
@@ -3569,6 +3589,8 @@ class SettingsWindow:
     def ClearWidget(self, widget):
         if type(widget) is gtk.Entry:
             widget.set_text("")
+        elif type(widget) is gtk.TextView:
+            widget.get_buffer().set_text("")
         elif type(widget) is gtk.SpinButton:
             widget.set_value(0)
         elif type(widget) is gtk.CheckButton:
@@ -3585,6 +3607,9 @@ class SettingsWindow:
         if type(widget) is gtk.Entry:
             if type(value) in (int, str):
                 widget.set_text(value)
+        elif type(widget) is gtk.TextView:
+            if type(value) in (int, str):
+                widget.get_buffer().set_text(value)
         elif type(widget) is gtk.SpinButton:
             widget.set_value(int(value))
         elif type(widget) is gtk.CheckButton:
