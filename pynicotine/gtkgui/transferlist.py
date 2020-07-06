@@ -273,10 +273,6 @@ class TransferList:
 
         return False  # Stopping timeout
 
-    def remove(self, transfer):
-
-        self.transfersmodel.remove(transfer.iter)
-
     def update(self, transfer=None, forced=False):
 
         current_page = self.frame.MainNotebook.get_current_page()
@@ -544,6 +540,12 @@ class TransferList:
                 path = self.transfersmodel.get_path(iter)
                 self.expand(path)
 
+    def remove_specific(self, transfer, cleartreeviewonly=False):
+        if not cleartreeviewonly:
+            self.list.remove(transfer)
+
+        self.transfersmodel.remove(transfer.iter)
+
     def Clear(self):
         self.users.clear()
         self.paths.clear()
@@ -658,8 +660,7 @@ class TransferList:
                 i.status = "Aborted"
 
             if clear:
-                self.list.remove(i)
-                self.transfersmodel.remove(i.iter)
+                self.remove_specific(i)
 
         self.update()
 
@@ -672,8 +673,7 @@ class TransferList:
             if i.status in status:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
-                self.list.remove(i)
-                self.transfersmodel.remove(i.iter)
+                self.remove_specific(i)
 
         self.update()
 

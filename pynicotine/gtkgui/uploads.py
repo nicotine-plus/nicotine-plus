@@ -282,7 +282,7 @@ class Uploads(TransferList):
             if i.user == user:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
-                self.list.remove(i)
+                self.remove_specific(i)
 
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()

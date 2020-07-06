@@ -237,7 +237,7 @@ class Transfers:
                     if i.transfertimer is not None:
                         i.transfertimer.cancel()
                     self.uploads.remove(i)
-                    self.uploadspanel.update()
+                    self.uploadspanel.remove_specific(i, True)
 
         if msg.status == 0:
             self.checkUploadQueue()
@@ -613,7 +613,7 @@ class Transfers:
         for i in self.uploads:
             if i.user == user and i.filename == filename:
                 self.uploads.remove(i)
-                self.uploadspanel.remove(i)
+                self.uploadspanel.remove_specific(i, True)
 
         self.uploads.append(transferobj)
 
@@ -920,7 +920,7 @@ class Transfers:
                         i.transfertimer.cancel()
 
                     self.uploads.remove(i)
-                    self.uploadspanel.update()
+                    self.uploadspanel.remove_specific(i, True)
 
                 elif msg.reason == "Cancelled":
 
@@ -1006,6 +1006,7 @@ class Transfers:
 
         downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
         incompletedir = self.eventprocessor.config.sections["transfers"]["incompletedir"]
+        needupdate = True
 
         if i.conn is None and i.size is not None:
             i.conn = msg.conn
@@ -1094,9 +1095,12 @@ class Transfers:
                         self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
                     else:
                         self.DownloadFinished(f, i)
+                        needupdate = False
 
             self.SetIconDownloads()
-            self.downloadspanel.update(i)
+
+            if needupdate:
+                self.downloadspanel.update(i)
         else:
             self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
                 'req': str(vars(msg)),
@@ -1226,6 +1230,7 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     self.DownloadFinished(msg.file, i)
+                    needupdate = False
             except IOError as strerror:
                 self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                 i.status = "Local file error"
@@ -1330,7 +1335,7 @@ class Transfers:
         # Autoclear this download
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(i)
-            self.downloadspanel.update()
+            self.downloadspanel.remove_specific(i, True)
         else:
             self.downloadspanel.update(i)
 
@@ -1448,6 +1453,7 @@ class Transfers:
 
                 # Autoclear this upload
                 self.AutoClearUpload(i)
+                needupdate = False
 
             if needupdate:
                 self.uploadspanel.update(i)
@@ -1455,9 +1461,9 @@ class Transfers:
     def AutoClearUpload(self, i):
         if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
             self.uploads.remove(i)
+            self.uploadspanel.remove_specific(i, True)
             self.calcUploadQueueSizes()
             self.checkUploadQueue()
-            self.uploadspanel.update()
 
     def BanUser(self, user, ban_message=None):
         """
