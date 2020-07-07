@@ -230,12 +230,28 @@ class Searches(IconNotebook):
 
     def DoSearch(self, text, mode, users=[], room=None):
 
+        # Get excluded words (starting with "-")
+        searchterm_words = text.split()
+        searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
+
+        # Remove words starting with "-", results containing these are excluded by us later
+        searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
+
+        if self.frame.np.config.sections["searches"]["remove_special_chars"]:
+            # Remove special characters from actual search term
+            searchterm_without_excluded = re.sub(r'\W+', ' ', searchterm_without_excluded)
+
+        # Append excluded words
+        searchterm_with_excluded = searchterm_without_excluded
+        for word in searchterm_words_ignore:
+            searchterm_with_excluded += " -" + word
+
         items = self.frame.np.config.sections["searches"]["history"]
 
-        if text in items:
-            items.remove(text)
+        if searchterm_with_excluded in items:
+            items.remove(searchterm_with_excluded)
 
-        items.insert(0, text)
+        items.insert(0, searchterm_with_excluded)
 
         # Clear old items
         del items[15:]
@@ -255,18 +271,18 @@ class Searches(IconNotebook):
         if mode == 3 and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
 
-        search = self.CreateTab(self.searchid, text, mode)
+        search = self.CreateTab(self.searchid, searchterm_with_excluded, mode)
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
         if mode == 0:
-            self.DoGlobalSearch(self.searchid, text)
+            self.DoGlobalSearch(self.searchid, searchterm_without_excluded)
         elif mode == 1:
-            self.DoRoomsSearch(self.searchid, text, room)
+            self.DoRoomsSearch(self.searchid, searchterm_without_excluded, room)
         elif mode == 2:
-            self.DoBuddiesSearch(self.searchid, text)
+            self.DoBuddiesSearch(self.searchid, searchterm_without_excluded)
         elif mode == 3 and users != [] and users[0] != '':
-            self.DoPeerSearch(self.searchid, text, users)
+            self.DoPeerSearch(self.searchid, searchterm_without_excluded, users)
 
         self.searchid += 1
 
@@ -810,7 +826,6 @@ class Search:
             searchterm_words = self.text.lower().split()
             searchterm_words_include = [p for p in searchterm_words if not p.startswith('-')]
             searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
-            print(searchterm_words_ignore)
 
             if any(x in fullpath_lower for x in searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """

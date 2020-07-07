@@ -248,7 +248,8 @@ class Config:
                 "distrib_ignore": 60,
                 "search_results": 1,
                 "max_displayed_results": 1000,
-                "max_stored_results": 1500
+                "max_stored_results": 1500,
+                "remove_special_chars": True
             },
 
             "ui": {
