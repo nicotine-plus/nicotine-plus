@@ -1974,6 +1974,9 @@ class Transfers:
         transfer.speed = 0
         transfer.timeleft = ""
 
+        if transfer in self.uploads:
+            self.eventprocessor.ProcessRequestToPeer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason="Aborted"))
+
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
