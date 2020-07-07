@@ -331,11 +331,13 @@ class Searches(IconNotebook):
         tab = Search(self, text, id, mode, remember)
 
         if mode:
-            label = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text[:15]
+            fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text
+            label = fulltext[:15]
         else:
-            label = text[:20]
+            fulltext = text
+            label = fulltext[:20]
 
-        self.append_page(tab.Main, label, tab.OnClose)
+        self.append_page(tab.Main, label, tab.OnClose, fulltext=fulltext)
 
         search = [id, text, tab, mode, remember]
         self.searches[id] = search
@@ -679,9 +681,6 @@ class Search:
         self.col_length.set_sort_column_id(10)
 
         self.ResultsList.set_model(self.resultsmodel)
-
-        # Sort by speed by default
-        # self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
