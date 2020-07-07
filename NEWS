@@ -15,6 +15,9 @@ Changes
  * Support for transfers larger than 2 GB in size
  * Transfers and search results now support drag-select
  * Performance improvements in downloads, uploads and search views
+ * Special characters (e.g. -, ') are now removed from search terms by default, to receive more search results.
+   This behavior can be toggled in Settings -> Misc -> Searches.
+ * Excluding search results by placing a - sign in front of a word now works properly
  * Nicotine+ now follows the XDG Base Directory Specification
  * Replaced deprecated dependencies with maintained ones
  * Added unit and DEP-8 continuous integration testing
@@ -97,6 +100,7 @@ Bugs closed in GitHub
  * Window decorator close button doesn't work (#330)
  * Question: group by folders vs group by users (#335)
  * #312 continued, cannot connect (#336)
+ * Can't find anything from Wu-tang (#343)
  * AttributeError: 'Uploads' object has no attribute 'transfers' (#360)
 
 Version 1.4.3 (unstable)
