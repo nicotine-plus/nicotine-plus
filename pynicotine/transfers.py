@@ -255,7 +255,8 @@ class Transfers:
 
     def pushFile(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None):
         if size is None:
-            size = self.getFileSize(filename)
+            size = self.getFileSize(realfilename)
+
         self.transferFile(1, user, filename, path, transfer, size, bitrate, length, realfilename)
 
     def transferFile(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None):
@@ -263,7 +264,7 @@ class Transfers:
         not None, update it, otherwise create a new one."""
         if transfer is None:
             transfer = Transfer(
-                user=user, filename=filename, path=path,
+                user=user, filename=filename, realfilename=realfilename, path=path,
                 status="Getting status", size=size, bitrate=bitrate,
                 length=length
             )
