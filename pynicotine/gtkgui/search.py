@@ -238,8 +238,14 @@ class Searches(IconNotebook):
         searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
 
         if self.frame.np.config.sections["searches"]["remove_special_chars"]:
-            # Remove special characters from actual search term
+            """
+            Remove special characters from search term
+            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+            """
             searchterm_without_excluded = re.sub(r'\W+', ' ', searchterm_without_excluded)
+
+        # Remove trailing whitespace
+        searchterm_without_excluded = searchterm_without_excluded.strip()
 
         # Append excluded words
         searchterm_with_excluded = searchterm_without_excluded
@@ -830,12 +836,12 @@ class Search:
             if any(x in fullpath_lower for x in searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
                 log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
-                break
+                continue
 
             if not any(x in fullpath_lower for x in searchterm_words_include):
                 """ Some users may send us wrong results, filter out such ones """
                 log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
-                break
+                continue
 
             name = fullpath.split('\\')[-1]
             dir = fullpath[:-len(name)]

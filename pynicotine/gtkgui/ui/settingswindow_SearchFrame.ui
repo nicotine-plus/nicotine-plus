@@ -223,7 +223,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="RemoveSpecialChars">
-                <property name="label" translatable="yes">Remove special characters from search terms (may yield better results)</property>
+                <property name="label" translatable="yes">Remove special characters from search terms (some clients don't send search results if they're included)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
