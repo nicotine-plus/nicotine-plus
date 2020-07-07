@@ -804,14 +804,15 @@ class Search:
             if counter > self.Searches.maxstoredresults:
                 break
 
-            name = result[1].split('\\')[-1]
-            dir = result[1][:-len(name)]
+            fullpath = result[1]
+            name = fullpath.split('\\')[-1]
+            dir = fullpath[:-len(name)]
 
             size = result[2]
             h_size = HumanSize(size)
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
-            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, result[1], country, result[2], ulspeed, inqueue, status])
+            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
             counter += 1
 
         # Update counter

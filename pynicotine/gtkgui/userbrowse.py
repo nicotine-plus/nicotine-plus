@@ -772,6 +772,7 @@ class UserBrowse:
     def OnUploadDirectoryTo(self, widget, recurse=0):
 
         dir = self.selected_folder
+
         if dir is None:
             return
 
@@ -802,6 +803,7 @@ class UserBrowse:
         if dir == "" or dir is None or user is None or user == "":
             return
 
+        realpath = self.frame.np.shares.virtual2real(dir)
         ldir = dir.split("\\")[-1]
 
         for d, f in self.shares:
@@ -811,9 +813,10 @@ class UserBrowse:
                 continue
 
             for file in f:
-                path = "\\".join([dir, file[1]])
+                filename = "\\".join([dir, file[1]])
+                realfilename = "\\".join([realpath, file[1]])
                 size = file[2]
-                self.frame.np.transfers.pushFile(user, path, ldir, size=size)
+                self.frame.np.transfers.pushFile(user, filename, realfilename, ldir, size=size)
                 self.frame.np.transfers.checkUploadQueue()
 
         if not recurse:
@@ -826,6 +829,8 @@ class UserBrowse:
     def OnUploadFiles(self, widget, prefix=""):
 
         dir = self.selected_folder
+        realpath = self.frame.np.shares.virtual2real(dir)
+
         users = []
 
         for entry in self.frame.np.config.sections["server"]["userlist"]:
@@ -845,7 +850,7 @@ class UserBrowse:
         self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
 
         for fn in self.selected_files:
-            self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), prefix)
+            self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), "\\".join([realpath, fn]), prefix)
             self.frame.np.transfers.checkUploadQueue()
 
     def OnPlayFiles(self, widget, prefix=""):

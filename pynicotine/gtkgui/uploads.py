@@ -282,12 +282,10 @@ class Uploads(TransferList):
             if i.user == user:
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
-                self.list.remove(i)
+                self.remove_specific(i)
 
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()
-
-        self.update()
 
     def DoubleClick(self, event):
 
@@ -313,8 +311,6 @@ class Uploads(TransferList):
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()
 
-        self.update()
-
     def OnClearQueued(self, widget):
 
         self.select_transfers()
@@ -323,12 +319,8 @@ class Uploads(TransferList):
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()
 
-        self.update()
-
     def OnClearFailed(self, widget):
 
         TransferList.OnClearFailed(self, widget)
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()
-
-        self.update()

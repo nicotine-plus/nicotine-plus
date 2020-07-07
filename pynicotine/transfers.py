@@ -237,7 +237,7 @@ class Transfers:
                     if i.transfertimer is not None:
                         i.transfertimer.cancel()
                     self.uploads.remove(i)
-                    self.uploadspanel.update()
+                    self.uploadspanel.remove_specific(i, True)
 
         if msg.status == 0:
             self.checkUploadQueue()
@@ -255,7 +255,8 @@ class Transfers:
 
     def pushFile(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None):
         if size is None:
-            size = self.getFileSize(filename)
+            size = self.getFileSize(realfilename)
+
         self.transferFile(1, user, filename, path, transfer, size, bitrate, length, realfilename)
 
     def transferFile(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None):
@@ -263,7 +264,7 @@ class Transfers:
         not None, update it, otherwise create a new one."""
         if transfer is None:
             transfer = Transfer(
-                user=user, filename=filename, path=path,
+                user=user, filename=filename, realfilename=realfilename, path=path,
                 status="Getting status", size=size, bitrate=bitrate,
                 length=length
             )
@@ -613,7 +614,7 @@ class Transfers:
         for i in self.uploads:
             if i.user == user and i.filename == filename:
                 self.uploads.remove(i)
-                self.uploadspanel.remove(i)
+                self.uploadspanel.remove_specific(i, True)
 
         self.uploads.append(transferobj)
 
@@ -880,7 +881,7 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in (self.downloads + self.uploads):
+            for i in self.downloads:
 
                 if i.req != msg.req:
                     continue
@@ -888,6 +889,25 @@ class Transfers:
                 i.status = msg.reason
                 i.req = None
                 self.downloadspanel.update(i)
+
+                if msg.reason == "Queued":
+
+                    if i.user not in self.users or self.users[i.user].status is None:
+                        if i.user not in self.eventprocessor.watchedusers:
+                            self.queue.put(slskmessages.AddUser(i.user))
+                        self.queue.put(slskmessages.GetUserStatus(i.user))
+
+                    self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+
+                self.checkUploadQueue()
+
+            for i in self.uploads:
+
+                if i.req != msg.req:
+                    continue
+
+                i.status = msg.reason
+                i.req = None
                 self.uploadspanel.update(i)
 
                 if msg.reason == "Queued":
@@ -897,17 +917,15 @@ class Transfers:
                             self.queue.put(slskmessages.AddUser(i.user))
                         self.queue.put(slskmessages.GetUserStatus(i.user))
 
-                    if i in self.uploads:
-                        if i.transfertimer is not None:
-                            i.transfertimer.cancel()
-                        self.uploads.remove(i)
-                        self.uploadspanel.update()
+                    if i.transfertimer is not None:
+                        i.transfertimer.cancel()
 
-                    if i in self.downloads:
-                        self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+                    self.uploads.remove(i)
+                    self.uploadspanel.remove_specific(i, True)
+
                 elif msg.reason == "Cancelled":
-                    if i in self.uploads:
-                        self.AutoClearUpload(i)
+
+                    self.AutoClearUpload(i)
 
                 self.checkUploadQueue()
 
@@ -959,8 +977,11 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i.user))
 
             self.queue.put(slskmessages.GetUserStatus(i.user))
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if i in self.downloads:
+                self.downloadspanel.update(i)
+            elif i in self.uploads:
+                self.uploadspanel.update(i)
 
         self.checkUploadQueue()
 
@@ -986,6 +1007,7 @@ class Transfers:
 
         downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
         incompletedir = self.eventprocessor.config.sections["transfers"]["incompletedir"]
+        needupdate = True
 
         if i.conn is None and i.size is not None:
             i.conn = msg.conn
@@ -1074,9 +1096,12 @@ class Transfers:
                         self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
                     else:
                         self.DownloadFinished(f, i)
+                        needupdate = False
 
             self.SetIconDownloads()
-            self.downloadspanel.update(i)
+
+            if needupdate:
+                self.downloadspanel.update(i)
         else:
             self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
                 'req': str(vars(msg)),
@@ -1206,6 +1231,7 @@ class Transfers:
                     i.status = "Transferring"
                 else:
                     self.DownloadFinished(msg.file, i)
+                    needupdate = False
             except IOError as strerror:
                 self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
                 i.status = "Local file error"
@@ -1310,7 +1336,7 @@ class Transfers:
         # Autoclear this download
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(i)
-            self.downloadspanel.update()
+            self.downloadspanel.remove_specific(i, True)
         else:
             self.downloadspanel.update(i)
 
@@ -1428,6 +1454,7 @@ class Transfers:
 
                 # Autoclear this upload
                 self.AutoClearUpload(i)
+                needupdate = False
 
             if needupdate:
                 self.uploadspanel.update(i)
@@ -1435,9 +1462,9 @@ class Transfers:
     def AutoClearUpload(self, i):
         if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
             self.uploads.remove(i)
+            self.uploadspanel.remove_specific(i, True)
             self.calcUploadQueueSizes()
             self.checkUploadQueue()
-            self.uploadspanel.update()
 
     def BanUser(self, user, ban_message=None):
         """
@@ -1731,8 +1758,12 @@ class Transfers:
             i.requestconn = None
             i.status = "Connection closed by peer"
             i.req = None
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if type == "download":
+                self.downloadspanel.update(i)
+            elif type == "upload":
+                self.uploadspanel.update(i)
+
             self.checkUploadQueue()
 
         if i.file is not None:
@@ -1755,8 +1786,12 @@ class Transfers:
                 j.timequeued = curtime
 
         i.conn = None
-        self.downloadspanel.update(i)
-        self.uploadspanel.update(i)
+
+        if type == "download":
+            self.downloadspanel.update(i)
+        elif type == "upload":
+            self.uploadspanel.update(i)
+
         self.checkUploadQueue()
 
     def getRenamed(self, name, originalfile):
@@ -1838,8 +1873,12 @@ class Transfers:
             i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn.conn))
             self.eventprocessor.logMessage(_("I/O error: %s") % msg.strerror)
-            self.downloadspanel.update(i)
-            self.uploadspanel.update(i)
+
+            if i in self.downloads:
+                self.downloadspanel.update(i)
+            elif i in self.uploads:
+                self.uploadspanel.update(i)
+
             self.checkUploadQueue()
 
     def FolderContentsResponse(self, msg):
@@ -1934,6 +1973,9 @@ class Transfers:
         transfer.req = None
         transfer.speed = 0
         transfer.timeleft = ""
+
+        if transfer in self.uploads:
+            self.eventprocessor.ProcessRequestToPeer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason="Aborted"))
 
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
