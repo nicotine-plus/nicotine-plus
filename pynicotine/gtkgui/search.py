@@ -805,6 +805,23 @@ class Search:
                 break
 
             fullpath = result[1]
+
+            fullpath_lower = fullpath.lower()
+            searchterm_words = self.text.lower().split()
+            searchterm_words_include = [p for p in searchterm_words if not p.startswith('-')]
+            searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
+            print(searchterm_words_ignore)
+
+            if any(x in fullpath_lower for x in searchterm_words_ignore):
+                """ Filter out results with filtered words (e.g. nicotine -music) """
+                log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
+                break
+
+            if not any(x in fullpath_lower for x in searchterm_words_include):
+                """ Some users may send us wrong results, filter out such ones """
+                log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
+                break
+
             name = fullpath.split('\\')[-1]
             dir = fullpath[:-len(name)]
 
