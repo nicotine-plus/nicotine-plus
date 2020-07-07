@@ -835,6 +835,7 @@ class IconNotebook:
         gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)
 
         self.Notebook.set_tab_reorderable(page, self.reorderable)
+        self.Notebook.set_show_tabs(True)
 
     def remove_page(self, page):
 
@@ -845,7 +846,10 @@ class IconNotebook:
                 i[3].destroy()
                 self.pages.remove(i)
 
-                return
+                break
+
+        if self.Notebook.get_n_pages() == 0:
+            self.Notebook.set_show_tabs(False)
 
     def OnTabWindowDestroy(self, widget, page):
 
