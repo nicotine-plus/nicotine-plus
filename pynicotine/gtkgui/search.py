@@ -516,9 +516,8 @@ class Search:
         builder.connect_signals(self)
 
         self.text = text
-        self.searchterm_include_regex = re.compile('|'.join([p for p in text.lower().split() if not p.startswith('-')]), re.IGNORECASE)
-        self.searchterm_words_ignore = '|'.join([p[1:] for p in text.lower().split() if p.startswith('-') and len(p) > 1])
-        self.searchterm_ignore_regex = re.compile(self.searchterm_words_ignore, re.IGNORECASE)
+        self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
+        self.searchterm_words_ignore = [p[1:] for p in text.lower().split() if p.startswith('-') and len(p) > 1]
 
         self.id = id
         self.mode = mode
@@ -682,7 +681,7 @@ class Search:
         self.ResultsList.set_model(self.resultsmodel)
 
         # Sort by speed by default
-        #self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
+        # self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
@@ -838,12 +837,12 @@ class Search:
 
             fullpath = result[1]
 
-            if self.searchterm_words_ignore != "" and self.searchterm_ignore_regex.search(fullpath):
+            if any(word in fullpath.lower() for word in self.searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
                 log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
                 continue
 
-            if not self.searchterm_include_regex.search(fullpath):
+            if not any(word in fullpath.lower() for word in self.searchterm_words_include):
                 """ Some users may send us wrong results, filter out such ones """
                 log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
                 continue
