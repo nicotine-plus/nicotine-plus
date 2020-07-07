@@ -516,6 +516,10 @@ class Search:
         builder.connect_signals(self)
 
         self.text = text
+        self.searchterm_include_regex = re.compile('|'.join([p for p in text.lower().split() if not p.startswith('-')]), re.IGNORECASE)
+        self.searchterm_words_ignore = '|'.join([p[1:] for p in text.lower().split() if p.startswith('-') and len(p) > 1])
+        self.searchterm_ignore_regex = re.compile(self.searchterm_words_ignore, re.IGNORECASE)
+
         self.id = id
         self.mode = mode
         self.remember = remember
@@ -678,7 +682,7 @@ class Search:
         self.ResultsList.set_model(self.resultsmodel)
 
         # Sort by speed by default
-        self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
+        #self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
@@ -825,6 +829,8 @@ class Search:
         if status is None:
             status = 0
 
+        append = False
+
         for result in msg.list:
 
             if counter > self.Searches.maxstoredresults:
@@ -832,17 +838,12 @@ class Search:
 
             fullpath = result[1]
 
-            fullpath_lower = fullpath.lower()
-            searchterm_words = self.text.lower().split()
-            searchterm_words_include = [p for p in searchterm_words if not p.startswith('-')]
-            searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
-
-            if any(x in fullpath_lower for x in searchterm_words_ignore):
+            if self.searchterm_words_ignore != "" and self.searchterm_ignore_regex.search(fullpath):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
                 log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
                 continue
 
-            if not any(x in fullpath_lower for x in searchterm_words_include):
+            if not self.searchterm_include_regex.search(fullpath):
                 """ Some users may send us wrong results, filter out such ones """
                 log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
                 continue
@@ -855,15 +856,17 @@ class Search:
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
             self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
+            append = True
             counter += 1
 
-        # Update counter
-        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+        if append:
+            # Update counter
+            self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
-        # Update tab notification
-        self.frame.Searches.request_changed(self.Main)
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+            # Update tab notification
+            self.frame.Searches.request_changed(self.Main)
+            if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+                self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
