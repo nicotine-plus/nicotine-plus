@@ -600,6 +600,8 @@ class Search:
             # Group by folder or user
 
             self.ResultsList.set_show_expanders(True)
+        else:
+            self.ResultsList.set_show_expanders(False)
 
         self.COLUMN_TYPES = [
             gobject.TYPE_UINT64,  # (0)  num
@@ -627,7 +629,7 @@ class Search:
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
-            [_("Number"), widths[0], "text", self.CellDataFunc],
+            [_("ID"), widths[0], "text", self.CellDataFunc],
             [_("User"), widths[1], "text", self.CellDataFunc],
             [_("Country"), widths[2], "pixbuf"],
             [_("Immediate Download"), widths[3], "text", self.CellDataFunc],
@@ -641,7 +643,6 @@ class Search:
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
-        self.col_num.get_widget().hide()
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -675,6 +676,9 @@ class Search:
         self.col_length.set_sort_column_id(10)
 
         self.ResultsList.set_model(self.resultsmodel)
+
+        # Sort by speed by default
+        self.resultsmodel.set_sort_column_id(15, gtk.SortType.DESCENDING)
 
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
