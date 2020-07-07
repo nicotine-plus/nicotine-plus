@@ -1176,10 +1176,10 @@ class NicotineFrame:
 
             if not visible[name]:
                 if tab not in self.MainNotebook.get_children():
-                    return
+                    continue
 
                 if tab in self.HiddenTabs:
-                    return
+                    continue
 
                 self.HiddenTabs[tab] = self.MainNotebook.get_tab_label(tab)
                 num = self.MainNotebook.page_num(tab)
