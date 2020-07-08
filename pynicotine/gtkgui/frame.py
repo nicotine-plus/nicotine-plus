@@ -1152,6 +1152,11 @@ class NicotineFrame:
 
         self.np.config.sections["ui"]["modes_order"] = tabs
 
+        if MainNotebook.get_n_pages() == 0:
+            MainNotebook.set_show_tabs(False)
+        else:
+            MainNotebook.set_show_tabs(True)
+
     def SetMainTabsOrder(self):
         tabs = self.np.config.sections["ui"]["modes_order"]
         order = 0
@@ -1176,14 +1181,17 @@ class NicotineFrame:
 
             if not visible[name]:
                 if tab not in self.MainNotebook.get_children():
-                    return
+                    continue
 
                 if tab in self.HiddenTabs:
-                    return
+                    continue
 
                 self.HiddenTabs[tab] = self.MainNotebook.get_tab_label(tab)
                 num = self.MainNotebook.page_num(tab)
                 self.MainNotebook.remove_page(num)
+
+        if self.MainNotebook.get_n_pages() == 0:
+            self.MainNotebook.set_show_tabs(False)
 
     def SetLastSessionTab(self):
         try:

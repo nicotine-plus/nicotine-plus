@@ -843,7 +843,7 @@ class Ticker:
 def TickDialog(parent, default=""):
 
     dlg = gtk.Dialog(
-        title=_("Set ticker message"),
+        title=_("Nicotine+: Set ticker message"),
         transient_for=parent
     )
     dlg.add_buttons(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
@@ -852,7 +852,7 @@ def TickDialog(parent, default=""):
     t = 0
 
     dlg.set_border_width(10)
-    dlg.vbox.set_spacing(10)
+    dlg.vbox.set_spacing(15)
 
     l = gtk.Label.new(_("Set room ticker message:"))  # noqa: E741
     l.set_alignment(0, 0.5)
@@ -864,6 +864,7 @@ def TickDialog(parent, default=""):
     dlg.vbox.pack_start(entry, True, True, 0)
 
     v = gtk.Box.new(gtk.Orientation.VERTICAL, False)
+    v.set_spacing(5)
     r1 = gtk.RadioButton().new_from_widget(None)
     r1.set_label(_("Just this time"))
     r1.set_active(True)

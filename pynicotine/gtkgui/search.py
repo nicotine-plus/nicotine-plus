@@ -1559,7 +1559,7 @@ class WishList(gtk.Dialog):
 
         gtk.Dialog.__init__(self)
 
-        self.set_title(_("Nicotine+ Wishlist"))
+        self.set_title(_("Nicotine+: Search Wishlist"))
         self.set_icon(frame.images["n"])
         self.connect("destroy", self.quit)
         self.connect("destroy-event", self.quit)
@@ -1567,14 +1567,12 @@ class WishList(gtk.Dialog):
         self.connect("delete_event", self.quit)
 
         self.nicotine = frame
+        self.set_modal(True)
         self.set_size_request(600, 600)
+        self.set_transient_for(frame.MainWindow)
         self.mainHbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 5)
+        self.mainHbox.set_border_width(10)
         self.mainHbox.show()
-
-        self.WishLabel = gtk.Label.new(_("Search Wishlist"))
-        self.WishLabel.set_line_wrap(False)
-        self.WishLabel.show()
-        self.vbox.pack_start(self.WishLabel, False, True, 0)
 
         self.WishScrollWin = gtk.ScrolledWindow()
         self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)

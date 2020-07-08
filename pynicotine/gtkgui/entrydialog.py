@@ -40,6 +40,8 @@ class MetaDialog(gtk.Dialog):
         self.connect("delete-event", self.quit)
         self.nicotine = frame
 
+        self.set_transient_for(frame.MainWindow)
+
         if modal:
             self.set_modal(True)
 
@@ -453,6 +455,8 @@ class EntryDialog(gtk.Dialog):
         self.connect("destroy", self.quit)
         self.connect("delete-event", self.quit)
 
+        self.set_transient_for(frame.MainWindow)
+
         self.gotoption = option
 
         box = gtk.VBox(spacing=10)
@@ -578,6 +582,8 @@ class FindDialog(gtk.Dialog):
         self.currentPosition = None
         self.lastdirection = "next"
 
+        self.set_transient_for(frame.MainWindow)
+
         if modal:
             self.set_modal(True)
 
@@ -663,6 +669,8 @@ class FolderDownloadDialog(gtk.Dialog):
         self.nicotine = frame
 
         self.set_modal(modal)
+        self.set_transient_for(frame.MainWindow)
+
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
         self.vbox.pack_start(box, False, False, 0)
@@ -723,6 +731,8 @@ class OptionDialog(gtk.Dialog):
         self.nicotine = frame
 
         self.set_modal(modal)
+        self.set_transient_for(frame.MainWindow)
+
         box = gtk.VBox(spacing=10)
         box.set_border_width(10)
         self.vbox.pack_start(box, False, False, 0)
