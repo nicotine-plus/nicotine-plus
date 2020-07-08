@@ -800,7 +800,7 @@ class IconNotebook:
 
         return True
 
-    def append_page(self, page, label, onclose=None, angle=0):
+    def append_page(self, page, label, onclose=None, angle=0, fulltext=None):
 
         self.set_tab_angle(angle)
         closebutton = self.tabclosers
@@ -810,6 +810,11 @@ class IconNotebook:
             angle=angle, show_image=self._show_image, statusimage=None,
             show_status_image=self._show_status_image
         )
+
+        if fulltext is None:
+            fulltext = label
+
+        label_tab.set_tooltip_text(fulltext)
 
         # menu for all tabs
         label_tab_menu = ImageLabel(label, self.images["empty"])

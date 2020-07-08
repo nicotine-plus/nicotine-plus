@@ -226,12 +226,34 @@ class Searches(IconNotebook):
 
     def DoSearch(self, text, mode, users=[], room=None):
 
+        # Get excluded words (starting with "-")
+        searchterm_words = text.split()
+        searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
+
+        # Remove words starting with "-", results containing these are excluded by us later
+        searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
+
+        if self.frame.np.config.sections["searches"]["remove_special_chars"]:
+            """
+            Remove special characters from search term
+            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
+            """
+            searchterm_without_excluded = re.sub(r'\W+', ' ', searchterm_without_excluded)
+
+        # Remove trailing whitespace
+        searchterm_without_excluded = searchterm_without_excluded.strip()
+
+        # Append excluded words
+        searchterm_with_excluded = searchterm_without_excluded
+        for word in searchterm_words_ignore:
+            searchterm_with_excluded += " -" + word
+
         items = self.frame.np.config.sections["searches"]["history"]
 
-        if text in items:
-            items.remove(text)
+        if searchterm_with_excluded in items:
+            items.remove(searchterm_with_excluded)
 
-        items.insert(0, text)
+        items.insert(0, searchterm_with_excluded)
 
         # Clear old items
         del items[15:]
@@ -251,18 +273,18 @@ class Searches(IconNotebook):
         if mode == 3 and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
 
-        search = self.CreateTab(self.searchid, text, mode)
+        search = self.CreateTab(self.searchid, searchterm_with_excluded, mode)
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
         if mode == 0:
-            self.DoGlobalSearch(self.searchid, text)
+            self.DoGlobalSearch(self.searchid, searchterm_without_excluded)
         elif mode == 1:
-            self.DoRoomsSearch(self.searchid, text, room)
+            self.DoRoomsSearch(self.searchid, searchterm_without_excluded, room)
         elif mode == 2:
-            self.DoBuddiesSearch(self.searchid, text)
+            self.DoBuddiesSearch(self.searchid, searchterm_without_excluded)
         elif mode == 3 and users != [] and users[0] != '':
-            self.DoPeerSearch(self.searchid, text, users)
+            self.DoPeerSearch(self.searchid, searchterm_without_excluded, users)
 
         self.searchid += 1
 
@@ -305,11 +327,13 @@ class Searches(IconNotebook):
         tab = Search(self, text, id, mode, remember)
 
         if mode:
-            label = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text[:15]
+            fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text
+            label = fulltext[:15]
         else:
-            label = text[:20]
+            fulltext = text
+            label = fulltext[:20]
 
-        self.append_page(tab.Main, label, tab.OnClose)
+        self.append_page(tab.Main, label, tab.OnClose, fulltext=fulltext)
 
         search = [id, text, tab, mode, remember]
         self.searches[id] = search
@@ -490,6 +514,9 @@ class Search:
         builder.connect_signals(self)
 
         self.text = text
+        self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
+        self.searchterm_words_ignore = [p[1:] for p in text.lower().split() if p.startswith('-') and len(p) > 1]
+
         self.id = id
         self.mode = mode
         self.remember = remember
@@ -583,6 +610,8 @@ class Search:
             # Group by folder or user
 
             self.ResultsList.set_show_expanders(True)
+        else:
+            self.ResultsList.set_show_expanders(False)
 
         self.COLUMN_TYPES = [
             gobject.TYPE_UINT64,  # (0)  num
@@ -610,7 +639,7 @@ class Search:
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(
             self.ResultsList,
-            [_("Number"), widths[0], "text", self.CellDataFunc],
+            [_("ID"), widths[0], "text", self.CellDataFunc],
             [_("User"), widths[1], "text", self.CellDataFunc],
             [_("Country"), widths[2], "pixbuf"],
             [_("Immediate Download"), widths[3], "text", self.CellDataFunc],
@@ -624,7 +653,6 @@ class Search:
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
-        self.col_num.get_widget().hide()
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -804,12 +832,25 @@ class Search:
         if status is None:
             status = 0
 
+        append = False
+
         for result in msg.list:
 
             if counter > self.Searches.maxstoredresults:
                 break
 
             fullpath = result[1]
+
+            if any(word in fullpath.lower() for word in self.searchterm_words_ignore):
+                """ Filter out results with filtered words (e.g. nicotine -music) """
+                log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
+                continue
+
+            if not any(word in fullpath.lower() for word in self.searchterm_words_include):
+                """ Some users may send us wrong results, filter out such ones """
+                log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
+                continue
+
             name = fullpath.split('\\')[-1]
             dir = fullpath[:-len(name)]
 
@@ -818,15 +859,17 @@ class Search:
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
             self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
+            append = True
             counter += 1
 
-        # Update counter
-        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+        if append:
+            # Update counter
+            self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
-        # Update tab notification
-        self.frame.Searches.request_changed(self.Main)
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-            self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+            # Update tab notification
+            self.frame.Searches.request_changed(self.Main)
+            if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
+                self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
