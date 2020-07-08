@@ -1,3 +1,4 @@
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Josep Anguera <josep.anguera@gmail.com>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>

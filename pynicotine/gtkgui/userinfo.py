@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -26,7 +25,6 @@ import tempfile
 import time
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GObject as gobject
@@ -41,8 +39,6 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 from pynicotine.utils import CleanFile
-
-gi.require_version('Gtk', '3.0')
 
 
 # User Info and User Browse Notebooks

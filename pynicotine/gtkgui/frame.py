@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -86,9 +85,6 @@ from pynicotine.utils import executeCommand
 from pynicotine.utils import installPrefix
 from pynicotine.utils import unescape
 from pynicotine.utils import version
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 class NicotineFrame:

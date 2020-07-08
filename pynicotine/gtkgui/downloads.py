@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -26,7 +25,6 @@
 import os
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import Gtk as gtk
 
@@ -41,9 +39,6 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 class Downloads(TransferList):

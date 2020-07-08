@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -23,13 +22,9 @@
 
 import os
 
-import gi
-
 from gettext import gettext as _
 
 from gi.repository import Gtk as gtk
-
-gi.require_version('Gtk', '3.0')
 
 
 def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):

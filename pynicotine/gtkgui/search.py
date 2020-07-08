@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -28,7 +27,6 @@ import re
 import sre_constants
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
@@ -52,9 +50,6 @@ from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
 from pynicotine.utils import GetResultBitrateLength
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 class Searches(IconNotebook):

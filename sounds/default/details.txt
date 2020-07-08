@@ -4,7 +4,7 @@ Origins of audio samples
 Creator: Joao_Janz
 Creator's Url: https://freesound.org/people/Joao_Janz/
 
-Nicotine+ Filename: room_nick.ogg
+Nicotine+ Filename: room_nick.wav
 Sample Url: https://freesound.org/people/Joao_Janz/sounds/504779/
 Original Filename: 504779__joao-janz__percussive-alert-1-2.wav
 
@@ -13,6 +13,6 @@ Original Filename: 504779__joao-janz__percussive-alert-1-2.wav
 Creator: Joao_Janz
 Creator's Url: https://freesound.org/people/Joao_Janz/
 
-Nicotine+ Filename: private.ogg
+Nicotine+ Filename: private.wav
 Sample Url: https://freesound.org/people/Joao_Janz/sounds/478514/
 Original Filename: 478514__joao-janz__notification-4-1.wav

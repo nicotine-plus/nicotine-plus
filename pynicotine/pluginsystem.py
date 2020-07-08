@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -31,15 +30,12 @@ from traceback import extract_tb
 from traceback import format_list
 from traceback import print_exc
 
-import gi
 from gi.repository import GLib
 
 from _thread import start_new_thread
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
 from pynicotine.utils import installPrefix
-
-gi.require_version('Gtk', '3.0')
 
 
 WIN32 = sys.platform.startswith("win")

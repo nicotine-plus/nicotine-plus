@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -25,12 +24,9 @@ import urllib.parse
 import urllib.request
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gtk as gtk
 
 from pynicotine.utils import version
-
-gi.require_version('Gtk', '3.0')
 
 
 def makeversion(version):

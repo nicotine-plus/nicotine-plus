@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>

@@ -1,3 +1,4 @@
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -25,7 +26,6 @@ from gettext import gettext as _
 from time import altzone
 from time import daylight
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
@@ -45,10 +45,6 @@ from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.logfacility import log
 from pynicotine.utils import version
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
-gi.require_version('Pango', '1.0')
 
 
 CTCP_VERSION = "\x01VERSION\x01"

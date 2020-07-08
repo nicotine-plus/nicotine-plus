@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 #
@@ -25,7 +24,6 @@ from os.path import exists
 from os.path import getsize
 from os.path import join
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
@@ -39,9 +37,6 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import OpenUri
 from pynicotine.gtkgui.utils import popupWarning
 from pynicotine.gtkgui.utils import recode
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 def dirstats(directory):
