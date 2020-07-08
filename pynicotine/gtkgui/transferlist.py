@@ -323,6 +323,15 @@ class TransferList:
                     self.frame.UpdateBandwidth()
                 else:
                     self.update_parent_row(useriter)
+            else:
+                # No grouping
+
+                for transfer in self.list:
+                    if transfer.user == username:
+                        break
+                else:
+                    del self.users[username]
+                    self.frame.UpdateBandwidth()
 
         self.lastupdate = time()  # ...and we're done
 
