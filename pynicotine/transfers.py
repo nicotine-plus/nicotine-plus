@@ -280,6 +280,8 @@ class Transfers:
         except KeyError:
             status = None
 
+        shouldupdate = True
+
         if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
             # Only filter downloads, never uploads!
             try:
@@ -289,6 +291,8 @@ class Transfers:
                     self.AbortTransfer(transfer)
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
+
+                    shouldupdate = not self.AutoClearDownload(transfer)
             except Exception:
                 pass
 
@@ -303,10 +307,11 @@ class Transfers:
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.getFileSize(realpath), realpath)
             self.eventprocessor.ProcessRequestToPeer(user, request)
 
-        if direction == 0:
-            self.downloadspanel.update(transfer)
-        else:
-            self.uploadspanel.update(transfer)
+        if shouldupdate:
+            if direction == 0:
+                self.downloadspanel.update(transfer)
+            else:
+                self.uploadspanel.update(transfer)
 
     def UploadFailed(self, msg):
 
@@ -1332,11 +1337,8 @@ class Transfers:
 
         self.SaveDownloads()
 
-        # Autoclear this download
-        if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
-            self.downloads.remove(i)
-            self.downloadspanel.remove_specific(i, True)
-        else:
+        # Attempt to autoclear this download, if configured
+        if not self.AutoClearDownload(i):
             self.downloadspanel.update(i)
 
         if newname and config["transfers"]["afterfinish"]:
@@ -1458,10 +1460,18 @@ class Transfers:
             if needupdate:
                 self.uploadspanel.update(i)
 
-    def AutoClearUpload(self, i):
+    def AutoClearDownload(self, transfer):
+        if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
+            self.downloads.remove(transfer)
+            self.downloadspanel.remove_specific(transfer, True)
+            return True
+
+        return False
+
+    def AutoClearUpload(self, transfer):
         if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
-            self.uploads.remove(i)
-            self.uploadspanel.remove_specific(i, True)
+            self.uploads.remove(transfer)
+            self.uploadspanel.remove_specific(transfer, True)
             self.calcUploadQueueSizes()
             self.checkUploadQueue()
 
