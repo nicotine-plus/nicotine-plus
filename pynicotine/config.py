@@ -42,6 +42,16 @@ import _thread
 from pynicotine.logfacility import log
 
 
+class RestrictedUnpickler(pickle.Unpickler):
+    """
+    Don't allow code execution from pickles
+    """
+    def find_class(self, module, name):
+        # Forbid all globals
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
+                                     (module, name))
+
+
 class Config:
     """
     This class holds configuration information and provides the
@@ -395,7 +405,7 @@ class Config:
 
         try:
             f = open(filename + ".alias", 'rb')
-            self.aliases = pickle.load(f)
+            self.aliases = RestrictedUnpickler(f).load()
             f.close()
         except Exception:
             self.aliases = {}
@@ -467,7 +477,7 @@ class Config:
                 log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
             else:
                 try:
-                    self.sections['transfers']['downloads'] = pickle.load(handle)
+                    self.sections['transfers']['downloads'] = RestrictedUnpickler(handle).load()
                 except (IOError, EOFError, ValueError) as inst:
                     log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
             try:
