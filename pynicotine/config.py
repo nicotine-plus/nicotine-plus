@@ -34,6 +34,7 @@ import pickle
 import shelve
 import sys
 import time
+from ast import literal_eval
 from gettext import gettext as _
 from os.path import exists
 
@@ -571,7 +572,7 @@ class Config:
                         self.sections[i][j] = None
                 else:
                     try:
-                        self.sections[i][j] = eval(val, {})
+                        self.sections[i][j] = literal_eval(val)
                     except Exception:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))

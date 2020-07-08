@@ -21,6 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import operator
 import os
 import random
 import re
@@ -502,6 +503,15 @@ class Search:
         self.resultslimit = 2000
         self.numvisibleresults = 0
 
+        self.operators = {
+            '<': operator.lt,
+            '<=': operator.le,
+            '==': operator.eq,
+            '!=': operator.ne,
+            '>=': operator.ge,
+            '>': operator.gt
+        }
+
         FillFileGroupingCombobox(self.ResultGrouping)
         self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
         self.ResultGrouping.connect("changed", self.OnGroup)
@@ -977,13 +987,11 @@ class Search:
 
         try:
             filter = int(filter) * factor
-        except TypeError:
+        except ValueError:
             return True
 
-        if eval(str(value) + op + str(filter), {}):
-            return True
-
-        return False
+        operation = self.operators.get(op)
+        return operation(value, filter)
 
     def check_filter(self, row):
 
