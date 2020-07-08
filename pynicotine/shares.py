@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
@@ -27,7 +26,6 @@ import sys
 import time
 from gettext import gettext as _
 
-import gi
 from gi.repository import GLib
 
 from pynicotine import metadata_mutagen as metadata
@@ -37,8 +35,6 @@ from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import GetUserDirectories
-
-gi.require_version('Gtk', '3.0')
 
 
 win32 = sys.platform.startswith("win")

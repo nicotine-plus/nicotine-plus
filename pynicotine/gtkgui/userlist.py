@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
@@ -26,7 +25,6 @@ import os
 import time
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
@@ -40,9 +38,6 @@ from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import showCountryTooltip
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 class UserList:

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# COPYRIGHT (C) 2020 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007

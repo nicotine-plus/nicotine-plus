@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
@@ -27,15 +26,12 @@ import re
 import sys
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 from pynicotine.logfacility import log
 from pynicotine.utils import executeCommand
-
-gi.require_version('Gtk', '3.0')
 
 
 class NowPlaying:

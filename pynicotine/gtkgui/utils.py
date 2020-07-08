@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
@@ -35,7 +34,6 @@ import urllib.request
 import webbrowser
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
@@ -45,10 +43,6 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui.countrycodes import code2name
 from pynicotine.utils import executeCommand
-
-gi.require_version('Pango', '1.0')
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 DECIMALSEP = ""

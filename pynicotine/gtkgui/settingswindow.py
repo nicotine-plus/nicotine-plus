@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -28,7 +27,6 @@ import re
 import sys
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GdkPixbuf
@@ -48,8 +46,6 @@ from pynicotine.gtkgui.utils import recode2
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
-
-gi.require_version('Gdk', '3.0')
 
 
 win32 = sys.platform.startswith("win")

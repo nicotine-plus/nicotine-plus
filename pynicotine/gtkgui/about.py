@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
@@ -24,12 +23,9 @@
 
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gtk as gtk
 
 from pynicotine.utils import version
-
-gi.require_version('Gtk', '3.0')
 
 
 class AboutDialog(gtk.AboutDialog):

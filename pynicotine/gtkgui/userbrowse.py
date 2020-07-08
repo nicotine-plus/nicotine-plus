@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2013 SeeSchloss <see@seos.fr>
 # COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
@@ -25,7 +24,6 @@
 import os
 from gettext import gettext as _
 
-import gi
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
@@ -44,9 +42,6 @@ from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
 from pynicotine.utils import GetUserDirectories
 from pynicotine.utils import GetResultBitrateLength
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
 
 
 class UserBrowse:

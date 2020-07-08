@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -26,7 +25,6 @@ from gettext import gettext as _
 from math import ceil
 from time import time
 
-import gi
 from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
@@ -37,8 +35,6 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
-
-gi.require_version('Gtk', '3.0')
 
 
 class TransferList:
