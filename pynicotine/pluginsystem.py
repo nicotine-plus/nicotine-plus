@@ -22,6 +22,7 @@
 
 import os
 import sys
+from ast import literal_eval
 from gettext import gettext as _
 from importlib.machinery import SourceFileLoader
 from time import time
@@ -192,7 +193,7 @@ class PluginHandler(object):
             for line in f:
                 try:
                     key, val = line.split("=", 1)
-                    infodict[key] = eval(val)
+                    infodict[key] = literal_eval(val)
                 except ValueError:
                     pass  # this happens on blank lines
         return infodict
