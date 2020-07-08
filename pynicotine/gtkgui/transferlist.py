@@ -277,8 +277,6 @@ class TransferList:
         if (current_page == my_page):
             self._update(transfer, forced, nochildupdate)
 
-        self.frame.UpdateBandwidth()
-
     def _update(self, transfer=None, forced=True, nochildupdate=False):
 
         now = time()
@@ -292,6 +290,8 @@ class TransferList:
 
             for i in self.list:
                 self.update_specific(i)
+
+        self.frame.UpdateBandwidth()
 
         # The rest is just summarizing so it's not too important.
         # It's fairly CPU intensive though, so we only do it if we haven't updated it recently
@@ -320,6 +320,7 @@ class TransferList:
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
+                    self.frame.UpdateBandwidth()
                 else:
                     self.update_parent_row(useriter)
 
