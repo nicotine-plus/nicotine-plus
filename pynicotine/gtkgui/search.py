@@ -273,7 +273,7 @@ class Searches(IconNotebook):
         if mode == 3 and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
 
-        search = self.CreateTab(self.searchid, searchterm_with_excluded, mode)
+        search = self.CreateTab(self.searchid, searchterm_with_excluded, mode, showtab=True)
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
@@ -322,10 +322,19 @@ class Searches(IconNotebook):
 
         return _("User")
 
-    def CreateTab(self, id, text, mode, remember=False):
+    def CreateTab(self, id, text, mode, remember=False, showtab=True):
 
-        tab = Search(self, text, id, mode, remember)
+        tab = Search(self, text, id, mode, remember, showtab)
 
+        if showtab:
+            self.ShowTab(tab, id, text, mode)
+
+        search = [id, text, tab, mode, remember]
+        self.searches[id] = search
+
+        return search
+
+    def ShowTab(self, tab, id, text, mode):
         if mode:
             fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text
             label = fulltext[:15]
@@ -335,11 +344,6 @@ class Searches(IconNotebook):
 
         self.append_page(tab.Main, label, tab.OnClose, fulltext=fulltext)
 
-        search = [id, text, tab, mode, remember]
-        self.searches[id] = search
-
-        return search
-
     def ShowResult(self, msg, username, country):
 
         if msg.token not in self.searches:
@@ -348,7 +352,7 @@ class Searches(IconNotebook):
         search = self.searches[msg.token]
 
         if search[2] is None:
-            search = self.CreateTab(search[0], search[1], search[3], search[4])
+            search = self.CreateTab(search[0], search[1], search[3], search[4], showtab=False)
 
         counter = len(search[2].all_data) + 1
 
@@ -489,7 +493,7 @@ class Searches(IconNotebook):
 
 class Search:
 
-    def __init__(self, Searches, text, id, mode, remember):
+    def __init__(self, Searches, text, id, mode, remember, showtab):
 
         self.Searches = Searches
         self.frame = Searches.frame
@@ -520,6 +524,7 @@ class Search:
         self.id = id
         self.mode = mode
         self.remember = remember
+        self.showtab = showtab
         self.selected_results = []
         self.selected_users = []
         self.usersiters = {}
@@ -863,6 +868,11 @@ class Search:
             counter += 1
 
         if append:
+            # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
+            if not self.showtab:
+                self.Searches.ShowTab(self, self.id, self.text, self.mode)
+                self.showtab = True
+
             # Update counter
             self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
