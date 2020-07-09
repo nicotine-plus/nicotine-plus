@@ -601,7 +601,7 @@ class Transfers:
 
         transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback)
         transferobj = Transfer(
-            user=user, realfilename=realpath, filename=realpath,
+            user=user, realfilename=realpath, filename=msg.file,
             path=os.path.dirname(realpath), status="Waiting for upload",
             req=msg.req, size=size, place=len(self.uploads)
         )
@@ -1505,10 +1505,11 @@ class Transfers:
     def startCheckDownloadQueueTimer(self):
         GLib.timeout_add(60000, self.checkDownloadQueue)
 
-    # Find failed downloads and attempt to queue them
+    # Find failed or stuck downloads and attempt to queue them
     def checkDownloadQueue(self):
 
-        statuslist = self.FAILED_TRANSFERS + ["Getting address", "Connecting", "Waiting for peer to connect", "Initializing transfer"]
+        statuslist = self.FAILED_TRANSFERS + \
+            ["Getting status", "Getting address", "Connecting", "Waiting for peer to connect", "Requesting file", "Initializing transfer"]
 
         for transfer in self.downloads:
             if transfer.status in statuslist:
@@ -1783,7 +1784,6 @@ class Transfers:
                 i.status = "User logged off"
             elif type == "download":
                 i.status = "Connection closed by peer"
-                self.getFile(i.user, i.filename, i.path, i)
             elif type == "upload":
                 i.status = "Cancelled"
                 self.AbortTransfer(i)
