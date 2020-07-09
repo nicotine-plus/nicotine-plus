@@ -601,7 +601,7 @@ class Transfers:
 
         transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback)
         transferobj = Transfer(
-            user=user, realfilename=realpath, filename=realpath,
+            user=user, realfilename=realpath, filename=msg.file,
             path=os.path.dirname(realpath), status="Waiting for upload",
             req=msg.req, size=size, place=len(self.uploads)
         )
