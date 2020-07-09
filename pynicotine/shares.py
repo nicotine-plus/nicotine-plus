@@ -329,6 +329,10 @@ class Shares:
         if searchterm is None:
             return
 
+        if user != self.config.sections["server"]["login"]:
+            # We shouldn't send a search response if we initiated the search request
+            return
+
         checkuser, reason = self.np.CheckUser(user, None)
         if not checkuser:
             return
