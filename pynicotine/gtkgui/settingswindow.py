@@ -158,15 +158,13 @@ class ServerFrame(buildFrame):
             # if the config said so
             self.UseUPnP.set_active(server["upnp"])
             self.UseUPnP.set_sensitive(True)
+            self.labelRequirementsUPnP.hide()
         else:
             # If we cant do a port mapping: highlight the requirements
             # & disable the choice
             self.UseUPnP.set_active(False)
             self.UseUPnP.set_sensitive(False)
-            self.labelRequirementsUPnP.set_sensitive(True)
-
-        # Handle the switch between direct connections and upnp ones
-        self.OnUPnPToggled(None)
+            self.labelRequirementsUPnP.show()
 
     def GetSettings(self):
 
@@ -200,10 +198,7 @@ class ServerFrame(buildFrame):
             )
             raise UserWarning
 
-        if self.UseUPnP.get_active():
-            firewalled = False
-        else:
-            firewalled = not self.DirectConnection.get_active()
+        firewalled = not self.DirectConnection.get_active()
 
         return {
             "server": {
@@ -222,30 +217,6 @@ class ServerFrame(buildFrame):
 
     def OnCheckPort(self, widget):
         OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
-
-    def OnUPnPToggled(self, widget):
-
-        if self.UseUPnP.get_active():
-
-            # If we want to use upnp remove hint highlight
-            # since its possible to do it
-            self.labelRequirementsUPnP.set_sensitive(False)
-
-            # We set direct connection to True
-            # since now its possible to establish them
-            self.DirectConnection.set_active(True)
-
-            # Also desactivate direct connections options
-            self.DirectConnection.set_sensitive(False)
-            self.Requirement.set_sensitive(False)
-        else:
-
-            # If we want dont want to use upnp restore the hint for it
-            self.labelRequirementsUPnP.set_sensitive(True)
-
-            # Also activate direct connections
-            self.Requirement.set_sensitive(True)
-            self.DirectConnection.set_sensitive(True)
 
 
 class DownloadsFrame(buildFrame):

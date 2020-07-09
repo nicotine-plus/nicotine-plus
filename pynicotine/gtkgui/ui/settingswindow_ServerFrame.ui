@@ -354,13 +354,12 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="UseUPnP">
-                <property name="label" translatable="yes">Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python bindings)</property>
+                <property name="label" translatable="yes">Use UPnP to map the port on my router (requires restart)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnUPnPToggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -405,7 +404,8 @@
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">(only use if the above ports are remotely accessible)</property>
+                <property name="label" translatable="yes">Only disable direct connections if the above ports aren't accessible after attempting UPnP and manual port forwarding, if possible. This can happen if your ISP blocks ports.</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -526,6 +526,25 @@ class NicotineFrame:
 
         self.SetTabPositions()
 
+        # Test if we want to do a port mapping
+        if self.np.config.sections["server"]["upnp"]:
+
+            # Initialise a UPnPPortMapping object
+            upnp = UPnPPortMapping()
+
+            # Check if we can do a port mapping
+            (self.upnppossible, errors) = upnp.IsPossible()
+
+            # Test if we are able to do a port mapping
+            if self.upnppossible:
+                # Do the port mapping
+                _thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
+            else:
+                # Display errors
+                if errors is not None:
+                    for err in errors:
+                        log.addwarning(err)
+
         ConfigUnset = self.np.config.needConfig()
         if ConfigUnset:
             if ConfigUnset > 1:
@@ -535,9 +554,9 @@ class NicotineFrame:
                 self.OnFastConfigure(None)
             else:
                 # Connect anyway
-                self.OnFirstConnect(-1)
+                self.OnConnect(-1)
         else:
-            self.OnFirstConnect(-1)
+            self.OnConnect(-1)
 
         self.UpdateDownloadFilters()
 
@@ -1497,33 +1516,6 @@ class NicotineFrame:
 
         # Exiting GTK
         gtk.main_quit()
-
-    def OnFirstConnect(self, widget):
-
-        # Test if we want to do a port mapping
-        if self.np.config.sections["server"]["upnp"]:
-
-            # Initialise a UPnPPortMapping object
-            upnp = UPnPPortMapping()
-
-            # Check if we can do a port mapping
-            (self.upnppossible, errors) = upnp.IsPossible()
-
-            # Test if we are able to do a port mapping
-            if self.upnppossible:
-                # Do the port mapping
-                _thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
-            else:
-                # Display errors
-                if errors is not None:
-                    for err in errors:
-                        log.addwarning(err)
-
-                # If not we connect without changing anything
-                self.OnConnect(-1)
-        else:
-            # If not we connect without changing anything
-            self.OnConnect(-1)
 
     def OnConnect(self, widget):
 

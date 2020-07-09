@@ -152,9 +152,6 @@ class FastConfigureAssistant(object):
         self.kids['upperport'].set_value(
             self.config.sections["server"]["portrange"][1]
         )
-        self.kids['useupnp'].set_active(
-            self.config.sections["server"]["upnp"]
-        )
 
         # sharepage
         if self.config.sections['transfers']['downloaddir']:
@@ -200,7 +197,6 @@ class FastConfigureAssistant(object):
             self.kids['lowerport'].get_value_as_int(),
             self.kids['upperport'].get_value_as_int()
         )
-        self.config.sections['server']['upnp'] = self.kids['useupnp'].get_active()
         self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
 
         # sharepage
@@ -227,7 +223,7 @@ class FastConfigureAssistant(object):
         )
 
         if not self.frame.np.serverconn:
-            self.frame.OnFirstConnect(-1)
+            self.frame.OnConnect(-1)
 
     def OnCancel(self, widget):
         self.window.hide()
@@ -254,12 +250,9 @@ class FastConfigureAssistant(object):
                 complete = True
 
         elif name == 'portpage':
-            if self.kids['useupnp'].get_active():
+            if self.kids['portopen'].get_active() or \
+               self.kids['portclosed'].get_active():
                 complete = True
-            else:
-                if self.kids['portopen'].get_active() or \
-                   self.kids['portclosed'].get_active():
-                    complete = True
 
         elif name == 'sharepage':
             if exists(self.kids['downloaddir'].get_filename()):
@@ -269,8 +262,7 @@ class FastConfigureAssistant(object):
 
             complete = True
             showcpwarning = (
-                self.kids['portclosed'].get_active() and
-                not self.kids['useupnp'].get_active()
+                self.kids['portclosed'].get_active()
             )
 
             if showcpwarning:
@@ -493,27 +485,6 @@ class FastConfigureAssistant(object):
         self.resetcompleteness()
 
     def OnToggled(self, widget):
-
-        name = gtk.Buildable.get_name(widget)
-
-        if name == 'useupnp':
-
-            # Setting active state
-            if widget.get_active():
-                self.kids['portopen'].set_inconsistent(True)
-                self.kids['portclosed'].set_inconsistent(True)
-            else:
-                self.kids['portopen'].set_inconsistent(False)
-                self.kids['portclosed'].set_inconsistent(False)
-
-            # Setting sensitive state
-            inverse = not widget.get_active()
-
-            self.kids['portopen'].set_sensitive(inverse)
-            self.kids['portclosed'].set_sensitive(inverse)
-            self.kids['checkmyport'].set_sensitive(inverse)
-
-            self.resetcompleteness()
 
         if self.initphase:
             return

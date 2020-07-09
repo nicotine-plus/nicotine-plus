@@ -91,7 +91,7 @@ class Config:
                 "autosearch": [],
                 "autoreply": "",
                 "portrange": (2234, 2239),
-                "upnp": False,
+                "upnp": True,
                 "userlist": [],
                 "banlist": [],
                 "ignorelist": [],

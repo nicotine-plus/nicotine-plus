@@ -38,9 +38,6 @@ class UPnPPortMapping:
         # Default discovery delay (ms)
         self.discoverdelay = 2000
 
-        # Default requested external WAN port
-        self.externalwanport = 15000
-
         # List of existing port mappings
         self.existingportsmappings = []
 
@@ -161,6 +158,7 @@ class UPnPPortMapping:
 
         # Store the Local LAN port
         self.internallanport = np.protothread._p.getsockname()[1]
+        self.externalwanport = self.internallanport
 
         # The function depends on what method of configuring port mapping is
         # available
@@ -190,9 +188,6 @@ class UPnPPortMapping:
 
         # Set the external WAN port in the GUI
         frame.networkcallback([slskmessages.IncPort(self.externalwanport)])
-
-        # Establish the connection to the slsk network
-        frame.OnConnect(-1)
 
     def AddPortMappingBinary(self):
         """Function to create a Port Mapping via MiniUPnPc binary: upnpc.
