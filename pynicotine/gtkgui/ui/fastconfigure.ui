@@ -314,6 +314,22 @@ If you already have an account at the server fill in those details.</property>
                 <property name="position">2</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Only select "The page says my port is closed" if all attempts at opening the port were unsuccessful. This can happen if your ISP blocks ports.</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="width_chars">60</property>
+                <property name="max_width_chars">60</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -332,22 +348,6 @@ If you already have an account at the server fill in those details.</property>
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="useupnp">
-            <property name="label" translatable="yes">Use UPnP to map the port on my router</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="halign">center</property>
-            <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="OnToggled" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
           </packing>
         </child>
         <child>
