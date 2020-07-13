@@ -2888,7 +2888,7 @@ class NicotineFrame:
         if direction == "next":
             current = buffer.get_mark("insert")
             iter = buffer.get_iter_at_mark(current)
-            match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
+            match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
             if match1 is not None and len(match1) == 2:
                 match_start, match_end = match1
@@ -2897,7 +2897,7 @@ class NicotineFrame:
                 textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
             else:
                 iter = start
-                match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
+                match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
                 if match1 is not None and len(match1) == 2:
                     match_start, match_end = match1
@@ -2909,7 +2909,7 @@ class NicotineFrame:
 
             current = buffer.get_mark("insert")
             iter = buffer.get_iter_at_mark(current)
-            match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
+            match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
             if match1 is not None and len(match1) == 2:
                 match_start, match_end = match1
@@ -2918,7 +2918,7 @@ class NicotineFrame:
                 textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
             else:
                 iter = end
-                match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY, limit=None)
+                match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
                 if match1 is not None and len(match1) == 2:
                     match_start, match_end = match1
