@@ -104,6 +104,7 @@ Bugs closed in GitHub
  * AttributeError: 'Uploads' object has no attribute 'transfers' (#360)
  * remove filtered files when autoremoving (#374)
  * wishlist searches should notify on finding a result, not on attempting to find something (#380)
+ * Search log window case insensitive. (#384)
 
 Version 1.4.3 (unstable)
 -----------------------------
