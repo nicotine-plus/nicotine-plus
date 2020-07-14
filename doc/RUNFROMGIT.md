@@ -23,7 +23,7 @@ $ python3 nicotine
 ## Installing nicotine from the git repository
 This is useful if you want to share your nicotine-plus installation with other users.
 ```
-$ cd nicotine
+$ cd nicotine-plus
 $ sudo python3 setup.py install
 ```
 
