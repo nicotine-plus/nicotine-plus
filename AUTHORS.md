@@ -53,7 +53,7 @@ lee8oi
 
 INMCM
 - Nicotine+ topic maintainer on ubuntuforums.org
-- http://ubuntuforums.org/showthread.php?t=196835
+- https://ubuntuforums.org/showthread.php?t=196835
 
 suser-guru
 - Suse Linux packager
@@ -105,7 +105,7 @@ Gustavo
 SeeSchloss
 - Developer
 - Made 1.0.8 win32 installer
-- Created [Soulfind](http://seeschloss.org/soulfind.html), opensource Soulseek Server written in D
+- Created [Soulfind](https://github.com/seeschloss/soulfind), opensource Soulseek Server written in D
 
 vasi
 - Mac developer

@@ -33,7 +33,7 @@ from codecs import encode, decode
 from subprocess import PIPE
 from subprocess import Popen
 
-version = "1.4.3"
+version = "2.0.0"
 
 log = 0
 win32 = sys.platform.startswith("win")

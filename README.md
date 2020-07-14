@@ -1,11 +1,11 @@
 # Nicotine+
 
-Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/) peer-to-peer file sharing network. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
+Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
 
 [Screenshots](files/screenshots/SCREENSHOTS.md)
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 1.4.1. An unstable version 1.4.3 is currently under development and available for testing.
+The current stable version of Nicotine+ is 2.0.0, released on 14 July 2020. See the [changelog](NEWS).
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -32,8 +32,7 @@ $ sudo apt install nicotine
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
 ## Windows
-- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/1.4.1/Nicotine.-1.4.1.exe)  
-- [Nicotine+ Source](https://github.com/Nicotine-Plus/nicotine-plus/archive/1.4.1.tar.gz)
+- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)  
 
 # License
 
@@ -109,5 +108,5 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
 
 # Legal and Privacy
 
-- By using Nicotine+, you agree to abide by the Soulseek [rules](http://slsknet.org/news/node/681) and [terms of service](http://slsknet.org/news/node/682), as long as you are using the official Soulseek server.
+- By using Nicotine+, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682), as long as you are using the official Soulseek server.
 - While Nicotine+ does not collect any user data, the official Soulseek server or a user-configured third-party server may potentially do so.

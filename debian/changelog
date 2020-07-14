@@ -1,3 +1,9 @@
+nicotine (2.0.0-1) focal; urgency=medium
+
+  * Latest upstream.
+
+ -- Mathias <mail@mathias.is>  Mon, 14 July 2020 20:35:00 +0300
+
 nicotine (1.4.3-2) focal; urgency=medium
 
   * Dropped Python requirement from 3.7 to 3.5 for Xenial support
