@@ -1,5 +1,8 @@
 # Packaging
 
+### Dependencies
+The dependencies for Nicotine+ are described in [DEPENDENCIES.md](doc/DEPENDENCIES.md).
+
 ### GNU/Linux instructions
 
 #### Building a source distribution
