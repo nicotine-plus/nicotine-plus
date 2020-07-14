@@ -45,7 +45,7 @@ sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1
 % python -V
 Python 2.7.16
 ```
-Not to worry, you often can use the command `python3` For example:
+Not to worry, you often can use the command `python3`. For example:
 ```
 % python3 -V
 Python 3.7.3
