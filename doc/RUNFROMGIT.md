@@ -1,7 +1,7 @@
 # Run Nicotine+ from git
 
 ## Installing the dependencies
-To run nicotine from git you first have to install all required dependencies. You may also want to install the optional dependencies.
+To run Nicotine+ from git, you first have to install all required dependencies. You may also want to install the optional dependencies.
 See [DEPENDENCIES.md](doc/DEPENDENCIES.md)
 
 ## Clone the repository and run nicotine
