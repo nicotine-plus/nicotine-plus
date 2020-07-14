@@ -34,6 +34,16 @@ Package maintainers, please insert instructions for users to install pre-compile
 ## Windows
 - [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)  
 
+## Building nicotine+ directly from the git repository
+For those of us who like living on the bleeding edge and want to help testing the latest changes and bug-fixes you can build nicotine+ directly from the git repository.
+This is not particularly hard, but it may come with some additional required skills, like installing dependencies and managing changes in the database and the config files.
+
+```
+$ git clone https://github.com/Nicotine-Plus/nicotine-plus.git
+$ cd nicotine-plus
+$ python3 setup.py install
+```
+
 # License
 
 Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
