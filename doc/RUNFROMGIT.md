@@ -1,5 +1,5 @@
 # Run Nicotine+ from git
-For those of us who like living on the bleeding edge and want to help testing the latest changes and bug-fixes you can build Nicotine+ directly from the git repository.
+For those of us who like living on the bleeding edge and want to help testing the latest changes and bug-fixes, you can run Nicotine+ directly from the git repository.
 This is not particularly hard, but it may come with some additional required skills, like installing dependencies and managing changes in the database and the config files.
 
 ## Installing the dependencies
