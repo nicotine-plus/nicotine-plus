@@ -26,7 +26,6 @@ from subprocess import STDOUT
 from subprocess import Popen
 
 from pynicotine.logfacility import log
-from pynicotine.pynicotine import slskmessages
 
 
 class UPnPPortMapping:
@@ -173,7 +172,7 @@ class UPnPPortMapping:
                     'UPnP Port Mapping rule.'))
             return
 
-        log.add(
+        log.adddebug(
             _('Managed to map external WAN port %(externalwanport)s ' +
                 'on your external IP %(externalipaddress)s ' +
                 'to your local host %(internalipaddress)s ' +
@@ -185,9 +184,6 @@ class UPnPPortMapping:
                 'internallanport': self.internallanport
             }
         )
-
-        # Set the external WAN port in the GUI
-        frame.networkcallback([slskmessages.IncPort(self.externalwanport)])
 
     def AddPortMappingBinary(self):
         """Function to create a Port Mapping via MiniUPnPc binary: upnpc.
