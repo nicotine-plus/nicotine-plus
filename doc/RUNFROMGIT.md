@@ -13,7 +13,7 @@ $ python3 nicotine
 ```
 
 ## Updating your cloned nicotine-plus
-If you want to update to the latest version of nicotine-plus proceed like this:
+If you want to update to the latest version of Nicotine+, proceed like this:
 ```
 $ cd nicotine-plus
 $ git pull
