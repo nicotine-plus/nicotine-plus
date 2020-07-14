@@ -1,8 +1,10 @@
 # Run Nicotine+ from git
+For those of us who like living on the bleeding edge and want to help testing the latest changes and bug-fixes you can build Nicotine+ directly from the git repository.
+This is not particularly hard, but it may come with some additional required skills, like installing dependencies and managing changes in the database and the config files.
 
 ## Installing the dependencies
 To run Nicotine+ from git, you first have to install all required dependencies. You may also want to install the optional dependencies.
-See [DEPENDENCIES.md](doc/DEPENDENCIES.md)
+See [DEPENDENCIES.md](DEPENDENCIES.md)
 
 ## Clone the repository and run Nicotine+
 This is great if you're the only Nicotine+ user on your system and you want to test the latest version.
@@ -27,4 +29,4 @@ $ cd nicotine-plus
 $ sudo python3 setup.py install
 ```
 
-And after that you should be able to run `nicotine`.
+And after that you should be able to run `nicotine` just like a normal command.
