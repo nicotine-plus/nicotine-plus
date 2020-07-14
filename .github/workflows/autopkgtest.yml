@@ -76,6 +76,8 @@ jobs:
           name: debuild-source
       - name: Install autopkgtest dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get upgrade
           sudo apt install autopkgtest
       - name: Run autopkgtest
         run: |
