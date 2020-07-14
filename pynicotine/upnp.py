@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-import socket
 from gettext import gettext as _
 from subprocess import PIPE
 from subprocess import STDOUT
@@ -140,20 +139,8 @@ class UPnPPortMapping:
 
         log.add(_('Creating Port Mapping rule via UPnP...'))
 
-        # Hack to found out the local LAN IP
-        # See https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib/28950776#28950776
-
-        # Create a UDP socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-        # Send a broadcast packet on a local address (doesn't need to be reachable, but MacOS requires port to be non-zero)
-        s.connect(('10.255.255.255', 1))
-
-        # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.
-        self.internalipaddress = s.getsockname()[0]
-
-        # Close the socket
-        s.close()
+        # Placeholder LAN IP address, updated in AddPortMappingBinary or AddPortMappingModule
+        self.internalipaddress = "127.0.0.1"
 
         # Store the Local LAN port
         self.internallanport = np.protothread._p.getsockname()[1]
@@ -223,7 +210,15 @@ class UPnPPortMapping:
         #  i protocol exPort->inAddr:inPort description remoteHost leaseTime
         #  0 TCP 15000->192.168.0.1:2234  'Nicotine+' '' 0
 
-        re_ip = re.compile(r"""
+        re_internal_ip = re.compile(r"""
+            ^
+                Local \s+ LAN \s+ ip \s+ address
+                \s+ : \s+
+                (?P<ip> \d+ \. \d+ \. \d+ \. \d+ )?
+            $
+        """, re.VERBOSE)
+
+        re_external_ip = re.compile(r"""
             ^
                 ExternalIPAddress
                 \s+ = \s+
@@ -248,11 +243,16 @@ class UPnPPortMapping:
 
             line = line.strip()
 
-            ip_match = re.match(re_ip, line)
+            internal_ip_match = re.match(re_internal_ip, line)
+            external_ip_match = re.match(re_external_ip, line)
             mapping_match = re.match(re_mapping, line)
 
-            if ip_match:
-                self.externalipaddress = ip_match.group('ip')
+            if internal_ip_match:
+                self.internalipaddress = internal_ip_match.group('ip')
+                next
+
+            if external_ip_match:
+                self.externalipaddress = external_ip_match.group('ip')
                 next
 
             if mapping_match:
@@ -348,6 +348,7 @@ class UPnPPortMapping:
                 _('Cannot select an IGD : %(error)s') %
                 {'error': str(e)})
 
+        self.internalipaddress = u.lanaddr
         self.externalipaddress = u.externalipaddress()
         log.adddebug('IGD selected : External IP address: %s' %
                      (self.externalipaddress))
