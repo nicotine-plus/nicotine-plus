@@ -20,7 +20,7 @@ $ git pull
 $ python3 nicotine
 ```
 
-## Installing nicotine from the git repository
+## Installing Nicotine+ from the git repository
 This is useful if you want to share your Nicotine+ installation with other users.
 ```
 $ cd nicotine-plus
