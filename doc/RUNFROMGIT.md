@@ -5,7 +5,7 @@ To run Nicotine+ from git, you first have to install all required dependencies. 
 See [DEPENDENCIES.md](doc/DEPENDENCIES.md)
 
 ## Clone the repository and run nicotine
-This is great if you're the only nicotine user on your system and you want to test the latest version.
+This is great if you're the only Nicotine+ user on your system and you want to test the latest version.
 ```
 $ git clone https://github.com/Nicotine-Plus/nicotine-plus.git
 $ cd nicotine-plus
