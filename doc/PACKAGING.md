@@ -74,7 +74,7 @@ Run PyInstaller:
 
 `pyinstaller files/windows/nicotine.spec`
 
-After the frozen application build finished you can find it under the `dist\Nicotine+` subdirectory.
+After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
 
 If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 
