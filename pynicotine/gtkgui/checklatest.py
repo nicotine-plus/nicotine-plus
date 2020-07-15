@@ -31,11 +31,15 @@ from pynicotine.utils import version
 
 def makeversion(version):
 
-    if version.find("git") >= 0:
-        ix = version.find("git")
+    if version.find("dev") >= 0:
+        # Example: 2.0.1-dev1
+
+        ix = version.find("dev") - 1
         version = version[:ix]
     elif version.find("rc") >= 0:
-        ix = version.find("rc")
+        # Example: 2.0.1-rc1
+
+        ix = version.find("rc") - 1
         version = version[:ix]
 
     s = version.split(".")
@@ -57,7 +61,9 @@ def checklatest(frame):
         response = urllib.request.urlopen(latesturl)
         data = json.loads(response.read())
         response.close()
-        latest = makeversion(data['name'])
+        hlatest = data['name']
+        latest = makeversion(hlatest)
+        date = data['created_at']
     except Exception as m:
         dlg = gtk.MessageDialog(
             frame,
@@ -79,7 +85,7 @@ def checklatest(frame):
             0,
             gtk.MessageType.WARNING,
             gtk.ButtonsType.OK,
-            _("A newer version ('%s') is available. Check Nicotine+ releases page\n(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest version.") % data
+            _("A newer version %s is available, released on %s.") % (hlatest, date)
         )
     elif myversion > latest:
         dlg = gtk.MessageDialog(
@@ -87,7 +93,7 @@ def checklatest(frame):
             0,
             gtk.MessageType.WARNING,
             gtk.ButtonsType.OK,
-            _("You appear to be using a development version of Nicotine+.\nCheck out the latest version from the Git repository at https://github.com/Nicotine-Plus/nicotine-plus/")
+            _("You appear to be using a development version of Nicotine+.")
         )
     else:
         dlg = gtk.MessageDialog(

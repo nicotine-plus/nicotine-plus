@@ -35,10 +35,13 @@ Nicotine+ is available in the community repository of Arch Linux and Parabola. T
 $ pacman -S nicotine+
 ```
 
+### Flathub (Stable)
+[Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+
 ### Other Distributions
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
-## Windows
+## Windows (Stable)
 - [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)  
 
 # License
