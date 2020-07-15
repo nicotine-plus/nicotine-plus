@@ -11,7 +11,9 @@ languages/nicotine-*.pot
 venv/*
 
 # Ignore packaging directories and files
+install.txt
 MANIFEST
 build/
 dist/
-debian/files
+nicotine.egg-info/
+packaging/debian/files

@@ -1,7 +1,5 @@
-include AUTHORS.md
-include COPYING
-include MANIFEST.in
-include NEWS
-include README.md
-
+recursive-include pynicotine *
 recursive-include test *
+
+recursive-exclude * __pycache__
+recursive-exclude * *.pyc

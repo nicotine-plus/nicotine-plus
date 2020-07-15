@@ -2,10 +2,10 @@
 
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
 
-[Screenshots](files/screenshots/SCREENSHOTS.md)
+[Screenshots](data/screenshots/SCREENSHOTS.md)
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 2.0.0, released on 14 July 2020. See the [changelog](NEWS).
+The current stable version of Nicotine+ is 2.0.0, released on 14 July 2020. See the [changelog](NEWS.md).
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -76,7 +76,7 @@ Generate a Nicotine+ source package in the parent directory of `nicotine_source`
 ```
 $ cd nicotine_source
 $ sudo apt build-dep nicotine
-$ ./debian/rules get-orig-source
+$ ./packaging/debian/rules get-orig-source
 $ debuild -S -sa
 ```
 

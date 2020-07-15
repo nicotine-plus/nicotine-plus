@@ -29,15 +29,38 @@
 
 import os
 import glob
+import sys
 
 from os.path import isdir
-from distutils.core import setup
+from pynicotine.utils import version
+from setuptools import find_packages, setup
 
 # Compute data_files
 files = []
 
+# Documentation
+for file in ["AUTHORS.md", "COPYING", "NEWS.md", "README.md", "TRANSLATORS.md"]:
+    files.append(
+        (
+            "share/doc/nicotine",
+            [file]
+        )
+    )
+
+for (path, dirs, docfiles) in os.walk("doc"):
+
+    dst_path = os.sep.join(path.split("/")[1:])
+
+    for f in docfiles:
+        files.append(
+            (
+                os.path.join("share/doc/nicotine", dst_path),
+                [os.path.join(path, f)]
+            )
+        )
+
 # Manuals
-manpages = glob.glob(os.path.join("manpages", "*.1"))
+manpages = glob.glob(os.path.join("data/manpages", "*.1"))
 
 for man in manpages:
     files.append(
@@ -51,7 +74,7 @@ for man in manpages:
 files.append(
     (
         "share/icons/hicolor/scalable/apps",
-        ["files/org.nicotine_plus.Nicotine.svg"]
+        ["data/org.nicotine_plus.Nicotine.svg"]
     )
 )
 
@@ -60,7 +83,7 @@ for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconne
     files.append(
         (
             "share/nicotine/trayicons",
-            ["img/" + iconname]
+            [os.path.join("data/icons", iconname)]
         )
     )
 
@@ -68,7 +91,7 @@ for iconname in ["trayicon_away.png", "trayicon_connect.png", "trayicon_disconne
 files.append(
     (
         "share/applications",
-        ["files/org.nicotine_plus.Nicotine.desktop"]
+        ["data/org.nicotine_plus.Nicotine.desktop"]
     )
 )
 
@@ -76,7 +99,7 @@ files.append(
 files.append(
     (
         "share/metainfo",
-        ["files/appdata/org.nicotine_plus.Nicotine.appdata.xml"]
+        ["data/appdata/org.nicotine_plus.Nicotine.appdata.xml"]
     )
 )
 
@@ -98,50 +121,17 @@ for mo in mo_dirs:
         )
     )
 
-# Plugins
-for (path, dirs, pluginfiles) in os.walk("plugins"):
-
-    dst_path = os.sep.join(path.split("/")[1:])
-
-    for f in pluginfiles:
-        files.append(
-            (
-                os.path.join("share/nicotine/plugins", dst_path),
-                [os.path.join(path, f)]
-            )
-        )
-
 # Sounds
-sound_dirs = glob.glob(os.path.join("sounds", "*"))
-
-for sounds in sound_dirs:
-    p, theme = os.path.split(sounds)
-    for file in ["private.wav", "room_nick.wav", "details.txt", "license.txt"]:
-        files.append(
-            (
-                os.path.join("share/nicotine/sounds", theme),
-                [os.path.join(sounds, file)]
-            )
+for file in ["private.wav", "room_nick.wav", "details.txt", "license.txt"]:
+    files.append(
+        (
+            "share/nicotine/sounds",
+            [os.path.join("data/sounds", file)]
         )
-
-# Documentation
-for (path, dirs, docfiles) in os.walk("doc"):
-
-    dst_path = os.sep.join(path.split("/")[1:])
-
-    for f in docfiles:
-        files.append(
-            (
-                os.path.join("share/doc/nicotine", dst_path),
-                [os.path.join(path, f)]
-            )
-        )
+    )
 
 
 if __name__ == '__main__':
-
-    from pynicotine.utils import version
-    LONG_DESCRIPTION = """Nicotine+ is a client for the SoulSeek filesharing network, forked from Nicotine."""
 
     setup(
         name="nicotine",
@@ -150,15 +140,9 @@ if __name__ == '__main__':
         description="Nicotine+, a client for the Soulseek file sharing network.",
         author="Nicotine+ Contributors",
         url="https://nicotine-plus.org/",
-        packages=[
-            'pynicotine', 'pynicotine.geoip', 'pynicotine.gtkgui', 'pynicotine.gtkgui.ui'
-        ],
-        package_data={
-            'pynicotine.geoip': ["ipcountrydb.bin"],
-            'pynicotine.gtkgui.ui': ["*.ui"]
-        },
+        packages=find_packages(exclude=['*tests*']),
+        include_package_data=True,
         scripts=['nicotine'],
-        long_description=LONG_DESCRIPTION,
         data_files=files
     )
 

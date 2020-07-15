@@ -1,5 +1,5 @@
 title: Nicotine+
-logo: /files/org.nicotine_plus.Nicotine.svg
+logo: /data/org.nicotine_plus.Nicotine.svg
 description: A graphical client for Soulseek
 
 plugins:
@@ -8,10 +8,5 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-
-exclude:
-  - files/README
-  - img/README
-  - plugins/README
 
 theme: jekyll-theme-minimal

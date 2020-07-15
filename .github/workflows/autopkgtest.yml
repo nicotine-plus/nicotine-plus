@@ -40,11 +40,11 @@ jobs:
           name: NICOTINE_VERSION
       - name: Install build dependencies
         run: |
-          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
+          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < packaging/debian/control)
           sudo apt-get install $BUILD_DEPS
       - name: Build source .deb
         run: |
-          ./debian/rules get-orig-source
+          ./packaging/debian/rules get-orig-source
           dpkg-buildpackage -S -sa -us -uc
       - name: Collect source .deb artifacts
         run: |
@@ -76,6 +76,7 @@ jobs:
           name: debuild-source
       - name: Install autopkgtest dependencies
         run: |
+          sudo apt update
           sudo apt install autopkgtest
       - name: Run autopkgtest
         run: |

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.nicotine_plus.Nicotine</id>
+  <launchable type="desktop-id">org.nicotine_plus.Nicotine.desktop</launchable>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <translation type="gettext">nicotine</translation>
+  <name>Nicotine+</name>
+  <summary>A graphical client for the Soulseek file sharing network</summary>
+  <description>
+    <p>
+      Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing network.
+    </p>
+    <p>
+      Nicotine+ is an attempt to keep Nicotine working with the latest
+      libraries, kill bugs, keep current with the Soulseek protocol and add some
+      new features that users want and/or need.
+    </p>
+  </description>
+  <categories>
+    <category>Audio</category>
+    <category>AudioVideo</category>
+    <category>FileSharing</category>
+    <category>GTK</category>
+    <category>P2P</category>
+    <category>Network</category>
+  </categories>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/data/appdata/images/screenshot1.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/data/appdata/images/screenshot2.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/data/appdata/images/screenshot3.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/data/appdata/images/screenshot4.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://nicotine-plus.org/</url>
+  <url type="bugtracker">https://github.com/Nicotine-Plus/nicotine-plus/issues</url>
+  <content_rating type="oars-1.0">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+  </content_rating>
+  <releases>
+    <release version="2.0.0" date="2020-07-14" />
+  </releases>
+</component>
