@@ -53,4 +53,4 @@ Python 3.7.3
 ```
 
 ## Windows
-See [PACKAGING.md](doc/PACKAGING.md#windows)
+See [PACKAGING.md](PACKAGING.md#windows)
