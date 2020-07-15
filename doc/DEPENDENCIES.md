@@ -30,7 +30,7 @@ sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3
 sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-mutagen
 ```
 
-#### installing the optional dependencies
+#### Installing the optional dependencies
 * On Redhat/Fedora based distributions:
 ```
 sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-miniupnpc
