@@ -40,12 +40,13 @@ sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-miniupnpc
 sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7 python3-miniupnpc
 ```
 
-* Check that the Python version you are using is 3.5 or newer via `python -V`. On lots of systems this will return something like this:
+#### Check the Python version.
+To check that the Python version you are using is 3.5 or newer use `python -V`. On lots of systems this will return something like this:
 ```
 % python -V
 Python 2.7.16
 ```
-Not to worry, you often can use the command `python3`. For example:
+Not to worry, python version 3 is often installed alongside and can be used like  this:
 ```
 % python3 -V
 Python 3.7.3
