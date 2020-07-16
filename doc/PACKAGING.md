@@ -1,5 +1,8 @@
 # Packaging
 
+### Dependencies
+The dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
+
 ### GNU/Linux instructions
 
 #### Building a source distribution
@@ -71,7 +74,7 @@ Run PyInstaller:
 
 `pyinstaller files/windows/nicotine.spec`
 
-When the frozen application finish to build you will find it under the `dist\Nicotine+` subdirectory.
+After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
 
 If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 

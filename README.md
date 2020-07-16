@@ -42,24 +42,25 @@ $ pacman -S nicotine+
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
 ## Windows (Stable)
-- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)  
+You can download a windows package here: [Windows Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)
 
-# License
-
-Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
+## Building from git
+Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)
+Also do read the next section about getting involved.
 
 # Getting Involved
 Please come and join us in the `#nicotine+` channel on Freenode!
 
-If you'd like to contribute, you have a couple of options to get started. You can [open an issue ticket](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, discuss in `#nicotine+`, or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net). Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
-
-For (unofficial) documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md)
-
-There is a current list of things [TODO.md](doc/TODO.md).
-
-If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
-
-If you want to contact someone, see [MAINTAINERS.md](AUTHORS.md).
+If you'd like to contribute, you have a couple of options to get started. 
+* If you find a problem or have a feature request you can
+  * discuss your findings on the `#nicotine+` channel on the [freenode IRC-Network](https://webchat.freenode.net/)
+  * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
+  * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
+* Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
+* For (unofficial) documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md)
+* There is a current list of things [TODO.md](doc/TODO.md).
+* If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
+* If you want to contact someone, see [MAINTAINERS.md](AUTHORS.md).
 
 # Continuous Integration Testing
 
@@ -97,26 +98,11 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
       --qemu-options='-enable-kvm'
 ```
 
-# Dependencies
-
-## Required
-
-* [python3](https://www.python.org/) >= 3.5 for interpreter;
-* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
-* [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
-* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
-* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/) >= 1.36.2 for metadata parsing;
-* [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
-* [robotframework](https://robotframework.org/) for CI testing.
-
-## Optional
-
-* [gir1.2-appindicator3-0.1](https://lazka.github.io/pgi-docs/AppIndicator3-0.1/index.html) for tray icon;
-* [gir1.2-gsound-1.0](https://lazka.github.io/pgi-docs/GSound-1.0/index.html) for sound effects;
-* [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat;
-* [gir1.2-notify-0.7](https://lazka.github.io/pgi-docs/Notify-0.7/index.html) for desktop notifications;
-
 # Legal and Privacy
 
 - By using Nicotine+, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682), as long as you are using the official Soulseek server.
 - While Nicotine+ does not collect any user data, the official Soulseek server or a user-configured third-party server may potentially do so.
+
+# License
+
+Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.

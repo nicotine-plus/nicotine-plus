@@ -1,31 +1,32 @@
 # Run Nicotine+ from git
+For those of us who like living on the bleeding edge and want to help testing the latest changes and bug-fixes, you can run Nicotine+ directly from the git repository.
+This is not particularly hard, but it may come with some additional required skills, like installing dependencies and managing changes in the database and the config files.
 
-## GNU/Linux
+## Installing the dependencies
+To run Nicotine+ from git, you first have to install all required dependencies. You may also want to install the optional dependencies.
+See [DEPENDENCIES.md](DEPENDENCIES.md)
 
-* Install all the [required dependencies](README.md#required):
+## Clone the repository and run Nicotine+
+This is great if you're the only Nicotine+ user on your system and you want to test the latest version.
+```
+$ git clone https://github.com/Nicotine-Plus/nicotine-plus.git
+$ cd nicotine-plus
+$ python3 nicotine
+```
 
-    * On Redhat/Fedora based distributions:
+## Updating your cloned Nicotine+
+If you want to update to the latest version of Nicotine+, proceed like this:
+```
+$ cd nicotine-plus
+$ git pull
+$ python3 nicotine
+```
 
-    `sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3-mutagen`
+## Installing Nicotine+ from the git repository
+This is useful if you want to share your Nicotine+ installation with other users.
+```
+$ cd nicotine-plus
+$ sudo python3 setup.py install
+```
 
-    * On Debian/Ubuntu based distributions:
-
-    `sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-mutagen`
-
-* Install [optional dependencies](README.md#optional), if desired:
-
-    * On Redhat/Fedora based distributions:
-
-    `sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-miniupnpc`
-
-    * On Debian/Ubuntu based distributions:
-
-    `sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7 python3-miniupnpc `
-
-* Check that the Python version you are using is 3.5 or newer via `python -V`.
-
-* In the git root folder, run `python nicotine`.
-
-## Windows
-
-See [PACKAGING.md](doc/PACKAGING.md#windows)
+And after that you should be able to run `nicotine` just like a normal command.
