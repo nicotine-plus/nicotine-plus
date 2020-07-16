@@ -1,8 +1,8 @@
-nicotine (2.0.1-dev1) focal; urgency=medium
+nicotine (2.0.1-1) focal; urgency=medium
 
-  * Development version.
+  * Latest upstream.
 
- -- Mathias <mail@mathias.is>  Mon, 15 Jul 2020 00:49:00 +0300
+ -- Mathias <mail@mathias.is>  Mon, 16 Jul 2020 20:23:00 +0300
 
 nicotine (2.0.0-1) focal; urgency=medium
 
