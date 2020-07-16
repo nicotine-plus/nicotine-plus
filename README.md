@@ -34,8 +34,8 @@ $ sudo apt install nicotine
 ### Other Distributions
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
-## Windows(Stable)
-- [Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)
+## Windows (Stable)
+You can download a windows package here: [Windows Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)
 
 ## Building from git
 Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)
