@@ -5,7 +5,7 @@ Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/
 [Screenshots](files/screenshots/SCREENSHOTS.md)
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 2.0.0, released on 14 July 2020. See the [changelog](NEWS).
+The current stable version of Nicotine+ is 2.0.1, released on 16 July 2020. See the [changelog](NEWS).
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -42,7 +42,7 @@ $ pacman -S nicotine+
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
 ## Windows (Stable)
-You can download a windows package here: [Windows Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.0/Nicotine+-2.0.0.exe)
+You can download a Windows package here: [Windows Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.1/Nicotine+-2.0.1.exe)
 
 ## Building from git
 Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)
