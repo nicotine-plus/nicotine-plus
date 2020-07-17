@@ -4,6 +4,13 @@ News
     As per GCS § 6.7, this file contains a list of user-visible noteworthy
     changes. Note that this is not the same as a changelog.
 
+Version 2.0.1 (16 July 2020)
+-----------------------------
+
+Changes
+ * Fixed an issue where search requests from others weren't processed
+ * The update checker now shows the latest version properly
+
 Version 2.0.0 (14 July 2020)
 -----------------------------
 
