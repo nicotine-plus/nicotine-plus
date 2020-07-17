@@ -1,8 +1,7 @@
 News
 ====
 
-    As per GCS § 6.7, this file contains a list of user-visible noteworthy
-    changes. Note that this is not the same as a changelog.
+As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
 Version 2.0.1 (16 July 2020)
 -----------------------------
