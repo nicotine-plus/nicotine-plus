@@ -166,8 +166,8 @@ Bugs closed on Github
  * Make proper release ([#26](https://github.com/Nicotine-Plus/nicotine-plus/issues/26))
 
 Bug closed on Trac (readonly)
- * File Manager / "Open Directory" function in Windows ([#717](https://github.com/Nicotine-Plus/nicotine-plus/issues/717))
- * Open Directory not working ([#945](https://github.com/Nicotine-Plus/nicotine-plus/issues/945))
+ * File Manager / "Open Directory" function in Windows (#717)
+ * Open Directory not working (#945)
 
 Version 1.3.2 unstable (14th January 2017)
 -----------------------------
@@ -177,10 +177,10 @@ Bugs closed on Github
  * Can't download from certain users ([#37](https://github.com/Nicotine-Plus/nicotine-plus/issues/37))
 
 Bug closed on Trac (readonly)
- * shared files appear not shared to some peers ([#744](https://github.com/Nicotine-Plus/nicotine-plus/issues/744))
- * Stops Downloading After About 15 Minutes ([#759](https://github.com/Nicotine-Plus/nicotine-plus/issues/759))
- * Browse Files from Friemds ([#762](https://github.com/Nicotine-Plus/nicotine-plus/issues/762))
- * Download issue.... ([#903](https://github.com/Nicotine-Plus/nicotine-plus/issues/903))
+ * shared files appear not shared to some peers (#744)
+ * Stops Downloading After About 15 Minutes (#759)
+ * Browse Files from Friemds (#762)
+ * Download issue.... (#903)
 
 Version 1.3.1 unstable (10th January 2017)
 -----------------------------
@@ -234,29 +234,29 @@ Bugs closed on Github
  * Settings window slow to open ([#36](https://github.com/Nicotine-Plus/nicotine-plus/issues/36))
 
 Bug closed on Trac (readonly)
- * "Abort & Delete" button is mislabeled ([#194](https://github.com/Nicotine-Plus/nicotine-plus/issues/194))
- * No icon found in nicotine.exe ([#512](https://github.com/Nicotine-Plus/nicotine-plus/issues/512))
- * French translation and non-translatable strings ([#524](https://github.com/Nicotine-Plus/nicotine-plus/issues/524))
- * Limiting number of upload slots doesn't work all the time ([#651](https://github.com/Nicotine-Plus/nicotine-plus/issues/651))
- * Add option to override locale dir ([#495](https://github.com/Nicotine-Plus/nicotine-plus/issues/495))
- * File and Fast-Configure keyboard shortcuts are the same ([#658](https://github.com/Nicotine-Plus/nicotine-plus/issues/658))
- * Rescanning shares stalls/fails in some cases ([#671](https://github.com/Nicotine-Plus/nicotine-plus/issues/671))
- * Distressingly, /al is not working in private chat ([#678](https://github.com/Nicotine-Plus/nicotine-plus/issues/678))
- * tab completion of user name does not work in private chat ([#679](https://github.com/Nicotine-Plus/nicotine-plus/issues/679))
- * slskmessages.py:69:__init__:Exception: Programming bug ([#697](https://github.com/Nicotine-Plus/nicotine-plus/issues/697))
- * upload queue size limits can't be set to "unlimited" ([#706](https://github.com/Nicotine-Plus/nicotine-plus/issues/706))
- * Impossible to install nicotine without a mouse ([#712](https://github.com/Nicotine-Plus/nicotine-plus/issues/712))
- * Tray icon is lost after explorer is terminated, doesn't return after explorer is restarted ([#715](https://github.com/Nicotine-Plus/nicotine-plus/issues/715))
- * nicotine crashed with TypeError in PopulateFilters(): value is of wrong type for this column ([#726](https://github.com/Nicotine-Plus/nicotine-plus/issues/726))
- * Dont draw eventbox background for tab labels ([#727](https://github.com/Nicotine-Plus/nicotine-plus/issues/727))
- * Rythmbox Now Playing Error ([#750](https://github.com/Nicotine-Plus/nicotine-plus/issues/750)) ([#935](https://github.com/Nicotine-Plus/nicotine-plus/issues/935))
- * Realpath / filename error ([#776](https://github.com/Nicotine-Plus/nicotine-plus/issues/776))
- * Connection limit ([#802](https://github.com/Nicotine-Plus/nicotine-plus/issues/802))
- * Disabled UPnP support due to errors Message (Can We Silence?) ([#803](https://github.com/Nicotine-Plus/nicotine-plus/issues/803))
- * English text refactorizationillisms ([#828](https://github.com/Nicotine-Plus/nicotine-plus/issues/828))
- * Cannot download from soulseekqt users ([#912](https://github.com/Nicotine-Plus/nicotine-plus/issues/912))
- * Corrected Hungarian translation for 1.2.16 ([#923](https://github.com/Nicotine-Plus/nicotine-plus/issues/923))
- * Nicotine+ 1.2.16 on win7SP164bit - German language ([#998](https://github.com/Nicotine-Plus/nicotine-plus/issues/998))
+ * "Abort & Delete" button is mislabeled (#194)
+ * No icon found in nicotine.exe (#512)
+ * French translation and non-translatable strings (#524)
+ * Limiting number of upload slots doesn't work all the time (#651)
+ * Add option to override locale dir (#495)
+ * File and Fast-Configure keyboard shortcuts are the same (#658)
+ * Rescanning shares stalls/fails in some cases (#671)
+ * Distressingly, /al is not working in private chat (#678)
+ * tab completion of user name does not work in private chat (#679)
+ * slskmessages.py:69:__init__:Exception: Programming bug (#697)
+ * upload queue size limits can't be set to "unlimited" (#706)
+ * Impossible to install nicotine without a mouse (#712)
+ * Tray icon is lost after explorer is terminated, doesn't return after explorer is restarted (#715)
+ * nicotine crashed with TypeError in PopulateFilters(): value is of wrong type for this column (#726)
+ * Dont draw eventbox background for tab labels (#727)
+ * Rythmbox Now Playing Error (#750) (#935)
+ * Realpath / filename error (#776)
+ * Connection limit (#802)
+ * Disabled UPnP support due to errors Message (Can We Silence?) (#803)
+ * English text refactorizationillisms (#828)
+ * Cannot download from soulseekqt users (#912)
+ * Corrected Hungarian translation for 1.2.16 (#923)
+ * Nicotine+ 1.2.16 on win7SP164bit - German language (#998)
 
  A bunch of outdated bug reports have been closed on Trac.
 
@@ -265,29 +265,29 @@ Version 1.2.16 (31th October 2010)
 ----------------------------------
 
 Behaviour
- * Updated most country flags ([#599](https://github.com/Nicotine-Plus/nicotine-plus/issues/599))
- * All messages should now be properly timestamped in the log ([#602](https://github.com/Nicotine-Plus/nicotine-plus/issues/602))
+ * Updated most country flags (#599)
+ * All messages should now be properly timestamped in the log (#602)
  * Saving user pictures now appends a timestamp so pictures aren't overwritten
 
 Features
- * Foobar support for NowPlaying ([#644](https://github.com/Nicotine-Plus/nicotine-plus/issues/644))
+ * Foobar support for NowPlaying (#644)
 
 Bugs
- * Division-by-zero errors broke transfers ([#561](https://github.com/Nicotine-Plus/nicotine-plus/issues/561))
- * Some packets were packed incorrectly ([#570](https://github.com/Nicotine-Plus/nicotine-plus/issues/570))
- * Recursive downloads didn't work ([#571](https://github.com/Nicotine-Plus/nicotine-plus/issues/571))
- * Search results were improperly formatted ([#594](https://github.com/Nicotine-Plus/nicotine-plus/issues/594))
- * Copying folder URLS didn't work ([#574](https://github.com/Nicotine-Plus/nicotine-plus/issues/574))
- * Mid sentence tab completion destroyed input ([#562](https://github.com/Nicotine-Plus/nicotine-plus/issues/562))
- * Portmapping with MiniUPnPc (the binary) didn't work ([#593](https://github.com/Nicotine-Plus/nicotine-plus/issues/593))
- * Deprecated raise statements using strings ([#613](https://github.com/Nicotine-Plus/nicotine-plus/issues/613))
- * Transparency wasn't saved properly ([#615](https://github.com/Nicotine-Plus/nicotine-plus/issues/615))
- * Shares didn't work properly with out-of-ASCII characters ([#623](https://github.com/Nicotine-Plus/nicotine-plus/issues/623), [#345](https://github.com/Nicotine-Plus/nicotine-plus/issues/345))
- * Fileshare counter increased on refreshing a filelist ([#617](https://github.com/Nicotine-Plus/nicotine-plus/issues/617))
- * Program failed to start with a corrupt transfer file ([#628](https://github.com/Nicotine-Plus/nicotine-plus/issues/628))
+ * Division-by-zero errors broke transfers (#561)
+ * Some packets were packed incorrectly (#570)
+ * Recursive downloads didn't work (#571)
+ * Search results were improperly formatted (#594)
+ * Copying folder URLS didn't work (#574)
+ * Mid sentence tab completion destroyed input (#562)
+ * Portmapping with MiniUPnPc (the binary) didn't work (#593)
+ * Deprecated raise statements using strings (#613)
+ * Transparency wasn't saved properly (#615)
+ * Shares didn't work properly with out-of-ASCII characters (#623, #345)
+ * Fileshare counter increased on refreshing a filelist (#617)
+ * Program failed to start with a corrupt transfer file (#628)
  * Network loop crashed on invalid DistribSearch packets
- * Private rooms often didn't show up in the room list ([#641](https://github.com/Nicotine-Plus/nicotine-plus/issues/641))
- * nicotine.desktop was missing P2P and Network sub categories ([#660](https://github.com/Nicotine-Plus/nicotine-plus/issues/660))
+ * Private rooms often didn't show up in the room list (#641)
+ * nicotine.desktop was missing P2P and Network sub categories (#660)
 
 
 Version 1.2.15 (16th February 2010)
@@ -295,7 +295,7 @@ Version 1.2.15 (16th February 2010)
 
 Behaviour
  * Changed the description for our .exe files so it shows up as Nicotine+ in
-   firewalls (ticket [#498](https://github.com/Nicotine-Plus/nicotine-plus/issues/498))
+   firewalls (ticket #498)
  * When using an upload slot limit, uploads that don't start within 30 seconds
    are no longer counted as a used slot. This stops a single faulty user from
    preventing other connections
@@ -305,22 +305,22 @@ Behaviour
  * xdg-open is now used by default to open folders and play music
 
 Features
- * Now-Playing support for Amarok2 (Ticket [#423](https://github.com/Nicotine-Plus/nicotine-plus/issues/423))
- * FastConfigure dialog for new users (Ticket [#482](https://github.com/Nicotine-Plus/nicotine-plus/issues/482))
- * Country flags now have tooltips (Ticket [#521](https://github.com/Nicotine-Plus/nicotine-plus/issues/521))
+ * Now-Playing support for Amarok2 (Ticket #423)
+ * FastConfigure dialog for new users (Ticket #482)
+ * Country flags now have tooltips (Ticket #521)
  * Now-Playing support for Banshee
 
 Bugs
  * Collapse mode in upload/download didn't work for newly added files, wasn't
-   remembered with restart (ticket [#205](https://github.com/Nicotine-Plus/nicotine-plus/issues/205))
+   remembered with restart (ticket #205)
  * The packing/unpacking of network messages has been made more explicit. This
    should make Nicotine+ less likely to fail on different processor types and
-   operating systems (Tickets [#486](https://github.com/Nicotine-Plus/nicotine-plus/issues/486) [#493](https://github.com/Nicotine-Plus/nicotine-plus/issues/493) [#518](https://github.com/Nicotine-Plus/nicotine-plus/issues/518) [#540](https://github.com/Nicotine-Plus/nicotine-plus/issues/540) [#548](https://github.com/Nicotine-Plus/nicotine-plus/issues/548))
+   operating systems (Tickets #486 #493 #518 #540 #548)
  * Double quotation marks weren't filtered from filenames on Windows systems
- * Ban list got unintentionally deleted sometimes (Ticket [#519](https://github.com/Nicotine-Plus/nicotine-plus/issues/519))
- * "Show IP" didn't not work on the userinfo page (Ticket [#522](https://github.com/Nicotine-Plus/nicotine-plus/issues/522))
+ * Ban list got unintentionally deleted sometimes (Ticket #519)
+ * "Show IP" didn't not work on the userinfo page (Ticket #522)
  * Wishlist searches would stop working if the setting "Reopen search tabs" was
-   disabled and the user closed the search tab (Ticket [#552](https://github.com/Nicotine-Plus/nicotine-plus/issues/552))
+   disabled and the user closed the search tab (Ticket #552)
  * Incoming RoomSearch raised exceptions
 
 Translations
@@ -332,16 +332,16 @@ Version 1.2.14 (4th October 2009)
 ---------------------------------
 
 Behaviour
- * A corrupt configuration file will no longer make Nicotine+ fail on startup (ticket [#483](https://github.com/Nicotine-Plus/nicotine-plus/issues/483))
+ * A corrupt configuration file will no longer make Nicotine+ fail on startup (ticket #483)
  * Multiple shares can now be loaded from the harddrive at the same time
 
 Features
- * Support for UPnP through MiniUPnPc (ticket [#230](https://github.com/Nicotine-Plus/nicotine-plus/issues/230))
+ * Support for UPnP through MiniUPnPc (ticket #230)
 
 Bugs
- * Search failed to work on certain combinations of OS and processor (ticket [#486](https://github.com/Nicotine-Plus/nicotine-plus/issues/486))
+ * Search failed to work on certain combinations of OS and processor (ticket #486)
  * Implemented our own filelist iterator, dramatically reducing the amount of
-   CPU cycles needed to open filelists. Thanks goes to Nick Voronin (ticket [#480](https://github.com/Nicotine-Plus/nicotine-plus/issues/480))
+   CPU cycles needed to open filelists. Thanks goes to Nick Voronin (ticket #480)
  * Bitrates for Musepack audio were scanned incorrectly
  * Saving file lists from users with slashes in the name didn't work
  * Filesize was incorrect for files around 2 gigabytes and up in userbrowse.
@@ -351,8 +351,8 @@ Version 1.2.13 (22 Sept 2009)
 -----------------------------
 
 Behaviour
- * Download queue is stored independently from the normal configuration file (ticket [#467](https://github.com/Nicotine-Plus/nicotine-plus/issues/467))
- * Non-working connections are cleaned up more aggressively (ticket [#473](https://github.com/Nicotine-Plus/nicotine-plus/issues/473))
+ * Download queue is stored independently from the normal configuration file (ticket #467)
+ * Non-working connections are cleaned up more aggressively (ticket #473)
 
 Features
  * Themes can now use a range of image types, including SVG
@@ -366,7 +366,7 @@ Features
 Bugs
  * Notifications failed when a user had <> in the name
  * Highlight icon kept on blinking with detached windows
- * Fixed links in the Help menu that didn't work (ticket [#459](https://github.com/Nicotine-Plus/nicotine-plus/issues/459))
+ * Fixed links in the Help menu that didn't work (ticket #459)
  * A few different GUI related bugs that should make Nicotine+ much more
    responsive and use less CPU: Startup time reduced when there is a queue,
    queueing many items at a timer, pressing buttons like "Clear Finished" and
@@ -384,53 +384,53 @@ Version 1.2.12 (26 May 2009)
 
 Behaviour
  * RGBA mode is no longer on by default, to use it pass the --enable-rgba flag when starting Nicotine+
- * On Windows, configuration files are now stored in the user's Application Data folder instead of the installation folder (bug [#330](https://github.com/Nicotine-Plus/nicotine-plus/issues/330))
- * The configuration screen for shares has been rearranged in order to make it more logical (bug [#341](https://github.com/Nicotine-Plus/nicotine-plus/issues/341))
- * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug [#259](https://github.com/Nicotine-Plus/nicotine-plus/issues/259))
+ * On Windows, configuration files are now stored in the user's Application Data folder instead of the installation folder (bug #330)
+ * The configuration screen for shares has been rearranged in order to make it more logical (bug #341)
+ * Support for Mutagen has been added. This will result in more accurate information about bitrates and lengths (bug #259)
  * Icons have been replaced, the alt-tab icon is increased.
  * Most external calls now support pipes
- * Improved German (bug [#394](https://github.com/Nicotine-Plus/nicotine-plus/issues/394)) and French translation (thanks goes to ><((((*>)
- * The dependency for PyVorbis has been removed in favour of Mutagen (bug [#409](https://github.com/Nicotine-Plus/nicotine-plus/issues/409))
+ * Improved German (bug #394) and French translation (thanks goes to ><((((*>)
+ * The dependency for PyVorbis has been removed in favour of Mutagen (bug #409)
  * Notification popups will no longer stack but a single popup will be updated
 
 Features
  * Built-in Webbrowser (MozEmbed)
  * Ignore by IP
  * Windows components have been improved
- * The language selection now uses normal names instead of abbreviations (bug [#332](https://github.com/Nicotine-Plus/nicotine-plus/issues/332))
+ * The language selection now uses normal names instead of abbreviations (bug #332)
  * When switching languages GTK will be translated as well
  * Hash checking to eliminate duplicates. When a file name conflict arises after a download finishes both files are hashed
    to make sure the new file is not identical to the old one.
  * Public Room support has been added
  * The amount of tracked and displayed search results is now limited, which should allow nicotine+ to cope better with overly
    generic search terms. Internally a maximum of 1500 are recorded, of which a maximum of 500 are shown. The other 1000 can be
-   retrieved by using the filters. (bug [#284](https://github.com/Nicotine-Plus/nicotine-plus/issues/284))
+   retrieved by using the filters. (bug #284)
  * Notebook tabs can be reordered and hidden, and these settings will be remembered.
  * Search results are now limited. There are two different limits:
    1) The show limit. This is the amount of results shown in the search tabs
    2) The store limit. This is the amount of results stored internally. This is useful when using search filters
-   These limits are configurable from the configuration screen. (bug [#284](https://github.com/Nicotine-Plus/nicotine-plus/issues/284))
- * Nicotine tries to rename itself from 'python' to 'nicotine' for programs like 'ps' (requires procname module) and 'pkill' (bug [#355](https://github.com/Nicotine-Plus/nicotine-plus/issues/355))
+   These limits are configurable from the configuration screen. (bug #284)
+ * Nicotine tries to rename itself from 'python' to 'nicotine' for programs like 'ps' (requires procname module) and 'pkill' (bug #355)
  * 'Remember choice' option in the quit confirmation dialogue
  * It is possible to ignore people based on their IP address
- * Import warnings are now shows in the log window as well as in the console (bug [#381](https://github.com/Nicotine-Plus/nicotine-plus/issues/381))
+ * Import warnings are now shows in the log window as well as in the console (bug #381)
  * New logging functionality, which means no more messages should get lost in the console
- * You can change your password now (bug [#424](https://github.com/Nicotine-Plus/nicotine-plus/issues/424))
+ * You can change your password now (bug #424)
  * Misc. improvements to transfer handling
  * Tab completion can be done by in-line replacement instead of dropdown list
  * Transfer views now have a 'Place in line' column
 
 Bugs
  * The Danish translation is now stored under 'da'
- * Fixed sorting of percentage (bug [#322](https://github.com/Nicotine-Plus/nicotine-plus/issues/322))
- * A number of typographical errors have been corrected (bug [#334](https://github.com/Nicotine-Plus/nicotine-plus/issues/334) and [#335](https://github.com/Nicotine-Plus/nicotine-plus/issues/335))
- * When disabling sound this setting will be loaded correctly now (bug [#285](https://github.com/Nicotine-Plus/nicotine-plus/issues/285))
+ * Fixed sorting of percentage (bug #322)
+ * A number of typographical errors have been corrected (bug #334 and #335)
+ * When disabling sound this setting will be loaded correctly now (bug #285)
  * Repaired sayprivate function from the pluginsystem
- * The Windows versions now comes with jpeg62.dll (bug [#342](https://github.com/Nicotine-Plus/nicotine-plus/issues/342))
- * The word '-' is now filtered from search queries (bug [#367](https://github.com/Nicotine-Plus/nicotine-plus/issues/367))
+ * The Windows versions now comes with jpeg62.dll (bug #342)
+ * The word '-' is now filtered from search queries (bug #367)
  * Handling of word wrapping of extremely long words is improved
  * Tray icon menu on OSX
- * Private Room handling has improved (bug [#432](https://github.com/Nicotine-Plus/nicotine-plus/issues/432))
+ * Private Room handling has improved (bug #432)
 
 
 Version 1.2.10 (30 December 2008)
@@ -441,10 +441,10 @@ Features
  * Tabs can be reorderen and can be hidden
 
 Bugs
- * Fixed bug [#177](https://github.com/Nicotine-Plus/nicotine-plus/issues/177), notification popups are now split into file and directory notifications
- * Fixed bug [#274](https://github.com/Nicotine-Plus/nicotine-plus/issues/274), cancelling and disowning private rooms bug (fr3shpr1nc3)
- * Fixed bug [#226](https://github.com/Nicotine-Plus/nicotine-plus/issues/226), file size dropdown in search filters are more readable now
- * Fixed bug [#310](https://github.com/Nicotine-Plus/nicotine-plus/issues/310), activity icon no longer activates on our own typing
+ * Fixed bug #177, notification popups are now split into file and directory notifications
+ * Fixed bug #274, cancelling and disowning private rooms bug (fr3shpr1nc3)
+ * Fixed bug #226, file size dropdown in search filters are more readable now
+ * Fixed bug #310, activity icon no longer activates on our own typing
  * Timestamps in private messages now are displayed correctly
  * Room searches work again (was broken in 1.2.10alpha)
 
@@ -482,7 +482,7 @@ General Changes
  * The Edit menu has been broken into Edit, View and Shares menus
    (similar to Enr1X's patch http://nicotine-plus.org/ticket/231 )
    Also fixed the duplicate Alt-B hotkey (hide flags is now Alt-G).
- * Committed QuinoX's patch for case-insensitive nick completion ([#252](https://github.com/Nicotine-Plus/nicotine-plus/issues/252))
+ * Committed QuinoX's patch for case-insensitive nick completion (#252)
 
 Chat Rooms
  * Added Server Message 141, enables Private Chat Room Invitations and thus
@@ -526,7 +526,7 @@ General Changes
  * Added credits and license note to About Nicotine dialog.
  * Disable many widgets (entries, buttons, lists) when disconnected from server
  * User tabs have right-click popup-menus in private, userinfo and userbrowse.
- * libnotify support added (patch by infinito ticket [#176](https://github.com/Nicotine-Plus/nicotine-plus/issues/176) )
+ * libnotify support added (patch by infinito ticket #176 )
    notification-daemon, libnotify and python-notify required
  * Added a 10 second cooldown between responding to Userinfo and Usershares
    requests from the same user (to mitigate damage from DOS attacks and simple
@@ -668,17 +668,17 @@ TRANSFERS
 
 PRIVATE CHAT
  * Added gallows' patch for including your username in the private chat log.
-   (ticket [#161](https://github.com/Nicotine-Plus/nicotine-plus/issues/161))
+   (ticket #161)
  * Direct private messages (currently only supported by Nicotine+ >= 1.2.7.1)
 
 SEARCH
  * Search now has combo boxes, per-room searching and per-user searching.
  * Added Wishlist and changed remembered search tabs to only display
    when new search results arrive
- * Switch to newly started search tab (ticket [#157](https://github.com/Nicotine-Plus/nicotine-plus/issues/157))
+ * Switch to newly started search tab (ticket #157)
 
 USERINFO
- * gallows added userinfo image zooming via the scrollwheel (ticket [#160](https://github.com/Nicotine-Plus/nicotine-plus/issues/160))
+ * gallows added userinfo image zooming via the scrollwheel (ticket #160)
 
 SETTINGS
  * Changed Audio Player Syntax it now uses "$" as the filename
