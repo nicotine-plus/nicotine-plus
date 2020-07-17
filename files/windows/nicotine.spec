@@ -31,7 +31,7 @@ added_files = [
     ('../../COPYING', '.'),
  
     # News file
-    ('../../NEWS', '.'),
+    ('../../NEWS.md', '.'),
 ]
  
 a = Analysis(['../../nicotine'],

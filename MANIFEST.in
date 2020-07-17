@@ -1,7 +1,7 @@
 include AUTHORS.md
 include COPYING
 include MANIFEST.in
-include NEWS
+include NEWS.md
 include README.md
 
 recursive-include test *
