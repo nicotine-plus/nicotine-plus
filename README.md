@@ -35,6 +35,13 @@ Nicotine+ is available in the community repository of Arch Linux and Parabola. T
 $ pacman -S nicotine+
 ```
 
+### Void Linux (Stable)
+To install Nicotine+ on Void Linux, run the following:
+
+```console
+$ sudo xbps-install -S nicotine+
+```
+
 ### Flathub (Stable)
 [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
