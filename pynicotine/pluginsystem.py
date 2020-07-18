@@ -36,7 +36,6 @@ from gi.repository import GLib
 from _thread import start_new_thread
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
-from pynicotine.utils import installPrefix
 
 
 WIN32 = sys.platform.startswith("win")
@@ -97,8 +96,8 @@ class PluginHandler(object):
             pass
 
         # Load system-wide plugins
-        prefix = installPrefix()
-        self.plugindirs.append(os.path.join(prefix, "share/nicotine/plugins"))
+        prefix = os.path.dirname(__file__)
+        self.plugindirs.append(os.path.join(prefix, "plugins"))
 
         # Load home directory plugins
         self.plugindirs.append(plugindir)

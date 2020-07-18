@@ -1,4 +1,4 @@
----
+# Credits
 
 Created by gfarmerfr (released under Public Domain)
 

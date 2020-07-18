@@ -12,7 +12,9 @@ PATH="$HOME/.local/bin:$PATH"
 # Install Robot Framework. This installs outside of system package manager's
 #  control of the FHS...
 echo "*** Installing test harness..."
+cd test  # Avoid picking up our setup.cfg file
 pip3 --disable-pip-version-check install robotframework
+cd ..
 
 # Run the GUI inside of a dummy frame buffer...
 echo "*** Launching Nicotine+ inside of dummy frame buffer..."

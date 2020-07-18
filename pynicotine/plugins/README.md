@@ -1,7 +1,6 @@
-README Concerning plugins for N+
+# README Concerning plugins for N+
 
-
-FOR DEVELOPERS
+## FOR DEVELOPERS
 
 In order to load your own plugins you need to copy them to
 ~/.local/share/nicotine/plugins, creating this directory if it doesn't exist
