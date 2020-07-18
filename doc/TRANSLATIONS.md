@@ -1,6 +1,6 @@
 # Translations
 
-For a list of translators, see [TRANSLATORS.md](TRANSLATORS.md)
+For a list of translators, see [TRANSLATORS.md](../TRANSLATORS.md)
 
 If your name is missing, please contact us.
 

@@ -20,15 +20,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt upgrade -y
-          sudo apt -y install miniupnpc gobject-introspection gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gtk-3.0 \
-            gir1.2-notify-0.7 python3 python3-dbus python3-gi python3-gst-1.0 python3-mutagen xdg-utils
+          sudo apt -y install flake8 gobject-introspection gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gtk-3.0 \
+            gir1.2-notify-0.7 miniupnpc python3 python3-dbus python3-gi python3-gst-1.0 python3-mutagen python3-pytest xdg-utils
       - name: Lint with flake8
         run: |
-          pip install flake8
-          flake8 nicotine pynicotine plugins --ignore=E501,W503,W504
+          flake8 nicotine pynicotine --ignore=E501,W503,W504
       - name: Unit tests
         env:
           PYTHONPATH: .
         run: |
-          pip install pytest
-          pytest test/unit
+          py.test-3 test/unit

@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-#
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 #
 # GNU GENERAL PUBLIC LICENSE

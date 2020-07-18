@@ -21,9 +21,6 @@ added_files = [
     # Translation files
     ('../../languages', 'languages'),
 
-    # Plugins
-    ('../../plugins', 'share/nicotine/plugins'),
-
     # Sounds
     ('../../sounds', 'share/nicotine/sounds'),
 
