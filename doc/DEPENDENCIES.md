@@ -23,21 +23,21 @@
 #### Installing the required dependencies
 * On Redhat/Fedora based distributions:
 ```
-sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3-mutagen
+sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3-miniupnpc python3-mutagen
 ```
 * On Debian/Ubuntu based distributions:
 ```
-sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-mutagen
+sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-miniupnpc python3-mutagen
 ```
 
 #### Installing the optional dependencies
 * On Redhat/Fedora based distributions:
 ```
-sudo dnf install gsound gspell libappindicator-gtk3 libnotify python3-miniupnpc
+sudo dnf install gsound gspell libappindicator-gtk3 libnotify
 ```
 * On Debian/Ubuntu based distributions:
 ```
-sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7 python3-miniupnpc
+sudo apt install gir1.2-appindicator3-0.1 gir1.2-gsound-1.0 gir1.2-gspell-1 gir1.2-notify-0.7
 ```
 
 #### Check the Python version.
