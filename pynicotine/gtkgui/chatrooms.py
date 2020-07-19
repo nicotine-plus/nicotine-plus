@@ -788,7 +788,7 @@ class Ticker:
         if self.ix >= len(self.messages):
             self.ix = 0
 
-        (user, message) = self.messages[self.ix]
+        user, message = self.messages[self.ix]
         self.entry.set_text("[%s]: %s" % (user, message))
         self.ix += 1
 
@@ -797,17 +797,17 @@ class Ticker:
     def add_ticker(self, user, message):
 
         message = message.replace("\n", " ")
-        self.messages.append((user, message))
+        self.messages.append([user, message])
 
         # Indicates that the ticker list should be sorted on the next scroll
         self.shouldsort = True
 
-    def remove_ticker(self, user, message):
+    def remove_ticker(self, user):
 
-        try:
-            self.messages.remove((user, message))
-        except ValueError:
-            pass
+        for i in range(len(self.messages)):
+            if self.messages[i][0] == user:
+                del self.messages[i]
+                return
 
     def get_tickers(self):
         return self.messages
@@ -1355,7 +1355,7 @@ class ChatRoom:
         self.Ticker.add_ticker(msg.user, msg.msg)
 
     def TickerRemove(self, msg):
-        self.Ticker.remove_ticker(msg.user, msg.msg)
+        self.Ticker.remove_ticker(msg.user)
 
     def SayChatRoom(self, msg, text, public=False):
         text = re.sub("\\s\\s+", "  ", text)
