@@ -31,7 +31,8 @@ ReserveFile "shortcuts.ini"
 Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
 BrandingText "${PRODUCT_NAME}"
 OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
-InstallDir "$PROGRAMFILES\Nicotine+"
+; When creating a 32-bit installer, replace PROGRAMFILES64 with PROGRAMFILES
+InstallDir "$PROGRAMFILES64\Nicotine+"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show

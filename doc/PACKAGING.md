@@ -50,6 +50,8 @@ The RPM package will be located in the `dist` subdirectory of your git repositor
 
 ### Windows
 
+To avoid compatibility issues with older Windows versions, Windows 7 is used to package Nicotine+.
+
 #### Building a frozen application via PyInstaller
 
 First, follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
@@ -89,3 +91,9 @@ Extract it in the `files\windows` directory.
 Then via cmd.exe or Powershell go to `files\windows` directory and run `nsis-$(version)/makensis.exe nicotine.nsi`
 
 You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
+
+#### Building a 32-bit (i686) application and installer
+
+Start a MinGW 32-bit terminal, and follow the above tutorial again, replacing any instance of "x86_64" with "i686" when installing packages.
+
+Preferably, clone a fresh copy of the nicotine-plus git repository before freezing Nicotine+ with PyInstaller again.

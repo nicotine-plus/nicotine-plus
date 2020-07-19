@@ -1,8 +1,10 @@
 # -*- mode: python ; coding: utf-8 -*-
- 
+
 block_cipher = None
- 
- 
+
+import sys
+sys.modules['FixTk'] = None
+
 # Files to be added to the frozen app
 added_files = [
     #
@@ -15,22 +17,19 @@ added_files = [
     # GeoIP database
     ('../../pynicotine/geoip/ipcountrydb.bin', 'pynicotine/geoip'),
     
-    # Icon
+    # About icon
     ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
+
+    # Shortcut icon
+    ('nicotine-plus.ico', '.'),
  
     # Translation files
     ('../../languages', 'languages'),
 
     # Sounds
     ('../../sounds', 'share/nicotine/sounds'),
-
-    # License file
-    ('../../COPYING', '.'),
- 
-    # News file
-    ('../../NEWS.md', '.'),
 ]
- 
+
 a = Analysis(['../../nicotine'],
              pathex=['.'],
              binaries=[],
@@ -38,22 +37,17 @@ a = Analysis(['../../nicotine'],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=[],
+             excludes=['FixTk', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
- 
+
 # Removing po files, translation template and translation tools
 a.binaries = [
-    x for x in a.binaries if not x[0].endswith(('.po', '.pot', 'mergeall', 'msgfmtall.py', 'tr_gen.py'))
+    x for x in a.binaries if not x[0].endswith(('.po', '.pot', 'merge_all', 'msgfmtall.py', 'remove_fuzzy', 'remove_mo', 'update_pot.py'))
 ]
- 
-# Removing the changelog and markdown files
-a.binaries = [
-    x for x in a.binaries if not x[0].endswith(('CHANGELOG_DOCS', '.md'))
-]
- 
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
