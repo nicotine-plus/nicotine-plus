@@ -32,12 +32,12 @@ from pynicotine.utils import version
 def makeversion(version):
 
     if version.find("dev") >= 0:
-        # Example: 2.0.1-dev1
+        # Example: 2.0.1.dev1
 
         ix = version.find("dev") - 1
         version = version[:ix]
     elif version.find("rc") >= 0:
-        # Example: 2.0.1-rc1
+        # Example: 2.0.1.rc1
 
         ix = version.find("rc") - 1
         version = version[:ix]
