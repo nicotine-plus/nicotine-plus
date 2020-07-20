@@ -49,7 +49,10 @@ $ sudo xbps-install -S nicotine+
 Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
 
 ## Windows (Stable)
-You can download a Windows package here: [Windows Nicotine+ Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.1/Nicotine+-2.0.1.exe)
+You can download Windows packages here:
+
+- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.1/Nicotine+-2.0.1-x86_64.exe)
+- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.0.1/Nicotine+-2.0.1-i686.exe)
 
 ## Building from git
 Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)

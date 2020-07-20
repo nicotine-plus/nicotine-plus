@@ -262,10 +262,10 @@ def ApplyTranslation():
         # Locales are in the current dir: install them
         if win32:
 
-            # On windows we use intl.dll: the core DLL of GNU gettext-runtime on Windows
+            # On windows we use libintl-8.dll: the core DLL of GNU gettext-runtime on Windows
             import ctypes
 
-            libintl = ctypes.cdll.LoadLibrary("intl.dll")
+            libintl = ctypes.cdll.LoadLibrary("libintl-8.dll")
 
             libintl.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
             libintl.bind_textdomain_codeset(PACKAGE, "UTF-8")
