@@ -77,8 +77,7 @@ class RoomsControl:
         "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ",
         "/usearch ", "/rsearch ", "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ",
         "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
-        "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/attach ", "/detach ",
-        "/toggle", "/tickers"
+        "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/toggle", "/tickers"
     }
 
     def __init__(self, ChatNotebook):
@@ -704,9 +703,6 @@ class RoomsControl:
 
         room = self.joinedrooms[msg.room]
 
-        if self.ChatNotebook.is_tab_detached(room.Main):
-            self.ChatNotebook.attach_tab(room.Main)
-
         self.ChatNotebook.remove_page(room.Main)
 
         room.destroy()
@@ -1300,7 +1296,7 @@ class ChatRoom:
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnShowChatHelp(self, widget):
-        self.frame.OnAboutChatroomCommands(widget, self.GetTabParent(self.Main))
+        self.frame.OnAboutChatroomCommands(widget, self.frame.MainWindow)
 
     def OnShowChatButtons(self, show=True):
 
@@ -1375,25 +1371,18 @@ class ChatRoom:
 
                 self.roomsctrl.ChatNotebook.request_hilite(self.Main)
 
-                if self.roomsctrl.ChatNotebook.is_tab_detached(self.Main):
-                    if not self.roomsctrl.ChatNotebook.is_detached_tab_focused(self.Main):
-                        self.frame.Notifications.Add("rooms", user, self.room, tab=False)
-                else:
-                    self.frame.ChatRequestIcon(1, self.Main)
+                self.frame.ChatRequestIcon(1, self.Main)
 
-                    # add hilite to trayicon
-                    if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
-                       self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
-                       not self.frame.MainWindow.get_property("visible"):
-                        if self.room not in self.frame.hilites["rooms"]:
-                            self.frame.Notifications.Add("rooms", user, self.room, tab=True)
+                # add hilite to trayicon
+                if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
+                   self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
+                   not self.frame.MainWindow.get_property("visible"):
+                    if self.room not in self.frame.hilites["rooms"]:
+                        self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 
             else:
                 self.roomsctrl.ChatNotebook.request_changed(self.Main)
-                if self.roomsctrl.ChatNotebook.is_tab_detached(self.Main):
-                    pass
-                else:
-                    self.frame.ChatRequestIcon(0)
+                self.frame.ChatRequestIcon(0)
 
         if text[:4] == "/me ":
 
@@ -1607,13 +1596,6 @@ class ChatRoom:
         elif cmd == "/now":
             self.NowPlayingThread()
 
-        elif cmd == "/detach":
-            self.Detach()
-
-        elif cmd == "/attach":
-            self.roomsctrl.ChatNotebook.attach_tab(self.Main)
-            GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
-
         elif cmd == "/rescan":
 
             # Rescan public shares if needed
@@ -1658,10 +1640,6 @@ class ChatRoom:
         tickers = self.Ticker.get_tickers()
         header = _("All ticker messages for %(room)s:") % {'room': self.room}
         self.frame.logMessage("%s\n%s" % (header, "\n".join(["%s: %s" % (user, msg) for (user, msg) in tickers])))
-
-    def Detach(self, widget=None):
-        self.roomsctrl.ChatNotebook.detach_tab(self.Main, _("Nicotine+ Chatroom: %s") % self.room)
-        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -2278,13 +2256,6 @@ class ChatRoom:
         else:
             self.Ticker.enable()
 
-    def GetTabParent(self, page):
-
-        if self.roomsctrl.ChatNotebook.is_tab_detached(page):
-            return self.Main.get_parent().get_parent()
-
-        return self.frame.MainWindow
-
     def OnTickerClicked(self, widget, event):
 
         if event.button != 1 or event.type != Gdk.EventType._2BUTTON_PRESS:
@@ -2297,7 +2268,7 @@ class ChatRoom:
         else:
             old = ""
 
-        t, result = TickDialog(self.GetTabParent(self.Main), old)
+        t, result = TickDialog(self.frame.MainWindow, old)
 
         if result is not None:
 
@@ -2365,7 +2336,6 @@ class ChatRooms(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Detach this tab"), self.roomsctrl.joinedrooms[room].Detach),
             ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave)
         )
         popup.set_user(room)

@@ -160,7 +160,6 @@ class UserTabs(IconNotebook):
             ("$" + _("Ban this user"), popup.OnBanUser),
             ("$" + _("Ignore this user"), popup.OnIgnoreUser),
             ("", None),
-            ("#" + _("Detach this tab"), self.users[user].Detach),
             ("#" + _("Close this tab"), self.users[user].OnClose)
         )
 
@@ -332,18 +331,6 @@ class UserInfo:
     def ConnClose(self):
         pass
 
-    def Attach(self, widget=None):
-        self.userinfos.attach_tab(self.Main)
-
-    def Detach(self, widget=None):
-        self.userinfos.detach_tab(
-            self.Main,
-            _("Nicotine+ Userinfo: %(user)s (%(status)s)") % {
-                'user': self.user,
-                'status': [_("Offline"), _("Away"), _("Online")][self.status]
-            }
-        )
-
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
@@ -502,11 +489,8 @@ class UserInfo:
         del self.userinfos.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
 
-        if self.userinfos.is_tab_detached(self.Main):
-            self.Main.get_parent_window().destroy()
-        else:
-            self.userinfos.remove_page(self.Main)
-            self.Main.destroy()
+        self.userinfos.remove_page(self.Main)
+        self.Main.destroy()
 
     def OnSavePicture(self, widget):
 

@@ -56,7 +56,7 @@ class PrivateChats(IconNotebook):
         [
             "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ", "/usearch ", "/rsearch ",
             "/bsearch ", "/join ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ",
-            "/clear ", "/quit ", "/exit ", "/rescan ", "/info ", "/attach ", "/detach ", "/ctcpversion "
+            "/clear ", "/quit ", "/exit ", "/rescan ", "/info ", "/ctcpversion "
         ]
     )
 
@@ -171,7 +171,6 @@ class PrivateChats(IconNotebook):
             ("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
             ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
             ("", None),
-            ("#" + _("Detach this tab"), self.users[user].Detach),
             ("#" + _("Close this tab"), self.users[user].OnClose)
         )
 
@@ -235,21 +234,15 @@ class PrivateChats(IconNotebook):
         chat = self.users[msg.user]
         self.request_changed(chat.Main)
 
-        if self.is_tab_detached(chat.Main):
-            # Only show notifications if window is not focused, and don't highlight main window
-            if not self.is_detached_tab_focused(chat.Main):
-                self.frame.Notifications.Add("private", msg.user)
-        else:
-            # If tab isn't detached
-            # Hilight main private chats Label
-            self.frame.RequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
+        # Hilight main private chats Label
+        self.frame.RequestIcon(self.frame.PrivateChatTabLabel, chat.Main)
 
-            # Show notifications if the private chats notebook isn't selected,
-            # the tab is not selected, or the main window isn't mapped
-            if self.get_current_page() != self.page_num(chat.Main) or \
-               self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
-               not self.frame.MainWindow.get_property("visible"):
-                self.frame.Notifications.Add("private", msg.user)
+        # Show notifications if the private chats notebook isn't selected,
+        # the tab is not selected, or the main window isn't mapped
+        if self.get_current_page() != self.page_num(chat.Main) or \
+           self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
+           not self.frame.MainWindow.get_property("visible"):
+            self.frame.Notifications.Add("private", msg.user)
 
         # SEND CLIENT VERSION to user if the following string is sent
         ctcpversion = 0
@@ -281,11 +274,8 @@ class PrivateChats(IconNotebook):
         if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
             self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
 
-        if self.is_tab_detached(tab.Main):
-            tab.Main.get_parent_window().destroy()
-        else:
-            self.remove_page(tab.Main)
-            tab.Main.destroy()
+        self.remove_page(tab.Main)
+        tab.Main.destroy()
 
     def Login(self):
 
@@ -755,12 +745,6 @@ class PrivateChat:
         elif cmd == "/now":
             self.NowPlayingThread()
 
-        elif cmd == "/detach":
-            self.Detach()
-
-        elif cmd == "/attach":
-            self.Attach()
-
         elif cmd == "/rescan":
             self.frame.OnRescan()
 
@@ -783,20 +767,6 @@ class PrivateChat:
             return
 
         widget.set_text("")
-
-    def Attach(self, widget=None):
-        self.chats.attach_tab(self.Main)
-        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
-
-    def Detach(self, widget=None):
-        self.chats.detach_tab(
-            self.Main,
-            _("Nicotine+ Private Chat: %(user)s (%(status)s)") % {
-                'user': self.user,
-                'status': [_("Offline"), _("Away"), _("Online")][self.status]
-            }
-        )
-        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
     def NowPlayingThread(self):
         if self.frame.now is None:
@@ -943,9 +913,6 @@ class PrivateChat:
         self.status = status
         color = self.getUserStatusColor(self.status)
         self.changecolour(self.tag_username, color)
-        statusword = [_("Offline"), _("Away"), _("Online")][status]
-        title = _("Nicotine+ Private Chat: %(user)s (%(status)s)") % {'user': self.user, 'status': statusword}
-        self.chats.set_detached_tab_title(self.Main, title)
 
     def OnClose(self, widget):
 

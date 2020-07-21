@@ -384,11 +384,8 @@ class Searches(IconNotebook):
             search = self.searches[tab.id]
             search[2] = None
 
-        if self.is_tab_detached(tab.Main):
-            tab.Main.get_parent_window().destroy()
-        else:
-            self.remove_page(tab.Main)
-            tab.Main.destroy()
+        self.remove_page(tab.Main)
+        tab.Main.destroy()
 
     def AutoSearch(self, id):
 
@@ -451,7 +448,6 @@ class Searches(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Detach this tab"), self.searches[id][2].Detach),
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
 
@@ -787,18 +783,6 @@ class Search:
                 model.append([text])
             else:
                 model.prepend([text])
-
-    def Attach(self, widget=None):
-        self.Searches.attach_tab(self.Main)
-
-    def Detach(self, widget=None):
-        self.Searches.detach_tab(
-            self.Main,
-            _("Nicotine+ %(mode)s Search: %(term)s") % {
-                'mode': [_("Global"), _("Rooms"), _("Buddies"), self.Searches.GetUserSearchName(self.id)][self.mode],
-                'term': self.text
-            }
-        )
 
     def AddUserResults(self, msg, user, country):
 
