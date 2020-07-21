@@ -41,8 +41,6 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import OpenUri
 from pynicotine.gtkgui.utils import popupWarning
-from pynicotine.gtkgui.utils import recode
-from pynicotine.gtkgui.utils import recode2
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
@@ -303,7 +301,7 @@ class DownloadsFrame(buildFrame):
             place = "Home"
             homedir = pwd.getpwuid(os.getuid())[5]
 
-        if homedir == recode2(self.DownloadDir.get_file().get_path()) and self.ShareDownloadDir.get_active():
+        if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
             popupWarning(
                 self.p.SettingsWindow,
@@ -316,8 +314,8 @@ class DownloadsFrame(buildFrame):
 
         return {
             "transfers": {
-                "incompletedir": recode2(self.IncompleteDir.get_file().get_path()),
-                "downloaddir": recode2(self.DownloadDir.get_file().get_path()),
+                "incompletedir": self.IncompleteDir.get_file().get_path(),
+                "downloaddir": self.DownloadDir.get_file().get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "downloadfilters": self.GetFilterList(),
                 "enablefilters": self.DownloadFilter.get_active(),
@@ -624,7 +622,7 @@ class SharesFrame(buildFrame):
                 self.shareslist.append(
                     [
                         virtual,
-                        recode(actual),
+                        actual,
                         "",
                         actual
                     ]
@@ -641,7 +639,7 @@ class SharesFrame(buildFrame):
                 self.bshareslist.append(
                     [
                         virtual,
-                        recode(actual),
+                        actual,
                         "",
                         actual
                     ]
@@ -785,7 +783,7 @@ class SharesFrame(buildFrame):
                         self.shareslist.append(
                             [
                                 virtual,
-                                recode(directory),
+                                directory,
                                 "",
                                 directory
                             ]
@@ -843,7 +841,7 @@ class SharesFrame(buildFrame):
                         self.bshareslist.append(
                             [
                                 virtual,
-                                recode(directory),
+                                directory,
                                 "",
                                 directory
                             ]
@@ -1060,7 +1058,7 @@ class TransfersFrame(buildFrame):
                 "prioritize": self.DownloadChecksumsFirst.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
                 "uploadallowed": uploadallowed,
-                "uploaddir": recode2(self.UploadDir.get_file().get_path())
+                "uploaddir": self.UploadDir.get_file().get_path()
             }
         }
 
@@ -1187,7 +1185,7 @@ class UserinfoFrame(buildFrame):
         descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
 
         if self.ImageChooser.get_filename() is not None:
-            pic = recode2(self.ImageChooser.get_filename())
+            pic = self.ImageChooser.get_filename()
         else:
             pic = ""
 
@@ -1569,7 +1567,7 @@ class SoundsFrame(buildFrame):
     def GetSettings(self):
 
         if self.SoundDir.get_file() is not None:
-            soundtheme = recode2(self.SoundDir.get_file().get_path())
+            soundtheme = self.SoundDir.get_file().get_path()
         else:
             soundtheme = ""
 
@@ -1651,7 +1649,7 @@ class IconsFrame(buildFrame):
                 break
 
         if self.ThemeDir.get_file() is not None:
-            icontheme = recode2(self.ThemeDir.get_file().get_path())
+            icontheme = self.ThemeDir.get_file().get_path()
         else:
             icontheme = ""
 
@@ -2282,9 +2280,9 @@ class LogFrame(buildFrame):
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
                 "chatrooms": self.LogRooms.get_active(),
-                "logsdir": recode2(self.LogDir.get_file().get_path()),
-                "roomlogsdir": recode2(self.RoomLogDir.get_file().get_path()),
-                "privatelogsdir": recode2(self.PrivateLogDir.get_file().get_path()),
+                "logsdir": self.LogDir.get_file().get_path(),
+                "roomlogsdir": self.RoomLogDir.get_file().get_path(),
+                "privatelogsdir": self.PrivateLogDir.get_file().get_path(),
                 "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),

@@ -36,7 +36,6 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import OpenUri
 from pynicotine.gtkgui.utils import popupWarning
-from pynicotine.gtkgui.utils import recode
 
 
 def dirstats(directory):
@@ -336,7 +335,7 @@ class FastConfigureAssistant(object):
 
         self.sharelist.append([
             directory[0],
-            recode(directory[1]),
+            directory[1],
             "",
             "",
             "",
@@ -381,7 +380,7 @@ class FastConfigureAssistant(object):
 
                 self.sharelist.insert(0, [
                     directory[0],
-                    recode(directory[1]),
+                    directory[1],
                     HumanSize(size),
                     str(files),
                     str(subdirs),

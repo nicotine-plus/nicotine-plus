@@ -21,7 +21,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import locale
 import math
 import os
 import re
@@ -42,6 +41,7 @@ from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.countrycodes import code2name
+from pynicotine.utils import CleanFile
 from pynicotine.utils import executeCommand
 
 
@@ -144,20 +144,6 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     tooltip.set_text(countryname)
 
     return True
-
-
-def recode(s):
-    try:
-        return s.decode(locale.nl_langinfo(locale.CODESET), "replace").encode("utf-8", "replace")
-    except Exception:
-        return s
-
-
-def recode2(s):
-    try:
-        return s.decode("utf-8", "replace").encode(locale.nl_langinfo(locale.CODESET), "replace")
-    except Exception:
-        return s
 
 
 def FillFileGroupingCombobox(combobox):
@@ -421,20 +407,16 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
 
     buffer = textview.get_buffer()
     linenr = buffer.get_line_count()
-    ME = 0
-
-    if line.startswith("* "):
-        ME = 1  # noqa: F841
 
     TIMESTAMP = None
     TS = 0
 
-    if NICOTINE.np.config.sections["logging"]["timestamps"] and showstamp:
+    if showstamp and NICOTINE.np.config.sections["logging"]["timestamps"]:
         if timestamp_format and not timestamp:
-            TIMESTAMP = recode(time.strftime(timestamp_format))
+            TIMESTAMP = time.strftime(timestamp_format)
             line = "%s %s\n" % (TIMESTAMP, line)
         elif timestamp_format and timestamp:
-            TIMESTAMP = recode(time.strftime(timestamp_format, time.localtime(timestamp)))
+            TIMESTAMP = time.strftime(timestamp_format, time.localtime(timestamp))
             line = "%s %s\n" % (TIMESTAMP, line)
     else:
         line += "\n"
@@ -1226,26 +1208,15 @@ def WriteLog(logsdir, fn, msg):
     if not os.path.exists(logsdir):
         os.makedirs(logsdir)
 
-    logfile = open(os.path.join(logsdir, fixpath(fn.replace(os.sep, "-")) + ".log"), 'ab', 0)
+    logfile = open(os.path.join(logsdir, CleanFile(fn.replace(os.sep, "-")) + ".log"), 'ab', 0)
 
     os.umask(oldumask)
 
-    text = "%s %s\n" % (recode(time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"])), msg)
+    text = "%s %s\n" % (time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"]), msg)
 
     logfile.write(text.encode('UTF-8', 'replace'))
     logfile.flush()
     logfile.close()
-
-
-def fixpath(path):
-    try:
-        if sys.platform == "win32":
-            chars = ["?", "/", "\\", "\"", ":", ">", "<", "|", "*"]
-            for char in chars:
-                path = path.replace(char, "_")
-        return path
-    except Exception:
-        return path
 
 
 def HumanSize(filesize):

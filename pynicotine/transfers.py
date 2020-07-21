@@ -34,7 +34,6 @@ import os.path
 import re
 import shutil
 import stat
-import sys
 import threading
 import time
 from gettext import gettext as _
@@ -48,8 +47,6 @@ from pynicotine.slskmessages import newId
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
 from pynicotine.utils import GetResultBitrateLength
-
-win32 = sys.platform.startswith("win")
 
 
 class Transfer(object):
@@ -790,12 +787,8 @@ class Transfers:
 
     def fileIsShared(self, user, virtualfilename, realfilename):
 
-        if win32:
-            u_realfilename = "%s" % realfilename
-            u_virtualfilename = "%s" % virtualfilename
-        else:
-            u_realfilename = realfilename
-            u_virtualfilename = virtualfilename
+        u_realfilename = realfilename
+        u_virtualfilename = virtualfilename
 
         u_realfilename = u_realfilename.replace("\\", os.sep)
         if not os.access(u_realfilename, os.R_OK):
@@ -870,10 +863,7 @@ class Transfers:
     def getFileSize(self, filename):
 
         try:
-            if win32:
-                size = os.path.getsize("%s" % filename.replace("\\", os.sep))
-            else:
-                size = os.path.getsize(filename.replace("\\", os.sep))
+            size = os.path.getsize(filename.replace("\\", os.sep))
         except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
@@ -1057,10 +1047,7 @@ class Transfers:
                     else:
                         fname = pynewfname
 
-                    if win32:
-                        f = open("%s" % fname, 'ab+')
-                    else:
-                        f = open(fname, 'ab+')
+                    f = open(fname, 'ab+')
 
                 except IOError as strerror:
                     self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
@@ -1126,10 +1113,7 @@ class Transfers:
 
             try:
                 # Open File
-                if win32:
-                    filename = "%s" % i.realfilename.replace("\\", os.sep)
-                else:
-                    filename = i.realfilename.replace("\\", os.sep)
+                filename = i.realfilename.replace("\\", os.sep)
 
                 f = open(filename, "rb")
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
@@ -1320,10 +1304,7 @@ class Transfers:
         i.conn = None
 
         if newname:
-            if win32:
-                self.addToShared("%s" % newname)
-            else:
-                self.addToShared(newname)
+            self.addToShared(newname)
             self.eventprocessor.shares.sendNumSharedFoldersFiles()
 
             if config["transfers"]["shownotification"]:
@@ -1812,10 +1793,8 @@ class Transfers:
         with the same checksum value already exists as identicalfile, if
         identicalfile is None the file can be saved under newname."""
 
-        if win32 and not os.path.exists("%s" % name) and not os.path.exists(name):
+        if not os.path.exists(name):
             # Filename doesn't exist, good for renaming
-            return (name, None)
-        elif not win32 and not os.path.exists(name):
             return (name, None)
 
         # A file with the same name already exists. First lets check whether it's a duplicate
