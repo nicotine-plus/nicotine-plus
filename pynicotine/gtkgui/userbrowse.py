@@ -373,7 +373,6 @@ class UserBrowse:
 
     def MakeNewModel(self, list):
 
-        print(self.shares)
         self.shares = list
         self.selected_folder = None
         self.selected_files = []
@@ -418,7 +417,7 @@ class UserBrowse:
         dirseparator = '\\'
 
         # If there is no share
-        print(self.shares)
+
         if self.shares == []:
 
             # Set the model of the treeviex
@@ -568,11 +567,9 @@ class UserBrowse:
 
     def ShowInfo(self, msg):
         self.conn = None
-        print("showinfo")
         self.MakeNewModel(msg.list)
 
     def LoadShares(self, list):
-        print("loadshares")
         self.MakeNewModel(list)
 
     def UpdateGauge(self, msg):

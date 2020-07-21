@@ -77,7 +77,12 @@ class Config:
         self.filename = filename
         self.data_dir = data_dir
         self.parser = configparser.RawConfigParser()
-        self.parser.read([self.filename])
+
+        try:
+            self.parser.read([self.filename], encoding="utf-8")
+        except UnicodeDecodeError:
+            self.convertConfig()
+            self.parser.read([self.filename], encoding="utf-8")
 
         LOGDIR = os.path.join(data_dir, "logs")
 
@@ -412,6 +417,29 @@ class Config:
             self.aliases = {}
 
         self.config_lock.release()
+
+    def convertConfig(self):
+        """ Converts the config to utf-8.
+        Mainly for upgrading Windows build. (22 July, 2020) """
+
+        try:
+            from chardet import detect
+        except ImportError:
+            return
+
+        os.rename(self.filename, self.filename + ".conv")
+
+        with open(self.filename + ".conv", 'rb') as f:
+            rawdata = f.read()
+
+        from_encoding = detect(rawdata)['encoding']
+
+        with open(self.filename + ".conv", 'r', encoding=from_encoding) as fr:
+            with open(self.filename, 'w', encoding="utf-8") as fw:
+                for line in fr:
+                    fw.write(line[:-1] + '\r\n')
+
+        os.remove(self.filename + ".conv")
 
     def needConfig(self):
 
