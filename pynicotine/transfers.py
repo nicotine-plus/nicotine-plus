@@ -787,14 +787,11 @@ class Transfers:
 
     def fileIsShared(self, user, virtualfilename, realfilename):
 
-        u_realfilename = realfilename
-        u_virtualfilename = virtualfilename
-
-        u_realfilename = u_realfilename.replace("\\", os.sep)
-        if not os.access(u_realfilename, os.R_OK):
+        realfilename = realfilename.replace("\\", os.sep)
+        if not os.access(realfilename, os.R_OK):
             return False
 
-        (dir, sep, file) = u_virtualfilename.rpartition('\\')
+        (dir, sep, file) = virtualfilename.rpartition('\\')
 
         if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
             if user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
@@ -1249,22 +1246,19 @@ class Transfers:
         if not os.access(folder, os.F_OK):
             os.makedirs(folder)
 
-        (newname, identicalfile) = self.getRenamed(os.path.join(folder, basename), file.name)
+        newname, identicalfile = self.getRenamed(os.path.join(folder, basename), file.name)
 
         if newname:
             try:
                 shutil.move(file.name, newname)
-            except (IOError, OSError) as inst:  # noqa: F841
-                try:
-                    shutil.move(file.name, "%s" % newname)
-                except (IOError, OSError) as inst:
-                    log.addwarning(
-                        _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                            'tempfile': file.name,
-                            'file': newname,
-                            'error': inst
-                        }
-                    )
+            except (IOError, OSError) as inst:
+                log.addwarning(
+                    _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+                        'tempfile': "%s" % file.name,
+                        'file': newname,
+                        'error': inst
+                    }
+                )
 
         i.status = "Finished"
         i.speed = 0
@@ -1287,7 +1281,7 @@ class Transfers:
         else:
             self.eventprocessor.logMessage(
                 _("File %(file)s is identical to %(identical)s, not saving.") % {
-                    'file': file.name,
+                    'file': "%s" % file.name,
                     'identical': identicalfile
                 },
                 1
