@@ -842,7 +842,7 @@ class Config:
         oldumask = os.umask(0o077)
 
         try:
-            f = open(self.filename + ".new", "w")
+            f = open(self.filename + ".new", "w", encoding="utf-8")
         except IOError as e:
             log.addwarning(_("Can't save config file, I/O error: %s") % e)
             self.config_lock.release()
