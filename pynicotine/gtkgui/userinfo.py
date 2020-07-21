@@ -256,7 +256,7 @@ class UserInfo:
         self.tag_local = self.makecolour("chatremote")  # noqa: F821
         self.ChangeColours()
 
-        self.likes_popup_menu = popup = PopupMenu(self)
+        self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
@@ -266,7 +266,7 @@ class UserInfo:
 
         self.Likes.connect("button_press_event", self.OnPopupLikesMenu)
 
-        self.hates_popup_menu = popup = PopupMenu(self)
+        self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
             ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
@@ -276,7 +276,7 @@ class UserInfo:
 
         self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
 
-        self.image_menu = popup = PopupMenu(self)
+        self.image_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.MakeZoomNormal),
             ("#" + _("Zoom In"), self.MakeZoomIn),
