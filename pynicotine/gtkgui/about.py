@@ -334,8 +334,6 @@ class AboutRoomsDialog(GenericTableDialog):
         "/clear /cl", _("Clear the chat window"),
         "/tick /t", _("Set your personal ticker"),
         "/tickers", _("Show all the tickers"),
-        "/attach", _("Reattach a chat window to the notebook"),
-        "/detach", _("Detach a chat tab from the notebook"),
         "", "",
         "/me %s" % _("message"), _("Say something in the third-person"),
         "/now", _("Display the Now Playing script's output"),
@@ -384,8 +382,6 @@ class AboutPrivateDialog(GenericTableDialog):
     items = [
         "/close /c", _("Close the current private chat"),
         "/clear /cl", _("Clear the chat window"),
-        "/detach", _("Detach a chat tab from the notebook"),
-        "/attach", _("Reattach a chat window to the notebook"),
         "", "",
         "/me %s" % _("message"), _("Say something in the third-person"),
         "/now", _("Display the Now Playing script's output"),

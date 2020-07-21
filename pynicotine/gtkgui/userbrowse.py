@@ -240,18 +240,6 @@ class UserBrowse:
     def OnPopupMenuDummy(self, widget):
         pass
 
-    def Attach(self, widget=None):
-        self.userbrowses.attach_tab(self.Main)
-
-    def Detach(self, widget=None):
-        self.userbrowses.detach_tab(
-            self.Main,
-            _("Nicotine+ User Browse: %(user)s (%(status)s)") % {
-                'user': self.user,
-                'status': [_("Offline"), _("Away"), _("Online")][self.status]
-            }
-        )
-
     def ConnClose(self):
         pass
 
@@ -933,11 +921,8 @@ class UserBrowse:
         del self.userbrowses.users[self.user]
         self.frame.np.ClosePeerConnection(self.conn)
 
-        if self.userbrowses.is_tab_detached(self.Main):
-            self.Main.get_parent_window().destroy()
-        else:
-            self.userbrowses.remove_page(self.Main)
-            self.Main.destroy()
+        self.userbrowses.remove_page(self.Main)
+        self.Main.destroy()
 
     def OnRefresh(self, widget):
         self.FolderTreeView.set_sensitive(False)
