@@ -1,3 +1,4 @@
+recursive-include languages *
 recursive-include pynicotine *
 recursive-include test *
 
