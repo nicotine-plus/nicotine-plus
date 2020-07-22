@@ -47,10 +47,10 @@ from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
-from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
+from pynicotine.utils import CleanFile
 from pynicotine.utils import cmp
 from pynicotine.utils import debug
 
@@ -1129,7 +1129,7 @@ class ChatRoom:
         config = self.frame.np.config.sections
         log = os.path.join(
             config["logging"]["roomlogsdir"],
-            fixpath(self.room.replace(os.sep, "-")) + ".log"
+            CleanFile(self.room.replace(os.sep, "-")) + ".log"
         )
 
         try:

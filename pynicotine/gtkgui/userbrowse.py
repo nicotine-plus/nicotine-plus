@@ -417,6 +417,7 @@ class UserBrowse:
         dirseparator = '\\'
 
         # If there is no share
+
         if self.shares == []:
 
             # Set the model of the treeviex

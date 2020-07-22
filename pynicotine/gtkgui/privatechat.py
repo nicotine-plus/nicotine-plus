@@ -41,9 +41,9 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
-from pynicotine.gtkgui.utils import fixpath
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.logfacility import log
+from pynicotine.utils import CleanFile
 from pynicotine.utils import version
 
 
@@ -417,7 +417,7 @@ class PrivateChat:
 
         # Read log file
         config = self.frame.np.config.sections
-        log = os.path.join(config["logging"]["privatelogsdir"], fixpath(self.user.replace(os.sep, "-")) + ".log")
+        log = os.path.join(config["logging"]["privatelogsdir"], CleanFile(self.user.replace(os.sep, "-")) + ".log")
 
         try:
             numlines = int(config["logging"]["readprivatelines"])

@@ -50,22 +50,6 @@ returncode = {
 tupletype = type(('', ''))
 
 
-def cast_to_unicode_if_needed(text, logfunc):
-    if isinstance(text, str):
-        return text
-    try:
-        better = str.decode(text, 'utf8')
-        logfunc("Plugin problem: casting '%s' to unicode!" % repr(text))
-        return better
-    except UnicodeError:
-        better = str.decode(text, 'utf8', 'replace')
-        logfunc("Plugin problem: casting '%s' to unicode, losing characters in the process." % repr(text))
-        return better
-    except Exception:
-        logfunc("Plugin problem: failed to completely cast '%s', you're on your own from here on." % repr(text))
-        return text
-
-
 class InvalidPluginError(Exception):
     pass
 
@@ -383,7 +367,6 @@ class PluginHandler(object):
         self.appendqueue({'type': 'logtext', 'text': text})
 
     def saychatroom(self, room, text):
-        text = cast_to_unicode_if_needed(text, log.addwarning)
         self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
@@ -533,7 +516,6 @@ class BasePlugin(object):
             room = self.frame.chatrooms.roomsctrl.joinedrooms[room]
         except KeyError:
             return False
-        text = cast_to_unicode_if_needed(text, self.log)
         msg = slskmessages.SayChatroom(room, text)
         msg.user = user
         room.SayChatRoom(msg, text)

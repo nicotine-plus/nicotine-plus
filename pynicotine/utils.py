@@ -48,8 +48,9 @@ replacementchar = '_'
 
 def CleanFile(filename):
 
-    for char in illegalfilechars:
-        filename = filename.replace(char, replacementchar)
+    if win32:
+        for char in illegalfilechars:
+            filename = filename.replace(char, replacementchar)
 
     return filename
 

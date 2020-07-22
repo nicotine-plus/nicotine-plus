@@ -35,7 +35,6 @@ import logging
 import os
 import queue
 import shutil
-import sys
 import threading
 import time
 from gettext import gettext as _
@@ -1379,12 +1378,7 @@ class NetworkEventProcessor:
             return
 
         try:
-            if sys.platform == "win32":
-                userpic = "%s" % self.config.sections["userinfo"]["pic"]
-                if not os.path.exists(userpic):
-                    userpic = self.config.sections["userinfo"]["pic"]
-            else:
-                userpic = self.config.sections["userinfo"]["pic"]
+            userpic = self.config.sections["userinfo"]["pic"]
 
             f = open(userpic, 'rb')
             pic = f.read()

@@ -425,10 +425,7 @@ class Shares:
 
         self.logMessage(_("%(num)s directories found before rescan/rebuild") % {"num": len(oldmtimes)})
 
-        if win32:
-            newmtimes = self.getDirsMtimesUnicode(shared_directories, yieldfunction)
-        else:
-            newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
+        newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
 
         self.logMessage(_("%(num)s directories found after rescan/rebuild") % {"num": len(newmtimes)})
 
@@ -436,19 +433,13 @@ class Shares:
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
-        if win32:
-            newsharedfiles = self.getFilesListUnicode(newmtimes, oldmtimes, oldfiles, yieldfunction, progress, rebuild)
-        else:
-            newsharedfiles = self.getFilesList(newmtimes, oldmtimes, oldfiles, yieldfunction, progress, rebuild)
+        newsharedfiles = self.getFilesList(newmtimes, oldmtimes, oldfiles, yieldfunction, progress, rebuild)
 
         # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
-        GLib.idle_add(progress.set_text, _("Building DataBase"))
+        GLib.idle_add(progress.set_text, _("Building Database"))
 
-        if win32:
-            newsharedfilesstreams = self.getFilesStreamsUnicode(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
-        else:
-            newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
+        newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
 
         # Update Search Index
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
@@ -537,7 +528,7 @@ class Shares:
 
         return list
 
-    # Check for new files on Unix
+    # Check for new files
     def getFilesList(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
@@ -610,7 +601,7 @@ class Shares:
 
         return list
 
-    # Get metadata via mutagen on Unix
+    # Get metadata via mutagen
     def getFileInfo(self, name, pathname):
 
         try:
@@ -635,7 +626,7 @@ class Shares:
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
 
-    # Get streams of files on Unix
+    # Get streams of files
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
@@ -651,241 +642,6 @@ class Shares:
             if not rebuild and directory in oldmtimes:
                 if mtimes[directory] == oldmtimes[directory]:
                     if os.path.exists(directory):
-                        # No change
-                        try:
-                            streams[virtualdir] = oldstreams[virtualdir]
-                            continue
-                        except KeyError:
-                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
-                                'vdir': virtualdir,
-                                'dir': directory
-                            })
-                    else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
-                        continue
-
-            streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
-
-            if yieldcall is not None:
-                yieldcall()
-
-        return streams
-
-    # Get Modification Times on Windows
-    def getDirsMtimesUnicode(self, dirs, yieldcall=None):
-
-        list = {}
-
-        for directory in dirs:
-
-            directory = os.path.expanduser(directory.replace("//", "/"))
-
-            u_directory = "%s" % directory
-            str_directory = str(directory)
-
-            if self.hiddenCheck({'dir': directory}):
-                continue
-
-            try:
-                contents = dircache.listdir(u_directory)
-                mtime = os.path.getmtime(u_directory)
-            except OSError as errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_directory}
-                print(str(message))
-                self.logMessage(message)
-                displayTraceback(sys.exc_info()[2])
-                continue
-
-            contents.sort()
-
-            list[str_directory] = mtime
-
-            for filename in contents:
-
-                path = os.path.join(directory, filename)
-
-                # force Unicode for reading from disk in win32
-                u_path = "%s" % path
-                s_path = str(path)
-
-                try:
-                    isdir = os.path.isdir(u_path)
-                except OSError as errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                    print(str(message))
-                    self.logMessage(message)
-                    continue
-
-                try:
-                    mtime = os.path.getmtime(u_path)
-                except OSError as errtuple:  # noqa: F841
-                    try:
-                        mtime = os.path.getmtime(s_path)
-                    except OSError as errtuple:
-                        message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': u_path}
-                        print(str(message))
-                        self.logMessage(message)
-                        continue
-                else:
-                    if isdir:
-                        list[s_path] = mtime
-                        dircontents = self.getDirsMtimesUnicode([path])
-                        for k in dircontents:
-                            list[k] = dircontents[k]
-
-                    if yieldcall is not None:
-                        yieldcall()
-
-        return list
-
-    # Check for new files on Windows
-    def getFilesListUnicode(self, mtimes, oldmtimes, oldlist, yieldcall=None, progress=None, rebuild=False):
-        """ Get a list of files with their filelength, bitrate and track length in seconds """
-
-        list = {}
-        count = 0
-
-        for directory in mtimes:
-
-            directory = os.path.expanduser(directory)
-            virtualdir = self.real2virtual(directory)
-            count += 1
-
-            if progress:
-                percent = float(count) / len(mtimes)
-                if percent <= 1.0:
-                    GLib.idle_add(progress.set_fraction, percent)
-
-            # force Unicode for reading from disk
-            u_directory = "%s" % directory
-            str_directory = str(directory)  # noqa: F841
-
-            if self.hiddenCheck({'dir': directory}):
-                continue
-
-            if directory in oldmtimes and directory not in oldlist:
-                # Partial information, happened with unicode paths that N+ couldn't handle properly
-                del oldmtimes[directory]
-
-            if not rebuild and directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(directory):
-                        try:
-                            list[virtualdir] = oldlist[virtualdir]
-                            continue
-                        except KeyError:
-                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
-                                'vdir': virtualdir,
-                                'dir': directory
-                            })
-                    else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
-                        continue
-
-            list[virtualdir] = []
-
-            try:
-                contents = os.listdir(u_directory)
-            except OSError as errtuple:
-                print(str(errtuple))
-                self.logMessage(str(errtuple))
-                continue
-
-            contents.sort()
-
-            for filename in contents:
-
-                if self.hiddenCheck({'dir': directory, 'file': filename}):
-                    continue
-
-                path = os.path.join(directory, filename)
-                s_path = str(path)
-                ppath = str(path)
-
-                s_filename = str(filename)
-                try:
-                    # try to force Unicode for reading from disk
-                    isfile = os.path.isfile(ppath)
-                except OSError as errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print(str(message))
-                    self.logMessage(message)
-                    displayTraceback(sys.exc_info()[2])
-                    continue
-                else:
-                    if isfile:
-                        # Get the metadata of the file via mutagen
-                        data = self.getFileInfoUnicode(s_filename, s_path)
-                        if data is not None:
-                            list[virtualdir].append(data)
-
-                if yieldcall is not None:
-                    yieldcall()
-
-        return list
-
-    # Get metadata via mutagen on Windows
-    def getFileInfoUnicode(self, name, pathname):
-
-        try:
-
-            if type(name) is str:
-                pathname_f = "%s" % pathname
-            else:
-                pathname_f = pathname
-
-            try:
-                size = os.path.getsize(pathname_f)
-            except Exception:
-                size = os.path.getsize(pathname)
-
-            try:
-                info = metadata.detect(pathname_f)
-            except Exception:
-                info = metadata.detect(pathname)
-
-            if info:
-
-                # Sometimes the duration (time) or the bitrate of the file is unknown
-                if info["time"] is None or info["bitrate"] is None:
-                    fileinfo = (name, size, None, None)
-                else:
-                    bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
-                    fileinfo = (name, size, bitrateinfo, int(info["time"]))
-            else:
-                fileinfo = (name, size, None, None)
-
-            return fileinfo
-
-        except Exception as errtuple:
-            message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
-            self.logMessage(message)
-            displayTraceback(sys.exc_info()[2])
-
-    # Get streams of files on Windows
-    def getFilesStreamsUnicode(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
-
-        streams = {}
-        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
-
-        for directory in list(mtimes.keys()):
-
-            virtualdir = self.real2virtual(directory)
-
-            # force Unicode for reading from disk
-            u_directory = "%s" % directory
-            str_directory = str(directory)  # noqa: F841
-
-            if self.hiddenCheck({'dir': directory}):
-                continue
-
-            if directory in oldmtimes and directory not in oldstreams:
-                # Partial information, happened with unicode paths that N+ couldn't handle properly
-                del oldmtimes[directory]
-
-            if not rebuild and directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(u_directory):
                         # No change
                         try:
                             streams[virtualdir] = oldstreams[virtualdir]
