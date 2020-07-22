@@ -242,7 +242,10 @@ class NicotineFrame:
         self.CreateRecommendationsWidgets()
 
         self.status_context_id = self.Statusbar.get_context_id("")
+
         self.socket_context_id = self.SocketStatus.get_context_id("")
+        self.socket_template = _("%(current)s/%(limit)s Connections")
+
         self.user_context_id = self.UserStatus.get_context_id("")
         self.down_context_id = self.DownStatus.get_context_id("")
         self.up_context_id = self.UpStatus.get_context_id("")
@@ -468,6 +471,12 @@ class NicotineFrame:
             "rooms": [],
             "private": []
         }
+
+        self.users_template = _("Users: %s")
+        self.files_template = _("Files: %s")
+        self.down_template = _("Down: %(num)i users, %(speed).1f KB/s")
+        self.up_template = _("Up: %(num)i users, %(speed).1f KB/s")
+        self.tray_tooltip_template = _("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up")
 
         self.UpdateBandwidth()
         self.UpdateTransferButtons()
@@ -1623,7 +1632,7 @@ class NicotineFrame:
 
     def SetSocketStatus(self, status):
         self.SocketStatus.pop(self.socket_context_id)
-        self.SocketStatus.push(self.socket_context_id, _("%(current)s/%(limit)s Connections") % {'current': status, 'limit': slskproto.MAXFILELIMIT})
+        self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXFILELIMIT})
 
     def InitInterface(self, msg):
 
@@ -1860,17 +1869,17 @@ class NicotineFrame:
             down = up = 0.0
             filesup = filesdown = total_usersdown = total_usersup = 0
 
-        self.DownloadUsers.set_text(_("Users: %s") % total_usersdown)
-        self.UploadUsers.set_text(_("Users: %s") % total_usersup)
-        self.DownloadFiles.set_text(_("Files: %s") % filesdown)
-        self.UploadFiles.set_text(_("Files: %s") % filesup)
+        self.DownloadUsers.set_text(self.users_template % total_usersdown)
+        self.UploadUsers.set_text(self.users_template % total_usersup)
+        self.DownloadFiles.set_text(self.files_template % filesdown)
+        self.UploadFiles.set_text(self.files_template % filesup)
 
         self.DownStatus.pop(self.down_context_id)
         self.UpStatus.pop(self.up_context_id)
-        self.DownStatus.push(self.down_context_id, _("Down: %(num)i users, %(speed).1f KB/s") % {'num': total_usersdown, 'speed': down})
-        self.UpStatus.push(self.up_context_id, _("Up: %(num)i users, %(speed).1f KB/s") % {'num': total_usersup, 'speed': up})
+        self.DownStatus.push(self.down_context_id, self.down_template % {'num': total_usersdown, 'speed': down})
+        self.UpStatus.push(self.up_context_id, self.up_template % {'num': total_usersup, 'speed': up})
 
-        self.TrayApp.SetToolTip(_("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up") % {'speeddown': down, 'speedup': up})
+        self.TrayApp.SetToolTip(self.tray_tooltip_template % {'speeddown': down, 'speedup': up})
 
     def BanUser(self, user):
         if self.np.transfers is not None:
