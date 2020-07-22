@@ -21,6 +21,8 @@ import os
 
 from gettext import gettext as _
 
+from pynicotine import slskmessages
+from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 from pynicotine.utils import installPrefix
@@ -61,15 +63,86 @@ class TrayApp:
                 ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow),
                 (1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
                 ("#" + _("Settings"), self.frame.OnSettings),
-                ("#" + _("Send Message"), self.frame.OnOpenPrivateChat),
-                ("#" + _("Lookup a User's IP"), self.frame.OnGetAUsersIP),
-                ("#" + _("Lookup a User's Info"), self.frame.OnGetAUsersInfo),
-                ("#" + _("Lookup a User's Shares"), self.frame.OnGetAUsersShares),
+                ("#" + _("Send Message"), self.OnOpenPrivateChat),
+                ("#" + _("Lookup a User's IP"), self.OnGetAUsersIP),
+                ("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo),
+                ("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares),
                 ("$" + _("Toggle Away"), self.frame.OnAway),
                 ("#" + _("Quit"), self.frame.OnExit)
             )
         except Exception as e:
             log.addwarning(_('ERROR: tray menu, %(error)s') % {'error': e})
+
+    def OnOpenPrivateChat(self, widget, prefix=""):
+
+        # popup
+        users = []
+        for entry in self.frame.np.config.sections["server"]["userlist"]:
+            users.append(entry[0])
+
+        users.sort()
+        user = input_box(
+            self.frame,
+            title=_('Nicotine+:') + " " + _("Start Message"),
+            message=_('Enter the User who you wish to send a private message:'),
+            droplist=users
+        )
+
+        if user is not None:
+            self.frame.privatechats.SendMessage(user, None, 1)
+            self.frame.ChangeMainPage(None, "private")
+
+    def OnGetAUsersInfo(self, widget, prefix=""):
+
+        # popup
+        users = []
+        for entry in self.frame.np.config.sections["server"]["userlist"]:
+            users.append(entry[0])
+
+        users.sort()
+        user = input_box(
+            self.frame,
+            title=_('Nicotine+: Get User Info'),
+            message=_('Enter the User whose User Info you wish to receive:'),
+            droplist=users
+        )
+
+        if user is None:
+            pass
+        else:
+            self.frame.LocalUserInfoRequest(user)
+
+    def OnGetAUsersIP(self, widget, prefix=""):
+        users = []
+        for entry in self.frame.np.config.sections["server"]["userlist"]:
+            users.append(entry[0])
+        users.sort()
+        user = input_box(
+            self.frame,
+            title=_("Nicotine+: Get A User's IP"),
+            message=_('Enter the User whose IP Address you wish to receive:'),
+            droplist=users
+        )
+        if user is None:
+            pass
+        else:
+            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+
+    def OnGetAUsersShares(self, widget, prefix=""):
+        users = []
+        for entry in self.frame.np.config.sections["server"]["userlist"]:
+            users.append(entry[0])
+        users.sort()
+        user = input_box(
+            self.frame,
+            title=_("Nicotine+: Get A User's Shares List"),
+            message=_('Enter the User whose Shares List you wish to receive:'),
+            droplist=users
+        )
+        if user is None:
+            pass
+        else:
+            self.frame.BrowseUser(user)
 
     def OnPopupServer(self, widget):
         items = self.tray_popup_menu_server.get_children()
