@@ -9,9 +9,4 @@ relative_links:
   enabled: true
   collections: true
 
-exclude:
-  - files/README.md
-  - img/README.md
-  - plugins/README.md
-
 theme: jekyll-theme-minimal
