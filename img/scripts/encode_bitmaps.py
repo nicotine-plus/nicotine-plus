@@ -26,18 +26,18 @@ import string
 from os.path import isfile
 
 table = [
-    ["away.png", "away"],
-    ["online.png", "online"],
-    ["offline.png", "offline"],
-    ["trayicon_away.png", "trayicon_away"],
-    ["trayicon_connect.png", "trayicon_connect"],
-    ["trayicon_disconnect.png", "trayicon_disconnect"],
-    ["trayicon_msg.png", "trayicon_msg"],
-    ["empty.png", "empty"],
-    ["hilite.png", "hilite"],
-    ["hilite3.png", "hilite3"],
-    ["n.png", "n"],
-    ["notify.png", "notify"]
+    ["img/away.png", "away"],
+    ["img/online.png", "online"],
+    ["img/offline.png", "offline"],
+    ["img/trayicon_away.png", "trayicon_away"],
+    ["img/trayicon_connect.png", "trayicon_connect"],
+    ["img/trayicon_disconnect.png", "trayicon_disconnect"],
+    ["img/trayicon_msg.png", "trayicon_msg"],
+    ["img/empty.png", "empty"],
+    ["img/hilite.png", "hilite"],
+    ["img/hilite3.png", "hilite3"],
+    ["files/org.nicotine_plus.Nicotine.svg", "n"],
+    ["files/org.nicotine_plus.Nicotine.svg", "notify"]
 ]
 
 flagtable = []
@@ -52,13 +52,7 @@ if isfile(missing):
 
 outf = open(os.path.join("pynicotine", "gtkgui", "imagedata.py"), "w")
 
-for image in sorted(table):
-    print(image[0])
-    f = open(os.path.join("img", image[0]), "rb")
-    outf.write("%s = %r\n" % (image[1], f.read()))
-    f.close()
-
-for image in flagtable:
+for image in sorted(table) + flagtable:
     print(image[0])
     f = open(image[0], "rb")
     outf.write("%s = %r\n" % (image[1], f.read()))
