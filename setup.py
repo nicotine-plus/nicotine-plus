@@ -120,19 +120,6 @@ for mo in mo_dirs:
         )
     )
 
-# Sounds
-sound_dirs = glob.glob(os.path.join("sounds", "*"))
-
-for sounds in sound_dirs:
-    p, theme = os.path.split(sounds)
-    for file in ["private.wav", "room_nick.wav", "details.txt", "license.txt"]:
-        files.append(
-            (
-                os.path.join("share/nicotine/sounds", theme),
-                [os.path.join(sounds, file)]
-            )
-        )
-
 
 if __name__ == '__main__':
 

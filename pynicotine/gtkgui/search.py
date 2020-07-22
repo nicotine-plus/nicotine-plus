@@ -76,7 +76,7 @@ class Searches(IconNotebook):
             self.frame.images,
             angle=ui["labelsearch"],
             tabclosers=ui["tabclosers"],
-            show_image=ui["tab_icons"],
+            show_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
             reorderable=ui["tab_reorderable"],
             notebookraw=self.frame.SearchNotebookRaw
         )

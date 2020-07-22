@@ -121,8 +121,6 @@ class Config:
                 "preferfriends": 0,
                 "useupslots": 0,
                 "uploadslots": 2,
-                "shownotification": 0,
-                "shownotificationperfolder": 0,
                 "afterfinish": "",
                 "afterfolder": "",
                 "lock": 1,
@@ -288,7 +286,6 @@ class Config:
                 "spellcheck": 1,
                 "exitdialog": 1,
                 "notexists": 1,
-                "tab_colors": 0,
                 "tab_default": "",
                 "tab_hilite": "red",
                 "tab_changed": "#0000ff",
@@ -300,7 +297,6 @@ class Config:
                 "tabinfo": "Top",
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
-                "tab_icons": 1,
                 "tab_status_icons": 1,
                 "chat_hidebuttons": 0,
                 "labelmain": 0,
@@ -343,8 +339,6 @@ class Config:
                 "showaway": 0,
                 "buddylistinchatrooms": 0,
                 "trayicon": 1,
-                "soundenabled": 1,
-                "soundtheme": "",
                 "filemanager": "xdg-open $",
                 "speechenabled": 0,
                 "speechprivate": "%(user)s told you.. %(message)s",
@@ -386,6 +380,18 @@ class Config:
                 "npplayer": "",
                 "npformatlist": [],
                 "npformat": ""
+            },
+
+            "notifications": {
+                "notification_window_title": 1,
+                "notification_tab_colors": 0,
+                "notification_tab_icons": 1,
+                "notification_popup_sound": 1,
+                "notification_popup_file": 1,
+                "notification_popup_folder": 1,
+                "notification_popup_private_message": 1,
+                "notification_popup_chatroom": 0,
+                "notification_popup_chatroom_mention": 1
             },
 
             "plugins": {
@@ -569,6 +575,14 @@ class Config:
         # Remove auto-retry failed downloads-option, this is now default behavior
         self.removeOldOption("transfers", "autoretry_downloads")
 
+        # Remove old notification/sound settings
+        self.removeOldOption("transfers", "shownotification")
+        self.removeOldOption("transfers", "shownotificationperfolder")
+        self.removeOldOption("ui", "soundenabled")
+        self.removeOldOption("ui", "soundtheme")
+        self.removeOldOption("ui", "tab_colors")
+        self.removeOldOption("ui", "tab_icons")
+
         # Checking for unknown section/options
         unknown1 = [
             'login', 'passw', 'enc', 'downloaddir', 'uploaddir', 'customban',
@@ -585,7 +599,7 @@ class Config:
                 "showaway", "usernamehotspots", "exitdialog",
                 "tab_icons", "spellcheck", "modes_order", "modes_visible",
                 "chat_hidebuttons", "tab_status_icons", "notexists",
-                "soundenabled", "speechenabled", "enablefilters", "width",
+                "speechenabled", "enablefilters", "width",
                 "height", "xposition", "yposition", "labelmain", "labelrooms",
                 "labelprivate", "labelinfo", "labelbrowse", "labelsearch"
             ],

@@ -1301,13 +1301,14 @@ class Transfers:
             self.addToShared(newname)
             self.eventprocessor.shares.sendNumSharedFoldersFiles()
 
-            if config["transfers"]["shownotification"]:
+            if config["notifications"]["notification_popup_file"]:
                 self.eventprocessor.frame.NewNotification(
                     _("%(file)s downloaded from %(user)s") % {
                         'user': i.user,
                         'file': newname.rsplit(os.sep, 1)[1]
                     },
-                    title=_("File downloaded")
+                    title=_("File downloaded"),
+                    soundnamenotify="complete-download"
                 )
 
         self.SaveDownloads()
@@ -1322,20 +1323,21 @@ class Transfers:
             else:
                 self.eventprocessor.logMessage(_("Executed: %s") % config["transfers"]["afterfinish"])
 
-        if i.path and (config["transfers"]["shownotificationperfolder"] or config["transfers"]["afterfolder"]):
+        if i.path and (config["notifications"]["notification_popup_folder"] or config["transfers"]["afterfolder"]):
 
             # walk through downloads and break if any file in the same folder exists, else execute
             for ia in self.downloads:
                 if ia.status not in ["Finished", "Aborted", "Paused", "Filtered"] and ia.path and ia.path == i.path:
                     break
             else:
-                if config["transfers"]["shownotificationperfolder"]:
+                if config["notifications"]["notification_popup_folder"]:
                     self.eventprocessor.frame.NewNotification(
                         _("%(folder)s downloaded from %(user)s") % {
                             'user': i.user,
                             'folder': folder
                         },
-                        title=_("Folder downloaded")
+                        title=_("Folder downloaded"),
+                        soundnamenotify="complete-download"
                     )
                 if config["transfers"]["afterfolder"]:
                     if not executeCommand(config["transfers"]["afterfolder"], folder):

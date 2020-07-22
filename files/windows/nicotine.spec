@@ -25,9 +25,6 @@ added_files = [
  
     # Translation files
     ('../../languages', 'languages'),
-
-    # Sounds
-    ('../../sounds', 'share/nicotine/sounds'),
 ]
 
 a = Analysis(['../../nicotine'],

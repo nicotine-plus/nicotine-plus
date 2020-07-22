@@ -518,10 +518,9 @@ class ImageLabel(gtk.HBox):
         self.statusimage = gtk.Image()
         self.label = gtk.Label()
         self.text = label
-        if NICOTINE.np.config.sections["ui"]["tab_colors"]:
-            color = NICOTINE.np.config.sections["ui"]["tab_default"]
-        else:
-            color = ""
+
+        color = NICOTINE.np.config.sections["ui"]["tab_default"]
+
         if not color:
             self.label.set_text("%s" % self.text)
         else:
@@ -641,19 +640,17 @@ class ImageLabel(gtk.HBox):
         else:
             self.notify = notify
 
-        if NICOTINE.np.config.sections["ui"]["tab_colors"]:
+        color = NICOTINE.np.config.sections["ui"]["tab_default"]
+
+        if NICOTINE.np.config.sections["notifications"]["notification_tab_colors"]:
             if notify == 1:
                 color = NICOTINE.np.config.sections["ui"]["tab_changed"]
             elif notify == 2:
                 color = NICOTINE.np.config.sections["ui"]["tab_hilite"]
-            else:
-                color = NICOTINE.np.config.sections["ui"]["tab_default"]
 
-            try:
-                Gdk.color_parse(color)
-            except Exception:
-                color = ""
-        else:
+        try:
+            Gdk.color_parse(color)
+        except Exception:
             color = ""
 
         if text is not None:
@@ -686,11 +683,7 @@ class ImageLabel(gtk.HBox):
         return self.status_img
 
     def set_text(self, lbl):
-        if NICOTINE.np.config.sections["ui"]["tab_colors"]:
-            self.set_text_color(notify=None, text=lbl)
-        else:
-            self.text = lbl
-            self.label.set_text(lbl)
+        self.set_text_color(notify=None, text=lbl)
 
     def get_text(self):
         return self.label.get_text()

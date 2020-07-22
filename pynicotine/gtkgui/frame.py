@@ -81,7 +81,6 @@ from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import executeCommand
-from pynicotine.utils import installPrefix
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -109,8 +108,6 @@ class NicotineFrame:
         self.bindip = bindip
         self.port = port
         self.got_focus = False
-        self.notify = None
-        self.gsound = None
 
         try:
             # Spell checking support
@@ -120,27 +117,20 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.gspell = False
 
-        # No good way of supporting notifications on Windows currently
-        if sys.platform != "win32":
+        try:
+            # Notification support
+            gi.require_version('Notify', '0.7')
+            from gi.repository import Notify
+            Notify.init("Nicotine+")
+            self.notificationprovider = Notify
+            self.notifyBox = None
+        except (ImportError, ValueError):
             try:
-                # Notification support
-                gi.require_version('Notify', '0.7')
-                from gi.repository import Notify
-                Notify.init("Nicotine+")
-                self.notify = Notify
-                self.notifyBox = None
+                # Windows support via plyer
+                from plyer import notification
+                self.notificationprovider = notification
             except (ImportError, ValueError):
-                self.notify = None
-
-            try:
-                # Sound effect support
-                gi.require_version('GSound', '1.0')
-                from gi.repository import GSound
-                ctx = GSound.Context()
-                ctx.init()
-                self.gsound = ctx
-            except (ImportError, ValueError):
-                self.gsound = None
+                self.notificationprovider = None
 
         self.np = NetworkEventProcessor(
             self,
@@ -277,7 +267,7 @@ class NicotineFrame:
         for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
-            w.show_images(config["ui"]["tab_icons"])
+            w.show_images(config["notifications"]["notification_tab_icons"])
 
         for tab in self.MainNotebook.get_children():
             self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
@@ -325,7 +315,7 @@ class NicotineFrame:
             label_tab.add(img_label)
 
             # Set tab icons, angle and text color
-            img_label.show_image(config["ui"]["tab_icons"])
+            img_label.show_image(config["notifications"]["notification_tab_icons"])
             img_label.set_angle(config["ui"]["labelmain"])
             img_label.set_text_color(0)
 
@@ -694,22 +684,39 @@ class NicotineFrame:
         # data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
         selection.set(selection.target, 8, user)
 
-    def NewNotification(self, message, title="Nicotine+"):
+    def NewNotification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
 
-        if self.notify is None:
+        if self.notificationprovider is None:
             return
 
-        if self.notifyBox is None:
-            self.notifyBox = self.notify.Notification.new(title, message)
-            self.notifyBox.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
-            self.notifyBox.set_image_from_pixbuf(self.images["notify"])
-        else:
-            self.notifyBox.update(title, message)
-
         try:
-            self.notifyBox.show()
-        except gobject.GError as error:
-            self.logMessage(_("Notification Error: %s") % str(error))
+            if self.notifyBox is None:
+                self.notifyBox = self.notificationprovider.Notification.new(title, message)
+                self.notifyBox.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
+
+                if self.np.config.sections["notifications"]["notification_popup_sound"]:
+                    self.notifyBox.set_hint("sound-name", GLib.Variant("s", soundnamenotify))
+
+                self.notifyBox.set_image_from_pixbuf(self.images["notify"])
+            else:
+                self.notifyBox.update(title, message)
+
+            try:
+                self.notifyBox.show()
+            except gobject.GError as error:
+                self.logMessage(_("Notification Error: %s") % str(error))
+        except AttributeError:
+            # Fall back to plyer
+
+            self.notificationprovider.notify(
+                app_name="Nicotine+",
+                title=title,
+                message=message
+            )
+
+            if sys.platform == "win32" and self.np.config.sections["notifications"]["notification_popup_sound"]:
+                import winsound
+                winsound.PlaySound(soundnamewin, winsound.SND_ALIAS)
 
     def LoadIcons(self):
         self.images = {}
@@ -2179,7 +2186,7 @@ class NicotineFrame:
         for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
-            w.show_images(config["ui"]["tab_icons"])
+            w.show_images(config["notifications"]["notification_tab_icons"])
             w.set_text_colors(None)
 
         try:
@@ -2205,10 +2212,10 @@ class NicotineFrame:
 
         for label_tab in tabLabels:
             if type(label_tab) is ImageLabel:
-                label_tab.show_image(config["ui"]["tab_icons"])
+                label_tab.show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.set_text_color(None)
             elif type(label_tab) is gtk.EventBox:
-                label_tab.get_child().show_image(config["ui"]["tab_icons"])
+                label_tab.get_child().show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.get_child().set_text_color(None)
 
         self.SetTabPositions()
@@ -2599,10 +2606,7 @@ class NicotineFrame:
         if user == self.np.config.sections["server"]["login"]:
             try:
                 if self.np.config.sections["userinfo"]["pic"] != "":
-                    if sys.platform == "win32":
-                        userpic = "%s" % self.np.config.sections["userinfo"]["pic"]
-                    else:
-                        userpic = self.np.config.sections["userinfo"]["pic"]
+                    userpic = self.np.config.sections["userinfo"]["pic"]
                     if os.path.exists(userpic):
                         has_pic = True
                         f = open(userpic, 'rb')
@@ -3223,7 +3227,6 @@ class Notifications:
         if location == "rooms" and room is not None and user is not None:
             if room not in self.frame.hilites["rooms"]:
                 self.frame.hilites["rooms"].append(room)
-                self.sound("room_nick", user, place=room)
 
                 self.frame.TrayApp.SetImage()
         elif location == "private":
@@ -3232,7 +3235,6 @@ class Notifications:
                 self.frame.hilites[location].append(user)
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
-                self.sound(location, user)
 
                 self.frame.TrayApp.SetImage()
 
@@ -3272,7 +3274,7 @@ class Notifications:
             # Reset Title
             if self.frame.MainWindow.get_title() != _("Nicotine+") + " " + version:
                 self.frame.MainWindow.set_title(_("Nicotine+") + " " + version)
-        else:
+        elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
             # Private Chats have a higher priority
             if len(self.frame.hilites["private"]) > 0:
                 user = self.frame.hilites["private"][-1]
@@ -3328,78 +3330,6 @@ class Notifications:
         self.tts_playing = True
 
         executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
-
-    def sound(self, message, user, place=None):
-
-        if self.frame.np.config.sections["ui"]["speechenabled"]:
-
-            if message == "room_nick" and place is not None:
-                self.new_tts(
-                    _("%(myusername)s, the user, %(username)s has mentioned your name in the room, %(place)s.") % {
-                        "myusername": self.frame.np.config.sections["server"]["login"],
-                        "username": user,
-                        "place": place
-                    }
-                )
-            elif message == "private":
-                self.new_tts(
-                    _("%(myusername)s, you have recieved a private message from %(username)s.") % {
-                        "myusername": self.frame.np.config.sections["server"]["login"],
-                        "username": user
-                    }
-                )
-
-            return
-
-        if self.frame.gsound is None and sys.platform != "win32":
-            return
-
-        if "soundenabled" not in self.frame.np.config.sections["ui"] or not self.frame.np.config.sections["ui"]["soundenabled"]:
-            return
-
-        path = None
-        exists = 0
-
-        if message == "private":
-            soundtitle = "private"
-        elif message == "room_nick":
-            soundtitle = "room_nick"
-
-        if "soundtheme" in self.frame.np.config.sections["ui"]:
-
-            path = os.path.expanduser(os.path.join(self.frame.np.config.sections["ui"]["soundtheme"], "%s.wav" % soundtitle))
-
-            if os.path.exists(path):
-                exists = 1
-            else:
-                path = None
-
-        if not exists:
-
-            prefix = installPrefix()
-            path = "%s/share/nicotine/sounds/default/%s.wav" % (prefix, soundtitle)
-
-            if os.path.exists(path):
-                exists = 1
-            else:
-                path = None
-
-        if not exists:
-
-            path = "sounds/default/%s.wav" % soundtitle
-
-            if os.path.exists(path):
-                exists = 1
-            else:
-                path = None
-
-        if path is not None and exists:
-
-            if sys.platform == "win32":
-                import winsound
-                winsound.PlaySound(path, winsound.SND_FILENAME)
-            else:
-                self.frame.gsound.play_simple({'media.filename': path})
 
 
 class MainApp:

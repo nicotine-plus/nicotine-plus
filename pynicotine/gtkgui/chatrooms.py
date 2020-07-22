@@ -1380,9 +1380,23 @@ class ChatRoom:
                     if self.room not in self.frame.hilites["rooms"]:
                         self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 
+                if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
+                    self.frame.NewNotification(
+                        text,
+                        title=_("%s mentioned you in the %s room") % (user, self.room),
+                        soundnamenotify="bell-window-system",
+                        soundnamewin="SystemExclamation"
+                    )
+
             else:
                 self.roomsctrl.ChatNotebook.request_changed(self.Main)
                 self.frame.ChatRequestIcon(0)
+
+                if self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
+                    self.frame.NewNotification(
+                        text,
+                        title=_("Message by %s in the %s room") % (user, self.room)
+                    )
 
         if text[:4] == "/me ":
 
@@ -2311,15 +2325,15 @@ class ChatRooms(IconNotebook):
 
         self.frame = frame
 
-        ui = self.frame.np.config.sections["ui"]
+        config = self.frame.np.config.sections
 
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=ui["labelrooms"],
-            tabclosers=ui["tabclosers"],
-            show_image=ui["tab_icons"],
-            reorderable=ui["tab_reorderable"],
+            angle=config["ui"]["labelrooms"],
+            tabclosers=config["ui"]["tabclosers"],
+            show_image=config["notifications"]["notification_tab_icons"],
+            reorderable=config["ui"]["tab_reorderable"],
             notebookraw=self.frame.ChatNotebookRaw
         )
 
@@ -2327,7 +2341,7 @@ class ChatRooms(IconNotebook):
 
         self.popup_enable()
 
-        self.set_tab_pos(self.frame.getTabPosition(self.frame.np.config.sections["ui"]["tabrooms"]))
+        self.set_tab_pos(self.frame.getTabPosition(config["ui"]["tabrooms"]))
 
     def TabPopup(self, room):
 

@@ -55,7 +55,7 @@ class UserTabs(IconNotebook):
             self.frame.images,
             angle=ui["labelinfo"],
             tabclosers=ui["tabclosers"],
-            show_image=ui["tab_icons"],
+            show_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
             reorderable=ui["tab_reorderable"],
             show_status_image=ui["tab_status_icons"],
             notebookraw=notebookraw
