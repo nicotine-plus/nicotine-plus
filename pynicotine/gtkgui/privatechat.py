@@ -64,16 +64,16 @@ class PrivateChats(IconNotebook):
 
         self.frame = frame
 
-        ui = frame.np.config.sections["ui"]
+        config = frame.np.config.sections
 
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=ui["labelprivate"],
-            tabclosers=ui["tabclosers"],
-            show_image=ui["tab_icons"],
-            reorderable=ui["tab_reorderable"],
-            show_status_image=ui["tab_status_icons"],
+            angle=config["ui"]["labelprivate"],
+            tabclosers=config["ui"]["tabclosers"],
+            show_image=config["notifications"]["notification_tab_icons"],
+            reorderable=config["ui"]["tab_reorderable"],
+            show_status_image=config["ui"]["tab_status_icons"],
             notebookraw=self.frame.PrivatechatNotebookRaw
         )
 
@@ -243,6 +243,12 @@ class PrivateChats(IconNotebook):
            self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
            not self.frame.MainWindow.get_property("visible"):
             self.frame.Notifications.Add("private", msg.user)
+
+            if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
+                self.frame.NewNotification(
+                    text,
+                    title=_("Private message from %s") % msg.user
+                )
 
         # SEND CLIENT VERSION to user if the following string is sent
         ctcpversion = 0

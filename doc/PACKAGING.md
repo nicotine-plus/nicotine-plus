@@ -70,7 +70,7 @@ Once PyInstaller is installed, clone the Nicotine+ git repository:
 Install dependencies:
 
 `pacman -S mingw-w64-x86_64-miniupnpc`  
-`pip install mutagen`  
+`pip install mutagen plyer`  
 
 Run PyInstaller:
 

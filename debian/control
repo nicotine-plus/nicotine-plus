@@ -33,7 +33,6 @@ Depends:
     xdg-utils
 Recommends:
     gir1.2-appindicator3-0.1,
-    gir1.2-gsound-1.0,
     gir1.2-gspell-1,
     gir1.2-notify-0.7,
     python3-miniupnpc

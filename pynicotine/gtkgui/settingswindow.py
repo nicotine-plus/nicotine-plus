@@ -1478,9 +1478,6 @@ class SoundsFrame(buildFrame):
 
         buildFrame.__init__(self, "SoundsFrame")
 
-        if not win32 and self.frame.gsound is None:
-            self.SoundCheck.set_sensitive(False)
-
         # Combobox for audio players
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
         for executable in [
@@ -1505,8 +1502,6 @@ class SoundsFrame(buildFrame):
 
         self.options = {
             "ui": {
-                "soundtheme": self.SoundDir,
-                "soundenabled": self.SoundCheck,
                 "speechenabled": self.TextToSpeech,
                 "speechcommand": self.TTSCommand,
                 "speechrooms": self.RoomMessage,
@@ -1516,14 +1511,6 @@ class SoundsFrame(buildFrame):
                 "default": self.audioPlayerCombo
             }
         }
-
-    def OnSoundCheckToggled(self, widget):
-
-        sensitive = self.SoundCheck.get_active()
-
-        self.SoundDir.set_sensitive(sensitive)
-        self.DefaultSoundDir.set_sensitive(sensitive)
-        self.snddirLabel.set_sensitive(sensitive)
 
     def DefaultPrivate(self, widget):
         self.PrivateMessage.set_text("%(user)s told you.. %(message)s")
@@ -1540,17 +1527,11 @@ class SoundsFrame(buildFrame):
 
         self.tableTTS.set_sensitive(sensitive)
 
-    def OnDefaultSoundTheme(self, widget):
-        self.SoundDir.unselect_all()
-
     def SetSettings(self, config):
 
         ui = config["ui"]
 
         self.p.SetWidgetsData(config, self.options)
-
-        if ui["soundtheme"]:
-            self.SoundDir.set_current_folder(ui["soundtheme"])
 
         for i in ["%(user)s", "%(message)s"]:
 
@@ -1560,21 +1541,12 @@ class SoundsFrame(buildFrame):
             if i not in ui["speechrooms"]:
                 self.DefaultRooms(None)
 
-        self.OnSoundCheckToggled(self.SoundCheck)
-
         self.OnTextToSpeechToggled(self.TextToSpeech)
 
     def GetSettings(self):
 
-        if self.SoundDir.get_file() is not None:
-            soundtheme = self.SoundDir.get_file().get_path()
-        else:
-            soundtheme = ""
-
         return {
             "ui": {
-                "soundtheme": soundtheme,
-                "soundenabled": self.SoundCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
                 "speechcommand": self.TTSCommand.get_child().get_text(),
                 "speechrooms": self.RoomMessage.get_text(),
@@ -2060,8 +2032,6 @@ class NotebookFrame(buildFrame):
                 "labelbrowse": self.UserBrowseAngleSpin,
                 "tab_select_previous": self.TabSelectPrevious,
                 "tabclosers": self.TabClosers,
-                "tab_icons": self.TabIcons,
-                "tab_colors": self.TabColours,
                 "tab_reorderable": self.TabReorderable,
                 "tab_status_icons": self.TabStatusIcons
             }
@@ -2116,8 +2086,6 @@ class NotebookFrame(buildFrame):
                 "labelbrowse": self.UserBrowseAngleSpin.get_value_as_int(),
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
-                "tab_icons": self.TabIcons.get_active(),
-                "tab_colors": self.TabColours.get_active(),
                 "tab_reorderable": self.TabReorderable.get_active(),
                 "tab_status_icons": self.TabStatusIcons.get_active()
             }
@@ -2443,8 +2411,6 @@ class EventsFrame(buildFrame):
 
         self.options = {
             "transfers": {
-                "shownotification": self.ShowNotification,
-                "shownotificationperfolder": self.ShowNotificationPerFolder,
                 "afterfinish": self.AfterDownload,
                 "afterfolder": self.AfterFolder,
                 "download_doubleclick": self.DownloadDoubleClick,
@@ -2457,21 +2423,12 @@ class EventsFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        if self.frame.notify is not None:
-            self.ShowNotification.set_sensitive(True)
-            self.ShowNotificationPerFolder.set_sensitive(True)
-        else:
-            self.ShowNotification.set_sensitive(False)
-            self.ShowNotificationPerFolder.set_sensitive(False)
-
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
 
         return {
             "transfers": {
-                "shownotification": self.ShowNotification.get_active(),
-                "shownotificationperfolder": self.ShowNotificationPerFolder.get_active(),
                 "afterfinish": self.AfterDownload.get_text(),
                 "afterfolder": self.AfterFolder.get_text(),
                 "download_doubleclick": self.DownloadDoubleClick.get_active(),
@@ -3143,6 +3100,64 @@ class buildDialog(gtk.Dialog):
         self.PluginProperties.show()
 
 
+class NotificationsFrame(buildFrame):
+
+    def __init__(self, parent):
+
+        self.p = parent
+
+        buildFrame.__init__(self, "NotificationsFrame")
+
+        self.options = {
+            "notifications": {
+                "notification_window_title": self.NotificationWindowTitle,
+                "notification_tab_colors": self.NotificationTabColours,
+                "notification_tab_icons": self.NotificationTabIcons,
+                "notification_popup_sound": self.NotificationPopupSound,
+                "notification_popup_file": self.NotificationPopupFile,
+                "notification_popup_folder": self.NotificationPopupFolder,
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
+                "notification_popup_chatroom": self.NotificationPopupChatroom,
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
+            }
+        }
+
+    def SetSettings(self, config):
+
+        if self.frame.notificationprovider is not None:
+            self.NotificationPopupSound.set_sensitive(True)
+            self.NotificationPopupFile.set_sensitive(True)
+            self.NotificationPopupFolder.set_sensitive(True)
+            self.NotificationPopupPrivateMessage.set_sensitive(True)
+            self.NotificationPopupChatroom.set_sensitive(True)
+            self.NotificationPopupChatroomMention.set_sensitive(True)
+        else:
+            self.NotificationPopupSound.set_sensitive(False)
+            self.NotificationPopupFile.set_sensitive(False)
+            self.NotificationPopupFolder.set_sensitive(False)
+            self.NotificationPopupPrivateMessage.set_sensitive(False)
+            self.NotificationPopupChatroom.set_sensitive(False)
+            self.NotificationPopupChatroomMention.set_sensitive(False)
+
+        self.p.SetWidgetsData(config, self.options)
+
+    def GetSettings(self):
+
+        return {
+            "notifications": {
+                "notification_window_title": self.NotificationWindowTitle.get_active(),
+                "notification_tab_colors": self.NotificationTabColours.get_active(),
+                "notification_tab_icons": self.NotificationTabIcons.get_active(),
+                "notification_popup_sound": self.NotificationPopupSound.get_active(),
+                "notification_popup_file": self.NotificationPopupFile.get_active(),
+                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
+                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
+            }
+        }
+
+
 class PluginFrame(buildFrame):
 
     def __init__(self, parent):
@@ -3377,6 +3392,7 @@ class SettingsWindow:
 
         self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
+        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["User info"] = model.append(row, [_("User info"), "User info"])
@@ -3407,6 +3423,7 @@ class SettingsWindow:
 
         p["Misc"] = MiscFrame(self)
         p["Plugins"] = PluginFrame(self)
+        p["Notifications"] = NotificationsFrame(self)
         p["Sounds"] = SoundsFrame(self)
         p["Searches"] = SearchFrame(self)
         p["User info"] = UserinfoFrame(self)
@@ -3619,6 +3636,7 @@ class SettingsWindow:
                 "urls": {},
                 "players": {},
                 "words": {},
+                "notifications": {},
                 "plugins": {}
             }
 
