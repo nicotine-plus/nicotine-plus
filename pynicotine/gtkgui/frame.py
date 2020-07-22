@@ -59,7 +59,6 @@ from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.entrydialog import FindDialog
 from pynicotine.gtkgui.entrydialog import FolderDownload
 from pynicotine.gtkgui.entrydialog import QuitBox
-from pynicotine.gtkgui.entrydialog import input_box
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
@@ -1070,77 +1069,6 @@ class NicotineFrame:
             return
         self.privatechats.SendMessage(text, None, 1)
         self.UserPrivateCombo.get_child().set_text("")
-
-    def OnOpenPrivateChat(self, widget, prefix=""):
-
-        # popup
-        users = []
-        for entry in self.np.config.sections["server"]["userlist"]:
-            users.append(entry[0])
-
-        users.sort()
-        user = input_box(
-            self,
-            title=_('Nicotine+:') + " " + _("Start Message"),
-            message=_('Enter the User who you wish to send a private message:'),
-            droplist=users
-        )
-
-        if user is not None:
-            self.privatechats.SendMessage(user, None, 1)
-            self.ChangeMainPage(None, "chatrooms")
-
-    def OnGetAUsersInfo(self, widget, prefix=""):
-
-        # popup
-        users = []
-        for entry in self.np.config.sections["server"]["userlist"]:
-            users.append(entry[0])
-
-        users.sort()
-        user = input_box(
-            self,
-            title=_('Nicotine+: Get User Info'),
-            message=_('Enter the User whose User Info you wish to receive:'),
-            droplist=users
-        )
-
-        if user is None:
-            pass
-        else:
-            self.LocalUserInfoRequest(user)
-
-    def OnGetAUsersIP(self, widget, prefix=""):
-        users = []
-        for entry in self.np.config.sections["server"]["userlist"]:
-            users.append(entry[0])
-        users.sort()
-        user = input_box(
-            self,
-            title=_("Nicotine+: Get A User's IP"),
-            message=_('Enter the User whose IP Address you wish to receive:'),
-            droplist=users
-        )
-        if user is None:
-            pass
-        else:
-            self.np.queue.put(slskmessages.GetPeerAddress(user))
-
-    def OnGetAUsersShares(self, widget, prefix=""):
-        users = []
-        for entry in self.np.config.sections["server"]["userlist"]:
-            users.append(entry[0])
-        users.sort()
-        user = input_box(
-            self,
-            title=_("Nicotine+: Get A User's Shares List"),
-            message=_('Enter the User whose Shares List you wish to receive:'),
-            droplist=users
-        )
-        if user is None:
-            pass
-        else:
-            self.BrowseUser(user)
 
     def button_press(self, widget, event):
         try:
