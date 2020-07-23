@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="add">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">list-add-symbolic</property>
-  </object>
-  <object class="GtkImage" id="configure">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">applications-system-symbolic</property>
-  </object>
   <object class="GtkWindow" id="TempWindow">
     <property name="can_focus">False</property>
     <child>
@@ -99,6 +89,12 @@
                 <property name="image">add</property>
                 <property name="always_show_image">True</property>
                 <signal name="clicked" handler="OnAddUser" swapped="no"/>
+                <child>
+                  <object class="GtkImage" id="add">
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">list-add-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -115,6 +111,12 @@
                 <property name="image">configure</property>
                 <property name="always_show_image">True</property>
                 <signal name="clicked" handler="OnSettingsBanIgnore" swapped="no"/>
+                <child>
+                  <object class="GtkImage" id="configure">
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
