@@ -1497,10 +1497,10 @@ class Search:
 
         if active:
             self.ResultsList.expand_all()
-            self.expandImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+            self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
             CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
-            self.expandImage.set_from_stock(gtk.STOCK_ADD, 4)
+            self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["searches"]["expand_searches"] = active
 

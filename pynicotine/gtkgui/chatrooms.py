@@ -1316,20 +1316,20 @@ class ChatRoom:
         act = widget.get_active()
         if act:
             self.RoomLogWindow.hide()
-            self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_DOWN, 1)
+            self.HideStatusLogImage.set_from_icon_name("go-down-symbolic", gtk.IconSize.BUTTON)
         else:
             self.RoomLogWindow.show()
-            self.HideStatusLogImage.set_from_stock(gtk.STOCK_GO_UP, 1)
+            self.HideStatusLogImage.set_from_icon_name("go-up-symbolic", gtk.IconSize.BUTTON)
 
     def OnHideUserList(self, widget):
 
         act = widget.get_active()
         if act:
             self.vbox5.hide()
-            self.HideUserListImage.set_from_stock(gtk.STOCK_GO_BACK, 1)
+            self.HideUserListImage.set_from_icon_name("go-previous-symbolic", gtk.IconSize.BUTTON)
         else:
             self.vbox5.show()
-            self.HideUserListImage.set_from_stock(gtk.STOCK_GO_FORWARD, 1)
+            self.HideUserListImage.set_from_icon_name("go-next-symbolic", gtk.IconSize.BUTTON)
 
     def TickerSet(self, msg):
 

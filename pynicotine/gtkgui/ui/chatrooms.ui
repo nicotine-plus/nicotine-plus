@@ -39,11 +39,11 @@
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="tooltip_text" translatable="yes">Hide/Show Status log</property>
-                <property name="image">up</property>
+                <property name="image">HideStatusLogImage</property>
                 <property name="always_show_image">True</property>
                 <signal name="toggled" handler="OnHideStatusLog" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="up">
+                  <object class="GtkImage" id="HideStatusLogImage">
                     <property name="can_focus">False</property>
                     <property name="icon_name">go-up-symbolic</property>
                   </object>
@@ -63,11 +63,11 @@
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="tooltip_text" translatable="yes">Hide/Show User list</property>
-                <property name="image">right</property>
+                <property name="image">HideUserListImage</property>
                 <property name="always_show_image">True</property>
                 <signal name="toggled" handler="OnHideUserList" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="right">
+                  <object class="GtkImage" id="HideUserListImage">
                     <property name="can_focus">False</property>
                     <property name="icon_name">go-next-symbolic</property>
                   </object>
