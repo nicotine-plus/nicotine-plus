@@ -285,10 +285,10 @@ class UserBrowse:
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
-            self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+            self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
             self.FolderTreeView.collapse_all()
-            self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
+            self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
             dirs = list(self.directories.keys())
             dirs.sort()
