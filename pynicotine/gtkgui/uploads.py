@@ -132,10 +132,10 @@ class Uploads(TransferList):
 
         if expanded:
             self.frame.UploadList.expand_all()
-            self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+            self.frame.ExpandUploadsImage.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
             CollapseTreeview(self.frame.UploadList, self.TreeUsers)
-            self.frame.ExpandUploadsImage.set_from_stock(gtk.STOCK_ADD, 4)
+            self.frame.ExpandUploadsImage.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
         self.frame.np.config.writeConfiguration()

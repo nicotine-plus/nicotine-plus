@@ -618,7 +618,7 @@ class ImageLabel(gtk.HBox):
             return
         self.button = gtk.Button()
         img = gtk.Image()
-        img.set_from_stock(gtk.STOCK_CLOSE, gtk.IconSize.MENU)
+        img.set_from_icon_name("window-close-symbolic", gtk.IconSize.MENU)
         self.button.add(img)
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)

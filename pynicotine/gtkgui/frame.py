@@ -2869,7 +2869,9 @@ class NicotineFrame:
             return
 
     def OnAddThingILike(self, widget):
-        thing = utils.InputDialog(self.MainWindow, _("Add thing I like"), _("I like") + ":")
+        thing = self.AddLikeEntry.get_text()
+        self.AddLikeEntry.set_text("")
+
         if thing and thing.lower() not in self.np.config.sections["interests"]["likes"]:
             thing = thing.lower()
             self.np.config.sections["interests"]["likes"].append(thing)
@@ -2878,7 +2880,9 @@ class NicotineFrame:
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
     def OnAddThingIDislike(self, widget):
-        thing = utils.InputDialog(self.MainWindow, _("Add thing I don't like"), _("I don't like") + ":")
+        thing = self.AddDislikeEntry.get_text()
+        self.AddDislikeEntry.set_text("")
+
         if thing and thing.lower() not in self.np.config.sections["interests"]["dislikes"]:
             thing = thing.lower()
             self.np.config.sections["interests"]["dislikes"].append(thing)

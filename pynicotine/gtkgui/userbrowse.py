@@ -270,7 +270,7 @@ class UserBrowse:
     def ChangeColours(self):
         self.frame.SetTextBG(self.FileTreeView)
         self.frame.SetTextBG(self.FolderTreeView)
-        self.frame.SetTextBG(self.entry4)
+        self.frame.SetTextBG(self.SearchEntry)
 
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
         self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
@@ -285,10 +285,10 @@ class UserBrowse:
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
-            self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_REMOVE, 4)
+            self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
             self.FolderTreeView.collapse_all()
-            self.ExpandDirectoriesImage.set_from_stock(gtk.STOCK_ADD, 4)
+            self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
             dirs = list(self.directories.keys())
             dirs.sort()
@@ -870,7 +870,7 @@ class UserBrowse:
 
     def OnSearch(self, widget):
 
-        query = widget.get_text().lower()
+        query = self.SearchEntry.get_text().lower()
 
         if self.query == query:
             self.search_position += 1
