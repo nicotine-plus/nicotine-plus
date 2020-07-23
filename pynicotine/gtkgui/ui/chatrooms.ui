@@ -132,6 +132,12 @@
                         <property name="can_focus">False</property>
                         <property name="editable">False</property>
                         <property name="cursor_visible">False</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="pixels_below_lines">1</property>
+                        <property name="left_margin">10</property>
+                        <property name="right_margin">10</property>
+                        <property name="top_margin">5</property>
+                        <property name="bottom_margin">5</property>
                         <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
                       </object>
                     </child>
@@ -159,6 +165,12 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">word-char</property>
                             <property name="cursor_visible">False</property>
+                            <property name="pixels_above_lines">1</property>
+                            <property name="pixels_below_lines">1</property>
+                            <property name="left_margin">10</property>
+                            <property name="right_margin">10</property>
+                            <property name="top_margin">5</property>
+                            <property name="bottom_margin">5</property>
                             <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
                           </object>
                         </child>

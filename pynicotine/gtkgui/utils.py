@@ -406,6 +406,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         bottom = True
 
     buffer = textview.get_buffer()
+    text_iter_start, text_iter_end = buffer.get_bounds()
     linenr = buffer.get_line_count()
 
     TIMESTAMP = None
@@ -414,12 +415,16 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     if showstamp and NICOTINE.np.config.sections["logging"]["timestamps"]:
         if timestamp_format and not timestamp:
             TIMESTAMP = time.strftime(timestamp_format)
-            line = "%s %s\n" % (TIMESTAMP, line)
+            line = "%s %s" % (TIMESTAMP, line)
         elif timestamp_format and timestamp:
             TIMESTAMP = time.strftime(timestamp_format, time.localtime(timestamp))
-            line = "%s %s\n" % (TIMESTAMP, line)
-    else:
-        line += "\n"
+            line = "%s %s" % (TIMESTAMP, line)
+
+    # Ensure newlines are in the correct place
+    # We want them before the content, to prevent adding an empty line at the end of the TextView
+    line = line.strip("\n")
+    if text_iter_end.get_offset() > 0:
+        line = "\n" + line
 
     if TIMESTAMP is not None:
         TS = len(TIMESTAMP)
