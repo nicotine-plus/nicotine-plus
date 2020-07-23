@@ -340,6 +340,14 @@ class NicotineFrame:
         self.LogScrolledWindow.show()
 
         self.LogWindow = gtk.TextView()
+
+        self.LogWindow.set_pixels_above_lines(1)
+        self.LogWindow.set_pixels_below_lines(1)
+        self.LogWindow.set_left_margin(10)
+        self.LogWindow.set_right_margin(10)
+        self.LogWindow.set_top_margin(5)
+        self.LogWindow.set_bottom_margin(5)
+
         self.LogWindow.set_wrap_mode(gtk.WrapMode.WORD)
         self.LogWindow.set_cursor_visible(False)
         self.LogWindow.set_editable(False)
