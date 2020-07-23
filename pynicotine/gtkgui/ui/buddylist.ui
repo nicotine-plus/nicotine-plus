@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkWindow" id="TempWindow">
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkVBox" id="userlistvbox">
+      <object class="GtkBox" id="userlistvbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">5</property>
         <property name="spacing">5</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="BuddiesLabel">
             <property name="visible">True</property>
@@ -24,7 +24,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow" id="userlistSW">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
@@ -46,12 +46,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="UserHbox">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkLabel" id="label1">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Add Buddy: </property>
@@ -81,17 +81,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="AddUser">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Add</property>
+                <property name="image">add</property>
+                <property name="always_show_image">True</property>
                 <signal name="clicked" handler="OnAddUser" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="image1">
-                    <property name="visible">True</property>
+                  <object class="GtkImage" id="add">
                     <property name="can_focus">False</property>
-                    <property name="stock">gtk-add</property>
+                    <property name="icon_name">list-add-symbolic</property>
                   </object>
                 </child>
               </object>
@@ -102,18 +103,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="configureUsers">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Configure banned users</property>
+                <property name="image">configure</property>
+                <property name="always_show_image">True</property>
                 <signal name="clicked" handler="OnSettingsBanIgnore" swapped="no"/>
                 <child>
-                  <object class="GtkImage" id="image2">
-                    <property name="visible">True</property>
+                  <object class="GtkImage" id="configure">
                     <property name="can_focus">False</property>
-                    <property name="stock">gtk-preferences</property>
-                    <property name="icon-size">1</property>
+                    <property name="icon_name">applications-system-symbolic</property>
                   </object>
                 </child>
               </object>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkWindow" id="NowPlaying">
     <property name="border_width">10</property>
     <property name="width_request">800</property>
@@ -11,16 +10,16 @@
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <child>
-      <object class="GtkVBox" id="vbox1">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">10</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel" id="label1">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <property name="xpad">5</property>
+            <property name="halign">start</property>
             <property name="label" translatable="yes">Display what your Media Player is playing in Chat with the /now command</property>
             <property name="single_line_mode">True</property>
           </object>
@@ -32,13 +31,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkTable" id="table1">
+          <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="n_rows">4</property>
-            <property name="n_columns">3</property>
-            <property name="column_spacing">5</property>
             <property name="row_spacing">5</property>
+            <property name="column_spacing">5</property>
+            <property name="column_homogeneous">True</property>
             <child>
               <object class="GtkRadioButton" id="NP_xmms2">
                 <property name="label" translatable="yes">XMMS2</property>
@@ -46,15 +44,14 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="tooltip_text" translatable="yes">You must have the xmms2-python module</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -63,13 +60,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -78,15 +76,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
                 <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -95,13 +92,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -110,15 +108,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -127,15 +124,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
                 <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
@@ -144,9 +140,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkRadioButton" id="NP_foobar">
@@ -154,13 +155,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
+                <property name="left_attach">0</property>
                 <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
@@ -169,13 +171,14 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="halign">start</property>
                 <property name="draw_indicator">True</property>
                 <property name="group">NP_amarok</property>
                 <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
               </object>
               <packing>
+                <property name="left_attach">0</property>
                 <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
               </packing>
             </child>
           </object>
@@ -186,7 +189,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
@@ -227,19 +230,17 @@
           </packing>
         </child>
         <child>
-          <object class="GtkExpander" id="expander1">
+          <object class="GtkExpander">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
               <object class="GtkLabel" id="Legend">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="xpad">5</property>
               </object>
             </child>
             <child type="label">
-              <object class="GtkLabel" id="label3">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Legend:</property>
@@ -253,15 +254,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox3">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkLabel" id="label4">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
                 <property name="label" translatable="yes">Now playing format:</property>
               </object>
               <packing>
@@ -291,15 +291,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox4">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkLabel" id="label5">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
                 <property name="label" translatable="yes">Example:</property>
               </object>
               <packing>
@@ -313,7 +312,7 @@
               <object class="GtkLabel" id="Example">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -329,18 +328,17 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButtonBox" id="hbox5">
+          <object class="GtkButtonBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="NPCancel">
-                <property name="label">gtk-undo</property>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPCancel" swapped="no"/>
               </object>
               <packing>
@@ -350,13 +348,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="NPTest">
-                <property name="label">gtk-execute</property>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Execute</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Test the configuration</property>
-                <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPTest" swapped="no"/>
               </object>
               <packing>
@@ -366,12 +363,11 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="NPSave">
-                <property name="label">gtk-ok</property>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
                 <signal name="clicked" handler="OnNPSave" swapped="no"/>
               </object>
               <packing>
