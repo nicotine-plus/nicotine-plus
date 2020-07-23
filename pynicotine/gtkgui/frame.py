@@ -335,6 +335,7 @@ class NicotineFrame:
             popup.set_user(map_tablabels_to_box[label_tab])
 
         self.LogScrolledWindow = gtk.ScrolledWindow()
+        self.LogScrolledWindow.set_min_content_height(90)
         self.LogScrolledWindow.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
         self.LogScrolledWindow.show()
 
