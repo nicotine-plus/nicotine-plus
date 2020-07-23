@@ -270,7 +270,7 @@ class UserBrowse:
     def ChangeColours(self):
         self.frame.SetTextBG(self.FileTreeView)
         self.frame.SetTextBG(self.FolderTreeView)
-        self.frame.SetTextBG(self.entry4)
+        self.frame.SetTextBG(self.SearchEntry)
 
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
         self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
@@ -870,7 +870,7 @@ class UserBrowse:
 
     def OnSearch(self, widget):
 
-        query = widget.get_text().lower()
+        query = self.SearchEntry.get_text().lower()
 
         if self.query == query:
             self.search_position += 1
