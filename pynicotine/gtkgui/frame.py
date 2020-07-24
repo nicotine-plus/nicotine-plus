@@ -569,13 +569,11 @@ class NicotineFrame:
         # Deactivate public shares related menu entries if we don't use them
         if self.np.config.sections["transfers"]["friendsonly"] or not self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(False)
-            self.rebuild_public.set_sensitive(False)
             self.browse_public_shares.set_sensitive(False)
 
         # Deactivate buddy shares related menu entries if we don't use them
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(False)
-            self.rebuild_buddy.set_sensitive(False)
             self.browse_buddy_shares.set_sensitive(False)
 
         self.SetMainTabsOrder()
@@ -1968,7 +1966,6 @@ class NicotineFrame:
         self.rescanning = 1
 
         self.rescan_public.set_sensitive(False)
-        self.rebuild_public.set_sensitive(False)
         self.browse_public_shares.set_sensitive(False)
 
         self.logMessage(_("Rescanning started"))
@@ -1986,9 +1983,6 @@ class NicotineFrame:
         msg = slskmessages.RescanShares(cleanedshares, lambda: None)
         _thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
 
-    def OnRebuild(self, widget=None):
-        self.OnRescan(widget, rebuild=True)
-
     def OnBuddyRescan(self, widget=None, rebuild=False):
 
         if self.brescanning:
@@ -1997,7 +1991,6 @@ class NicotineFrame:
         self.brescanning = 1
 
         self.rescan_buddy.set_sensitive(False)
-        self.rebuild_buddy.set_sensitive(False)
         self.browse_buddy_shares.set_sensitive(False)
 
         self.logMessage(_("Rescanning Buddy Shares started"))
@@ -2015,9 +2008,6 @@ class NicotineFrame:
         msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
         _thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
 
-    def OnBuddyRebuild(self, widget=None):
-        self.OnBuddyRescan(widget, rebuild=True)
-
     def _BuddyRescanFinished(self, data):
 
         self.np.config.setBuddyShares(*data)
@@ -2025,7 +2015,6 @@ class NicotineFrame:
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)
-            self.rebuild_buddy.set_sensitive(True)
             self.browse_buddy_shares.set_sensitive(True)
 
         if self.np.transfers is not None:
@@ -2044,7 +2033,6 @@ class NicotineFrame:
 
         if self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(True)
-            self.rebuild_public.set_sensitive(True)
             self.browse_public_shares.set_sensitive(True)
 
         if self.np.transfers is not None:
