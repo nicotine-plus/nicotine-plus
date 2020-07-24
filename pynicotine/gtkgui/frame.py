@@ -1531,10 +1531,10 @@ class NicotineFrame:
         self.awayreturn1.set_sensitive(status)
         self.check_privileges1.set_sensitive(status)
         self.get_privileges1.set_sensitive(status)
-
-        self.roomlist.CreateRoomEntry.set_sensitive(status)
         self.roomlist.RoomsList.set_sensitive(status)
         self.roomlist.SearchRooms.set_sensitive(status)
+        self.roomlist.RefreshButton.set_sensitive(status)
+        self.roomlist.AcceptPrivateRoom.set_sensitive(status)
         self.UserPrivateCombo.set_sensitive(status)
         self.sPrivateChatButton.set_sensitive(status)
         self.UserBrowseCombo.set_sensitive(status)

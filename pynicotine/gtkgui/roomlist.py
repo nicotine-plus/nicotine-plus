@@ -58,14 +58,7 @@ class RoomList:
         self.query = ""
         self.room_model = self.RoomsList.get_model()
 
-    def OnCreateRoom(self, widget):
-
-        room = self.CreateRoomEntry.get_text()
-        if not room:
-            return
-
-        self.frame.np.queue.put(slskmessages.JoinRoom(room))
-        self.CreateRoomEntry.set_text("")
+        self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
 
     def OnSearchRoom(self, widget):
 
@@ -96,3 +89,10 @@ class RoomList:
                 break
 
             self.search_iter = self.room_model.iter_next(self.search_iter)
+
+    def OnRefresh(self, widget):
+        self.frame.np.queue.put(slskmessages.RoomList())
+
+    def OnToggleAcceptPrivateRoom(self, widget):
+        value = self.AcceptPrivateRoom.get_active()
+        self.frame.np.queue.put(slskmessages.PrivateRoomToggle(value))

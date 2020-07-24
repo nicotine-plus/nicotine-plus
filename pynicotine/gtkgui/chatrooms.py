@@ -119,15 +119,13 @@ class RoomsControl:
 
         self.popup_room = None
         self.popup_menu = PopupMenu(self.frame).setup(
-            ("#" + _("Join room"), self.OnPopupJoin),
-            ("#" + _("Leave room"), self.OnPopupLeave),
-            ("", None),
-            ("#" + _("Enable Private Rooms"), self.OnEnablePrivateRooms),
-            ("#" + _("Disable Private Rooms"), self.OnDisablePrivateRooms),
+            ("#" + _("Join Room"), self.OnPopupJoin),
+            ("#" + _("Leave Room"), self.OnPopupLeave),
+            ("#" + _("Create Room"), self.OnPopupCreatePublicRoom),
             ("", None),
             ("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom),
             ("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown),
-            ("#" + _("Cancel room membership"), self.OnPopupPrivateRoomDismember),
+            ("#" + _("Cancel Room Membership"), self.OnPopupPrivateRoomDismember),
             ("", None),
             ("#" + _("Join Public Room"), self.OnJoinPublicRoom),
             ("", None),
@@ -135,11 +133,7 @@ class RoomsControl:
         )
 
         items = self.popup_menu.get_children()
-        self.Menu_Join, self.Menu_Leave, self.Menu_Empty1, self.Menu_PrivateRoom_Enable, self.Menu_PrivateRoom_Disable, self.Menu_Empty2, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty3, self.Menu_JoinPublicRoom, self.Menu_Empty4, self.Menu_Refresh = items
-
-        self.Menu_PrivateRoom_Enable.set_sensitive(False)
-        self.Menu_PrivateRoom_Disable.set_sensitive(False)
-        self.Menu_PrivateRoom_Create.set_sensitive(False)
+        self.Menu_Join, self.Menu_Leave, self.Menu_Create_Room, self.Menu_Empty1, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty2, self.Menu_JoinPublicRoom, self.Menu_Empty3, self.Menu_Refresh = items
 
         self.frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
@@ -148,7 +142,6 @@ class RoomsControl:
         self.ChatNotebook.Notebook.connect("page-reordered", self.OnReorderedPage)
 
         self.frame.SetTextBG(self.frame.roomlist.RoomsList)
-        self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
     def IsPrivateRoomOwned(self, room):
@@ -319,8 +312,16 @@ class RoomsControl:
     def OnPopupJoin(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
 
-    def OnEnablePrivateRooms(self, widget):
-        self.frame.np.queue.put(slskmessages.PrivateRoomToggle(True))
+    def OnPopupCreatePublicRoom(self, widget):
+
+        room = input_box(
+            self.frame,
+            title=_('Nicotine+:') + " " + _("Create Public Room"),
+            message=_('Enter the name of the public room you wish to create')
+        )
+
+        if room:
+            self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
     def OnJoinPublicRoom(self, widget):
 
@@ -344,9 +345,6 @@ class RoomsControl:
         room.CountUsers()
 
         self.frame.np.queue.put(slskmessages.JoinPublicRoom())
-
-    def OnDisablePrivateRooms(self, widget):
-        self.frame.np.queue.put(slskmessages.PrivateRoomToggle(False))
 
     def OnPopupCreatePrivateRoom(self, widget):
 
@@ -609,10 +607,6 @@ class RoomsControl:
 
         self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
 
-        self.Menu_PrivateRoom_Enable.set_sensitive(not enabled)
-        self.Menu_PrivateRoom_Disable.set_sensitive(enabled)
-        self.Menu_PrivateRoom_Create.set_sensitive(enabled)
-
     def PrivateRoomDisown(self, msg):
         if msg.room in self.PrivateRooms:
             if self.PrivateRooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
@@ -680,7 +674,6 @@ class RoomsControl:
     def UpdateColours(self):
 
         self.frame.SetTextBG(self.frame.roomlist.RoomsList)
-        self.frame.SetTextBG(self.frame.roomlist.CreateRoomEntry)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
         for room in list(self.joinedrooms.values()):
@@ -1087,7 +1080,6 @@ class ChatRoom:
         self.UserList.connect("button_press_event", self.OnPopupMenu)
 
         self.ChatEntry.grab_focus()
-        self.ChatEntryBox.set_focus_child(self.ChatEntry)
 
         self.logpopupmenu = PopupMenu(self.frame).setup(
             ("#" + _("Find"), self.OnFindLogWindow),
