@@ -21,7 +21,6 @@
 
 from gettext import gettext as _
 
-from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -125,7 +124,7 @@ def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_
         self.checkbox.show()
 
     if third:
-        third_button = self.add_button(third, gtk.ResponseType.REJECT)
+        self.add_button(third, gtk.ResponseType.REJECT)
 
     self.show()
 

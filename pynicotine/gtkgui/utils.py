@@ -523,7 +523,7 @@ class ImageLabel(gtk.Box):
         self.Box = gtk.Box()
 
         if self.angle in (90, -90):
-            self.Box.set_orientation(vertical)
+            self.Box.set_orientation(gtk.Orientation.VERTICAL)
         else:
             self.angle = 0
 

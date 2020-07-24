@@ -315,9 +315,9 @@ class RoomsControl:
 
     def OnPopupCreatePublicRoom(self, widget):
 
-        room = input_box(
-            self.frame,
-            title=_('Nicotine+:') + " " + _("Create Public Room"),
+        room = EntryDialog(
+            self.frame.MainWindow,
+            title=_("Create Public Room"),
             message=_('Enter the name of the public room you wish to create')
         )
 
