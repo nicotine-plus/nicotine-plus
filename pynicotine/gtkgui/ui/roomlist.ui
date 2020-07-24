@@ -32,11 +32,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="SearchRooms">
+              <object class="GtkSearchEntry" id="SearchRooms">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="primary_icon_name">system-search-symbolic</property>
-                <property name="primary_icon_activatable">False</property>
                 <signal name="activate" handler="OnSearchRoom" swapped="no"/>
               </object>
               <packing>
