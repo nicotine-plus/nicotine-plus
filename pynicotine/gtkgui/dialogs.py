@@ -21,9 +21,168 @@
 
 from gettext import gettext as _
 
-from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
+
+
+def ComboBoxDialog(parent, title, message, default_text="",
+                   option=False, optionmessage="",
+                   optionvalue=False, droplist=[]):
+
+    self = gtk.MessageDialog(
+        transient_for=parent,
+        flags=0,
+        type=gtk.MessageType.QUESTION,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        text=title
+    )
+    self.set_default_size(500, -1)
+    self.set_modal(True)
+    self.format_secondary_text(message)
+
+    self.gotoption = option
+
+    self.combo_list = gtk.ListStore(gobject.TYPE_STRING)
+    self.combo = gtk.ComboBox.new_with_model_and_entry(model=self.combo_list)
+    self.combo.set_entry_text_column(0)
+
+    for i in droplist:
+        self.combo_list.append([i])
+
+    self.combo.get_child().set_text(default_text)
+
+    self.get_message_area().pack_start(self.combo, False, False, 0)
+
+    self.combo.show()
+    self.combo.grab_focus()
+
+    if self.gotoption:
+
+        self.option = gtk.CheckButton()
+        self.option.set_active(optionvalue)
+        self.option.set_label(optionmessage)
+        self.option.show()
+
+        self.get_message_area().pack_start(self.option, False, False, 0)
+
+    result = None
+    if self.run() == gtk.ResponseType.OK:
+        if self.gotoption:
+            result = [self.combo.get_child().get_text(), self.option.get_active()]
+        else:
+            result = self.combo.get_child().get_text()
+
+    self.destroy()
+
+    return result
+
+
+def EntryDialog(parent, title, message, default=""):
+
+    self = gtk.MessageDialog(
+        transient_for=parent,
+        flags=0,
+        type=gtk.MessageType.QUESTION,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        text=title
+    )
+    self.set_default_size(500, -1)
+    self.set_modal(True)
+    self.format_secondary_text(message)
+
+    entry = gtk.Entry()
+    entry.set_activates_default(True)
+    entry.set_text(default)
+    self.get_message_area().pack_start(entry, True, True, 0)
+    entry.show()
+
+    result = None
+    if self.run() == gtk.ResponseType.OK:
+        result = entry.get_text()
+
+    self.destroy()
+
+    return result
+
+
+def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_label="", third=""):
+
+    self = gtk.MessageDialog(
+        transient_for=parent,
+        flags=0,
+        type=gtk.MessageType.QUESTION,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        text=title
+    )
+    self.connect("response", callback, callback_data)
+    self.set_modal(True)
+    self.format_secondary_text(message)
+
+    if checkbox_label:
+        self.checkbox = gtk.CheckButton(checkbox_label)
+        self.get_message_area().pack_start(self.checkbox, False, False, 0)
+        self.checkbox.show()
+
+    if third:
+        self.add_button(third, gtk.ResponseType.REJECT)
+
+    self.show()
+
+
+def TickerDialog(parent, title, message, default_text=""):
+
+    self = gtk.MessageDialog(
+        transient_for=parent,
+        flags=0,
+        type=gtk.MessageType.QUESTION,
+        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        text=title
+    )
+    self.set_default_size(600, -1)
+    self.set_modal(True)
+    self.format_secondary_text(message)
+
+    entry = gtk.Entry()
+    entry.set_activates_default(True)
+    entry.set_text(default_text)
+    self.get_message_area().pack_start(entry, True, True, 0)
+
+    box = gtk.Box.new(gtk.Orientation.VERTICAL, False)
+    box.set_spacing(5)
+
+    radio1 = gtk.RadioButton().new_from_widget(None)
+    radio1.set_label(_("Just this time"))
+    radio1.set_active(True)
+    box.pack_start(radio1, False, False, 0)
+
+    radio2 = gtk.RadioButton().new_from_widget(radio1)
+    radio2.set_label(_("Always for this channel"))
+    box.pack_start(radio2, False, False, 0)
+
+    radio3 = gtk.RadioButton().new_from_widget(radio1)
+    radio3.set_label(_("Default for all channels"))
+    box.pack_start(radio3, False, False, 0)
+
+    self.get_message_area().pack_start(box, True, True, 0)
+
+    self.vbox.show_all()
+
+    result = None
+    t = 0
+    if self.run() == gtk.ResponseType.OK:
+
+        if radio1.get_active():
+            t = 0
+        elif radio2.get_active():
+            t = 1
+        elif radio3.get_active():
+            t = 2
+
+        result = entry.get_text()
+
+    self.destroy()
+
+    return t, result
 
 
 class MetaDialog(gtk.Dialog):
@@ -439,113 +598,6 @@ class MetaDialog(gtk.Dialog):
         return label, entry
 
 
-class EntryDialog(gtk.Dialog):
-
-    def __init__(self, frame, message="", default_text="",
-                 option=False, optionmessage="",
-                 optionvalue=False, droplist=[]):
-
-        gtk.Dialog.__init__(self)
-
-        self.connect("destroy", self.quit)
-        self.connect("delete-event", self.quit)
-
-        self.set_transient_for(frame.MainWindow)
-
-        self.gotoption = option
-
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box, False, False, 0)
-        box.show()
-
-        if message:
-            label = gtk.Label.new(message)
-            box.pack_start(label, False, False, 0)
-            label.set_line_wrap(True)
-            label.show()
-
-        self.combo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.combo = gtk.ComboBox.new_with_model_and_entry(model=self.combo_List)
-        self.combo.set_entry_text_column(0)
-
-        for i in droplist:
-            self.combo_List.append([i])
-
-        self.combo.get_child().set_text(default_text)
-
-        box.pack_start(self.combo, False, False, 0)
-
-        self.combo.show()
-        self.combo.grab_focus()
-
-        if self.gotoption:
-
-            self.option = gtk.CheckButton()
-            self.option.set_active(optionvalue)
-            self.option.set_label(optionmessage)
-            self.option.show()
-
-            box.pack_start(self.option, False, False, 0)
-
-        button = gtk.Button(_("Cancel"))
-        button.connect("clicked", self.quit)
-        button.props.can_default = True
-        self.action_area.pack_start(button, False, False, 0)
-
-        button.show()
-
-        button = gtk.Button(_("OK"))
-        button.connect("clicked", self.click)
-        button.props.can_default = True
-        self.action_area.pack_start(button, False, False, 0)
-
-        button.show()
-        button.grab_default()
-
-        # Set modal to True to avoid wrong window having the focus
-        self.set_modal(True)
-
-        self.ret = None
-
-    def quit(self, w=None, event=None):
-        self.hide()
-        self.destroy()
-        gtk.main_quit()
-
-    def click(self, button):
-
-        if self.gotoption:
-            self.ret = [self.combo.get_child().get_text(), self.option.get_active()]
-        else:
-            self.ret = self.combo.get_child().get_text()
-
-        self.quit()
-
-
-def input_box(frame, title="Input Box", message="", default_text="",
-              modal=True, option=False, optionmessage="",
-              optionvalue=False, droplist=[]):
-
-    win = EntryDialog(
-        frame, message, default_text,
-        option=option, optionmessage=optionmessage,
-        optionvalue=optionvalue, droplist=droplist
-    )
-
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-
-    hints_geometry = Gdk.Geometry()
-    hints_geometry.min_width = 300
-    win.set_geometry_hints(None, hints_geometry, Gdk.WindowHints(Gdk.WindowHints.MIN_SIZE))
-    win.show()
-
-    gtk.main()
-
-    return win.ret
-
-
 class FindDialog(gtk.Dialog):
 
     def __init__(self, frame, message="", default_text='',
@@ -640,160 +692,3 @@ class FindDialog(gtk.Dialog):
     def destroy(self, w=None, event=None):
         if "FindDialog" in self.nicotine.__dict__:
             del self.nicotine.FindDialog
-
-
-def FolderDownload(frame, title="Option Box", message="", default_text='',
-                   modal=True, data=None, callback=None):
-
-    win = FolderDownloadDialog(frame, message, modal=modal)
-    win.connect("response", callback, data)
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-    win.show()
-
-
-class FolderDownloadDialog(gtk.Dialog):
-
-    def __init__(self, frame, message="", modal=False, ):
-
-        gtk.Dialog.__init__(self)
-
-        self.connect("destroy", self.quit)
-        self.connect("delete-event", self.quit)
-
-        self.nicotine = frame
-
-        self.set_modal(modal)
-        self.set_transient_for(frame.MainWindow)
-
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box, False, False, 0)
-        box.show()
-        hbox = gtk.HBox(spacing=5)
-        hbox.set_border_width(5)
-        hbox.show()
-        box.pack_start(hbox, False, False, 0)
-
-        image = gtk.Image()
-        image.set_padding(0, 0)
-        icon = gtk.STOCK_DIALOG_QUESTION
-        image.set_from_stock(icon, 4)
-        image.show()
-        hbox.pack_start(image, False, False, 0)
-
-        if message:
-            label = gtk.Label.new(message)
-            hbox.pack_start(label, False, False, 0)
-            label.set_line_wrap(True)
-            label.show()
-
-        hbox2 = gtk.HBox(spacing=5)
-        hbox2.set_border_width(5)
-        hbox2.show()
-        box.pack_start(hbox2, False, False, 0)
-
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)  # noqa: F841
-        ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
-        ok_button.grab_default()
-
-    def quit(self, *args):
-        self.destroy()
-
-
-def QuitBox(frame, title="Option Box", message="", default_text='',
-            modal=True, status=None, tray=False, third=""):
-
-    win = OptionDialog(frame, message, modal=modal, status=status,
-                       option=tray, third=third, rememberbox=True)
-    win.connect("response", frame.on_quit_response)
-    win.set_title(title)
-    win.set_icon(frame.images["n"])
-    win.show()
-    return win
-
-
-class OptionDialog(gtk.Dialog):
-
-    def __init__(self, frame, message="", modal=False, status=None,
-                 option=False, third="", rememberbox=False):
-
-        gtk.Dialog.__init__(self)
-
-        self.connect("destroy", self.quit)
-        self.connect("delete-event", self.quit)
-
-        self.nicotine = frame
-
-        self.set_modal(modal)
-        self.set_transient_for(frame.MainWindow)
-
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box, False, False, 0)
-        box.show()
-        hbox = gtk.HBox(spacing=5)
-        hbox.set_border_width(5)
-        hbox.show()
-        box.pack_start(hbox, False, False, 0)
-
-        if status:
-            image = gtk.Image()
-            image.set_padding(0, 0)
-            if status == "warning":
-                icon = gtk.STOCK_DIALOG_WARNING
-            else:
-                icon = gtk.STOCK_DIALOG_QUESTION
-            image.set_from_stock(icon, 4)
-            image.show()
-            hbox.pack_start(image, False, False, 0)
-
-        if message:
-            label = gtk.Label.new(message)
-            hbox.pack_start(label, False, False, 0)
-            label.set_line_wrap(True)
-            label.show()
-
-        hbox2 = gtk.HBox(spacing=5)
-        hbox2.set_border_width(5)
-        hbox2.show()
-        box.pack_start(hbox2, False, False, 0)
-
-        # Storing under self. so we can find it easily later
-        if rememberbox:
-            self.checkbox = gtk.CheckButton("Remember choice")
-            box.pack_start(self.checkbox, False, False, 0)
-            self.checkbox.show()
-
-        if option:
-            Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-            Alignment.show()
-
-            Hbox = gtk.HBox(False, 2)
-            Hbox.show()
-            Hbox.set_spacing(2)
-
-            image = gtk.Image()
-            image.set_padding(0, 0)
-
-            image.set_from_stock(gtk.STOCK_GO_DOWN, 4)
-            image.show()
-            Hbox.pack_start(image, False, False, 0)
-            Alignment.add(Hbox)
-
-            if label:
-                Label = gtk.Label.new(third)
-                Label.set_padding(0, 0)
-                Label.show()
-                Hbox.pack_start(Label, False, False, 0)
-
-            tray_button = self.add_button("", gtk.ResponseType.REJECT)
-            tray_button.remove(tray_button.get_child())
-            tray_button.add(Alignment)
-
-        cancel_button = self.add_button(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL)  # noqa: F841
-        ok_button = self.add_button(gtk.STOCK_OK, gtk.ResponseType.OK)
-        ok_button.grab_default()
-
-    def quit(self, *args):
-        self.destroy()

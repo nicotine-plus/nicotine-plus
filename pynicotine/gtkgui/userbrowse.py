@@ -31,7 +31,7 @@ from gi.repository import Gtk as gtk
 from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.dialogs import ComboBoxDialog
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
@@ -765,9 +765,9 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_("Nicotine+: Upload Directory's Contents"),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_("Upload Directory's Contents"),
             message=_('Enter the User you wish to upload to:'),
             droplist=users
         )
@@ -821,9 +821,9 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_('Nicotine+: Upload File(s)'),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_('Upload File(s)'),
             message=_('Enter the User you wish to upload to:'),
             droplist=users
         )

@@ -35,7 +35,7 @@ from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.dialogs import MetaDialog
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import Humanize
@@ -43,7 +43,6 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
@@ -1340,7 +1339,6 @@ class Search:
 
         win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
-        win.set_icon(self.frame.images["n"])
         win.show()
         gtk.main()
 
@@ -1593,56 +1591,31 @@ class Search:
                 CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
 
-class WishList(gtk.Dialog):
+class WishList:
 
     def __init__(self, frame):
 
-        gtk.Dialog.__init__(self)
+        builder = gtk.Builder()
 
-        self.set_title(_("Nicotine+: Search Wishlist"))
-        self.set_icon(frame.images["n"])
-        self.connect("destroy", self.quit)
-        self.connect("destroy-event", self.quit)
-        self.connect("delete-event", self.quit)
-        self.connect("delete_event", self.quit)
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
 
-        self.nicotine = frame
-        self.set_modal(True)
-        self.set_size_request(600, 600)
-        self.set_transient_for(frame.MainWindow)
-        self.mainHbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 5)
-        self.mainHbox.set_border_width(10)
-        self.mainHbox.show()
+        self.WishList = builder.get_object("WishList")
+        builder.connect_signals(self)
 
-        self.WishScrollWin = gtk.ScrolledWindow()
-        self.WishScrollWin.set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
-        self.WishScrollWin.show()
-        self.WishScrollWin.set_shadow_type(gtk.ShadowType.IN)
+        for i in builder.get_objects():
+            try:
+                self.__dict__[gtk.Buildable.get_name(i)] = i
+            except TypeError:
+                pass
 
-        self.WishlistView = gtk.TreeView()
-        self.WishlistView.show()
-        self.WishlistView.set_headers_visible(False)
-        self.WishScrollWin.add(self.WishlistView)
+        self.WishList.set_transient_for(frame.MainWindow)
 
-        self.mainHbox.pack_start(self.WishScrollWin, True, True, 0)
-        self.mainVbox = gtk.Box.new(gtk.Orientation.VERTICAL, 5)
-        self.mainHbox.pack_start(self.mainVbox, False, False, 0)
-        self.mainVbox.show()
-        self.mainVbox.set_spacing(5)
-
-        self.AddWishButton = self.nicotine.CreateIconButton(gtk.STOCK_ADD, "stock", self.OnAddWish, _("Add..."))
-        self.mainVbox.pack_start(self.AddWishButton, False, False, 0)
-
-        self.RemoveWishButton = self.nicotine.CreateIconButton(gtk.STOCK_REMOVE, "stock", self.OnRemoveWish, _("Remove"))
-        self.mainVbox.pack_start(self.RemoveWishButton, False, False, 0)
-
-        self.SelectAllWishesButton = self.nicotine.CreateIconButton(gtk.STOCK_DND_MULTIPLE, "stock", self.OnSelectAllWishes, _("Select all"))
-        self.mainVbox.pack_start(self.SelectAllWishesButton, False, False, 0)
-
-        self.CloseButton = self.nicotine.CreateIconButton(gtk.STOCK_CLOSE, "stock", self.quit, _("Close"))
-        self.mainVbox.pack_end(self.CloseButton, False, False, 0)
-
-        self.vbox.pack_start(self.mainHbox, True, True, 0)
+        self.frame = frame
+        self.WishList.connect("destroy", self.quit)
+        self.WishList.connect("destroy-event", self.quit)
+        self.WishList.connect("delete-event", self.quit)
+        self.WishList.connect("delete_event", self.quit)
 
         self.store = gtk.ListStore(gobject.TYPE_STRING)
 
@@ -1655,48 +1628,18 @@ class WishList(gtk.Dialog):
         self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
         self.wishes = {}
 
-        for wish in self.nicotine.np.config.sections["server"]["autosearch"]:
+        for wish in self.frame.np.config.sections["server"]["autosearch"]:
             self.wishes[wish] = self.store.append([wish])
 
     def OnAddWish(self, widget):
-
-        wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:"))
+        wish = self.AddWishEntry.get_text()
+        self.AddWishEntry.set_text("")
 
         if wish and wish not in self.wishes:
             self.wishes[wish] = self.store.append([wish])
-            self.nicotine.Searches.NewWish(wish)
-
-    def _RemoveWish(self, model, path, iter, line):
-        line.append(iter)
-
-    def removeWish(self, wish):
-
-        if wish in self.wishes:
-            self.store.remove(self.wishes[wish])
-            del self.wishes[wish]
-
-        if wish in self.nicotine.np.config.sections["server"]["autosearch"]:
-
-            self.nicotine.np.config.sections["server"]["autosearch"].remove(wish)
-
-            for number, search in list(self.nicotine.Searches.searches.items()):
-
-                if search[1] == wish and search[4] == 1:
-
-                    search[4] = 0
-                    self.nicotine.Searches.searches[number] = search
-
-                    if search[2] is not None:
-                        search[2].RememberCheckButton.set_active(False)
-
-                    break
-
-    def addWish(self, wish):
-        if wish and wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
+            self.frame.Searches.NewWish(wish)
 
     def OnRemoveWish(self, widget):
-
         iters = []
         self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
 
@@ -1704,16 +1647,45 @@ class WishList(gtk.Dialog):
             wish = self.store.get_value(iter, 0)
             self.removeWish(wish)
 
+    def _RemoveWish(self, model, path, iter, line):
+        line.append(iter)
+
     def OnSelectAllWishes(self, widget):
         self.WishlistView.get_selection().select_all()
 
+    def addWish(self, wish):
+        if wish and wish not in self.wishes:
+            self.wishes[wish] = self.store.append([wish])
+
+    def removeWish(self, wish):
+
+        if wish in self.wishes:
+            self.store.remove(self.wishes[wish])
+            del self.wishes[wish]
+
+        if wish in self.frame.np.config.sections["server"]["autosearch"]:
+
+            self.frame.np.config.sections["server"]["autosearch"].remove(wish)
+
+            for number, search in list(self.frame.Searches.searches.items()):
+
+                if search[1] == wish and search[4] == 1:
+
+                    search[4] = 0
+                    self.frame.Searches.searches[number] = search
+
+                    if search[2] is not None:
+                        search[2].RememberCheckButton.set_active(False)
+
+                    break
+
     def quit(self, w=None, event=None):
-        self.hide()
+        self.WishList.hide()
         return True
 
     def Toggle(self, widget):
 
-        if self.get_property("visible"):
-            self.hide()
+        if self.WishList.get_property("visible"):
+            self.WishList.hide()
         else:
-            self.show()
+            self.WishList.show()

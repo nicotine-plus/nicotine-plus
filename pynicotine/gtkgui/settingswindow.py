@@ -35,12 +35,11 @@ from gi.repository import Gtk as gtk
 
 import _thread
 from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.dialogs import ComboBoxDialog
+from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import OpenUri
-from pynicotine.gtkgui.utils import popupWarning
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
@@ -174,12 +173,16 @@ class ServerFrame(buildFrame):
             server = None
 
         if str(self.Login.get_text()) == "None":
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Warning: Bad Username"),
-                _("Username 'None' is not a good one, please pick another."),
-                self.frame.images["n"]
+            dlg = gtk.MessageDialog(
+                transient_for=self.p.SettingsWindow,
+                flags=0,
+                type=gtk.MessageType.WARNING,
+                buttons=gtk.ButtonsType.OK,
+                text=_("Warning: Bad Username")
             )
+            dlg.format_secondary_text(_("Username 'None' is not a good one, please pick another."))
+            dlg.run()
+            dlg.destroy()
             raise UserWarning
 
         try:
@@ -188,12 +191,16 @@ class ServerFrame(buildFrame):
             portrange = (firstport, lastport)
         except Exception:
             portrange = None
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Warning: Invalid ports"),
-                _("Client ports are invalid."),
-                self.frame.images["n"]
+            dlg = gtk.MessageDialog(
+                transient_for=self.p.SettingsWindow,
+                flags=0,
+                type=gtk.MessageType.WARNING,
+                buttons=gtk.ButtonsType.OK,
+                text=_("Warning: Invalid ports")
             )
+            dlg.format_secondary_text(_("Client ports are invalid."))
+            dlg.run()
+            dlg.destroy()
             raise UserWarning
 
         firewalled = not self.DirectConnection.get_active()
@@ -303,12 +310,16 @@ class DownloadsFrame(buildFrame):
 
         if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
-            popupWarning(
-                self.p.SettingsWindow,
-                _("Warning"),
-                _("Security Risk: you should not share your %s directory!") % place,
-                self.frame.images["n"]
+            dlg = gtk.MessageDialog(
+                transient_for=self.p.SettingsWindow,
+                flags=0,
+                type=gtk.MessageType.WARNING,
+                buttons=gtk.ButtonsType.OK,
+                text=_("Warning")
             )
+            dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
+            dlg.run()
+            dlg.destroy()
 
             raise UserWarning
 
@@ -363,9 +374,9 @@ class DownloadsFrame(buildFrame):
 
     def OnAddFilter(self, widget):
 
-        response = input_box(
-            self.frame,
-            title=_('Nicotine+: Add a download filter'),
+        response = ComboBoxDialog(
+            parent=self.p.SettingsWindow,
+            title=_('Add a download filter'),
             message=_('Enter a new download filter:'),
             option=True,
             optionvalue=True,
@@ -409,9 +420,9 @@ class DownloadsFrame(buildFrame):
             iter = self.filtersiters[dfilter]
             escapedvalue = self.filterlist.get_value(iter, 1)
 
-            response = input_box(
-                self.frame,
-                title=_('Nicotine+: Edit a download filter'),
+            response = ComboBoxDialog(
+                parent=self.p.SettingsWindow,
+                title=_('Edit a download filter'),
                 message=_('Modify this download filter:'),
                 default_text=dfilter,
                 option=True,
@@ -663,12 +674,16 @@ class SharesFrame(buildFrame):
 
         for share in self.shareddirs + self.bshareddirs:
             if homedir == share:
-                popupWarning(
-                    self.p.SettingsWindow,
-                    _("Warning"),
-                    _("Security Risk: you should not share your %s directory!") % place,
-                    self.frame.images["n"]
+                dlg = gtk.MessageDialog(
+                    transient_for=self.p.SettingsWindow,
+                    flags=0,
+                    type=gtk.MessageType.WARNING,
+                    buttons=gtk.ButtonsType.OK,
+                    text=_("Warning")
                 )
+                dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
+                dlg.run()
+                dlg.destroy()
                 raise UserWarning
 
         # Buddy shares related menus are activated if needed
@@ -751,18 +766,22 @@ class SharesFrame(buildFrame):
                 # If the directory is already shared
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
-                    popupWarning(
-                        self.p.SettingsWindow,
-                        _("Warning"),
-                        _("The chosen directory is already shared"),
-                        self.frame.images["n"]
+                    dlg = gtk.MessageDialog(
+                        transient_for=self.p.SettingsWindow,
+                        flags=0,
+                        type=gtk.MessageType.WARNING,
+                        buttons=gtk.ButtonsType.OK,
+                        text=_("Warning")
                     )
+                    dlg.format_secondary_text(_("The chosen directory is already shared"))
+                    dlg.run()
+                    dlg.destroy()
                     pass
 
                 else:
 
-                    virtual = input_box(
-                        self.frame,
+                    virtual = ComboBoxDialog(
+                        parent=self.p.SettingsWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -770,12 +789,16 @@ class SharesFrame(buildFrame):
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
-                        popupWarning(
-                            self.p.SettingsWindow,
-                            _("Warning"),
-                            _("The chosen virtual name is either empty or already exist"),
-                            self.frame.images["n"]
+                        dlg = gtk.MessageDialog(
+                            transient_for=self.p.SettingsWindow,
+                            flags=0,
+                            type=gtk.MessageType.WARNING,
+                            buttons=gtk.ButtonsType.OK,
+                            text=_("Warning")
                         )
+                        dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
+                        dlg.run()
+                        dlg.destroy()
                         pass
 
                     else:
@@ -809,18 +832,22 @@ class SharesFrame(buildFrame):
                 # If the directory is already shared
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
-                    popupWarning(
-                        self.p.SettingsWindow,
-                        _("Warning"),
-                        _("The chosen directory is already shared"),
-                        self.frame.images["n"]
+                    dlg = gtk.MessageDialog(
+                        transient_for=self.p.SettingsWindow,
+                        flags=0,
+                        type=gtk.MessageType.WARNING,
+                        buttons=gtk.ButtonsType.OK,
+                        text=_("Warning")
                     )
+                    dlg.format_secondary_text(_("The chosen directory is already shared"))
+                    dlg.run()
+                    dlg.destroy()
                     pass
 
                 else:
 
-                    virtual = input_box(
-                        self.frame,
+                    virtual = ComboBoxDialog(
+                        parent=self.p.SettingsWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -828,12 +855,16 @@ class SharesFrame(buildFrame):
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
-                        popupWarning(
-                            self.p.SettingsWindow,
-                            _("Warning"),
-                            _("The chosen virtual name is either empty or already exist"),
-                            self.frame.images["n"]
+                        dlg = gtk.MessageDialog(
+                            transient_for=self.p.SettingsWindow,
+                            flags=0,
+                            type=gtk.MessageType.WARNING,
+                            buttons=gtk.ButtonsType.OK,
+                            text=_("Warning")
                         )
+                        dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
+                        dlg.run()
+                        dlg.destroy()
                         pass
 
                     else:
@@ -866,8 +897,8 @@ class SharesFrame(buildFrame):
             directory = self.shareslist.get_value(iter, 3)
             oldmapping = (oldvirtual, directory)
 
-            virtual = input_box(
-                self.frame,
+            virtual = ComboBoxDialog(
+                parent=self.p.SettingsWindow,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -891,8 +922,8 @@ class SharesFrame(buildFrame):
             directory = self.bshareslist.get_value(iter, 3)
             oldmapping = (oldvirtual, directory)
 
-            virtual = input_box(
-                self.frame,
+            virtual = ComboBoxDialog(
+                parent=self.p.SettingsWindow,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -1265,7 +1296,7 @@ class IgnoreFrame(buildFrame):
 
     def OnAddIgnored(self, widget):
 
-        user = InputDialog(
+        user = EntryDialog(
             self.Main.get_toplevel(),
             _("Ignore user..."),
             _("User:")
@@ -1289,7 +1320,7 @@ class IgnoreFrame(buildFrame):
 
     def OnAddIgnoredIP(self, widget):
 
-        ip = InputDialog(
+        ip = EntryDialog(
             self.Main.get_toplevel(),
             _("Ignore IP Address..."),
             _("IP:") + " " + _("* is a wildcard")
@@ -1401,7 +1432,7 @@ class BanFrame(buildFrame):
 
     def OnAddBanned(self, widget):
 
-        user = InputDialog(
+        user = EntryDialog(
             self.Main.get_toplevel(),
             _("Ban user..."),
             _("User:")
@@ -1431,7 +1462,7 @@ class BanFrame(buildFrame):
 
     def OnAddBlocked(self, widget):
 
-        ip = InputDialog(
+        ip = EntryDialog(
             self.Main.get_toplevel(),
             _("Block IP Address..."),
             _("IP:") + " " + _("* is a wildcard")
@@ -2939,7 +2970,6 @@ class buildDialog(gtk.Dialog):
 
         builder.connect_signals(self)
 
-        self.PluginProperties.set_icon(self.settings.frame.images["n"])
         self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
         self.tw = {}
         self.options = {}

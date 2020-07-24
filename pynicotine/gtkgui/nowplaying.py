@@ -57,7 +57,6 @@ class NowPlaying:
             except TypeError:
                 pass
 
-        self.NowPlaying.set_icon(self.frame.images["n"])
         self.NowPlaying.set_transient_for(self.frame.MainWindow)
         self.NowPlaying.add_accel_group(self.accel_group)
 

@@ -31,10 +31,10 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import showCountryTooltip
@@ -464,7 +464,7 @@ class UserList:
         else:
             comments = ""
 
-        comments = InputDialog(self.frame.MainWindow, _("Edit comments") + "...", _("Comments") + ":", comments)
+        comments = EntryDialog(self.frame.MainWindow, _("Edit comments") + "...", _("Comments") + ":", comments)
 
         if comments is not None:
             for i in self.userlist:

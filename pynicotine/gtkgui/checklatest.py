@@ -18,10 +18,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import json
 import urllib.error
 import urllib.parse
 import urllib.request
+
 from gettext import gettext as _
 
 from gi.repository import Gtk as gtk
@@ -66,44 +68,39 @@ def checklatest(frame):
         date = data['created_at']
     except Exception as m:
         dlg = gtk.MessageDialog(
-            frame,
-            0,
-            gtk.MessageType.ERROR,
-            gtk.ButtonsType.OK,
-            _("Could not retrieve version information!\nError: %s") % m
-        )
-        dlg.set_title(_("Check Latest Version"))
-        dlg.run()
-        dlg.destroy()
-        return
-
-    myversion = makeversion(version)
-
-    if latest > myversion:
-        dlg = gtk.MessageDialog(
-            frame,
-            0,
-            gtk.MessageType.WARNING,
-            gtk.ButtonsType.OK,
-            _("A newer version %s is available, released on %s.") % (hlatest, date)
-        )
-    elif myversion > latest:
-        dlg = gtk.MessageDialog(
-            frame,
-            0,
-            gtk.MessageType.WARNING,
-            gtk.ButtonsType.OK,
-            _("You appear to be using a development version of Nicotine+.")
+            transient_for=frame,
+            flags=0,
+            type=gtk.MessageType.ERROR,
+            buttons=gtk.ButtonsType.OK,
+            text=_("Could not retrieve version information!\nError: %s") % m
         )
     else:
-        dlg = gtk.MessageDialog(
-            frame,
-            0,
-            gtk.MessageType.INFO,
-            gtk.ButtonsType.OK,
-            _("You are using the latest version of Nicotine+.")
-        )
+        myversion = makeversion(version)
 
-    dlg.set_title(_("Check Latest Version"))
+        if latest > myversion:
+            dlg = gtk.MessageDialog(
+                transient_for=frame,
+                flags=0,
+                type=gtk.MessageType.INFO,
+                buttons=gtk.ButtonsType.OK,
+                text=_("A newer version %s is available, released on %s.") % (hlatest, date)
+            )
+        elif myversion > latest:
+            dlg = gtk.MessageDialog(
+                transient_for=frame,
+                flags=0,
+                type=gtk.MessageType.INFO,
+                buttons=gtk.ButtonsType.OK,
+                text=_("You appear to be using a development version of Nicotine+.")
+            )
+        else:
+            dlg = gtk.MessageDialog(
+                transient_for=frame,
+                flags=0,
+                type=gtk.MessageType.INFO,
+                buttons=gtk.ButtonsType.OK,
+                text=_("You are using the latest version of Nicotine+.")
+            )
+
     dlg.run()
     dlg.destroy()
