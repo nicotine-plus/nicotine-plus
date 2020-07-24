@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.18"/>
+  <object class="GtkWindow" id="AboutSearchFilters">
+    <property name="border_width">10</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">About search filters</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="margin_start">5</property>
+        <property name="margin_end">5</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">You can use this to refine which results are displayed. The full results
+from the server are always available if you clear all the search terms.
+
+You can filter by:
+
+- Included text:
+      Files are shown if they contain this text.
+      Case is insensitive, but word order is important.
+      'Spears Brittany' will not show any 'Brittany Spears'
+
+- Excluded text:
+      As above, but files will not be displayed if the text matches
+
+- Size:
+      Shows results based on size. use &gt; and &lt; to find files larger or smaller.
+      Files exactly the same as this term will always match.
+      Use = to specify an exact match. Use k or m to specify kilo or megabytes.
+      &gt;10M will find files larger than 10 megabytes.
+      &lt;4000k will find files smaller than 4000k.
+
+- Bitrate:
+      Find files based on bitrate. Use &lt; and &gt; to find lower or higher.
+      &gt;192 finds 192 and higher, &lt;192 finds 192 or lower.
+      =192 only finds 192.
+      For VBR, the average bitrate is used.
+
+- Free slot:
+      Show only those results from users which have at least
+      one upload slot free.
+
+- To set the filter, press Enter. This will apply to any existing results, and any more that are returned.
+- To filter in a different way, just set the relevant terms.
+- You do not need to do another search to apply a different filter.</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="padding">5</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
