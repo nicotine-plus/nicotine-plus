@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.18"/>
+  <object class="GtkAboutDialog" id="About">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">About Nicotine+</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="logo_icon_name">org.nicotine_plus.Nicotine</property>
+    <property name="program_name" translatable="yes">Nicotine+</property>
+    <property name="comments" translatable="yes">A graphical client for the Soulseek peer-to-peer system
+Based on code from Nicotine and PySoulSeek
+
+This product includes IP2Location LITE data, available from:
+https://www.ip2location.com</property>
+    <property name="website">https://nicotine-plus.org</property>
+    <property name="license_type">GTK_LICENSE_GPL_3_0_ONLY</property>
+    <property name="authors"># Nicotine+ MAINTAINERS
+
+### Active
+
+Mutnick
+- Created Nicotine+ GitHub Organization
+- Developer
+- [mutnick(at)techie(dot)com]
+
+eLvErDe
+- Provides Nicotine+ Website
+- Migrated source code from SVN to Github
+- python3-miniupnpc bindings
+- Developer
+
+Kip Warner
+- Developer
+- Debianization
+- [kip(at)thevertigo(dot)com]
+
+Lene Preuss
+- Python3 migration
+- Unit and DEP-8 continuous integration testing
+- [lene.preuss(at)here(dot)com]
+
+mathiascode
+- Developer
+- [mail(at)mathias(dot)is]
+
+### Retired
+
+daelstorm
+- Developer
+- [daelstorm(at)gmail(dot)com]
+
+gallows (aka 'burp O')
+- Developer, Packager
+- [g4ll0ws(at)gmail(dot)com]
+- Submitted Slack.Build file
+
+QuinoX
+- Developer
+
+hedonist (formerly known as alexbk)
+- OS X nicotine.app maintainer / developer
+- [ak(at)sensi(dot)org]
+- Author of original pyslsk, which is used for nicotine core
+
+lee8oi
+- Bash Commander
+- [winslaya(at)gmail(dot)com]
+- New and updated /alias
+
+INMCM
+- Nicotine+ topic maintainer on ubuntuforums.org
+- ubuntuforums.org/showthread.php?t=196835
+
+suser-guru
+- Suse Linux packager
+- dev-loki.blogspot.fr
+- Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+
+osiris
+- handy-man
+- documentation
+- some GNU/Linux packaging
+- Nicotine+ on win32
+- Author of Nicotine+ Guide
+- [osiris.contact(at)gmail(dot)com]
+
+Michael Labouebe (aka gfarmerfr)
+- Developer
+- [gfarmerfr(at)free(dot)fr
+
+# Nicotine MAINTAINERS
+
+### Retired
+
+Hyriand
+- Founder
+- [hyriand(at)thegraveyard(dot)org]
+
+osiris
+- handy-man
+- [osiris.contact(at)gmail(dot)com]
+
+SmackleFunky
+- Beta tester
+
+Wretched
+- Beta tester
+- Bringer of great ideas
+
+(va)\\*10^3
+- Beta tester
+- Designer of the old nicotine homepage and artwork
+
+sierracat
+- MacOSX tester
+- Developed soulseeX
+
+Gustavo
+- [gjc(at)inescporto(dot)pt]
+- Made the exception dialog
+
+SeeSchloss
+- Developer
+- Made 1.0.8 win32 installer
+- Created Soulfind github.com/seeschloss/soulfind,
+  opensource Soulseek Server written in D
+
+vasi
+- Mac developer
+- [djvasi@gmail.com]
+- Packaged nicotine on OSX PowerPc
+
+Country flags provided by flags.blogpotato.de,
+distributed under a CC BY-SA 3.0 Unported license.</property>
+    <property name="translator_credits">Dutch
+ * nince78 (2007)
+ * hyriand
+
+German
+ * Meokater (2007)
+ * (._.) (2007)
+ * lippel (2004)
+ * hyriand (2003)
+
+Spanish
+ * Silvio Orta (2007)
+ * Dreslo
+
+French
+ * Michael Labouebe (2016-2017) &lt;gfarmerfr@free.fr&gt;
+ * ManWell (2007)
+ * zniavre (2007-2009)
+ * flashfr
+ * systr
+
+Italian
+ * Nicola (2007) &lt;info@nicoladimaria.info&gt;
+ * dbazza
+
+Polish
+ * Amun-Ra (2007)
+ * thine (2007)
+ * owczi
+
+Swedish
+ * alimony &lt;markus@samsonrourke.com&gt;
+
+Hungarian
+ * djbaloo &lt;dj_baloo@freemail.hu&gt;
+
+Slovak
+ * Josef Riha (2006) &lt;jose1711@gmail.com&gt;
+
+Portuguese Brazilian
+ * Suicide|Solution (2006) &lt;felipe@bunghole.com.br&gt;
+
+Lithuanian
+ * Žygimantas Beručka (2006) &lt;uid0@akl.lt&gt;
+
+Finnish
+ * Kalevi &lt;mr_auer@welho.net&gt;
+
+Euskara
+ * The Librezale.org Team &lt;librezale@librezale.org&gt;</property>
+  </object>
+</interface>

@@ -47,10 +47,6 @@ from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui import tray
 from pynicotine.gtkgui import utils
-from pynicotine.gtkgui.about import AboutDialog
-from pynicotine.gtkgui.about import AboutFiltersDialog
-from pynicotine.gtkgui.about import AboutPrivateDialog
-from pynicotine.gtkgui.about import AboutRoomsDialog
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.checklatest import checklatest
 from pynicotine.gtkgui.dirchooser import ChooseFile
@@ -2434,26 +2430,41 @@ class NicotineFrame:
         OpenUri(url, self.MainWindow)
 
     def OnAbout(self, widget):
-        dlg = AboutDialog(self.MainWindow)
-        dlg.run()
-        dlg.destroy()
+        builder = gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
+
+        self.About = builder.get_object("About")
+        self.About.set_transient_for(self.MainWindow)
+        self.About.set_version(version)
+        self.About.show()
 
     def OnAboutChatroomCommands(self, widget, parent=None):
-        if parent is None:
-            parent = self.MainWindow
-        dlg = AboutRoomsDialog(parent)
-        dlg.run()
-        dlg.destroy()
+        builder = gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
+
+        self.AboutChatroomCommands = builder.get_object("AboutChatRoomCommands")
+        self.AboutChatroomCommands.set_transient_for(self.MainWindow)
+        self.AboutChatroomCommands.show()
 
     def OnAboutPrivateChatCommands(self, widget):
-        dlg = AboutPrivateDialog(self.MainWindow)
-        dlg.run()
-        dlg.destroy()
+        builder = gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
+
+        self.AboutPrivateChatCommands = builder.get_object("AboutPrivateChatCommands")
+        self.AboutPrivateChatCommands.set_transient_for(self.MainWindow)
+        self.AboutPrivateChatCommands.show()
 
     def OnAboutFilters(self, widget):
-        dlg = AboutFiltersDialog(self.MainWindow)
-        dlg.run()
-        dlg.destroy()
+        builder = gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
+
+        self.AboutSearchFilters = builder.get_object("AboutSearchFilters")
+        self.AboutSearchFilters.set_transient_for(self.MainWindow)
+        self.AboutSearchFilters.show()
 
     def OnShowChatButtons(self, widget=None):
         if widget is not None:
