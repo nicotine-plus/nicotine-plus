@@ -67,11 +67,9 @@
                     <property name="margin_end">5</property>
                     <property name="margin_bottom">5</property>
                     <child>
-                      <object class="GtkEntry" id="SearchEntry">
+                      <object class="GtkSearchEntry" id="SearchEntry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="primary_icon_name">system-search-symbolic</property>
-                        <property name="primary_icon_activatable">False</property>
                         <property name="tooltip_text" translatable="yes">Search files and folders (exact match)</property>
                         <signal name="activate" handler="OnSearch" swapped="no"/>
                       </object>
