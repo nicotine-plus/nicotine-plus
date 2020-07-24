@@ -2440,6 +2440,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkBox">
+                                        <property name="width_request">280</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="border_width">5</property>
@@ -2530,7 +2531,7 @@
                                         </child>
                                       </object>
                                       <packing>
-                                        <property name="resize">True</property>
+                                        <property name="resize">False</property>
                                         <property name="shrink">True</property>
                                       </packing>
                                     </child>

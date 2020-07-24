@@ -506,6 +506,9 @@ class PrivateChat:
     def OnClearChatLog(self, widget):
         self.ChatScroll.get_buffer().set_text("")
 
+    def OnShowChatHelp(self, widget):
+        self.frame.OnAboutPrivateChatCommands(widget)
+
     def ShowMessage(self, text, status=None, timestamp=None):
 
         self.UpdateColours()
