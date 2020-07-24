@@ -22,7 +22,6 @@
     <signal name="apply" handler="OnApply" swapped="no"/>
     <signal name="cancel" handler="OnCancel" swapped="no"/>
     <signal name="close" handler="OnClose" swapped="no"/>
-    <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
     <signal name="prepare" handler="OnPrepare" swapped="no"/>
     <child>
       <object class="GtkBox" id="welcomepage">

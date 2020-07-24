@@ -3331,7 +3331,7 @@ class SettingsWindow:
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_TreeView.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow.ui"))
 
         self.SettingsWindow = builder.get_object("SettingsWindow")
 
@@ -3349,7 +3349,6 @@ class SettingsWindow:
         # Connect the custom handlers
         self.SettingsWindow.set_transient_for(frame.MainWindow)
         self.SettingsWindow.connect("delete-event", self.OnDelete)
-        self.SettingsWindow.connect("key-press-event", self.OnKeyPress)
 
         # This is ?
         self.empty_label = gtk.Label.new("")
@@ -3513,12 +3512,6 @@ class SettingsWindow:
         self.OnCancel(widget)
         widget.stop_emission_by_name("delete-event")
         return True
-
-    def OnKeyPress(self, widget, event):
-
-        # Close the window when escape is pressed
-        if event.keyval == Gdk.KEY_Escape:
-            self.OnCancel(widget)
 
     def GetPosition(self, combobox, option):
         iter = combobox.get_model().get_iter_first()
