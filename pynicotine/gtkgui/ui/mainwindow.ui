@@ -332,30 +332,6 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="rebuild_public">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Re_build Public shares</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnRebuild" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="rebuild_buddy">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Rebuild Bu_ddy shares</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnBuddyRebuild" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkMenuItem" id="browse_public_shares">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
