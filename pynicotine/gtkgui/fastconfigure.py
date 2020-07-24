@@ -24,7 +24,6 @@ from os.path import exists
 from os.path import getsize
 from os.path import join
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
@@ -514,9 +513,3 @@ class FastConfigureAssistant(object):
                 self.kids['lowerport'].set_value(widget.get_value())
 
         self.resetcompleteness()
-
-    def OnKeyPress(self, widget, event):
-
-        # Close the window when escape is pressed
-        if event.keyval == Gdk.KEY_Escape:
-            self.OnCancel(widget)

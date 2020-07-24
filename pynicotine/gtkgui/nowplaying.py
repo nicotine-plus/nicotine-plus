@@ -26,7 +26,6 @@ import re
 import sys
 from gettext import gettext as _
 
-from gi.repository import Gdk
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -65,7 +64,6 @@ class NowPlaying:
         self.NowPlaying.connect("destroy", self.quit)
         self.NowPlaying.connect("destroy-event", self.quit)
         self.NowPlaying.connect("delete-event", self.quit)
-        self.NowPlaying.connect("key-press-event", self.OnKeyPress)
 
         self.title_clear()
 
@@ -228,12 +226,6 @@ class NowPlaying:
 
     def OnNPCancel(self, widget):
         self.quit(None)
-
-    def OnKeyPress(self, widget, event):
-
-        # Close the window when escape is pressed
-        if event.keyval == Gdk.KEY_Escape:
-            self.quit(None)
 
     def quit(self, widget, s=None):
 
