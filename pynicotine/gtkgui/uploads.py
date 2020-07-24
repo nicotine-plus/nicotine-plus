@@ -30,7 +30,7 @@ from gi.repository import Gtk as gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.entrydialog import OptionDialog
+from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
@@ -97,10 +97,9 @@ class Uploads(TransferList):
 
         direction = "up"
 
-        win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, status=None, option=False, third="")
+        win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, option=False, third="")
         win.connect("response", self.frame.on_clear_response, direction)
         win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
-        win.set_icon(self.frame.images["n"])
 
         win.show()
 

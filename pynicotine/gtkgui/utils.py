@@ -40,6 +40,7 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.countrycodes import code2name
 from pynicotine.utils import CleanFile
 from pynicotine.utils import executeCommand
@@ -53,38 +54,6 @@ CATCH_URLS = 0
 HUMANIZE_URLS = 0
 USERNAMEHOTSPOTS = 0
 NICOTINE = None
-
-
-def popupWarning(parent, title, warning, icon=None):
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_OK, gtk.ResponseType.OK))
-    dlg.set_default_response(gtk.ResponseType.OK)
-    dlg.set_icon(icon)
-    dlg.set_border_width(10)
-    dlg.vbox.set_spacing(10)
-    hbox = gtk.HBox(spacing=5)
-    hbox.set_border_width(5)
-    hbox.show()
-    dlg.vbox.pack_start(hbox, True, True, 0)
-
-    image = gtk.Image()
-    image.set_padding(0, 0)
-    icon = gtk.STOCK_DIALOG_WARNING
-    image.set_from_stock(icon, 4)
-    image.show()
-
-    hbox.pack_start(image, True, True, 0)
-    label = gtk.Label()
-    label.set_markup(warning)
-    label.set_line_wrap(True)
-    hbox.pack_start(label, True, True, 0)
-
-    dlg.vbox.show_all()
-
-    result = None  # noqa: F841
-    if dlg.run() == gtk.ResponseType.OK:
-        dlg.destroy()
-
-    return 0
 
 
 # we could move this into a new class
@@ -503,11 +472,11 @@ class BuddiesComboBox:
             del self.items[item]
 
 
-class ImageLabel(gtk.HBox):
+class ImageLabel(gtk.Box):
 
     def __init__(self, label="", image=None, onclose=None, closebutton=False, angle=0, show_image=True, statusimage=None, show_status_image=False):
 
-        gtk.HBox.__init__(self)
+        gtk.Box.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -524,14 +493,8 @@ class ImageLabel(gtk.HBox):
         self.label = gtk.Label()
         self.text = label
 
-        color = NICOTINE.np.config.sections["ui"]["tab_default"]
+        self.set_text(self.text)
 
-        if not color:
-            self.label.set_text("%s" % self.text)
-        else:
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
-
-        self.label.set_alignment(0.0, 0.50)
         self.label.set_angle(angle)
         self.label.show()
 
@@ -557,11 +520,12 @@ class ImageLabel(gtk.HBox):
             self.Box.destroy()
             del self.Box
 
+        self.Box = gtk.Box()
+
         if self.angle in (90, -90):
-            self.Box = gtk.VBox()
+            self.Box.set_orientation(vertical)
         else:
             self.angle = 0
-            self.Box = gtk.HBox()
 
         self.Box.set_spacing(2)
         self.add(self.Box)
@@ -654,7 +618,8 @@ class ImageLabel(gtk.HBox):
                 color = NICOTINE.np.config.sections["ui"]["tab_hilite"]
 
         try:
-            Gdk.color_parse(color)
+            rgba = Gdk.RGBA()
+            rgba.parse(color)
         except Exception:
             color = ""
 
@@ -1126,7 +1091,7 @@ class PopupMenu(gtk.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        text = InputDialog(
+        text = EntryDialog(
             self.frame.MainWindow,
             _("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
             _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
@@ -1170,34 +1135,6 @@ class PopupMenu(gtk.Menu):
         popup.setup(*items)
 
         return True
-
-
-def InputDialog(parent, title, message, default=""):
-
-    dlg = gtk.Dialog(title=title, parent=parent, buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK))
-    dlg.set_default_response(gtk.ResponseType.OK)
-
-    dlg.set_border_width(10)
-    dlg.vbox.set_spacing(10)
-
-    l = gtk.Label(message)  # noqa: E741
-    l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False, 0)
-
-    entry = gtk.Entry()
-    entry.set_activates_default(True)
-    entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True, 0)
-
-    dlg.vbox.show_all()
-
-    result = None
-    if dlg.run() == gtk.ResponseType.OK:
-        result = entry.get_text()
-
-    dlg.destroy()
-
-    return result
 
 
 def WriteLog(logsdir, fn, msg):

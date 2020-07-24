@@ -52,9 +52,8 @@ from pynicotine.gtkgui.checklatest import checklatest
 from pynicotine.gtkgui.dirchooser import ChooseFile
 from pynicotine.gtkgui.dirchooser import SaveFile
 from pynicotine.gtkgui.downloads import Downloads
-from pynicotine.gtkgui.entrydialog import FindDialog
-from pynicotine.gtkgui.entrydialog import FolderDownload
-from pynicotine.gtkgui.entrydialog import QuitBox
+from pynicotine.gtkgui.dialogs import FindDialog
+from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
@@ -656,21 +655,21 @@ class NicotineFrame:
             return True
 
         if self.TrayApp.IsTrayIconVisible():
-            option = QuitBox(
-                self,
+            OptionDialog(
+                parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
                 message=_('Are you sure you wish to exit Nicotine+ at this time?'),
-                tray=True,
-                status="question",
-                third=_("Send to tray")
+                third=_("Send to tray"),
+                checkbox_label=_("Remember choice"),
+                callback=self.on_quit_response
             )
         else:
-            option = QuitBox(  # noqa: F841
-                self,
+            OptionDialog(
+                parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
                 message=_('Are you sure you wish to exit Nicotine+ at this time?'),
-                tray=False,
-                status="question"
+                checkbox_label=_("Remember choice"),
+                callback=self.on_quit_response
             )
 
         return True
@@ -970,27 +969,23 @@ class NicotineFrame:
         self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 
     def download_large_folder(self, username, folder, files, numfiles, msg):
-        FolderDownload(
-            self,
-            title=_('Nicotine+') + ': Download %(num)i files?' % {'num': numfiles},
+        OptionDialog(
+            parent=self.MainWindow,
+            title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
-            modal=True,
-            data=msg,
-            callback=self.folder_download_response
+            callback=self.folder_download_response,
+            callback_data=msg
         )
 
     def folder_download_response(self, dialog, response, data):
 
-        if response == gtk.ResponseType.CANCEL:
-            dialog.destroy()
-            return
-        elif response == gtk.ResponseType.OK:
-            dialog.destroy()
+        if response == gtk.ResponseType.OK:
             self.np.transfers.FolderContentsResponse(data)
 
-    def on_quit_response(self, dialog, response):
-        checkbox = dialog.checkbox.get_active()
         dialog.destroy()
+
+    def on_quit_response(self, dialog, response, data):
+        checkbox = dialog.checkbox.get_active()
 
         if response == gtk.ResponseType.OK:
 
@@ -1013,14 +1008,17 @@ class NicotineFrame:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
 
-    def on_clear_response(self, dialog, response, direction):
         dialog.destroy()
+
+    def on_clear_response(self, dialog, response, direction):
 
         if response == gtk.ResponseType.OK:
             if direction == "down":
                 self.downloads.ClearTransfers(["Queued"])
             elif direction == "up":
                 self.uploads.ClearTransfers(["Queued"])
+
+        dialog.destroy()
 
     def onOpenRoomList(self, dialog, response):
         dialog.destroy()
@@ -1348,26 +1346,27 @@ class NicotineFrame:
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
         if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
-            colour = None
+            rgba = None
         else:
             if bgcolor == "":
                 bgcolor = self.np.config.sections["ui"]["textbg"]
-            colour = Gdk.color_parse(bgcolor)
+            rgba = Gdk.RGBA()
+            rgba.parse(bgcolor)
 
-        widget.modify_base(gtk.StateFlags.NORMAL, colour)
-        widget.modify_bg(gtk.StateFlags.NORMAL, colour)
+        widget.override_background_color(gtk.StateFlags.NORMAL, rgba)
         widgetlist = [gtk.Entry, gtk.SpinButton]
         if type(widget) in widgetlist:
             if fgcolor != "":
-                colour = Gdk.color_parse(fgcolor)
+                rgba = Gdk.RGBA()
+                rgba.parse(fgcolor)
             elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] == "":
-                colour = None
+                rgba = None
             elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] != "":
                 fgcolor = self.np.config.sections["ui"]["inputcolor"]
-                colour = Gdk.color_parse(fgcolor)
+                rgba = Gdk.RGBA()
+                rgba.parse(fgcolor)
 
-            widget.modify_text(gtk.StateFlags.NORMAL, colour)
-            widget.modify_fg(gtk.StateFlags.NORMAL, colour)
+            widget.override_color(gtk.StateFlags.NORMAL, rgba)
 
         if type(widget) is gtk.TreeView:
             colour = self.np.config.sections["ui"]["search"]
@@ -2804,7 +2803,6 @@ class NicotineFrame:
                 modal=False
             )
             self.FindDialog.set_title(_('Nicotine+: Find string'))
-            self.FindDialog.set_icon(self.images["n"])
             self.FindDialog.set_transient_for(self.MainWindow)
             self.FindDialog.show()
             self.FindDialog.connect("find-click", self.OnFindClicked)

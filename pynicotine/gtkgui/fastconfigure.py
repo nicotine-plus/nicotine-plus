@@ -30,11 +30,10 @@ from gi.repository import Gtk as gtk
 
 import _thread
 from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.dialogs import ComboBoxDialog
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import OpenUri
-from pynicotine.gtkgui.utils import popupWarning
 
 
 def dirstats(directory):
@@ -419,8 +418,8 @@ class FastConfigureAssistant(object):
 
                 for directory in selected:
 
-                    virtual = input_box(
-                        self.frame,
+                    virtual = ComboBoxDialog(
+                        parent=self.frame.MainWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -428,12 +427,16 @@ class FastConfigureAssistant(object):
                     # If the virtual name is empty
                     if virtual == '' or virtual is None:
 
-                        popupWarning(
-                            self.window,
-                            _("Warning"),
-                            _("The chosen virtual name is empty"),
-                            self.frame.images["n"]
+                        dlg = gtk.MessageDialog(
+                            transient_for=self.window,
+                            flags=0,
+                            type=gtk.MessageType.WARNING,
+                            buttons=gtk.ButtonsType.OK,
+                            text=_("Warning")
                         )
+                        dlg.format_secondary_text(_("The chosen virtual name is empty"))
+                        dlg.run()
+                        dlg.destroy()
                         pass
 
                     else:
@@ -447,23 +450,31 @@ class FastConfigureAssistant(object):
                             # We reject the share if the virtual share name is already used
                             if virtual == model.get_value(iter, 0):
 
-                                popupWarning(
-                                    self.window,
-                                    _("Warning"),
-                                    _("The chosen virtual name already exist"),
-                                    self.frame.images["n"]
+                                dlg = gtk.MessageDialog(
+                                    transient_for=self.window,
+                                    flags=0,
+                                    type=gtk.MessageType.WARNING,
+                                    buttons=gtk.ButtonsType.OK,
+                                    text=_("Warning")
                                 )
+                                dlg.format_secondary_text(_("The chosen virtual name already exists"))
+                                dlg.run()
+                                dlg.destroy()
                                 return
 
                             # We also reject the share if the directory is already used
                             elif directory == model.get_value(iter, 6):
 
-                                popupWarning(
-                                    self.window,
-                                    _("Warning"),
-                                    _("The chosen directory is already shared"),
-                                    self.frame.images["n"]
+                                dlg = gtk.MessageDialog(
+                                    transient_for=self.window,
+                                    flags=0,
+                                    type=gtk.MessageType.WARNING,
+                                    buttons=gtk.ButtonsType.OK,
+                                    text=_("Warning")
                                 )
+                                dlg.format_secondary_text(_("The chosen directory is already shared"))
+                                dlg.run()
+                                dlg.destroy()
                                 return
 
                             else:

@@ -35,7 +35,8 @@ from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.entrydialog import MetaDialog
+from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.dialogs import MetaDialog
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import Humanize
@@ -43,7 +44,6 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import InputDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
@@ -1340,7 +1340,6 @@ class Search:
 
         win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
-        win.set_icon(self.frame.images["n"])
         win.show()
         gtk.main()
 
@@ -1600,7 +1599,6 @@ class WishList(gtk.Dialog):
         gtk.Dialog.__init__(self)
 
         self.set_title(_("Nicotine+: Search Wishlist"))
-        self.set_icon(frame.images["n"])
         self.connect("destroy", self.quit)
         self.connect("destroy-event", self.quit)
         self.connect("delete-event", self.quit)
@@ -1660,7 +1658,7 @@ class WishList(gtk.Dialog):
 
     def OnAddWish(self, widget):
 
-        wish = InputDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:"))
+        wish = EntryDialog(self.vbox.get_toplevel(), _("Add Wish..."), _("Wish:"))
 
         if wish and wish not in self.wishes:
             self.wishes[wish] = self.store.append([wish])

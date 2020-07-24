@@ -30,8 +30,8 @@ from gi.repository import Gtk as gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.entrydialog import MetaDialog
-from pynicotine.gtkgui.entrydialog import OptionDialog
+from pynicotine.gtkgui.dialogs import MetaDialog
+from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
@@ -103,10 +103,9 @@ class Downloads(TransferList):
     def OnTryClearQueued(self, widget):
 
         direction = "down"
-        win = OptionDialog(self.frame, _("Clear All Queued Downloads?"), modal=True, status=None, option=False, third="")
+        win = OptionDialog(self.frame, _("Clear All Queued Downloads?"), modal=True, option=False, third="")
         win.connect("response", self.frame.on_clear_response, direction)
         win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
-        win.set_icon(self.frame.images["n"])
         win.show()
 
     def expand(self, path):
@@ -147,7 +146,6 @@ class Downloads(TransferList):
 
         win = MetaDialog(self.frame, message, data, modal, Search=Search)
         win.set_title(title)
-        win.set_icon(self.frame.images["n"])
         win.show()
         gtk.main()
 

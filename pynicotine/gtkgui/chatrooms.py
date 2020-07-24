@@ -36,7 +36,8 @@ from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui import nowplaying
-from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.dialogs import TickerDialog
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
@@ -348,9 +349,9 @@ class RoomsControl:
 
     def OnPopupCreatePrivateRoom(self, widget):
 
-        room = input_box(
-            self.frame,
-            title=_('Nicotine+:') + " " + _("Create Private Room"),
+        room = EntryDialog(
+            self.frame.MainWindow,
+            title=_("Create Private Room"),
             message=_('Enter the name of the private room you wish to create')
         )
 
@@ -821,65 +822,6 @@ class Ticker:
         GLib.source_remove(self.source)
 
         self.source = None
-
-
-def TickDialog(parent, default=""):
-
-    dlg = gtk.Dialog(
-        title=_("Nicotine+: Set ticker message"),
-        transient_for=parent
-    )
-    dlg.add_buttons(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK)
-    dlg.set_default_response(gtk.ResponseType.OK)
-
-    t = 0
-
-    dlg.set_border_width(10)
-    dlg.vbox.set_spacing(15)
-
-    l = gtk.Label.new(_("Set room ticker message:"))  # noqa: E741
-    l.set_alignment(0, 0.5)
-    dlg.vbox.pack_start(l, False, False, 0)
-
-    entry = gtk.Entry()
-    entry.set_activates_default(True)
-    entry.set_text(default)
-    dlg.vbox.pack_start(entry, True, True, 0)
-
-    v = gtk.Box.new(gtk.Orientation.VERTICAL, False)
-    v.set_spacing(5)
-    r1 = gtk.RadioButton().new_from_widget(None)
-    r1.set_label(_("Just this time"))
-    r1.set_active(True)
-    v.pack_start(r1, False, False, 0)
-
-    r2 = gtk.RadioButton().new_from_widget(r1)
-    r2.set_label(_("Always for this channel"))
-    v.pack_start(r2, False, False, 0)
-
-    r3 = gtk.RadioButton().new_from_widget(r1)
-    r3.set_label(_("Default for all channels"))
-    v.pack_start(r3, False, False, 0)
-
-    dlg.vbox.pack_start(v, True, True, 0)
-
-    dlg.vbox.show_all()
-
-    result = None
-    if dlg.run() == gtk.ResponseType.OK:
-
-        if r1.get_active():
-            t = 0
-        elif r2.get_active():
-            t = 1
-        elif r3.get_active():
-            t = 2
-
-        result = entry.get_text()
-
-    dlg.destroy()
-
-    return [t, result]
 
 
 class ChatRoom:
@@ -2268,7 +2210,12 @@ class ChatRoom:
         else:
             old = ""
 
-        t, result = TickDialog(self.frame.MainWindow, old)
+        t, result = TickerDialog(
+            parent=self.frame.MainWindow,
+            title="Set ticker message",
+            message="Set room ticker message:",
+            default_text=old
+        )
 
         if result is not None:
 

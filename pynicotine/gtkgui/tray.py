@@ -22,7 +22,7 @@ import os
 from gettext import gettext as _
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.entrydialog import input_box
+from pynicotine.gtkgui.dialogs import ComboBoxDialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 from pynicotine.utils import installPrefix
@@ -81,9 +81,9 @@ class TrayApp:
             users.append(entry[0])
 
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_('Nicotine+:') + " " + _("Start Message"),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_('Nicotine+') + ": " + _("Start Messaging"),
             message=_('Enter the User who you wish to send a private message:'),
             droplist=users
         )
@@ -100,9 +100,9 @@ class TrayApp:
             users.append(entry[0])
 
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_('Nicotine+: Get User Info'),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_('Nicotine+') + ": " + _("Get User Info"),
             message=_('Enter the User whose User Info you wish to receive:'),
             droplist=users
         )
@@ -117,9 +117,9 @@ class TrayApp:
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_("Nicotine+: Get A User's IP"),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_('Nicotine+') + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
         )
@@ -133,9 +133,9 @@ class TrayApp:
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
         users.sort()
-        user = input_box(
-            self.frame,
-            title=_("Nicotine+: Get A User's Shares List"),
+        user = ComboBoxDialog(
+            parent=self.frame.MainWindow,
+            title=_('Nicotine+') + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
         )

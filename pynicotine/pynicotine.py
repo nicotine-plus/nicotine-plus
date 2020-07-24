@@ -1592,7 +1592,7 @@ class NetworkEventProcessor:
                     if os.path.commonprefix([i, j]) == j:
                         files = msg.list[i][j]
                         numfiles = len(files)
-                        if numfiles > 100:
+                        if numfiles > 0:
                             many = True
                             folder = j
 
