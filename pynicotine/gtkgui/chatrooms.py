@@ -1296,20 +1296,18 @@ class ChatRoom:
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def OnShowChatHelp(self, widget):
-        self.frame.OnAboutChatroomCommands(widget, self.frame.MainWindow)
+        self.frame.OnAboutChatroomCommands(widget)
 
     def OnShowChatButtons(self, show=True):
 
-        for widget in self.HideStatusLog, self.HideUserList, self.ShowChatHelp:
+        for widget in self.AutoJoin, self.HideStatusLog, self.HideUserList:
             if show:
                 widget.show()
             else:
                 widget.hide()
 
-        if self.frame.np.config.sections["ui"]["speechenabled"] and show:
+        if self.frame.np.config.sections["ui"]["speechenabled"]:
             self.Speech.show()
-        else:
-            self.Speech.hide()
 
     def OnHideStatusLog(self, widget):
 
@@ -1733,12 +1731,9 @@ class ChatRoom:
     def CountUsers(self):
 
         numusers = len(self.users)
-        if numusers > 1:
+        if numusers > 0:
             self.LabelPeople.show()
-            self.LabelPeople.set_text(_("%i people in room") % numusers)
-        elif numusers == 1:
-            self.LabelPeople.show()
-            self.LabelPeople.set_text(_("You are alone"))
+            self.LabelPeople.set_text(_("User List (%i)") % numusers)
         else:
             self.LabelPeople.hide()
 
@@ -1965,7 +1960,6 @@ class ChatRoom:
         if self.leaving:
             return
 
-        self.Leave.set_sensitive(False)
         self.leaving = 1
 
         config = self.frame.np.config.sections

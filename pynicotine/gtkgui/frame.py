@@ -1535,7 +1535,6 @@ class NicotineFrame:
         self.roomlist.CreateRoomEntry.set_sensitive(status)
         self.roomlist.RoomsList.set_sensitive(status)
         self.roomlist.SearchRooms.set_sensitive(status)
-        self.roomlist.FindRoom.set_sensitive(status)
         self.UserPrivateCombo.set_sensitive(status)
         self.sPrivateChatButton.set_sensitive(status)
         self.UserBrowseCombo.set_sensitive(status)
@@ -2439,7 +2438,7 @@ class NicotineFrame:
         self.About.set_version(version)
         self.About.show()
 
-    def OnAboutChatroomCommands(self, widget, parent=None):
+    def OnAboutChatroomCommands(self, widget):
         builder = gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
