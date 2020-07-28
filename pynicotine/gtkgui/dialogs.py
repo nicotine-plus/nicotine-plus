@@ -32,8 +32,8 @@ def ComboBoxDialog(parent, title, message, default_text="",
     self = gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        type=gtk.MessageType.QUESTION,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        message_type=gtk.MessageType.QUESTION,
+        buttons=gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.set_default_size(500, -1)
@@ -82,8 +82,8 @@ def EntryDialog(parent, title, message, default=""):
     self = gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        type=gtk.MessageType.QUESTION,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        message_type=gtk.MessageType.QUESTION,
+        buttons=gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.set_default_size(500, -1)
@@ -110,8 +110,8 @@ def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_
     self = gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        type=gtk.MessageType.QUESTION,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        message_type=gtk.MessageType.QUESTION,
+        buttons=gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.connect("response", callback, callback_data)
@@ -119,7 +119,8 @@ def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_
     self.format_secondary_text(message)
 
     if checkbox_label:
-        self.checkbox = gtk.CheckButton(checkbox_label)
+        self.checkbox = gtk.CheckButton()
+        self.checkbox.set_label(checkbox_label)
         self.get_message_area().pack_start(self.checkbox, False, False, 0)
         self.checkbox.show()
 
@@ -134,8 +135,8 @@ def TickerDialog(parent, title, message, default_text=""):
     self = gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        type=gtk.MessageType.QUESTION,
-        buttons=(gtk.STOCK_CANCEL, gtk.ResponseType.CANCEL, gtk.STOCK_OK, gtk.ResponseType.OK),
+        message_type=gtk.MessageType.QUESTION,
+        buttons=gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.set_default_size(600, -1)

@@ -2791,7 +2791,6 @@ class NicotineFrame:
                 modal=False
             )
             self.FindDialog.set_title(_('Nicotine+: Find string'))
-            self.FindDialog.set_transient_for(self.MainWindow)
             self.FindDialog.show()
             self.FindDialog.connect("find-click", self.OnFindClicked)
             return
@@ -2803,7 +2802,6 @@ class NicotineFrame:
         self.FindDialog.currentPosition = None
         self.FindDialog.nextPosition = None
 
-        self.FindDialog.set_transient_for(self.MainWindow)
         self.FindDialog.show()
         self.FindDialog.deiconify()
 
