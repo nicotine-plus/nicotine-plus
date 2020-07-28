@@ -1109,7 +1109,6 @@ class PopupMenu(gtk.Menu):
         if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
             return False
 
-        user = self.user  # noqa: F841
         items = []
         popup = self.frame.userlist.Popup_Menu_PrivateRooms
         popup.clear()

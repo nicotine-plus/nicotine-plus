@@ -991,7 +991,7 @@ class PrivilegedUsers(ServerMessage):
         try:
             x = zlib.decompress(message)
             message = x[4:]
-        except Exception as error:  # noqa: F841
+        except Exception:
             pass
         self.users = []
         pos, numusers = self.getObject(message, int)
@@ -1310,7 +1310,7 @@ class UserPrivileged(ServerMessage):
         return self.packObject(self.user)
 
     def parseNetworkMessage(self, message):
-        pos, self.user = self.getObject(message, bytes, 0)  # noqa: F821
+        pos, self.user = self.getObject(message, bytes, 0)
         pos, self.privileged = pos + 1, bool(message[pos])
 
 

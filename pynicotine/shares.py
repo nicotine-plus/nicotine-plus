@@ -302,7 +302,7 @@ class Shares:
         elif checkuser == 2:
             shares = self.config.sections["transfers"]["bsharedfiles"]
         else:
-            response = self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))  # noqa: F841
+            self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
             shares = {}
 
         if checkuser:
@@ -630,7 +630,6 @@ class Shares:
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
 
         streams = {}
-        shared = self.config.sections["transfers"]["shared"]  # noqa: F841
 
         for directory in list(mtimes.keys()):
 
@@ -681,7 +680,7 @@ class Shares:
 
             try:
                 from win32file import GetFileAttributes
-            except ImportError as e:  # noqa: F841
+            except ImportError:
                 pass
             else:
 

@@ -219,7 +219,6 @@ class NicotineFrame:
         self.minimized = False
         self.HiddenTabs = {}
 
-        display = Gdk.Display.get_default()  # noqa: F841
         self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
 
         # for iterating buddy changes to the combos
@@ -2826,8 +2825,6 @@ class NicotineFrame:
         if self.FindDialog.currentPosition is None:
             self.FindDialog.currentPosition = buffer.create_mark(None, start, False)
             self.FindDialog.nextPosition = buffer.create_mark(None, start, False)
-
-        second = 0  # noqa: F841
 
         if direction == "next":
             current = buffer.get_mark("insert")

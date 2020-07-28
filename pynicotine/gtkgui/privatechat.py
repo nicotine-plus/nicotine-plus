@@ -437,7 +437,7 @@ class PrivateChat:
 
                 for line in lines:
                     AppendLine(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
-        except IOError as e:  # noqa: F841
+        except IOError:
             pass
 
         GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
@@ -781,7 +781,7 @@ class PrivateChat:
         if self.frame.now is None:
             self.frame.now = nowplaying.NowPlaying(self.frame)
 
-        np = self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)  # noqa: F841
+        self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
 
     def makecolour(self, buffer, colour):
 

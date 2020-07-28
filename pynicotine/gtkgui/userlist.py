@@ -243,7 +243,6 @@ class UserList:
 
     def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
 
-        model = treeview.get_model()  # noqa: F841
         user = selection.data
 
         if user:
@@ -346,7 +345,6 @@ class UserList:
 
     def OnPopupMenu(self, widget, event):
 
-        items = self.popup_menu.get_children()
         d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
@@ -361,7 +359,6 @@ class UserList:
 
             self.popup_menu.set_user(user)
 
-            items = self.popup_menu.get_children()  # noqa: F841
             me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
@@ -476,13 +473,13 @@ class UserList:
 
     def SaveUserList(self):
 
-        l = []  # noqa: E741
+        list = []
 
         for i in self.userlist:
             user, comment, seen, iter, flag = i
-            l.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
+            list.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
 
-        self.frame.np.config.sections["server"]["userlist"] = l
+        self.frame.np.config.sections["server"]["userlist"] = list
         self.frame.np.config.writeConfiguration()
 
     def saveColumns(self):

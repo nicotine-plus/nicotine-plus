@@ -649,7 +649,7 @@ class NowPlaying:
 
         try:
             (user, apikey) = self.NPCommand.get_text().split(';')
-        except ValueError as error:  # noqa: F841
+        except ValueError:
             log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
 

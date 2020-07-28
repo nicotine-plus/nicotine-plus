@@ -446,7 +446,6 @@ class Transfers:
     def TransferRequest(self, msg):
 
         user = response = None
-        transfers = self.eventprocessor.config.sections["transfers"]  # noqa: F841
 
         if msg.conn is not None:
             for i in self.peerconns:
