@@ -191,6 +191,21 @@ class TransferList:
 
     def SelectedTransfersCallback(self, model, path, iter):
 
+        self.SelectTransfer(model, iter, selectuser=True)
+
+        # If we're in grouping mode, select any transfers under the selected
+        # user or folder
+        self.SelectChildTransfers(model, model.iter_children(iter))
+
+    def SelectChildTransfers(self, model, iter):
+
+        while iter is not None:
+            self.SelectTransfer(model, iter)
+            self.SelectChildTransfers(model, model.iter_children(iter))
+            iter = model.iter_next(iter)
+
+    def SelectTransfer(self, model, iter, selectuser=False):
+
         user = model.get_value(iter, 0)
         file = model.get_value(iter, 10)
 
@@ -199,7 +214,7 @@ class TransferList:
                 self.selected_transfers.append(i)
                 break
 
-        if user not in self.selected_users:
+        if selectuser and user not in self.selected_users:
             self.selected_users.append(user)
 
     def TranslateStatus(self, status):
