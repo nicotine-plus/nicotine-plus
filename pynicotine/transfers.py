@@ -1939,6 +1939,31 @@ class Transfers:
             parent = directory.split('\\')[-1]
 
         destination = os.path.join(destination, parent)
+
+        """ Make sure the target folder doesn't exist
+        If it exists, append a number to the folder name """
+
+        downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
+
+        if destination[0] == '/':
+            # We selected the folder to download to, real path already known
+            realpath = destination
+        else:
+            realpath = os.path.join(downloaddir, destination)
+
+        index = ""
+
+        while True:
+            if os.path.exists(realpath + index):
+                if index:
+                    index = " (" + str(int(index[2:-1]) + 1) + ")"
+                else:
+                    index = " (1)"
+                pass
+            else:
+                destination += index
+                break
+
         return destination
 
     def AbortTransfers(self):

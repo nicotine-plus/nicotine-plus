@@ -1411,28 +1411,15 @@ class Search:
 
     def OnDownloadFolders(self, widget):
 
-        folders = []
-
         for i in self.selected_results:
 
             user = i[0]
             dir = "\\".join(i[1].split("\\")[:-1])
 
-            if (user, dir) in folders:
-                continue
-
             self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
-            folders.append((user, dir))
-
-            if user not in self.frame.np.requestedFolders:
-                continue
-
-            if dir in self.frame.np.requestedFolders[user]:
-                del self.frame.np.requestedFolders[user][dir]
 
     def OnDownloadFoldersTo(self, widget):
 
-        folders = []
         directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if directories is None or directories == []:
@@ -1444,15 +1431,6 @@ class Search:
 
             user = i[0]
             dir = "\\".join(i[1].split("\\")[:-1])
-
-            if (user, dir) in folders:
-                continue
-
-            folders.append((user, dir))
-
-        for tup in folders:
-
-            user, dir = tup
 
             if user not in self.frame.np.requestedFolders:
                 self.frame.np.requestedFolders[user] = {}
