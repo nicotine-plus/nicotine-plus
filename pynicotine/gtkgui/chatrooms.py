@@ -728,7 +728,7 @@ class RoomsControl:
                 clist += self.rooms
 
             if config["buddies"]:
-                clist += [i[0] for i in self.frame.userlist.userlist]
+                clist += [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]
 
             if config["aliases"]:
                 clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]
@@ -1143,7 +1143,7 @@ class ChatRoom:
         treeselection = treeview.get_selection()
         model, iter = treeselection.get_selected()
         user = model.get_value(iter, 2)
-        selection.set(selection.target, 8, user)
+        selection.set(selection.get_target(), 8, user)
 
     def destroy(self):
         self.Main.destroy()
@@ -1630,7 +1630,7 @@ class ChatRoom:
         # Remove from completion list, and completion drop-down
         if self.frame.np.config.sections["words"]["tab"]:
 
-            if username in self.clist and username not in [i[0] for i in self.frame.userlist.userlist]:
+            if username in self.clist and username not in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]:
 
                 self.clist.remove(username)
 

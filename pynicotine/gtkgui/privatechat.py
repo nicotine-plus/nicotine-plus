@@ -311,7 +311,7 @@ class PrivateChats(IconNotebook):
         clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + list(self.users.keys())
 
         if config["buddies"]:
-            clist += [i[0] for i in self.frame.userlist.userlist]
+            clist += [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]
 
         if config["aliases"]:
             clist += ["/" + k for k in list(self.frame.np.config.aliases.keys())]

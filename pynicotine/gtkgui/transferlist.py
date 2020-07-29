@@ -58,7 +58,7 @@ class TransferList:
         widget.set_enable_tree_lines(True)
         widget.set_rubber_banding(True)
 
-        columntypes = [
+        self.transfersmodel = gtk.TreeStore(
             str,                   # (0)  user
             str,                   # (1)  path
             str,                   # (2)  file name
@@ -77,11 +77,9 @@ class TransferList:
             gobject.TYPE_UINT64,   # (15) time elapsed
             gobject.TYPE_UINT64,   # (16) file count
             gobject.TYPE_UINT64,   # (17) queue position
-        ]
+        )
 
-        self.transfersmodel = gtk.TreeStore(*columntypes)
         widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
-
         self.cols = cols = InitialiseColumns(
             widget,
             [_("User"), widths[0], "text", self.CellDataFunc],

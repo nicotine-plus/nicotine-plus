@@ -301,8 +301,9 @@ class Searches(IconNotebook):
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
     def DoBuddiesSearch(self, id, text):
-        for users in self.frame.userlist.userlist:
-            self.frame.np.queue.put(slskmessages.UserSearch(users[0], id, text))
+        for i in self.frame.np.config.sections["server"]["userlist"]:
+            user = i[0]
+            self.frame.np.queue.put(slskmessages.UserSearch(user, id, text))
 
     def DoPeerSearch(self, id, text, users):
         for user in users:
@@ -611,7 +612,7 @@ class Search:
         else:
             self.ResultsList.set_show_expanders(False)
 
-        self.COLUMN_TYPES = [
+        self.resultsmodel = gtk.TreeStore(
             gobject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
             gobject.TYPE_OBJECT,  # (2)  flag
@@ -630,9 +631,7 @@ class Search:
             gobject.TYPE_UINT64,  # (15) speed
             gobject.TYPE_UINT64,  # (16) queue
             gobject.TYPE_INT64    # (17) status
-        ]
-
-        self.resultsmodel = gtk.TreeStore(*self.COLUMN_TYPES)
+        )
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
         cols = InitialiseColumns(

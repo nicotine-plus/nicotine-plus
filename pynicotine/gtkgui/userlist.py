@@ -46,6 +46,7 @@ class UserList:
 
         # Build the window
         self.frame = frame
+        config = self.frame.np.config.sections
 
         builder = gtk.Builder()
 
@@ -65,22 +66,32 @@ class UserList:
 
         builder.connect_signals(self)
 
+        """ Columns """
+
         TARGETS = [('text/plain', 0, 1)]
         self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, TARGETS, Gdk.DragAction.COPY)
         self.UserList.enable_model_drag_dest(TARGETS, Gdk.DragAction.COPY)
         self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
         self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
 
-        self.userlist = []
-
         self.usersmodel = gtk.ListStore(
-            gobject.TYPE_OBJECT, gobject.TYPE_OBJECT,
-            gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING,
-            gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN,
-            gobject.TYPE_STRING, gobject.TYPE_STRING,
-            gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_INT,
-            gobject.TYPE_STRING
+            gobject.TYPE_OBJECT,  # (0)  status icon
+            gobject.TYPE_OBJECT,  # (1)  flag
+            str,                  # (2)  username
+            str,                  # (3)  hspeed
+            str,                  # (4)  hfile count
+            bool,                 # (5)  trusted
+            bool,                 # (6)  notify
+            bool,                 # (7)  privileged
+            str,                  # (8)  hlast seen
+            str,                  # (9)  comments
+            gobject.TYPE_INT64,   # (10) status
+            gobject.TYPE_UINT64,  # (11) speed
+            gobject.TYPE_UINT64,  # (12) file count
+            int,                  # (13) last seen
+            str                   # (14) country
         )
+
         widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = InitialiseColumns(
             self.UserList,
@@ -96,21 +107,7 @@ class UserList:
             [_("Comments"), widths[9], "edit", self.CellDataFunc]
         )
 
-        self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last, self.col_comments = cols
-        self.col_status.set_sort_column_id(10)
-        self.col_country.set_sort_column_id(14)
-        self.col_user.set_sort_column_id(2)
-        self.col_speed.set_sort_column_id(11)
-        self.col_files.set_sort_column_id(12)
-        self.col_trusted.set_sort_column_id(5)
-        self.col_notify.set_sort_column_id(6)
-        self.col_privileged.set_sort_column_id(7)
-        self.col_last.set_sort_column_id(13)
-        self.col_comments.set_sort_column_id(9)
-        self.col_status.get_widget().hide()
-        self.col_country.get_widget().hide()
-
-        config = self.frame.np.config.sections
+        self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last_seen, self.col_comments = cols
 
         try:
             for i in range(len(cols)):
@@ -120,10 +117,24 @@ class UserList:
                     parent.connect("button_press_event", PressHeader)
 
                 # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["userlist"][i])
+                cols[i].set_visible(config["columns"]["userlist"][i])
         except IndexError:
             # Column count in config is probably incorrect (outdated?), don't crash
             pass
+
+        self.col_status.set_sort_column_id(10)
+        self.col_country.set_sort_column_id(14)
+        self.col_user.set_sort_column_id(2)
+        self.col_speed.set_sort_column_id(11)
+        self.col_files.set_sort_column_id(12)
+        self.col_trusted.set_sort_column_id(5)
+        self.col_notify.set_sort_column_id(6)
+        self.col_privileged.set_sort_column_id(7)
+        self.col_last_seen.set_sort_column_id(13)
+        self.col_comments.set_sort_column_id(9)
+
+        self.col_status.get_widget().hide()
+        self.col_country.get_widget().hide()
 
         if config["columns"]["hideflags"]:
             cols[1].set_visible(0)
@@ -138,18 +149,15 @@ class UserList:
         for render in self.col_privileged.get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
 
-        renderers = self.col_comments.get_cells()
-
-        for render in renderers:
+        for render in self.col_comments.get_cells():
             render.connect('edited', self.cell_edited_callback, self.UserList, 9)
 
         self.UserList.set_model(self.usersmodel)
-        self.privileged = []
-        self.notify = []
-        self.trusted = []
+
+        """ Buddy list """
 
         for user in self.frame.np.config.sections["server"]["userlist"]:
-            username, comment, notify, privileged, trusted, last_seen, flag = user
+            username, comment, notify, privileged, trusted, last_seen, country = user
 
             try:
                 time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
@@ -159,26 +167,28 @@ class UserList:
 
             row = [
                 self.frame.GetStatusImage(0),
-                self.frame.GetFlagImage(flag),
-                username, "0", "0",
-                trusted, notify, privileged, last_seen,
-                comment, 0, 0, 0,
+                self.frame.GetFlagImage(country),
+                username,
+                "",
+                "",
+                trusted,
+                notify,
+                privileged,
+                last_seen,
+                comment,
+                0,
+                0,
+                0,
                 time_from_epoch,
-                flag
+                country
             ]
 
-            if len(user) > 2:
-                if notify:
-                    self.notify.append(username)
-                if privileged:
-                    self.privileged.append(username)
-                if trusted:
-                    self.trusted.append(username)
-
-            iter_ = self.usersmodel.insert(0, row)
-            self.userlist.append([user[0], user[1], last_seen, iter_, flag])
+            self.usersmodel.insert(0, row)
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
+
+        """ Popup """
+
         self.Popup_Menu_PrivateRooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(frame)
 
@@ -239,11 +249,11 @@ class UserList:
         model, iter = treeselection.get_selected()
         status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
-        selection.set(selection.target, 8, user)
+        selection.set(selection.get_target(), 8, user)
 
     def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
 
-        user = selection.data
+        user = selection.get_data()
 
         if user:
             self.AddToList(user)
@@ -263,33 +273,9 @@ class UserList:
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
         iter = self.usersmodel.get_iter(index)
-        user = self.usersmodel.get_value(iter, 2)
         value = self.usersmodel.get_value(iter, pos)
 
         self.usersmodel.set(iter, pos, not value)
-        toggle = not value
-
-        if pos == 5:
-            if toggle:
-                if user not in self.trusted:
-                    self.trusted.append(user)
-            else:
-                if user in self.trusted:
-                    self.trusted.remove(user)
-        elif pos == 6:
-            if toggle:
-                if user not in self.notify:
-                    self.notify.append(user)
-            else:
-                if user in self.notify:
-                    self.notify.remove(user)
-        elif pos == 7:
-            if toggle:
-                if user not in self.privileged:
-                    self.privileged.append(user)
-            else:
-                if user in self.privileged:
-                    self.privileged.remove(user)
 
         self.SaveUserList()
 
@@ -310,11 +296,10 @@ class UserList:
             last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
             time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
 
-        for i in self.userlist:
-            if i[0] == user:
-                i[2] = last_seen
-                self.usersmodel.set(i[3], 8, last_seen)
-                self.usersmodel.set(i[3], 13, int(time_from_epoch))
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set(i.iter, 8, last_seen)
+                self.usersmodel.set(i.iter, 13, int(time_from_epoch))
                 break
 
         if not online:
@@ -326,9 +311,8 @@ class UserList:
 
         if comments is not None:
 
-            for i in self.userlist:
-                if i[0] == user:
-                    i[1] = comments
+            for i in self.usersmodel:
+                if i[2] == user:
                     self.usersmodel.set(iter, 9, comments)
                     break
 
@@ -336,12 +320,20 @@ class UserList:
 
     def ConnClose(self):
 
-        for user in self.userlist:
-            self.usersmodel.set(user[3], 0, self.frame.GetStatusImage(0), 3, "0", 4, "0", 10, 0, 11, 0, 12, 0)
+        for i in self.usersmodel:
+            self.usersmodel.set(
+                i.iter,
+                0, self.frame.GetStatusImage(0),
+                3, "",
+                4, "",
+                10, 0,
+                11, 0,
+                12, 0
+            )
 
-        for user in self.userlist:
-            if self.usersmodel.get(user[3], 8)[0] == "":
-                self.SetLastSeen(user[0])
+            if self.usersmodel.get(i.iter, 8)[0] == "":
+                user = i[2]
+                self.SetLastSeen(user)
 
     def OnPopupMenu(self, widget, event):
 
@@ -349,7 +341,10 @@ class UserList:
 
         if d:
             path, column, x, y = d
-            user = self.UserList.get_model().get_value(self.UserList.get_model().get_iter(path), 2)
+            model = self.UserList.get_model()
+            iter = model.get_iter(path)
+            user = model.get_value(iter, 2)
+            status = model.get_value(iter, 10)
 
             if event.button != 3:
                 if event.type == Gdk.EventType._2BUTTON_PRESS:
@@ -359,20 +354,27 @@ class UserList:
 
             self.popup_menu.set_user(user)
 
-            me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+            self.Menu_SendMessage.set_sensitive(status)
+            self.Menu_ShowIPaddress.set_sensitive(status)
+            self.Menu_GetUserInfo.set_sensitive(status)
+            self.Menu_BrowseUser.set_sensitive(status)
+            self.Menu_GivePrivileges.set_sensitive(status)
+            self.Menu_PrivateRooms.set_sensitive(
+                status or
+                self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
+            )
 
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
             self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-            self.Menu_OnNotify.set_active(user in self.notify)
-            self.Menu_OnPrivileged.set_active(user in self.privileged)
-            self.Menu_OnTrusted.set_active(user in self.trusted)
-            self.Menu_PrivateRooms.set_sensitive(not me)  # Private rooms
+            self.Menu_OnNotify.set_active(model.get_value(iter, 6))
+            self.Menu_OnPrivileged.set_active(model.get_value(iter, 7))
+            self.Menu_OnTrusted.set_active(model.get_value(iter, 5))
 
             self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def GetIter(self, user):
 
-        iters = [i[3] for i in self.userlist if i[0] == user]
+        iters = [i.iter for i in self.usersmodel if i[2] == user]
 
         if iters:
             return iters[0]
@@ -381,64 +383,83 @@ class UserList:
 
     def GetUserStatus(self, msg):
 
-        iter = self.GetIter(msg.user)
+        user = msg.user
+        status = msg.status
+        iter = self.GetIter(user)
 
         if iter is None:
             return
-        if msg.status == int(self.usersmodel.get_value(iter, 10)):
+
+        if status == int(self.usersmodel.get_value(iter, 10)):
             return
 
-        if msg.user in self.notify:
-            status = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][msg.status]
-            self.frame.logMessage(status % msg.user)
-            self.frame.NewNotification(status % msg.user)
+        notify = self.usersmodel.get_value(iter, 6)
 
-        img = self.frame.GetStatusImage(msg.status)
-        self.usersmodel.set(iter, 0, img, 10, msg.status)
+        if notify:
+            status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
+            self.frame.logMessage(status_text % user)
+            self.frame.NewNotification(status_text % user)
 
-        if msg.status:  # online
-            self.SetLastSeen(msg.user, online=True)
+        img = self.frame.GetStatusImage(status)
+        self.usersmodel.set(
+            iter,
+            0, img,
+            10, status
+        )
+
+        if status:  # online
+            self.SetLastSeen(user, online=True)
         elif self.usersmodel.get(iter, 8)[0] == "":  # disconnected
-            self.SetLastSeen(msg.user)
+            self.SetLastSeen(user)
 
     def GetUserStats(self, msg):
 
-        iter = self.GetIter(msg.user)
+        user = msg.user
+        iter = self.GetIter(user)
+
         if iter is None:
             return
 
+        country = msg.country
         hspeed = HumanSpeed(msg.avgspeed)
         hfiles = Humanize(msg.files)
-        self.usersmodel.set(iter, 3, hspeed, 4, hfiles, 11, msg.avgspeed, 12, msg.files)
 
-        if msg.country is not None and msg.country != "":
+        self.usersmodel.set(
+            iter,
+            3, hspeed,
+            4, hfiles,
+            11, msg.avgspeed,
+            12, msg.files
+        )
 
-            flag = "flag_" + msg.country
-            self.SetUserFlag(msg.user, flag)
+        if country is not None and country != "":
 
-    def SetUserFlag(self, user, flag):
+            country = "flag_" + country
+            self.SetUserFlag(user, country)
+
+    def SetUserFlag(self, user, country):
 
         iter = self.GetIter(user)
         if iter is None:
             return
 
-        if user not in [i[0] for i in self.userlist]:
+        if user not in [i[2] for i in self.usersmodel]:
             return
 
-        self.usersmodel.set(iter, 1, self.frame.GetFlagImage(flag), 14, flag)
-        for i in self.userlist:
-            if i[0] == user:
-                i[4] = flag
+        self.usersmodel.set(
+            iter,
+            1, self.frame.GetFlagImage(country),
+            14, country
+        )
 
     def AddToList(self, user):
 
-        if user in [i[0] for i in self.userlist]:
+        if user in [i[2] for i in self.usersmodel]:
             return
 
-        row = [self.frame.GetStatusImage(0), None, user, "0", "0", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
-        iter = self.usersmodel.append(row)
+        row = [self.frame.GetStatusImage(0), None, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
+        self.usersmodel.append(row)
 
-        self.userlist.append([user, "", _("Never seen"), iter, self.frame.GetUserFlag(user)])
         self.SaveUserList()
         self.frame.np.queue.put(slskmessages.AddUser(user))
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -454,9 +475,9 @@ class UserList:
 
         user = self.popup_menu.get_user()
 
-        for i in self.userlist:
-            if i[0] == user:
-                comments = i[1]
+        for i in self.usersmodel:
+            if i[2] == user:
+                comments = i[9]
                 break
         else:
             comments = ""
@@ -464,20 +485,21 @@ class UserList:
         comments = EntryDialog(self.frame.MainWindow, _("Edit comments") + "...", _("Comments") + ":", comments)
 
         if comments is not None:
-            for i in self.userlist:
-                if i[0] == user:
-                    i[1] = comments
-                    self.usersmodel.set(i[3], 9, comments)
+            for i in self.usersmodel:
+                if i[2] == user:
+                    i[9] = comments
+                    self.usersmodel.set(i.iter, 9, comments)
                     break
+
             self.SaveUserList()
 
     def SaveUserList(self):
 
         list = []
 
-        for i in self.userlist:
-            user, comment, seen, iter, flag = i
-            list.append([user, comment, (user in self.notify), (user in self.privileged), (user in self.trusted), seen, flag])
+        for i in self.usersmodel:
+            status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, hlast_seen, comments, status, speed, file_count, last_seen, country = i
+            list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
 
         self.frame.np.config.sections["server"]["userlist"] = list
         self.frame.np.config.writeConfiguration()
@@ -494,17 +516,9 @@ class UserList:
 
     def RemoveFromList(self, user):
 
-        if user in self.notify:
-            self.notify.remove(user)
-        if user in self.privileged:
-            self.privileged.remove(user)
-        if user in self.trusted:
-            self.trusted.remove(user)
-
-        for i in self.userlist:
-            if i[0] == user:
-                self.userlist.remove(i)
-                self.usersmodel.remove(i[3])
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.remove(i.iter)
                 break
 
         self.SaveUserList()
@@ -523,16 +537,10 @@ class UserList:
 
         user = self.popup_menu.get_user()
 
-        if not widget.get_active():
-            if user in self.trusted:
-                self.trusted.remove(user)
-        else:
-            if user not in self.trusted:
-                self.trusted.append(user)
-
-        for i in self.userlist:
-            if i[0] == user:
-                self.usersmodel.set(i[3], 5, (user in self.trusted))
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set(i.iter, 5, widget.get_active())
+                break
 
         self.SaveUserList()
 
@@ -540,16 +548,10 @@ class UserList:
 
         user = self.popup_menu.get_user()
 
-        if not widget.get_active():
-            if user in self.notify:
-                self.notify.remove(user)
-        else:
-            if user not in self.notify:
-                self.notify.append(user)
-
-        for i in self.userlist:
-            if i[0] == user:
-                self.usersmodel.set(i[3], 6, (user in self.notify))
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set(i.iter, 6, widget.get_active())
+                break
 
         self.SaveUserList()
 
@@ -557,15 +559,9 @@ class UserList:
 
         user = self.popup_menu.get_user()
 
-        if not widget.get_active():
-            if user in self.privileged:
-                self.privileged.remove(user)
-        else:
-            if user not in self.privileged:
-                self.privileged.append(user)
-
-        for i in self.userlist:
-            if i[0] == user:
-                self.usersmodel.set(i[3], 7, (user in self.privileged))
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set(i.iter, 7, widget.get_active())
+                break
 
         self.SaveUserList()
