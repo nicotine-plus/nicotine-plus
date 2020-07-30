@@ -24,6 +24,7 @@ import os
 import string
 import sys
 import time
+from collections import defaultdict
 from gettext import gettext as _
 
 from gi.repository import GLib
@@ -40,26 +41,6 @@ from pynicotine.utils import GetUserDirectories
 win32 = sys.platform.startswith("win")
 
 
-class dircache:
-    """Adapted from https://raw.githubusercontent.com/python/cpython/2.7/Lib/dircache.py"""
-
-    cache = {}
-
-    @classmethod
-    def listdir(cls, path):
-        try:
-            cached_mtime, dir_list = cls.cache[path]
-            del cls.cache[path]
-        except KeyError:
-            cached_mtime, dir_list = -1, []
-        mtime = os.stat(path).st_mtime
-        if mtime != cached_mtime:
-            dir_list = os.listdir(path)
-            dir_list.sort()
-        cls.cache[path] = mtime, dir_list
-        return dir_list
-
-
 class Shares:
 
     def __init__(self, np):
@@ -72,10 +53,7 @@ class Shares:
         self.CompressShares("buddy")
         self.requestedShares = {}
         self.newbuddyshares = self.newnormalshares = False
-        self.translatepunctuation = str.maketrans(
-            string.punctuation,
-            ''.join([' ' for i in string.punctuation])
-        )
+        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     def real2virtual(self, path):
         for (virtual, real) in self._virtualmapping():
@@ -147,7 +125,7 @@ class Shares:
             time.sleep(0.5)
 
             self.np.frame.RescanFinished(
-                [files, streams, wordindex, fileindex, mtimes],
+                files, streams, wordindex, fileindex, mtimes,
                 "normal"
             )
         except Exception as ex:
@@ -176,7 +154,7 @@ class Shares:
         time.sleep(0.5)
 
         self.np.frame.RescanFinished(
-            [files, streams, wordindex, fileindex, mtimes],
+            files, streams, wordindex, fileindex, mtimes,
             "buddy"
         )
 
@@ -423,11 +401,9 @@ class Shares:
         GLib.idle_add(progress.show)
         GLib.idle_add(progress.set_fraction, 0)
 
-        self.logMessage(_("%(num)s directories found before rescan/rebuild") % {"num": len(oldmtimes)})
+        self.logMessage(_("%(num)s directories found before rescan, rebuilding...") % {"num": len(oldmtimes)})
 
         newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
-
-        self.logMessage(_("%(num)s directories found after rescan/rebuild") % {"num": len(newmtimes)})
 
         GLib.idle_add(progress.set_text, _("Scanning %s") % name)
 
@@ -453,71 +429,63 @@ class Shares:
 
         GLib.idle_add(progress.set_fraction, 1.0)
 
+        self.logMessage(_("%(num)s directories found after rescan") % {"num": len(newmtimes)})
+
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
-    # Get Modification Times on Unix
+    # Get Modification Times
     def getDirsMtimes(self, dirs, yieldcall=None):
 
         list = {}
 
-        for directory in dirs:
+        for folder in dirs:
 
-            directory = os.path.expanduser(directory.replace("//", "/"))
+            folder = os.path.expanduser(folder.replace("//", "/"))
 
-            if self.hiddenCheck({'dir': directory}):
+            if self.hiddenCheck({'dir': folder}):
                 continue
 
             try:
-                contents = dircache.listdir(directory)
-                mtime = os.path.getmtime(directory)
+                mtime = os.path.getmtime(folder)
             except OSError as errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': directory}
+                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
                 print(str(message))
                 self.logMessage(message)
-                displayTraceback(sys.exc_info()[2])
                 continue
 
-            contents.sort()
+            list[folder] = mtime
 
-            list[directory] = mtime
+            try:
+                for entry in os.scandir(folder):
 
-            for filename in contents:
+                    if entry.is_dir():
 
-                path = os.path.join(directory, filename)
+                        path = os.path.join(folder, entry.path.split("/")[-1])
 
-                try:
-                    isdir = os.path.isdir(path)
-                except OSError as errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print(str(message))
-                    self.logMessage(message)
-                    continue
+                        try:
+                            mtime = os.path.getmtime(path)
+                        except OSError as errtuple:
+                            islink = False
+                            try:
+                                islink = os.path.islink(path)
+                            except OSError as errtuple2:
+                                print(errtuple2)
 
-                try:
-                    mtime = os.path.getmtime(path)
-                except OSError as errtuple:
-                    islink = False
-                    try:
-                        islink = os.path.islink(path)
-                    except OSError as errtuple2:
-                        print(errtuple2)
+                            if islink:
+                                message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
+                                    'link': os.readlink(path),
+                                    'path': path
+                                }
+                            else:
+                                message = _("Scanning Error: %(error)s Path: %(path)s") % {
+                                    'error': errtuple,
+                                    'path': path
+                                }
 
-                    if islink:
-                        message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
-                            'link': os.readlink(path),
-                            'path': path
-                        }
-                    else:
-                        message = _("Scanning Error: %(error)s Path: %(path)s") % {
-                            'error': errtuple,
-                            'path': path
-                        }
+                            print(str(message))
+                            self.logMessage(message)
+                            continue
 
-                    print(str(message))
-                    self.logMessage(message)
-                    continue
-                else:
-                    if isdir:
                         list[path] = mtime
                         dircontents = self.getDirsMtimes([path])
                         for k in dircontents:
@@ -525,6 +493,11 @@ class Shares:
 
                     if yieldcall is not None:
                         yieldcall()
+            except OSError as errtuple:
+                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
+                print(str(message))
+                self.logMessage(message)
+                continue
 
         return list
 
@@ -535,10 +508,10 @@ class Shares:
         list = {}
         count = 0
 
-        for directory in mtimes:
+        for folder in mtimes:
 
-            directory = os.path.expanduser(directory)
-            virtualdir = self.real2virtual(directory)
+            folder = os.path.expanduser(folder)
+            virtualdir = self.real2virtual(folder)
             count += 1
 
             if progress:
@@ -546,58 +519,49 @@ class Shares:
                 if percent <= 1.0:
                     GLib.idle_add(progress.set_fraction, percent)
 
-            if self.hiddenCheck({'dir': directory}):
+            if self.hiddenCheck({'dir': folder}):
                 continue
 
-            if not rebuild and directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(directory):
+            if not rebuild and folder in oldmtimes:
+                if mtimes[folder] == oldmtimes[folder]:
+                    if os.path.exists(folder):
                         try:
                             list[virtualdir] = oldlist[virtualdir]
                             continue
                         except KeyError:
                             log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                 'vdir': virtualdir,
-                                'dir': directory
+                                'dir': folder
                             })
                     else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
                         continue
 
             list[virtualdir] = []
 
             try:
-                contents = os.listdir(directory)
-            except OSError as errtuple:
-                print(str(errtuple))
-                self.logMessage(str(errtuple))
-                continue
+                for entry in os.scandir(folder):
 
-            contents.sort()
+                    if entry.is_file():
+                        filename = entry.path.split("/")[-1]
 
-            for filename in contents:
+                        if self.hiddenCheck({'dir': folder, 'file': filename}):
+                            continue
 
-                if self.hiddenCheck({'dir': directory, 'file': filename}):
-                    continue
+                        path = os.path.join(folder, filename)
 
-                path = os.path.join(directory, filename)
-                try:
-                    isfile = os.path.isfile(path)
-                except OSError as errtuple:
-                    message = _("Scanning Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': path}
-                    print(str(message))
-                    self.logMessage(message)
-                    displayTraceback(sys.exc_info()[2])
-                    continue
-                else:
-                    if isfile:
                         # Get the metadata of the file via mutagen
                         data = self.getFileInfo(filename, path)
                         if data is not None:
                             list[virtualdir].append(data)
 
-                if yieldcall is not None:
-                    yieldcall()
+                    if yieldcall is not None:
+                        yieldcall()
+            except OSError as errtuple:
+                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
+                print(str(message))
+                self.logMessage(message)
+                continue
 
         return list
 
@@ -749,12 +713,12 @@ class Shares:
     # Update Search index with new files
     def getFilesIndex(self, mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall=None, progress=None):
 
-        wordindex = {}
+        wordindex = defaultdict(list)
         fileindex = {}
         index = 0
         count = 0
 
-        for directory in list(mtimes.keys()):
+        for directory in mtimes:
 
             virtualdir = self.real2virtual(directory)
 
@@ -770,8 +734,10 @@ class Shares:
 
             for j in newsharedfiles[virtualdir]:
                 indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
+
                 for k in indexes:
-                    wordindex.setdefault(k, []).append(index)
+                    wordindex[k].append(index)
+
                 fileindex[str(index)] = ((virtualdir + '\\' + j[0]), ) + j[1:]
                 index += 1
 
@@ -783,19 +749,10 @@ class Shares:
     # Collect words from filenames for Search index
     def getIndexWords(self, dir, file, shareddirs):
 
-        for i in shareddirs:
-            if os.path.commonprefix([dir, i]) == i:
-                dir = dir[len(i):]
+        words = os.path.join(dir, file).translate(self.translatepunctuation).lower().split()
 
-        words = (dir + ' ' + file).translate(
-            str.maketrans(string.punctuation, ''.join([' ' for i in string.punctuation]))
-        ).lower().split()
-
-        # remove duplicates
-        d = {}
-        for x in words:
-            d[x] = x
-        return list(d.values())
+        # Remove duplicates
+        return list(dict.fromkeys(words))
 
     def addToShared(self, name):
         """ Add a file to the normal shares database """

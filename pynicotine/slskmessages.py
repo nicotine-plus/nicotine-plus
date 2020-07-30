@@ -1763,8 +1763,12 @@ class SharedFileList(PeerMessage):
             return self.built
         msg = bytearray()
         msg.extend(self.packObject(len(self.list)))
-        for (key, value) in self.list.items():
-            msg.extend(self.packObject(key.replace(os.sep, "\\")) + value)
+
+        for key in self.list:
+            try:
+                msg.extend(self.packObject(key.replace(os.sep, "\\")) + self.list[key])
+            except KeyError:
+                pass
         if not nozlib:
             self.built = zlib.compress(msg)
         else:
