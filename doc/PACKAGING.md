@@ -50,27 +50,22 @@ The RPM package will be located in the `dist` subdirectory of your git repositor
 
 ### Windows
 
-To avoid compatibility issues with older Windows versions, Windows 7 is used to package Nicotine+.
+GitHub Actions currently builds Nicotine+ installers for Windows, but the following information may be useful if you want to generate an installer on your own Windows machine.
 
 #### Building a frozen application via PyInstaller
 
 First, follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
-Then, you need to install PyInstaller via pip (in a Mingw terminal):
+Then, install dependencies:
 
-`pacman -S mingw-w64-x86_64-python3-pip`  
-`pip install PyInstaller`
+`export ARCH=x86_64`
+`files/windows/dependencies.sh`  
 
-Once PyInstaller is installed, clone the Nicotine+ git repository:
+Clone the Nicotine+ git repository:
 
 `pacman -S git`  
 `git clone https://github.com/Nicotine-Plus/nicotine-plus`  
 `cd nicotine-plus`  
-
-Install dependencies:
-
-`pacman -S mingw-w64-x86_64-miniupnpc`  
-`pip install mutagen plyer`  
 
 Run PyInstaller:
 
@@ -80,15 +75,12 @@ After the frozen application build finished you can find it in the `dist\Nicotin
 
 If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 
-It's a tedious process, deal with it. :)
-
 #### Building a NSIS installer from the frozen application
 
-After building the frozen app download the last zip from [NSIS3 version](https://sourceforge.net/projects/nsis/files/NSIS%203/).
+Run the following:
 
-Extract it in the `files\windows` directory.
-
-Then via cmd.exe or Powershell go to `files\windows` directory and run `nsis-$(version)/makensis.exe nicotine.nsi`
+`cd files/windows`
+`makensis -DARCH=x86_64 nicotine.nsi`
 
 You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
 

@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1
@@ -51,6 +53,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
@@ -61,20 +65,8 @@ jobs:
       - name: Install dependencies
         shell: msys2 {0}
         run: |
-            pacman --noconfirm -S --needed \
-                git \
-                mingw-w64-x86_64-gtk3 \
-                mingw-w64-x86_64-miniupnpc \
-                mingw-w64-x86_64-python3 \
-                mingw-w64-x86_64-python3-gobject \
-                mingw-w64-x86_64-python3-pip \
-                mingw-w64-x86_64-python3-pytest \
-                mingw-w64-x86_64-python3-flake8
-
-            # pip shouldn't pick up our setup.cfg file
-            cd pynicotine
-            pip install mutagen plyer --isolated
-            cd ..
+          export ARCH=x86_64
+          files/windows/dependencies.sh
 
       - name: Unit tests
         shell: msys2 {0}

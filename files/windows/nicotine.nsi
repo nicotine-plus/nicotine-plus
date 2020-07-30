@@ -20,19 +20,13 @@
 ; Validate installation directory
 !define MUI_DIRECTORYPAGE_VERIFYONLEAVE
 !insertmacro MUI_PAGE_DIRECTORY
-Page custom ShortCuts
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "English"
 
-ReserveFile "shortcuts.ini"
-!insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
-
 Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
 BrandingText "${PRODUCT_NAME}"
 OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
-; When creating a 32-bit installer, replace PROGRAMFILES64 with PROGRAMFILES
-InstallDir "$PROGRAMFILES64\Nicotine+"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -45,11 +39,6 @@ Section "Core" Core
   File /r "..\..\dist\Nicotine+\"
 SectionEnd
 
-Function ShortCuts
-  !insertmacro MUI_HEADER_TEXT "Nicotine+ shortcuts" "Please choose where shortctus will be created"
-  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "shortcuts.ini"
-FunctionEnd
-
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
@@ -57,25 +46,20 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
-  ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 2" "State"
-  ${if} $0 = 1
-    CreateShortCut "$SMPROGRAMS\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe"
-  ${endif}
-  ReadINIStr $0 "$PLUGINSDIR\shortcuts.ini" "Field 3" "State"
-  ${if} $0 = 1
-    CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe" "" "$INSTDIR\nicotine-plus.ico" 0
-  ${endif}
+  CreateShortCut "$SMPROGRAMS\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe"
+  CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe"
 SectionEnd
 
-!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${Core} "Required files"
-!insertmacro MUI_FUNCTION_DESCRIPTION_END
-
 Function .onInit
-  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "shortcuts.ini"
   ${IfNot} ${AtLeastWin7}
     MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 7 or later."
     Quit
+  ${EndIf}
+
+  ${If} ${ARCH} == "i686"
+    StrCpy $InstDir "$PROGRAMFILES\Nicotine+"
+  ${Else}
+    StrCpy $InstDir "$PROGRAMFILES64\Nicotine+"
   ${EndIf}
 FunctionEnd
 

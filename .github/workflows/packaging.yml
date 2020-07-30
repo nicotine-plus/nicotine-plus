@@ -1,0 +1,70 @@
+name: Nicotine+ packaging CI
+
+on: [push, pull_request]
+
+jobs:
+
+  package-ubuntu:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+    steps:
+      - name: Install autopkgtest dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install autopkgtest
+
+      - name: Run autopkgtest
+        run: |
+          set +e
+
+          # Ubuntu 16.04 uses adt-run
+          if ! sudo autopkgtest https://github.com/nicotine-plus/nicotine-plus -- null; then
+            sudo adt-run --git-source https://github.com/nicotine-plus/nicotine-plus --- null
+          fi
+
+          # autopkgtest exit code 2 signifies skipped tests
+          if [ $? -gt 2 ]; then
+            exit 1
+          fi
+
+  package-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include: [
+          { msystem: MINGW64, arch: x86_64 },
+          { msystem: MINGW32, arch: i686   }
+        ]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          update: true
+
+      - name: Install build dependencies
+        run: |
+          export ARCH=${{ matrix.arch }}
+          files/windows/dependencies.sh
+
+      - name: Build installer
+        run: |
+          pyinstaller files/windows/nicotine.spec
+          cd files/windows
+          makensis -DARCH=${{ matrix.arch }} nicotine.nsi
+
+      - name: Archive installer artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: windows-${{ matrix.arch }}-installer
+          path: files/windows
