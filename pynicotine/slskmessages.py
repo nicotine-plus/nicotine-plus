@@ -1761,10 +1761,10 @@ class SharedFileList(PeerMessage):
         # instead of repacking it, unless rebuild is True
         if not rebuild and self.built is not None:
             return self.built
-        msg = b""
-        msg = msg + self.packObject(len(self.list))
+        msg = bytearray()
+        msg.extend(self.packObject(len(self.list)))
         for (key, value) in self.list.items():
-            msg = msg + self.packObject(key.replace(os.sep, "\\")) + value
+            msg.extend(self.packObject(key.replace(os.sep, "\\")) + value)
         if not nozlib:
             self.built = zlib.compress(msg)
         else:
