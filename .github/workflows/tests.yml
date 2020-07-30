@@ -4,29 +4,79 @@ on: [push, pull_request]
 
 jobs:
 
-  test:
+  ubuntu:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04]
+        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
         python: [3.5, 3.6, 3.7, 3.8]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
+
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt upgrade -y
-          sudo apt -y install flake8 gobject-introspection gir1.2-appindicator3-0.1 gir1.2-gtk-3.0 \
-            gir1.2-notify-0.7 miniupnpc python3 python3-dbus python3-gi python3-mutagen python3-pytest xdg-utils
+          sudo apt -y install \
+            flake8 \
+            gobject-introspection \
+            gir1.2-appindicator3-0.1 \
+            gir1.2-gtk-3.0 \
+            gir1.2-notify-0.7 \
+            miniupnpc \
+            python3 \
+            python3-dbus \
+            python3-gi \
+            python3-mutagen \
+            python3-pytest \
+            xdg-utils
+
       - name: Lint with flake8
         run: |
           flake8 nicotine pynicotine --ignore=E501,W503,W504
+
       - name: Unit tests
         env:
           PYTHONPATH: .
         run: |
-          py.test-3 test/unit
+          py.test-3
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+
+      - name: Install dependencies
+        shell: msys2 {0}
+        run: |
+            pacman --noconfirm -S --needed \
+                git \
+                mingw-w64-x86_64-gtk3 \
+                mingw-w64-x86_64-miniupnpc \
+                mingw-w64-x86_64-python3 \
+                mingw-w64-x86_64-python3-gobject \
+                mingw-w64-x86_64-python3-pip \
+                mingw-w64-x86_64-python3-pytest \
+                mingw-w64-x86_64-python3-flake8
+
+            # pip shouldn't pick up our setup.cfg file
+            cd pynicotine
+            pip install mutagen plyer --isolated
+            cd ..
+
+      - name: Unit tests
+        shell: msys2 {0}
+        run: |
+          pytest

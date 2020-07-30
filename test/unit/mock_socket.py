@@ -8,9 +8,18 @@ from pathlib import Path
 class MockSocket(Mock):
 
     def set_data(self, datafile: str) -> None:
-        with open(str(Path(__file__).resolve().parent / datafile), 'rb') as file:
-            logs = pickle.load(file, encoding='bytes')
+        windows_line_ending = b'\r\n'
+        unix_line_ending = b'\n'
+
+        file_path = str(Path(__file__).resolve().parent / datafile)
+
+        with open(file_path, 'rb') as open_file:
+            content = open_file.read()
+
+        content = content.replace(windows_line_ending, unix_line_ending)
+        logs = pickle.loads(content, encoding='bytes')
         self.events = {}
+
         for mode in b'send', b'recv':
             for time, event in logs[b'transactions'][mode].items():
                 self.events[time] = (mode.decode('latin1'), event)
