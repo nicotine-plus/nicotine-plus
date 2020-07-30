@@ -59,6 +59,7 @@ class RoomList:
         self.room_model = self.RoomsList.get_model()
 
         self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
+        self.AcceptPrivateRoom.connect("toggled", self.OnToggleAcceptPrivateRoom)
 
     def OnSearchRoom(self, widget):
 
