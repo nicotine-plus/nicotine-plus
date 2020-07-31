@@ -32,6 +32,30 @@ ShowInstDetails show
 ShowUnInstDetails show
 ManifestDPIAware true
 
+; Installer
+
+Function .onInit
+  ${IfNot} ${AtLeastWin7}
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 7 or later."
+    Quit
+  ${EndIf}
+
+  ${If} ${ARCH} == "i686"
+    StrCpy $InstDir "$PROGRAMFILES\Nicotine+"
+  ${Else}
+    StrCpy $InstDir "$PROGRAMFILES64\Nicotine+"
+  ${EndIf}
+FunctionEnd
+
+Section -Pre
+  ReadRegStr $R0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString"
+
+  ${If} $R0 != ""        
+    DetailPrint "Removing previous installation."
+    ExecWait '$R0 /S _?=$INSTDIR'
+  ${EndIf}
+SectionEnd
+
 Section "Core" Core
   SectionIn RO
   SetOverwrite on
@@ -50,26 +74,15 @@ Section -Post
   CreateShortCut "$DESKTOP\Nicotine+.lnk" "$INSTDIR\Nicotine+.exe"
 SectionEnd
 
-Function .onInit
-  ${IfNot} ${AtLeastWin7}
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Nicotine+ requires Windows 7 or later."
-    Quit
-  ${EndIf}
-
-  ${If} ${ARCH} == "i686"
-    StrCpy $InstDir "$PROGRAMFILES\Nicotine+"
-  ${Else}
-    StrCpy $InstDir "$PROGRAMFILES64\Nicotine+"
-  ${EndIf}
-FunctionEnd
+; Uninstaller
 
 Function un.onUninstSuccess
   HideWindow
-  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) was successfully removed from your computer."
+  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) was successfully removed from your computer." /SD IDOK
 FunctionEnd
 
 Function un.onInit
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" /SD IDYES IDYES +2
   Abort
 FunctionEnd
 
