@@ -19,7 +19,7 @@ added_files = [
     ('../../pynicotine', 'pynicotine'),
 
     # Translation files
-    ('../../languages', 'languages'),
+    ('../../languages', 'share/locale'),
 ]
 
 a = Analysis(['../../nicotine'],
@@ -35,10 +35,12 @@ a = Analysis(['../../nicotine'],
              cipher=block_cipher,
              noarchive=False)
 
-# Removing po files, translation template and translation tools
-a.binaries = [
-    x for x in a.binaries if not x[0].endswith(('.po', '.pot', 'merge_all', 'msgfmtall.py', 'remove_fuzzy', 'remove_mo', 'update_pot.py'))
-]
+# Remove unwanted files
+for file in a.datas[:]:
+    excluded = ('.ani', '.cur', '.md', '.png', '.po', '.pot', '.py', '.pyc', 'merge_all', 'remove_fuzzy', 'remove_mo')
+
+    if file[0].endswith(excluded):
+        a.datas.remove(file)
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
