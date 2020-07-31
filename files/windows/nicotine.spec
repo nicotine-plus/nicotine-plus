@@ -12,16 +12,13 @@ added_files = [
     #
  
     # GTK Builder files
-    ('../../pynicotine/gtkgui/ui/*.ui', 'pynicotine/gtkgui/ui'),
+    ('../../pynicotine/gtkgui/ui', 'pynicotine/gtkgui/ui'),
 
     # GeoIP database
     ('../../pynicotine/geoip/ipcountrydb.bin', 'pynicotine/geoip'),
     
     # About icon
-    ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
-
-    # Shortcut icon
-    ('nicotine-plus.ico', '.'),
+    ('../org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
  
     # Translation files
     ('../../languages', 'languages'),
@@ -57,7 +54,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=False,
-          icon='../../files/windows/nicotine-plus.ico')
+          icon='nicotine-plus.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
