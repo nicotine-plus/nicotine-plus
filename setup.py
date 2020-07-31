@@ -135,4 +135,3 @@ if __name__ == '__main__':
         scripts=['nicotine'],
         data_files=files
     )
-

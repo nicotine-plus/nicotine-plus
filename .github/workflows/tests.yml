@@ -23,24 +23,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
+
           sudo apt update
-          sudo apt -y install \
-            flake8 \
-            gobject-introspection \
-            gir1.2-appindicator3-0.1 \
-            gir1.2-gtk-3.0 \
-            gir1.2-notify-0.7 \
-            miniupnpc \
-            python3 \
-            python3-dbus \
-            python3-gi \
-            python3-mutagen \
-            python3-pytest \
-            xdg-utils
+          sudo apt -y install $BUILD_DEPS
 
       - name: Lint with flake8
         run: |
-          flake8 nicotine pynicotine --ignore=E501,W503,W504
+          flake8
 
       - name: Unit tests
         env:
