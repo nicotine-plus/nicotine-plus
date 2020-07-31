@@ -50,6 +50,9 @@ jobs:
 
   windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -63,12 +66,26 @@ jobs:
           update: true
 
       - name: Install dependencies
-        shell: msys2 {0}
         run: |
           export ARCH=x86_64
           files/windows/dependencies.sh
 
       - name: Unit tests
-        shell: msys2 {0}
+        run: |
+          pytest
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          files/macos/dependencies.sh
+
+      - name: Unit tests
         run: |
           pytest
