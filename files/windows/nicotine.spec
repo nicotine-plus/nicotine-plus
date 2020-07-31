@@ -11,16 +11,13 @@ added_files = [
     #
     # Application core modules
     #
- 
-    # GTK Builder files
-    ('../../pynicotine/gtkgui/ui', 'pynicotine/gtkgui/ui'),
 
-    # GeoIP database
-    ('../../pynicotine/geoip/ipcountrydb.bin', 'pynicotine/geoip'),
-    
     # About icon
     ('../org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
- 
+
+    # GTK Builder files, plugins, geoip database
+    ('../../pynicotine', 'pynicotine'),
+
     # Translation files
     ('../../languages', 'languages'),
 ]
