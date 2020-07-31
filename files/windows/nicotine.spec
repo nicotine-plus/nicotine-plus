@@ -4,6 +4,7 @@ block_cipher = None
 
 import sys
 sys.modules['FixTk'] = None
+sys.modules['lib2to3'] = None
 
 # Files to be added to the frozen app
 added_files = [
@@ -31,7 +32,7 @@ a = Analysis(['../../nicotine'],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['FixTk', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
+             excludes=['FixTk', 'lib2to3', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,
