@@ -531,11 +531,11 @@ class SlskProtoThread(threading.Thread):
                 key_events = selector.select(timeout)
                 input = [key.fileobj for key, event in key_events if event & selectors.EVENT_READ]
                 output = [key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE]
-        except PermissionError:
+        except Exception:
             # The selector chosen by the selectors module didn't work? Fall back to the select() syscall
             input, output, exc = select.select(input_list, output_list, [], timeout)
 
-        return (input, output)
+        return input, output
 
     def run(self):
         """ Actual networking loop is here."""
