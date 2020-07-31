@@ -44,6 +44,12 @@ jobs:
           name: windows-${{ matrix.arch }}-installer
           path: files/windows
 
+      - name: Archive package artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: windows-${{ matrix.arch }}-package
+          path: dist
+
   macos:
     runs-on: macos-latest
     steps:
