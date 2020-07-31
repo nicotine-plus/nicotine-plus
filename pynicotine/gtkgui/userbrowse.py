@@ -663,6 +663,9 @@ class UserBrowse:
 
         ldir = prefix + dir.split("\\")[-1]
 
+        # Check if folder already exists on system
+        ldir = self.frame.np.transfers.FolderDestination(self.user, ldir)
+
         for d, f in self.shares:
 
             # Find the wanted directory
@@ -696,7 +699,15 @@ class UserBrowse:
                 size = file[2]
                 h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
-                self.frame.np.transfers.getFile(self.user, path, ldir, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
+                self.frame.np.transfers.getFile(
+                    self.user,
+                    path,
+                    ldir,
+                    size=size,
+                    bitrate=h_bitrate,
+                    length=h_length,
+                    checkduplicate=True
+                )
 
         if not recurse:
             return
