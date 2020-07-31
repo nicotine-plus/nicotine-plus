@@ -21,7 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from os import listdir, remove, system
 from os.path import isfile, join
 
@@ -58,8 +57,10 @@ def isBuilder(dir, file):
         return dir + file
     return None
 
+
 pythonscripts = []
 builderscripts = []
+
 
 for dir, files in list(files.items()):
 

@@ -6,12 +6,12 @@ Standards-Version: 3.9.7
 Build-Depends:
     debhelper (>= 9~),
     dh-python,
-    python3 (>= 3.5),
-    python3-pytest,
+    flake8,
     gettext,
     lintian,
-    python3-setuptools,
-    quilt
+    python3 (>= 3.5),
+    python3-pytest,
+    python3-setuptools
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.5
@@ -21,8 +21,6 @@ Rules-Requires-Root: no
 Package: nicotine
 Architecture: all
 Depends:
-    ${python3:Depends},
-    ${misc:Depends},
     python3-miniupnpc | miniupnpc (>= 1.9),
     gobject-introspection,
     gir1.2-gtk-3.0,
