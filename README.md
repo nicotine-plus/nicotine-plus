@@ -61,7 +61,7 @@ You can download stable Windows packages here:
 
 Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing. You need to be signed into a GitHub account to download the packages.
 
-- [64/32-bit Installers / Packages](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Nicotine%2B+packaging+CI%22)
+- [64/32-bit Installers / Packages](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
 ## macOS
 
@@ -71,7 +71,7 @@ Unstable MacOS packages are generated after every commit to the master branch, a
 
 Please note that we haven't been able to test these packages. Please let us know about any potential issues.
 
-- [Download Installer / Package](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Nicotine%2B+packaging+CI%22)
+- [Download Installer / Package](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
 ## Building from git
 Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)
