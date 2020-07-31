@@ -450,8 +450,6 @@ class Searches(IconNotebook):
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
 
-        items = popup.get_children()  # noqa: F841
-
         return popup
 
     def on_tab_click(self, widget, event, child):

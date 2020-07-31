@@ -284,7 +284,6 @@ class RoomsControl:
         if event.button != 3 or self.roomsmodel is None:
             return
 
-        items = self.popup_menu.get_children()  # noqa: F841
         d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
@@ -1116,7 +1115,7 @@ class ChatRoom:
                 if len(lines) > 0:
                     AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
-        except IOError as e:  # noqa: F841
+        except IOError:
             pass
 
         GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
@@ -1186,17 +1185,10 @@ class ChatRoom:
         if popup is None:
             return
 
-        menu = popup
-        user = menu.user  # noqa: F841
-        items = menu.get_children()  # noqa: F841
-
-        act = False  # noqa: F841
-
         return True
 
     def OnPopupMenu(self, widget, event):
 
-        items = self.popup_menu.get_children()  # noqa: F841
         d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
         if not d:

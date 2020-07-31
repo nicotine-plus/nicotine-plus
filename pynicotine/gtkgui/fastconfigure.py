@@ -105,7 +105,7 @@ class FastConfigureAssistant(object):
             gobject.TYPE_STRING
         )
 
-        columns = InitialiseColumns(  # noqa: F841
+        InitialiseColumns(
             self.kids['shareddirectoriestree'],
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -284,7 +284,6 @@ class FastConfigureAssistant(object):
         self.resetcompleteness(page)
 
     def OnEntryChanged(self, widget, param1=None, param2=None, param3=None):
-        name = gtk.Buildable.get_name(widget)  # noqa: F841
         self.resetcompleteness()
 
     def OnEntryPaste(self, user_data):
@@ -504,8 +503,6 @@ class FastConfigureAssistant(object):
 
         if self.initphase:
             return
-
-        name = gtk.Buildable.get_name(widget)  # noqa: F841
 
         self.resetcompleteness()
 

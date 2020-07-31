@@ -702,7 +702,6 @@ class SlskProtoThread(threading.Thread):
             # ---------------------------
             # Timeout Connections
             curtime = time.time()
-            connsockets = len(list(conns.keys()))  # noqa: F841
             for connection in list(conns.keys())[:]:
                 if connection is not server_socket and connection is not p:
                     if curtime - conns[connection].lastactive > self.CONNECTION_MAX_IDLE:

@@ -252,7 +252,7 @@ class UserInfo:
         cols[0].set_sort_column_id(0)
         self.likesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        self.tag_local = self.makecolour("chatremote")  # noqa: F821
+        self.tag_local = self.makecolour("chatremote")
         self.ChangeColours()
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
@@ -437,7 +437,7 @@ class UserInfo:
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
-            except TypeError as e:  # noqa: F841
+            except TypeError:
                 name = tempfile.mktemp()
                 f = open(name, "w")
                 f.write(pic)

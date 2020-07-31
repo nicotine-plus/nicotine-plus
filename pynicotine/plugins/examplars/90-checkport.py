@@ -80,7 +80,7 @@ class Plugin(BasePlugin):
             s.connect((ip, port))
             self.log("%s:%s: Port is open." % (ip, port))
             return 'open'
-        except socket.error as inst:  # noqa: F841
+        except socket.error:
             self.log("%s:%s: Port is closed." % (ip, port))
             return 'closed'
         s.close()

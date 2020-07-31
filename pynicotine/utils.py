@@ -427,7 +427,7 @@ def findBestEncoding(bytes, encodings, fallback=None):
     for encoding in encodings:
         try:
             return str(bytes, encoding)
-        except (UnicodeDecodeError, LookupError) as e:  # noqa: F841
+        except (UnicodeDecodeError, LookupError):
             pass
 
     # None were successful
