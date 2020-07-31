@@ -58,14 +58,14 @@ First, follow the instructions on installing MSYS2: [https://pygobject.readthedo
 
 Then, install dependencies:
 
-`export ARCH=x86_64`
-`files/windows/dependencies.sh`  
+`export ARCH=x86_64`  
+`files/windows/dependencies.sh`
 
 Clone the Nicotine+ git repository:
 
 `pacman -S git`  
 `git clone https://github.com/Nicotine-Plus/nicotine-plus`  
-`cd nicotine-plus`  
+`cd nicotine-plus`
 
 Run PyInstaller:
 
@@ -79,13 +79,13 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 
 Run the following:
 
-`cd files/windows`
+`cd files/windows`  
 `makensis -DARCH=x86_64 nicotine.nsi`
 
 You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
 
 #### Building a 32-bit (i686) application and installer
 
-Start a MinGW 32-bit terminal, and follow the above tutorial again, replacing any instance of "x86_64" with "i686" when installing packages.
+Start a MinGW 32-bit terminal, and follow the above instructions again, replacing any instance of "x86_64" with "i686" when installing packages.
 
 Preferably, clone a fresh copy of the nicotine-plus git repository before freezing Nicotine+ with PyInstaller again.
