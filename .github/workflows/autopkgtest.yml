@@ -1,4 +1,4 @@
-name: Nicotine+ packaging CI
+name: Ubuntu Continuous Integration (DEP-8)
 
 on: [push, pull_request]
 
