@@ -558,7 +558,7 @@ class Transfers:
             return slskmessages.TransferResponse(conn, 0, reason="Queued", req=msg.req)
 
         # Has user hit queue limit?
-        friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
+        friend = user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
         if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
             limits = False
         else:
@@ -665,7 +665,7 @@ class Transfers:
 
         if not self.fileIsUploadQueued(user, msg.file):
 
-            friend = user in [i[0] for i in self.eventprocessor.userlist.userlist]
+            friend = user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
             if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
                 limits = 0
             else:
@@ -747,7 +747,7 @@ class Transfers:
             # Remote Uploads only for users in list
             if transfers["uploadallowed"] == 2:
                 # Users in userlist
-                if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+                if user not in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
                     # Not a buddy
                     return False
 
@@ -761,10 +761,12 @@ class Transfers:
 
             if transfers["uploadallowed"] == 3:
                 # Trusted Users
-                if user not in [i[0] for i in self.eventprocessor.userlist.userlist]:
+                userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+
+                if user not in userlist:
                     # Not a buddy
                     return False
-                if user not in self.eventprocessor.userlist.trusted:
+                if not self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][4]:
                     # Not Trusted
                     return False
 

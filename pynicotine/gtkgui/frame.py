@@ -1489,8 +1489,9 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.ConnClose(self.np.serverconn))
 
     def FetchUserListStatus(self):
-        for user in self.userlist.userlist:
-            self.np.queue.put(slskmessages.AddUser(user[0]))
+        for i in self.np.config.sections["server"]["userlist"]:
+            user = i[0]
+            self.np.queue.put(slskmessages.AddUser(user))
 
         return False
 
