@@ -1,4 +1,4 @@
-name: Nicotine+ packaging
+name: Packaging (Windows and OSX)
 
 on: [push, pull_request]
 
