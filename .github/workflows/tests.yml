@@ -1,4 +1,4 @@
-name: Nicotine+ source-level tests
+name: In-Tree Unit Tests
 
 on: [push, pull_request]
 
