@@ -1,10 +1,10 @@
-name: Ubuntu Continuous Integration (DEP-8)
+name: Continuous Integration (DEP-8)
 
 on: [push, pull_request]
 
 jobs:
 
-  autopkgtest-ubuntu:
+  ubuntu:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

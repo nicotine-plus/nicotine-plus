@@ -1,10 +1,10 @@
-name: Packaging (Windows and OSX)
+name: Packaging (Windows and macOS)
 
 on: [push, pull_request]
 
 jobs:
 
-  package-windows:
+  windows:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -44,7 +44,7 @@ jobs:
           name: windows-${{ matrix.arch }}-installer
           path: files/windows
 
-  package-macos:
+  macos:
     runs-on: macos-latest
     steps:
       - name: Checkout code
