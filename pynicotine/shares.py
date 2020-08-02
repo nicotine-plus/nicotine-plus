@@ -94,6 +94,7 @@ class Shares:
         Send number of files in buddy shares if only buddies can
         download, and buddy-shares are enabled.
         """
+
         conf = self.config.sections
 
         if conf["transfers"]["enablebuddyshares"] and conf["transfers"]["friendsonly"]:
@@ -102,7 +103,7 @@ class Shares:
             shared_db = "sharedfiles"
 
         sharedfolders = len(conf["transfers"][shared_db])
-        sharedfiles = sum([len(x) for x in list(conf["transfers"][shared_db].values())])
+        sharedfiles = sum([len(x) for x in conf["transfers"][shared_db]])
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
     def RebuildShares(self, msg):
@@ -122,8 +123,6 @@ class Shares:
                 rebuild=rebuild
             )
 
-            time.sleep(0.5)
-
             self.np.frame.RescanFinished(
                 files, streams, wordindex, fileindex, mtimes,
                 "normal"
@@ -140,23 +139,28 @@ class Shares:
 
     def RescanBuddyShares(self, msg, rebuild=False):
 
-        files, streams, wordindex, fileindex, mtimes = self.rescandirs(
-            msg.shared,
-            self.config.sections["transfers"]["bsharedmtimes"],
-            self.config.sections["transfers"]["bsharedfiles"],
-            self.config.sections["transfers"]["bsharedfilesstreams"],
-            msg.yieldfunction,
-            self.np.frame.BuddySharesProgress,
-            name=_("Buddy Shares"),
-            rebuild=rebuild
-        )
+        try:
+            files, streams, wordindex, fileindex, mtimes = self.rescandirs(
+                msg.shared,
+                self.config.sections["transfers"]["bsharedmtimes"],
+                self.config.sections["transfers"]["bsharedfiles"],
+                self.config.sections["transfers"]["bsharedfilesstreams"],
+                msg.yieldfunction,
+                self.np.frame.BuddySharesProgress,
+                name=_("Buddy Shares"),
+                rebuild=rebuild
+            )
 
-        time.sleep(0.5)
-
-        self.np.frame.RescanFinished(
-            files, streams, wordindex, fileindex, mtimes,
-            "buddy"
-        )
+            self.np.frame.RescanFinished(
+                files, streams, wordindex, fileindex, mtimes,
+                "buddy"
+            )
+        except Exception as ex:
+            config_dir, data_dir = GetUserDirectories()
+            log.addwarning(
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
+            )
+            raise
 
     def CompressShares(self, sharestype):
 
