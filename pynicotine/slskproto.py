@@ -604,7 +604,6 @@ class SlskProtoThread(threading.Thread):
                         self._ui_callback([ConnectError(value, err)])
             # Listen / Peer Port
             if p in input[:]:
-                print("reading from {}".format(p))
                 try:
                     incconn, incaddr = p.accept()
                 except Exception:
