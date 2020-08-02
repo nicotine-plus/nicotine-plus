@@ -2008,9 +2008,9 @@ class NicotineFrame:
         msg = slskmessages.RescanBuddyShares(cleanedshares, lambda: None)
         _thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
 
-    def _BuddyRescanFinished(self, data):
+    def _BuddyRescanFinished(self, files, streams, wordindex, fileindex, mtimes):
 
-        self.np.config.setBuddyShares(*data)
+        self.np.config.setBuddyShares(files, streams, wordindex, fileindex, mtimes)
         self.np.config.writeShares()
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
@@ -2026,9 +2026,9 @@ class NicotineFrame:
         self.BuddySharesProgress.hide()
         self.np.shares.CompressShares("buddy")
 
-    def _RescanFinished(self, data):
+    def _RescanFinished(self, files, streams, wordindex, fileindex, mtimes):
 
-        self.np.config.setShares(*data)
+        self.np.config.setShares(files, streams, wordindex, fileindex, mtimes)
         self.np.config.writeShares()
 
         if self.np.config.sections["transfers"]["shared"]:
@@ -2044,11 +2044,11 @@ class NicotineFrame:
         self.SharesProgress.hide()
         self.np.shares.CompressShares("normal")
 
-    def RescanFinished(self, data, type):
+    def RescanFinished(self, files, streams, wordindex, fileindex, mtimes, type):
         if type == "buddy":
-            GLib.idle_add(self._BuddyRescanFinished, data)
+            GLib.idle_add(self._BuddyRescanFinished, files, streams, wordindex, fileindex, mtimes)
         elif type == "normal":
-            GLib.idle_add(self._RescanFinished, data)
+            GLib.idle_add(self._RescanFinished, files, streams, wordindex, fileindex, mtimes)
 
     def OnSettingsShares(self, widget):
         self.OnSettings(widget, 'Shares')

@@ -968,7 +968,7 @@ class Config:
         ]
 
         self.config_lock.acquire()
-        self._storeObjects(storable_objects)
+        _thread.start_new_thread(self._storeObjects, (storable_objects,))
         self.config_lock.release()
 
     def setShares(self, files, streams, wordindex, fileindex, mtimes):
@@ -982,7 +982,7 @@ class Config:
         ]
 
         self.config_lock.acquire()
-        self._storeObjects(storable_objects)
+        _thread.start_new_thread(self._storeObjects, (storable_objects,))
         self.config_lock.release()
 
     def _storeObjects(self, storable_objects):
