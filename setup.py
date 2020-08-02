@@ -30,46 +30,13 @@
 import os
 import glob
 
-from os.path import isdir
 from pynicotine.utils import version
 from setuptools import find_packages, setup
 
 # Compute data_files
 files = []
 
-# Documentation
-for file in ["AUTHORS.md", "COPYING", "NEWS.md", "README.md", "TRANSLATORS.md"]:
-    files.append(
-        (
-            "share/doc/nicotine",
-            [file]
-        )
-    )
-
-for (path, dirs, docfiles) in os.walk("doc"):
-
-    dst_path = os.sep.join(path.split("/")[1:])
-
-    for f in docfiles:
-        files.append(
-            (
-                os.path.join("share/doc/nicotine", dst_path),
-                [os.path.join(path, f)]
-            )
-        )
-
-# Manuals
-manpages = glob.glob(os.path.join("manpages", "*.1"))
-
-for man in manpages:
-    files.append(
-        (
-            "share/man/man1",
-            [man]
-        )
-    )
-
-# Scalable icons
+# Program icon
 files.append(
     (
         "share/icons/hicolor/scalable/apps",
@@ -102,8 +69,29 @@ files.append(
     )
 )
 
-# Translation files
-mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if isdir(x)]
+# Documentation
+docfiles = glob.glob("[!404.md]*.md") + glob.glob(os.path.join("doc", "*.md"))
+
+for doc in docfiles:
+    files.append(
+        (
+            "share/doc/nicotine",
+            [doc]
+        )
+    )
+
+manpages = glob.glob(os.path.join("files", "*.1"))
+
+for man in manpages:
+    files.append(
+        (
+            "share/man/man1",
+            [man]
+        )
+    )
+
+# Translation
+mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if os.path.isdir(x)]
 
 for mo in mo_dirs:
 
