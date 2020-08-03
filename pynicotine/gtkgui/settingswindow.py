@@ -2179,11 +2179,11 @@ class BloatFrame(buildFrame):
             "ui": {
                 "decimalsep": self.DecimalSep.get_model().get(self.DecimalSep.get_active_iter(), 0)[0],
                 "spellcheck": self.SpellCheck.get_active(),
-                "chatfont": self.SelectChatFont.get_font_name(),
-                "listfont": self.SelectListFont.get_font_name(),
-                "searchfont": self.SelectSearchFont.get_font_name(),
-                "transfersfont": self.SelectTransfersFont.get_font_name(),
-                "browserfont": self.SelectBrowserFont.get_font_name()
+                "chatfont": self.SelectChatFont.get_font(),
+                "listfont": self.SelectListFont.get_font(),
+                "searchfont": self.SelectSearchFont.get_font(),
+                "transfersfont": self.SelectTransfersFont.get_font(),
+                "browserfont": self.SelectBrowserFont.get_font()
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons.get_active()
@@ -3564,8 +3564,8 @@ class SettingsWindow:
             return widget.get_active()
         elif type(widget) is gtk.ComboBox:
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
-        elif type(widget) is gtk.FontChooser:
-            widget.get_font_name()
+        elif type(widget) is gtk.FontButton:
+            widget.get_font()
         elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:
             wlist = []
             iter = widget.get_model().get_iter_first()
@@ -3589,8 +3589,8 @@ class SettingsWindow:
             widget.set_active(0)
         elif type(widget) is gtk.ComboBox:
             self.GetPosition(widget, "")
-        elif type(widget) is gtk.FontChooser:
-            widget.set_font_name("")
+        elif type(widget) is gtk.FontButton:
+            widget.set_font("")
 
     def SetWidget(self, widget, value):
 
@@ -3611,8 +3611,8 @@ class SettingsWindow:
                 self.GetPosition(widget, value)
             elif type(value) is int:
                 widget.set_active(value)
-        elif type(widget) is gtk.FontChooser:
-            widget.set_font_name(value)
+        elif type(widget) is gtk.FontButton:
+            widget.set_font(value)
         elif type(widget) is gtk.TreeView and type(value) is list and widget.get_model().get_n_columns() == 1:
             for item in value:
                 widget.get_model().append([item])
