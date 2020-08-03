@@ -80,6 +80,13 @@ for doc in docfiles:
         )
     )
 
+files.append(
+    (
+        "share/doc/nicotine",
+        ["img/CREDITS.md"]
+    )
+)
+
 manpages = glob.glob(os.path.join("files", "*.1"))
 
 for man in manpages:
