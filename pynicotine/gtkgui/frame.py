@@ -2011,7 +2011,6 @@ class NicotineFrame:
     def _BuddyRescanFinished(self, files, streams, wordindex, fileindex, mtimes):
 
         self.np.config.setBuddyShares(files, streams, wordindex, fileindex, mtimes)
-        self.np.config.writeShares()
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)
@@ -2030,7 +2029,6 @@ class NicotineFrame:
     def _RescanFinished(self, files, streams, wordindex, fileindex, mtimes):
 
         self.np.config.setShares(files, streams, wordindex, fileindex, mtimes)
-        self.np.config.writeShares()
 
         if self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(True)

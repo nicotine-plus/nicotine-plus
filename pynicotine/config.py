@@ -967,9 +967,7 @@ class Config:
             (fileindex, "bfileindex", "buddyfileindex.db")
         ]
 
-        self.config_lock.acquire()
-        _thread.start_new_thread(self._storeObjects, (storable_objects,))
-        self.config_lock.release()
+        self.storeObjects(storable_objects)
 
     def setShares(self, files, streams, wordindex, fileindex, mtimes):
 
@@ -981,38 +979,22 @@ class Config:
             (fileindex, "fileindex", "fileindex.db")
         ]
 
-        self.config_lock.acquire()
-        _thread.start_new_thread(self._storeObjects, (storable_objects,))
-        self.config_lock.release()
+        self.storeObjects(storable_objects)
 
-    def _storeObjects(self, storable_objects):
+    def storeObjects(self, storable_objects):
+
+        self.config_lock.acquire()
 
         for (source, destination, filename) in storable_objects:
             try:
                 self.sections["transfers"][destination].close()
                 self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
-                for (key, value) in source.items():
-                    self.sections["transfers"][destination][key] = value
+                for key in source:
+                    self.sections["transfers"][destination][key] = source[key]
             except Exception as e:
                 log.addwarning(_("Can't save %s: %s") % (filename, e))
                 return
-
-    def writeShares(self):
-
-        self.config_lock.acquire()
-
-        self.sections["transfers"]["sharedfiles"].sync()
-        self.sections["transfers"]["sharedfilesstreams"].sync()
-        self.sections["transfers"]["wordindex"].sync()
-        self.sections["transfers"]["fileindex"].sync()
-        self.sections["transfers"]["sharedmtimes"].sync()
-
-        self.sections["transfers"]["bsharedfiles"].sync()
-        self.sections["transfers"]["bsharedfilesstreams"].sync()
-        self.sections["transfers"]["bwordindex"].sync()
-        self.sections["transfers"]["bfileindex"].sync()
-        self.sections["transfers"]["bsharedmtimes"].sync()
 
         self.config_lock.release()
 

@@ -24,6 +24,7 @@ import os
 import string
 import sys
 import time
+import _thread
 from collections import defaultdict
 from gettext import gettext as _
 
@@ -176,7 +177,7 @@ class Shares:
             return
 
         m = slskmessages.SharedFileList(None, streams)
-        m.makeNetworkMessage(nozlib=0, rebuild=True)
+        _thread.start_new_thread(m.makeNetworkMessage, (0, True))
 
         if sharestype == "normal":
             self.CompressedSharesNormal = m
@@ -425,7 +426,7 @@ class Shares:
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
+        newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, newsharedfiles, yieldfunction, progress)
 
         self.logMessage(_("%(num)s directories found after rescan") % {"num": len(newmtimes)})
 
@@ -514,8 +515,8 @@ class Shares:
             count += 1
 
             if progress:
-                # Truncate the percentage to one decimal place to avoid sending data to the GUI thread too often
-                percent = float("%.1f" % (float(count) / len(mtimes) * 0.5))
+                # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
+                percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
 
                 if percent > lastpercent and percent <= 1.0:
                     GLib.idle_add(progress.set_fraction, percent)
@@ -597,16 +598,16 @@ class Shares:
 
         streams = {}
 
-        for directory in list(mtimes.keys()):
+        for folder in mtimes:
 
-            virtualdir = self.real2virtual(directory)
+            virtualdir = self.real2virtual(folder)
 
-            if self.hiddenCheck({'dir': directory}):
+            if self.hiddenCheck({'dir': folder}):
                 continue
 
-            if not rebuild and directory in oldmtimes:
-                if mtimes[directory] == oldmtimes[directory]:
-                    if os.path.exists(directory):
+            if not rebuild and folder in oldmtimes:
+                if mtimes[folder] == oldmtimes[folder]:
+                    if os.path.exists(folder):
                         # No change
                         try:
                             streams[virtualdir] = oldstreams[virtualdir]
@@ -614,10 +615,10 @@ class Shares:
                         except KeyError:
                             log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                 'vdir': virtualdir,
-                                'dir': directory
+                                'dir': folder
                             })
                     else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': directory})
+                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
                         continue
 
             streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
@@ -673,10 +674,11 @@ class Shares:
     def getDirStream(self, dir):
 
         msg = slskmessages.SlskMessage()
-        stream = msg.packObject(NetworkIntType(len(dir)))
+        stream = bytearray()
+        stream.extend(msg.packObject(NetworkIntType(len(dir))))
 
         for file_and_meta in dir:
-            stream += self.getByteStream(file_and_meta)
+            stream.extend(self.getByteStream(file_and_meta))
 
         return stream
 
@@ -685,12 +687,13 @@ class Shares:
 
         message = slskmessages.SlskMessage()
 
-        stream = bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1]))
+        stream = bytearray()
+        stream.extend(bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1])))
         if fileinfo[2] is not None:
             try:
-                msgbytes = b''
-                msgbytes += message.packObject('mp3') + message.packObject(3)
-                msgbytes += (
+                msgbytes = bytearray()
+                msgbytes.extend(message.packObject('mp3') + message.packObject(3))
+                msgbytes.extend(
                     message.packObject(0) +
                     message.packObject(NetworkIntType(fileinfo[2][0])) +
                     message.packObject(1) +
@@ -698,7 +701,7 @@ class Shares:
                     message.packObject(2) +
                     message.packObject(NetworkIntType(fileinfo[2][1]))
                 )
-                stream += msgbytes
+                stream.extend(msgbytes)
             except Exception:
                 log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
                     'file': fileinfo[0],
@@ -706,19 +709,19 @@ class Shares:
                     'length': fileinfo[3],
                     'vbr': fileinfo[2][1]
                 }))
-                stream += message.packObject('') + message.packObject(0)
+                stream.extend(message.packObject('') + message.packObject(0))
         else:
-            stream += message.packObject('') + message.packObject(0)
+            stream.extend(message.packObject('') + message.packObject(0))
 
         return stream
 
     # Update Search index with new files
-    def getFilesIndex(self, mtimes, oldmtimes, shareddirs, newsharedfiles, yieldcall=None, progress=None):
+    def getFilesIndex(self, mtimes, oldmtimes, newsharedfiles, yieldcall=None, progress=None):
 
         wordindex = defaultdict(list)
         fileindex = {}
         index = 0
-        count = len(mtimes)  # getFilesList left the progress bar at 50%, we continue from there and finish it
+        count = len(mtimes)
         lastpercent = 0.0
 
         for directory in mtimes:
@@ -727,8 +730,8 @@ class Shares:
             count += 1
 
             if progress:
-                # Truncate the percentage to one decimal place to avoid sending data to the GUI thread too often
-                percent = float("%.1f" % (float(count) / len(mtimes) * 0.5))
+                # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
+                percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
 
                 if percent > lastpercent and percent <= 1.0:
                     GLib.idle_add(progress.set_fraction, percent)
@@ -738,26 +741,20 @@ class Shares:
                 continue
 
             for j in newsharedfiles[virtualdir]:
-                indexes = self.getIndexWords(virtualdir, j[0], shareddirs)
+                fileindex[str(index)] = (virtualdir + '\\' + j[0],) + j[1:]
 
-                for k in indexes:
+                # Collect words from filenames for Search index (prevent duplicates with set)
+                words = set((virtualdir + " " + j[0]).translate(self.translatepunctuation).lower().split())
+
+                for k in words:
                     wordindex[k].append(index)
 
-                fileindex[str(index)] = ((virtualdir + '\\' + j[0]), ) + j[1:]
                 index += 1
 
             if yieldcall is not None:
                 yieldcall()
 
         return wordindex, fileindex
-
-    # Collect words from filenames for Search index
-    def getIndexWords(self, dir, file, shareddirs):
-
-        words = os.path.join(dir, file).translate(self.translatepunctuation).lower().split()
-
-        # Remove duplicates
-        return list(dict.fromkeys(words))
 
     def addToShared(self, name):
         """ Add a file to the normal shares database """
@@ -794,8 +791,6 @@ class Shares:
         if config["transfers"]["enablebuddyshares"]:
             self.addToBuddyShared(name)
 
-        self.config.writeShares()
-
     def addToBuddyShared(self, name):
         """ Add a file to the buddy shares database """
 
@@ -830,7 +825,7 @@ class Shares:
             self.newbuddyshares = True
 
     def addToIndex(self, wordindex, fileindex, words, dir, fileinfo):
-        index = len(list(fileindex.keys()))
+        index = len(fileindex)
         for i in words:
             if i not in wordindex:
                 wordindex[i] = [index]
