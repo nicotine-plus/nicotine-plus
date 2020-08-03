@@ -2024,6 +2024,7 @@ class NicotineFrame:
         self.logMessage(_("Rescanning Buddy Shares finished"))
 
         self.BuddySharesProgress.hide()
+
         self.np.shares.CompressShares("buddy")
 
     def _RescanFinished(self, files, streams, wordindex, fileindex, mtimes):
@@ -2039,6 +2040,7 @@ class NicotineFrame:
         self.logMessage(_("Rescanning finished"))
 
         self.SharesProgress.hide()
+
         self.np.shares.CompressShares("normal")
 
         if self.np.transfers is not None:

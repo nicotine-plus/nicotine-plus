@@ -339,7 +339,12 @@ class Shares:
             return
 
         terms = searchterm.translate(self.translatepunctuation).lower().split()
-        list = [wordindex[i][:] for i in terms if i in wordindex]
+
+        try:
+            list = [wordindex[i][:] for i in terms if i in wordindex]
+        except ValueError:
+            # Shelf is probably closed, perhaps when rescanning share
+            return
 
         if len(list) != len(terms) or len(list) == 0:
             return
@@ -398,18 +403,15 @@ class Shares:
         or, if rebuild is True, all directories
         """
 
+        GLib.idle_add(progress.set_fraction, 0.0)
+        GLib.idle_add(progress.show)
+
         # returns dict in format:  { Directory : mtime, ... }
         shared_directories = [x[1] for x in shared]
-
-        GLib.idle_add(progress.set_text, _("Checking for changes"))
-        GLib.idle_add(progress.show)
-        GLib.idle_add(progress.set_fraction, 0)
 
         self.logMessage(_("%(num)s directories found before rescan, rebuilding...") % {"num": len(oldmtimes)})
 
         newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
-
-        GLib.idle_add(progress.set_text, _("Scanning %s") % name)
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -417,21 +419,13 @@ class Shares:
 
         # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
-        GLib.idle_add(progress.set_text, _("Building Database"))
-
         newsharedfilesstreams = self.getFilesStreams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild, yieldfunction)
 
         # Update Search Index
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        GLib.idle_add(progress.set_text, _("Building Index"))
-
-        GLib.idle_add(progress.set_fraction, 0.0)
-
         newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, shared_directories, newsharedfiles, yieldfunction, progress)
-
-        GLib.idle_add(progress.set_fraction, 1.0)
 
         self.logMessage(_("%(num)s directories found after rescan") % {"num": len(newmtimes)})
 
@@ -511,6 +505,7 @@ class Shares:
 
         list = {}
         count = 0
+        lastpercent = 0.0
 
         for folder in mtimes:
 
@@ -519,9 +514,12 @@ class Shares:
             count += 1
 
             if progress:
-                percent = float(count) / len(mtimes)
-                if percent <= 1.0:
+                # Truncate the percentage to one decimal place to avoid sending data to the GUI thread too often
+                percent = float("%.1f" % (float(count) / len(mtimes) * 0.5))
+
+                if percent > lastpercent and percent <= 1.0:
                     GLib.idle_add(progress.set_fraction, percent)
+                    lastpercent = percent
 
             if self.hiddenCheck({'dir': folder}):
                 continue
@@ -720,18 +718,21 @@ class Shares:
         wordindex = defaultdict(list)
         fileindex = {}
         index = 0
-        count = 0
+        count = len(mtimes)  # getFilesList left the progress bar at 50%, we continue from there and finish it
+        lastpercent = 0.0
 
         for directory in mtimes:
 
             virtualdir = self.real2virtual(directory)
+            count += 1
 
             if progress:
-                percent = float(count) / len(mtimes)
-                if percent <= 1.0:
-                    GLib.idle_add(progress.set_fraction, percent)
+                # Truncate the percentage to one decimal place to avoid sending data to the GUI thread too often
+                percent = float("%.1f" % (float(count) / len(mtimes) * 0.5))
 
-            count += 1
+                if percent > lastpercent and percent <= 1.0:
+                    GLib.idle_add(progress.set_fraction, percent)
+                    lastpercent = percent
 
             if self.hiddenCheck({'dir': directory}):
                 continue
