@@ -48,7 +48,7 @@ from pynicotine.utils import executeCommand
 
 DECIMALSEP = ""
 
-URL_RE = re.compile("(\\w+\\://.+?)[\\s\\(\\)]|(www\\.\\w+\\.\\w+.*?)[\\s\\(\\)]|(mailto\\:\\w.+?)[\\s\\(\\)]")
+URL_RE = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
 PROTOCOL_HANDLERS = {}
 CATCH_URLS = 0
 HUMANIZE_URLS = 0
@@ -396,7 +396,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         line = "\n" + line
 
     if TIMESTAMP is not None:
-        TS = len(TIMESTAMP)
+        TS = len("\n") + len(TIMESTAMP)
 
     # Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
     _append(buffer, line[:TS], tag)
@@ -407,9 +407,9 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     while CATCH_URLS and match:
         start = line[:match.start()]
         _usertag(buffer, start)
-        url = match.group()[:-1]
+        url = match.group()
         urltag = _makeurltag(buffer, tag, url)
-        line = line[match.end() - 1:]
+        line = line[match.end():]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
             url = urllib.request.url2pathname(url)
