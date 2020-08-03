@@ -550,54 +550,6 @@ class Search:
 
         self.RememberCheckButton.set_active(remember)
 
-        """ Filters """
-
-        self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterBitrate.set_model(self.FilterBitrate_List)
-        self.FilterBitrate.set_entry_text_column(0)
-
-        self.FilterSize_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterSize.set_model(self.FilterSize_List)
-        self.FilterSize.set_entry_text_column(0)
-
-        self.FilterCountry_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterCountry.set_model(self.FilterCountry_List)
-        self.FilterCountry.set_entry_text_column(0)
-
-        self.FilterIn_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterIn.set_model(self.FilterIn_List)
-        self.FilterIn.set_entry_text_column(0)
-
-        self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterOut.set_model(self.FilterOut_List)
-        self.FilterOut.set_entry_text_column(0)
-
-        self.PopulateFilters()
-
-        self.FilterSize.clear()
-        sizecell = gtk.CellRendererText()
-        sizecell.set_property("xalign", 1)
-        self.FilterSize.pack_start(sizecell, True)
-        self.FilterSize.add_attribute(sizecell, "text", 0)
-
-        self.FilterBitrate.clear()
-        bit_cell = gtk.CellRendererText()
-        bit_cell.set_property("xalign", 1)
-        self.FilterBitrate.pack_start(bit_cell, True)
-        self.FilterBitrate.add_attribute(bit_cell, "text", 0)
-
-        self.FilterIn.connect("changed", self.OnFilterChanged)
-        self.FilterOut.connect("changed", self.OnFilterChanged)
-        self.FilterSize.connect("changed", self.OnFilterChanged)
-        self.FilterBitrate.connect("changed", self.OnFilterChanged)
-        self.FilterCountry.connect("changed", self.OnFilterChanged)
-
-        self.FilterIn.get_child().connect("activate", self.OnRefilter)
-        self.FilterOut.get_child().connect("activate", self.OnRefilter)
-        self.FilterSize.get_child().connect("activate", self.OnRefilter)
-        self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
-        self.FilterCountry.get_child().connect("activate", self.OnRefilter)
-
         """ Columns """
 
         self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
@@ -687,6 +639,54 @@ class Search:
         self.ResultsList.connect("button_press_event", self.OnListClicked)
 
         self.ChangeColours()
+
+        """ Filters """
+
+        self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterBitrate.set_model(self.FilterBitrate_List)
+        self.FilterBitrate.set_entry_text_column(0)
+
+        self.FilterSize_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterSize.set_model(self.FilterSize_List)
+        self.FilterSize.set_entry_text_column(0)
+
+        self.FilterCountry_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterCountry.set_model(self.FilterCountry_List)
+        self.FilterCountry.set_entry_text_column(0)
+
+        self.FilterIn_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterIn.set_model(self.FilterIn_List)
+        self.FilterIn.set_entry_text_column(0)
+
+        self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterOut.set_model(self.FilterOut_List)
+        self.FilterOut.set_entry_text_column(0)
+
+        self.PopulateFilters()
+
+        self.FilterSize.clear()
+        sizecell = gtk.CellRendererText()
+        sizecell.set_property("xalign", 1)
+        self.FilterSize.pack_start(sizecell, True)
+        self.FilterSize.add_attribute(sizecell, "text", 0)
+
+        self.FilterBitrate.clear()
+        bit_cell = gtk.CellRendererText()
+        bit_cell.set_property("xalign", 1)
+        self.FilterBitrate.pack_start(bit_cell, True)
+        self.FilterBitrate.add_attribute(bit_cell, "text", 0)
+
+        self.FilterIn.connect("changed", self.OnFilterChanged)
+        self.FilterOut.connect("changed", self.OnFilterChanged)
+        self.FilterSize.connect("changed", self.OnFilterChanged)
+        self.FilterBitrate.connect("changed", self.OnFilterChanged)
+        self.FilterCountry.connect("changed", self.OnFilterChanged)
+
+        self.FilterIn.get_child().connect("activate", self.OnRefilter)
+        self.FilterOut.get_child().connect("activate", self.OnRefilter)
+        self.FilterSize.get_child().connect("activate", self.OnRefilter)
+        self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
+        self.FilterCountry.get_child().connect("activate", self.OnRefilter)
 
         """ Popup """
 
