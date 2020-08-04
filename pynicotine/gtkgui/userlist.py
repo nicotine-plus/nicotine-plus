@@ -68,12 +68,6 @@ class UserList:
 
         """ Columns """
 
-        TARGETS = [('text/plain', 0, 1)]
-        self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, TARGETS, Gdk.DragAction.COPY)
-        self.UserList.enable_model_drag_dest(TARGETS, Gdk.DragAction.COPY)
-        self.UserList.connect("drag_data_get", self.buddylist_drag_data_get_data)
-        self.UserList.connect("drag_data_received", self.DragUserToBuddylist)
-
         self.usersmodel = gtk.ListStore(
             gobject.TYPE_OBJECT,  # (0)  status icon
             gobject.TYPE_OBJECT,  # (1)  flag
@@ -242,21 +236,6 @@ class UserList:
 
     def UpdateColours(self):
         self.frame.SetTextBG(self.AddUserEntry)
-
-    def buddylist_drag_data_get_data(self, treeview, context, selection, target_id, etime):
-
-        treeselection = treeview.get_selection()
-        model, iter = treeselection.get_selected()
-        status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments = model.get(iter, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-
-        selection.set(selection.get_target(), 8, user)
-
-    def DragUserToBuddylist(self, treeview, context, x, y, selection, info, etime):
-
-        user = selection.get_data()
-
-        if user:
-            self.AddToList(user)
 
     def OnSettingsBanIgnore(self, widget):
         self.frame.OnSettingsBanIgnore(widget)

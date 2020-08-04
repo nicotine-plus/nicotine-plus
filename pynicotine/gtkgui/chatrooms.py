@@ -977,8 +977,6 @@ class ChatRoom:
         self.UpdateColours()
 
         self.UserList.set_model(self.usersmodel)
-        self.UserList.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY)
-        self.UserList.connect("drag_data_get", self.drag_data_get_data)
 
         self.popup_menu_privaterooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
@@ -1138,12 +1136,6 @@ class ChatRoom:
 
     def OnFindChatLog(self, widget):
         self.frame.OnFindTextview(None, self.ChatScroll)
-
-    def drag_data_get_data(self, treeview, context, selection, target_id, etime):
-        treeselection = treeview.get_selection()
-        model, iter = treeselection.get_selected()
-        user = model.get_value(iter, 2)
-        selection.set(selection.get_target(), 8, user)
 
     def destroy(self):
         self.Main.destroy()
