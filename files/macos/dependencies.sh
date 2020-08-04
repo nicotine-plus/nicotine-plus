@@ -9,6 +9,7 @@ brew install \
   libnotify \
   miniupnpc \
   pygobject3 \
+  taglib \
   upx
 
 # pip should not pick up our setup.cfg
