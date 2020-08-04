@@ -100,11 +100,14 @@ class Shares:
 
         if conf["transfers"]["enablebuddyshares"] and conf["transfers"]["friendsonly"]:
             shared_db = "bsharedfiles"
+            index_db = "bfileindex"
         else:
             shared_db = "sharedfiles"
+            index_db = "fileindex"
 
         sharedfolders = len(conf["transfers"][shared_db])
-        sharedfiles = sum([len(x) for x in conf["transfers"][shared_db]])
+        sharedfiles = len(conf["transfers"][index_db])
+
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
     def RebuildShares(self, msg):
@@ -448,6 +451,7 @@ class Shares:
                         except OSError as errtuple:
                             islink = False
                             try:
+                                print("link?")
                                 islink = os.path.islink(path)
                             except OSError as errtuple2:
                                 print(errtuple2)
@@ -700,7 +704,7 @@ class Shares:
     def getFilesIndex(self, mtimes, oldmtimes, newsharedfiles, yieldcall=None, progress=None):
 
         wordindex = defaultdict(list)
-        fileindex = {}
+        fileindex = []
         index = 0
         count = len(mtimes)
         lastpercent = 0.0
@@ -722,10 +726,11 @@ class Shares:
                 continue
 
             for j in newsharedfiles[virtualdir]:
-                fileindex[str(index)] = (virtualdir + '\\' + j[0],) + j[1:]
+                file = j[0]
+                fileindex.append((virtualdir + '\\' + file,) + j[1:])
 
                 # Collect words from filenames for Search index (prevent duplicates with set)
-                words = set((virtualdir + " " + j[0]).translate(self.translatepunctuation).lower().split())
+                words = set((virtualdir + " " + file).translate(self.translatepunctuation).lower().split())
 
                 for k in words:
                     wordindex[k].append(index)
@@ -812,4 +817,4 @@ class Shares:
                 wordindex[i] = [index]
             else:
                 wordindex[i] = wordindex[i] + [index]
-        fileindex[str(index)] = (os.path.join(dir, fileinfo[0]),) + fileinfo[1:]
+        fileindex.append((os.path.join(dir, fileinfo[0]),) + fileinfo[1:])

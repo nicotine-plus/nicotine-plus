@@ -990,8 +990,16 @@ class Config:
                 self.sections["transfers"][destination].close()
                 self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
-                for key in source:
-                    self.sections["transfers"][destination][key] = source[key]
+                if "fileindex" in destination:
+                    index = 0
+
+                    for value in source:
+                        # The file index db is a list
+                        self.sections["transfers"][destination][str(index)] = value
+                        index += 1
+                else:
+                    for key in source:
+                        self.sections["transfers"][destination][key] = source[key]
             except Exception as e:
                 log.addwarning(_("Can't save %s: %s") % (filename, e))
                 return
