@@ -23,6 +23,7 @@
 import os
 import string
 import sys
+import taglib
 import time
 import _thread
 from collections import defaultdict
@@ -30,7 +31,6 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 
-from pynicotine import metadata_mutagen as metadata
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import NetworkIntType
@@ -524,7 +524,7 @@ class Shares:
                         if self.hiddenCheck({'dir': folder, 'file': filename}):
                             continue
 
-                        # Get the metadata of the file via mutagen
+                        # Get the metadata of the file
                         data = self.getFileInfo(filename, entry.path)
                         if data is not None:
                             list[virtualdir].append(data)
@@ -539,21 +539,24 @@ class Shares:
 
         return list
 
-    # Get metadata via mutagen
+    # Get metadata via taglib
     def getFileInfo(self, name, pathname):
 
         try:
+            audio = None
             size = os.stat(pathname).st_size
-            info = metadata.detect(pathname)
 
-            if info:
+            if size > 0:
+                try:
+                    audio = taglib.File(pathname)
+                except IOError:
+                    pass
 
-                # Sometimes the duration (time) or the bitrate of the file is unknown
-                if info["time"] is None or info["bitrate"] is None:
-                    fileinfo = (name, size, None, None)
-                else:
-                    bitrateinfo = (int(info["bitrate"]), int(info["vbr"]))
-                    fileinfo = (name, size, bitrateinfo, int(info["time"]))
+            if audio is not None:
+                # TODO: Variable bitrate is always set to false now, perhaps detect it somehow
+                vbr = False
+                bitrateinfo = (int(audio.bitrate), int(vbr))
+                fileinfo = (name, size, bitrateinfo, int(audio.length))
             else:
                 fileinfo = (name, size, None, None)
 

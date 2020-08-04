@@ -69,6 +69,12 @@ You should install GTK 3.0 or newer.""") % e
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
+    # Require pytaglib
+    try:
+        import taglib
+    except ImportError:
+        return _("Cannot find pytaglib, please install it.")
+
     # Require pynicotine
     try:
         import pynicotine  # noqa: F401
