@@ -15,5 +15,5 @@ pacman --noconfirm -S --needed \
 
 # pip should not pick up our setup.cfg
 cd pynicotine
-pip install mutagen plyer PyInstaller
+pip install plyer pyinstaller pytaglib
 cd ..

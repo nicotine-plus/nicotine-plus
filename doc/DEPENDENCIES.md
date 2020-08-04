@@ -6,8 +6,8 @@
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
-* [python3-mutagen](https://mutagen.readthedocs.io/en/latest/) >= 1.36.2 for metadata parsing;
 * [python3-miniupnpc](https://miniupnp.tuxfamily.org/) >= 1.9 for opening ports on your router or `upnpc(1)` if not available;
+* [python3-taglib](https://github.com/supermihi/pytaglib) for metadata parsing;
 * [robotframework](https://robotframework.org/) for CI testing.
 
 ## Optional
@@ -22,11 +22,11 @@
 #### Installing the required dependencies
 * On Redhat/Fedora based distributions:
 ```
-sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3-miniupnpc python3-mutagen
+sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject python3-miniupnpc python3-pytaglib
 ```
 * On Debian/Ubuntu based distributions:
 ```
-sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-miniupnpc python3-mutagen
+sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi python3-miniupnpc python3-taglib
 ```
 
 #### Installing the optional dependencies

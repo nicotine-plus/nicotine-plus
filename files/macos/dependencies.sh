@@ -13,5 +13,5 @@ brew install \
 
 # pip should not pick up our setup.cfg
 cd pynicotine
-pip3 install flake8 mutagen pyinstaller pytest
+pip3 install flake8 pyinstaller pytaglib pytest
 cd ..
