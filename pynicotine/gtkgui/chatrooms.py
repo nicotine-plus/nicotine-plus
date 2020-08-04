@@ -1226,7 +1226,7 @@ class ChatRoom:
 
     def OnShowChatButtons(self, show=True):
 
-        for widget in self.AutoJoin, self.HideStatusLog, self.HideUserList:
+        for widget in self.HideStatusLog, self.HideUserList:
             if show:
                 widget.show()
             else:
