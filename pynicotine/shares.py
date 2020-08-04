@@ -447,25 +447,12 @@ class Shares:
                         path = entry.path
 
                         try:
-                            mtime = os.path.getmtime(path)
+                            mtime = entry.stat().st_mtime
                         except OSError as errtuple:
-                            islink = False
-                            try:
-                                print("link?")
-                                islink = os.path.islink(path)
-                            except OSError as errtuple2:
-                                print(errtuple2)
-
-                            if islink:
-                                message = _("Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s\". Repair or remove this link.") % {
-                                    'link': os.readlink(path),
-                                    'path': path
-                                }
-                            else:
-                                message = _("Scanning Error: %(error)s Path: %(path)s") % {
-                                    'error': errtuple,
-                                    'path': path
-                                }
+                            message = _("Scanning Error: %(error)s Path: %(path)s") % {
+                                'error': errtuple,
+                                'path': path
+                            }
 
                             print(str(message))
                             self.logMessage(message)
@@ -518,7 +505,7 @@ class Shares:
                                 list[virtualdir] = oldlist[virtualdir]
                                 continue
                             except KeyError:
-                                log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                     'vdir': virtualdir,
                                     'dir': folder
                                 })
@@ -532,15 +519,13 @@ class Shares:
                 for entry in os.scandir(folder):
 
                     if entry.is_file():
-                        filename = entry.path.split("/")[-1]
+                        filename = entry.name
 
                         if self.hiddenCheck({'dir': folder, 'file': filename}):
                             continue
 
-                        path = os.path.join(folder, filename)
-
                         # Get the metadata of the file via mutagen
-                        data = self.getFileInfo(filename, path)
+                        data = self.getFileInfo(filename, entry.path)
                         if data is not None:
                             list[virtualdir].append(data)
 
@@ -558,7 +543,7 @@ class Shares:
     def getFileInfo(self, name, pathname):
 
         try:
-            size = os.path.getsize(pathname)
+            size = os.stat(pathname).st_size
             info = metadata.detect(pathname)
 
             if info:
