@@ -678,13 +678,6 @@ class NicotineFrame:
             else:
                 self.minimized = 0
 
-    def similar_users_drag_data_get_data(self, treeview, context, selection, target_id, etime):
-        treeselection = treeview.get_selection()
-        model, iter = treeselection.get_selected()
-        user = model.get_value(iter, 1)
-        # data = (status, flag, user, speed, files, trusted, notify, privileged, lastseen, comments)
-        selection.set(selection.target, 8, user)
-
     def NewNotification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
 
         if self.notificationprovider is None:
@@ -826,11 +819,6 @@ class NicotineFrame:
 
         cols[0].set_sort_column_id(0)
         self.LikesList.set_model(self.likeslist)
-
-        self.RecommendationUsersList.enable_model_drag_source(
-            Gdk.ModifierType.BUTTON1_MASK, [('text/plain', 0, 2)], Gdk.DragAction.COPY
-        )
-        self.RecommendationUsersList.connect("drag_data_get", self.similar_users_drag_data_get_data)
 
         self.til_popup_menu = popup = utils.PopupMenu(self)
 
