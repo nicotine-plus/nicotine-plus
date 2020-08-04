@@ -108,53 +108,45 @@ class Shares:
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
     def RebuildShares(self, msg):
-        self.RescanShares(msg, rebuild=True)
+        self._RescanShares(msg, "normal", rebuild=True)
 
     def RescanShares(self, msg, rebuild=False):
-
-        try:
-            files, streams, wordindex, fileindex, mtimes = self.rescandirs(
-                msg.shared,
-                self.config.sections["transfers"]["sharedmtimes"],
-                self.config.sections["transfers"]["sharedfiles"],
-                self.config.sections["transfers"]["sharedfilesstreams"],
-                msg.yieldfunction,
-                self.np.frame.SharesProgress,
-                name=_("Shares"),
-                rebuild=rebuild
-            )
-
-            self.np.frame.RescanFinished(
-                files, streams, wordindex, fileindex, mtimes,
-                "normal"
-            )
-        except Exception as ex:
-            config_dir, data_dir = GetUserDirectories()
-            log.addwarning(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
-            )
-            raise
+        self._RescanShares(msg, "normal", rebuild)
 
     def RebuildBuddyShares(self, msg):
-        self.RescanBuddyShares(msg, rebuild=True)
+        self._RescanShares(msg, "buddy", rebuild=True)
 
     def RescanBuddyShares(self, msg, rebuild=False):
+        self._RescanShares(msg, "buddy", rebuild)
+
+    def _RescanShares(self, msg, type, rebuild=False):
+
+        if type == "normal":
+            name = _("Shares")
+            mtimes = self.config.sections["transfers"]["sharedmtimes"]
+            files = self.config.sections["transfers"]["sharedfiles"]
+            filesstreams = self.config.sections["transfers"]["sharedfilesstreams"]
+        else:
+            name = _("Buddy Shares")
+            mtimes = self.config.sections["transfers"]["bsharedmtimes"]
+            files = self.config.sections["transfers"]["bsharedfiles"]
+            filesstreams = self.config.sections["transfers"]["bsharedfilesstreams"]
 
         try:
             files, streams, wordindex, fileindex, mtimes = self.rescandirs(
                 msg.shared,
-                self.config.sections["transfers"]["bsharedmtimes"],
-                self.config.sections["transfers"]["bsharedfiles"],
-                self.config.sections["transfers"]["bsharedfilesstreams"],
+                mtimes,
+                files,
+                filesstreams,
                 msg.yieldfunction,
-                self.np.frame.BuddySharesProgress,
-                name=_("Buddy Shares"),
+                self.np.frame.SharesProgress,
+                name=name,
                 rebuild=rebuild
             )
 
             self.np.frame.RescanFinished(
                 files, streams, wordindex, fileindex, mtimes,
-                "buddy"
+                type
             )
         except Exception as ex:
             config_dir, data_dir = GetUserDirectories()
@@ -459,7 +451,7 @@ class Shares:
 
                     if entry.is_dir():
 
-                        path = os.path.join(folder, entry.path.split("/")[-1])
+                        path = entry.path
 
                         try:
                             mtime = os.path.getmtime(path)
