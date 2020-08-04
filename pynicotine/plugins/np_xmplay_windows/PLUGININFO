@@ -1,4 +1,0 @@
-Version="2009-06-18r00"
-Authors=['quinox']
-Name="XMPlay (Windows) Now Playing"
-Description="NowPlaying command to use with XMPlay on Windows (other operating systems not supported).\n\nUsage: after enabling this plugin you can type /xm in a chatroom or private conversation to show the world what you're listening to."
