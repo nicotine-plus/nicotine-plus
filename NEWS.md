@@ -20,6 +20,7 @@ Changes
  * The Windows installer now removes old Nicotine+ system files before updating installations
  * Added quick-access checkbox for enabling/disabling private room invitations
  * Removed support for detachable tabs due to low usage and bugs
+ * Replaced Mutagen with pytaglib for audio file metadata scanning due to performance issues
 
 Issues closed on GitHub
 
