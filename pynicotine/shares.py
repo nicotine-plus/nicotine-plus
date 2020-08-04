@@ -431,24 +431,14 @@ class Shares:
 
         for folder in dirs:
 
-            folder = os.path.expanduser(folder.replace("//", "/"))
-
-            if self.hiddenCheck({'dir': folder}):
-                continue
-
             try:
+                if self.hiddenCheck({'dir': folder}):
+                    continue
+
                 mtime = os.path.getmtime(folder)
-            except OSError as errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
-                print(str(message))
-                self.logMessage(message)
-                continue
+                list[folder] = mtime
 
-            list[folder] = mtime
-
-            try:
                 for entry in os.scandir(folder):
-
                     if entry.is_dir():
 
                         path = entry.path
@@ -502,39 +492,39 @@ class Shares:
 
         for folder in mtimes:
 
-            folder = os.path.expanduser(folder)
-            virtualdir = self.real2virtual(folder)
-            count += 1
-
-            if progress:
-                # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-                percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
-
-                if percent > lastpercent and percent <= 1.0:
-                    GLib.idle_add(progress.set_fraction, percent)
-                    lastpercent = percent
-
-            if self.hiddenCheck({'dir': folder}):
-                continue
-
-            if not rebuild and folder in oldmtimes:
-                if mtimes[folder] == oldmtimes[folder]:
-                    if os.path.exists(folder):
-                        try:
-                            list[virtualdir] = oldlist[virtualdir]
-                            continue
-                        except KeyError:
-                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
-                                'vdir': virtualdir,
-                                'dir': folder
-                            })
-                    else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
-                        continue
-
-            list[virtualdir] = []
-
             try:
+                count += 1
+
+                if progress:
+                    # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
+                    percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
+
+                    if percent > lastpercent and percent <= 1.0:
+                        GLib.idle_add(progress.set_fraction, percent)
+                        lastpercent = percent
+
+                if self.hiddenCheck({'dir': folder}):
+                    continue
+
+                if not rebuild and folder in oldmtimes:
+                    if mtimes[folder] == oldmtimes[folder]:
+                        if os.path.exists(folder):
+                            try:
+                                virtualdir = self.real2virtual(folder)
+                                list[virtualdir] = oldlist[virtualdir]
+                                continue
+                            except KeyError:
+                                log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                    'vdir': virtualdir,
+                                    'dir': folder
+                                })
+                        else:
+                            log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
+                            continue
+
+                virtualdir = self.real2virtual(folder)
+                list[virtualdir] = []
+
                 for entry in os.scandir(folder):
 
                     if entry.is_file():
@@ -665,9 +655,8 @@ class Shares:
     # Pack all files and metadata in directory
     def getDirStream(self, dir):
 
-        msg = slskmessages.SlskMessage()
         stream = bytearray()
-        stream.extend(msg.packObject(NetworkIntType(len(dir))))
+        stream.extend(slskmessages.SlskMessage().packObject(NetworkIntType(len(dir))))
 
         for file_and_meta in dir:
             stream.extend(self.getByteStream(file_and_meta))
