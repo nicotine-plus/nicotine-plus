@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import stat
 import string
 import sys
 import taglib
@@ -37,9 +38,6 @@ from pynicotine.slskmessages import NetworkIntType
 from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import GetUserDirectories
-
-
-win32 = sys.platform.startswith("win")
 
 
 class Shares:
@@ -435,7 +433,7 @@ class Shares:
         for folder in dirs:
 
             try:
-                if self.hiddenCheck({'dir': folder}):
+                if self.hiddenCheck(folder):
                     continue
 
                 mtime = os.path.getmtime(folder)
@@ -449,9 +447,9 @@ class Shares:
                         try:
                             mtime = entry.stat().st_mtime
                         except OSError as errtuple:
-                            message = _("Scanning Error: %(error)s Path: %(path)s") % {
-                                'error': errtuple,
-                                'path': path
+                            message = _("Error while scanning %(path)s: %(error)s") % {
+                                'path': path,
+                                'error': errtuple
                             }
 
                             print(str(message))
@@ -466,7 +464,7 @@ class Shares:
                     if yieldcall is not None:
                         yieldcall()
             except OSError as errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
+                message = _("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple}
                 print(str(message))
                 self.logMessage(message)
                 continue
@@ -494,7 +492,7 @@ class Shares:
                         GLib.idle_add(progress.set_fraction, percent)
                         lastpercent = percent
 
-                if self.hiddenCheck({'dir': folder}):
+                if self.hiddenCheck(folder):
                     continue
 
                 if not rebuild and folder in oldmtimes:
@@ -510,7 +508,7 @@ class Shares:
                                     'dir': folder
                                 })
                         else:
-                            log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
+                            log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
                             continue
 
                 virtualdir = self.real2virtual(folder)
@@ -521,7 +519,7 @@ class Shares:
                     if entry.is_file():
                         filename = entry.name
 
-                        if self.hiddenCheck({'dir': folder, 'file': filename}):
+                        if self.hiddenCheck(folder, filename):
                             continue
 
                         # Get the metadata of the file
@@ -532,7 +530,7 @@ class Shares:
                     if yieldcall is not None:
                         yieldcall()
             except OSError as errtuple:
-                message = _("Scanning Directory Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': folder}
+                message = _("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple}
                 print(str(message))
                 self.logMessage(message)
                 continue
@@ -563,7 +561,7 @@ class Shares:
             return fileinfo
 
         except Exception as errtuple:
-            message = _("Scanning File Error: %(error)s Path: %(path)s") % {'error': errtuple, 'path': pathname}
+            message = _("Error while scanning file %(path)s: %(error)s") % {'path': pathname, 'error': errtuple}
             self.logMessage(message)
             displayTraceback(sys.exc_info()[2])
 
@@ -576,7 +574,7 @@ class Shares:
 
             virtualdir = self.real2virtual(folder)
 
-            if self.hiddenCheck({'dir': folder}):
+            if self.hiddenCheck(folder):
                 continue
 
             if not rebuild and folder in oldmtimes:
@@ -592,7 +590,7 @@ class Shares:
                                 'dir': folder
                             })
                     else:
-                        log.adddebug(_("Dropping missing directory %(dir)s") % {'dir': folder})
+                        log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
                         continue
 
             streams[virtualdir] = self.getDirStream(newsharedfiles[virtualdir])
@@ -603,44 +601,25 @@ class Shares:
         return streams
 
     # Stop sharing any dot/hidden directories/files
-    def hiddenCheck(self, stuff):
+    def hiddenCheck(self, folder, filename=None):
 
-        subdirs = stuff['dir'].split(os.sep)
+        subfolders = folder.split(os.sep)
 
         # If any part of the directory structure start with a dot we exclude it
-        for part in subdirs:
+        for part in subfolders:
             if part.startswith("."):
                 return True
 
         # If we're asked to check a file we exclude it if it start with a dot
-        if 'file' in stuff and stuff['file'].startswith("."):
+        if filename is not None and filename.startswith("."):
             return True
 
-        # On Windows check the directories attributes if the win32file module is available
-        if win32:
+        # Check if file is marked as hidden on Windows
+        if sys.platform == "win32":
+            if filename is not None:
+                folder = os.path.join(folder, filename)
 
-            try:
-                from win32file import GetFileAttributes
-            except ImportError:
-                pass
-            else:
-
-                if 'file' in stuff:
-                    # If it's a file it must contain the fully qualified path
-                    path = os.path.join(stuff['dir'], stuff['file']).replace('\\', '\\\\')
-                else:
-                    path = stuff['dir'].replace('\\', '\\\\')
-
-                attrs = GetFileAttributes(str(path))
-
-                # Set a mask to check the 2nd bit
-                # See https://msdn.microsoft.com/en-us/library/windows/desktop/gg258117(v=vs.85).aspx
-                # FILE_ATTRIBUTE_HIDDEN
-                # 2 (0x2)
-                mask = 1 << 1
-
-                if attrs & mask:
-                    return True
+            return os.stat(folder).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
         return False
 
@@ -697,9 +676,9 @@ class Shares:
         count = len(mtimes)
         lastpercent = 0.0
 
-        for directory in mtimes:
+        for folder in mtimes:
 
-            virtualdir = self.real2virtual(directory)
+            virtualdir = self.real2virtual(folder)
             count += 1
 
             if progress:
@@ -710,7 +689,7 @@ class Shares:
                     GLib.idle_add(progress.set_fraction, percent)
                     lastpercent = percent
 
-            if self.hiddenCheck({'dir': directory}):
+            if self.hiddenCheck(folder):
                 continue
 
             for j in newsharedfiles[virtualdir]:
