@@ -1286,15 +1286,7 @@ class ChatRoom:
             if tag == self.tag_hilite:
 
                 self.roomsctrl.ChatNotebook.request_hilite(self.Main)
-
                 self.frame.ChatRequestIcon(1, self.Main)
-
-                # add hilite to trayicon
-                if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
-                   self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
-                   not self.frame.MainWindow.get_property("visible"):
-                    if self.room not in self.frame.hilites["rooms"]:
-                        self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
                     self.frame.NewNotification(
@@ -1308,7 +1300,16 @@ class ChatRoom:
                 self.roomsctrl.ChatNotebook.request_changed(self.Main)
                 self.frame.ChatRequestIcon(0)
 
-                if self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
+            if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
+                self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
+                    not self.frame.MainWindow.get_property("visible"):
+
+                if tag == self.tag_hilite:
+
+                    if self.room not in self.frame.hilites["rooms"]:
+                        self.frame.Notifications.Add("rooms", user, self.room, tab=True)
+
+                elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
                     self.frame.NewNotification(
                         text,
                         title=_("Message by %s in the %s room") % (user, self.room)
