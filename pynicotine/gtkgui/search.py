@@ -38,13 +38,13 @@ from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.dialogs import MetaDialog
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
+from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
@@ -590,13 +590,13 @@ class Search:
             [_("User"), widths[1], "text", self.CellDataFunc],
             [_("Country"), widths[2], "pixbuf"],
             [_("Immediate Download"), widths[3], "text", self.CellDataFunc],
-            [_("Speed"), widths[4], "text", self.CellDataFunc],
-            [_("In queue"), widths[5], "text", self.CellDataFunc],
+            [_("Speed"), widths[4], "number", self.CellDataFunc],
+            [_("In queue"), widths[5], "number", self.CellDataFunc],
             [_("Directory"), widths[6], "text", self.CellDataFunc],
             [_("Filename"), widths[7], "text", self.CellDataFunc],
-            [_("Size"), widths[8], "text", self.CellDataFunc],
-            [_("Bitrate"), widths[9], "text", self.CellDataFunc],
-            [_("Length"), widths[10], "text", self.CellDataFunc]
+            [_("Size"), widths[8], "number", self.CellDataFunc],
+            [_("Bitrate"), widths[9], "number", self.CellDataFunc],
+            [_("Length"), widths[10], "number", self.CellDataFunc]
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
@@ -607,18 +607,7 @@ class Search:
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
 
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect('button_press_event', PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["filesearch_columns"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
+        HideColumns(cols, self.frame.np.config.sections["columns"]["filesearch_columns"])
 
         self.col_num.set_sort_column_id(0)
         self.col_user.set_sort_column_id(1)
