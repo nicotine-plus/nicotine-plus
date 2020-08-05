@@ -29,11 +29,11 @@ from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
+from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SelectUserRowIter
 
 
@@ -84,28 +84,17 @@ class TransferList:
             [_("Path"), widths[1], "text", self.CellDataFunc],
             [_("Filename"), widths[2], "text", self.CellDataFunc],
             [_("Status"), widths[3], "text", self.CellDataFunc],
-            [_("Queue Position"), widths[4], "text", self.CellDataFunc],
+            [_("Queue Position"), widths[4], "number", self.CellDataFunc],
             [_("Percent"), widths[5], "progress"],
-            [_("Size"), widths[6], "text", self.CellDataFunc],
-            [_("Speed"), widths[7], "text", self.CellDataFunc],
-            [_("Time elapsed"), widths[8], "text", self.CellDataFunc],
-            [_("Time left"), widths[9], "text", self.CellDataFunc]
+            [_("Size"), widths[6], "number", self.CellDataFunc],
+            [_("Speed"), widths[7], "number", self.CellDataFunc],
+            [_("Time elapsed"), widths[8], "number", self.CellDataFunc],
+            [_("Time left"), widths[9], "number", self.CellDataFunc]
         )
 
         self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
 
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"][self.type + "_columns"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
+        HideColumns(cols, self.frame.np.config.sections["columns"][self.type + "_columns"])
 
         self.col_user.set_sort_column_id(0)
         self.col_path.set_sort_column_id(1)

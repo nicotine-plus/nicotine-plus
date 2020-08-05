@@ -241,7 +241,7 @@ class Config:
                 "upload_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 "upload_widths": [200, 250, 250, 140, 50, 70, 170, 90, 140, 0],
                 "filesearch_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "filesearch_widths": [50, 200, 25, 20, 90, 50, 400, 400, 100, 50, 0],
+                "filesearch_widths": [50, 200, 25, 20, 90, 50, 400, 400, 100, 100, 0],
                 "hideflags": False
             },
 

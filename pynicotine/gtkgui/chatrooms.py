@@ -39,6 +39,7 @@ from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.dialogs import TickerDialog
 from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -922,18 +923,7 @@ class ChatRoom:
         if len(config["columns"]["chatrooms"][room]) != 5:  # Insert new column to old settings.
             config["columns"]["chatrooms"][room].insert(1, 1)
 
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(config["columns"]["chatrooms"][room][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
+        HideColumns(cols, config["columns"]["chatrooms"][room])
 
         if config["columns"]["hideflags"]:
             cols[1].set_visible(0)

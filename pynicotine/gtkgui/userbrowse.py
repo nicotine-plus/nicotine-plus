@@ -32,10 +32,10 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.dialogs import ComboBoxDialog
+from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import CleanFile
 from pynicotine.utils import displayTraceback
@@ -180,9 +180,9 @@ class UserBrowse:
         cols = InitialiseColumns(
             self.FileTreeView,
             [_("Filename"), widths[0], "text", self.CellDataFunc],
-            [_("Size"), widths[1], "text", self.CellDataFunc],
-            [_("Bitrate"), widths[2], "text", self.CellDataFunc],
-            [_("Length"), widths[3], "text", self.CellDataFunc]
+            [_("Size"), widths[1], "number", self.CellDataFunc],
+            [_("Bitrate"), widths[2], "number", self.CellDataFunc],
+            [_("Length"), widths[3], "number", self.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
@@ -190,18 +190,7 @@ class UserBrowse:
         cols[3].set_sort_column_id(5)
         self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(self.frame.np.config.sections["columns"]["userbrowse"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
+        HideColumns(cols, self.frame.np.config.sections["columns"]["userbrowse"])
 
         self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)

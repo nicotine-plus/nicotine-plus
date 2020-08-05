@@ -174,6 +174,7 @@ def InitialiseColumns(treeview, *args):
         elif c[2] == "number":
             renderer = gtk.CellRendererText()
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column.set_alignment(1.0)
             renderer.set_property("xalign", 1)
         elif c[2] == "colored":
             renderer = gtk.CellRendererText()
@@ -226,6 +227,32 @@ def InitialiseColumns(treeview, *args):
     return cols
 
 
+def HideColumns(cols, visibility_list):
+    try:
+        for i in range(len(cols)):
+
+            parent = cols[i].get_widget().get_ancestor(gtk.Button)
+            if parent:
+                parent.connect('button_press_event', PressHeader)
+
+            # Read Show / Hide column settings from last session
+            cols[i].set_visible(visibility_list[i])
+
+        # Make sure the width of the last visible column isn't fixed
+        for i in reversed(range(len(cols))):
+
+            if cols[i].get_visible():
+                column = cols[i]
+                column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
+                column.set_resizable(False)
+                column.set_fixed_width(-1)
+                break
+
+    except IndexError:
+        # Column count in config is probably incorrect (outdated?), don't crash
+        pass
+
+
 def PressHeader(widget, event):
     if event.button != 3:
         return False
@@ -245,7 +272,7 @@ def PressHeader(widget, event):
                 item.set_sensitive(False)
         else:
             item.set_active(False)
-        item.connect('activate', header_toggle, column)
+        item.connect('activate', header_toggle, columns, pos - 1)
         menu.append(item)
         pos += 1
 
@@ -256,8 +283,29 @@ def PressHeader(widget, event):
     return True
 
 
-def header_toggle(menuitem, column):
+def header_toggle(menuitem, columns, index):
+    column = columns[index]
     column.set_visible(not column.get_visible())
+
+    # Make sure the width of the last visible column isn't fixed
+    for i in reversed(range(len(columns))):
+
+        if columns[i].get_visible():
+            column = columns[i]
+            column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
+            column.set_resizable(False)
+            column.set_fixed_width(-1)
+            break
+
+    """ If the column we toggled the visibility of is now the last visible one,
+    the previously last visible column should've resized to fit properly now,
+    since it was set to AUTOSIZE. We can now set the previous column to FIXED,
+    and make it resizable again. """
+
+    prev_column = columns[index - 1]
+    prev_column.set_sizing(gtk.TreeViewColumnSizing.FIXED)
+    prev_column.set_resizable(True)
+
     NICOTINE.SaveColumns()
 
 

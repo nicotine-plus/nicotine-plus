@@ -32,11 +32,11 @@ from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import Humanize
 from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import showCountryTooltip
 
 
@@ -103,18 +103,7 @@ class UserList:
 
         self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last_seen, self.col_comments = cols
 
-        try:
-            for i in range(len(cols)):
-
-                parent = cols[i].get_widget().get_ancestor(gtk.Button)
-                if parent:
-                    parent.connect("button_press_event", PressHeader)
-
-                # Read Show / Hide column settings from last session
-                cols[i].set_visible(config["columns"]["userlist"][i])
-        except IndexError:
-            # Column count in config is probably incorrect (outdated?), don't crash
-            pass
+        HideColumns(cols, config["columns"]["userlist"])
 
         self.col_status.set_sort_column_id(10)
         self.col_country.set_sort_column_id(14)
