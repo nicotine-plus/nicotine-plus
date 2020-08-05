@@ -103,10 +103,13 @@ class Downloads(TransferList):
     def OnTryClearQueued(self, widget):
 
         direction = "down"
-        win = OptionDialog(self.frame, _("Clear All Queued Downloads?"), modal=True, option=False, third="")
-        win.connect("response", self.frame.on_clear_response, direction)
-        win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
-        win.show()
+        OptionDialog(
+            parent=self.frame.MainWindow,
+            title=_('Clear Queued Downloads'),
+            message=_('Are you sure you wish to clear all queued downloads?'),
+            callback=self.frame.on_clear_response,
+            callback_data=direction
+        )
 
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
@@ -226,6 +229,7 @@ class Downloads(TransferList):
 
     def OnSelectAbortTransfer(self, widget):
         self.select_transfers()
+
         self.OnAbortTransfer(widget, False)
 
     def on_key_press_event(self, widget, event):
@@ -380,4 +384,5 @@ class Downloads(TransferList):
 
     def OnAbortRemoveTransfer(self, widget):
         self.select_transfers()
+
         self.OnClearTransfer(widget)
