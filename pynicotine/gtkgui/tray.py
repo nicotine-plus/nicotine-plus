@@ -31,15 +31,21 @@ class TrayApp:
 
     def __init__(self, frame):
         try:
-            # Check if AppIndicator3 is available
-            gi.require_version('AppIndicator3', '0.1')
-            from gi.repository import AppIndicator3  # noqa: F401
-            self.appindicator = AppIndicator3
+            # Check if AyatanaAppIndicator3 is available
+            gi.require_version('AyatanaAppIndicator3', '0.1')
+            from gi.repository import AyatanaAppIndicator3  # noqa: F401
+            self.appindicator = AyatanaAppIndicator3
         except (ImportError, ValueError):
-            # No AppIndicator3, Fall back to GtkStatusIcon
-            from gi.repository import Gtk
-            self.appindicator = None
-            self.gtk = Gtk
+            try:
+                # Check if AppIndicator3 is available
+                gi.require_version('AppIndicator3', '0.1')
+                from gi.repository import AppIndicator3  # noqa: F401
+                self.appindicator = AppIndicator3
+            except (ImportError, ValueError):
+                # No AppIndicator support, fall back to GtkStatusIcon
+                from gi.repository import Gtk
+                self.appindicator = None
+                self.gtk = Gtk
 
         self.frame = frame
         self.trayicon = None
@@ -171,7 +177,7 @@ class TrayApp:
             if self.appindicator is not None:
                 trayicon = self.appindicator.Indicator.new(
                     "Nicotine+",
-                    "",
+                    "org.nicotine_plus.Nicotine_connect",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 trayicon.set_menu(self.tray_popup_menu)
             else:
@@ -182,7 +188,6 @@ class TrayApp:
 
         """ Set up icons """
         custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
-        print(custom_icon_path)
         final_icon_path = ""
 
         for icon_name in ["away", "connect", "disconnect", "msg"]:
