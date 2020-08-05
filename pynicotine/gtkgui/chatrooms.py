@@ -1754,13 +1754,18 @@ class ChatRoom:
                 tag.set_property("underline", pango.Underline.NONE)
 
             tag.connect("event", self.UserNameEvent, username)
-            tag.last_event_type = -1
 
         return tag
 
     def UserNameEvent(self, tag, widget, event, iter, user):
 
-        if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button in (1, 2):
+        """
+        Mouse buttons:
+        1 = left button
+        2 = middle button
+        3 = right button
+        """
+        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button in (1, 2, 3):
 
             # Chat, Userlists use the normal popup system
             self.popup_menu.editing = True
@@ -1779,7 +1784,7 @@ class ChatRoom:
             self.popup_menu.editing = False
             self.popup_menu.popup(None, None, None, None, event.button.button, event.button.time)
 
-        tag.last_event_type = event.button.type
+        return True
 
     def UpdateColours(self):
 
