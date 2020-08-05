@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import re
-import sys
 import time
 import urllib.error
 import urllib.parse
@@ -44,6 +43,7 @@ from pynicotine import pluginsystem
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.gtkgui import imagedata
+from pynicotine.gtkgui import notifications
 from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui import tray
 from pynicotine.gtkgui import utils
@@ -75,7 +75,6 @@ from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
-from pynicotine.utils import executeCommand
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -111,21 +110,6 @@ class NicotineFrame:
             self.gspell = True
         except (ImportError, ValueError):
             self.gspell = False
-
-        try:
-            # Notification support
-            gi.require_version('Notify', '0.7')
-            from gi.repository import Notify
-            Notify.init("Nicotine+")
-            self.notificationprovider = Notify
-            self.notifyBox = None
-        except (ImportError, ValueError):
-            try:
-                # Windows support via plyer
-                from plyer import notification
-                self.notificationprovider = notification
-            except (ImportError, ValueError):
-                self.notificationprovider = None
 
         self.np = NetworkEventProcessor(
             self,
@@ -455,8 +439,7 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        self.Notifications = Notifications(self)
-
+        self.Notifications = notifications.Notifications(self)
         self.TrayApp = tray.TrayApp(self)
 
         self.hilites = {
@@ -677,40 +660,6 @@ class NicotineFrame:
                 self.minimized = 1
             else:
                 self.minimized = 0
-
-    def NewNotification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
-
-        if self.notificationprovider is None:
-            return
-
-        try:
-            if self.notifyBox is None:
-                self.notifyBox = self.notificationprovider.Notification.new(title, message)
-                self.notifyBox.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
-
-                if self.np.config.sections["notifications"]["notification_popup_sound"]:
-                    self.notifyBox.set_hint("sound-name", GLib.Variant("s", soundnamenotify))
-
-                self.notifyBox.set_image_from_pixbuf(self.images["notify"])
-            else:
-                self.notifyBox.update(title, message)
-
-            try:
-                self.notifyBox.show()
-            except gobject.GError as error:
-                self.logMessage(_("Notification Error: %s") % str(error))
-        except AttributeError:
-            # Fall back to plyer
-
-            self.notificationprovider.notify(
-                app_name="Nicotine+",
-                title=title,
-                message=message
-            )
-
-            if sys.platform == "win32" and self.np.config.sections["notifications"]["notification_popup_sound"]:
-                import winsound
-                winsound.PlaySound(soundnamewin, winsound.SND_ALIAS)
 
     def LoadIcons(self):
         self.images = {}
@@ -3203,126 +3152,6 @@ class NicotineFrame:
 
         self.OnToggleBuddyList(widget)
         self.ChangeMainPage(widget, "userlist")
-
-
-class Notifications:
-
-    def __init__(self, frame):
-
-        self.frame = frame
-
-        self.tts = []
-        self.tts_playing = False
-        self.continue_playing = False
-
-    def Add(self, location, user, room=None, tab=True):
-
-        if location == "rooms" and room is not None and user is not None:
-            if room not in self.frame.hilites["rooms"]:
-                self.frame.hilites["rooms"].append(room)
-
-                self.frame.TrayApp.SetImage()
-        elif location == "private":
-            if user in self.frame.hilites[location]:
-                self.frame.hilites[location].remove(user)
-                self.frame.hilites[location].append(user)
-            elif user not in self.frame.hilites[location]:
-                self.frame.hilites[location].append(user)
-
-                self.frame.TrayApp.SetImage()
-
-        if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
-            self.frame.MainWindow.set_urgency_hint(True)
-
-        self.SetTitle(user)
-
-    def ClearPage(self, notebook, item):
-
-        (page, label, window, focused) = item
-        location = None
-
-        if notebook is self.frame.ChatNotebook:
-            location = "rooms"
-            self.Clear(location, room=label)
-        elif notebook is self.frame.PrivatechatNotebook:
-            location = "private"
-            self.Clear(location, user=label)
-
-    def Clear(self, location, user=None, room=None):
-
-        if location == "rooms" and room is not None:
-            if room in self.frame.hilites["rooms"]:
-                self.frame.hilites["rooms"].remove(room)
-            self.SetTitle(room)
-        elif location == "private":
-            if user in self.frame.hilites["private"]:
-                self.frame.hilites["private"].remove(user)
-            self.SetTitle(user)
-
-        self.frame.TrayApp.SetImage()
-
-    def SetTitle(self, user=None):
-
-        if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
-            # Reset Title
-            if self.frame.MainWindow.get_title() != _("Nicotine+") + " " + version:
-                self.frame.MainWindow.set_title(_("Nicotine+") + " " + version)
-        elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
-            # Private Chats have a higher priority
-            if len(self.frame.hilites["private"]) > 0:
-                user = self.frame.hilites["private"][-1]
-                self.frame.MainWindow.set_title(
-                    _("Nicotine+") + " " + version + " :: " + _("Private Message from %(user)s") % {'user': user}
-                )
-            # Allow for the possibility the username is not available
-            elif len(self.frame.hilites["rooms"]) > 0:
-                room = self.frame.hilites["rooms"][-1]
-                if user is None:
-                    self.frame.MainWindow.set_title(
-                        _("Nicotine+") + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
-                    )
-                else:
-                    self.frame.MainWindow.set_title(
-                        _("Nicotine+") + " " + version + " :: " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
-                    )
-
-    def new_tts(self, message):
-
-        if not self.frame.np.config.sections["ui"]["speechenabled"]:
-            return
-
-        if message not in self.tts:
-            self.tts.append(message)
-            _thread.start_new_thread(self.play_tts, ())
-
-    def play_tts(self):
-
-        if self.tts_playing:
-            self.continue_playing = True
-            return
-
-        for message in self.tts[:]:
-            self.tts_player(message)
-            if message in self.tts:
-                self.tts.remove(message)
-
-        self.tts_playing = False
-        if self.continue_playing:
-            self.continue_playing = False
-            self.play_tts()
-
-    def tts_clean(self, message):
-
-        for i in ["_", "[", "]", "(", ")"]:
-            message = message.replace(i, " ")
-
-        return message
-
-    def tts_player(self, message):
-
-        self.tts_playing = True
-
-        executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
 
 class MainApp:

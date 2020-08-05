@@ -1025,7 +1025,7 @@ class Transfers:
                 i.status = "Download directory error"
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
-                self.eventprocessor.frame.NewNotification(_("OS error: %s") % strerror, title=_("Folder download error"))
+                self.eventprocessor.frame.Notifications.NewNotificationPopup(_("OS error: %s") % strerror, title=_("Folder download error"))
 
             else:
                 # also check for a windows-style incomplete transfer
@@ -1303,7 +1303,7 @@ class Transfers:
             self.eventprocessor.shares.sendNumSharedFoldersFiles()
 
             if config["notifications"]["notification_popup_file"]:
-                self.eventprocessor.frame.NewNotification(
+                self.eventprocessor.frame.Notifications.NewNotificationPopup(
                     _("%(file)s downloaded from %(user)s") % {
                         'user': i.user,
                         'file': newname.rsplit(os.sep, 1)[1]
@@ -1332,7 +1332,7 @@ class Transfers:
                     break
             else:
                 if config["notifications"]["notification_popup_folder"]:
-                    self.eventprocessor.frame.NewNotification(
+                    self.eventprocessor.frame.Notifications.NewNotificationPopup(
                         _("%(folder)s downloaded from %(user)s") % {
                             'user': i.user,
                             'folder': folder

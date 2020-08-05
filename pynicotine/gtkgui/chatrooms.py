@@ -1289,7 +1289,7 @@ class ChatRoom:
                 self.frame.ChatRequestIcon(1, self.Main)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                    self.frame.NewNotification(
+                    self.frame.Notifications.NewNotificationPopup(
                         text,
                         title=_("%s mentioned you in the %s room") % (user, self.room),
                         soundnamenotify="bell-window-system",
@@ -1310,7 +1310,7 @@ class ChatRoom:
                         self.frame.Notifications.Add("rooms", user, self.room, tab=True)
 
                 elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
-                    self.frame.NewNotification(
+                    self.frame.Notifications.NewNotificationPopup(
                         text,
                         title=_("Message by %s in the %s room") % (user, self.room)
                     )
