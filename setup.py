@@ -45,11 +45,13 @@ files.append(
 )
 
 # Tray icons
-for iconname in ["org.nicotine_plus.Nicotine-away.png", "org.nicotine_plus.Nicotine-connect.png", "org.nicotine_plus.Nicotine-disconnect.png", "org.nicotine_plus.Nicotine-msg.png"]:
+tray_icons = glob.glob(os.path.join("img", "tray", "*"))
+
+for icon_name in tray_icons:
     files.append(
         (
             "share/icons/hicolor/32x32/apps",
-            [os.path.join("img", iconname)]
+            [icon_name]
         )
     )
 

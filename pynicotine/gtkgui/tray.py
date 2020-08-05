@@ -43,8 +43,8 @@ class TrayApp:
 
         self.frame = frame
         self.trayicon = None
-        self.icon_prefix = "org.nicotine_plus.Nicotine"
-        self.icon_path = ""
+        self.custom_icons = False
+        self.local_icons = False
         self.tray_status = {
             "status": "disconnect",
             "last": "disconnect"
@@ -182,32 +182,31 @@ class TrayApp:
 
         """ Set up icons """
         custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
+        print(custom_icon_path)
+        final_icon_path = ""
 
         for icon_name in ["away", "connect", "disconnect", "msg"]:
-            """ 
+            """
             There are two naming schemes for tray icons:
-            - System-wide icons: "org.nicotine_plus.Nicotine_<icon_name>"
-            - Local/custom icons: "trayicon_<icon_name>"
+            - System-wide/local icons: "org.nicotine_plus.Nicotine_<icon_name>"
+            - Custom icons: "trayicon_<icon_name>"
             """
 
-            icon_name_system = self.icon_prefix + "_" + icon_name
-            icon_name_local = "trayicon" + "_" + icon_name
-
-            if glob.glob(os.path.join(custom_icon_path, icon_name_system) + ".*"):
-                self.icon_path = custom_icon_path
-
-            if glob.glob(os.path.join(custom_icon_path, icon_name_local) + ".*"):
-                self.icon_path = custom_icon_path
-                self.icon_prefix = "trayicon"
-
-            if glob.glob(os.path.join("img", icon_name_system) + ".*") or \
-                glob.glob(os.path.join("img", icon_name_local) + ".*"):
-                self.icon_path = os.path.abspath("img")
-
-            # If custom icon path was found, use it, otherwise we fall back to system icons
-            if self.appindicator is not None and self.icon_path:
-                self.trayicon.set_icon_theme_path(self.icon_path)
+            if glob.glob(os.path.join(custom_icon_path, "trayicon_" + icon_name) + ".*"):
+                final_icon_path = custom_icon_path
+                self.custom_icons = True
                 break
+
+            if glob.glob(os.path.join("img", "tray", "org.nicotine_plus.Nicotine_" + icon_name) + ".*"):
+                final_icon_path = os.path.abspath(
+                    os.path.join("img", "tray")
+                )
+                self.local_icons = True
+                break
+
+        # If custom icon path was found, use it, otherwise we fall back to system icons
+        if self.appindicator is not None and final_icon_path:
+            self.trayicon.set_icon_theme_path(final_icon_path)
 
         """ Set visible """
         if self.appindicator is not None:
@@ -281,17 +280,22 @@ class TrayApp:
             if icon_name != self.tray_status["last"]:
                 self.tray_status["last"] = icon_name
 
-            prefix_icon_name = self.icon_prefix + "_" + icon_name
-
             if self.appindicator is not None:
-                self.trayicon.set_icon_full(prefix_icon_name, "Nicotine+")
-                
+                if self.custom_icons:
+                    icon_name = "trayicon_" + icon_name
+                else:
+                    icon_name = "org.nicotine_plus.Nicotine_" + icon_name
+
+                self.trayicon.set_icon_full(icon_name, "Nicotine+")
+
             else:
                 # GtkStatusIcon fallback
-                if self.icon_path:
-                    self.trayicon.set_from_file(os.path.join(self.icon_path, prefix_icon_name))
+                if self.custom_icons or self.local_icons:
+                    self.trayicon.set_from_pixbuf(
+                        self.frame.images["trayicon_" + icon_name]
+                    )
                 else:
-                    self.trayicon.set_from_icon_name(prefix_icon_name)
+                    self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine_" + icon_name)
 
         except Exception as e:
             log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
