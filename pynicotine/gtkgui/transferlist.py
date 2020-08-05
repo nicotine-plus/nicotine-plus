@@ -47,8 +47,6 @@ class TransferList:
         self.widget = widget
         self.type = type
         self.list = None
-        self.selected_transfers = []
-        self.selected_users = []
         self.users = {}
         self.paths = {}
         self.lastupdate = 0
@@ -161,8 +159,8 @@ class TransferList:
         self.Clear()
 
     def select_transfers(self):
-        self.selected_transfers = []
-        self.selected_users = []
+        self.selected_transfers = set()
+        self.selected_users = set()
 
         self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
@@ -173,7 +171,6 @@ class TransferList:
             self.frame.BanUser(user)
 
     def OnFileSearch(self, widget):
-        self.select_transfers()
 
         for transfer in self.selected_transfers:
             self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
@@ -203,17 +200,16 @@ class TransferList:
             iter = model.iter_next(iter)
 
     def SelectTransfer(self, model, iter, selectuser=False):
-
         user = model.get_value(iter, 0)
         file = model.get_value(iter, 10)
 
         for i in self.list:
             if i.user == user and i.filename == file:
-                self.selected_transfers.append(i)
+                self.selected_transfers.add(i)
                 break
 
-        if selectuser and user not in self.selected_users:
-            self.selected_users.append(user)
+        if selectuser:
+            self.selected_users.add(user)
 
     def TranslateStatus(self, status):
 
@@ -571,8 +567,8 @@ class TransferList:
     def Clear(self):
         self.users.clear()
         self.paths.clear()
-        self.selected_transfers = []
-        self.selected_users = []
+        self.selected_transfers = set()
+        self.selected_users = set()
         self.transfersmodel.clear()
 
         if self.list is not None:
@@ -581,14 +577,11 @@ class TransferList:
 
     def OnPopupMenuUsers(self, widget):
 
-        self.select_transfers()
-
         self.popup_menu_users.clear()
 
         if len(self.selected_users) > 0:
 
             items = []
-            self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
 
@@ -673,14 +666,14 @@ class TransferList:
 
     def OnAbortTransfer(self, widget, remove=False, clear=False):
 
-        transfers = self.selected_transfers
-
-        for i in transfers:
+        for i in self.selected_transfers:
 
             if i.status != "Finished":
                 self.frame.np.transfers.AbortTransfer(i, remove)
-                i.status = "Aborted"
-                self.update(i)
+
+                if not clear:
+                    i.status = "Aborted"
+                    self.update(i)
 
             if clear:
                 self.remove_specific(i)

@@ -96,12 +96,13 @@ class Uploads(TransferList):
     def OnTryClearQueued(self, widget):
 
         direction = "up"
-
-        win = OptionDialog(self.frame, _("Clear All Queued Uploads?"), modal=True, option=False, third="")
-        win.connect("response", self.frame.on_clear_response, direction)
-        win.set_title(_("Nicotine+") + ": " + _("Clear Queued Transfers"))
-
-        win.show()
+        OptionDialog(
+            parent=self.frame.MainWindow,
+            title=_('Clear Queued Uploads'),
+            message=_('Are you sure you wish to clear all queued uploads?'),
+            callback=self.frame.on_clear_response,
+            callback_data=direction
+        )
 
     def OnOpenDirectory(self, widget):
 
@@ -159,10 +160,9 @@ class Uploads(TransferList):
         self.select_transfers()
 
         for user in self.selected_users:
-            for i in self.list[:]:
+            for i in self.list:
                 if i.user == user:
-                    if i not in self.selected_transfers:
-                        self.selected_transfers.append(i)
+                    self.selected_transfers.add(i)
 
         TransferList.OnAbortTransfer(self, widget, False, False)
         self.frame.np.transfers.calcUploadQueueSizes()
@@ -298,15 +298,11 @@ class Uploads(TransferList):
 
     def OnAbortTransfer(self, widget, remove=False, clear=False):
 
-        self.select_transfers()
-
         TransferList.OnAbortTransfer(self, widget, remove, clear)
         self.frame.np.transfers.calcUploadQueueSizes()
         self.frame.np.transfers.checkUploadQueue()
 
     def OnClearQueued(self, widget):
-
-        self.select_transfers()
 
         TransferList.OnClearQueued(self, widget)
         self.frame.np.transfers.calcUploadQueueSizes()

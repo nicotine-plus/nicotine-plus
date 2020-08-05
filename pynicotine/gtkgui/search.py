@@ -519,8 +519,6 @@ class Search:
         self.mode = mode
         self.remember = remember
         self.showtab = showtab
-        self.selected_results = []
-        self.selected_users = []
         self.usersiters = {}
         self.directoryiters = {}
         self.users = set()
@@ -1118,7 +1116,6 @@ class Search:
         if len(self.selected_users) > 0:
 
             items = []
-            self.selected_users.sort(key=str.lower)
 
             for user in self.selected_users:
                 popup = PopupMenu(self.frame, False)
@@ -1188,8 +1185,8 @@ class Search:
 
     def select_results(self):
 
-        self.selected_results = []
-        self.selected_users = []
+        self.selected_results = set()
+        self.selected_users = set()
 
         self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
 
@@ -1244,8 +1241,7 @@ class Search:
         if user is None:
             return
 
-        if user not in self.selected_users:
-            self.selected_users.append(user)
+        self.selected_users.add(user)
 
         for r in self.all_data:
 
@@ -1265,7 +1261,7 @@ class Search:
             length = r[10]
             break
 
-        self.selected_results.append((user, fn, size, bitrate, length, isdirectory))
+        self.selected_results.add((user, fn, size, bitrate, length, isdirectory))
 
     def OnListClicked(self, widget, event):
 
