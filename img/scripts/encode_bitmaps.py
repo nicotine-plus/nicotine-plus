@@ -27,10 +27,6 @@ table = [
     ["img/away.png", "away"],
     ["img/online.png", "online"],
     ["img/offline.png", "offline"],
-    ["img/trayicon_away.png", "trayicon_away"],
-    ["img/trayicon_connect.png", "trayicon_connect"],
-    ["img/trayicon_disconnect.png", "trayicon_disconnect"],
-    ["img/trayicon_msg.png", "trayicon_msg"],
     ["img/empty.png", "empty"],
     ["img/hilite.png", "hilite"],
     ["img/hilite3.png", "hilite3"],
@@ -38,11 +34,19 @@ table = [
     ["files/org.nicotine_plus.Nicotine.svg", "notify"]
 ]
 
+for name in sorted(os.listdir(os.path.join("img", "tray"))):
+    p = os.path.join("img", "tray", name)
+
+    if isfile(p):
+        table.append([p, "trayicon_%s" % name[:-4]])
+
 flagtable = []
+
 for name in sorted(os.listdir(os.path.join("img", "flags"))):
     p = os.path.join("img", "flags", name)
+
     if isfile(p):
-        flagtable.append((os.path.join("img", "flags", name), 'flag_%s' % name[:2].upper()))
+        flagtable.append([p, "flag_%s" % name[:2].upper()])
 
 outf = open(os.path.join("pynicotine", "gtkgui", "imagedata.py"), "w")
 

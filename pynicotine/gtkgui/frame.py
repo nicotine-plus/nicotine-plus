@@ -1452,7 +1452,7 @@ class NicotineFrame:
 
     def OnConnect(self, widget):
 
-        self.TrayApp.tray_status["status"] = "trayicon_connect"
+        self.TrayApp.tray_status["status"] = "connect"
         self.TrayApp.SetImage()
 
         if self.np.serverconn is not None:
@@ -1496,7 +1496,7 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+        self.TrayApp.tray_status["status"] = "disconnect"
         self.TrayApp.SetImage()
 
         self.Searches.interval = 0
@@ -1544,7 +1544,7 @@ class NicotineFrame:
 
         self.SetUserStatus(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "trayicon_disconnect"
+        self.TrayApp.tray_status["status"] = "disconnect"
         self.TrayApp.SetImage()
 
         self.uploads.ConnClose()
@@ -1563,7 +1563,7 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_connect"
+            self.TrayApp.tray_status["status"] = "connect"
             self.TrayApp.SetImage()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
@@ -1575,7 +1575,7 @@ class NicotineFrame:
         else:
             self.SetUserStatus(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_away"
+            self.TrayApp.tray_status["status"] = "away"
             self.TrayApp.SetImage()
 
         self.SetWidgetOnlineStatus(True)
@@ -1653,12 +1653,12 @@ class NicotineFrame:
         if self.away == 0:
             self.SetUserStatus(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_connect"
+            self.TrayApp.tray_status["status"] = "connect"
             self.TrayApp.SetImage()
         else:
             self.SetUserStatus(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "trayicon_away"
+            self.TrayApp.tray_status["status"] = "away"
             self.TrayApp.SetImage()
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))

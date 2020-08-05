@@ -15,6 +15,9 @@ added_files = [
     # About icon
     ('../org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
 
+    # Tray icons
+    ('../../img/tray', 'share/icons/hicolor/32x32/apps'),
+
     # GTK Builder files, plugins, geoip database
     ('../../pynicotine', 'pynicotine'),
 
@@ -37,9 +40,10 @@ a = Analysis(['../../nicotine'],
 
 # Remove unwanted files
 for file in a.datas[:]:
-    excluded = ('.ani', '.cur', '.md', '.png', '.po', '.pot', '.py', '.pyc', 'merge_all', 'remove_fuzzy', 'remove_mo')
+    excluded = ('.ani', '.cur', '.md', '.po', '.pot', '.py', '.pyc', 'merge_all', 'remove_fuzzy', 'remove_mo')
 
-    if file[0].endswith(excluded):
+    if file[0].endswith(excluded) or \
+        file[0].endswith('.png') and not 'org.nicotine_plus.Nicotine' in file[0]:
         a.datas.remove(file)
 
 pyz = PYZ(a.pure, a.zipped_data,
