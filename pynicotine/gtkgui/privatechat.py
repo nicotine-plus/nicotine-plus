@@ -245,7 +245,7 @@ class PrivateChats(IconNotebook):
             self.frame.Notifications.Add("private", msg.user)
 
             if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
-                self.frame.NewNotification(
+                self.frame.Notifications.NewNotificationPopup(
                     text,
                     title=_("Private message from %s") % msg.user
                 )

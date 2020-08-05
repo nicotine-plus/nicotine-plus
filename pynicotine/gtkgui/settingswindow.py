@@ -3137,7 +3137,7 @@ class NotificationsFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        if self.frame.notificationprovider is not None:
+        if self.frame.Notifications.notification_provider is not None:
             self.NotificationPopupSound.set_sensitive(True)
             self.NotificationPopupFile.set_sensitive(True)
             self.NotificationPopupFolder.set_sensitive(True)
