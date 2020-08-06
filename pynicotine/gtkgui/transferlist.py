@@ -469,7 +469,7 @@ class TransferList:
                 # Group by folder, path not visible
                 path = None
             else:
-                path = transfer.path
+                path = '/'.join(reversed(transfer.path.split('/')))[1:]
 
             self.transfersmodel.set(
                 transfer.iter,
@@ -508,15 +508,17 @@ class TransferList:
 
                     """ Paths can be empty if files are downloaded individually, make sure we
                     don't add files to the wrong user in the TreeView """
-                    path = user + transfer.path
+                    path = transfer.path
+                    user_path = user + path
+                    reverse_path = '/'.join(reversed(path.split('/')))[1:]
 
-                    if path not in self.paths:
-                        self.paths[path] = self.transfersmodel.append(
+                    if user_path not in self.paths:
+                        self.paths[user_path] = self.transfersmodel.append(
                             self.users[user],
-                            [user, transfer.path, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
+                            [user, reverse_path, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
                         )
 
-                    parent = self.paths[path]
+                    parent = self.paths[user_path]
             else:
                 # No grouping
 
@@ -531,7 +533,7 @@ class TransferList:
                 # Group by folder, path not visible
                 path = None
             else:
-                path = transfer.path
+                path = '/'.join(reversed(transfer.path.split('/')))[1:]
 
             iter = self.transfersmodel.append(
                 parent,
