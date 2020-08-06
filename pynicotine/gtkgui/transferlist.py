@@ -469,7 +469,7 @@ class TransferList:
                 # Group by folder, path not visible
                 path = None
             else:
-                path = '/'.join(reversed(transfer.path.split('/')))[1:]
+                path = '/'.join(reversed(transfer.path.split('/')))
 
             self.transfersmodel.set(
                 transfer.iter,
@@ -510,7 +510,7 @@ class TransferList:
                     don't add files to the wrong user in the TreeView """
                     path = transfer.path
                     user_path = user + path
-                    reverse_path = '/'.join(reversed(path.split('/')))[1:]
+                    reverse_path = '/'.join(reversed(path.split('/')))
 
                     if user_path not in self.paths:
                         self.paths[user_path] = self.transfersmodel.append(
@@ -533,7 +533,7 @@ class TransferList:
                 # Group by folder, path not visible
                 path = None
             else:
-                path = '/'.join(reversed(transfer.path.split('/')))[1:]
+                path = '/'.join(reversed(transfer.path.split('/')))
 
             iter = self.transfersmodel.append(
                 parent,
