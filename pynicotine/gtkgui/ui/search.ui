@@ -358,6 +358,33 @@
                         <property name="draw_indicator">True</property>
                         <signal name="toggled" handler="OnRefilter" swapped="no"/>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="ShowChatHelp">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Search filter help</property>
+                        <property name="image">help</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="clicked" handler="OnAboutFilters" swapped="no"/>
+                        <child>
+                          <object class="GtkImage" id="help">
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">dialog-question-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">3</property>
+                      </packing>
                     </child>
                   </object>
                 </child>
