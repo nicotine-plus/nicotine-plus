@@ -1529,6 +1529,9 @@ class Search:
             else:
                 CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
+    def OnAboutFilters(self, widget):
+        self.frame.OnAboutFilters(widget)
+
 
 class WishList:
 
