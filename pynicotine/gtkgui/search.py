@@ -941,41 +941,31 @@ class Search:
             if user == r[1]:
                 self.all_data[pos][17] = status
 
-                if self.ResultGrouping.get_active() == 0 and pos < self.Searches.maxdisplayedresults:
-                    # No grouping
-
-                    iter = self.resultsmodel.get_iter_from_string(str(pos))
-                    self.resultsmodel.set_value(iter, 17, status)
-
             pos += 1
 
-        if self.ResultGrouping.get_active() > 0:
-            # Group by folder or user
+        useriter = self.resultsmodel.get_iter_first()
 
-            useriter = self.resultsmodel.get_iter_first()
+        while useriter is not None:
+            selected_user = self.resultsmodel.get_value(useriter, 1)
 
-            while useriter is not None:
-                selected_user = self.resultsmodel.get_value(useriter, 1)
+            if selected_user == user:
+                self.resultsmodel.set_value(useriter, 17, status)
 
-                if selected_user == user:
-                    self.resultsmodel.set_value(useriter, 17, status)
+                diriter = self.resultsmodel.iter_children(useriter)
 
-                    diriter = self.resultsmodel.iter_children(useriter)
+                while diriter is not None:
+                    self.resultsmodel.set_value(diriter, 17, status)
 
-                    while diriter is not None:
-                        self.resultsmodel.set_value(diriter, 17, status)
+                    fileiter = self.resultsmodel.iter_children(diriter)
 
-                        fileiter = self.resultsmodel.iter_children(diriter)
+                    while fileiter is not None:
+                        self.resultsmodel.set_value(fileiter, 17, status)
 
-                        while fileiter is not None:
-                            self.resultsmodel.set_value(fileiter, 17, status)
+                        fileiter = self.resultsmodel.iter_next(fileiter)
 
-                            fileiter = self.resultsmodel.iter_next(fileiter)
+                    diriter = self.resultsmodel.iter_next(diriter)
 
-                        diriter = self.resultsmodel.iter_next(diriter)
-                    return
-
-                useriter = self.resultsmodel.iter_next(useriter)
+            useriter = self.resultsmodel.iter_next(useriter)
 
     def checkDigit(self, filter, value, factorize=True):
 
