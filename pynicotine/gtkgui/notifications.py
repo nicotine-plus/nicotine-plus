@@ -179,7 +179,7 @@ class Notifications:
         except AttributeError:
             # Fall back to plyer
 
-            self.notificationprovider.notify(
+            self.notification_provider.notify(
                 app_name="Nicotine+",
                 title=title,
                 message=message
