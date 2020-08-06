@@ -589,9 +589,9 @@ class Search:
             [_("ID"), widths[0], "text", self.CellDataFunc],
             [_("User"), widths[1], "text", self.CellDataFunc],
             [_("Country"), widths[2], "pixbuf"],
-            [_("Immediate Download"), widths[3], "text", self.CellDataFunc],
+            [_("Immediate Download"), widths[3], "center", self.CellDataFunc],
             [_("Speed"), widths[4], "number", self.CellDataFunc],
-            [_("In queue"), widths[5], "number", self.CellDataFunc],
+            [_("In queue"), widths[5], "center", self.CellDataFunc],
             [_("Directory"), widths[6], "text", self.CellDataFunc],
             [_("Filename"), widths[7], "text", self.CellDataFunc],
             [_("Size"), widths[8], "number", self.CellDataFunc],
@@ -620,6 +620,8 @@ class Search:
         self.col_size.set_sort_column_id(14)
         self.col_bitrate.set_sort_column_id(11)
         self.col_length.set_sort_column_id(10)
+
+        self.col_country.get_widget().hide()
 
         self.ResultsList.set_model(self.resultsmodel)
 
@@ -824,13 +826,13 @@ class Search:
                 continue
 
             name = fullpath.split('\\')[-1]
-            dir = fullpath[:-len(name)]
+            directory = '\\'.join(reversed(fullpath[:-len(name)].split('\\')))[1:]
 
             size = result[2]
             h_size = HumanSize(size)
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
-            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, dir, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
+            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
             append = True
             counter += 1
 
@@ -1222,35 +1224,22 @@ class Search:
     def SelectedResultsCallback(self, model, path, iter):
 
         user = model.get_value(iter, 1)
-        dir = model.get_value(iter, 6)
-        file = model.get_value(iter, 7)
-        fn = None
-        isdirectory = False
+        directory = model.get_value(iter, 6)
+        bitrate = model.get_value(iter, 9)
+        length = model.get_value(iter, 10)
+        path = model.get_value(iter, 12)
+        size = model.get_value(iter, 14)
 
         if user is None:
             return
 
         self.selected_users.add(user)
 
-        for r in self.all_data:
+        if directory == "" and path == "":
+            # Result is not a file or directory, don't add it
+            return
 
-            if (file != "" and file != r[7]) or (dir != "" and dir != r[6]) or user != r[1]:
-                continue
-
-            if file == "":
-                if dir == "":
-                    # Result is not a file or directory, don't add it
-                    return
-                else:
-                    isdirectory = True
-
-            fn = r[12]
-            size = r[14]
-            bitrate = r[9]
-            length = r[10]
-            break
-
-        self.selected_results.add((user, fn, size, bitrate, length, isdirectory))
+        self.selected_results.add((user, path, size, bitrate, length, directory))
 
     def OnListClicked(self, widget, event):
 
@@ -1287,7 +1276,7 @@ class Search:
         items[8].set_sensitive(users)
 
         for result in self.selected_results:
-            if result[5] is False:
+            if result[1]:
                 # At least one selected result is a file, activate file-related items
                 items[0].set_sensitive(True)
                 items[1].set_sensitive(True)
@@ -1377,7 +1366,7 @@ class Search:
 
         for file in self.selected_results:
             # Make sure the selected result is not a directory
-            if file[5] is False:
+            if file[1]:
                 self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def OnDownloadFilesTo(self, widget):
@@ -1396,9 +1385,9 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            dir = "\\".join(i[1].split("\\")[:-1])
+            directory = '\\'.join(reversed(i[5].split('\\')))
 
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
+            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, directory))
 
     def OnDownloadFoldersTo(self, widget):
 
@@ -1412,7 +1401,7 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            dir = "\\".join(i[1].split("\\")[:-1])
+            dir = '\\'.join(reversed(i[5].split('\\')))
 
             if user not in self.frame.np.requestedFolders:
                 self.frame.np.requestedFolders[user] = {}

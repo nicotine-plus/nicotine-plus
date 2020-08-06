@@ -170,12 +170,20 @@ def InitialiseColumns(treeview, *args):
 
         if c[2] == "text":
             renderer = gtk.CellRendererText()
+            renderer.set_padding(10, 3)
+
+            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+        elif c[2] == "center":
+            renderer = gtk.CellRendererText()
+            renderer.set_property("xalign", 0.5)
+
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "number":
             renderer = gtk.CellRendererText()
+            renderer.set_property("xalign", 0.9)
+
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
-            column.set_alignment(1.0)
-            renderer.set_property("xalign", 1)
+            column.set_alignment(0.9)
         elif c[2] == "colored":
             renderer = gtk.CellRendererText()
             column = gtk.TreeViewColumn(c[0], renderer, text=i, foreground=c[3][0], background=c[3][1])
@@ -216,6 +224,7 @@ def InitialiseColumns(treeview, *args):
 
         column.set_reorderable(False)
         column.set_widget(gtk.Label.new(c[0]))
+        column.get_widget().set_margin_start(6)
         column.get_widget().show()
 
         treeview.append_column(column)
