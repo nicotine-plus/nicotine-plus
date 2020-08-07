@@ -37,7 +37,8 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.dialogs import EntryDialog
-from pynicotine.gtkgui.dialogs import TickerDialog
+from pynicotine.gtkgui.roomwall import RoomWall
+from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import HideColumns
 from pynicotine.gtkgui.utils import Humanize
@@ -743,87 +744,6 @@ class RoomsControl:
             room.GetCompletionList(clist=list(self.clist))
 
 
-class Ticker:
-
-    def __init__(self, TickerEventBox):
-
-        self.entry = gtk.Entry()
-        self.entry.set_property("editable", False)
-        self.entry.set_has_frame(False)
-        self.entry.show()
-
-        TickerEventBox.add(self.entry)
-
-        self.messages = []
-        self.ix = 0
-        self.source = None
-        self.shouldsort = False
-
-        self.enable()
-
-    def __del__(self):
-        GLib.source_remove(self.source)
-
-    def scroll(self, *args):
-
-        if not self.messages:
-            self.entry.set_text("")
-            return True
-
-        if self.shouldsort:
-            # A new ticker was added, sort the tickers by message length
-            self.messages.sort(key=lambda x: len(x[1]))
-            self.shouldsort = False
-
-        if self.ix >= len(self.messages):
-            self.ix = 0
-
-        user, message = self.messages[self.ix]
-        self.entry.set_text("[%s]: %s" % (user, message))
-        self.ix += 1
-
-        return True
-
-    def add_ticker(self, user, message):
-
-        message = message.replace("\n", " ")
-        self.messages.append([user, message])
-
-        # Indicates that the ticker list should be sorted on the next scroll
-        self.shouldsort = True
-
-    def remove_ticker(self, user):
-
-        for i in range(len(self.messages)):
-            if self.messages[i][0] == user:
-                del self.messages[i]
-                return
-
-    def get_tickers(self):
-        return self.messages
-
-    def set_ticker(self, msgs):
-        self.messages = msgs
-        self.ix = 0
-        self.scroll()
-
-    def enable(self):
-
-        if self.source:
-            return
-
-        self.source = GLib.timeout_add(2500, self.scroll)
-
-    def disable(self):
-
-        if not self.source:
-            return
-
-        GLib.source_remove(self.source)
-
-        self.source = None
-
-
 class ChatRoom:
 
     def __init__(self, roomsctrl, room, users, meta=False):
@@ -851,25 +771,17 @@ class ChatRoom:
 
         builder.connect_signals(self)
 
-        self.Ticker = Ticker(self.TickerEventBox)
+        self.Tickers = Tickers()
+        self.RoomWall = RoomWall(self.frame, self)
 
         self.room = room
         self.leaving = 0
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
 
-        if config["ticker"]["hide"]:
-            self.TickerEventBox.hide()
-        else:
-            self.TickerEventBox.show()
-
-        self.OnShowChatButtons(show=(not config["ui"]["chat_hidebuttons"]))
+        self.OnShowChatButtons()
 
         self.clist = []
-
-        self.Ticker.entry.connect("button_press_event", self.OnTickerClicked)
-        self.Ticker.entry.connect("focus-in-event", self.OnTickerFocus)
-        self.Ticker.entry.connect("focus-out-event", self.OnTickerFocus)
 
         if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
@@ -1203,19 +1115,18 @@ class ChatRoom:
         self.popup_menu.editing = False
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
+    def OnShowRoomWall(self, widget):
+        self.RoomWall.show()
+
     def OnShowChatHelp(self, widget):
         self.frame.OnAboutChatroomCommands(widget)
 
     def OnShowChatButtons(self, show=True):
 
-        for widget in self.HideStatusLog, self.HideUserList:
-            if show:
-                widget.show()
-            else:
-                widget.hide()
-
         if self.frame.np.config.sections["ui"]["speechenabled"]:
             self.Speech.show()
+        else:
+            self.Speech.hide()
 
     def OnHideStatusLog(self, widget):
 
@@ -1239,13 +1150,13 @@ class ChatRoom:
 
     def TickerSet(self, msg):
 
-        self.Ticker.set_ticker([])
+        self.Tickers.set_ticker([])
         for user in list(msg.msgs.keys()):
             if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
                 # User ignored, ignore Ticker messages
                 return
 
-            self.Ticker.add_ticker(user, msg.msgs[user])
+            self.Tickers.add_ticker(user, msg.msgs[user])
 
     def TickerAdd(self, msg):
 
@@ -1254,10 +1165,10 @@ class ChatRoom:
             # User ignored, ignore Ticker messages
             return
 
-        self.Ticker.add_ticker(msg.user, msg.msg)
+        self.Tickers.add_ticker(msg.user, msg.msg)
 
     def TickerRemove(self, msg):
-        self.Ticker.remove_ticker(msg.user)
+        self.Tickers.remove_ticker(msg.user)
 
     def SayChatRoom(self, msg, text, public=False):
         text = re.sub("\\s\\s+", "  ", text)
@@ -1558,9 +1469,9 @@ class ChatRoom:
         self.ChatEntry.set_text("")
 
     def showTickers(self):
-        tickers = self.Ticker.get_tickers()
-        header = _("All ticker messages for %(room)s:") % {'room': self.room}
-        self.frame.logMessage("%s\n%s" % (header, "\n".join(["%s: %s" % (user, msg) for (user, msg) in tickers])))
+        tickers = self.Tickers.get_tickers()
+        header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
+        self.frame.logMessage("%s\n%s" % (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -1801,7 +1712,6 @@ class ChatRoom:
         self.frame.SetTextBG(self.ChatEntry)
         self.frame.SetTextBG(self.AutoJoin)
         self.frame.SetTextBG(self.Log)
-        self.frame.SetTextBG(self.Ticker.entry)
 
     def getUserStatusColor(self, status):
 
@@ -1866,7 +1776,6 @@ class ChatRoom:
         self.frame.SetTextBG(self.ChatEntry)
         self.frame.SetTextBG(self.AutoJoin)
         self.frame.SetTextBG(self.Log)
-        self.frame.SetTextBG(self.Ticker.entry)
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
     def OnLeave(self, widget=None):
@@ -1924,7 +1833,7 @@ class ChatRoom:
         for tag in list(self.tag_users.values()):
             self.changecolour(tag, "useroffline")
 
-        self.Ticker.set_ticker([])
+        self.Tickers.set_ticker([])
 
     def Rejoined(self, users):
 
@@ -2170,66 +2079,6 @@ class ChatRoom:
 
     def OnClearRoomLog(self, widget):
         self.RoomLog.get_buffer().set_text("")
-
-    def OnTickerFocus(self, widget, event):
-
-        if widget.is_focus():
-            self.Ticker.disable()
-        else:
-            self.Ticker.enable()
-
-    def OnTickerClicked(self, widget, event):
-
-        if event.button != 1 or event.type != Gdk.EventType._2BUTTON_PRESS:
-            return False
-
-        config = self.frame.np.config.sections
-
-        if config["server"]["login"] in self.Ticker.messages:
-            old = self.Ticker.messages[config["server"]["login"]]
-        else:
-            old = ""
-
-        t, result = TickerDialog(
-            parent=self.frame.MainWindow,
-            title="Set ticker message",
-            message="Set room ticker message:",
-            default_text=old
-        )
-
-        if result is not None:
-
-            if t == 1:
-
-                if not result:
-                    if self.room in config["ticker"]["rooms"]:
-                        del config["ticker"]["rooms"][self.room]
-                else:
-                    config["ticker"]["rooms"][self.room] = result
-
-                self.frame.np.config.writeConfiguration()
-
-            elif t == 2:
-
-                if self.room in config["ticker"]["rooms"]:
-                    del config["ticker"]["rooms"][self.room]
-
-                config["ticker"]["default"] = result
-
-                self.frame.np.config.writeConfiguration()
-
-            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, result))
-
-        return True
-
-    def ShowTicker(self, visible):
-
-        if visible:
-            self.Ticker.enable()
-            self.TickerEventBox.show()
-        else:
-            self.Ticker.disable()
-            self.TickerEventBox.hide()
 
 
 class ChatRooms(IconNotebook):

@@ -360,8 +360,6 @@ class NicotineFrame:
         self.LogWindow.show()
         self.OnShowLog(self.show_log_window1)
 
-        self.show_tickers1.set_active(not config["ticker"]["hide"])
-
         self.show_debug_info1.set_active(self.np.config.sections["logging"]["debug"])
 
         self.chatrooms = self.ChatNotebook
@@ -495,8 +493,6 @@ class NicotineFrame:
         self.get_privileges1.set_sensitive(0)
 
         self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
-
-        self.ShowChatButtons.set_active(not config["ui"]["chat_hidebuttons"])
 
         if config["transfers"]["rescanonstartup"]:
 
@@ -3022,15 +3018,6 @@ class NicotineFrame:
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
         self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
-
-    def OnShowTickers(self, widget):
-        if not self.chatrooms:
-            return
-        show = widget.get_active()
-        self.np.config.sections["ticker"]["hide"] = (not show)
-        self.np.config.writeConfiguration()
-        for room in list(self.chatrooms.roomsctrl.joinedrooms.values()):
-            room.ShowTicker(show)
 
     def RecommendationsExpanderStatus(self, widget):
         if widget.get_property("expanded"):

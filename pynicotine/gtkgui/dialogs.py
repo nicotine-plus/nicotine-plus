@@ -130,62 +130,6 @@ def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_
     self.show()
 
 
-def TickerDialog(parent, title, message, default_text=""):
-
-    self = gtk.MessageDialog(
-        transient_for=parent,
-        flags=0,
-        message_type=gtk.MessageType.QUESTION,
-        buttons=gtk.ButtonsType.OK_CANCEL,
-        text=title
-    )
-    self.set_default_size(600, -1)
-    self.set_modal(True)
-    self.format_secondary_text(message)
-
-    entry = gtk.Entry()
-    entry.set_activates_default(True)
-    entry.set_text(default_text)
-    self.get_message_area().pack_start(entry, True, True, 0)
-
-    box = gtk.Box.new(gtk.Orientation.VERTICAL, False)
-    box.set_spacing(5)
-
-    radio1 = gtk.RadioButton().new_from_widget(None)
-    radio1.set_label(_("Just this time"))
-    radio1.set_active(True)
-    box.pack_start(radio1, False, False, 0)
-
-    radio2 = gtk.RadioButton().new_from_widget(radio1)
-    radio2.set_label(_("Always for this channel"))
-    box.pack_start(radio2, False, False, 0)
-
-    radio3 = gtk.RadioButton().new_from_widget(radio1)
-    radio3.set_label(_("Default for all channels"))
-    box.pack_start(radio3, False, False, 0)
-
-    self.get_message_area().pack_start(box, True, True, 0)
-
-    self.vbox.show_all()
-
-    result = None
-    t = 0
-    if self.run() == gtk.ResponseType.OK:
-
-        if radio1.get_active():
-            t = 0
-        elif radio2.get_active():
-            t = 1
-        elif radio3.get_active():
-            t = 2
-
-        result = entry.get_text()
-
-    self.destroy()
-
-    return t, result
-
-
 class MetaDialog(gtk.Dialog):
 
     def __init__(self, frame, message="", data=None, modal=True, Search=True):
