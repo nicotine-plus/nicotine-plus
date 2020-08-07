@@ -309,86 +309,88 @@ class Shares:
             # We shouldn't send a search response if we initiated the search request
             return
 
-        checkuser, reason = self.np.CheckUser(user, None)
-        if not checkuser:
-            return
-
-        if reason == "geoip":
-            geoip = 1
-        else:
-            geoip = 0
-
         maxresults = self.config.sections["searches"]["maxresults"]
-
-        if checkuser == 2:
-            wordindex = self.config.sections["transfers"]["bwordindex"]
-            fileindex = self.config.sections["transfers"]["bfileindex"]
-        else:
-            wordindex = self.config.sections["transfers"]["wordindex"]
-            fileindex = self.config.sections["transfers"]["fileindex"]
-
-        fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 
         if maxresults == 0:
             return
 
+        checkuser, reason = self.np.CheckUser(user, None)
+        if not checkuser:
+            return
+
+        if checkuser == 2:
+            wordindex = self.config.sections["transfers"]["bwordindex"]
+        else:
+            wordindex = self.config.sections["transfers"]["wordindex"]
+
         terms = searchterm.translate(self.translatepunctuation).lower().split()
 
+        length = 0
+
+        for i in terms:
+            if i in wordindex:
+                length += 1
+
+        if length == 0 or length != len(terms):
+            return
+
         try:
-            list = [wordindex[i][:] for i in terms if i in wordindex]
+            list = [wordindex[i] for i in terms if i in wordindex]
         except ValueError:
             # Shelf is probably closed, perhaps when rescanning share
             return
 
-        if len(list) != len(terms) or len(list) == 0:
-            return
+        shortest = min(list, key=len)
+        list.remove(shortest)
 
-        min = list[0]
-
-        for i in list[1:]:
-            if len(i) < len(min):
-                min = i
-
-        list.remove(min)
-
-        for i in min[:]:
+        for i in shortest[:]:
             for j in list:
                 if i not in j:
-                    min.remove(i)
+                    shortest.remove(i)
                     break
 
-        results = min[:maxresults]
+        results = shortest[:maxresults]
 
         if len(results) > 0 and self.np.transfers is not None:
 
             queuesizes = self.np.transfers.getUploadQueueSizes()
             slotsavail = self.np.transfers.allowNewUploads()
 
-            if len(results) > 0:
+            if reason == "geoip":
+                geoip = 1
+            else:
+                geoip = 0
 
-                message = slskmessages.FileSearchResult(
-                    None,
-                    self.config.sections["server"]["login"],
-                    geoip, searchid, results, fileindex, slotsavail,
-                    self.np.speed, queuesizes, fifoqueue
-                )
+            if checkuser == 2:
+                fileindex = self.config.sections["transfers"]["bfileindex"]
+            else:
+                fileindex = self.config.sections["transfers"]["fileindex"]
 
-                self.np.ProcessRequestToPeer(user, message)
+            fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 
-                if direct:
-                    self.logMessage(
-                        _("User %(user)s is directly searching for %(query)s, returning %(num)i results") % {
-                            'user': user,
-                            'query': searchterm,
-                            'num': len(results)
-                        }, 2)
-                else:
-                    self.logMessage(
-                        _("User %(user)s is searching for %(query)s, returning %(num)i results") % {
-                            'user': user,
-                            'query': searchterm,
-                            'num': len(results)
-                        }, 2)
+            message = slskmessages.FileSearchResult(
+                None,
+                self.config.sections["server"]["login"],
+                geoip, searchid, results, fileindex, slotsavail,
+                self.np.speed, queuesizes, fifoqueue
+            )
+
+            self.np.ProcessRequestToPeer(user, message)
+
+            if direct:
+                self.logMessage(
+                    _("User %(user)s is directly searching for %(query)s, returning %(num)i results") % {
+                        'user': user,
+                        'query': searchterm,
+                        'num': len(results)
+                    }, 2)
+            else:
+                self.logMessage(
+                    _("User %(user)s is searching for %(query)s, returning %(num)i results") % {
+                        'user': user,
+                        'query': searchterm,
+                        'num': len(results)
+                    }, 2)
 
     # Rescan directories in shared databases
     def rescandirs(self, shared, oldmtimes, oldfiles, sharedfilesstreams, yieldfunction, progress=None, name="", rebuild=False):
