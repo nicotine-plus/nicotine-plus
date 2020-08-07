@@ -2354,6 +2354,12 @@ class NicotineFrame:
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
 
         self.About = builder.get_object("About")
+
+        # Remove non-functional close button added by GTK
+        buttons = self.About.get_action_area().get_children()
+        if buttons:
+            buttons[-1].destroy()
+
         self.About.set_transient_for(self.MainWindow)
         self.About.set_version(version)
         self.About.show()
