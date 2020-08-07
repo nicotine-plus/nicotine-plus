@@ -199,26 +199,6 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckMenuItem" id="show_tickers1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show _tickers</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnShowTickers" swapped="no"/>
-                        <accelerator key="T" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkCheckMenuItem" id="ShowChatButtons">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show _chat room log and list toggles</property>
-                        <property name="use_underline">True</property>
-                        <signal name="toggled" handler="OnShowChatButtons" swapped="no"/>
-                        <accelerator key="E" signal="activate" modifiers="GDK_MOD1_MASK"/>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkCheckMenuItem" id="ShowFlags">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>

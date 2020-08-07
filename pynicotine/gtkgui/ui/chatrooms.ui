@@ -10,78 +10,6 @@
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">5</property>
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkEventBox" id="TickerEventBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="visible_window">False</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="HideUserList">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Hide/Show User list</property>
-                <property name="image">HideUserListImage</property>
-                <property name="always_show_image">True</property>
-                <signal name="toggled" handler="OnHideUserList" swapped="no"/>
-                <child>
-                  <object class="GtkImage" id="HideUserListImage">
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">go-next-symbolic</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleButton" id="HideStatusLog">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Hide/Show Status log</property>
-                <property name="image">HideStatusLogImage</property>
-                <property name="always_show_image">True</property>
-                <signal name="toggled" handler="OnHideStatusLog" swapped="no"/>
-                <child>
-                  <object class="GtkImage" id="HideStatusLogImage">
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">go-up-symbolic</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkPaned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -214,6 +142,28 @@
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkButton" id="ShowRoomWall">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Room wall</property>
+                            <property name="image">list</property>
+                            <property name="always_show_image">True</property>
+                            <signal name="clicked" handler="OnShowRoomWall" swapped="no"/>
+                            <child>
+                              <object class="GtkImage" id="list">
+                                <property name="can_focus">False</property>
+                                <property name="icon_name">format-unordered-list-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkButton" id="ShowChatHelp">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -232,7 +182,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="position">3</property>
+                            <property name="position">4</property>
                           </packing>
                         </child>
                       </object>

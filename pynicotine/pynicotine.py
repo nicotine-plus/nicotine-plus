@@ -753,8 +753,6 @@ class NetworkEventProcessor:
 
             if msg.room in self.config.sections["ticker"]["rooms"]:
                 ticker = self.config.sections["ticker"]["rooms"][msg.room]
-            elif self.config.sections["ticker"]["default"]:
-                ticker = self.config.sections["ticker"]["default"]
 
             if ticker:
                 self.queue.put(slskmessages.RoomTickerSet(msg.room, ticker))
