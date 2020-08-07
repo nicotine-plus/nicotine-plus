@@ -177,7 +177,7 @@ class TrayApp:
             if self.appindicator is not None:
                 trayicon = self.appindicator.Indicator.new(
                     "Nicotine+",
-                    "org.nicotine_plus.Nicotine_connect",
+                    "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 trayicon.set_menu(self.tray_popup_menu)
             else:
@@ -193,7 +193,7 @@ class TrayApp:
         for icon_name in ["away", "connect", "disconnect", "msg"]:
             """
             There are two naming schemes for tray icons:
-            - System-wide/local icons: "org.nicotine_plus.Nicotine_<icon_name>"
+            - System-wide/local icons: "org.nicotine_plus.Nicotine-<icon_name>"
             - Custom icons: "trayicon_<icon_name>"
             """
 
@@ -202,7 +202,7 @@ class TrayApp:
                 self.custom_icons = True
                 break
 
-            if glob.glob(os.path.join("img", "tray", "org.nicotine_plus.Nicotine_" + icon_name) + ".*"):
+            if glob.glob(os.path.join("img", "tray", "org.nicotine_plus.Nicotine-" + icon_name) + ".*"):
                 final_icon_path = os.path.abspath(
                     os.path.join("img", "tray")
                 )
@@ -289,7 +289,7 @@ class TrayApp:
                 if self.custom_icons:
                     icon_name = "trayicon_" + icon_name
                 else:
-                    icon_name = "org.nicotine_plus.Nicotine_" + icon_name
+                    icon_name = "org.nicotine_plus.Nicotine-" + icon_name
 
                 self.trayicon.set_icon_full(icon_name, "Nicotine+")
 
@@ -300,7 +300,7 @@ class TrayApp:
                         self.frame.images["trayicon_" + icon_name]
                     )
                 else:
-                    self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine_" + icon_name)
+                    self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
 
         except Exception as e:
             log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
