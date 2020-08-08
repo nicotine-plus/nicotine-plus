@@ -44,7 +44,7 @@
                 <property name="vscrollbar_policy">automatic</property>
                 <child>
                   <object class="GtkViewport" id="viewport1">
-                    <property name="border_width">10</property>
+                    <property name="border_width">15</property>
                     <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
