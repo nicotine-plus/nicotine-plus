@@ -167,7 +167,7 @@ Protocols handlers: </property>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Add</property>
+                        <property name="label" translatable="yes">Add...</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>

@@ -2094,13 +2094,13 @@ class NotebookFrame(buildFrame):
         }
 
 
-class BloatFrame(buildFrame):
+class FontsFrame(buildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "bloat")
+        buildFrame.__init__(self, "fonts")
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2120,8 +2120,7 @@ class BloatFrame(buildFrame):
                 "searchfont": self.SelectSearchFont,
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
-                "decimalsep": self.DecimalSep,
-                "spellcheck": self.SpellCheck
+                "decimalsep": self.DecimalSep
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons
@@ -2149,8 +2148,6 @@ class BloatFrame(buildFrame):
 
         self.needcolors = 0
 
-        self.SpellCheck.set_sensitive(self.frame.gspell)
-
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
@@ -2158,7 +2155,6 @@ class BloatFrame(buildFrame):
         return {
             "ui": {
                 "decimalsep": self.DecimalSep.get_model().get(self.DecimalSep.get_active_iter(), 0)[0],
-                "spellcheck": self.SpellCheck.get_active(),
                 "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
@@ -2871,6 +2867,9 @@ class CompletionFrame(buildFrame):
                 "commands": self.CompleteCommandsCheck,
                 "aliases": self.CompleteAliasesCheck,
                 "onematch": self.OneMatchCheck
+            },
+            "ui": {
+                "spellcheck": self.SpellCheck
             }
         }
 
@@ -2886,6 +2885,9 @@ class CompletionFrame(buildFrame):
 
     def SetSettings(self, config):
         self.needcompletion = 0
+
+        self.SpellCheck.set_sensitive(self.frame.gspell)
+
         self.p.SetWidgetsData(config, self.options)
 
     def OnCompletionChanged(self, widget):
@@ -2924,6 +2926,9 @@ class CompletionFrame(buildFrame):
                 "commands": self.CompleteCommandsCheck.get_active(),
                 "aliases": self.CompleteAliasesCheck.get_active(),
                 "onematch": self.OneMatchCheck.get_active()
+            },
+            "ui": {
+                "spellcheck": self.SpellCheck.get_active()
             }
         }
 
@@ -3306,48 +3311,6 @@ class PluginFrame(buildFrame):
         }
 
 
-class TransfersFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "misc")
-        self.options = {}
-
-    def SetSettings(self, config):
-        return {}
-
-    def GetSettings(self):
-        return {}
-
-
-class ChatFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "chat")
-        self.options = {}
-
-    def SetSettings(self, config):
-        return {}
-
-    def GetSettings(self):
-        return {}
-
-
-class MiscFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "misc")
-        self.options = {}
-
-    def SetSettings(self, config):
-        return {}
-
-    def GetSettings(self):
-        return {}
-
-
 class SettingsWindow:
 
     def __init__(self, frame):
@@ -3410,6 +3373,7 @@ class SettingsWindow:
         self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 
         self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
+        self.tree["Fonts"] = model.append(row, [_("Fonts"), "Fonts"])
         self.tree["Colours"] = model.append(row, [_("Colors"), "Colours"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
@@ -3424,7 +3388,6 @@ class SettingsWindow:
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 
         # Build individual categories
-        p["General"] = MiscFrame(self)
         p["Server"] = ServerFrame(self)
         p["Plugins"] = PluginFrame(self)
         p["Notifications"] = NotificationsFrame(self)
@@ -3432,7 +3395,6 @@ class SettingsWindow:
         p["Searches"] = SearchFrame(self)
         p["User info"] = UserinfoFrame(self)
 
-        p["Transfers"] = TransfersFrame(self)
         p["Shares"] = SharesFrame(self)
         p["Downloads"] = DownloadsFrame(self)
         p["Uploads"] = UploadsFrame(self)
@@ -3440,12 +3402,11 @@ class SettingsWindow:
         p["Events"] = EventsFrame(self)
         p["Geo Block"] = GeoBlockFrame(self)
 
-        p["Interface"] = BloatFrame(self)
+        p["Fonts"] = FontsFrame(self)
         p["Colours"] = ColoursFrame(self)
         p["Icons"] = IconsFrame(self)
         p["Notebook Tabs"] = NotebookFrame(self)
 
-        p["Chat"] = ChatFrame(self)
         p["Away Mode"] = AwayFrame(self)
         p["Logging"] = LogFrame(self)
         p["Ignore List"] = IgnoreFrame(self)
@@ -3665,6 +3626,6 @@ class SettingsWindow:
                 for (key, data) in list(sub.items()):
                     config[key].update(data)
 
-            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
+            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None

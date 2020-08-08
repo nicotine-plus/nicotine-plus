@@ -7,14 +7,14 @@
       <object class="GtkBox" id="Main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="border_width">5</property>
-        <property name="spacing">10</property>
+        <property name="spacing">15</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
@@ -114,14 +114,14 @@
                       <object class="GtkImage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="icon_name">view-refresh-symbolic</property>
+                        <property name="icon_name">edit-clear-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Default</property>
+                        <property name="label" translatable="yes">Clear</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
