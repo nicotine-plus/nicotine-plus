@@ -153,7 +153,7 @@
                             <child>
                               <object class="GtkImage" id="list">
                                 <property name="can_focus">False</property>
-                                <property name="icon_name">format-unordered-list-symbolic</property>
+                                <property name="icon_name">view-list-symbolic</property>
                               </object>
                             </child>
                           </object>
