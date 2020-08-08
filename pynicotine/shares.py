@@ -25,7 +25,6 @@ import stat
 import string
 import sys
 import taglib
-import time
 import _thread
 from collections import defaultdict
 from gettext import gettext as _
@@ -50,7 +49,6 @@ class Shares:
         self.CompressedSharesBuddy = self.CompressedSharesNormal = None
         self.CompressShares("normal")
         self.CompressShares("buddy")
-        self.requestedShares = {}
         self.newbuddyshares = self.newnormalshares = False
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
@@ -195,14 +193,6 @@ class Shares:
         if user is None:
             # No peer connection
             return
-
-        requestTime = time.time()
-        if user in self.requestedShares:
-            if not requestTime > 10 + self.requestedShares[user]:
-                # Ignoring request, because it's 10 or less seconds since the
-                # last one by this user
-                return
-        self.requestedShares[user] = requestTime
 
         # Check address is spoofed, if possible
         # if self.CheckSpoof(user, ip, port):
