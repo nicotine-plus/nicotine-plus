@@ -63,7 +63,7 @@ class buildFrame:
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_" + window + ".ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
 
         self.__dict__[window] = builder.get_object(window)
 
@@ -85,7 +85,7 @@ class ServerFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "ServerFrame")
+        buildFrame.__init__(self, "server")
 
         self.options = {
             "server": {
@@ -230,7 +230,7 @@ class DownloadsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "DownloadsFrame")
+        buildFrame.__init__(self, "downloads")
 
         self.needrescan = False
 
@@ -563,7 +563,7 @@ class SharesFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "SharesFrame")
+        buildFrame.__init__(self, "shares")
 
         self.needrescan = False
 
@@ -997,7 +997,7 @@ class TransfersFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "TransfersFrame")
+        buildFrame.__init__(self, "transfers")
 
         self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
         self.UploadsAllowed.set_model(self.UploadsAllowed_List)
@@ -1113,7 +1113,7 @@ class GeoBlockFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "GeoBlockFrame")
+        buildFrame.__init__(self, "geoblock")
 
         self.options = {
             "transfers": {
@@ -1153,7 +1153,7 @@ class UserinfoFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "UserinfoFrame")
+        buildFrame.__init__(self, "userinfo")
 
         self.options = {
             "userinfo": {
@@ -1228,7 +1228,7 @@ class IgnoreFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "IgnoreFrame")
+        buildFrame.__init__(self, "ignore")
 
         self.options = {
             "server": {
@@ -1354,7 +1354,7 @@ class BanFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "BanFrame")
+        buildFrame.__init__(self, "ban")
 
         self.options = {
             "server": {
@@ -1498,7 +1498,7 @@ class SoundsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "SoundsFrame")
+        buildFrame.__init__(self, "sounds")
 
         # Combobox for audio players
         self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -1586,7 +1586,7 @@ class IconsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "IconsFrame")
+        buildFrame.__init__(self, "icons")
 
         self.options = {
             "ui": {
@@ -1662,7 +1662,7 @@ class ColoursFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "ColoursFrame")
+        buildFrame.__init__(self, "colours")
 
         # Combobox for user names style
         self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2001,7 +2001,7 @@ class NotebookFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "NotebookFrame")
+        buildFrame.__init__(self, "notebook")
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
@@ -2120,7 +2120,7 @@ class BloatFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "BloatFrame")
+        buildFrame.__init__(self, "bloat")
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2224,7 +2224,7 @@ class LogFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "LogFrame")
+        buildFrame.__init__(self, "log")
 
         self.options = {
             "logging": {
@@ -2300,7 +2300,7 @@ class SearchFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "SearchFrame")
+        buildFrame.__init__(self, "search")
         self.options = {
             "searches": {
                 "maxresults": self.MaxResults,
@@ -2375,7 +2375,7 @@ class AwayFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "AwayFrame")
+        buildFrame.__init__(self, "away")
         self.options = {
             "server": {
                 "autoaway": self.AutoAway,
@@ -2405,7 +2405,7 @@ class EventsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "EventsFrame")
+        buildFrame.__init__(self, "events")
 
         # Combobox for file manager
         self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2463,7 +2463,7 @@ class UrlCatchFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "UrlCatchFrame")
+        buildFrame.__init__(self, "urlcatch")
 
         self.options = {
             "urls": {
@@ -2633,7 +2633,7 @@ class CensorFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "CensorFrame")
+        buildFrame.__init__(self, "censor")
 
         self.options = {
             "words": {
@@ -2745,7 +2745,7 @@ class AutoReplaceFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "AutoReplaceFrame")
+        buildFrame.__init__(self, "autoreplace")
 
         self.options = {
             "words": {
@@ -2857,7 +2857,7 @@ class CompletionFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "CompletionFrame")
+        buildFrame.__init__(self, "completion")
 
         self.options = {
             "words": {
@@ -2941,7 +2941,7 @@ class buildDialog(gtk.Dialog):
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_PluginProperties.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
 
         self.PluginProperties = builder.get_object(window)
 
@@ -3119,7 +3119,7 @@ class NotificationsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "NotificationsFrame")
+        buildFrame.__init__(self, "notifications")
 
         self.options = {
             "notifications": {
@@ -3176,7 +3176,7 @@ class PluginFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "PluginFrame")
+        buildFrame.__init__(self, "plugin")
 
         self.options = {
             "plugins": {
@@ -3310,7 +3310,7 @@ class ChatFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "ChatFrame")
+        buildFrame.__init__(self, "chat")
         self.options = {}
 
     def SetSettings(self, config):
@@ -3324,7 +3324,7 @@ class MiscFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "MiscFrame")
+        buildFrame.__init__(self, "misc")
         self.options = {}
 
     def SetSettings(self, config):
@@ -3344,7 +3344,7 @@ class SettingsWindow:
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
 
         self.SettingsWindow = builder.get_object("SettingsWindow")
 
@@ -3394,11 +3394,11 @@ class SettingsWindow:
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
+        self.tree["Away Mode"] = model.append(row, [_("Away Mode"), "Away Mode"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
         self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
         self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
-        self.tree["Auto-Replace"] = model.append(row, [_("Auto-Replace"), "Auto-Replace"])
+        self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
         self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 
@@ -3425,11 +3425,11 @@ class SettingsWindow:
         p["Notebook Tabs"] = NotebookFrame(self)
 
         p["Chat"] = ChatFrame(self)
-        p["Away mode"] = AwayFrame(self)
+        p["Away Mode"] = AwayFrame(self)
         p["Logging"] = LogFrame(self)
         p["Ignore List"] = IgnoreFrame(self)
         p["Censor List"] = CensorFrame(self)
-        p["Auto-Replace"] = AutoReplaceFrame(self)
+        p["Auto-Replace List"] = AutoReplaceFrame(self)
         p["URL Catching"] = UrlCatchFrame(self)
         p["Completion"] = CompletionFrame(self)
 

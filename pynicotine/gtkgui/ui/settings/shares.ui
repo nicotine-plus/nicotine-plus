@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkWindow" id="SharesFrame">
+  <object class="GtkWindow" id="shares">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Shares</property>
     <child>

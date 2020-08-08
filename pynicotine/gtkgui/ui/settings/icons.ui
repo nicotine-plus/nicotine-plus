@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkWindow" id="IconsFrame">
+  <object class="GtkWindow" id="icons">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Icons</property>
     <child>

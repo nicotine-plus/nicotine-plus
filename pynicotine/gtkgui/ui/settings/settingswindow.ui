@@ -2,7 +2,6 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="SettingsWindow">
-    <property name="border_width">10</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
@@ -22,10 +21,8 @@
                 <property name="width_request">250</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="margin_right">8</property>
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
-                <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTreeView" id="SettingsTreeview">
                     <property name="visible">True</property>
@@ -43,15 +40,14 @@
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="margin_left">8</property>
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
                 <child>
                   <object class="GtkViewport" id="viewport1">
+                    <property name="border_width">10</property>
                     <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="shadow_type">none</property>
                     <child>
                       <placeholder/>
                     </child>
