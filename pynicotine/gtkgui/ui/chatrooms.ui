@@ -255,7 +255,7 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="width_request">320</property>
+                    <property name="width_request">340</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
