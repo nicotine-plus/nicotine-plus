@@ -93,12 +93,13 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">To create a new user just fill in the username and password you want.
+            <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have an account at the server, fill in those details.
 
-If you already have an account at the server fill in those details.</property>
+Please keep in mind that more common usernames may be taken. If you're unable to connect later, change your username in the settings.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
+            <property name="max_width_chars">60</property>
           </object>
           <packing>
             <property name="expand">True</property>

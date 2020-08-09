@@ -270,14 +270,6 @@ class DownloadsFrame(buildFrame):
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        self.DownloadFilters.connect("activate", self.OnExpand)
-
-    def OnExpand(self, widget):
-        if widget.get_expanded():
-            self.DownloadsVbox.set_child_packing(widget, False, False, 0, 0)
-        else:
-            self.DownloadsVbox.set_child_packing(widget, True, True, 0, 0)
-
     def SetSettings(self, config):
 
         transfers = config["transfers"]
@@ -3031,7 +3023,6 @@ class buildDialog(gtk.Dialog):
 
         self.options = options
         self.plugin = plugin
-        self.PluginLabel.set_markup("<b>%s</b>" % plugin)
 
         c = 0
 
@@ -3358,10 +3349,10 @@ class SettingsWindow:
         # Fill up the model
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
         self.tree["Server"] = model.append(row, [_("Server"), "Server"])
-        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
-        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
+        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
+        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
+        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
         self.tree["User info"] = model.append(row, [_("User info"), "User info"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
@@ -3389,10 +3380,10 @@ class SettingsWindow:
 
         # Build individual categories
         p["Server"] = ServerFrame(self)
-        p["Plugins"] = PluginFrame(self)
-        p["Notifications"] = NotificationsFrame(self)
-        p["Text To Speech"] = TTSFrame(self)
         p["Searches"] = SearchFrame(self)
+        p["Notifications"] = NotificationsFrame(self)
+        p["Plugins"] = PluginFrame(self)
+        p["Text To Speech"] = TTSFrame(self)
         p["User info"] = UserinfoFrame(self)
 
         p["Shares"] = SharesFrame(self)
