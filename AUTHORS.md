@@ -3,11 +3,6 @@ This is a somewhat up-to-date list of current Nicotine+ maintainers. For inquiri
 
 ### Active
 
-Mutnick
-- Created Nicotine+ GitHub Organization
-- Developer
-- [muhing(at)yahoo(dot)com]
-
 eLvErDe
 - Provides Nicotine+ Website
 - Migrated source code from SVN to Github
@@ -16,6 +11,7 @@ eLvErDe
 
 Kip Warner
 - Developer
+- Debianization
 - [kip(at)thevertigo(dot)com]
 
 Lene Preuss
@@ -68,6 +64,11 @@ osiris
 Michael Labouebe (aka gfarmerfr)
 - Developer
 - [gfarmerfr(at)free(dot)fr]
+
+Mutnick
+- Created Nicotine+ GitHub Organization
+- Developer
+- [muhing(at)yahoo(dot)com]
 
 ---
 
