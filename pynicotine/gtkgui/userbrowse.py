@@ -373,10 +373,10 @@ class UserBrowse:
         self.totalsize = 0
         for dir, files in self.shares:
             for filedata in files:
-                if filedata[2] < 18446744000000000000:
+                try:
                     self.totalsize += filedata[2]
-                else:
-                    print("Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata)))
+                except Exception:
+                    pass
 
         self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
@@ -509,7 +509,7 @@ class UserBrowse:
             rl = 0
             try:
                 size = int(file[2])
-            except ValueError:
+            except Exception:
                 size = 0
 
             f = [file[1], HumanSize(size)]
