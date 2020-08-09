@@ -42,8 +42,6 @@ win32 = platform.system().startswith("Win")
 
 
 def checkenv():
-    import dbm
-    print(dbm.whichdb("buddyfiles.db"))
 
     # Require Python 3.5 or newer
     try:

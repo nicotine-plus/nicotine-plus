@@ -13,14 +13,11 @@
           <object class="GtkExpander" id="ChatExpander">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="expanded">True</property>
-            <signal name="activate" handler="OnExpand" swapped="no"/>
             <child>
               <object class="GtkAlignment" id="alignment2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="xalign">0.10000000149011612</property>
                 <property name="yalign">0</property>
                 <property name="bottom_padding">5</property>
@@ -30,7 +27,6 @@
                   <object class="GtkTable" id="table1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="n_rows">9</property>
                     <property name="n_columns">4</property>
                     <property name="column_spacing">5</property>
@@ -884,7 +880,6 @@
                       <object class="GtkHBox" id="hotbox1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child>
                           <object class="GtkCheckButton" id="UsernameHotspots">
                             <property name="label" translatable="yes">Username Colors and Hotspots</property>
@@ -907,7 +902,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
@@ -1149,7 +1143,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1164,7 +1157,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1181,7 +1173,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1198,7 +1189,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1215,7 +1205,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1232,7 +1221,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1249,7 +1237,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1266,7 +1253,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1285,7 +1271,6 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">&lt;b&gt;Chat colors&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
@@ -1301,14 +1286,11 @@
           <object class="GtkExpander" id="ListExpander">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="use_markup">True</property>
-            <signal name="activate" handler="OnExpand" swapped="no"/>
             <child>
               <object class="GtkAlignment" id="alignment6">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="xalign">0.10000000149011612</property>
                 <property name="yalign">0</property>
                 <property name="bottom_padding">5</property>
@@ -1318,7 +1300,6 @@
                   <object class="GtkTable" id="table7">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="n_rows">6</property>
                     <property name="n_columns">4</property>
                     <property name="column_spacing">5</property>
@@ -1329,7 +1310,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1346,7 +1326,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1363,7 +1342,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1380,7 +1358,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -1397,7 +1374,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2071,7 +2047,6 @@
               <object class="GtkLabel" id="label121">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">&lt;b&gt;List and search colors&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
@@ -2087,13 +2062,11 @@
           <object class="GtkExpander" id="TabExpander">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="use_markup">True</property>
             <child>
               <object class="GtkAlignment" id="alignment37">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="xalign">0.10000000149011612</property>
                 <property name="yalign">0</property>
                 <property name="bottom_padding">5</property>
@@ -2103,7 +2076,6 @@
                   <object class="GtkTable" id="table8">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="n_rows">3</property>
                     <property name="n_columns">4</property>
                     <property name="column_spacing">5</property>
@@ -2114,7 +2086,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2131,7 +2102,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2148,7 +2118,6 @@
                         <property name="height_request">16</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -2573,7 +2542,6 @@
               <object class="GtkLabel" id="label64">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">&lt;b&gt;Tab colors&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
@@ -2589,7 +2557,6 @@
           <object class="GtkBox" id="ColorButtonsHbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <property name="spacing">5</property>
             <child>
               <object class="GtkButton" id="DefaultColours">

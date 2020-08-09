@@ -7,135 +7,26 @@
       <object class="GtkBox" id="Main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">10</property>
+        <property name="spacing">20</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="AfterDownload">
-            <property name="width_request">313</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">True</property>
-            <property name="secondary_icon_sensitive">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="width_request">48</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after folder finishes ($ for folder path):</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">5</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="AfterFolder">
-            <property name="width_request">313</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">True</property>
-            <property name="secondary_icon_sensitive">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="FileManagerCombo">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="has_entry">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">8</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
-            <property name="xalign">0</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">9</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="audioPlayerCombo">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="has_entry">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">10</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkTable">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="n_rows">3</property>
-            <property name="n_columns">2</property>
-            <property name="column_spacing">5</property>
-            <property name="row_spacing">5</property>
+            <property name="spacing">10</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Double-clicking on...</property>
+                <property name="label" translatable="yes">&lt;b&gt;Commands&lt;/b&gt;</property>
+                <property name="halign">start</property>
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="right_attach">2</property>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -143,11 +34,58 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Download transfers</property>
+                <property name="label" translatable="yes">Run command after download finishes ($ for filename):</property>
               </object>
               <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="AfterDownload">
+                <property name="width_request">313</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width_request">48</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Run command after folder finishes ($ for folder path):</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="AfterFolder">
+                <property name="width_request">313</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">6</property>
               </packing>
             </child>
             <child>
@@ -155,56 +93,160 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Upload transfers</property>
+                <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
               </object>
               <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">7</property>
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="DownloadDoubleClick">
+              <object class="GtkComboBox" id="FileManagerCombo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="model">liststore_DownloadDoubleClick</property>
-                <child>
-                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
+                <property name="has_entry">True</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">8</property>
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="UploadDoubleClick">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="model">liststore_UploadDoubleClick</property>
+                <property name="label" translatable="yes">Audio Player Command ($ for filename):</property>
+                <property name="xalign">0</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBox" id="audioPlayerCombo">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="has_entry">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">10</property>
+              </packing>
+            </child>
+         </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">10</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;b&gt;Double-clicking on...&lt;/b&gt;</property>
+                <property name="halign">start</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkTable">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="n_rows">3</property>
+                <property name="n_columns">2</property>
+                <property name="column_spacing">5</property>
+                <property name="row_spacing">5</property>
                 <child>
-                  <object class="GtkCellRendererText" id="cellrenderertext2"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Download transfers</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Upload transfers</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="DownloadDoubleClick">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="model">liststore_DownloadDoubleClick</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBox" id="UploadDoubleClick">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="model">liststore_UploadDoubleClick</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">11</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>

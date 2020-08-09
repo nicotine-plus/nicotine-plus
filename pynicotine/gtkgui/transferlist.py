@@ -98,7 +98,6 @@ class TransferList:
 
         self.col_user.set_sort_column_id(0)
         self.col_path.set_sort_column_id(1)
-        self.col_path.set_alignment(1.0)
         self.col_filename.set_sort_column_id(2)
         self.col_status.set_sort_column_id(11)
         self.col_position.set_sort_column_id(17)

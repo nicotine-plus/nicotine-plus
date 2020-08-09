@@ -2,11 +2,12 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="SettingsWindow">
+    <property name="border_width">10</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
     <property name="default_width">1200</property>
-    <property name="default_height">700</property>
+    <property name="default_height">800</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="Main">
         <property name="visible">True</property>
@@ -23,6 +24,8 @@
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
+                <property name="shadow_type">in</property>
+                <property name="margin_end">10</property>
                 <child>
                   <object class="GtkTreeView" id="SettingsTreeview">
                     <property name="visible">True</property>
@@ -42,9 +45,10 @@
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
+                <property name="margin_start">10</property>
                 <child>
                   <object class="GtkViewport" id="viewport1">
-                    <property name="border_width">15</property>
+                    <property name="border_width">5</property>
                     <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -66,7 +70,7 @@
             <property name="position">0</property>
           </packing>
         </child>
-        <child>
+        <child internal-child="action_area">
           <object class="GtkButtonBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>

@@ -306,8 +306,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
-            <property name="yalign">0</property>
-            <property name="xpad">8</property>
             <property name="label" translatable="yes">If you wish to use UPnP to fix portmapping on your router please install MiniUPnP client binary or the MiniUPnP client module for Python.</property>
             <property name="wrap">True</property>
           </object>

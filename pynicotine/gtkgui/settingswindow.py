@@ -242,6 +242,7 @@ class DownloadsFrame(buildFrame):
                 "incompletedir": self.IncompleteDir,
                 "downloaddir": self.DownloadDir,
                 "sharedownloaddir": self.ShareDownloadDir,
+                "uploaddir": self.UploadDir,
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed
@@ -281,6 +282,9 @@ class DownloadsFrame(buildFrame):
 
         if transfers["downloaddir"]:
             self.DownloadDir.set_current_folder(transfers["downloaddir"])
+
+        if transfers["uploaddir"]:
+            self.UploadDir.set_current_folder(transfers["uploaddir"])
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -326,6 +330,7 @@ class DownloadsFrame(buildFrame):
                 "incompletedir": self.IncompleteDir.get_file().get_path(),
                 "downloaddir": self.DownloadDir.get_file().get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
+                "uploaddir": self.UploadDir.get_file().get_path(),
                 "downloadfilters": self.GetFilterList(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int()
@@ -1014,8 +1019,7 @@ class UploadsFrame(buildFrame):
                 "friendsnolimits": self.FriendsNoLimits,
                 "preferfriends": self.PreferFriends,
                 "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed,
-                "uploaddir": self.UploadDir
+                "uploadallowed": self.UploadsAllowed
             }
         }
 
@@ -1039,9 +1043,6 @@ class UploadsFrame(buildFrame):
         self.OnQueueUseSlotsToggled(self.QueueUseSlots)
 
         self.OnLimitToggled(self.Limit)
-
-        if transfers["uploaddir"]:
-            self.UploadDir.set_current_folder(transfers["uploaddir"])
 
         if transfers["uploadallowed"] is not None:
             self.UploadsAllowed.set_active(transfers["uploadallowed"])
@@ -1072,8 +1073,7 @@ class UploadsFrame(buildFrame):
                 "friendsnolimits": self.FriendsNoLimits.get_active(),
                 "preferfriends": self.PreferFriends.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": uploadallowed,
-                "uploaddir": self.UploadDir.get_file().get_path()
+                "uploadallowed": uploadallowed
             }
         }
 
@@ -1796,18 +1796,6 @@ class ColoursFrame(buildFrame):
         self.ToggledAwayColours(self.DisplayAwayColours)
         self.settingup = 0
         self.needcolors = 0
-
-    def OnExpand(self, widget):
-
-        if self.ListExpander.get_property("expanded"):
-            self.vboxColours.set_child_packing(self.ListExpander, False, False, 0, 0)
-        else:
-            self.vboxColours.set_child_packing(self.ListExpander, False, True, 0, 0)
-
-        if self.ChatExpander.get_property("expanded"):
-            self.vboxColours.set_child_packing(self.ChatExpander, False, False, 0, 0)
-        else:
-            self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
 
     def GetSettings(self):
 
@@ -3282,7 +3270,7 @@ class PluginFrame(buildFrame):
         return {}
 
     def OnPluginsEnable(self, widget):
-        self.vbox99.set_sensitive(self.PluginsEnable.get_active())
+        self.PluginList.set_sensitive(self.PluginsEnable.get_active())
 
         if not self.PluginsEnable.get_active():
             # Disable all plugins
@@ -3419,11 +3407,8 @@ class SettingsWindow:
         # Connect the signal when a page/category is changed
         self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
 
-        # Set the cursor to the first element of the TreeViewColumn.
-        # On Debian/Ubuntu there is patch (042_treeview_single-focus.patch)
-        # on top of upstream GTK2 that disable the default selection
-        # of the first element in a Treeview.
-        self.SettingsTreeview.set_cursor((0,))
+        # Set the cursor to the second element of the TreeViewColumn.
+        self.SettingsTreeview.set_cursor((0, 0))
 
         self.UpdateColours()
 
