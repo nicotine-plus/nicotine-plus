@@ -113,7 +113,7 @@ class Uploads(TransferList):
             incompletedir = downloaddir
 
         filemanager = self.frame.np.config.sections["ui"]["filemanager"]
-        transfer = self.selected_transfers[0]
+        transfer = next(iter(self.selected_transfers))
 
         if os.path.exists(transfer.path):
             executeCommand(filemanager, transfer.path)
