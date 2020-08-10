@@ -239,6 +239,8 @@ class DownloadsFrame(buildFrame):
                 "lock": self.LockIncoming,
                 "reverseorder": self.DownloadReverseOrder,
                 "prioritize": self.DownloadChecksumsFirst,
+                "remotedownloads": self.RemoteDownloads,
+                "uploadallowed": self.UploadsAllowed,
                 "incompletedir": self.IncompleteDir,
                 "downloaddir": self.DownloadDir,
                 "sharedownloaddir": self.ShareDownloadDir,
@@ -248,6 +250,20 @@ class DownloadsFrame(buildFrame):
                 "downloadlimit": self.DownloadSpeed
             }
         }
+
+        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+
+        self.UploadsAllowed_List.clear()
+        self.alloweduserslist = [
+            _("No one"),
+            _("Everyone"),
+            _("Users in list"),
+            _("Trusted Users")
+        ]
+
+        for item in self.alloweduserslist:
+            self.UploadsAllowed_List.append([item])
 
         self.filterlist = gtk.ListStore(
             gobject.TYPE_STRING,
@@ -276,6 +292,11 @@ class DownloadsFrame(buildFrame):
         transfers = config["transfers"]
 
         self.p.SetWidgetsData(config, self.options)
+
+        if transfers["uploadallowed"] is not None:
+            self.UploadsAllowed.set_active(transfers["uploadallowed"])
+
+        self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
         if transfers["incompletedir"]:
             self.IncompleteDir.set_current_folder(transfers["incompletedir"])
@@ -322,11 +343,21 @@ class DownloadsFrame(buildFrame):
 
             raise UserWarning
 
+        try:
+            uploadallowed = self.UploadsAllowed.get_active()
+        except Exception:
+            uploadallowed = 0
+
+        if not self.RemoteDownloads.get_active():
+            uploadallowed = 0
+
         return {
             "transfers": {
                 "lock": self.LockIncoming.get_active(),
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "prioritize": self.DownloadChecksumsFirst.get_active(),
+                "remotedownloads": self.RemoteDownloads.get_active(),
+                "uploadallowed": uploadallowed,
                 "incompletedir": self.IncompleteDir.get_file().get_path(),
                 "downloaddir": self.DownloadDir.get_file().get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
@@ -359,6 +390,12 @@ class DownloadsFrame(buildFrame):
             if self.ShareDownloadDir.get_active():
                 if dir_disp != transfers["downloaddir"]:
                     self.needrescan = True
+
+    def OnRemoteDownloads(self, widget):
+
+        sensitive = widget.get_active()
+
+        self.UploadsAllowed.set_sensitive(sensitive)
 
     def OnShareDownloadDirToggled(self, widget):
         self.needrescan = True
@@ -1002,9 +1039,6 @@ class UploadsFrame(buildFrame):
 
         buildFrame.__init__(self, "uploads")
 
-        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
-
         self.options = {
             "transfers": {
                 "uploadbandwidth": self.QueueBandwidth,
@@ -1017,22 +1051,9 @@ class UploadsFrame(buildFrame):
                 "queuelimit": self.MaxUserQueue,
                 "filelimit": self.MaxUserFiles,
                 "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed
+                "preferfriends": self.PreferFriends
             }
         }
-
-        self.UploadsAllowed_List.clear()
-        self.alloweduserslist = [
-            _("No one"),
-            _("Everyone"),
-            _("Users in list"),
-            _("Trusted Users")
-        ]
-
-        for item in self.alloweduserslist:
-            self.UploadsAllowed_List.append([item])
 
     def SetSettings(self, config):
 
@@ -1044,20 +1065,7 @@ class UploadsFrame(buildFrame):
 
         self.OnLimitToggled(self.Limit)
 
-        if transfers["uploadallowed"] is not None:
-            self.UploadsAllowed.set_active(transfers["uploadallowed"])
-
-        self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
-
     def GetSettings(self):
-
-        try:
-            uploadallowed = self.UploadsAllowed.get_active()
-        except Exception:
-            uploadallowed = 0
-
-        if not self.RemoteDownloads.get_active():
-            uploadallowed = 0
 
         return {
             "transfers": {
@@ -1071,17 +1079,9 @@ class UploadsFrame(buildFrame):
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
                 "filelimit": self.MaxUserFiles.get_value_as_int(),
                 "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": uploadallowed
+                "preferfriends": self.PreferFriends.get_active()
             }
         }
-
-    def OnRemoteDownloads(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.UploadsAllowed.set_sensitive(sensitive)
 
     def OnQueueUseSlotsToggled(self, widget):
 
