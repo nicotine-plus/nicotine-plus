@@ -1057,8 +1057,6 @@ class UploadsFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        transfers = config["transfers"]
-
         self.p.SetWidgetsData(config, self.options)
 
         self.OnQueueUseSlotsToggled(self.QueueUseSlots)
@@ -3181,7 +3179,7 @@ class PluginFrame(buildFrame):
         cols = InitialiseColumns(
             self.PluginTreeView,
             [_("Plugins"), 380, "text"],
-            [_("Enabled"), 40, "toggle"]
+            [_("Enabled"), -1, "toggle"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -3341,7 +3339,7 @@ class SettingsWindow:
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
         self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
-        self.tree["User info"] = model.append(row, [_("User info"), "User info"])
+        self.tree["User Info"] = model.append(row, [_("User Info"), "User Info"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
@@ -3372,7 +3370,7 @@ class SettingsWindow:
         p["Notifications"] = NotificationsFrame(self)
         p["Plugins"] = PluginFrame(self)
         p["Text To Speech"] = TTSFrame(self)
-        p["User info"] = UserinfoFrame(self)
+        p["User Info"] = UserinfoFrame(self)
 
         p["Shares"] = SharesFrame(self)
         p["Downloads"] = DownloadsFrame(self)

@@ -117,7 +117,6 @@
                     <property name="receives_default">False</property>
                     <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory</property>
                     <property name="use_underline">True</property>
-                    <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="OnRemoteDownloads" swapped="no"/>
                   </object>
