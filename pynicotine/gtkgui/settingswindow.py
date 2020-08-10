@@ -1522,7 +1522,7 @@ class TTSFrame(buildFrame):
 
         sensitive = self.TextToSpeech.get_active()
 
-        self.tableTTS.set_sensitive(sensitive)
+        self.TTSGrid.set_sensitive(sensitive)
 
     def SetSettings(self, config):
 
