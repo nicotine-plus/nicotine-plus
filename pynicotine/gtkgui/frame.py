@@ -1695,7 +1695,7 @@ class NicotineFrame:
                 l.get_child().set_image(self.images["empty"])
                 l.get_child().set_text_color(0)
 
-        if n is not None and type(n.Notebook) not in [gtk.HPaned, gtk.VBox]:
+        if n is not None:
             n.popup_disable()
             n.popup_enable()
             if n.get_current_page() != -1:
