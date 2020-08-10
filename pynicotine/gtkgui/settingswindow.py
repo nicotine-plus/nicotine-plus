@@ -2948,7 +2948,8 @@ class buildDialog(gtk.Dialog):
 
     def GenerateTreeView(self, name, description, value, c=0):
 
-        self.tw["box%d" % c] = gtk.VBox(False, 5)
+        self.tw["box%d" % c] = gtk.Box(False, 5)
+        self.tw["box%d" % c].set_orientation(gtk.Orientation.VERTICAL)
 
         self.tw[name + "SW"] = gtk.ScrolledWindow()
         self.tw[name + "SW"].set_shadow_type(gtk.ShadowType.IN)
@@ -2970,7 +2971,7 @@ class buildDialog(gtk.Dialog):
         self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)
         self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
 
-        self.tw["vbox%d" % c] = gtk.HBox(False, 5)
+        self.tw["vbox%d" % c] = gtk.Box(False, 5)
         self.tw["vbox%d" % c].pack_start(self.addButton, False, False, 0)
         self.tw["vbox%d" % c].pack_start(self.removeButton, False, False, 0)
 
@@ -3029,7 +3030,7 @@ class buildDialog(gtk.Dialog):
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 
             if data["type"] in ("integer", "int", "float"):
-                self.tw["box%d" % c] = gtk.HBox(False, 5)
+                self.tw["box%d" % c] = gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
@@ -3038,7 +3039,7 @@ class buildDialog(gtk.Dialog):
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("bool",):
-                self.tw["box%d" % c] = gtk.HBox(False, 5)
+                self.tw["box%d" % c] = gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
@@ -3047,7 +3048,7 @@ class buildDialog(gtk.Dialog):
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('str', 'string', 'file'):
-                self.tw["box%d" % c] = gtk.HBox(False, 5)
+                self.tw["box%d" % c] = gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
@@ -3056,7 +3057,7 @@ class buildDialog(gtk.Dialog):
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('textview'):
-                self.tw["box%d" % c] = gtk.HBox(False, 5)
+                self.tw["box%d" % c] = gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.GenerateLabel(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
