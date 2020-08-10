@@ -1991,14 +1991,12 @@ class NicotineFrame:
 
     def OnSettingsDownloads(self, widget):
         self.OnSettings(widget, 'Downloads')
-        self.settingswindow.pages["Downloads"].DownloadFilters.set_expanded(True)
 
     def OnSettingsUploads(self, widget):
-        self.OnSettings(widget, 'Transfers')
-        self.settingswindow.pages["Transfers"].Uploads.set_expanded(True)
+        self.OnSettings(widget, 'Uploads')
 
     def OnSettingsUserinfo(self, widget):
-        self.OnSettings(widget, 'User info')
+        self.OnSettings(widget, 'User Info')
 
     def OnSettingsLogging(self, widget):
         self.OnSettings(widget, 'Logging')

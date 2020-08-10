@@ -63,7 +63,7 @@ class buildFrame:
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_" + window + ".ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
 
         self.__dict__[window] = builder.get_object(window)
 
@@ -85,7 +85,7 @@ class ServerFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "ServerFrame")
+        buildFrame.__init__(self, "server")
 
         self.options = {
             "server": {
@@ -230,20 +230,40 @@ class DownloadsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "DownloadsFrame")
+        buildFrame.__init__(self, "downloads")
 
         self.needrescan = False
 
         self.options = {
             "transfers": {
+                "lock": self.LockIncoming,
+                "reverseorder": self.DownloadReverseOrder,
+                "prioritize": self.DownloadChecksumsFirst,
+                "remotedownloads": self.RemoteDownloads,
+                "uploadallowed": self.UploadsAllowed,
                 "incompletedir": self.IncompleteDir,
                 "downloaddir": self.DownloadDir,
                 "sharedownloaddir": self.ShareDownloadDir,
+                "uploaddir": self.UploadDir,
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed
             }
         }
+
+        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+
+        self.UploadsAllowed_List.clear()
+        self.alloweduserslist = [
+            _("No one"),
+            _("Everyone"),
+            _("Users in list"),
+            _("Trusted Users")
+        ]
+
+        for item in self.alloweduserslist:
+            self.UploadsAllowed_List.append([item])
 
         self.filterlist = gtk.ListStore(
             gobject.TYPE_STRING,
@@ -267,25 +287,25 @@ class DownloadsFrame(buildFrame):
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        self.DownloadFilters.connect("activate", self.OnExpand)
-
-    def OnExpand(self, widget):
-        if widget.get_expanded():
-            self.DownloadsVbox.set_child_packing(widget, False, False, 0, 0)
-        else:
-            self.DownloadsVbox.set_child_packing(widget, True, True, 0, 0)
-
     def SetSettings(self, config):
 
         transfers = config["transfers"]
 
         self.p.SetWidgetsData(config, self.options)
 
+        if transfers["uploadallowed"] is not None:
+            self.UploadsAllowed.set_active(transfers["uploadallowed"])
+
+        self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
+
         if transfers["incompletedir"]:
             self.IncompleteDir.set_current_folder(transfers["incompletedir"])
 
         if transfers["downloaddir"]:
             self.DownloadDir.set_current_folder(transfers["downloaddir"])
+
+        if transfers["uploaddir"]:
+            self.UploadDir.set_current_folder(transfers["uploaddir"])
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -323,11 +343,25 @@ class DownloadsFrame(buildFrame):
 
             raise UserWarning
 
+        try:
+            uploadallowed = self.UploadsAllowed.get_active()
+        except Exception:
+            uploadallowed = 0
+
+        if not self.RemoteDownloads.get_active():
+            uploadallowed = 0
+
         return {
             "transfers": {
+                "lock": self.LockIncoming.get_active(),
+                "reverseorder": self.DownloadReverseOrder.get_active(),
+                "prioritize": self.DownloadChecksumsFirst.get_active(),
+                "remotedownloads": self.RemoteDownloads.get_active(),
+                "uploadallowed": uploadallowed,
                 "incompletedir": self.IncompleteDir.get_file().get_path(),
                 "downloaddir": self.DownloadDir.get_file().get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
+                "uploaddir": self.UploadDir.get_file().get_path(),
                 "downloadfilters": self.GetFilterList(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int()
@@ -356,6 +390,12 @@ class DownloadsFrame(buildFrame):
             if self.ShareDownloadDir.get_active():
                 if dir_disp != transfers["downloaddir"]:
                     self.needrescan = True
+
+    def OnRemoteDownloads(self, widget):
+
+        sensitive = widget.get_active()
+
+        self.UploadsAllowed.set_sensitive(sensitive)
 
     def OnShareDownloadDirToggled(self, widget):
         self.needrescan = True
@@ -563,7 +603,7 @@ class SharesFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "SharesFrame")
+        buildFrame.__init__(self, "shares")
 
         self.needrescan = False
 
@@ -991,16 +1031,13 @@ class SharesFrame(buildFrame):
             iter = liststore.iter_next(iter)
 
 
-class TransfersFrame(buildFrame):
+class UploadsFrame(buildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "TransfersFrame")
-
-        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+        buildFrame.__init__(self, "uploads")
 
         self.options = {
             "transfers": {
@@ -1014,30 +1051,11 @@ class TransfersFrame(buildFrame):
                 "queuelimit": self.MaxUserQueue,
                 "filelimit": self.MaxUserFiles,
                 "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends,
-                "lock": self.LockIncoming,
-                "reverseorder": self.DownloadReverseOrder,
-                "prioritize": self.DownloadChecksumsFirst,
-                "remotedownloads": self.RemoteDownloads,
-                "uploadallowed": self.UploadsAllowed,
-                "uploaddir": self.UploadDir
+                "preferfriends": self.PreferFriends
             }
         }
 
-        self.UploadsAllowed_List.clear()
-        self.alloweduserslist = [
-            _("No one"),
-            _("Everyone"),
-            _("Users in list"),
-            _("Trusted Users")
-        ]
-
-        for item in self.alloweduserslist:
-            self.UploadsAllowed_List.append([item])
-
     def SetSettings(self, config):
-
-        transfers = config["transfers"]
 
         self.p.SetWidgetsData(config, self.options)
 
@@ -1045,23 +1063,7 @@ class TransfersFrame(buildFrame):
 
         self.OnLimitToggled(self.Limit)
 
-        if transfers["uploaddir"]:
-            self.UploadDir.set_current_folder(transfers["uploaddir"])
-
-        if transfers["uploadallowed"] is not None:
-            self.UploadsAllowed.set_active(transfers["uploadallowed"])
-
-        self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
-
     def GetSettings(self):
-
-        try:
-            uploadallowed = self.UploadsAllowed.get_active()
-        except Exception:
-            uploadallowed = 0
-
-        if not self.RemoteDownloads.get_active():
-            uploadallowed = 0
 
         return {
             "transfers": {
@@ -1075,21 +1077,9 @@ class TransfersFrame(buildFrame):
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
                 "filelimit": self.MaxUserFiles.get_value_as_int(),
                 "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active(),
-                "lock": self.LockIncoming.get_active(),
-                "reverseorder": self.DownloadReverseOrder.get_active(),
-                "prioritize": self.DownloadChecksumsFirst.get_active(),
-                "remotedownloads": self.RemoteDownloads.get_active(),
-                "uploadallowed": uploadallowed,
-                "uploaddir": self.UploadDir.get_file().get_path()
+                "preferfriends": self.PreferFriends.get_active()
             }
         }
-
-    def OnRemoteDownloads(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.UploadsAllowed.set_sensitive(sensitive)
 
     def OnQueueUseSlotsToggled(self, widget):
 
@@ -1113,7 +1103,7 @@ class GeoBlockFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "GeoBlockFrame")
+        buildFrame.__init__(self, "geoblock")
 
         self.options = {
             "transfers": {
@@ -1153,7 +1143,7 @@ class UserinfoFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "UserinfoFrame")
+        buildFrame.__init__(self, "userinfo")
 
         self.options = {
             "userinfo": {
@@ -1228,7 +1218,7 @@ class IgnoreFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "IgnoreFrame")
+        buildFrame.__init__(self, "ignore")
 
         self.options = {
             "server": {
@@ -1354,7 +1344,7 @@ class BanFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "BanFrame")
+        buildFrame.__init__(self, "ban")
 
         self.options = {
             "server": {
@@ -1492,27 +1482,13 @@ class BanFrame(buildFrame):
         self.blockedlist.clear()
 
 
-class SoundsFrame(buildFrame):
+class TTSFrame(buildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "SoundsFrame")
-
-        # Combobox for audio players
-        self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        for executable in [
-            "amarok -a $",
-            "audacious -e $",
-            "exaile $",
-            "rhythmbox $",
-            "xmms2 add -f $"
-        ]:
-            self.audioPlayerCombo_List.append([executable])
-
-        self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
-        self.audioPlayerCombo.set_entry_text_column(0)
+        buildFrame.__init__(self, "tts")
 
         # Combobox for text-to-speech readers
         self.TTSCommand_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -1528,9 +1504,6 @@ class SoundsFrame(buildFrame):
                 "speechcommand": self.TTSCommand,
                 "speechrooms": self.RoomMessage,
                 "speechprivate": self.PrivateMessage
-            },
-            "players": {
-                "default": self.audioPlayerCombo
             }
         }
 
@@ -1547,7 +1520,7 @@ class SoundsFrame(buildFrame):
 
         sensitive = self.TextToSpeech.get_active()
 
-        self.tableTTS.set_sensitive(sensitive)
+        self.TTSGrid.set_sensitive(sensitive)
 
     def SetSettings(self, config):
 
@@ -1573,10 +1546,7 @@ class SoundsFrame(buildFrame):
                 "speechcommand": self.TTSCommand.get_child().get_text(),
                 "speechrooms": self.RoomMessage.get_text(),
                 "speechprivate": self.PrivateMessage.get_text()
-            },
-            "players": {
-                "default": self.audioPlayerCombo.get_child().get_text()
-            },
+            }
         }
 
 
@@ -1586,7 +1556,7 @@ class IconsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "IconsFrame")
+        buildFrame.__init__(self, "icons")
 
         self.options = {
             "ui": {
@@ -1662,7 +1632,7 @@ class ColoursFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "ColoursFrame")
+        buildFrame.__init__(self, "colours")
 
         # Combobox for user names style
         self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -1824,18 +1794,6 @@ class ColoursFrame(buildFrame):
         self.ToggledAwayColours(self.DisplayAwayColours)
         self.settingup = 0
         self.needcolors = 0
-
-    def OnExpand(self, widget):
-
-        if self.ListExpander.get_property("expanded"):
-            self.vboxColours.set_child_packing(self.ListExpander, False, False, 0, 0)
-        else:
-            self.vboxColours.set_child_packing(self.ListExpander, False, True, 0, 0)
-
-        if self.ChatExpander.get_property("expanded"):
-            self.vboxColours.set_child_packing(self.ChatExpander, False, False, 0, 0)
-        else:
-            self.vboxColours.set_child_packing(self.ChatExpander, False, True, 0, 0)
 
     def GetSettings(self):
 
@@ -2001,7 +1959,7 @@ class NotebookFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "NotebookFrame")
+        buildFrame.__init__(self, "notebook")
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
@@ -2114,13 +2072,13 @@ class NotebookFrame(buildFrame):
         }
 
 
-class BloatFrame(buildFrame):
+class FontsFrame(buildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "BloatFrame")
+        buildFrame.__init__(self, "fonts")
 
         # Combobox for the decimal separator
         self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2140,8 +2098,7 @@ class BloatFrame(buildFrame):
                 "searchfont": self.SelectSearchFont,
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
-                "decimalsep": self.DecimalSep,
-                "spellcheck": self.SpellCheck
+                "decimalsep": self.DecimalSep
             },
             "transfers": {
                 "enabletransferbuttons": self.ShowTransferButtons
@@ -2169,8 +2126,6 @@ class BloatFrame(buildFrame):
 
         self.needcolors = 0
 
-        self.SpellCheck.set_sensitive(self.frame.gspell)
-
         self.p.SetWidgetsData(config, self.options)
 
     def GetSettings(self):
@@ -2178,7 +2133,6 @@ class BloatFrame(buildFrame):
         return {
             "ui": {
                 "decimalsep": self.DecimalSep.get_model().get(self.DecimalSep.get_active_iter(), 0)[0],
-                "spellcheck": self.SpellCheck.get_active(),
                 "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
@@ -2224,7 +2178,7 @@ class LogFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "LogFrame")
+        buildFrame.__init__(self, "log")
 
         self.options = {
             "logging": {
@@ -2300,7 +2254,7 @@ class SearchFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "SearchFrame")
+        buildFrame.__init__(self, "search")
         self.options = {
             "searches": {
                 "maxresults": self.MaxResults,
@@ -2375,7 +2329,7 @@ class AwayFrame(buildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "AwayFrame")
+        buildFrame.__init__(self, "away")
         self.options = {
             "server": {
                 "autoaway": self.AutoAway,
@@ -2405,7 +2359,7 @@ class EventsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "EventsFrame")
+        buildFrame.__init__(self, "events")
 
         # Combobox for file manager
         self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2426,6 +2380,20 @@ class EventsFrame(buildFrame):
         self.FileManagerCombo.set_model(self.FileManagerCombo_List)
         self.FileManagerCombo.set_entry_text_column(0)
 
+        # Combobox for audio players
+        self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        for executable in [
+            "amarok -a $",
+            "audacious -e $",
+            "exaile $",
+            "rhythmbox $",
+            "xmms2 add -f $"
+        ]:
+            self.audioPlayerCombo_List.append([executable])
+
+        self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
+        self.audioPlayerCombo.set_entry_text_column(0)
+
         self.options = {
             "transfers": {
                 "afterfinish": self.AfterDownload,
@@ -2435,6 +2403,9 @@ class EventsFrame(buildFrame):
             },
             "ui": {
                 "filemanager": self.FileManagerCombo
+            },
+            "players": {
+                "default": self.audioPlayerCombo
             }
         }
 
@@ -2453,6 +2424,9 @@ class EventsFrame(buildFrame):
             },
             "ui": {
                 "filemanager": self.FileManagerCombo.get_child().get_text()
+            },
+            "players": {
+                "default": self.audioPlayerCombo.get_child().get_text()
             }
         }
 
@@ -2463,7 +2437,7 @@ class UrlCatchFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "UrlCatchFrame")
+        buildFrame.__init__(self, "urlcatch")
 
         self.options = {
             "urls": {
@@ -2633,7 +2607,7 @@ class CensorFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "CensorFrame")
+        buildFrame.__init__(self, "censor")
 
         self.options = {
             "words": {
@@ -2745,7 +2719,7 @@ class AutoReplaceFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "AutoReplaceFrame")
+        buildFrame.__init__(self, "autoreplace")
 
         self.options = {
             "words": {
@@ -2857,7 +2831,7 @@ class CompletionFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "CompletionFrame")
+        buildFrame.__init__(self, "completion")
 
         self.options = {
             "words": {
@@ -2871,6 +2845,9 @@ class CompletionFrame(buildFrame):
                 "commands": self.CompleteCommandsCheck,
                 "aliases": self.CompleteAliasesCheck,
                 "onematch": self.OneMatchCheck
+            },
+            "ui": {
+                "spellcheck": self.SpellCheck
             }
         }
 
@@ -2886,6 +2863,9 @@ class CompletionFrame(buildFrame):
 
     def SetSettings(self, config):
         self.needcompletion = 0
+
+        self.SpellCheck.set_sensitive(self.frame.gspell)
+
         self.p.SetWidgetsData(config, self.options)
 
     def OnCompletionChanged(self, widget):
@@ -2924,6 +2904,9 @@ class CompletionFrame(buildFrame):
                 "commands": self.CompleteCommandsCheck.get_active(),
                 "aliases": self.CompleteAliasesCheck.get_active(),
                 "onematch": self.OneMatchCheck.get_active()
+            },
+            "ui": {
+                "spellcheck": self.SpellCheck.get_active()
             }
         }
 
@@ -2941,7 +2924,7 @@ class buildDialog(gtk.Dialog):
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow_PluginProperties.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
 
         self.PluginProperties = builder.get_object(window)
 
@@ -3026,7 +3009,6 @@ class buildDialog(gtk.Dialog):
 
         self.options = options
         self.plugin = plugin
-        self.PluginLabel.set_markup("<b>%s</b>" % plugin)
 
         c = 0
 
@@ -3119,7 +3101,7 @@ class NotificationsFrame(buildFrame):
 
         self.p = parent
 
-        buildFrame.__init__(self, "NotificationsFrame")
+        buildFrame.__init__(self, "notifications")
 
         self.options = {
             "notifications": {
@@ -3176,7 +3158,7 @@ class PluginFrame(buildFrame):
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "PluginFrame")
+        buildFrame.__init__(self, "plugin")
 
         self.options = {
             "plugins": {
@@ -3197,7 +3179,7 @@ class PluginFrame(buildFrame):
         cols = InitialiseColumns(
             self.PluginTreeView,
             [_("Plugins"), 380, "text"],
-            [_("Enabled"), 40, "toggle"]
+            [_("Enabled"), -1, "toggle"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -3286,7 +3268,7 @@ class PluginFrame(buildFrame):
         return {}
 
     def OnPluginsEnable(self, widget):
-        self.vbox99.set_sensitive(self.PluginsEnable.get_active())
+        self.PluginList.set_sensitive(self.PluginsEnable.get_active())
 
         if not self.PluginsEnable.get_active():
             # Disable all plugins
@@ -3306,34 +3288,6 @@ class PluginFrame(buildFrame):
         }
 
 
-class ChatFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "ChatFrame")
-        self.options = {}
-
-    def SetSettings(self, config):
-        return {}
-
-    def GetSettings(self):
-        return {}
-
-
-class MiscFrame(buildFrame):
-
-    def __init__(self, parent):
-        self.p = parent
-        buildFrame.__init__(self, "MiscFrame")
-        self.options = {}
-
-    def SetSettings(self, config):
-        return {}
-
-    def GetSettings(self):
-        return {}
-
-
 class SettingsWindow:
 
     def __init__(self, frame):
@@ -3344,7 +3298,7 @@ class SettingsWindow:
         builder = gtk.Builder()
 
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settingswindow.ui"))
+        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
 
         self.SettingsWindow = builder.get_object("SettingsWindow")
 
@@ -3379,66 +3333,64 @@ class SettingsWindow:
         model = gtk.TreeStore(str, str)
 
         # Fill up the model
-        self.tree["Server"] = model.append(None, [_("Server"), "Server"])
-        self.tree["Shares"] = model.append(None, [_("Shares"), "Shares"])
+        self.tree["General"] = row = model.append(None, [_("General"), "General"])
+        self.tree["Server"] = model.append(row, [_("Server"), "Server"])
+        self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
+        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
+        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
+        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
+        self.tree["User Info"] = model.append(row, [_("User Info"), "User Info"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
+        self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
         self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
+        self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
         self.tree["Ban List"] = model.append(row, [_("Ban List"), "Ban List"])
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
         self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 
         self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
+        self.tree["Fonts"] = model.append(row, [_("Fonts"), "Fonts"])
         self.tree["Colours"] = model.append(row, [_("Colors"), "Colours"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["Away mode"] = model.append(row, [_("Away mode"), "Away mode"])
+        self.tree["Away Mode"] = model.append(row, [_("Away Mode"), "Away Mode"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
         self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
         self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
-        self.tree["Auto-Replace"] = model.append(row, [_("Auto-Replace"), "Auto-Replace"])
+        self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
         self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
 
-        self.tree["Misc"] = row = model.append(None, [_("Misc"), "Misc"])
-        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
-        self.tree["Sounds"] = model.append(row, [_("Sounds"), "Sounds"])
-        self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
-        self.tree["User info"] = model.append(row, [_("User info"), "User info"])
-
         # Build individual categories
         p["Server"] = ServerFrame(self)
-        p["Shares"] = SharesFrame(self)
+        p["Searches"] = SearchFrame(self)
+        p["Notifications"] = NotificationsFrame(self)
+        p["Plugins"] = PluginFrame(self)
+        p["Text To Speech"] = TTSFrame(self)
+        p["User Info"] = UserinfoFrame(self)
 
-        p["Transfers"] = TransfersFrame(self)
+        p["Shares"] = SharesFrame(self)
         p["Downloads"] = DownloadsFrame(self)
+        p["Uploads"] = UploadsFrame(self)
         p["Ban List"] = BanFrame(self)
         p["Events"] = EventsFrame(self)
         p["Geo Block"] = GeoBlockFrame(self)
 
-        p["Interface"] = BloatFrame(self)
+        p["Fonts"] = FontsFrame(self)
         p["Colours"] = ColoursFrame(self)
         p["Icons"] = IconsFrame(self)
         p["Notebook Tabs"] = NotebookFrame(self)
 
-        p["Chat"] = ChatFrame(self)
-        p["Away mode"] = AwayFrame(self)
+        p["Away Mode"] = AwayFrame(self)
         p["Logging"] = LogFrame(self)
         p["Ignore List"] = IgnoreFrame(self)
         p["Censor List"] = CensorFrame(self)
-        p["Auto-Replace"] = AutoReplaceFrame(self)
+        p["Auto-Replace List"] = AutoReplaceFrame(self)
         p["URL Catching"] = UrlCatchFrame(self)
         p["Completion"] = CompletionFrame(self)
-
-        p["Misc"] = MiscFrame(self)
-        p["Plugins"] = PluginFrame(self)
-        p["Notifications"] = NotificationsFrame(self)
-        p["Sounds"] = SoundsFrame(self)
-        p["Searches"] = SearchFrame(self)
-        p["User info"] = UserinfoFrame(self)
 
         # Title of the treeview
         column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text=0)
@@ -3453,11 +3405,8 @@ class SettingsWindow:
         # Connect the signal when a page/category is changed
         self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
 
-        # Set the cursor to the first element of the TreeViewColumn.
-        # On Debian/Ubuntu there is patch (042_treeview_single-focus.patch)
-        # on top of upstream GTK2 that disable the default selection
-        # of the first element in a Treeview.
-        self.SettingsTreeview.set_cursor((0,))
+        # Set the cursor to the second element of the TreeViewColumn.
+        self.SettingsTreeview.set_cursor((0, 0))
 
         self.UpdateColours()
 
@@ -3651,6 +3600,6 @@ class SettingsWindow:
                 for (key, data) in list(sub.items()):
                     config[key].update(data)
 
-            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Interface"].needcolors), self.pages["Completion"].needcompletion, config
+            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None
