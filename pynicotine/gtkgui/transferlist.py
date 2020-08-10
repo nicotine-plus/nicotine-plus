@@ -21,8 +21,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from gettext import gettext as _
 from math import ceil
+from sys import maxsize
 from time import time
 
 from gi.repository import GLib
@@ -431,6 +433,8 @@ class TransferList:
 
         try:
             size = int(transfer.size)
+            if size < 0 or size > maxsize:
+                size = 0
         except TypeError:
             size = 0
 
