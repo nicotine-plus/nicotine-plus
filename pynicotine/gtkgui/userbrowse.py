@@ -23,6 +23,7 @@
 
 import os
 from gettext import gettext as _
+from sys import maxsize
 
 from gi.repository import Gdk
 from gi.repository import GObject as gobject
@@ -373,10 +374,10 @@ class UserBrowse:
         self.totalsize = 0
         for dir, files in self.shares:
             for filedata in files:
-                if filedata[2] < 18446744000000000000:
+                if filedata[2] < maxsize:
                     self.totalsize += filedata[2]
                 else:
-                    print("Unbelievable filesize: %s, %s" % (HumanSize(filedata[2]), repr(filedata)))
+                    pass
 
         self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
@@ -507,8 +508,13 @@ class UserBrowse:
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
             rl = 0
+
             try:
                 size = int(file[2])
+
+                # Some clients send incorrect file sizes
+                if size < 0 or size > maxsize:
+                    size = 0
             except ValueError:
                 size = 0
 
