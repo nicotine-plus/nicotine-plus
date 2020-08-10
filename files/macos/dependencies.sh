@@ -14,5 +14,5 @@ brew install \
 
 # pip should not pick up our setup.cfg
 cd pynicotine
-pip3 install flake8 pyinstaller pytaglib pytest
+pip3 install flake8 pyinstaller==3.6 pytaglib pytest
 cd ..
