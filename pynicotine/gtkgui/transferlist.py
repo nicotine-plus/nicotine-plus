@@ -642,13 +642,13 @@ class TransferList:
         self.select_transfers()
 
     def OnCopyURL(self, widget):
-        i = self.selected_transfers[0]
+        i = next(iter(self.selected_transfers))
         self.frame.SetClipboardURL(i.user, i.filename)
 
     def OnCopyDirURL(self, widget):
 
-        i = self.selected_transfers[0]
-        path = "\\".join(i.filename.split("\\")[:-1]) + "\\"
+        i = next(iter(self.selected_transfers))
+        path = "\\".join(i.filename.split("\\")[:-1])
 
         if path[:-1] != "/":
             path += "/"

@@ -213,7 +213,7 @@ class Downloads(TransferList):
             incompletedir = downloaddir
 
         filemanager = self.frame.np.config.sections["ui"]["filemanager"]
-        transfer = self.selected_transfers[0]
+        transfer = next(iter(self.selected_transfers))
 
         complete_path = os.path.join(downloaddir, transfer.path)
 
