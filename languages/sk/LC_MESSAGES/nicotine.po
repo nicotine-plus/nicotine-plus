@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-11 07:35+0300\n"
+"POT-Creation-Date: 2020-08-11 17:37+0300\n"
 "PO-Revision-Date: 2007-12-18 18:22+0100\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: Jozef Riha <jose1711@gmail.com>\n"
@@ -33,6 +33,9 @@ msgid ""
 msgstr ""
 
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
+msgstr ""
+
+msgid "Cannot find pytaglib, please install it."
 msgstr ""
 
 msgid ""
@@ -80,35 +83,32 @@ msgstr "Zoznam kamarátov"
 msgid "Add Buddy: "
 msgstr "Pridať kamaráta: "
 
+msgid "Add"
+msgstr "Pridať"
+
 msgid "Configure banned users"
 msgstr ""
 
 msgid "Chat Room"
 msgstr ""
 
-msgid "Hide/Show Status log"
-msgstr "Skryť/Zobraziť záznam o stavoch"
-
-msgid "Hide/Show User list"
-msgstr "Skryť/Zobraziť okno s používateľmi"
+msgid "Log"
+msgstr "Logovať"
 
 msgid "Toggle Text-To-Speech"
 msgstr "Prepnúť Text-Na-Reč"
 
+msgid "Room wall"
+msgstr ""
+
 msgid "Chat room command help"
 msgstr "Pomoc s príkazmi pre chatovaciu miestnosť"
 
-msgid "0 people in room"
-msgstr "0 ľudí v miestnosti"
+msgid "User List"
+msgstr ""
 
-msgid "Log"
-msgstr "Logovať"
-
-msgid "Auto-join"
-msgstr "Auto-vstup"
-
-msgid "Leave"
-msgstr "Opustiť"
+msgid "Auto-join Room"
+msgstr ""
 
 msgid "<b>Welcome to Nicotine+!</b>"
 msgstr ""
@@ -119,9 +119,11 @@ msgid ""
 msgstr ""
 
 msgid ""
-"To create a new user just fill in the username and password you want.\n"
+"To create a new user, fill in the username and password you want. If you "
+"already have an account at the server, fill in those details.\n"
 "\n"
-"If you already have an account at the server fill in those details."
+"Please keep in mind that more common usernames may be taken. If you're "
+"unable to connect later, change your username in the settings."
 msgstr ""
 
 msgid "Username"
@@ -145,7 +147,9 @@ msgstr ""
 msgid "The page says my port is closed"
 msgstr ""
 
-msgid "Use UPnP to map the port on my router"
+msgid ""
+"Only select \"The page says my port is closed\" if all attempts at opening "
+"the port were unsuccessful. This can happen if your ISP blocks ports."
 msgstr ""
 
 msgid "Use the first available port in the range from "
@@ -159,9 +163,6 @@ msgstr ""
 
 msgid "Share the following directories:"
 msgstr ""
-
-msgid "Add"
-msgstr "Pridať"
 
 msgid "Remove"
 msgstr "Odstrániť"
@@ -239,12 +240,6 @@ msgstr "Zo_braziť ladiace informácie"
 msgid "Show _room list"
 msgstr ""
 
-msgid "Show _tickers"
-msgstr ""
-
-msgid "Show _chat room log and list toggles"
-msgstr ""
-
 msgid "Show _flag columns in user lists"
 msgstr ""
 
@@ -270,12 +265,6 @@ msgid "_Rescan Public shares"
 msgstr ""
 
 msgid "Rescan B_uddy shares"
-msgstr ""
-
-msgid "Re_build Public shares"
-msgstr ""
-
-msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
 msgid "_Browse Public shares"
@@ -317,12 +306,6 @@ msgstr "Zoznam _kamarátov"
 msgid "_Help"
 msgstr ""
 
-msgid "Project _Website"
-msgstr ""
-
-msgid "Project _Github Page"
-msgstr ""
-
 msgid "About _chat room commands"
 msgstr "O _príkazoch pre chatovaciu miestnosť"
 
@@ -332,8 +315,8 @@ msgstr "O p_ríkazoch súkromného chatu"
 msgid "About _search filters"
 msgstr "O _vyhľadávacích filtroch"
 
-msgid "Check _latest"
-msgstr "_Skontrolovať najnovšiu verziu"
+msgid "Check _latest version"
+msgstr ""
 
 msgid "Report a _bug"
 msgstr ""
@@ -341,8 +324,11 @@ msgstr ""
 msgid "About _Nicotine+"
 msgstr ""
 
-msgid "Start Message"
-msgstr "Začať si písať s"
+msgid "User:"
+msgstr "Používateľ:"
+
+msgid "Start Messaging"
+msgstr ""
 
 msgid "Configure logging"
 msgstr ""
@@ -356,14 +342,11 @@ msgstr "Súbory: 0"
 msgid "Expand / Collapse all"
 msgstr "Rozbaliť / Zabaliť všetko"
 
-msgid "Group by Users"
-msgstr "Zoskupiť podľa používateľov"
+msgid "Autoclear finished / filtered"
+msgstr ""
 
-msgid "Auto-retry failed"
-msgstr "Skúsiť znovu pri zlyhaní"
-
-msgid "Every 3 minutes"
-msgstr "Každé 3 minúty"
+msgid "File grouping mode"
+msgstr ""
 
 msgid "Configure downloads"
 msgstr ""
@@ -380,14 +363,14 @@ msgstr "Skúsiť znova"
 msgid "Abort"
 msgstr "Zrušiť"
 
-msgid "Abort & Delete"
-msgstr "Zrušiť a vymazať"
+msgid "Delete"
+msgstr ""
 
 msgid "Ban User(s)"
 msgstr "Zakázať používateľa(ov)"
 
-msgid "Autoclear Finished"
-msgstr "Automaticky vyčistiť hotové"
+msgid "Autoclear finished / aborted"
+msgstr ""
 
 msgid "Configure uploads"
 msgstr ""
@@ -395,10 +378,10 @@ msgstr ""
 msgid "Clear Finished / Failed"
 msgstr ""
 
-msgid "Abort User's Upload(s)"
-msgstr "Zrušiť upload(y) používateľom"
+msgid "Abort User's Uploads"
+msgstr ""
 
-msgid "Wishlist"
+msgid "Search scope"
 msgstr ""
 
 msgid "Search patterns: with a word = term, without a word = -term"
@@ -410,14 +393,14 @@ msgstr "Vymazať všetky pokus o vyhľadanie"
 msgid "Search"
 msgstr "Hľadať"
 
-msgid "Search scope"
+msgid "Wishlist"
 msgstr ""
 
 msgid "Configure searches"
 msgstr ""
 
-msgid "Get Userinfo"
-msgstr "Získať údaje o používateľovi"
+msgid "Show Info"
+msgstr ""
 
 msgid "Configure user info"
 msgstr ""
@@ -425,23 +408,32 @@ msgstr ""
 msgid "Browse Shares"
 msgstr "Prehliadať mnou zdieľané súbory"
 
-msgid "Load From Disk"
-msgstr "Načítať z disku"
+msgid "Load from Disk"
+msgstr ""
 
 msgid "Configure shares"
 msgstr ""
 
-msgid "Similar users"
-msgstr "Podobní používatelia"
+msgid "Your interests"
+msgstr ""
 
 msgid "Recommendations"
 msgstr "Doporučenia"
 
-msgid "Global recommendations"
-msgstr "Všeobecné doporučenia"
+msgid "Personal"
+msgstr ""
+
+msgid "Global"
+msgstr "Globálne"
 
 msgid "Unrecommendations"
 msgstr "Nedoporučenia"
+
+msgid "Similar users"
+msgstr "Podobní používatelia"
+
+msgid "Show Similar Users"
+msgstr ""
 
 msgid "Debug output:"
 msgstr ""
@@ -470,8 +462,8 @@ msgstr "Skenovanie priateľmi zdieľaných súborov"
 msgid "Scanning Shares"
 msgstr "Skenovanie zdieľaných súborov"
 
-msgid "Nicotine+: Configure Now Playing"
-msgstr "Nicotine+: Nastaviť Teraz prehrávané"
+msgid "Configure Now Playing"
+msgstr ""
 
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
@@ -519,14 +511,23 @@ msgstr "Formát Teraz prehrávané:"
 msgid "Example:"
 msgstr "Príklad:"
 
+msgid "Cancel"
+msgstr "Zrušiť"
+
+msgid "Execute"
+msgstr ""
+
 msgid "Test the configuration"
 msgstr ""
+
+msgid "OK"
+msgstr "OK"
 
 msgid "PrivateChat"
 msgstr ""
 
-msgid "Direct"
-msgstr "Priamo"
+msgid "Direct Message"
+msgstr ""
 
 msgid ""
 "Send the private message directly to the user (not supported on most clients)"
@@ -534,26 +535,31 @@ msgstr ""
 "Poslať súkromnú správu priamo používateľovi (nepodporované na väčšine "
 "klientov)"
 
-msgid "Close"
-msgstr "Zatvoriť"
+msgid "Private chat command help"
+msgstr ""
 
 msgid "Room List"
 msgstr ""
 
-msgid "Chatrooms"
+msgid "Chat Rooms"
+msgstr "Chatovacie miestnosti"
+
+msgid "Refresh room list"
 msgstr ""
 
-msgid "Create: "
-msgstr "Vytvoriť: "
-
-msgid "Hide room list"
-msgstr "Skryť okno s miestnosťami"
-
-msgid "Search: "
+msgid "Accept private room invitations"
 msgstr ""
 
-msgid "Query"
-msgstr "Otázka"
+msgid "Room Wall"
+msgstr ""
+
+msgid ""
+"The room wall feature allows users in a room to specify a unique message to "
+"display to others."
+msgstr ""
+
+msgid "Set Message"
+msgstr ""
 
 msgid "Results: 0/0"
 msgstr ""
@@ -573,6 +579,9 @@ msgstr ""
 "požiadavky na vyhľadanie po intervale nastavenom na serveri (obvykle okolo "
 "hodiny)"
 
+msgid "Result grouping mode"
+msgstr ""
+
 msgid "Clear all results"
 msgstr "Vyčistiť všetky výsledky"
 
@@ -581,11 +590,6 @@ msgstr "Zabráni zobrazovaniu nových výsledkov hľadania"
 
 msgid "Ignore"
 msgstr "Ignorovať"
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-"Zavrieť panel s vyhľadávaním; stlačte ignorovať, aby sa tento panel znovu "
-"neotvoril"
 
 msgid "Filter in:"
 msgstr "Obsiahnutý text:"
@@ -605,865 +609,11 @@ msgstr "Krajina:"
 msgid "Free slot"
 msgstr "Voľný slot"
 
-msgid ""
-"Enable automatic replacement of chat words you've\n"
-"typed incorrectly or as an acronym"
+msgid "Search filter help"
 msgstr ""
-"Zapnúť v chate automatické nahradzovanie slov, ktoré\n"
-"ste napísali nesprávne alebo ako akronym"
-
-msgid "Add..."
-msgstr "Pridať..."
-
-msgid "Clear"
-msgstr "Vyčistiť"
-
-msgid "Load Defaults"
-msgstr "Nahrať východzie"
-
-msgid "Auto-Replace List"
-msgstr "Zoznam automatických náhrad"
-
-msgid "Away"
-msgstr "Preč"
-
-msgid "Toggle away after "
-msgstr "Prepnúť do módu neprítomnosti (preč) po "
-
-msgid " minutes of inactivity"
-msgstr " minútach neaktivity"
-
-msgid "Auto-reply when away:  "
-msgstr "Automatická odpoveď pri stave Preč: "
-
-msgid "Away mode"
-msgstr "Mód neprítomnosti"
-
-msgid "Ban"
-msgstr "Zakázať"
-
-msgid "Banned Users:"
-msgstr "Zakázaní používatelia:"
-
-msgid "Blocked IP Addresses:"
-msgstr "Blokované IP adresy:"
-
-msgid "Use custom ban message:"
-msgstr "Použiť vlastnú správu pre zakázaných:"
-
-msgid "Banning"
-msgstr "Zákaz"
-
-msgid "Bloat"
-msgstr "Nafúknutý"
-
-msgid "Enable spell checker (requires a restart)"
-msgstr "Aktivovať kontrolu pravopisu (vyžaduje reštart programu):"
-
-msgid "Show Buttons in Transfers Tabs"
-msgstr "Zobrazovať tlačidlá na paneli prenosov"
-
-msgid "Chat Font:"
-msgstr "Font chatu:"
-
-msgid "List Font:"
-msgstr "Font pre zoznam:"
-
-msgid "Transfers Font:"
-msgstr "Font pre prenosy"
-
-msgid "Search Font:"
-msgstr "Font pre hľadanie:"
-
-msgid "Browse Font:"
-msgstr "Font pre prehliadač:"
-
-msgid "Decimal separator:"
-msgstr "Desatinný oddeľovač:"
-
-msgid "Extra stuff for your comfort"
-msgstr "Extra veci pre vaše pohodlie"
-
-msgid "Enable Censorship"
-msgstr "Zapnúť cenzúru"
-
-msgid ""
-"Add spaces around words if you don't wish to match strings inside words (may "
-"fail at beginning and end of lines)"
-msgstr ""
-
-msgid "Replace censored letters with:"
-msgstr "Nahradiť cenzúrované písmená:"
-
-msgid "Censor List"
-msgstr "Zoznam cenzúr"
-
-msgid "Chat"
-msgstr "Chat"
-
-msgid "Choose <b>Away mode</b> to configure your auto-away settings."
-msgstr ""
-
-msgid ""
-"Choose <b>Logging</b> to configure what's logged and where to save the logs."
-msgstr ""
-"Vyberte <b>Logovanie</b> pre nastavenie toho, čo je logované a kam sa "
-"ukladajú logy."
-
-msgid ""
-"Choose <b>Ignore List</b> to configure users and/or IPs you want to ignore."
-msgstr ""
-
-msgid ""
-"Choose <b>Censor List</b> to configure what unwanted words you want to "
-"censor."
-msgstr ""
-
-msgid ""
-"Choose <b>Auto-Replace</b> to configure auto-replacement of words (such as "
-"common typos)."
-msgstr ""
-
-msgid ""
-"Choose <b>URL Catching</b> to configure the programs used when clicking on "
-"links."
-msgstr ""
-"Vyberte <b>Zachytávanie URL</b> pre nastavenie programov, ktoré budú použité "
-"pre otváranie odkazov."
-
-msgid "Choose <b>Completion</b> to configure auto-completion in chats."
-msgstr ""
-
-msgid "Chat Settings"
-msgstr "Nastavenia chatu"
-
-msgid "Colors"
-msgstr ""
-
-msgid "Default Colors"
-msgstr ""
-
-msgid "URL Link text"
-msgstr "Text odkazu na URL"
-
-msgid "Default"
-msgstr "Východzie"
-
-msgid "Username Font Style:"
-msgstr "Štýl písma mena používateľa:"
-
-msgid "Offline"
-msgstr "Offline"
-
-msgid "Online"
-msgstr "Online"
-
-msgid "Username Colors and Hotspots"
-msgstr ""
-
-msgid "Display away colors"
-msgstr "Zobrazovať ikony režimu neprítomnosti"
-
-msgid "Highlight text"
-msgstr "Zvýrazňovať text"
-
-msgid "/me text"
-msgstr "/me text"
-
-msgid "Local text"
-msgstr "Miestny text"
-
-msgid "Remote text"
-msgstr "Vzdialený text"
-
-msgid "<b>Chat colors</b>"
-msgstr ""
-
-msgid "Input Text"
-msgstr "Vstupný text"
-
-msgid "Background"
-msgstr "Pozadie"
-
-msgid "Input and lists colors"
-msgstr ""
-
-msgid "Offline Search"
-msgstr "Offline vyhľadávanie"
-
-msgid "With queue"
-msgstr "Vo fronte"
-
-msgid "List Text"
-msgstr "Text zoznamu"
-
-msgid "<b>List and search colors</b>"
-msgstr ""
-
-msgid "Notebook tab labels change to these colors."
-msgstr ""
-
-msgid "Changed"
-msgstr "Zmenené"
-
-msgid "Highlight"
-msgstr "Zvýrazňovať"
-
-msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid "Text Completion"
-msgstr "Doplňovanie textu"
-
-msgid "Enable tab-key completion"
-msgstr "Povoliť doplňovanie textu tabulátorom"
-
-msgid "Cycle completions instead of showing a dropdown"
-msgstr ""
-
-msgid "Complete room names in chat rooms"
-msgstr "Doplňovať názvy miestností v chatovacích miestnostiach"
-
-msgid "Complete Buddy Names"
-msgstr "Doplňovať mená kamarátov"
-
-msgid "Complete usernames in chat rooms"
-msgstr "Doplňovať mená používateľov v chatovacích miestnostiach"
-
-msgid "Complete built-in /Commands"
-msgstr "Doplňovať zabudované /Príkazy"
-
-msgid "Complete alias /Commands"
-msgstr "Doplňovať alias /Príkazy"
-
-msgid "Allowed Completions"
-msgstr "Povolené doplnenia"
-
-msgid "Enable completion drop-down list"
-msgstr "Povoliť rozbaľovací zoznam pri doplňovaní"
-
-msgid "Minimum characters required to display drop-down:"
-msgstr "Minimálny počet znakov pre zobrazenie zoznamu:"
-
-msgid "Hide drop-down when only one matches"
-msgstr "Skryť rozbaľovací zoznam len pri jednom výskyte"
-
-msgid "Drop-down list"
-msgstr "Rozbaľovací zoznam"
-
-msgid "Chat text completion"
-msgstr "Doplnenie textu v chate"
-
-msgid "Shares"
-msgstr "Zdieľané súbory"
-
-msgid "Incomplete file directory:"
-msgstr "Adresár pre nedokončené súbory:"
-
-msgid "Download directory:"
-msgstr "Adresár pre download:"
-
-msgid "Share download directory"
-msgstr "Zdieľať adresár so stiahnutými súbormi"
-
-msgid "Limit total download speeds to (KBytes/sec):"
-msgstr ""
-
-msgid "Where incomplete downloads are stored temporarily"
-msgstr "Kde sú dočasne ukladané nekompletné sťahovania"
-
-msgid "Select a directory"
-msgstr ""
-
-msgid "<b>Directories</b>"
-msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr "<b>Nesťahovať tieto typy súborov:</b>"
-
-msgid "Enable Filters"
-msgstr "Zapnúť filtre"
-
-msgid ""
-"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
-"are supported if escaping is disabled. For simple filters, keep escaping "
-"enabled."
-msgstr ""
-"<b>Syntax:</b> Písmená rozlišujú veľkosť, sú podporované všetky regulárne "
-"výrazy Pythonu, ak je vypnuté escapeovanie. Pre jednoduché filtre nechajte "
-"escapeovanie zapnuté."
-
-msgid "Verify Filters"
-msgstr "Overiť filtre"
-
-msgid "<b>Unverified</b>"
-msgstr "<b>Neoverené</b>"
-
-msgid "Edit Filter"
-msgstr "Upraviť filter"
-
-msgid "<b>Download Filters:</b>"
-msgstr "<b>Filtre pre download:</b>"
-
-msgid "Downloads"
-msgstr "Downloady"
-
-msgid "Events"
-msgstr "Udalosti"
-
-msgid "Show notification popup in tray after..."
-msgstr ""
-
-msgid "...each file"
-msgstr ""
-
-msgid "...each directory"
-msgstr ""
-
-msgid "Run command after download finishes ($ for filename):"
-msgstr "Spustiť príkaz po stiahnutí súboru ($ pre súbor):"
-
-msgid "Run command after folder finishes ($ for folder path):"
-msgstr "Spustiť príkaz po stiahnutí adresára ($ pre adresár - plná cesta):"
-
-msgid "File Manager command ($ for folder path):"
-msgstr "Príkaz Súborového manažéra ($ pre cestu k adresáru):"
-
-msgid "Double-clicking on..."
-msgstr ""
-
-msgid "Download transfers"
-msgstr ""
-
-msgid "Upload transfers"
-msgstr ""
-
-msgid "Nothing"
-msgstr ""
-
-msgid "Send to player"
-msgstr ""
-
-msgid "Open Directory"
-msgstr "Otvoriť adresár"
-
-msgid "GeoBlock"
-msgstr "GeoBlock"
-
-msgid "Enable geographical blocker"
-msgstr "Zapnúť blokovanie krajín"
-
-msgid "Geographical paranoia (block unresolvable IPs)"
-msgstr "Paranoidné blokovanie krajín (blokovať nezistiteľné IP adresy)"
-
-msgid "Country codes to block (comma separated):"
-msgstr "Blokované krajiny (oddelené čiarkou):"
-
-msgid ""
-"Geo Block controls from which countries users are allowed access to your "
-"shares."
-msgstr ""
-
-msgid "Geographical Blocking"
-msgstr "Blokovanie krajín"
-
-msgid "Icons"
-msgstr "Ikony"
-
-msgid "Display Tray Icon"
-msgstr "Zobrazovať ikonu v oznamovacej oblasti"
-
-msgid "Show confirmation dialog when closing the main window"
-msgstr "Zobrazovať potvrdzovacie okno pri zatváraní hlavného okna"
-
-msgid "Always send Nicotine+ to tray when main window is closed"
-msgstr ""
-
-msgid "Always quit when main window is closed"
-msgstr "Vždy ukončiť aplikáciu pri zatvorení hlavného okna"
-
-msgid "Icon Theme Directory (requires restart):"
-msgstr "Adresár s motívom ikon (vyžaduje reštart programu):"
-
-msgid "Current Icons:"
-msgstr "Aktuálne ikony:"
-
-msgid "<b>Status</b>"
-msgstr "<b>Stav</b>"
-
-msgid "Online:"
-msgstr "Online:"
-
-msgid "Away:"
-msgstr "Preč:"
-
-msgid "Offline:"
-msgstr "Offline:"
-
-msgid "Nick Hilite:"
-msgstr ""
-
-msgid "Hilite:"
-msgstr "Zvýrazniť:"
-
-msgid "Disconnected:"
-msgstr "Odpojený:"
-
-msgid "Connected:"
-msgstr "Pripojený:"
-
-msgid "<b>Trayicon</b>"
-msgstr "<b>Ikona v systémovej lište</b>"
-
-msgid "Notify:"
-msgstr ""
-
-msgid "Window:"
-msgstr "Okno:"
-
-msgid "Tray & Icons"
-msgstr "Oznamovacia oblasť a ikony"
-
-msgid "Ignored users:"
-msgstr "Ignorovaní používatelia:"
-
-msgid "Ignored IPs:"
-msgstr ""
-
-msgid "Ignoring"
-msgstr ""
-
-msgid "Logs directory:"
-msgstr "Adresár s log súbormi:"
-
-msgid "Chatroom Logs directory:"
-msgstr "Adresár s log súbormi chatu:"
-
-msgid "Private Chat Logs directory:"
-msgstr "Adresár s log súbormi súkr. chatu:"
-
-msgid "Log chatrooms by default"
-msgstr "Štandardne logovať správy chatu"
-
-msgid "Log private chat by default"
-msgstr "Štandardne logovať súkromné správy chatu"
-
-msgid "Log transfers"
-msgstr "Logovať prenosy"
-
-msgid "Display logged chat room messages when a room is rejoined"
-msgstr ""
-"Zobrazovať logované správy chatovacej miestnosti pri opätovnom vojdení do "
-"miestnosti"
-
-msgid "Read"
-msgstr "Čítať"
-
-msgid "lines"
-msgstr "riadkov"
-
-msgid "Reopen last Private Chat messages"
-msgstr "Znovu otvoriť posledné správy súkromného chatu"
-
-msgid "<b>Timestamps</b>"
-msgstr "<b>Časové značky</b>"
-
-msgid "Display timestamps"
-msgstr "Zobraziť časové značky"
-
-msgid "Log file format:"
-msgstr "Formát log súborov:"
-
-msgid "Chat room format:"
-msgstr "Formát chatovacej miestnosti:"
-
-msgid "Private chat format:"
-msgstr "Formát súkromného chatu:"
-
-msgid "Logging"
-msgstr "Logovanie"
-
-msgid "Misc"
-msgstr "Rôzne"
-
-msgid "Choose <b>Plugins</b> to activate additional plugins (experimental)."
-msgstr ""
-
-msgid ""
-"Choose <b>Sounds</b> to configure sounds notifications and Text-to-Speech."
-msgstr ""
-
-msgid ""
-"Choose <b>Searches</b> to configure search settings and to set default "
-"search filters."
-msgstr ""
-
-msgid "Choose <b>User info</b> to add text and an image to your personal info."
-msgstr ""
-
-msgid "Miscellaneous Settings"
-msgstr "Rozličné nastavenia"
-
-msgid "Notebooks"
-msgstr "Notebooky"
-
-msgid "Select previous tab on startup"
-msgstr ""
-
-msgid "Close-buttons on tabs"
-msgstr "Tlačidlá pre zavretie panelov"
-
-msgid "Notification icons on tabs"
-msgstr "Notifikačné ikony na paneloch"
-
-msgid "Tabs can be repositioned"
-msgstr ""
-
-msgid "Notification changes the tab's text color"
-msgstr "Notifikácia mení farbu textu panelu"
-
-msgid "Show user status icons instead of status text"
-msgstr ""
-
-msgid "Main"
-msgstr "Hlavný"
-
-msgid "Label Angle:"
-msgstr "Uhol popisku:"
-
-msgid "Chat rooms"
-msgstr "Chatovacie miestnosti"
-
-msgid "Private chat"
-msgstr "Súkromný chat"
-
-msgid "User info"
-msgstr "Údaje o používateľovi"
-
-msgid "User browse"
-msgstr "Prehliadanie súborov používateľa"
-
-msgid "Notebook Tabs"
-msgstr "Panely notebooku"
-
-msgid "UrlCatch"
-msgstr "Zachytávanie URL"
-
-msgid "Enable Plugins"
-msgstr ""
-
-msgid "Version: "
-msgstr ""
-
-msgid "Author(s): "
-msgstr ""
-
-msgid "Description: "
-msgstr ""
-
-msgid "<b>No Plugin Selected</b>"
-msgstr ""
-
-msgid "Properties"
-msgstr ""
-
-msgid "Plugin Manager"
-msgstr ""
-
-msgid "Nicotine+ - Plugin Properties"
-msgstr ""
-
-msgid "Plugin"
-msgstr ""
-
-msgid "Enable sending search results to other users"
-msgstr ""
-
-msgid "Send out a max of"
-msgstr "Zobrazovať najviac"
-
-msgid "results per search request"
-msgstr "výsledkov pre jedno hľadanie"
-
-msgid "Toggle responding to distributed searches every"
-msgstr "Prepnúť odpovedanie na distribuované hľadanie každých"
-
-msgid "seconds"
-msgstr "sekúnd(y)"
-
-msgid "Network Searches:"
-msgstr "Vyhľadávanie v sieti:"
-
-msgid "Your Searches:"
-msgstr "Vaše hľadania:"
-
-msgid "Use regular expressions for filter in & out"
-msgstr "Používať regulérne výrazy pre obsiahnutý/výlučený text"
-
-msgid "Enable filters by default"
-msgstr "Štandardne povoliť filtre"
-
-msgid ""
-"Reopen closed search tabs that haven't been ignored\n"
-"when new results come in"
-msgstr ""
-
-msgid "Max visible results per search:"
-msgstr ""
-
-msgid "Max stored results per search:"
-msgstr ""
-
-msgid "Searches"
-msgstr "Hľadania"
-
-msgid "Server Settings"
-msgstr "Nastavenia servera"
-
-msgid "Login:"
-msgstr "Login:"
-
-msgid "Password:"
-msgstr "Heslo:"
-
-msgid "Change password"
-msgstr ""
-
-msgid ""
-"For a new account\n"
-" enter desired details"
-msgstr ""
-
-msgid "Your IP address has not been retrieved from the server"
-msgstr "Vaša IP adresa nebola získaná zo servera"
-
-msgid "Use the first available listening port from the following range:"
-msgstr ""
-
-msgid "Client port is not set"
-msgstr "Port klienta nie je nastavený"
-
-msgid "Check port status"
-msgstr ""
-
-msgid "Use the above ports to configure your router or firewall."
-msgstr ""
-"Použite vyššie uvedené porty v konfigurácií vášho routera alebo firewallu."
-
-msgid ""
-"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
-"bindings)"
-msgstr ""
-
-msgid ""
-"If you wish to use UPnP to fix portmapping on your router please install "
-"MiniUPnP client binary or the MiniUPnP client module for Python."
-msgstr ""
-
-msgid "I can receive direct connections"
-msgstr "Môžem prijímať priame spojenia"
-
-msgid "(only use if the above ports are remotely accessible)"
-msgstr "(použite iba ak horeuvedené porty budú nedostupné)"
-
-msgid "Enable CTCP-like PM responses (Client Version)"
-msgstr "Povoliť PM odpovede typu CTCP (klientská verzia)"
-
-msgid "Server"
-msgstr "Server"
-
-msgid "Rescan shares on startup"
-msgstr "Preskenuj zdieľané súbory po spustení programu"
-
-msgid "<b>Public Shares</b>"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Enable Buddy-Only shares"
-msgstr "Povoliť zdieľanie vybraných súborov iba pre kamarátov"
-
-msgid ""
-"If buddy shares are enabled, they will be shared. Otherwise normal shares "
-"will be used."
-msgstr ""
-"Ak je zapnuté zdieľanie s kamarátmi, budú zdieľané. Inak budú použité bežne "
-"zdieľané súbory."
-
-msgid "Share only to buddies"
-msgstr ""
-
-msgid "<b>Buddies-Only Shares</b>"
-msgstr ""
-
-msgid "Sounds"
-msgstr "Zvuky"
-
-msgid "Enable Sound Effects"
-msgstr "Zapnúť zvukové efekty"
-
-msgid "Sound Effects Directory:"
-msgstr "Adresár so zvukovými efektami:"
-
-msgid "Enable Text To Speech"
-msgstr "Povoliť Text-na-Reč"
-
-msgid "Text To Speech command:"
-msgstr "Príkaz pre Text-na-Reč:"
-
-msgid "Chat room message:"
-msgstr "Správa chatovacej miestnosti:"
-
-msgid "Private chat message:"
-msgstr "Súkromná správa chatu:"
-
-msgid "Audio Player Command ($ for filename):"
-msgstr "Príkaz na spustenie audio prehrávača ($ pre názov súboru):"
-
-msgid "Upload directory:"
-msgstr "Adresár pre upload:"
-
-msgid ""
-"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
-msgstr ""
-"Kde budú ukladané uploady od kamarátov (s podadresárom pre každého kamaráta)"
-
-msgid "Upload Queue type:"
-msgstr "Typ požiadavku na upload:"
-
-msgid "Round Robin"
-msgstr "Cyklická obsluha"
-
-msgid "Users will be sent one file and then another user will be selected"
-msgstr ""
-"Používateľom pošlete jeden súbor a potom bude sťahovať ďalší používateľ"
-
-msgid "First In, First Out"
-msgstr "Prvý dnu, prvý von"
-
-msgid "Files will be sent in the order they were queued"
-msgstr "Súbory budú posielané v tom poradí, v akom boli umiestnené do frontu"
-
-msgid "Queue Uploads if total transfer speed reaches"
-msgstr "Umiestniť uploady do frontu, ak celkový prenos dosiahne"
-
-msgid "KBytes/sec"
-msgstr "KBytov/s"
-
-msgid "Limit number of upload slots to"
-msgstr "Obmedzovať počet súčasne poskytovaných súborov na"
-
-msgid ""
-"If disabled, slots will automatically be determined by available bandwidth "
-"limitations"
-msgstr ""
-"Ak vypnuté, slot bude automaticky stanovený obmedzeniami dostupnej šírky "
-"pásma"
-
-msgid "(NOT RECOMMENDED)"
-msgstr "(NEDOPORUČOVANÉ)"
-
-msgid "Limit uploads speed to"
-msgstr "Obmedzovať rýchlosť poskytovania na"
-
-msgid "per transfer"
-msgstr "/prenos"
-
-msgid "total transfers"
-msgstr "súhrnne"
-
-msgid "Each user may queue a maximum of"
-msgstr "Každý používateľ môže umiestniť do frontu nanajvýš"
-
-msgid "Megabytes"
-msgstr "Megabytov"
-
-msgid "Files"
-msgstr "Súbory"
-
-msgid "Queue size limit does not apply to friends"
-msgstr "Obmedzenia veľkosti frontu sa netýkajú priateľov"
-
-msgid "Allow these users to send you files:"
-msgstr "Povoliť týmto používateľom posielať vám súbory:"
-
-msgid ""
-"The users will be able to send you files. These files will be downloaded "
-"into the Buddy Uploads subdirectory in your Download directory"
-msgstr ""
-"Používatelia vám budú môcť poslať súbory. Tieto súbory budu stiahnuté do "
-"podadresára Uploady od kamarátov vo vašom adresáre pre download"
-
-msgid "<b>Upload Queue:</b>"
-msgstr "<b>Front pre upload:</b>"
-
-msgid "Privilege all my friends"
-msgstr "Privilégia pre všetkých mojich priateľov"
-
-msgid ""
-"Friends will have higher priority in the queue, the same as globally "
-"privileged users"
-msgstr ""
-"Priatelia budú mať vyššiu prioritu vo fronte, rovnako ako aj používatelia s "
-"globálnymi oprávneniami"
-
-msgid "<b>Privileges:</b>"
-msgstr "<b>Privilégia:</b>"
-
-msgid "Lock incoming files (turn off for NFS)"
-msgstr "Uzamknúť prichádzajúce súbory (vypnite pre NFS)"
-
-msgid "Download folders in reverse alphanumerical order"
-msgstr ""
-
-msgid "Download SFV/MD5 before anything else"
-msgstr ""
-
-msgid "Nicotine+ Settings"
-msgstr ""
-
-msgid "Enable URL catching"
-msgstr "Zapnúť zachytávanie URL"
-
-msgid "Humanize slsk:// urls"
-msgstr "Poľudštiť slsk:// adresy"
-
-msgid ""
-"Instances of $ will be replaced by the link, add empty handlers to use the "
-"system default web browser.\n"
-"Protocols handlers: "
-msgstr ""
-
-msgid "Handler:"
-msgstr "Obslužný program:"
-
-msgid "Protocol:"
-msgstr "Protokol:"
-
-msgid "URL Catching"
-msgstr "Zachytávanie URL"
-
-msgid "Userinfo"
-msgstr "Údaje o používateľovi"
-
-msgid "Self description:"
-msgstr "Vlastný popis:"
-
-msgid "Image:"
-msgstr "Obrázok:"
-
-msgid "Select an image"
-msgstr ""
-
-msgid "Personal settings"
-msgstr "Osobné nastavenia"
 
 msgid "UserBrowse"
 msgstr ""
-
-msgid "Search file and folder names (exact match):"
-msgstr "Hľadať súbor/adresár (presná zhoda):"
 
 msgid "Dirs: Unknown"
 msgstr "Adresáre: neznáme"
@@ -1471,14 +621,20 @@ msgstr "Adresáre: neznáme"
 msgid "Shared: Unknown"
 msgstr "Zdieľané: neznáme"
 
-msgid "Save"
-msgstr "Uložiť"
+msgid "Search files and folders (exact match)"
+msgstr ""
 
-msgid "Refresh"
-msgstr "Obnoviť"
+msgid "Refresh files"
+msgstr ""
+
+msgid "Save file list to disk"
+msgstr ""
 
 msgid "UserInfo"
 msgstr ""
+
+msgid "Self description:"
+msgstr "Vlastný popis:"
 
 msgid "Information:"
 msgstr "Informácie:"
@@ -1513,17 +669,1003 @@ msgstr "Záujmy:"
 msgid "Picture:"
 msgstr "Obrázok:"
 
-msgid "Browse"
-msgstr "Prehliadať"
+msgid "Send Message"
+msgstr "Poslať správu"
 
-msgid "Show IP"
-msgstr "Zobraziť IP adresu"
+msgid "Browse Files"
+msgstr ""
 
-msgid "Add to list"
-msgstr "Pridať do zoznamu"
+msgid "Show IP Address"
+msgstr ""
 
-msgid "Save pic"
-msgstr "Uložiť obrázok"
+msgid "Add to Buddy List"
+msgstr ""
+
+msgid "Ban User"
+msgstr ""
+
+msgid "Ignore User"
+msgstr ""
+
+msgid "Save Picture"
+msgstr ""
+
+msgid "Refresh Info"
+msgstr ""
+
+msgid "Search Wishlist"
+msgstr "Prehľadať zoznam prianí"
+
+msgid "Add..."
+msgstr "Pridať..."
+
+msgid "Select All"
+msgstr ""
+
+msgid "About Nicotine+"
+msgstr ""
+
+msgid ""
+"A graphical client for the Soulseek peer-to-peer system\n"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
+msgstr ""
+
+msgid "About chat room commands"
+msgstr "O príkazoch pre chatovaciu miestnosť"
+
+msgid "/join /j 'room'"
+msgstr ""
+
+msgid "Join room 'room'"
+msgstr "Vstúpiť do miestnosti 'miestnosť'"
+
+msgid "/leave /l /part /p 'room'"
+msgstr ""
+
+msgid "Leave room 'room'"
+msgstr "Opustiť miestnosť 'miestnosť'"
+
+msgid "/clear /cl"
+msgstr ""
+
+msgid "Clear the chat window"
+msgstr "Vyčistiť okno s chatom"
+
+msgid "/tick /t"
+msgstr ""
+
+msgid "Set your personal ticker"
+msgstr "Nastaviť váš osobný ticker"
+
+msgid "/tickers"
+msgstr ""
+
+msgid "Show all the tickers"
+msgstr ""
+
+msgid "/me 'message'"
+msgstr ""
+
+msgid "Say something in the third-person"
+msgstr "Povedať niečo v tretej osobe"
+
+msgid "/now"
+msgstr ""
+
+msgid "Display the Now Playing script's output"
+msgstr "Zobraziť výstup skriptu Teraz prehrávané"
+
+msgid "Users"
+msgstr "Používatelia"
+
+msgid "/add /ad 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your user list"
+msgstr "Pridať používateľa 'používateľ' do zoznamu používateľov"
+
+msgid "/rem /unbuddy 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your user list"
+msgstr "Odstrániť používateľa 'používateľ' z vašeho zoznamu používateľov"
+
+msgid "/ban 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ban list"
+msgstr "Pridať používateľa 'používateľ' do zoznamu zakázaných používateľov"
+
+msgid "/unban 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ban list"
+msgstr "Odstrániť používateľa 'používateľ' zo zoznamu zakázaných používateľov"
+
+msgid "/ignore 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ignore list"
+msgstr "Pridať používateľa 'používateľ' do zoznamu ignorovaných"
+
+msgid "/unignore 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ignore list"
+msgstr "Odstrániť používateľa 'používateľ' zo zoznamu ignorovaných"
+
+msgid "/browse /b 'user'"
+msgstr ""
+
+msgid "Browse files of user 'user'"
+msgstr "Prehliadať súbory používateľa 'používateľ'"
+
+msgid "/whois /w 'user'"
+msgstr ""
+
+msgid "Request user info for user 'user'"
+msgstr "Vyžiadať informácie o používateľovi 'používateľ'"
+
+msgid "/ip 'user'"
+msgstr ""
+
+msgid "Show IP for user 'user'"
+msgstr "Zobraziť IP adresu používateľa 'používateľ'"
+
+msgid "Aliases"
+msgstr "Aliasy"
+
+msgid "/alias /al 'command' 'definition'"
+msgstr ""
+
+msgid "Add a new alias"
+msgstr "Pridať nový alias"
+
+msgid "/unalias /un 'command'"
+msgstr ""
+
+msgid "Remove an alias"
+msgstr "Odstrániť alias"
+
+msgid "/search /s 'query'"
+msgstr ""
+
+msgid "Start a new search for 'query'"
+msgstr "Začať nové vyhľadávanie na 'dotaz'"
+
+msgid "/rsearch /rs 'query'"
+msgstr ""
+
+msgid "Search the joined rooms for 'query'"
+msgstr "Prehľadávať aktuálne miestnosti na výskyt dotazu"
+
+msgid "/bsearch /bs '%s'"
+msgstr ""
+
+msgid "Search the buddy list for 'query'"
+msgstr "Prehľadávať zoznam používateľov na výskyt dotazu"
+
+msgid "/usearch /us 'user' 'query'"
+msgstr ""
+
+msgid "Search a user's shares for 'query'"
+msgstr "Prehľadávať zoznam zdieľaných súborov na výskyt dotazu"
+
+msgid "Private Chat"
+msgstr "Súkromný chat"
+
+msgid "/msg 'user' 'message'"
+msgstr ""
+
+msgid "Send message 'message' to user 'user'"
+msgstr "Poslať správu 'message' používateľovi 'používateľ'"
+
+msgid "/pm 'user'"
+msgstr ""
+
+msgid "Open private chat window for user 'user'"
+msgstr "Otvoriť okno súkromného chatu s používateľom 'používateľ'"
+
+msgid "/away /a"
+msgstr ""
+
+msgid "Toggles your away status"
+msgstr "Prepnúť stav prítomný/preč"
+
+msgid "/rescan"
+msgstr ""
+
+msgid "Rescan shares"
+msgstr "Prehľadať zdieľané súbory"
+
+msgid "/quit /q /exit"
+msgstr ""
+
+msgid "Quit Nicotine+"
+msgstr ""
+
+msgid "About private chat commands"
+msgstr "O príkazoch súkromného chatu"
+
+msgid "/close /c"
+msgstr ""
+
+msgid "Close the current private chat"
+msgstr "Zavrieť okno súkromného chatu"
+
+msgid "/toggle 'plugin'"
+msgstr ""
+
+msgid "Toggle plugin on/off state"
+msgstr ""
+
+msgid "About search filters"
+msgstr "O vyhľadávacích filtroch"
+
+msgid ""
+"You can use this to refine which results are displayed. The full results\n"
+"from the server are always available if you clear all the search terms.\n"
+"\n"
+"You can filter by:\n"
+"\n"
+"- Included text:\n"
+"      Files are shown if they contain this text.\n"
+"      Case is insensitive, but word order is important.\n"
+"      'Spears Brittany' will not show any 'Brittany Spears'\n"
+"\n"
+"- Excluded text:\n"
+"      As above, but files will not be displayed if the text matches\n"
+"\n"
+"- Size:\n"
+"      Shows results based on size. use > and < to find files larger or "
+"smaller.\n"
+"      Files exactly the same as this term will always match.\n"
+"      Use = to specify an exact match. Use k or m to specify kilo or "
+"megabytes.\n"
+"      >10M will find files larger than 10 megabytes.\n"
+"      <4000k will find files smaller than 4000k.\n"
+"\n"
+"- Bitrate:\n"
+"      Find files based on bitrate. Use < and > to find lower or higher.\n"
+"      >192 finds 192 and higher, <192 finds 192 or lower.\n"
+"      =192 only finds 192.\n"
+"      For VBR, the average bitrate is used.\n"
+"\n"
+"- Free slot:\n"
+"      Show only those results from users which have at least\n"
+"      one upload slot free.\n"
+"\n"
+"- To set the filter, press Enter. This will apply to any existing results, "
+"and any more that are returned.\n"
+"- To filter in a different way, just set the relevant terms.\n"
+"- You do not need to do another search to apply a different filter."
+msgstr ""
+
+msgid ""
+"Enable automatic replacement of chat words you've typed incorrectly or as an "
+"acronym"
+msgstr ""
+
+msgid "Clear"
+msgstr "Vyčistiť"
+
+msgid "Load Defaults"
+msgstr "Nahrať východzie"
+
+msgid "Toggle away after "
+msgstr "Prepnúť do módu neprítomnosti (preč) po "
+
+msgid " minutes of inactivity"
+msgstr " minútach neaktivity"
+
+msgid "Auto-reply when away:  "
+msgstr "Automatická odpoveď pri stave Preč: "
+
+msgid "Banned Users:"
+msgstr "Zakázaní používatelia:"
+
+msgid "Blocked IP Addresses:"
+msgstr "Blokované IP adresy:"
+
+msgid "Use custom ban message:"
+msgstr "Použiť vlastnú správu pre zakázaných:"
+
+msgid "Enable Censorship"
+msgstr "Zapnúť cenzúru"
+
+msgid ""
+"Add spaces around words if you don't wish to match strings inside words (may "
+"fail at beginning and end of lines)"
+msgstr ""
+
+msgid "Replace censored letters with:"
+msgstr "Nahradiť cenzúrované písmená:"
+
+msgid "<b>Chat Colors</b>"
+msgstr ""
+
+msgid "URL Link Text"
+msgstr ""
+
+msgid "Default"
+msgstr "Východzie"
+
+msgid "Username Font Style:"
+msgstr "Štýl písma mena používateľa:"
+
+msgid "Away"
+msgstr "Preč"
+
+msgid "Offline"
+msgstr "Offline"
+
+msgid "Online"
+msgstr "Online"
+
+msgid "Username Colors and Hotspots"
+msgstr ""
+
+msgid "Display away colors"
+msgstr "Zobrazovať ikony režimu neprítomnosti"
+
+msgid "Highlight Text"
+msgstr ""
+
+msgid "/me Text"
+msgstr ""
+
+msgid "Local Text"
+msgstr ""
+
+msgid "Remote Text"
+msgstr ""
+
+msgid "<b>List and Search Colors</b>"
+msgstr ""
+
+msgid "Input Text"
+msgstr "Vstupný text"
+
+msgid "Input Background"
+msgstr ""
+
+msgid "Offline Search"
+msgstr "Offline vyhľadávanie"
+
+msgid "With Queue"
+msgstr ""
+
+msgid "List Text"
+msgstr "Text zoznamu"
+
+msgid "Default Colors"
+msgstr ""
+
+msgid "<b>Tab Label Colors</b>"
+msgstr ""
+
+msgid "Changed"
+msgstr "Zmenené"
+
+msgid "Highlight"
+msgstr "Zvýrazňovať"
+
+msgid "<b>General</b>"
+msgstr ""
+
+msgid "Enable spell checker (requires a restart)"
+msgstr "Aktivovať kontrolu pravopisu (vyžaduje reštart programu):"
+
+msgid "Enable tab-key completion"
+msgstr "Povoliť doplňovanie textu tabulátorom"
+
+msgid "Cycle completions instead of showing a dropdown"
+msgstr ""
+
+msgid "<b>Allowed Completions</b>"
+msgstr ""
+
+msgid "Complete room names in chat rooms"
+msgstr "Doplňovať názvy miestností v chatovacích miestnostiach"
+
+msgid "Complete Buddy Names"
+msgstr "Doplňovať mená kamarátov"
+
+msgid "Complete usernames in chat rooms"
+msgstr "Doplňovať mená používateľov v chatovacích miestnostiach"
+
+msgid "Complete built-in /Commands"
+msgstr "Doplňovať zabudované /Príkazy"
+
+msgid "Complete alias /Commands"
+msgstr "Doplňovať alias /Príkazy"
+
+msgid "<b>Drop-down list</b>"
+msgstr ""
+
+msgid "Enable completion drop-down list"
+msgstr "Povoliť rozbaľovací zoznam pri doplňovaní"
+
+msgid "Minimum characters required to display drop-down:"
+msgstr "Minimálny počet znakov pre zobrazenie zoznamu:"
+
+msgid "Hide drop-down when only one matches"
+msgstr "Skryť rozbaľovací zoznam len pri jednom výskyte"
+
+msgid "Lock incoming files (turn off for NFS)"
+msgstr "Uzamknúť prichádzajúce súbory (vypnite pre NFS)"
+
+msgid "Download folders in reverse alphanumerical order"
+msgstr ""
+
+msgid "Download SFV/MD5 before anything else"
+msgstr ""
+
+msgid "Limit total download speeds to (KBytes/sec):"
+msgstr ""
+
+msgid "Allow these users to send you files:"
+msgstr "Povoliť týmto používateľom posielať vám súbory:"
+
+msgid ""
+"The users will be able to send you files. These files will be downloaded "
+"into the Buddy Uploads subdirectory in your Download directory"
+msgstr ""
+"Používatelia vám budú môcť poslať súbory. Tieto súbory budu stiahnuté do "
+"podadresára Uploady od kamarátov vo vašom adresáre pre download"
+
+msgid "<b>Folders</b>"
+msgstr ""
+
+msgid "Incomplete file folder:"
+msgstr ""
+
+msgid "Download folder:"
+msgstr ""
+
+msgid "Save buddies' uploads to:"
+msgstr ""
+
+msgid "Where buddies' uploads will be stored (with a subfolder for each buddy)"
+msgstr ""
+
+msgid "Select a directory"
+msgstr ""
+
+msgid "Share download folder"
+msgstr ""
+
+msgid "Where incomplete downloads are stored temporarily"
+msgstr "Kde sú dočasne ukladané nekompletné sťahovania"
+
+msgid "Select a folder"
+msgstr ""
+
+msgid "<b>Download Filters</b>"
+msgstr ""
+
+msgid "Enable Filters"
+msgstr "Zapnúť filtre"
+
+msgid ""
+"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
+"are supported if escaping is disabled. For simple filters, keep escaping "
+"enabled."
+msgstr ""
+"<b>Syntax:</b> Písmená rozlišujú veľkosť, sú podporované všetky regulárne "
+"výrazy Pythonu, ak je vypnuté escapeovanie. Pre jednoduché filtre nechajte "
+"escapeovanie zapnuté."
+
+msgid "Verify Filters"
+msgstr "Overiť filtre"
+
+msgid "<b>Unverified</b>"
+msgstr "<b>Neoverené</b>"
+
+msgid "Edit Filter"
+msgstr "Upraviť filter"
+
+msgid "<b>Commands</b>"
+msgstr ""
+
+msgid "Run command after download finishes ($ for filename):"
+msgstr "Spustiť príkaz po stiahnutí súboru ($ pre súbor):"
+
+msgid "Run command after folder finishes ($ for folder path):"
+msgstr "Spustiť príkaz po stiahnutí adresára ($ pre adresár - plná cesta):"
+
+msgid "File Manager command ($ for folder path):"
+msgstr "Príkaz Súborového manažéra ($ pre cestu k adresáru):"
+
+msgid "Audio Player Command ($ for filename):"
+msgstr "Príkaz na spustenie audio prehrávača ($ pre názov súboru):"
+
+msgid "<b>Double-clicking on...</b>"
+msgstr ""
+
+msgid "Download transfers"
+msgstr ""
+
+msgid "Upload transfers"
+msgstr ""
+
+msgid "Nothing"
+msgstr ""
+
+msgid "Send to player"
+msgstr ""
+
+msgid "Open Directory"
+msgstr "Otvoriť adresár"
+
+msgid "Show Buttons in Transfers Tabs"
+msgstr "Zobrazovať tlačidlá na paneli prenosov"
+
+msgid "Chat Font:"
+msgstr "Font chatu:"
+
+msgid "List Font:"
+msgstr "Font pre zoznam:"
+
+msgid "Transfers Font:"
+msgstr "Font pre prenosy"
+
+msgid "Search Font:"
+msgstr "Font pre hľadanie:"
+
+msgid "Browse Font:"
+msgstr "Font pre prehliadač:"
+
+msgid "Decimal separator:"
+msgstr "Desatinný oddeľovač:"
+
+msgid ""
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
+msgstr ""
+
+msgid "Enable geographical blocker"
+msgstr "Zapnúť blokovanie krajín"
+
+msgid "Geographical paranoia (block unresolvable IPs)"
+msgstr "Paranoidné blokovanie krajín (blokovať nezistiteľné IP adresy)"
+
+msgid "Country codes to block (comma separated):"
+msgstr "Blokované krajiny (oddelené čiarkou):"
+
+msgid "<b>Tray</b>"
+msgstr ""
+
+msgid "Display tray icon"
+msgstr ""
+
+msgid "Show confirmation dialog when closing the main window"
+msgstr "Zobrazovať potvrdzovacie okno pri zatváraní hlavného okna"
+
+msgid "Always send Nicotine+ to tray when main window is closed"
+msgstr ""
+
+msgid "Always quit when main window is closed"
+msgstr "Vždy ukončiť aplikáciu pri zatvorení hlavného okna"
+
+msgid "<b>Icon Theme</b>"
+msgstr ""
+
+msgid "Icon theme folder (requires restart):"
+msgstr ""
+
+msgid "<b>Status</b>"
+msgstr "<b>Stav</b>"
+
+msgid "Online:"
+msgstr "Online:"
+
+msgid "Away:"
+msgstr "Preč:"
+
+msgid "Offline:"
+msgstr "Offline:"
+
+msgid "Nick Hilite:"
+msgstr ""
+
+msgid "Hilite:"
+msgstr "Zvýrazniť:"
+
+msgid "Disconnected:"
+msgstr "Odpojený:"
+
+msgid "Connected:"
+msgstr "Pripojený:"
+
+msgid "<b>Trayicon</b>"
+msgstr "<b>Ikona v systémovej lište</b>"
+
+msgid "Notify:"
+msgstr ""
+
+msgid "Window:"
+msgstr "Okno:"
+
+msgid "Ignored users:"
+msgstr "Ignorovaní používatelia:"
+
+msgid "Ignored IPs:"
+msgstr ""
+
+msgid "Log chatrooms by default"
+msgstr "Štandardne logovať správy chatu"
+
+msgid "Log private chat by default"
+msgstr "Štandardne logovať súkromné správy chatu"
+
+msgid "Log transfers"
+msgstr "Logovať prenosy"
+
+msgid "Logs directory:"
+msgstr "Adresár s log súbormi:"
+
+msgid "Chatroom Logs directory:"
+msgstr "Adresár s log súbormi chatu:"
+
+msgid "Private Chat Logs directory:"
+msgstr "Adresár s log súbormi súkr. chatu:"
+
+msgid "Display logged chat room messages when a room is rejoined"
+msgstr ""
+"Zobrazovať logované správy chatovacej miestnosti pri opätovnom vojdení do "
+"miestnosti"
+
+msgid "Read"
+msgstr "Čítať"
+
+msgid "lines"
+msgstr "riadkov"
+
+msgid "Reopen last Private Chat messages"
+msgstr "Znovu otvoriť posledné správy súkromného chatu"
+
+msgid "<b>Timestamps</b>"
+msgstr "<b>Časové značky</b>"
+
+msgid "Display timestamps"
+msgstr "Zobraziť časové značky"
+
+msgid "Log file format:"
+msgstr "Formát log súborov:"
+
+msgid "Chat room format:"
+msgstr "Formát chatovacej miestnosti:"
+
+msgid "Private chat format:"
+msgstr "Formát súkromného chatu:"
+
+msgid "Select previous tab on startup"
+msgstr ""
+
+msgid "Close-buttons on tabs"
+msgstr "Tlačidlá pre zavretie panelov"
+
+msgid "Tabs can be repositioned"
+msgstr ""
+
+msgid "Show user status icons instead of status text"
+msgstr ""
+
+msgid "<b>Tab Positioning</b>"
+msgstr ""
+
+msgid "Main"
+msgstr "Hlavný"
+
+msgid "Label Angle:"
+msgstr "Uhol popisku:"
+
+msgid "Chat rooms"
+msgstr "Chatovacie miestnosti"
+
+msgid "Private chat"
+msgstr "Súkromný chat"
+
+msgid "User info"
+msgstr "Údaje o používateľovi"
+
+msgid "User browse"
+msgstr "Prehliadanie súborov používateľa"
+
+msgid "Show notification for private chat and mentions in window title"
+msgstr ""
+
+msgid "Show notification icons on tabs"
+msgstr ""
+
+msgid "Notification changes the tab's text color"
+msgstr "Notifikácia mení farbu textu panelu"
+
+msgid "Play sound for notification popups"
+msgstr ""
+
+msgid "<b>Show a notification popup...</b>"
+msgstr ""
+
+msgid "When a file has finished downloading"
+msgstr ""
+
+msgid "When a folder has finished downloading"
+msgstr ""
+
+msgid "When you receive a private message"
+msgstr ""
+
+msgid "When someone sends a message in a chat room"
+msgstr ""
+
+msgid "When you're mentioned in a chat room"
+msgstr ""
+
+msgid "Enable Plugins"
+msgstr ""
+
+msgid "<b>No Plugin Selected</b>"
+msgstr ""
+
+msgid "Version: "
+msgstr ""
+
+msgid "Author(s): "
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Plugin Properties"
+msgstr ""
+
+msgid "<b>Network Searches</b>"
+msgstr ""
+
+msgid "Enable sending search results to other users"
+msgstr ""
+
+msgid "Send out a max of"
+msgstr "Zobrazovať najviac"
+
+msgid "results per search request"
+msgstr "výsledkov pre jedno hľadanie"
+
+msgid "Toggle responding to distributed searches every"
+msgstr "Prepnúť odpovedanie na distribuované hľadanie každých"
+
+msgid "seconds"
+msgstr "sekúnd(y)"
+
+msgid "<b>Your Searches</b>"
+msgstr ""
+
+msgid ""
+"Remove special characters from search terms (some clients don't send search "
+"results if they're included)"
+msgstr ""
+
+msgid ""
+"Reopen closed search tabs that haven't been ignored when new results come in"
+msgstr ""
+
+msgid "Max visible results per search:"
+msgstr ""
+
+msgid "Max stored results per search:"
+msgstr ""
+
+msgid "<b>Search Filters</b>"
+msgstr ""
+
+msgid "Use regular expressions for filter in & out"
+msgstr "Používať regulérne výrazy pre obsiahnutý/výlučený text"
+
+msgid "Enable filters by default"
+msgstr "Štandardne povoliť filtre"
+
+msgid "<b>Login Details</b>"
+msgstr ""
+
+msgid ""
+"You can create a new account by entering the desired details below. Please "
+"keep in mind that some usernames may already be taken. If you're unable to "
+"connect with your selected username, choose another one."
+msgstr ""
+
+msgid "Server:"
+msgstr ""
+
+msgid "Username:"
+msgstr ""
+
+msgid "Password:"
+msgstr "Heslo:"
+
+msgid "Change password"
+msgstr ""
+
+msgid "Your IP address has not been retrieved from the server"
+msgstr "Vaša IP adresa nebola získaná zo servera"
+
+msgid "<b>Ports</b>"
+msgstr ""
+
+msgid "Use the first available listening port from the following range:"
+msgstr ""
+
+msgid "Client port is not set"
+msgstr "Port klienta nie je nastavený"
+
+msgid "Check port status"
+msgstr ""
+
+msgid "Use UPnP to map the port on my router (requires restart)"
+msgstr ""
+
+msgid ""
+"If you wish to use UPnP to fix portmapping on your router please install "
+"MiniUPnP client binary or the MiniUPnP client module for Python."
+msgstr ""
+
+msgid "I can receive direct connections"
+msgstr "Môžem prijímať priame spojenia"
+
+msgid ""
+"Only disable direct connections if the above ports aren't accessible after "
+"attempting UPnP and manual port forwarding, if possible. This can happen if "
+"your ISP blocks ports."
+msgstr ""
+
+msgid "<b>Miscellaneous</b>"
+msgstr ""
+
+msgid "Enable CTCP-like PM responses (Client Version)"
+msgstr "Povoliť PM odpovede typu CTCP (klientská verzia)"
+
+msgid "Nicotine+ Settings"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Rescan shares on startup"
+msgstr "Preskenuj zdieľané súbory po spustení programu"
+
+msgid "<b>Public Shares</b>"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Enable Buddy-Only shares"
+msgstr "Povoliť zdieľanie vybraných súborov iba pre kamarátov"
+
+msgid ""
+"If buddy shares are enabled, they will be shared. Otherwise normal shares "
+"will be used."
+msgstr ""
+"Ak je zapnuté zdieľanie s kamarátmi, budú zdieľané. Inak budú použité bežne "
+"zdieľané súbory."
+
+msgid "Share only to buddies"
+msgstr ""
+
+msgid "<b>Buddies-Only Shares</b>"
+msgstr ""
+
+msgid "Enable Text To Speech"
+msgstr "Povoliť Text-na-Reč"
+
+msgid "Text To Speech command:"
+msgstr "Príkaz pre Text-na-Reč:"
+
+msgid "Chat room message:"
+msgstr "Správa chatovacej miestnosti:"
+
+msgid "Private chat message:"
+msgstr "Súkromná správa chatu:"
+
+msgid "<b>Upload Queue</b>"
+msgstr ""
+
+msgid "Upload Queue type:"
+msgstr "Typ požiadavku na upload:"
+
+msgid "Round Robin"
+msgstr "Cyklická obsluha"
+
+msgid "Users will be sent one file and then another user will be selected"
+msgstr ""
+"Používateľom pošlete jeden súbor a potom bude sťahovať ďalší používateľ"
+
+msgid "First In, First Out"
+msgstr "Prvý dnu, prvý von"
+
+msgid "Files will be sent in the order they were queued"
+msgstr "Súbory budú posielané v tom poradí, v akom boli umiestnené do frontu"
+
+msgid "Queue Uploads if total transfer speed reaches"
+msgstr "Umiestniť uploady do frontu, ak celkový prenos dosiahne"
+
+msgid "KBytes/sec"
+msgstr "KBytov/s"
+
+msgid "Limit number of upload slots to"
+msgstr "Obmedzovať počet súčasne poskytovaných súborov na"
+
+msgid ""
+"If disabled, slots will automatically be determined by available bandwidth "
+"limitations"
+msgstr ""
+"Ak vypnuté, slot bude automaticky stanovený obmedzeniami dostupnej šírky "
+"pásma"
+
+msgid "Limit uploads speed to"
+msgstr "Obmedzovať rýchlosť poskytovania na"
+
+msgid "per transfer"
+msgstr "/prenos"
+
+msgid "total transfers"
+msgstr "súhrnne"
+
+msgid "Each user may queue a maximum of"
+msgstr "Každý používateľ môže umiestniť do frontu nanajvýš"
+
+msgid "Megabytes"
+msgstr "Megabytov"
+
+msgid "Files"
+msgstr "Súbory"
+
+msgid "Queue size limit does not apply to friends"
+msgstr "Obmedzenia veľkosti frontu sa netýkajú priateľov"
+
+msgid "<b>Privileges</b>"
+msgstr ""
+
+msgid "Privilege all my friends"
+msgstr "Privilégia pre všetkých mojich priateľov"
+
+msgid ""
+"Friends will have higher priority in the queue, the same as globally "
+"privileged users"
+msgstr ""
+"Priatelia budú mať vyššiu prioritu vo fronte, rovnako ako aj používatelia s "
+"globálnymi oprávneniami"
+
+msgid "Enable URL catching"
+msgstr "Zapnúť zachytávanie URL"
+
+msgid "Humanize slsk:// urls"
+msgstr "Poľudštiť slsk:// adresy"
+
+msgid ""
+"Instances of $ will be replaced by the link, add empty handlers to use the "
+"system default web browser.\n"
+"Protocols handlers: "
+msgstr ""
+
+msgid "Handler:"
+msgstr "Obslužný program:"
+
+msgid "Protocol:"
+msgstr "Protokol:"
+
+msgid "Image:"
+msgstr "Obrázok:"
+
+msgid "Select an image"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1593,6 +1735,18 @@ msgstr "Nepodarilo sa zálohovať súbor s konfiguráciou, chyba: %s"
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Nepodarilo sa zálohovať súbor s konfiguráciou, chyba: %s"
+
+#, python-format
+msgid "Can't save %s: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while opening your alias file: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while saving your alias file: %s"
+msgstr ""
 
 #, python-format
 msgid "No such alias (%s)"
@@ -1750,11 +1904,6 @@ msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr "Server ohlásil nulový port pre používateľa %(user)s, ďalší pokus"
 
 #, python-format
-msgid ""
-"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr "IP adresa %(user)s je %(ip)s, názov %(host)s, port %(port)i%(country)s"
-
-#, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "IP adresa %(user)s je %(ip)s, port %(port)i%(country)s"
 
@@ -1835,6 +1984,12 @@ msgstr "Nebolo možné zapísať log o prenosoch: %s"
 msgid "Downloaded"
 msgstr ""
 
+msgid "Shares"
+msgstr "Zdieľané súbory"
+
+msgid "Buddy Shares"
+msgstr "Zdieľanie pre kamarátov"
+
 #, python-format
 msgid ""
 "Failed to rebuild share, serious error occurred. If this problem persists "
@@ -1842,9 +1997,6 @@ msgid ""
 "with the stack trace included (see terminal output after this message). "
 "Technical details: %s"
 msgstr ""
-
-msgid "Buddy Shares"
-msgstr "Zdieľanie pre kamarátov"
 
 #, python-format
 msgid "ERROR: No %(type)s shares database available"
@@ -1879,39 +2031,20 @@ msgstr "Používateľ %(user)s hľadá priamo %(query)s, dostal %(num)i výsledk
 msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr "Používateľ %(user)s hľadá %(query)s, dostal %(num)i výsledkov"
 
-msgid "Checking for changes"
-msgstr "Kontrola zmien"
-
 #, python-format
-msgid "%(num)s directories found before rescan/rebuild"
+msgid "%(num)s directories found before rescan, rebuilding..."
 msgstr ""
 
 #, python-format
-msgid "%(num)s directories found after rescan/rebuild"
+msgid "%(num)s directories found after rescan"
 msgstr ""
 
 #, python-format
-msgid "Scanning %s"
-msgstr "Skenujem %s"
-
-msgid "Building DataBase"
-msgstr "Generujem databázu"
-
-msgid "Building Index"
-msgstr "Generujem index"
-
-#, python-format
-msgid "Scanning Directory Error: %(error)s Path: %(path)s"
+msgid "Error while scanning %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning Error: %(error)s Path: %(path)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
-"\". Repair or remove this link."
+msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
@@ -1919,11 +2052,11 @@ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 msgstr ""
 
 #, python-format
-msgid "Dropping missing directory %(dir)s"
+msgid "Dropping missing folder %(dir)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning File Error: %(error)s Path: %(path)s"
+msgid "Error while scanning file %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
@@ -1947,10 +2080,6 @@ msgstr "Nepodarilo sa rozparsovať prichádzajúcu správu, trieda %s"
 
 #, python-format
 msgid "Exception during parsing %(area)s: %(exception)s"
-msgstr ""
-
-#, python-format
-msgid "Offending package: %(bytes)s"
 msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
@@ -2021,14 +2150,6 @@ msgstr ""
 "Nepodarilo sa poslať správu cez uzavreté spojenie: %(type)s %(msg_obj)s"
 
 #, python-format
-msgid ""
-"You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
-"connections for your protection. If you get this message often you should "
-"search for less generic terms, or increase your per-process file descriptor "
-"limit."
-msgstr ""
-
-#, python-format
 msgid "User %s does not exist"
 msgstr "Používateľ %s neexistuje"
 
@@ -2039,10 +2160,6 @@ msgstr "Filtrovanie: %s"
 #, python-format
 msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr "Pokus o obnovenie sťahovania od používateľa %(user)s, súbor %(file)s"
-
-#, python-format
-msgid "Failed download: user %(user)s, file %(file)s"
-msgstr "Neúspešné sťahovanie: používateľ %(user)s, súbor %(file)s"
 
 #, python-format
 msgid "Got transfer request %s but cannot determine requestor"
@@ -2090,7 +2207,7 @@ msgstr "Neznáma požiadavka na súbor: %s"
 msgid "OS error: %s"
 msgstr "Chyba OS: %s"
 
-msgid "Nicotine+ :: Directory download error"
+msgid "Folder download error"
 msgstr ""
 
 #, python-format
@@ -2155,8 +2272,8 @@ msgstr ""
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s stiahnutých od %(user)s"
 
-msgid "Nicotine+ :: file downloaded"
-msgstr "Nicotine+:: súbor stiahnutý"
+msgid "File downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing '%s'"
@@ -2170,8 +2287,8 @@ msgstr "Spustené: %s"
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s stiahnutých od %(user)s"
 
-msgid "Nicotine+ :: directory completed"
-msgstr "Nicotine+ :: adresár dokončený"
+msgid "Folder downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing on folder: %s"
@@ -2190,10 +2307,6 @@ msgstr "(priateľ)"
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Upload dokončený: používateľ %(user)s, súbor %(file)s"
-
-#, python-format
-msgid "Retrying failed download: %(user)s, file %(file)s"
-msgstr "Pokus o obnovenie sťahovania od používateľa %(user)s, súbor %(file)s"
 
 #, python-format
 msgid "I/O error: %s"
@@ -2255,207 +2368,16 @@ msgstr ""
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 
-msgid "About Nicotine+"
-msgstr ""
-
-msgid ""
-"A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek\n"
-"\n"
-"This product includes IP2Location LITE data, available from:\n"
-"https://www.ip2location.com"
-msgstr ""
-
-msgid "About search filters"
-msgstr "O vyhľadávacích filtroch"
-
-msgid ""
-"Search filtering\n"
-"\n"
-"You can use this to refine which results are displayed. The full results\n"
-"from the server are always available if you clear all the search terms.\n"
-"\n"
-"You can filter by:\n"
-"\n"
-"Included text: Files are shown if they contain this text.\n"
-"Case is insensitive, but word order is important.\n"
-"'Spears Brittany' will not show any 'Brittany Spears'\n"
-"\n"
-"Excluded text: As above, but files will not be displayed if the text "
-"matches\n"
-"\n"
-"Size: Shows results based on size. use > and < to find files larger or "
-"smaller.\n"
-"Files exactly the same as this term will always match.\n"
-"Use = to specify an exact match. Use k or m to specify kilo or megabytes.\n"
-">10M will find files larger than 10 megabytes.\n"
-"<4000k will find files smaller than 4000k.\n"
-"\n"
-"Bitrate: Find files based on bitrate. Use < and > to find lower or higher.\n"
-">192 finds 192 and higher, <192 finds 192 or lower.\n"
-"=192 only finds 192.\n"
-"For VBR, the average bitrate is used.\n"
-"\n"
-"Free slot: Show only those results from users which have at least\n"
-"one upload slot free.\n"
-"\n"
-"To set the filter, press Enter.\n"
-"This will apply to any existing results, and any more that are returned.\n"
-"To filter in a different way, just set the relevant terms.\n"
-"You do not need to do another search to apply a different filter."
-msgstr ""
-
-msgid "room"
-msgstr "miestnosť"
-
-msgid "Join room 'room'"
-msgstr "Vstúpiť do miestnosti 'miestnosť'"
-
-msgid "Leave room 'room'"
-msgstr "Opustiť miestnosť 'miestnosť'"
-
-msgid "Clear the chat window"
-msgstr "Vyčistiť okno s chatom"
-
-msgid "Set your personal ticker"
-msgstr "Nastaviť váš osobný ticker"
-
-msgid "Show all the tickers"
-msgstr ""
-
-msgid "Reattach a chat window to the notebook"
-msgstr "Opäť pripojiť chatovacie okno k notebooku"
-
-msgid "Detach a chat tab from the notebook"
-msgstr "Odpojiť chatovací panel z notebooku"
-
-msgid "message"
-msgstr "správa"
-
-msgid "Say something in the third-person"
-msgstr "Povedať niečo v tretej osobe"
-
-msgid "Display the Now Playing script's output"
-msgstr "Zobraziť výstup skriptu Teraz prehrávané"
-
-msgid "Users"
-msgstr "Používatelia"
-
-msgid "user"
-msgstr "používateľ"
-
-msgid "Add user 'user' to your user list"
-msgstr "Pridať používateľa 'používateľ' do zoznamu používateľov"
-
-msgid "Remove user 'user' from your user list"
-msgstr "Odstrániť používateľa 'používateľ' z vašeho zoznamu používateľov"
-
-msgid "Add user 'user' to your ban list"
-msgstr "Pridať používateľa 'používateľ' do zoznamu zakázaných používateľov"
-
-msgid "Remove user 'user' from your ban list"
-msgstr "Odstrániť používateľa 'používateľ' zo zoznamu zakázaných používateľov"
-
-msgid "Add user 'user' to your ignore list"
-msgstr "Pridať používateľa 'používateľ' do zoznamu ignorovaných"
-
-msgid "Remove user 'user' from your ignore list"
-msgstr "Odstrániť používateľa 'používateľ' zo zoznamu ignorovaných"
-
-msgid "Browse files of user 'user'"
-msgstr "Prehliadať súbory používateľa 'používateľ'"
-
-msgid "Request user info for user 'user'"
-msgstr "Vyžiadať informácie o používateľovi 'používateľ'"
-
-msgid "Show IP for user 'user'"
-msgstr "Zobraziť IP adresu používateľa 'používateľ'"
-
-msgid "Aliases"
-msgstr "Aliasy"
-
-msgid "command"
-msgstr "príkaz"
-
-msgid "definition"
-msgstr "definícia"
-
-msgid "Add a new alias"
-msgstr "Pridať nový alias"
-
-msgid "process"
-msgstr "proces"
-
-msgid "Add a new alias that runs a process"
-msgstr "Pridať nový alias, ktorý spúšťa proces"
-
-msgid "Remove an alias"
-msgstr "Odstrániť alias"
-
-msgid "query"
-msgstr "dotaz"
-
-msgid "Start a new search for 'query'"
-msgstr "Začať nové vyhľadávanie na 'dotaz'"
-
-msgid "Search the joined rooms for 'query'"
-msgstr "Prehľadávať aktuálne miestnosti na výskyt dotazu"
-
-msgid "Search the buddy list for 'query'"
-msgstr "Prehľadávať zoznam používateľov na výskyt dotazu"
-
-msgid "Search a user's shares for 'query'"
-msgstr "Prehľadávať zoznam zdieľaných súborov na výskyt dotazu"
-
-msgid "Private Chat"
-msgstr "Súkromný chat"
-
-msgid "Send message 'message' to user 'user'"
-msgstr "Poslať správu 'message' používateľovi 'používateľ'"
-
-msgid "Open private chat window for user 'user'"
-msgstr "Otvoriť okno súkromného chatu s používateľom 'používateľ'"
-
-msgid "Toggles your away status"
-msgstr "Prepnúť stav prítomný/preč"
-
-msgid "Rescan shares"
-msgstr "Prehľadať zdieľané súbory"
-
-msgid "Quit Nicotine+"
-msgstr ""
-
-msgid "About chat room commands"
-msgstr "O príkazoch pre chatovaciu miestnosť"
-
-msgid "Close the current private chat"
-msgstr "Zavrieť okno súkromného chatu"
-
-msgid "plugin"
-msgstr ""
-
-msgid "Toggle plugin on/off state"
-msgstr ""
-
-msgid "Chat Rooms"
-msgstr "Chatovacie miestnosti"
-
-msgid "About private chat commands"
-msgstr "O príkazoch súkromného chatu"
-
 msgid "Room"
 msgstr "Miestnosť"
 
-msgid "Join room"
-msgstr "Vstúpiť do miestnosti"
-
-msgid "Leave room"
-msgstr "Opustiť miestnosť"
-
-msgid "Enable Private Rooms"
+msgid "Join Room"
 msgstr ""
 
-msgid "Disable Private Rooms"
+msgid "Leave Room"
+msgstr ""
+
+msgid "Create Room"
 msgstr ""
 
 msgid "Create Private Room"
@@ -2464,14 +2386,20 @@ msgstr "Vytvoriť súkromnú miestnosť"
 msgid "Disown Private Room"
 msgstr "Zriecť sa súkromnej miestnosti"
 
-msgid "Cancel room membership"
-msgstr "Zrušiť členstvo v miestnosti"
+msgid "Cancel Room Membership"
+msgstr ""
 
 msgid "Join Public Room"
 msgstr ""
 
-msgid "Nicotine+:"
-msgstr "Nicotine+:"
+msgid "Refresh"
+msgstr "Obnoviť"
+
+msgid "Create Public Room"
+msgstr ""
+
+msgid "Enter the name of the public room you wish to create"
+msgstr ""
 
 msgid "Enter the name of the private room you wish to create"
 msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
@@ -2491,21 +2419,6 @@ msgstr ""
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr ""
-
-msgid "Set ticker message"
-msgstr "Nastaviť správu tickeru"
-
-msgid "Set room ticker message:"
-msgstr "Nastaviť správu tickeru pre miestnosť:"
-
-msgid "Just this time"
-msgstr "Iba teraz"
-
-msgid "Always for this channel"
-msgstr "Vždy pre tento kanál"
-
-msgid "Default for all channels"
-msgstr "Prednastavené pre všetky kanály"
 
 msgid "Status"
 msgstr "Stav"
@@ -2587,6 +2500,14 @@ msgid "Add as operator of %s"
 msgstr ""
 
 #, python-format
+msgid "%s mentioned you in the %s room"
+msgstr ""
+
+#, python-format
+msgid "Message by %s in the %s room"
+msgstr ""
+
+#, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr ""
 
@@ -2595,12 +2516,8 @@ msgid "Command %s is not recognized"
 msgstr "Príkaz %s nie je rozpoznaný"
 
 #, python-format
-msgid "All ticker messages for %(room)s:"
+msgid "All tickers / wall messages for %(room)s:"
 msgstr ""
-
-#, python-format
-msgid "Nicotine+ Chatroom: %s"
-msgstr "Chatovacia miestnosť Nicotine+: %s"
 
 #, python-format
 msgid "%s joined the room"
@@ -2611,11 +2528,8 @@ msgid "%s left the room"
 msgstr "%s opustil miestnosť"
 
 #, python-format
-msgid "%i people in room"
-msgstr "%i ľudí v miestnosti"
-
-msgid "You are alone"
-msgstr "Ste sám"
+msgid "User List (%i)"
+msgstr ""
 
 #, python-format
 msgid "%s has gone away"
@@ -2631,9 +2545,6 @@ msgstr "--- odpojený ---"
 msgid "--- reconnected ---"
 msgstr "--- pripojenie obnovené ---"
 
-msgid "Detach this tab"
-msgstr "Odpojiť tento panel"
-
 msgid "Leave this room"
 msgstr "Opustiť túto miestnosť"
 
@@ -2645,24 +2556,67 @@ msgstr ""
 "Nepodarilo sa získať informáciu o verzii!\n"
 "Chyba: %s"
 
-msgid "Check Latest Version"
-msgstr "Skontrolovať najnovšiu verziu"
-
 #, python-format
-msgid ""
-"A newer version ('%s') is available. Check Nicotine+ releases page\n"
-"(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest "
-"version."
+msgid "A newer version %s is available, released on %s."
 msgstr ""
 
-msgid ""
-"You appear to be using a development version of Nicotine+.\n"
-"Check out the latest version from the Git repository at https://github.com/"
-"Nicotine-Plus/nicotine-plus/"
+msgid "You appear to be using a development version of Nicotine+."
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Používate najnovšiu verziu Nicotine+."
+
+msgid "Browse"
+msgstr "Prehliadať"
+
+msgid "<b>List Position:</b>"
+msgstr "<b>Pozícia v zozname:</b>"
+
+msgid "<b>File Name:</b>"
+msgstr "<b>Názov súboru:</b>"
+
+msgid "<b>Directory:</b>"
+msgstr "<b>Adresár:</b>"
+
+msgid "<b>File Size:</b>"
+msgstr "<b>Veľkosť súboru:</b>"
+
+msgid "<b>Length:</b>"
+msgstr "<b>Dĺžka:</b>"
+
+msgid "<b>Bitrate:</b>"
+msgstr "<b>Bitový tok:</b>"
+
+msgid "<b>Immediate Downloads:</b>"
+msgstr "<b>Okamžité sťahovanie:</b>"
+
+msgid "<b>Queue:</b>"
+msgstr "<b>Front:</b>"
+
+msgid "<b>Last Speed:</b>"
+msgstr "<b>Posledná rýchlosť:</b>"
+
+msgid "Download"
+msgstr "Stiahnuť"
+
+msgid "Download All"
+msgstr "Stiahnuť všetko"
+
+#, python-format
+msgid "<b>%s</b> File(s) Selected"
+msgstr "<b>%s</b> súbor(ov) vybraný(ch)"
+
+msgid "Previous"
+msgstr "Predchádzajúci"
+
+msgid "Next"
+msgstr "Ďalší"
+
+msgid "Close"
+msgstr "Zatvoriť"
+
+msgid "<b>Country Code:</b> "
+msgstr "<b>Kód krajiny:</b> "
 
 msgid "_Open"
 msgstr ""
@@ -2715,81 +2669,32 @@ msgstr "Skúsiť _znova"
 msgid "Abor_t"
 msgstr "_Zrušiť"
 
+msgid "Abort & Delete"
+msgstr "Zrušiť a vymazať"
+
 msgid "_Clear"
 msgstr "_Vyčistiť"
 
 msgid "Clear Groups"
 msgstr "Vyčistiť skupiny"
 
-msgid "Clear All Queued Downloads?"
-msgstr "Vyčistiť všetky sťahovania vo fronte?"
+msgid "Clear Queued Downloads"
+msgstr ""
 
-msgid "Clear Queued Transfers"
-msgstr "Vyčistiť prenosy vo fronte"
+msgid "Are you sure you wish to clear all queued downloads?"
+msgstr ""
 
 msgid " KB/s"
 msgstr " KB/s"
+
+msgid "Nicotine+:"
+msgstr "Nicotine+:"
 
 msgid "Downloads Metadata"
 msgstr "Metadáta sťahovaní"
 
 msgid "<b>Metadata</b> for Downloads"
 msgstr "<b>Metadáta</b> pre sťahovania"
-
-msgid "Select User's Transfers"
-msgstr "Vybrať prenosy používateľa"
-
-msgid "<b>List Position:</b>"
-msgstr "<b>Pozícia v zozname:</b>"
-
-msgid "<b>File Name:</b>"
-msgstr "<b>Názov súboru:</b>"
-
-msgid "<b>Directory:</b>"
-msgstr "<b>Adresár:</b>"
-
-msgid "<b>File Size:</b>"
-msgstr "<b>Veľkosť súboru:</b>"
-
-msgid "<b>Length:</b>"
-msgstr "<b>Dĺžka:</b>"
-
-msgid "<b>Bitrate:</b>"
-msgstr "<b>Bitový tok:</b>"
-
-msgid "<b>Immediate Downloads:</b>"
-msgstr "<b>Okamžité sťahovanie:</b>"
-
-msgid "<b>Queue:</b>"
-msgstr "<b>Front:</b>"
-
-msgid "<b>Last Speed:</b>"
-msgstr "<b>Posledná rýchlosť:</b>"
-
-msgid "Download"
-msgstr "Stiahnuť"
-
-msgid "Download All"
-msgstr "Stiahnuť všetko"
-
-#, python-format
-msgid "<b>%s</b> File(s) Selected"
-msgstr "<b>%s</b> súbor(ov) vybraný(ch)"
-
-msgid "Previous"
-msgstr "Predchádzajúci"
-
-msgid "Next"
-msgstr "Ďalší"
-
-msgid "<b>Country Code:</b> "
-msgstr "<b>Kód krajiny:</b> "
-
-msgid "Cancel"
-msgstr "Zrušiť"
-
-msgid "OK"
-msgstr "OK"
 
 msgid "Virtual Directory"
 msgstr ""
@@ -2828,14 +2733,21 @@ msgstr "Varovanie"
 msgid "The chosen virtual name is empty"
 msgstr ""
 
-msgid "The chosen virtual name already exist"
+msgid "The chosen virtual name already exists"
 msgstr ""
 
 msgid "The chosen directory is already shared"
 msgstr ""
 
+#, python-format
+msgid "%(current)s/%(limit)s Connections"
+msgstr ""
+
 msgid "Search files"
 msgstr "Hľadať súbory"
+
+msgid "Downloads"
+msgstr "Downloady"
 
 msgid "Uploads"
 msgstr "Uploady"
@@ -2847,11 +2759,28 @@ msgstr "Záujmy"
 msgid "Hide %(tab)s"
 msgstr ""
 
+#, python-format
+msgid "Users: %s"
+msgstr "Používatelia: %s"
+
+#, python-format
+msgid "Files: %s"
+msgstr "Súbory: %s"
+
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr "Down: %(num)i používateľov, %(speed).1f KB/s"
+
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr "Up: %(num)i používateľov, %(speed).1f KB/s"
+
+#, python-format
+msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+msgstr "Prenosy Nicotine+: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+
 msgid "Joined Rooms "
 msgstr "Pripojený v miestnostiach"
-
-msgid "Global"
-msgstr "Globálne"
 
 msgid "Buddies"
 msgstr "Kamaráti"
@@ -2868,9 +2797,8 @@ msgstr ""
 msgid "Send to tray"
 msgstr "Poslať do oznamovacej oblasti"
 
-#, python-format
-msgid "Notification Error: %s"
-msgstr "Chyba notifikácie: %s"
+msgid "Remember choice"
+msgstr ""
 
 msgid "I like"
 msgstr "Mám rád(a)"
@@ -2903,6 +2831,10 @@ msgid "_Recommendations for this item"
 msgstr "D_oporučenia pre túto položku"
 
 #, python-format
+msgid "Download %(num)i files?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory "
 "%(folder)s?"
@@ -2918,27 +2850,6 @@ msgstr "Nepodarilo sa vytvoriť adresár '%(folder)s', hlásená chyba: %(error)
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Nahrávanie zdieľaných súborov z disku zlyhalo: %(error)s"
 
-msgid "Enter the User who you wish to send a private message:"
-msgstr "Zadajte používateľa, ktorému chcete poslať súkromnú správu:"
-
-msgid "Nicotine+: Get User Info"
-msgstr "Nicotine+: Získať údaje o používateľovi"
-
-msgid "Enter the User whose User Info you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's IP"
-msgstr "Nicotine+: Zistiť IP adresu používateľa"
-
-msgid "Enter the User whose IP Address you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's Shares List"
-msgstr "Nicotine+: Získať zoznam zdieľaných súborov používateľa"
-
-msgid "Enter the User whose Shares List you wish to receive:"
-msgstr ""
-
 #, python-format
 msgid "button_press error, %(error)s"
 msgstr ""
@@ -2948,32 +2859,8 @@ msgid "Connecting to %(host)s:%(port)s"
 msgstr "Pripájam sa k %(host)s:%(port)s"
 
 #, python-format
-msgid "%(current)s/%(limit)s Connections"
-msgstr ""
-
-#, python-format
 msgid "Error loading image for %(flag)s: %(error)s"
 msgstr ""
-
-#, python-format
-msgid "Users: %s"
-msgstr "Používatelia: %s"
-
-#, python-format
-msgid "Files: %s"
-msgstr "Súbory: %s"
-
-#, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Down: %(num)i používateľov, %(speed).1f KB/s"
-
-#, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Up: %(num)i používateľov, %(speed).1f KB/s"
-
-#, python-format
-msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
-msgstr "Prenosy Nicotine+: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
 
 msgid "Rescanning started"
 msgstr "Reskenovanie začalo"
@@ -3008,6 +2895,9 @@ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Chyba: Filter pre download zlyhal! Skontrolujte vaše filtre. Príčina: %s"
 
+msgid "Buddy list"
+msgstr ""
+
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Chybná SoulSeek meta-url: %s"
@@ -3017,15 +2907,6 @@ msgstr "Zadajte reťazec, ktorý chcete hľadať:"
 
 msgid "Nicotine+: Find string"
 msgstr "Nicotine+: Nájsť reťazec"
-
-msgid "Add thing I like"
-msgstr "Pridať vec, ktorú mám rád(a)"
-
-msgid "Add thing I don't like"
-msgstr "Pridať vec, ktorú nemám rád(a)"
-
-msgid "I don't like"
-msgstr "Nemám rád(a)"
 
 #, python-format
 msgid "Recommendations for %s"
@@ -3044,16 +2925,8 @@ msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s vás spomenul v miestnosti %(room)s"
 
 #, python-format
-msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, "
-"%(place)s."
-msgstr ""
-"%(myusername)s, používateľ, %(username)s vyslovil vaše meno v miestnosti, "
-"%(place)s."
-
-#, python-format
-msgid "%(myusername)s, you have recieved a private message from %(username)s."
-msgstr ""
+msgid "Notification Error: %s"
+msgstr "Chyba notifikácie: %s"
 
 msgid "Username;APIKEY :"
 msgstr ""
@@ -3190,44 +3063,26 @@ msgstr "Ignorovať tohto používateľa"
 msgid "Close this tab"
 msgstr "Zavrieť tento panel"
 
+#, python-format
+msgid "Private message from %s"
+msgstr ""
+
 msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
 msgstr ""
 
-#, python-format
-msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+msgid "ID"
 msgstr ""
 
-msgid "Nicotine+ Wishlist"
-msgstr "Nicotine+ Zoznam prianí"
-
-msgid "Search Wishlist"
-msgstr "Prehľadať zoznam prianí"
-
-msgid "Select all"
-msgstr ""
-
-msgid "Wishes"
-msgstr ""
-
-msgid "Add Wish..."
-msgstr "Pridať prianie..."
-
-msgid "Wish:"
-msgstr "Prianie:"
-
-msgid "Number"
-msgstr "Číslo"
-
-msgid "Filename"
-msgstr "Názov súboru"
+msgid "Immediate Download"
+msgstr "Okamžité sťahovanie"
 
 msgid "In queue"
 msgstr "Vo fronte"
 
-msgid "Immediate Download"
-msgstr "Okamžité sťahovanie"
+msgid "Filename"
+msgstr "Názov súboru"
 
 msgid "_Download file(s)"
 msgstr "S_tiahnuť súbor(y)"
@@ -3235,17 +3090,19 @@ msgstr "S_tiahnuť súbor(y)"
 msgid "Download file(s) _to..."
 msgstr "Stiahnuť súbor(y) _do..."
 
-msgid "Download containing _folder(s)"
-msgstr "Stiahnuť _celý adresár(e)"
+msgid "Download _folder(s)"
+msgstr ""
 
-msgid "Download containing f_older(s) to..."
-msgstr "Stia_hnuť celý adresár(e) do..."
+msgid "Download f_older(s) to..."
+msgstr ""
 
 msgid "Copy folder U_RL"
 msgstr "K_opírovať URL priečinka"
 
-#, python-format
-msgid "Nicotine+ %(mode)s Search: %(term)s"
+msgid "Filtered out excluded search result "
+msgstr ""
+
+msgid "Filtered out inexact or incorrect search result "
 msgstr ""
 
 msgid "Select User's Results"
@@ -3257,6 +3114,9 @@ msgstr "Nicotine+: Výsledky vyhľadávania"
 #, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Metadáta</b> pre vyhľadávací dotaz: <i>%s</i>"
+
+msgid "Wishes"
+msgstr ""
 
 #, python-format
 msgid "Client port is <b>%(port)s</b>"
@@ -3278,42 +3138,6 @@ msgstr "Varovanie: Neplatné porty"
 msgid "Client ports are invalid."
 msgstr "Porty klienta sú neplatné."
 
-msgid "Filter"
-msgstr "Filter"
-
-msgid "Escaped"
-msgstr "Escapeované"
-
-#, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr "Bezpečnostné riziko: nemali by ste zdieľať váš adresár %s!"
-
-msgid "Nicotine+: Add a download filter"
-msgstr "Nicotine+: Pridať filter pre download"
-
-msgid "Enter a new download filter:"
-msgstr "Zadajte nový filter pre download:"
-
-msgid "Nicotine+: Edit a download filter"
-msgstr "Nicotine+: Upraviť filter pre download"
-
-msgid "Modify this download filter:"
-msgstr "Zmeňte tento filter pre download:"
-
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d zlyhal! %(error)s "
-
-msgid "The chosen virtual name is either empty or already exist"
-msgstr ""
-
-msgid "Add a shared buddy directory"
-msgstr ""
-
-#, python-format
-msgid "Enter new virtual name for '%(dir)s':"
-msgstr ""
-
 msgid "No one"
 msgstr "Nikto"
 
@@ -3326,14 +3150,47 @@ msgstr "Používatelia v zozname"
 msgid "Trusted Users"
 msgstr "Dôveryhodní používatelia"
 
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Escaped"
+msgstr "Escapeované"
+
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
+msgstr "Bezpečnostné riziko: nemali by ste zdieľať váš adresár %s!"
+
+msgid "Add a download filter"
+msgstr ""
+
+msgid "Enter a new download filter:"
+msgstr "Zadajte nový filter pre download:"
+
+msgid "Edit a download filter"
+msgstr ""
+
+msgid "Modify this download filter:"
+msgstr "Zmeňte tento filter pre download:"
+
+#, python-format
+msgid "%(num)d Failed! %(error)s "
+msgstr "%(num)d zlyhal! %(error)s "
+
+msgid "The chosen virtual name is either empty or already exists"
+msgstr ""
+
+msgid "Add a shared buddy directory"
+msgstr ""
+
+#, python-format
+msgid "Enter new virtual name for '%(dir)s':"
+msgstr ""
+
 msgid "Addresses"
 msgstr "Adresy"
 
 msgid "Ignore user..."
 msgstr "Ignorovať používateľa..."
-
-msgid "User:"
-msgstr "Používateľ:"
 
 msgid "Ignore IP Address..."
 msgstr ""
@@ -3377,8 +3234,29 @@ msgstr ""
 msgid "Could not disable plugin."
 msgstr ""
 
+msgid "General"
+msgstr ""
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Searches"
+msgstr "Hľadania"
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Text To Speech"
+msgstr ""
+
+msgid "User Info"
+msgstr ""
+
 msgid "Ban List"
 msgstr ""
+
+msgid "Events"
+msgstr "Udalosti"
 
 msgid "Geo Block"
 msgstr "Geografické blokovanie"
@@ -3386,11 +3264,38 @@ msgstr "Geografické blokovanie"
 msgid "Interface"
 msgstr "Interface"
 
+msgid "Fonts"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Icons"
+msgstr "Ikony"
+
+msgid "Notebook Tabs"
+msgstr "Panely notebooku"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Away Mode"
+msgstr ""
+
+msgid "Logging"
+msgstr "Logovanie"
+
 msgid "Ignore List"
 msgstr ""
 
-msgid "Auto-Replace"
-msgstr "Auto-nahradenie"
+msgid "Censor List"
+msgstr "Zoznam cenzúr"
+
+msgid "Auto-Replace List"
+msgstr "Zoznam automatických náhrad"
+
+msgid "URL Catching"
+msgstr "Zachytávanie URL"
 
 msgid "Completion"
 msgstr "Doplňovanie"
@@ -3398,62 +3303,8 @@ msgstr "Doplňovanie"
 msgid "Categories"
 msgstr "Kategórie"
 
-msgid "Getting status"
-msgstr "Získavanie stavu"
-
-msgid "Waiting for download"
-msgstr "Čakanie na download"
-
-msgid "Waiting for upload"
-msgstr "Čakám na upload"
-
-msgid "Getting address"
-msgstr "Získavanie adresy"
-
-msgid "Connecting"
-msgstr "Pripájanie sa"
-
-msgid "Waiting for peer to connect"
-msgstr "Čakanie na pripojenie vzdialeného používateľa"
-
-msgid "Cannot connect"
-msgstr "Nepodarilo sa pripojiť"
-
-msgid "User logged off"
-msgstr "Používateľ sa odpojil"
-
-msgid "Requesting file"
-msgstr "Požiadavka na súbor"
-
-msgid "Initializing transfer"
-msgstr "Spúšťanie prenosu"
-
-msgid "Filtered"
-msgstr "Filtrované"
-
-msgid "Download directory error"
-msgstr "Chyba adresára pre download"
-
-msgid "Local file error"
-msgstr "Chyba lokálneho súboru"
-
-msgid "File not shared"
-msgstr "Súbor nie je zdieľaný"
-
-msgid "Aborted"
-msgstr "Zrušené"
-
-msgid "Paused"
-msgstr "Pozastavené"
-
-msgid "Queued"
-msgstr "Vo fronte"
-
-msgid "Transferring"
-msgstr "Prenášam"
-
-msgid "Finished"
-msgstr "Ukončené"
+msgid "Path"
+msgstr "Cesta"
 
 msgid "Queue Position"
 msgstr ""
@@ -3467,14 +3318,71 @@ msgstr "Ubehnutý čas"
 msgid "Time left"
 msgstr "Zostávajúci čas"
 
-msgid "Path"
-msgstr "Cesta"
+msgid "Waiting for download"
+msgstr "Čakanie na download"
+
+msgid "Waiting for upload"
+msgstr "Čakám na upload"
+
+msgid "Requesting file"
+msgstr "Požiadavka na súbor"
+
+msgid "Initializing transfer"
+msgstr "Spúšťanie prenosu"
+
+msgid "Cannot connect"
+msgstr "Nepodarilo sa pripojiť"
+
+msgid "Waiting for peer to connect"
+msgstr "Čakanie na pripojenie vzdialeného používateľa"
+
+msgid "Connecting"
+msgstr "Pripájanie sa"
+
+msgid "Getting address"
+msgstr "Získavanie adresy"
+
+msgid "Getting status"
+msgstr "Získavanie stavu"
+
+msgid "Queued"
+msgstr "Vo fronte"
+
+msgid "User logged off"
+msgstr "Používateľ sa odpojil"
+
+msgid "Aborted"
+msgstr "Zrušené"
+
+msgid "Finished"
+msgstr "Ukončené"
+
+msgid "Paused"
+msgstr "Pozastavené"
+
+msgid "Transferring"
+msgstr "Prenášam"
+
+msgid "Filtered"
+msgstr "Filtrované"
 
 msgid "Connection closed by peer"
 msgstr "Spojenie ukončené vzdialeným používateľom"
 
+msgid "File not shared"
+msgstr "Súbor nie je zdieľaný"
+
 msgid "Establishing connection"
 msgstr "Vytvára sa spojenie"
+
+msgid "Download directory error"
+msgstr "Chyba adresára pre download"
+
+msgid "Local file error"
+msgstr "Chyba lokálneho súboru"
+
+msgid "Remote file error"
+msgstr ""
 
 #, python-format
 msgid "All %(ext)s"
@@ -3483,6 +3391,9 @@ msgstr ""
 #, python-format
 msgid "%(number)2s files "
 msgstr ""
+
+msgid "Select User's Transfers"
+msgstr "Vybrať prenosy používateľa"
 
 msgid "Connect"
 msgstr "Pripojiť sa"
@@ -3495,9 +3406,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Nastavenia"
-
-msgid "Send Message"
-msgstr "Poslať správu"
 
 msgid "Lookup a User's IP"
 msgstr "Vyhľadať IP adresu používateľa"
@@ -3518,6 +3426,27 @@ msgstr "Ukončiť"
 msgid "ERROR: tray menu, %(error)s"
 msgstr ""
 
+msgid "Enter the User who you wish to send a private message:"
+msgstr "Zadajte používateľa, ktorému chcete poslať súkromnú správu:"
+
+msgid "Get User Info"
+msgstr ""
+
+msgid "Enter the User whose User Info you wish to receive:"
+msgstr ""
+
+msgid "Get A User's IP"
+msgstr ""
+
+msgid "Enter the User whose IP Address you wish to receive:"
+msgstr ""
+
+msgid "Get A User's Shares List"
+msgstr ""
+
+msgid "Enter the User whose Shares List you wish to receive:"
+msgstr ""
+
 #, python-format
 msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
@@ -3528,8 +3457,11 @@ msgstr ""
 msgid "Clear failed"
 msgstr "Vyčistiť s chybou"
 
-msgid "Clear All Queued Uploads?"
-msgstr "Vyčistiť všetky uploady vo fronte?"
+msgid "Clear Queued Uploads"
+msgstr ""
+
+msgid "Are you sure you wish to clear all queued uploads?"
+msgstr ""
 
 msgid "Directories"
 msgstr "Adresáre"
@@ -3565,10 +3497,6 @@ msgid "Open in File Manager"
 msgstr "Otvoriť v Správcovi súborov"
 
 #, python-format
-msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
-msgstr ""
-
-#, python-format
 msgid "Shared: %s"
 msgstr "Zdieľané: %s"
 
@@ -3581,13 +3509,13 @@ msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr ""
 "Nepodarilo sa uložiť zdieľané súbory '%(user)s', hlásená chyba: %(error)s"
 
-msgid "Nicotine+: Upload Directory's Contents"
+msgid "Upload Directory's Contents"
 msgstr ""
 
 msgid "Enter the User you wish to upload to:"
 msgstr "Zadajte používateľa, ku ktorému chcete uploadovať:"
 
-msgid "Nicotine+: Upload File(s)"
+msgid "Upload File(s)"
 msgstr ""
 
 #, python-format
@@ -3615,10 +3543,6 @@ msgstr "Oddialiť"
 
 msgid "Save Image"
 msgstr "Uložiť obrázok"
-
-#, python-format
-msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
-msgstr ""
 
 #, python-format
 msgid "Total uploads allowed: %i"
@@ -3723,34 +3647,288 @@ msgstr "Koľko dní globálnych oprávnení venovať tomuto používateľovi?"
 msgid "%(days)s days left"
 msgstr "%(days)s zostávajúcich dní"
 
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
+#~ msgid "Hide/Show Status log"
+#~ msgstr "Skryť/Zobraziť záznam o stavoch"
+
+#~ msgid "Hide/Show User list"
+#~ msgstr "Skryť/Zobraziť okno s používateľmi"
+
+#~ msgid "0 people in room"
+#~ msgstr "0 ľudí v miestnosti"
+
+#~ msgid "Leave"
+#~ msgstr "Opustiť"
+
+#~ msgid "Check _latest"
+#~ msgstr "_Skontrolovať najnovšiu verziu"
+
+#~ msgid "Group by Users"
+#~ msgstr "Zoskupiť podľa používateľov"
+
+#~ msgid "Auto-retry failed"
+#~ msgstr "Skúsiť znovu pri zlyhaní"
+
+#~ msgid "Every 3 minutes"
+#~ msgstr "Každé 3 minúty"
+
+#~ msgid "Global recommendations"
+#~ msgstr "Všeobecné doporučenia"
+
+#~ msgid "Nicotine+: Configure Now Playing"
+#~ msgstr "Nicotine+: Nastaviť Teraz prehrávané"
+
+#~ msgid "Direct"
+#~ msgstr "Priamo"
+
+#~ msgid "Create: "
+#~ msgstr "Vytvoriť: "
+
+#~ msgid "Query"
+#~ msgstr "Otázka"
+
+#~ msgid "Close search tab; press ignore to prevent this tab from reopening"
+#~ msgstr ""
+#~ "Zavrieť panel s vyhľadávaním; stlačte ignorovať, aby sa tento panel znovu "
+#~ "neotvoril"
+
+#~ msgid "Ban"
+#~ msgstr "Zakázať"
+
+#~ msgid "Banning"
+#~ msgstr "Zákaz"
+
+#~ msgid "Bloat"
+#~ msgstr "Nafúknutý"
+
+#~ msgid "Extra stuff for your comfort"
+#~ msgstr "Extra veci pre vaše pohodlie"
+
+#~ msgid ""
+#~ "Choose <b>Logging</b> to configure what's logged and where to save the "
+#~ "logs."
+#~ msgstr ""
+#~ "Vyberte <b>Logovanie</b> pre nastavenie toho, čo je logované a kam sa "
+#~ "ukladajú logy."
+
+#~ msgid ""
+#~ "Choose <b>URL Catching</b> to configure the programs used when clicking "
+#~ "on links."
+#~ msgstr ""
+#~ "Vyberte <b>Zachytávanie URL</b> pre nastavenie programov, ktoré budú "
+#~ "použité pre otváranie odkazov."
+
+#~ msgid "Chat Settings"
+#~ msgstr "Nastavenia chatu"
+
+#~ msgid "Text Completion"
+#~ msgstr "Doplňovanie textu"
+
+#~ msgid "Chat text completion"
+#~ msgstr "Doplnenie textu v chate"
+
+#~ msgid "<b>Do not download these file types:</b>"
+#~ msgstr "<b>Nesťahovať tieto typy súborov:</b>"
+
+#~ msgid "GeoBlock"
+#~ msgstr "GeoBlock"
+
+#~ msgid "Geographical Blocking"
+#~ msgstr "Blokovanie krajín"
+
+#~ msgid "Current Icons:"
+#~ msgstr "Aktuálne ikony:"
+
+#~ msgid "Tray & Icons"
+#~ msgstr "Oznamovacia oblasť a ikony"
+
+#~ msgid "Misc"
+#~ msgstr "Rôzne"
+
+#~ msgid "Notebooks"
+#~ msgstr "Notebooky"
+
+#~ msgid "UrlCatch"
+#~ msgstr "Zachytávanie URL"
+
+#~ msgid "Server Settings"
+#~ msgstr "Nastavenia servera"
+
+#~ msgid "Login:"
+#~ msgstr "Login:"
+
+#~ msgid "Use the above ports to configure your router or firewall."
+#~ msgstr ""
+#~ "Použite vyššie uvedené porty v konfigurácií vášho routera alebo firewallu."
+
+#~ msgid "(only use if the above ports are remotely accessible)"
+#~ msgstr "(použite iba ak horeuvedené porty budú nedostupné)"
+
+#~ msgid "Sounds"
+#~ msgstr "Zvuky"
+
+#~ msgid "Enable Sound Effects"
+#~ msgstr "Zapnúť zvukové efekty"
+
+#~ msgid "Sound Effects Directory:"
+#~ msgstr "Adresár so zvukovými efektami:"
+
+#~ msgid "Upload directory:"
+#~ msgstr "Adresár pre upload:"
+
+#~ msgid "(NOT RECOMMENDED)"
+#~ msgstr "(NEDOPORUČOVANÉ)"
+
+#~ msgid "Userinfo"
+#~ msgstr "Údaje o používateľovi"
+
+#~ msgid "Save"
+#~ msgstr "Uložiť"
+
+#~ msgid "Add to list"
+#~ msgstr "Pridať do zoznamu"
+
+#~ msgid "Save pic"
+#~ msgstr "Uložiť obrázok"
 
 #, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
+#~ msgid ""
+#~ "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
+#~ msgstr ""
+#~ "IP adresa %(user)s je %(ip)s, názov %(host)s, port %(port)i%(country)s"
+
+#~ msgid "Checking for changes"
+#~ msgstr "Kontrola zmien"
 
 #, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
+#~ msgid "Scanning %s"
+#~ msgstr "Skenujem %s"
+
+#~ msgid "Building DataBase"
+#~ msgstr "Generujem databázu"
+
+#~ msgid "Building Index"
+#~ msgstr "Generujem index"
 
 #, python-format
-msgid "%d Bytes"
-msgstr ""
+#~ msgid "Failed download: user %(user)s, file %(file)s"
+#~ msgstr "Neúspešné sťahovanie: používateľ %(user)s, súbor %(file)s"
+
+#~ msgid "Nicotine+ :: directory completed"
+#~ msgstr "Nicotine+ :: adresár dokončený"
 
 #, python-format
-msgid "%.2f GB/s"
-msgstr ""
+#~ msgid "Retrying failed download: %(user)s, file %(file)s"
+#~ msgstr ""
+#~ "Pokus o obnovenie sťahovania od používateľa %(user)s, súbor %(file)s"
+
+#~ msgid "room"
+#~ msgstr "miestnosť"
+
+#~ msgid "Reattach a chat window to the notebook"
+#~ msgstr "Opäť pripojiť chatovacie okno k notebooku"
+
+#~ msgid "Detach a chat tab from the notebook"
+#~ msgstr "Odpojiť chatovací panel z notebooku"
+
+#~ msgid "user"
+#~ msgstr "používateľ"
+
+#~ msgid "command"
+#~ msgstr "príkaz"
+
+#~ msgid "definition"
+#~ msgstr "definícia"
+
+#~ msgid "process"
+#~ msgstr "proces"
+
+#~ msgid "Add a new alias that runs a process"
+#~ msgstr "Pridať nový alias, ktorý spúšťa proces"
+
+#~ msgid "query"
+#~ msgstr "dotaz"
+
+#~ msgid "Set ticker message"
+#~ msgstr "Nastaviť správu tickeru"
+
+#~ msgid "Set room ticker message:"
+#~ msgstr "Nastaviť správu tickeru pre miestnosť:"
+
+#~ msgid "Just this time"
+#~ msgstr "Iba teraz"
+
+#~ msgid "Always for this channel"
+#~ msgstr "Vždy pre tento kanál"
+
+#~ msgid "Default for all channels"
+#~ msgstr "Prednastavené pre všetky kanály"
 
 #, python-format
-msgid "%.2f MB/s"
-msgstr ""
+#~ msgid "Nicotine+ Chatroom: %s"
+#~ msgstr "Chatovacia miestnosť Nicotine+: %s"
 
 #, python-format
-msgid "%.2f KB/s"
-msgstr ""
+#~ msgid "%i people in room"
+#~ msgstr "%i ľudí v miestnosti"
+
+#~ msgid "You are alone"
+#~ msgstr "Ste sám"
+
+#~ msgid "Detach this tab"
+#~ msgstr "Odpojiť tento panel"
+
+#~ msgid "Clear Queued Transfers"
+#~ msgstr "Vyčistiť prenosy vo fronte"
+
+#~ msgid "Nicotine+: Get User Info"
+#~ msgstr "Nicotine+: Získať údaje o používateľovi"
+
+#~ msgid "Add thing I like"
+#~ msgstr "Pridať vec, ktorú mám rád(a)"
+
+#~ msgid "Add thing I don't like"
+#~ msgstr "Pridať vec, ktorú nemám rád(a)"
+
+#~ msgid "I don't like"
+#~ msgstr "Nemám rád(a)"
 
 #, python-format
-msgid "%d B/s"
-msgstr ""
+#~ msgid ""
+#~ "%(myusername)s, the user, %(username)s has mentioned your name in the "
+#~ "room, %(place)s."
+#~ msgstr ""
+#~ "%(myusername)s, používateľ, %(username)s vyslovil vaše meno v miestnosti, "
+#~ "%(place)s."
+
+#~ msgid "Nicotine+ Wishlist"
+#~ msgstr "Nicotine+ Zoznam prianí"
+
+#~ msgid "Add Wish..."
+#~ msgstr "Pridať prianie..."
+
+#~ msgid "Wish:"
+#~ msgstr "Prianie:"
+
+#~ msgid "Number"
+#~ msgstr "Číslo"
+
+#~ msgid "Download containing _folder(s)"
+#~ msgstr "Stiahnuť _celý adresár(e)"
+
+#~ msgid "Download containing f_older(s) to..."
+#~ msgstr "Stia_hnuť celý adresár(e) do..."
+
+#~ msgid "Auto-Replace"
+#~ msgstr "Auto-nahradenie"
+
+#, python-format
+#~ msgid "%.2f GB"
+#~ msgstr "%.2f GB"
+
+#, python-format
+#~ msgid "%.2f MB"
+#~ msgstr "%.2f MB"
+
+#, python-format
+#~ msgid "%.2f KB"
+#~ msgstr "%.2f KB"

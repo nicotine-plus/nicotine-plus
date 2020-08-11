@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-11 07:35+0300\n"
+"POT-Creation-Date: 2020-08-11 17:37+0300\n"
 "PO-Revision-Date: 2009-03-15 13:19+0100\n"
 "Last-Translator: daelstorm <daelstorm@gmail.com>\n"
 "Language-Team: German\n"
@@ -36,6 +36,9 @@ msgid ""
 msgstr ""
 
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
+msgstr ""
+
+msgid "Cannot find pytaglib, please install it."
 msgstr ""
 
 msgid ""
@@ -83,35 +86,32 @@ msgstr "Freundeliste"
 msgid "Add Buddy: "
 msgstr "Freund hinzufügen: "
 
+msgid "Add"
+msgstr "Hinzufügen"
+
 msgid "Configure banned users"
 msgstr ""
 
 msgid "Chat Room"
 msgstr ""
 
-msgid "Hide/Show Status log"
-msgstr "Status-Log anzeigen/verbergen"
-
-msgid "Hide/Show User list"
-msgstr "Benutzerliste verbergen"
+msgid "Log"
+msgstr "Log"
 
 msgid "Toggle Text-To-Speech"
 msgstr "Sprachausgabe"
 
+msgid "Room wall"
+msgstr ""
+
 msgid "Chat room command help"
 msgstr "Über Befehle in Chat-Räumen"
 
-msgid "0 people in room"
-msgstr "0 Leute im Raum"
+msgid "User List"
+msgstr ""
 
-msgid "Log"
-msgstr "Log"
-
-msgid "Auto-join"
-msgstr "Automatisch betreten"
-
-msgid "Leave"
-msgstr "Verlassen"
+msgid "Auto-join Room"
+msgstr ""
 
 msgid "<b>Welcome to Nicotine+!</b>"
 msgstr ""
@@ -122,9 +122,11 @@ msgid ""
 msgstr ""
 
 msgid ""
-"To create a new user just fill in the username and password you want.\n"
+"To create a new user, fill in the username and password you want. If you "
+"already have an account at the server, fill in those details.\n"
 "\n"
-"If you already have an account at the server fill in those details."
+"Please keep in mind that more common usernames may be taken. If you're "
+"unable to connect later, change your username in the settings."
 msgstr ""
 
 msgid "Username"
@@ -148,7 +150,9 @@ msgstr ""
 msgid "The page says my port is closed"
 msgstr ""
 
-msgid "Use UPnP to map the port on my router"
+msgid ""
+"Only select \"The page says my port is closed\" if all attempts at opening "
+"the port were unsuccessful. This can happen if your ISP blocks ports."
 msgstr ""
 
 msgid "Use the first available port in the range from "
@@ -162,9 +166,6 @@ msgstr ""
 
 msgid "Share the following directories:"
 msgstr ""
-
-msgid "Add"
-msgstr "Hinzufügen"
 
 msgid "Remove"
 msgstr "Entfernen"
@@ -242,12 +243,6 @@ msgstr "Debug-Infos anzeigen"
 msgid "Show _room list"
 msgstr ""
 
-msgid "Show _tickers"
-msgstr ""
-
-msgid "Show _chat room log and list toggles"
-msgstr ""
-
 msgid "Show _flag columns in user lists"
 msgstr ""
 
@@ -273,12 +268,6 @@ msgid "_Rescan Public shares"
 msgstr ""
 
 msgid "Rescan B_uddy shares"
-msgstr ""
-
-msgid "Re_build Public shares"
-msgstr ""
-
-msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
 msgid "_Browse Public shares"
@@ -320,12 +309,6 @@ msgstr "Freunde"
 msgid "_Help"
 msgstr ""
 
-msgid "Project _Website"
-msgstr ""
-
-msgid "Project _Github Page"
-msgstr ""
-
 msgid "About _chat room commands"
 msgstr "Über Befehle in Chat-Räumen"
 
@@ -335,8 +318,8 @@ msgstr "Über Befehle im privaten Chat"
 msgid "About _search filters"
 msgstr "Über Suchfilter"
 
-msgid "Check _latest"
-msgstr "Auf neue Version prüfen"
+msgid "Check _latest version"
+msgstr ""
 
 msgid "Report a _bug"
 msgstr ""
@@ -344,8 +327,11 @@ msgstr ""
 msgid "About _Nicotine+"
 msgstr ""
 
-msgid "Start Message"
-msgstr "Privaten Chat beginnen"
+msgid "User:"
+msgstr "Benutzer:"
+
+msgid "Start Messaging"
+msgstr ""
 
 msgid "Configure logging"
 msgstr ""
@@ -359,14 +345,11 @@ msgstr "Dateien: 0"
 msgid "Expand / Collapse all"
 msgstr "Alle auf-/zuklappen"
 
-msgid "Group by Users"
-msgstr "Nach Benutzern gruppieren"
+msgid "Autoclear finished / filtered"
+msgstr ""
 
-msgid "Auto-retry failed"
-msgstr "Fehlgeschlagene automatisch neustarten"
-
-msgid "Every 3 minutes"
-msgstr "Alle drei Minuten"
+msgid "File grouping mode"
+msgstr ""
 
 msgid "Configure downloads"
 msgstr ""
@@ -383,14 +366,14 @@ msgstr "Wiederholen"
 msgid "Abort"
 msgstr "Abbrechen"
 
-msgid "Abort & Delete"
-msgstr "Abbrechen & Löschen"
+msgid "Delete"
+msgstr ""
 
 msgid "Ban User(s)"
 msgstr "Benutzer sperren"
 
-msgid "Autoclear Finished"
-msgstr "Abgeschlossene automatisch entfernen"
+msgid "Autoclear finished / aborted"
+msgstr ""
 
 msgid "Configure uploads"
 msgstr ""
@@ -398,10 +381,10 @@ msgstr ""
 msgid "Clear Finished / Failed"
 msgstr ""
 
-msgid "Abort User's Upload(s)"
-msgstr "Upload(s) des Benutzers abbrechen"
+msgid "Abort User's Uploads"
+msgstr ""
 
-msgid "Wishlist"
+msgid "Search scope"
 msgstr ""
 
 msgid "Search patterns: with a word = term, without a word = -term"
@@ -413,14 +396,14 @@ msgstr "Alle offenen Suchen schließen"
 msgid "Search"
 msgstr "Suchen"
 
-msgid "Search scope"
+msgid "Wishlist"
 msgstr ""
 
 msgid "Configure searches"
 msgstr ""
 
-msgid "Get Userinfo"
-msgstr "Benutzerinfo abrufen"
+msgid "Show Info"
+msgstr ""
 
 msgid "Configure user info"
 msgstr ""
@@ -428,23 +411,32 @@ msgstr ""
 msgid "Browse Shares"
 msgstr "Freigaben durchsehen"
 
-msgid "Load From Disk"
-msgstr "Von Festplatte laden"
+msgid "Load from Disk"
+msgstr ""
 
 msgid "Configure shares"
 msgstr ""
 
-msgid "Similar users"
-msgstr "Ähnliche Benutzer"
+msgid "Your interests"
+msgstr ""
 
 msgid "Recommendations"
 msgstr "Vorschläge"
 
-msgid "Global recommendations"
-msgstr "Allgemeine Vorschläge"
+msgid "Personal"
+msgstr ""
+
+msgid "Global"
+msgstr "Global"
 
 msgid "Unrecommendations"
 msgstr "Abratungen"
+
+msgid "Similar users"
+msgstr "Ähnliche Benutzer"
+
+msgid "Show Similar Users"
+msgstr ""
 
 msgid "Debug output:"
 msgstr ""
@@ -473,8 +465,8 @@ msgstr "Aktualisierung privater Freigaben begonnen"
 msgid "Scanning Shares"
 msgstr "Aktualisierung öffentlicher Freigaben begonnen"
 
-msgid "Nicotine+: Configure Now Playing"
-msgstr "Nicotine+: Now-Playing-Skript konfigurieren"
+msgid "Configure Now Playing"
+msgstr ""
 
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
@@ -522,14 +514,23 @@ msgstr "Format:"
 msgid "Example:"
 msgstr "Beispiel:"
 
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Execute"
+msgstr ""
+
 msgid "Test the configuration"
 msgstr ""
+
+msgid "OK"
+msgstr "Okay"
 
 msgid "PrivateChat"
 msgstr ""
 
-msgid "Direct"
-msgstr "Direkt"
+msgid "Direct Message"
+msgstr ""
 
 msgid ""
 "Send the private message directly to the user (not supported on most clients)"
@@ -537,26 +538,31 @@ msgstr ""
 "Nachrichten direkt an Gegenstelle senden (Wird von den meisten Clients nicht "
 "unterstützt.)"
 
-msgid "Close"
-msgstr "Schließen"
+msgid "Private chat command help"
+msgstr ""
 
 msgid "Room List"
 msgstr ""
 
-msgid "Chatrooms"
+msgid "Chat Rooms"
+msgstr "Chat-Räume"
+
+msgid "Refresh room list"
 msgstr ""
 
-msgid "Create: "
-msgstr "Erstellen: "
-
-msgid "Hide room list"
-msgstr "Raumliste verbergen"
-
-msgid "Search: "
+msgid "Accept private room invitations"
 msgstr ""
 
-msgid "Query"
-msgstr "Suchanfrage"
+msgid "Room Wall"
+msgstr ""
+
+msgid ""
+"The room wall feature allows users in a room to specify a unique message to "
+"display to others."
+msgstr ""
+
+msgid "Set Message"
+msgstr ""
 
 msgid "Results: 0/0"
 msgstr ""
@@ -576,6 +582,9 @@ msgstr ""
 "einem vom Server bestimmten Intervall (um eine Stunde) Suchanfragen "
 "abschicken."
 
+msgid "Result grouping mode"
+msgstr ""
+
 msgid "Clear all results"
 msgstr "Suchergebnisse entfernen"
 
@@ -584,10 +593,6 @@ msgstr "Keine weiteren Suchergebnisse anzeigen"
 
 msgid "Ignore"
 msgstr "Ignorieren"
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-"Tab schließen („Ignorieren“ klicken, um ein erneutes Aufgehen zu verhindern)"
 
 msgid "Filter in:"
 msgstr "Reinfiltern:"
@@ -607,25 +612,351 @@ msgstr "Land:"
 msgid "Free slot"
 msgstr "Freier Slot"
 
-msgid ""
-"Enable automatic replacement of chat words you've\n"
-"typed incorrectly or as an acronym"
-msgstr "Automatisches Ersetzen von Wörtern in einem Chat aktivieren"
+msgid "Search filter help"
+msgstr ""
+
+msgid "UserBrowse"
+msgstr ""
+
+msgid "Dirs: Unknown"
+msgstr "Verzeichnisse: unbekannt"
+
+msgid "Shared: Unknown"
+msgstr "Freigegeben: unbekannt"
+
+msgid "Search files and folders (exact match)"
+msgstr ""
+
+msgid "Refresh files"
+msgstr ""
+
+msgid "Save file list to disk"
+msgstr ""
+
+msgid "UserInfo"
+msgstr ""
+
+msgid "Self description:"
+msgstr "Text:"
+
+msgid "Information:"
+msgstr "Information:"
+
+msgid "Total uploads allowed: unknown"
+msgstr "Uploads insgesamt erlaubt: unbekannt"
+
+msgid "Slots free: unknown"
+msgstr "Slots verfügbar: unbekannt"
+
+msgid "Queue size: unknown"
+msgstr "Länge der Warteschlange: unbekannt"
+
+msgid "Speed: unknown"
+msgstr "Geschwindigkeit: unbekannt"
+
+msgid "Files: unknown"
+msgstr "Dateien: unbekannt"
+
+msgid "Directories: unknown"
+msgstr "Verzeichnisse: unbekannt"
+
+msgid "Accepts Uploads from:"
+msgstr "Akzeptiert Uploads von:"
+
+msgid "unknown"
+msgstr "unbekannt"
+
+msgid "Interests:"
+msgstr "Interessen:"
+
+msgid "Picture:"
+msgstr "Bild:"
+
+msgid "Send Message"
+msgstr "Nachricht senden"
+
+msgid "Browse Files"
+msgstr ""
+
+msgid "Show IP Address"
+msgstr ""
+
+msgid "Add to Buddy List"
+msgstr ""
+
+msgid "Ban User"
+msgstr ""
+
+msgid "Ignore User"
+msgstr ""
+
+msgid "Save Picture"
+msgstr ""
+
+msgid "Refresh Info"
+msgstr ""
+
+msgid "Search Wishlist"
+msgstr "Dauerhafte Suchaufträge"
 
 msgid "Add..."
 msgstr "Hinzufügen ..."
+
+msgid "Select All"
+msgstr ""
+
+msgid "About Nicotine+"
+msgstr ""
+
+msgid ""
+"A graphical client for the Soulseek peer-to-peer system\n"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
+msgstr ""
+
+msgid "About chat room commands"
+msgstr "Über Befehle in Chat-Räumen"
+
+msgid "/join /j 'room'"
+msgstr ""
+
+msgid "Join room 'room'"
+msgstr "Raum betreten"
+
+msgid "/leave /l /part /p 'room'"
+msgstr ""
+
+msgid "Leave room 'room'"
+msgstr "Raum verlassen"
+
+msgid "/clear /cl"
+msgstr ""
+
+msgid "Clear the chat window"
+msgstr "Chat-Fenster leeren"
+
+msgid "/tick /t"
+msgstr ""
+
+msgid "Set your personal ticker"
+msgstr "Eigenen Ticker setzen"
+
+msgid "/tickers"
+msgstr ""
+
+msgid "Show all the tickers"
+msgstr ""
+
+msgid "/me 'message'"
+msgstr ""
+
+msgid "Say something in the third-person"
+msgstr "Etwas in der dritten Person sagen"
+
+msgid "/now"
+msgstr ""
+
+msgid "Display the Now Playing script's output"
+msgstr "Zeige Ausgabe des Now-Playing-Skripts"
+
+msgid "Users"
+msgstr "Benutzer"
+
+msgid "/add /ad 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your user list"
+msgstr "Benutzer der Freunde-Liste hinzufügen"
+
+msgid "/rem /unbuddy 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your user list"
+msgstr "Benutzer aus der Freunde-Liste entfernen"
+
+msgid "/ban 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ban list"
+msgstr "Benutzer der Sperrliste hinzufügen"
+
+msgid "/unban 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ban list"
+msgstr "Benutzer aus Sperrliste entfernen"
+
+msgid "/ignore 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ignore list"
+msgstr "Benutzer zur Ingnorierliste hinzufügen"
+
+msgid "/unignore 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ignore list"
+msgstr "Benutzer aus Ignorierliste entfernen"
+
+msgid "/browse /b 'user'"
+msgstr ""
+
+msgid "Browse files of user 'user'"
+msgstr "Dateien des Benutzers durchsehen"
+
+msgid "/whois /w 'user'"
+msgstr ""
+
+msgid "Request user info for user 'user'"
+msgstr "Die Info des Benutzers abrufen"
+
+msgid "/ip 'user'"
+msgstr ""
+
+msgid "Show IP for user 'user'"
+msgstr "IP-Adresse des Benutzers anzeigen"
+
+msgid "Aliases"
+msgstr "Aliase"
+
+msgid "/alias /al 'command' 'definition'"
+msgstr ""
+
+msgid "Add a new alias"
+msgstr "Einen neuen Alias hinzufügen"
+
+msgid "/unalias /un 'command'"
+msgstr ""
+
+msgid "Remove an alias"
+msgstr "Einen Alias entfernen"
+
+msgid "/search /s 'query'"
+msgstr ""
+
+msgid "Start a new search for 'query'"
+msgstr "Neue Suche starten"
+
+msgid "/rsearch /rs 'query'"
+msgstr ""
+
+msgid "Search the joined rooms for 'query'"
+msgstr ""
+
+msgid "/bsearch /bs '%s'"
+msgstr ""
+
+msgid "Search the buddy list for 'query'"
+msgstr "In der Freundeliste suchen"
+
+msgid "/usearch /us 'user' 'query'"
+msgstr ""
+
+msgid "Search a user's shares for 'query'"
+msgstr "In den Freigaben eines Benutzers suchen"
+
+msgid "Private Chat"
+msgstr "Privater Chat"
+
+msgid "/msg 'user' 'message'"
+msgstr ""
+
+msgid "Send message 'message' to user 'user'"
+msgstr "Sende Nachricht an Benutzer"
+
+msgid "/pm 'user'"
+msgstr ""
+
+msgid "Open private chat window for user 'user'"
+msgstr "Öffne privaten Chat"
+
+msgid "/away /a"
+msgstr ""
+
+msgid "Toggles your away status"
+msgstr "Schalte Anwesenheitsstatus um"
+
+msgid "/rescan"
+msgstr ""
+
+msgid "Rescan shares"
+msgstr "Freigaben aktualisieren"
+
+msgid "/quit /q /exit"
+msgstr ""
+
+msgid "Quit Nicotine+"
+msgstr ""
+
+msgid "About private chat commands"
+msgstr "Über Befehle im privaten Chat"
+
+msgid "/close /c"
+msgstr ""
+
+msgid "Close the current private chat"
+msgstr "Den aktuellen privaten Chat schließen"
+
+msgid "/toggle 'plugin'"
+msgstr ""
+
+msgid "Toggle plugin on/off state"
+msgstr ""
+
+msgid "About search filters"
+msgstr "Über Suchfilter"
+
+msgid ""
+"You can use this to refine which results are displayed. The full results\n"
+"from the server are always available if you clear all the search terms.\n"
+"\n"
+"You can filter by:\n"
+"\n"
+"- Included text:\n"
+"      Files are shown if they contain this text.\n"
+"      Case is insensitive, but word order is important.\n"
+"      'Spears Brittany' will not show any 'Brittany Spears'\n"
+"\n"
+"- Excluded text:\n"
+"      As above, but files will not be displayed if the text matches\n"
+"\n"
+"- Size:\n"
+"      Shows results based on size. use > and < to find files larger or "
+"smaller.\n"
+"      Files exactly the same as this term will always match.\n"
+"      Use = to specify an exact match. Use k or m to specify kilo or "
+"megabytes.\n"
+"      >10M will find files larger than 10 megabytes.\n"
+"      <4000k will find files smaller than 4000k.\n"
+"\n"
+"- Bitrate:\n"
+"      Find files based on bitrate. Use < and > to find lower or higher.\n"
+"      >192 finds 192 and higher, <192 finds 192 or lower.\n"
+"      =192 only finds 192.\n"
+"      For VBR, the average bitrate is used.\n"
+"\n"
+"- Free slot:\n"
+"      Show only those results from users which have at least\n"
+"      one upload slot free.\n"
+"\n"
+"- To set the filter, press Enter. This will apply to any existing results, "
+"and any more that are returned.\n"
+"- To filter in a different way, just set the relevant terms.\n"
+"- You do not need to do another search to apply a different filter."
+msgstr ""
+
+msgid ""
+"Enable automatic replacement of chat words you've typed incorrectly or as an "
+"acronym"
+msgstr ""
 
 msgid "Clear"
 msgstr "Entfernen"
 
 msgid "Load Defaults"
 msgstr "Standards laden"
-
-msgid "Auto-Replace List"
-msgstr "Auto-Ersetzen-Liste"
-
-msgid "Away"
-msgstr "Abwesend"
 
 msgid "Toggle away after "
 msgstr "Zu „Abwesend“ wechseln nach"
@@ -636,12 +967,6 @@ msgstr " Minuten Inaktivität"
 msgid "Auto-reply when away:  "
 msgstr "Automatische Antwort wenn abwesend:"
 
-msgid "Away mode"
-msgstr "Abwesenheits-Modus"
-
-msgid "Ban"
-msgstr "Sperren"
-
 msgid "Banned Users:"
 msgstr "Gesperrte Benutzer:"
 
@@ -650,39 +975,6 @@ msgstr "Geblockte IP-Adressen:"
 
 msgid "Use custom ban message:"
 msgstr "Eigene Sperr-Nachricht verwenden:"
-
-msgid "Banning"
-msgstr "Sperren"
-
-msgid "Bloat"
-msgstr "Blähungen"
-
-msgid "Enable spell checker (requires a restart)"
-msgstr "Rechtschreibprüfung aktivieren (erfordert Neustart)"
-
-msgid "Show Buttons in Transfers Tabs"
-msgstr "Schliessen-Buttons auf Tabs"
-
-msgid "Chat Font:"
-msgstr "Schrift für Chats:"
-
-msgid "List Font:"
-msgstr "Schrift für Listen:"
-
-msgid "Transfers Font:"
-msgstr "Schrift für Transfers:"
-
-msgid "Search Font:"
-msgstr "Schrift für Suche:"
-
-msgid "Browse Font:"
-msgstr "Schrift für Freigaben-Browser:"
-
-msgid "Decimal separator:"
-msgstr ""
-
-msgid "Extra stuff for your comfort"
-msgstr "Extra-Zeugs"
 
 msgid "Enable Censorship"
 msgstr "Zensurfilter aktivieren"
@@ -695,59 +987,20 @@ msgstr ""
 msgid "Replace censored letters with:"
 msgstr "Zensierte Zeichen ersetzen durch:"
 
-msgid "Censor List"
-msgstr "Zensurliste"
-
-msgid "Chat"
-msgstr "Chat"
-
-msgid "Choose <b>Away mode</b> to configure your auto-away settings."
+msgid "<b>Chat Colors</b>"
 msgstr ""
 
-msgid ""
-"Choose <b>Logging</b> to configure what's logged and where to save the logs."
-msgstr "<b>Protokoll</b>: Einstellen, was wo aufgezeichnet wird"
-
-msgid ""
-"Choose <b>Ignore List</b> to configure users and/or IPs you want to ignore."
+msgid "URL Link Text"
 msgstr ""
-
-msgid ""
-"Choose <b>Censor List</b> to configure what unwanted words you want to "
-"censor."
-msgstr ""
-
-msgid ""
-"Choose <b>Auto-Replace</b> to configure auto-replacement of words (such as "
-"common typos)."
-msgstr ""
-
-msgid ""
-"Choose <b>URL Catching</b> to configure the programs used when clicking on "
-"links."
-msgstr ""
-"<b>URL-Catching</b>: Einstellen, was passiert, wenn auf Links geklickt wird"
-
-msgid "Choose <b>Completion</b> to configure auto-completion in chats."
-msgstr ""
-
-msgid "Chat Settings"
-msgstr "Chat-Einstellungen"
-
-msgid "Colors"
-msgstr ""
-
-msgid "Default Colors"
-msgstr ""
-
-msgid "URL Link text"
-msgstr "URLs"
 
 msgid "Default"
 msgstr "Standard"
 
 msgid "Username Font Style:"
 msgstr "Benutzernamen-Schriftart:"
+
+msgid "Away"
+msgstr "Abwesend"
 
 msgid "Offline"
 msgstr "Offline"
@@ -761,43 +1014,40 @@ msgstr ""
 msgid "Display away colors"
 msgstr "Abwesenheitsfarben verwenden"
 
-msgid "Highlight text"
-msgstr "Markierter Text"
+msgid "Highlight Text"
+msgstr ""
 
-msgid "/me text"
-msgstr "/me-Text"
+msgid "/me Text"
+msgstr ""
 
-msgid "Local text"
-msgstr "Lokaler Text"
+msgid "Local Text"
+msgstr ""
 
-msgid "Remote text"
-msgstr "Entfernter Text"
+msgid "Remote Text"
+msgstr ""
 
-msgid "<b>Chat colors</b>"
+msgid "<b>List and Search Colors</b>"
 msgstr ""
 
 msgid "Input Text"
 msgstr "Eingabetext"
 
-msgid "Background"
-msgstr "Hintergrund"
-
-msgid "Input and lists colors"
+msgid "Input Background"
 msgstr ""
 
 msgid "Offline Search"
 msgstr "Offline"
 
-msgid "With queue"
-msgstr "Mit Warteschlange"
+msgid "With Queue"
+msgstr ""
 
 msgid "List Text"
 msgstr "Listentext"
 
-msgid "<b>List and search colors</b>"
+msgid "Default Colors"
 msgstr ""
 
-msgid "Notebook tab labels change to these colors."
+msgid "<b>Tab Label Colors</b>"
 msgstr ""
 
 msgid "Changed"
@@ -806,16 +1056,19 @@ msgstr "Veränderter Status"
 msgid "Highlight"
 msgstr "Hervorgehoben"
 
-msgid "<b>Tab colors</b>"
+msgid "<b>General</b>"
 msgstr ""
 
-msgid "Text Completion"
-msgstr "Vervollständigung"
+msgid "Enable spell checker (requires a restart)"
+msgstr "Rechtschreibprüfung aktivieren (erfordert Neustart)"
 
 msgid "Enable tab-key completion"
 msgstr "Tab-Tasten-Vervollständigung aktivieren"
 
 msgid "Cycle completions instead of showing a dropdown"
+msgstr ""
+
+msgid "<b>Allowed Completions</b>"
 msgstr ""
 
 msgid "Complete room names in chat rooms"
@@ -833,8 +1086,8 @@ msgstr "Interne Befehle vervollständigen"
 msgid "Complete alias /Commands"
 msgstr "Aliase/Befehle vervollständigen"
 
-msgid "Allowed Completions"
-msgstr "Erlaubte Vervollständigungen"
+msgid "<b>Drop-down list</b>"
+msgstr ""
 
 msgid "Enable completion drop-down list"
 msgstr "Drop-Down-Liste für Vervollständigungen aktivieren"
@@ -845,38 +1098,58 @@ msgstr "Minimum eingegebener Zeichen zum Auslösen der Drop-Down-Liste:"
 msgid "Hide drop-down when only one matches"
 msgstr "Drop-Down-Liste nicht anzeigen, wenn nur ein Treffer vorliegt"
 
-msgid "Drop-down list"
-msgstr "Drop-Down-Liste"
+msgid "Lock incoming files (turn off for NFS)"
+msgstr "Eingehende Dateien sperren (für NFS abschalten)"
 
-msgid "Chat text completion"
-msgstr "Auto-Vervollständigung in Chats"
+msgid "Download folders in reverse alphanumerical order"
+msgstr ""
 
-msgid "Shares"
-msgstr "Freigaben"
-
-msgid "Incomplete file directory:"
-msgstr "Verzeichnis für unvollständige Dateien:"
-
-msgid "Download directory:"
-msgstr "Download-Verzeichnis:"
-
-msgid "Share download directory"
-msgstr "Download-Verzeichnis freigeben"
+msgid "Download SFV/MD5 before anything else"
+msgstr ""
 
 msgid "Limit total download speeds to (KBytes/sec):"
+msgstr ""
+
+msgid "Allow these users to send you files:"
+msgstr "Freunden erlauben, dir Dateien zu senden"
+
+msgid ""
+"The users will be able to send you files. These files will be downloaded "
+"into the Buddy Uploads subdirectory in your Download directory"
+msgstr ""
+"Die Benutzer sind berechtigt, dir Dateien zu senden. Diese Dateien werden im "
+"entsprechenden Freunde-Upload-Ordner in deinem Downloadverzeichnis "
+"gespeichert."
+
+msgid "<b>Folders</b>"
+msgstr ""
+
+msgid "Incomplete file folder:"
+msgstr ""
+
+msgid "Download folder:"
+msgstr ""
+
+msgid "Save buddies' uploads to:"
+msgstr ""
+
+msgid "Where buddies' uploads will be stored (with a subfolder for each buddy)"
+msgstr ""
+
+msgid "Select a directory"
+msgstr ""
+
+msgid "Share download folder"
 msgstr ""
 
 msgid "Where incomplete downloads are stored temporarily"
 msgstr "Ort für temporäre Download-Dateien"
 
-msgid "Select a directory"
+msgid "Select a folder"
 msgstr ""
 
-msgid "<b>Directories</b>"
+msgid "<b>Download Filters</b>"
 msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr "<b>Diese Dateitypen nicht herunterladen:</b>"
 
 msgid "Enable Filters"
 msgstr "Filter aktivieren"
@@ -899,23 +1172,8 @@ msgstr "<b>Unüberprüft</b>"
 msgid "Edit Filter"
 msgstr "Bearbeite Filter"
 
-msgid "<b>Download Filters:</b>"
-msgstr "<b>Download-Filter:</b>"
-
-msgid "Downloads"
-msgstr "Downloads"
-
-msgid "Events"
-msgstr "Ereignisse"
-
-msgid "Show notification popup in tray after..."
+msgid "<b>Commands</b>"
 msgstr ""
-
-msgid "...each file"
-msgstr "jeder Datei"
-
-msgid "...each directory"
-msgstr "jeden Ordners"
 
 msgid "Run command after download finishes ($ for filename):"
 msgstr "Befehl ausführen nach erfolgreichem Download ($ für Dateiname):"
@@ -927,8 +1185,11 @@ msgstr ""
 msgid "File Manager command ($ for folder path):"
 msgstr "Befehl für Dateimanager ($ für Verzeichnispfad):"
 
-msgid "Double-clicking on..."
-msgstr "Doppelklick auf …"
+msgid "Audio Player Command ($ for filename):"
+msgstr "Befehl für Audio-Player ($ für Dateiname):"
+
+msgid "<b>Double-clicking on...</b>"
+msgstr ""
 
 msgid "Download transfers"
 msgstr "Downloads"
@@ -945,8 +1206,31 @@ msgstr "An Player übergeben"
 msgid "Open Directory"
 msgstr "Verzeichnis öffnen"
 
-msgid "GeoBlock"
-msgstr "GeoBlock"
+msgid "Show Buttons in Transfers Tabs"
+msgstr "Schliessen-Buttons auf Tabs"
+
+msgid "Chat Font:"
+msgstr "Schrift für Chats:"
+
+msgid "List Font:"
+msgstr "Schrift für Listen:"
+
+msgid "Transfers Font:"
+msgstr "Schrift für Transfers:"
+
+msgid "Search Font:"
+msgstr "Schrift für Suche:"
+
+msgid "Browse Font:"
+msgstr "Schrift für Freigaben-Browser:"
+
+msgid "Decimal separator:"
+msgstr ""
+
+msgid ""
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
+msgstr ""
 
 msgid "Enable geographical blocker"
 msgstr "Den Ländercode-Blocker aktivieren"
@@ -957,19 +1241,11 @@ msgstr "Geografischer Verfolgungswahn (Unauflösbare IPs sperren)"
 msgid "Country codes to block (comma separated):"
 msgstr "Zu sperrende Ländercodes (getrennt durch Kommata):"
 
-msgid ""
-"Geo Block controls from which countries users are allowed access to your "
-"shares."
+msgid "<b>Tray</b>"
 msgstr ""
 
-msgid "Geographical Blocking"
-msgstr "Ländercodes sperren"
-
-msgid "Icons"
-msgstr "Symbole"
-
-msgid "Display Tray Icon"
-msgstr "Tray-Symbol anzeigen"
+msgid "Display tray icon"
+msgstr ""
 
 msgid "Show confirmation dialog when closing the main window"
 msgstr "Vorm Schließen des Hauptfensters nachfragen"
@@ -980,11 +1256,11 @@ msgstr ""
 msgid "Always quit when main window is closed"
 msgstr "Beim Schließen des Hauptfensters immer beenden"
 
-msgid "Icon Theme Directory (requires restart):"
-msgstr "Symbolthemenordner (erfordert Neustart)"
+msgid "<b>Icon Theme</b>"
+msgstr ""
 
-msgid "Current Icons:"
-msgstr "Derzeitige Symbole:"
+msgid "Icon theme folder (requires restart):"
+msgstr ""
 
 msgid "<b>Status</b>"
 msgstr "<b>Status</b>"
@@ -1019,26 +1295,11 @@ msgstr ""
 msgid "Window:"
 msgstr "Fenster:"
 
-msgid "Tray & Icons"
-msgstr "Tray & Symbole"
-
 msgid "Ignored users:"
 msgstr "Ignorierte Benutzer:"
 
 msgid "Ignored IPs:"
 msgstr ""
-
-msgid "Ignoring"
-msgstr ""
-
-msgid "Logs directory:"
-msgstr "Verzeichnis für Protokolle:"
-
-msgid "Chatroom Logs directory:"
-msgstr "Verzeichnis für Chat-Raum-Protokolle:"
-
-msgid "Private Chat Logs directory:"
-msgstr "Verzeichnis für Privat-Chat-Protokolle:"
 
 msgid "Log chatrooms by default"
 msgstr "Chaträume standardmäßig protokollieren"
@@ -1048,6 +1309,15 @@ msgstr "Privaten Chat standardmäßig protokollieren"
 
 msgid "Log transfers"
 msgstr "Transfers protokollieren"
+
+msgid "Logs directory:"
+msgstr "Verzeichnis für Protokolle:"
+
+msgid "Chatroom Logs directory:"
+msgstr "Verzeichnis für Chat-Raum-Protokolle:"
+
+msgid "Private Chat Logs directory:"
+msgstr "Verzeichnis für Privat-Chat-Protokolle:"
 
 msgid "Display logged chat room messages when a room is rejoined"
 msgstr ""
@@ -1077,49 +1347,19 @@ msgstr "Chat-Raum-Format:"
 msgid "Private chat format:"
 msgstr "Privat-Chat-Format:"
 
-msgid "Logging"
-msgstr "Aufzeichnung"
-
-msgid "Misc"
-msgstr "Verschiedenes"
-
-msgid "Choose <b>Plugins</b> to activate additional plugins (experimental)."
-msgstr ""
-
-msgid ""
-"Choose <b>Sounds</b> to configure sounds notifications and Text-to-Speech."
-msgstr ""
-
-msgid ""
-"Choose <b>Searches</b> to configure search settings and to set default "
-"search filters."
-msgstr ""
-
-msgid "Choose <b>User info</b> to add text and an image to your personal info."
-msgstr ""
-
-msgid "Miscellaneous Settings"
-msgstr "Verschiedene Einstellungen"
-
-msgid "Notebooks"
-msgstr "Notebooks"
-
 msgid "Select previous tab on startup"
 msgstr ""
 
 msgid "Close-buttons on tabs"
 msgstr "Schließen-Knöpfe auf Tabs"
 
-msgid "Notification icons on tabs"
-msgstr "Benachrichtigungssymbole auf Tabs"
-
 msgid "Tabs can be repositioned"
 msgstr "Verschiebbare Tabs"
 
-msgid "Notification changes the tab's text color"
-msgstr "Benachrichtigung verändert die Textfarbe des Tabs"
-
 msgid "Show user status icons instead of status text"
+msgstr ""
+
+msgid "<b>Tab Positioning</b>"
 msgstr ""
 
 msgid "Main"
@@ -1140,13 +1380,40 @@ msgstr "Benutzerinfo"
 msgid "User browse"
 msgstr "Freigaben"
 
-msgid "Notebook Tabs"
-msgstr "Tabs"
+msgid "Show notification for private chat and mentions in window title"
+msgstr ""
 
-msgid "UrlCatch"
-msgstr "URL-Catching"
+msgid "Show notification icons on tabs"
+msgstr ""
+
+msgid "Notification changes the tab's text color"
+msgstr "Benachrichtigung verändert die Textfarbe des Tabs"
+
+msgid "Play sound for notification popups"
+msgstr ""
+
+msgid "<b>Show a notification popup...</b>"
+msgstr ""
+
+msgid "When a file has finished downloading"
+msgstr ""
+
+msgid "When a folder has finished downloading"
+msgstr ""
+
+msgid "When you receive a private message"
+msgstr ""
+
+msgid "When someone sends a message in a chat room"
+msgstr ""
+
+msgid "When you're mentioned in a chat room"
+msgstr ""
 
 msgid "Enable Plugins"
+msgstr ""
+
+msgid "<b>No Plugin Selected</b>"
 msgstr ""
 
 msgid "Version: "
@@ -1158,19 +1425,13 @@ msgstr ""
 msgid "Description: "
 msgstr ""
 
-msgid "<b>No Plugin Selected</b>"
-msgstr ""
-
 msgid "Properties"
 msgstr ""
 
-msgid "Plugin Manager"
+msgid "Plugin Properties"
 msgstr ""
 
-msgid "Nicotine+ - Plugin Properties"
-msgstr ""
-
-msgid "Plugin"
+msgid "<b>Network Searches</b>"
 msgstr ""
 
 msgid "Enable sending search results to other users"
@@ -1188,22 +1449,17 @@ msgstr "Antworten auf verteilte Suchanfragen alle"
 msgid "seconds"
 msgstr "Sekunden"
 
-msgid "Network Searches:"
-msgstr "Suchanfragen:"
-
-msgid "Your Searches:"
-msgstr "Deine Suchanfragen:"
-
-msgid "Use regular expressions for filter in & out"
-msgstr "Benutze reguläre Ausdrücke zum Ein- und Ausfiltern"
-
-msgid "Enable filters by default"
-msgstr "Filter standardmäßig aktivieren"
+msgid "<b>Your Searches</b>"
+msgstr ""
 
 msgid ""
-"Reopen closed search tabs that haven't been ignored\n"
-"when new results come in"
-msgstr "Nicht ignorierte Suchtabs bei neuen Ergebnissen wieder öffnen"
+"Remove special characters from search terms (some clients don't send search "
+"results if they're included)"
+msgstr ""
+
+msgid ""
+"Reopen closed search tabs that haven't been ignored when new results come in"
+msgstr ""
 
 msgid "Max visible results per search:"
 msgstr ""
@@ -1211,14 +1467,29 @@ msgstr ""
 msgid "Max stored results per search:"
 msgstr ""
 
-msgid "Searches"
-msgstr "Suche"
+msgid "<b>Search Filters</b>"
+msgstr ""
 
-msgid "Server Settings"
-msgstr "Server-Einstellungen"
+msgid "Use regular expressions for filter in & out"
+msgstr "Benutze reguläre Ausdrücke zum Ein- und Ausfiltern"
 
-msgid "Login:"
-msgstr "Benutzername:"
+msgid "Enable filters by default"
+msgstr "Filter standardmäßig aktivieren"
+
+msgid "<b>Login Details</b>"
+msgstr ""
+
+msgid ""
+"You can create a new account by entering the desired details below. Please "
+"keep in mind that some usernames may already be taken. If you're unable to "
+"connect with your selected username, choose another one."
+msgstr ""
+
+msgid "Server:"
+msgstr ""
+
+msgid "Username:"
+msgstr ""
 
 msgid "Password:"
 msgstr "Kennwort:"
@@ -1226,13 +1497,11 @@ msgstr "Kennwort:"
 msgid "Change password"
 msgstr ""
 
-msgid ""
-"For a new account\n"
-" enter desired details"
-msgstr ""
-
 msgid "Your IP address has not been retrieved from the server"
 msgstr "Deine IP-Adresse wurde vom Server nicht ausgegeben"
+
+msgid "<b>Ports</b>"
+msgstr ""
 
 msgid "Use the first available listening port from the following range:"
 msgstr "Lausche am ersten freien Port in diesem Bereich:"
@@ -1243,12 +1512,7 @@ msgstr "Client-Port ist nicht gesetzt"
 msgid "Check port status"
 msgstr ""
 
-msgid "Use the above ports to configure your router or firewall."
-msgstr "Konfiguriere deinen Router oder deine Firewall gemäß obiger Ports"
-
-msgid ""
-"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
-"bindings)"
+msgid "Use UPnP to map the port on my router (requires restart)"
 msgstr ""
 
 msgid ""
@@ -1259,14 +1523,23 @@ msgstr ""
 msgid "I can receive direct connections"
 msgstr "Ich kann Direktverbindungen annehmen"
 
-msgid "(only use if the above ports are remotely accessible)"
+msgid ""
+"Only disable direct connections if the above ports aren't accessible after "
+"attempting UPnP and manual port forwarding, if possible. This can happen if "
+"your ISP blocks ports."
+msgstr ""
+
+msgid "<b>Miscellaneous</b>"
 msgstr ""
 
 msgid "Enable CTCP-like PM responses (Client Version)"
 msgstr "Aktiviere CTCP-ähnliche PN-Antworten (Client-Version)"
 
-msgid "Server"
-msgstr "Server"
+msgid "Nicotine+ Settings"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
 
 msgid "Rescan shares on startup"
 msgstr "Freigaben beim Programmstart aktualisieren"
@@ -1293,15 +1566,6 @@ msgstr ""
 msgid "<b>Buddies-Only Shares</b>"
 msgstr ""
 
-msgid "Sounds"
-msgstr "Klänge"
-
-msgid "Enable Sound Effects"
-msgstr "Klangereignisse aktivieren"
-
-msgid "Sound Effects Directory:"
-msgstr "Verzeichnis für Klänge:"
-
 msgid "Enable Text To Speech"
 msgstr "Sprachausgabe aktivieren"
 
@@ -1314,16 +1578,8 @@ msgstr "Nachricht in Räumen:"
 msgid "Private chat message:"
 msgstr "Nachricht in privaten Chats:"
 
-msgid "Audio Player Command ($ for filename):"
-msgstr "Befehl für Audio-Player ($ für Dateiname):"
-
-msgid "Upload directory:"
-msgstr "Upload-Verzeichnis:"
-
-msgid ""
-"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
+msgid "<b>Upload Queue</b>"
 msgstr ""
-"Ort für Freunde-Uploads (plus extra Unterverzeichnis für jeden Uploader)"
 
 msgid "Upload Queue type:"
 msgstr "Warteschlangensystem:"
@@ -1360,9 +1616,6 @@ msgstr ""
 "Wenn deaktiviert, wird die Anzahl freier Slots anhand der maximalen "
 "zugestandenen Bandbreite ermittelt"
 
-msgid "(NOT RECOMMENDED)"
-msgstr "(NICHT EMPFOHLEN)"
-
 msgid "Limit uploads speed to"
 msgstr "Upload-Geschwindigkeit begrenzen auf:"
 
@@ -1384,19 +1637,8 @@ msgstr "Dateien"
 msgid "Queue size limit does not apply to friends"
 msgstr "Einschränkungen gelten nicht für Freunde"
 
-msgid "Allow these users to send you files:"
-msgstr "Freunden erlauben, dir Dateien zu senden"
-
-msgid ""
-"The users will be able to send you files. These files will be downloaded "
-"into the Buddy Uploads subdirectory in your Download directory"
+msgid "<b>Privileges</b>"
 msgstr ""
-"Die Benutzer sind berechtigt, dir Dateien zu senden. Diese Dateien werden im "
-"entsprechenden Freunde-Upload-Ordner in deinem Downloadverzeichnis "
-"gespeichert."
-
-msgid "<b>Upload Queue:</b>"
-msgstr "<b>Art der Warteschlange:</b>"
 
 msgid "Privilege all my friends"
 msgstr "Alle meine Freunde bevorzugen"
@@ -1407,21 +1649,6 @@ msgid ""
 msgstr ""
 "Freunde haben höhere Priorität in der Warteliste, genauso wie global "
 "privilegierte Benutzer."
-
-msgid "<b>Privileges:</b>"
-msgstr "<b>Privilegien:</b>"
-
-msgid "Lock incoming files (turn off for NFS)"
-msgstr "Eingehende Dateien sperren (für NFS abschalten)"
-
-msgid "Download folders in reverse alphanumerical order"
-msgstr ""
-
-msgid "Download SFV/MD5 before anything else"
-msgstr ""
-
-msgid "Nicotine+ Settings"
-msgstr ""
 
 msgid "Enable URL catching"
 msgstr "URL-Catching aktivieren"
@@ -1441,89 +1668,11 @@ msgstr "Programm:"
 msgid "Protocol:"
 msgstr "Protokoll:"
 
-msgid "URL Catching"
-msgstr "URL-Catching"
-
-msgid "Userinfo"
-msgstr "Benutzerinfo"
-
-msgid "Self description:"
-msgstr "Text:"
-
 msgid "Image:"
 msgstr "Bild:"
 
 msgid "Select an image"
 msgstr ""
-
-msgid "Personal settings"
-msgstr "Persönliche Einstellungen"
-
-msgid "UserBrowse"
-msgstr ""
-
-msgid "Search file and folder names (exact match):"
-msgstr "Suche Dateien und Verzeichnisse (genaue Übereinstimmung):"
-
-msgid "Dirs: Unknown"
-msgstr "Verzeichnisse: unbekannt"
-
-msgid "Shared: Unknown"
-msgstr "Freigegeben: unbekannt"
-
-msgid "Save"
-msgstr "Speichern"
-
-msgid "Refresh"
-msgstr "Aktualisieren"
-
-msgid "UserInfo"
-msgstr ""
-
-msgid "Information:"
-msgstr "Information:"
-
-msgid "Total uploads allowed: unknown"
-msgstr "Uploads insgesamt erlaubt: unbekannt"
-
-msgid "Slots free: unknown"
-msgstr "Slots verfügbar: unbekannt"
-
-msgid "Queue size: unknown"
-msgstr "Länge der Warteschlange: unbekannt"
-
-msgid "Speed: unknown"
-msgstr "Geschwindigkeit: unbekannt"
-
-msgid "Files: unknown"
-msgstr "Dateien: unbekannt"
-
-msgid "Directories: unknown"
-msgstr "Verzeichnisse: unbekannt"
-
-msgid "Accepts Uploads from:"
-msgstr "Akzeptiert Uploads von:"
-
-msgid "unknown"
-msgstr "unbekannt"
-
-msgid "Interests:"
-msgstr "Interessen:"
-
-msgid "Picture:"
-msgstr "Bild:"
-
-msgid "Browse"
-msgstr "Durchsehen"
-
-msgid "Show IP"
-msgstr "IP anzeigen"
-
-msgid "Add to list"
-msgstr "Zu Liste hinzufügen"
-
-msgid "Save pic"
-msgstr "Bild speichern"
 
 #, python-format
 msgid ""
@@ -1592,6 +1741,18 @@ msgstr "Kann Konfigurationsdatei nicht sichern, Fehler: %s"
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Kann Konfigurationsdatei nicht umbenennen, Fehler: %s"
+
+#, python-format
+msgid "Can't save %s: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while opening your alias file: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while saving your alias file: %s"
+msgstr ""
 
 #, python-format
 msgid "No such alias (%s)"
@@ -1751,12 +1912,6 @@ msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr "Server nennt Port 0 für Benutzer %(user)s, erneuter Versuch"
 
 #, python-format
-msgid ""
-"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr ""
-"IP-Adresse von %(user)s ist %(ip)s, Name %(host)s, Port %(port)i, %(country)s"
-
-#, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "IP-Adresse von %(user)s ist %(ip)s, Port %(port)i, %(country)s"
 
@@ -1835,6 +1990,12 @@ msgstr "Kann Transferlog nicht schreiben: %s"
 msgid "Downloaded"
 msgstr ""
 
+msgid "Shares"
+msgstr "Freigaben"
+
+msgid "Buddy Shares"
+msgstr "Private Freigaben"
+
 #, python-format
 msgid ""
 "Failed to rebuild share, serious error occurred. If this problem persists "
@@ -1842,9 +2003,6 @@ msgid ""
 "with the stack trace included (see terminal output after this message). "
 "Technical details: %s"
 msgstr ""
-
-msgid "Buddy Shares"
-msgstr "Private Freigaben"
 
 #, python-format
 msgid "ERROR: No %(type)s shares database available"
@@ -1882,39 +2040,20 @@ msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr ""
 "Benutzer %(user)s sucht nach %(query)s, liefere %(num)i Ergebnisse zurück"
 
-msgid "Checking for changes"
-msgstr "Suche nach Änderungen"
-
 #, python-format
-msgid "%(num)s directories found before rescan/rebuild"
+msgid "%(num)s directories found before rescan, rebuilding..."
 msgstr ""
 
 #, python-format
-msgid "%(num)s directories found after rescan/rebuild"
+msgid "%(num)s directories found after rescan"
 msgstr ""
 
 #, python-format
-msgid "Scanning %s"
-msgstr "Durchsuche %s"
-
-msgid "Building DataBase"
-msgstr "Baue Datenbank"
-
-msgid "Building Index"
-msgstr "Baue Index"
-
-#, python-format
-msgid "Scanning Directory Error: %(error)s Path: %(path)s"
+msgid "Error while scanning %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning Error: %(error)s Path: %(path)s"
-msgstr ""
-
-#, python-format
-msgid ""
-"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
-"\". Repair or remove this link."
+msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
@@ -1922,11 +2061,11 @@ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 msgstr ""
 
 #, python-format
-msgid "Dropping missing directory %(dir)s"
+msgid "Dropping missing folder %(dir)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning File Error: %(error)s Path: %(path)s"
+msgid "Error while scanning file %(path)s: %(error)s"
 msgstr ""
 
 #, python-format
@@ -1950,10 +2089,6 @@ msgstr "Kann eingehende Nachricht nicht parsen, Klasse %s"
 
 #, python-format
 msgid "Exception during parsing %(area)s: %(exception)s"
-msgstr ""
-
-#, python-format
-msgid "Offending package: %(bytes)s"
 msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
@@ -2026,18 +2161,6 @@ msgstr ""
 "%(msg_obj)s"
 
 #, python-format
-msgid ""
-"You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
-"connections for your protection. If you get this message often you should "
-"search for less generic terms, or increase your per-process file descriptor "
-"limit."
-msgstr ""
-"Du hast gerade deine Verbindungsgrenze von %(limit)s erreicht. Nicotine+ "
-"wird nun anfangen, zu deiner Sicherheit Verbindungen fallenzulassen. Wenn du "
-"diese Meldung öfter erhältst, sollest du deine Suchanfragen weniger "
-"allgemein gestalten oder deine File-Descriptor-Grenze pro Prozess erhöhen."
-
-#, python-format
 msgid "User %s does not exist"
 msgstr "Benutzer %s existiert nicht"
 
@@ -2049,10 +2172,6 @@ msgstr "Filtern: %s"
 msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr ""
 "Wiederhole fehlgeschlagenen Download: Benutzer %(user)s, Datei %(file)s"
-
-#, python-format
-msgid "Failed download: user %(user)s, file %(file)s"
-msgstr "Download fehlgeschlagen: Benutzer %(user)s, Datei %(file)s"
 
 #, python-format
 msgid "Got transfer request %s but cannot determine requestor"
@@ -2100,7 +2219,7 @@ msgstr "Unbekannte Datei-Anforderung: %s"
 msgid "OS error: %s"
 msgstr "Betriebssystem-Fehler: %s"
 
-msgid "Nicotine+ :: Directory download error"
+msgid "Folder download error"
 msgstr ""
 
 #, python-format
@@ -2167,8 +2286,8 @@ msgstr ""
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s von %(user)s heruntergeladen"
 
-msgid "Nicotine+ :: file downloaded"
-msgstr "Nicotine+: Datei heruntergeladen"
+msgid "File downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing '%s'"
@@ -2182,8 +2301,8 @@ msgstr "Ausgeführt: %s"
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s von %(user)s heruntergeladen"
 
-msgid "Nicotine+ :: directory completed"
-msgstr "Nicotine+: Verzeichnis-Download abgeschlossen"
+msgid "Folder downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing on folder: %s"
@@ -2202,11 +2321,6 @@ msgstr "(Freund)"
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Upload abgeschlossen: Benutzer %(user)s, Datei %(file)s"
-
-#, python-format
-msgid "Retrying failed download: %(user)s, file %(file)s"
-msgstr ""
-"Wiederhole fehlgeschlagenen Download: Benutzer %(user)s, Datei %(file)s"
 
 #, python-format
 msgid "I/O error: %s"
@@ -2268,208 +2382,17 @@ msgstr ""
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 
-msgid "About Nicotine+"
-msgstr ""
-
-msgid ""
-"A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek\n"
-"\n"
-"This product includes IP2Location LITE data, available from:\n"
-"https://www.ip2location.com"
-msgstr ""
-
-msgid "About search filters"
-msgstr "Über Suchfilter"
-
-msgid ""
-"Search filtering\n"
-"\n"
-"You can use this to refine which results are displayed. The full results\n"
-"from the server are always available if you clear all the search terms.\n"
-"\n"
-"You can filter by:\n"
-"\n"
-"Included text: Files are shown if they contain this text.\n"
-"Case is insensitive, but word order is important.\n"
-"'Spears Brittany' will not show any 'Brittany Spears'\n"
-"\n"
-"Excluded text: As above, but files will not be displayed if the text "
-"matches\n"
-"\n"
-"Size: Shows results based on size. use > and < to find files larger or "
-"smaller.\n"
-"Files exactly the same as this term will always match.\n"
-"Use = to specify an exact match. Use k or m to specify kilo or megabytes.\n"
-">10M will find files larger than 10 megabytes.\n"
-"<4000k will find files smaller than 4000k.\n"
-"\n"
-"Bitrate: Find files based on bitrate. Use < and > to find lower or higher.\n"
-">192 finds 192 and higher, <192 finds 192 or lower.\n"
-"=192 only finds 192.\n"
-"For VBR, the average bitrate is used.\n"
-"\n"
-"Free slot: Show only those results from users which have at least\n"
-"one upload slot free.\n"
-"\n"
-"To set the filter, press Enter.\n"
-"This will apply to any existing results, and any more that are returned.\n"
-"To filter in a different way, just set the relevant terms.\n"
-"You do not need to do another search to apply a different filter."
-msgstr ""
-
-msgid "room"
-msgstr "Raum"
-
-msgid "Join room 'room'"
-msgstr "Raum betreten"
-
-msgid "Leave room 'room'"
-msgstr "Raum verlassen"
-
-msgid "Clear the chat window"
-msgstr "Chat-Fenster leeren"
-
-msgid "Set your personal ticker"
-msgstr "Eigenen Ticker setzen"
-
-msgid "Show all the tickers"
-msgstr ""
-
-msgid "Reattach a chat window to the notebook"
-msgstr "Einen Chat-Tab wieder einklinken"
-
-msgid "Detach a chat tab from the notebook"
-msgstr "Einen Chat-Tab ausklinken"
-
-msgid "message"
-msgstr "Nachricht"
-
-msgid "Say something in the third-person"
-msgstr "Etwas in der dritten Person sagen"
-
-msgid "Display the Now Playing script's output"
-msgstr "Zeige Ausgabe des Now-Playing-Skripts"
-
-msgid "Users"
-msgstr "Benutzer"
-
-msgid "user"
-msgstr "Benutzer"
-
-msgid "Add user 'user' to your user list"
-msgstr "Benutzer der Freunde-Liste hinzufügen"
-
-msgid "Remove user 'user' from your user list"
-msgstr "Benutzer aus der Freunde-Liste entfernen"
-
-msgid "Add user 'user' to your ban list"
-msgstr "Benutzer der Sperrliste hinzufügen"
-
-msgid "Remove user 'user' from your ban list"
-msgstr "Benutzer aus Sperrliste entfernen"
-
-msgid "Add user 'user' to your ignore list"
-msgstr "Benutzer zur Ingnorierliste hinzufügen"
-
-msgid "Remove user 'user' from your ignore list"
-msgstr "Benutzer aus Ignorierliste entfernen"
-
-msgid "Browse files of user 'user'"
-msgstr "Dateien des Benutzers durchsehen"
-
-msgid "Request user info for user 'user'"
-msgstr "Die Info des Benutzers abrufen"
-
-msgid "Show IP for user 'user'"
-msgstr "IP-Adresse des Benutzers anzeigen"
-
-msgid "Aliases"
-msgstr "Aliase"
-
-msgid "command"
-msgstr "Befehl"
-
-msgid "definition"
-msgstr "Definition"
-
-msgid "Add a new alias"
-msgstr "Einen neuen Alias hinzufügen"
-
-msgid "process"
-msgstr "Prozess"
-
-msgid "Add a new alias that runs a process"
-msgstr "Einen neuen Alias hinzufügen, der einen Prozess ausführt"
-
-msgid "Remove an alias"
-msgstr "Einen Alias entfernen"
-
-msgid "query"
-msgstr "Suchanfrage"
-
-msgid "Start a new search for 'query'"
-msgstr "Neue Suche starten"
-
-msgid "Search the joined rooms for 'query'"
-msgstr ""
-
-msgid "Search the buddy list for 'query'"
-msgstr "In der Freundeliste suchen"
-
-msgid "Search a user's shares for 'query'"
-msgstr "In den Freigaben eines Benutzers suchen"
-
-msgid "Private Chat"
-msgstr "Privater Chat"
-
-msgid "Send message 'message' to user 'user'"
-msgstr "Sende Nachricht an Benutzer"
-
-msgid "Open private chat window for user 'user'"
-msgstr "Öffne privaten Chat"
-
-msgid "Toggles your away status"
-msgstr "Schalte Anwesenheitsstatus um"
-
-msgid "Rescan shares"
-msgstr "Freigaben aktualisieren"
-
-msgid "Quit Nicotine+"
-msgstr ""
-
-msgid "About chat room commands"
-msgstr "Über Befehle in Chat-Räumen"
-
-msgid "Close the current private chat"
-msgstr "Den aktuellen privaten Chat schließen"
-
-msgid "plugin"
-msgstr ""
-
-msgid "Toggle plugin on/off state"
-msgstr ""
-
-msgid "Chat Rooms"
-msgstr "Chat-Räume"
-
-msgid "About private chat commands"
-msgstr "Über Befehle im privaten Chat"
-
 msgid "Room"
 msgstr "Raum"
 
-msgid "Join room"
-msgstr "Raum betreten"
+msgid "Join Room"
+msgstr ""
 
-msgid "Leave room"
-msgstr "Raum verlassen"
+msgid "Leave Room"
+msgstr ""
 
-msgid "Enable Private Rooms"
-msgstr "Private Räume aktivieren"
-
-msgid "Disable Private Rooms"
-msgstr "Private Räume deaktivieren"
+msgid "Create Room"
+msgstr ""
 
 msgid "Create Private Room"
 msgstr "Privaten Raum erstellen"
@@ -2477,14 +2400,20 @@ msgstr "Privaten Raum erstellen"
 msgid "Disown Private Room"
 msgstr "Private Raum aufgeben"
 
-msgid "Cancel room membership"
-msgstr "Raum-Mitgliedschaft kündigen"
+msgid "Cancel Room Membership"
+msgstr ""
 
 msgid "Join Public Room"
 msgstr ""
 
-msgid "Nicotine+:"
-msgstr "Nicotine+:"
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+msgid "Create Public Room"
+msgstr ""
+
+msgid "Enter the name of the public room you wish to create"
+msgstr ""
 
 msgid "Enter the name of the private room you wish to create"
 msgstr "Gib einen Namen für deinen privaten Raum an:"
@@ -2504,21 +2433,6 @@ msgstr ""
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr ""
-
-msgid "Set ticker message"
-msgstr "Ticker-Nachricht setzen"
-
-msgid "Set room ticker message:"
-msgstr "Ticker-Nachricht für diesen Raum setzen:"
-
-msgid "Just this time"
-msgstr "Nur dieses Mal"
-
-msgid "Always for this channel"
-msgstr "Immer für diesen Raum"
-
-msgid "Default for all channels"
-msgstr "Standard für alle Räume"
 
 msgid "Status"
 msgstr "Status"
@@ -2600,6 +2514,14 @@ msgid "Add as operator of %s"
 msgstr "Op-Status für %s gewähren"
 
 #, python-format
+msgid "%s mentioned you in the %s room"
+msgstr ""
+
+#, python-format
+msgid "Message by %s in the %s room"
+msgstr ""
+
+#, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr ""
 
@@ -2608,12 +2530,8 @@ msgid "Command %s is not recognized"
 msgstr "Befehl %s ist unbekannt"
 
 #, python-format
-msgid "All ticker messages for %(room)s:"
+msgid "All tickers / wall messages for %(room)s:"
 msgstr ""
-
-#, python-format
-msgid "Nicotine+ Chatroom: %s"
-msgstr "Nicotine+ Chat-Raum: %s"
 
 #, python-format
 msgid "%s joined the room"
@@ -2624,11 +2542,8 @@ msgid "%s left the room"
 msgstr "%s hat den Raum verlassen"
 
 #, python-format
-msgid "%i people in room"
-msgstr "%i Leute im Raum"
-
-msgid "You are alone"
-msgstr "Du bist allein."
+msgid "User List (%i)"
+msgstr ""
 
 #, python-format
 msgid "%s has gone away"
@@ -2644,9 +2559,6 @@ msgstr "–––Verbindung getrennt–––"
 msgid "--- reconnected ---"
 msgstr "–––Verbindung wiederhergestellt–––"
 
-msgid "Detach this tab"
-msgstr "Diesen Tab ausklinken"
-
 msgid "Leave this room"
 msgstr "Raum verlassen"
 
@@ -2658,24 +2570,67 @@ msgstr ""
 "Kann Versionsinformationen nicht abrufen!\n"
 "Fehler: %s"
 
-msgid "Check Latest Version"
-msgstr "Version auf Aktualität prüfen"
-
 #, python-format
-msgid ""
-"A newer version ('%s') is available. Check Nicotine+ releases page\n"
-"(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest "
-"version."
+msgid "A newer version %s is available, released on %s."
 msgstr ""
 
-msgid ""
-"You appear to be using a development version of Nicotine+.\n"
-"Check out the latest version from the Git repository at https://github.com/"
-"Nicotine-Plus/nicotine-plus/"
+msgid "You appear to be using a development version of Nicotine+."
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Du verwendest die aktuellste Version von Nicotine+!"
+
+msgid "Browse"
+msgstr "Durchsehen"
+
+msgid "<b>List Position:</b>"
+msgstr "<b>Position in der Liste:</b>"
+
+msgid "<b>File Name:</b>"
+msgstr "<b>Dateiname:</b>"
+
+msgid "<b>Directory:</b>"
+msgstr "<b>Verzeichnis:</b>"
+
+msgid "<b>File Size:</b>"
+msgstr "<b>Dateigröße:</b>"
+
+msgid "<b>Length:</b>"
+msgstr "<b>Länge:</b>"
+
+msgid "<b>Bitrate:</b>"
+msgstr "<b>Bitrate:</b>"
+
+msgid "<b>Immediate Downloads:</b>"
+msgstr "<b>Sofortiger Download:</b>"
+
+msgid "<b>Queue:</b>"
+msgstr "<b>Warteschlange:</b>"
+
+msgid "<b>Last Speed:</b>"
+msgstr "<b>Letzte Geschwindigkeit:</b>"
+
+msgid "Download"
+msgstr "Herunterladen"
+
+msgid "Download All"
+msgstr "Alle herunterladen"
+
+#, python-format
+msgid "<b>%s</b> File(s) Selected"
+msgstr "<b>%s</b> Datei(en) ausgewählt"
+
+msgid "Previous"
+msgstr "Vorhergehender"
+
+msgid "Next"
+msgstr "Nächster"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "<b>Country Code:</b> "
+msgstr "<b>Ländercode:</b>"
 
 msgid "_Open"
 msgstr ""
@@ -2728,81 +2683,32 @@ msgstr "Wiederholen"
 msgid "Abor_t"
 msgstr "Abbrechen"
 
+msgid "Abort & Delete"
+msgstr "Abbrechen & Löschen"
+
 msgid "_Clear"
 msgstr "Entfernen"
 
 msgid "Clear Groups"
 msgstr "Gruppen leeren"
 
-msgid "Clear All Queued Downloads?"
-msgstr "Alle wartenden Downloads entfernen?"
+msgid "Clear Queued Downloads"
+msgstr ""
 
-msgid "Clear Queued Transfers"
-msgstr "Entferne Wartende"
+msgid "Are you sure you wish to clear all queued downloads?"
+msgstr ""
 
 msgid " KB/s"
 msgstr " KB/s"
+
+msgid "Nicotine+:"
+msgstr "Nicotine+:"
 
 msgid "Downloads Metadata"
 msgstr "Downloads Metadaten"
 
 msgid "<b>Metadata</b> for Downloads"
 msgstr "<b>Metadaten</b> für Downloads"
-
-msgid "Select User's Transfers"
-msgstr "Transfers des Benutzers markieren"
-
-msgid "<b>List Position:</b>"
-msgstr "<b>Position in der Liste:</b>"
-
-msgid "<b>File Name:</b>"
-msgstr "<b>Dateiname:</b>"
-
-msgid "<b>Directory:</b>"
-msgstr "<b>Verzeichnis:</b>"
-
-msgid "<b>File Size:</b>"
-msgstr "<b>Dateigröße:</b>"
-
-msgid "<b>Length:</b>"
-msgstr "<b>Länge:</b>"
-
-msgid "<b>Bitrate:</b>"
-msgstr "<b>Bitrate:</b>"
-
-msgid "<b>Immediate Downloads:</b>"
-msgstr "<b>Sofortiger Download:</b>"
-
-msgid "<b>Queue:</b>"
-msgstr "<b>Warteschlange:</b>"
-
-msgid "<b>Last Speed:</b>"
-msgstr "<b>Letzte Geschwindigkeit:</b>"
-
-msgid "Download"
-msgstr "Herunterladen"
-
-msgid "Download All"
-msgstr "Alle herunterladen"
-
-#, python-format
-msgid "<b>%s</b> File(s) Selected"
-msgstr "<b>%s</b> Datei(en) ausgewählt"
-
-msgid "Previous"
-msgstr "Vorhergehender"
-
-msgid "Next"
-msgstr "Nächster"
-
-msgid "<b>Country Code:</b> "
-msgstr "<b>Ländercode:</b>"
-
-msgid "Cancel"
-msgstr "Abbrechen"
-
-msgid "OK"
-msgstr "Okay"
 
 msgid "Virtual Directory"
 msgstr ""
@@ -2841,14 +2747,21 @@ msgstr "Warnung"
 msgid "The chosen virtual name is empty"
 msgstr ""
 
-msgid "The chosen virtual name already exist"
+msgid "The chosen virtual name already exists"
 msgstr ""
 
 msgid "The chosen directory is already shared"
 msgstr ""
 
+#, python-format
+msgid "%(current)s/%(limit)s Connections"
+msgstr ""
+
 msgid "Search files"
 msgstr "Suche"
+
+msgid "Downloads"
+msgstr "Downloads"
 
 msgid "Uploads"
 msgstr "Uploads"
@@ -2860,11 +2773,29 @@ msgstr "Interessen"
 msgid "Hide %(tab)s"
 msgstr "%(tab)s verstecken"
 
+#, python-format
+msgid "Users: %s"
+msgstr "Benutzer: %s"
+
+#, python-format
+msgid "Files: %s"
+msgstr "Dateien: %s"
+
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr "Runter: %(num)i Benutzer, %(speed).1f KB/s"
+
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr "Rauf: %(num)i Benutzer, %(speed).lf KB/s"
+
+#, python-format
+msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+msgstr ""
+"Nicotine+: Transfers: %(speeddown).1f KB/s runter, %(speedup).1f KB/s rauf"
+
 msgid "Joined Rooms "
 msgstr "Besuchte Räume"
-
-msgid "Global"
-msgstr "Global"
 
 msgid "Buddies"
 msgstr "Freunde"
@@ -2881,9 +2812,8 @@ msgstr ""
 msgid "Send to tray"
 msgstr "Ins Tray minimieren"
 
-#, python-format
-msgid "Notification Error: %s"
-msgstr "Benachrichtigungsfehler: %s"
+msgid "Remember choice"
+msgstr ""
 
 msgid "I like"
 msgstr "Ich mag"
@@ -2916,6 +2846,10 @@ msgid "_Recommendations for this item"
 msgstr "Vorschläge für diesen Eintrag"
 
 #, python-format
+msgid "Download %(num)i files?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory "
 "%(folder)s?"
@@ -2931,27 +2865,6 @@ msgstr "Kann Verzeichnis „%(folder)s“ nicht erstellen, Fehler: %(error)s"
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Laden der Freigaben von der Festplatte schlug fehl: %(error)s"
 
-msgid "Enter the User who you wish to send a private message:"
-msgstr "Gib den Namen des Benutzers ein, dem du eine Nachricht senden willst:"
-
-msgid "Nicotine+: Get User Info"
-msgstr "Nicotine+: Benutzerinfo abrufen"
-
-msgid "Enter the User whose User Info you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's IP"
-msgstr "Nicotine+: IP-Adresse eines Benutzers anzeigen"
-
-msgid "Enter the User whose IP Address you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's Shares List"
-msgstr "Nicotine+: Die Freigaben eines Benutzers anzeigen"
-
-msgid "Enter the User whose Shares List you wish to receive:"
-msgstr ""
-
 #, python-format
 msgid "button_press error, %(error)s"
 msgstr ""
@@ -2961,33 +2874,8 @@ msgid "Connecting to %(host)s:%(port)s"
 msgstr "Verbinde zu %(host)s:%(port)s"
 
 #, python-format
-msgid "%(current)s/%(limit)s Connections"
-msgstr ""
-
-#, python-format
 msgid "Error loading image for %(flag)s: %(error)s"
 msgstr ""
-
-#, python-format
-msgid "Users: %s"
-msgstr "Benutzer: %s"
-
-#, python-format
-msgid "Files: %s"
-msgstr "Dateien: %s"
-
-#, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Runter: %(num)i Benutzer, %(speed).1f KB/s"
-
-#, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Rauf: %(num)i Benutzer, %(speed).lf KB/s"
-
-#, python-format
-msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
-msgstr ""
-"Nicotine+: Transfers: %(speeddown).1f KB/s runter, %(speedup).1f KB/s rauf"
 
 msgid "Rescanning started"
 msgstr "Aktualisierung begonnen"
@@ -3022,6 +2910,9 @@ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Fehler: Downloadfilter fehlgeschlagen! Überprüfe deine Filter. Grund: %s"
 
+msgid "Buddy list"
+msgstr ""
+
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Ungültige Soulseek-Meta-URL: %s"
@@ -3031,15 +2922,6 @@ msgstr "Gib die Zeichenkette an, nach der du suchen möchtest:"
 
 msgid "Nicotine+: Find string"
 msgstr "Nicotine+: Zeichenkette finden"
-
-msgid "Add thing I like"
-msgstr "Etwas hinzufügen, das ich mag"
-
-msgid "Add thing I don't like"
-msgstr "Etwas hinzufügen, das ich nicht mag"
-
-msgid "I don't like"
-msgstr "Ich mag nicht"
 
 #, python-format
 msgid "Recommendations for %s"
@@ -3058,16 +2940,8 @@ msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s hat dich im Raum „%(room)s“ erwähnt"
 
 #, python-format
-msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, "
-"%(place)s."
-msgstr ""
-"%(myusername)s, der Benutzer %(username)s hat dich im Raum „%(place)s“ "
-"erwähnt."
-
-#, python-format
-msgid "%(myusername)s, you have recieved a private message from %(username)s."
-msgstr ""
+msgid "Notification Error: %s"
+msgstr "Benachrichtigungsfehler: %s"
 
 msgid "Username;APIKEY :"
 msgstr ""
@@ -3204,6 +3078,10 @@ msgstr "Benutzer ignorieren"
 msgid "Close this tab"
 msgstr "Diesen Tab schließen"
 
+#, python-format
+msgid "Private message from %s"
+msgstr ""
+
 msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
@@ -3211,39 +3089,17 @@ msgstr ""
 "* Nachricht(en) gesendet während du offline warst. Die Zeitstempel stammen "
 "vom Server und können falsch sein."
 
-#, python-format
-msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+msgid "ID"
 msgstr ""
 
-msgid "Nicotine+ Wishlist"
-msgstr "Nicotine+-Wunschliste"
-
-msgid "Search Wishlist"
-msgstr "Dauerhafte Suchaufträge"
-
-msgid "Select all"
-msgstr ""
-
-msgid "Wishes"
-msgstr ""
-
-msgid "Add Wish..."
-msgstr "Hinzufügen"
-
-msgid "Wish:"
-msgstr "Wunsch:"
-
-msgid "Number"
-msgstr "Nummer"
-
-msgid "Filename"
-msgstr "Dateiname"
+msgid "Immediate Download"
+msgstr "Sofortiger Download"
 
 msgid "In queue"
 msgstr "In Wartschlange"
 
-msgid "Immediate Download"
-msgstr "Sofortiger Download"
+msgid "Filename"
+msgstr "Dateiname"
 
 msgid "_Download file(s)"
 msgstr "Datei(en) herunterladen"
@@ -3251,17 +3107,19 @@ msgstr "Datei(en) herunterladen"
 msgid "Download file(s) _to..."
 msgstr "Datei(en) herunterladen nach ..."
 
-msgid "Download containing _folder(s)"
-msgstr "Mit Verzeichnis(sen) herunterladen"
+msgid "Download _folder(s)"
+msgstr ""
 
-msgid "Download containing f_older(s) to..."
-msgstr "Mit Verzeichnis(sen) herunterladen nach ..."
+msgid "Download f_older(s) to..."
+msgstr ""
 
 msgid "Copy folder U_RL"
 msgstr "Verzeichnis-URL kopieren"
 
-#, python-format
-msgid "Nicotine+ %(mode)s Search: %(term)s"
+msgid "Filtered out excluded search result "
+msgstr ""
+
+msgid "Filtered out inexact or incorrect search result "
 msgstr ""
 
 msgid "Select User's Results"
@@ -3273,6 +3131,9 @@ msgstr "Nicotine+: Suchergebnisse"
 #, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Metadaten</b> für Such Liste: <i>%s</i>"
+
+msgid "Wishes"
+msgstr ""
 
 #, python-format
 msgid "Client port is <b>%(port)s</b>"
@@ -3294,42 +3155,6 @@ msgstr "Achtung: ungültige Ports"
 msgid "Client ports are invalid."
 msgstr "Die Client-Ports sind ungültig."
 
-msgid "Filter"
-msgstr "Filters"
-
-msgid "Escaped"
-msgstr "Escapet"
-
-#, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr "Sicherheitsrisiko: Du solltest das %s-Verzeichnis nicht freigeben!"
-
-msgid "Nicotine+: Add a download filter"
-msgstr "Nicotine+: Downloadfilter hinzufügen"
-
-msgid "Enter a new download filter:"
-msgstr "Gib einen neuen Downloadfilter ein:"
-
-msgid "Nicotine+: Edit a download filter"
-msgstr "Nicotine+: Downloadfilter editieren"
-
-msgid "Modify this download filter:"
-msgstr "Diesen Downloadfilter modifizieren:"
-
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d Fehlgeschladen! %(error)s"
-
-msgid "The chosen virtual name is either empty or already exist"
-msgstr ""
-
-msgid "Add a shared buddy directory"
-msgstr ""
-
-#, python-format
-msgid "Enter new virtual name for '%(dir)s':"
-msgstr ""
-
 msgid "No one"
 msgstr "Niemand"
 
@@ -3342,14 +3167,47 @@ msgstr "Benutzer in Liste"
 msgid "Trusted Users"
 msgstr "Vertrauenswürdige"
 
+msgid "Filter"
+msgstr "Filters"
+
+msgid "Escaped"
+msgstr "Escapet"
+
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
+msgstr "Sicherheitsrisiko: Du solltest das %s-Verzeichnis nicht freigeben!"
+
+msgid "Add a download filter"
+msgstr ""
+
+msgid "Enter a new download filter:"
+msgstr "Gib einen neuen Downloadfilter ein:"
+
+msgid "Edit a download filter"
+msgstr ""
+
+msgid "Modify this download filter:"
+msgstr "Diesen Downloadfilter modifizieren:"
+
+#, python-format
+msgid "%(num)d Failed! %(error)s "
+msgstr "%(num)d Fehlgeschladen! %(error)s"
+
+msgid "The chosen virtual name is either empty or already exists"
+msgstr ""
+
+msgid "Add a shared buddy directory"
+msgstr ""
+
+#, python-format
+msgid "Enter new virtual name for '%(dir)s':"
+msgstr ""
+
 msgid "Addresses"
 msgstr "Adressen"
 
 msgid "Ignore user..."
 msgstr "Ignoriere Benutzer ..."
-
-msgid "User:"
-msgstr "Benutzer:"
 
 msgid "Ignore IP Address..."
 msgstr ""
@@ -3393,8 +3251,29 @@ msgstr ""
 msgid "Could not disable plugin."
 msgstr ""
 
+msgid "General"
+msgstr ""
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Searches"
+msgstr "Suche"
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Text To Speech"
+msgstr ""
+
+msgid "User Info"
+msgstr ""
+
 msgid "Ban List"
 msgstr ""
+
+msgid "Events"
+msgstr "Ereignisse"
 
 msgid "Geo Block"
 msgstr "Geo-Block"
@@ -3402,11 +3281,38 @@ msgstr "Geo-Block"
 msgid "Interface"
 msgstr "Oberfläche"
 
+msgid "Fonts"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Icons"
+msgstr "Symbole"
+
+msgid "Notebook Tabs"
+msgstr "Tabs"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Away Mode"
+msgstr ""
+
+msgid "Logging"
+msgstr "Aufzeichnung"
+
 msgid "Ignore List"
 msgstr ""
 
-msgid "Auto-Replace"
-msgstr "Auto-Ersetzen"
+msgid "Censor List"
+msgstr "Zensurliste"
+
+msgid "Auto-Replace List"
+msgstr "Auto-Ersetzen-Liste"
+
+msgid "URL Catching"
+msgstr "URL-Catching"
 
 msgid "Completion"
 msgstr "Vervollständigung"
@@ -3414,62 +3320,8 @@ msgstr "Vervollständigung"
 msgid "Categories"
 msgstr "Kategorien"
 
-msgid "Getting status"
-msgstr "Ermittle Status"
-
-msgid "Waiting for download"
-msgstr "Warte auf Download"
-
-msgid "Waiting for upload"
-msgstr "Warte auf Upload"
-
-msgid "Getting address"
-msgstr "Ermittle Adresse"
-
-msgid "Connecting"
-msgstr "Verbinde"
-
-msgid "Waiting for peer to connect"
-msgstr "Warte auf Gegenseite"
-
-msgid "Cannot connect"
-msgstr "Verbinden nicht möglich"
-
-msgid "User logged off"
-msgstr "Benutzer abgemeldet"
-
-msgid "Requesting file"
-msgstr "Fordere Datei an"
-
-msgid "Initializing transfer"
-msgstr "Initialisiere Transfer"
-
-msgid "Filtered"
-msgstr "Gefiltert"
-
-msgid "Download directory error"
-msgstr "Download-Verzeichnis-Fehler"
-
-msgid "Local file error"
-msgstr "Lokaler Dateifehler"
-
-msgid "File not shared"
-msgstr "Datei nicht freigegeben"
-
-msgid "Aborted"
-msgstr "Abgebrochen"
-
-msgid "Paused"
-msgstr "Pausiert"
-
-msgid "Queued"
-msgstr "In Warteschlange"
-
-msgid "Transferring"
-msgstr "Übertrage ..."
-
-msgid "Finished"
-msgstr "Abgeschlossen"
+msgid "Path"
+msgstr "Pfad"
 
 msgid "Queue Position"
 msgstr ""
@@ -3483,14 +3335,71 @@ msgstr "Zeit vergangen"
 msgid "Time left"
 msgstr "Zeit verbleibend"
 
-msgid "Path"
-msgstr "Pfad"
+msgid "Waiting for download"
+msgstr "Warte auf Download"
+
+msgid "Waiting for upload"
+msgstr "Warte auf Upload"
+
+msgid "Requesting file"
+msgstr "Fordere Datei an"
+
+msgid "Initializing transfer"
+msgstr "Initialisiere Transfer"
+
+msgid "Cannot connect"
+msgstr "Verbinden nicht möglich"
+
+msgid "Waiting for peer to connect"
+msgstr "Warte auf Gegenseite"
+
+msgid "Connecting"
+msgstr "Verbinde"
+
+msgid "Getting address"
+msgstr "Ermittle Adresse"
+
+msgid "Getting status"
+msgstr "Ermittle Status"
+
+msgid "Queued"
+msgstr "In Warteschlange"
+
+msgid "User logged off"
+msgstr "Benutzer abgemeldet"
+
+msgid "Aborted"
+msgstr "Abgebrochen"
+
+msgid "Finished"
+msgstr "Abgeschlossen"
+
+msgid "Paused"
+msgstr "Pausiert"
+
+msgid "Transferring"
+msgstr "Übertrage ..."
+
+msgid "Filtered"
+msgstr "Gefiltert"
 
 msgid "Connection closed by peer"
 msgstr "Verbindung von Gegenseite getrennt"
 
+msgid "File not shared"
+msgstr "Datei nicht freigegeben"
+
 msgid "Establishing connection"
 msgstr "Stelle Verbindung her"
+
+msgid "Download directory error"
+msgstr "Download-Verzeichnis-Fehler"
+
+msgid "Local file error"
+msgstr "Lokaler Dateifehler"
+
+msgid "Remote file error"
+msgstr ""
 
 #, python-format
 msgid "All %(ext)s"
@@ -3499,6 +3408,9 @@ msgstr "Alle %(ext)s"
 #, python-format
 msgid "%(number)2s files "
 msgstr "%(number)2s Dateien"
+
+msgid "Select User's Transfers"
+msgstr "Transfers des Benutzers markieren"
 
 msgid "Connect"
 msgstr "Verbindung herstellen"
@@ -3511,9 +3423,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Einstellungen"
-
-msgid "Send Message"
-msgstr "Nachricht senden"
 
 msgid "Lookup a User's IP"
 msgstr "IP eines Benutzers anzeigen"
@@ -3534,6 +3443,27 @@ msgstr "Beenden"
 msgid "ERROR: tray menu, %(error)s"
 msgstr ""
 
+msgid "Enter the User who you wish to send a private message:"
+msgstr "Gib den Namen des Benutzers ein, dem du eine Nachricht senden willst:"
+
+msgid "Get User Info"
+msgstr ""
+
+msgid "Enter the User whose User Info you wish to receive:"
+msgstr ""
+
+msgid "Get A User's IP"
+msgstr ""
+
+msgid "Enter the User whose IP Address you wish to receive:"
+msgstr ""
+
+msgid "Get A User's Shares List"
+msgstr ""
+
+msgid "Enter the User whose Shares List you wish to receive:"
+msgstr ""
+
 #, python-format
 msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
@@ -3544,8 +3474,11 @@ msgstr ""
 msgid "Clear failed"
 msgstr "Entferne Fehlgeschlagene"
 
-msgid "Clear All Queued Uploads?"
-msgstr "Alle wartenden Uploads entfernen?"
+msgid "Clear Queued Uploads"
+msgstr ""
+
+msgid "Are you sure you wish to clear all queued uploads?"
+msgstr ""
 
 msgid "Directories"
 msgstr "Verzeichnisse"
@@ -3581,10 +3514,6 @@ msgid "Open in File Manager"
 msgstr "In Datei-Manager öffnen"
 
 #, python-format
-msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
-msgstr ""
-
-#, python-format
 msgid "Shared: %s"
 msgstr "Freigegeben: %s"
 
@@ -3596,13 +3525,13 @@ msgstr "Ordner: %s"
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Kann Freigaben nicht speichern, %(user)s, Fehler: %(error)s"
 
-msgid "Nicotine+: Upload Directory's Contents"
+msgid "Upload Directory's Contents"
 msgstr ""
 
 msgid "Enter the User you wish to upload to:"
 msgstr "Gib den Namen des Benutzers an, zu dem du hochladen möchtest:"
 
-msgid "Nicotine+: Upload File(s)"
+msgid "Upload File(s)"
 msgstr ""
 
 #, python-format
@@ -3630,10 +3559,6 @@ msgstr "Rauszoomen"
 
 msgid "Save Image"
 msgstr "Bild speichern"
-
-#, python-format
-msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
-msgstr ""
 
 #, python-format
 msgid "Total uploads allowed: %i"
@@ -3738,34 +3663,307 @@ msgstr "Wie viele Tage globaler Privilegien gewähren?"
 msgid "%(days)s days left"
 msgstr "%(days)s Tage verbleiben."
 
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
+#~ msgid "Hide/Show Status log"
+#~ msgstr "Status-Log anzeigen/verbergen"
+
+#~ msgid "Hide/Show User list"
+#~ msgstr "Benutzerliste verbergen"
+
+#~ msgid "0 people in room"
+#~ msgstr "0 Leute im Raum"
+
+#~ msgid "Leave"
+#~ msgstr "Verlassen"
+
+#~ msgid "Check _latest"
+#~ msgstr "Auf neue Version prüfen"
+
+#~ msgid "Group by Users"
+#~ msgstr "Nach Benutzern gruppieren"
+
+#~ msgid "Auto-retry failed"
+#~ msgstr "Fehlgeschlagene automatisch neustarten"
+
+#~ msgid "Every 3 minutes"
+#~ msgstr "Alle drei Minuten"
+
+#~ msgid "Global recommendations"
+#~ msgstr "Allgemeine Vorschläge"
+
+#~ msgid "Nicotine+: Configure Now Playing"
+#~ msgstr "Nicotine+: Now-Playing-Skript konfigurieren"
+
+#~ msgid "Direct"
+#~ msgstr "Direkt"
+
+#~ msgid "Create: "
+#~ msgstr "Erstellen: "
+
+#~ msgid "Query"
+#~ msgstr "Suchanfrage"
+
+#~ msgid "Close search tab; press ignore to prevent this tab from reopening"
+#~ msgstr ""
+#~ "Tab schließen („Ignorieren“ klicken, um ein erneutes Aufgehen zu "
+#~ "verhindern)"
+
+#~ msgid "Ban"
+#~ msgstr "Sperren"
+
+#~ msgid "Banning"
+#~ msgstr "Sperren"
+
+#~ msgid "Bloat"
+#~ msgstr "Blähungen"
+
+#~ msgid "Extra stuff for your comfort"
+#~ msgstr "Extra-Zeugs"
+
+#~ msgid ""
+#~ "Choose <b>Logging</b> to configure what's logged and where to save the "
+#~ "logs."
+#~ msgstr "<b>Protokoll</b>: Einstellen, was wo aufgezeichnet wird"
+
+#~ msgid ""
+#~ "Choose <b>URL Catching</b> to configure the programs used when clicking "
+#~ "on links."
+#~ msgstr ""
+#~ "<b>URL-Catching</b>: Einstellen, was passiert, wenn auf Links geklickt "
+#~ "wird"
+
+#~ msgid "Chat Settings"
+#~ msgstr "Chat-Einstellungen"
+
+#~ msgid "Text Completion"
+#~ msgstr "Vervollständigung"
+
+#~ msgid "Chat text completion"
+#~ msgstr "Auto-Vervollständigung in Chats"
+
+#~ msgid "<b>Do not download these file types:</b>"
+#~ msgstr "<b>Diese Dateitypen nicht herunterladen:</b>"
+
+#~ msgid "...each file"
+#~ msgstr "jeder Datei"
+
+#~ msgid "...each directory"
+#~ msgstr "jeden Ordners"
+
+#~ msgid "GeoBlock"
+#~ msgstr "GeoBlock"
+
+#~ msgid "Geographical Blocking"
+#~ msgstr "Ländercodes sperren"
+
+#~ msgid "Current Icons:"
+#~ msgstr "Derzeitige Symbole:"
+
+#~ msgid "Tray & Icons"
+#~ msgstr "Tray & Symbole"
+
+#~ msgid "Misc"
+#~ msgstr "Verschiedenes"
+
+#~ msgid "Notebooks"
+#~ msgstr "Notebooks"
+
+#~ msgid "UrlCatch"
+#~ msgstr "URL-Catching"
+
+#~ msgid "Server Settings"
+#~ msgstr "Server-Einstellungen"
+
+#~ msgid "Login:"
+#~ msgstr "Benutzername:"
+
+#~ msgid "Use the above ports to configure your router or firewall."
+#~ msgstr "Konfiguriere deinen Router oder deine Firewall gemäß obiger Ports"
+
+#~ msgid "Sounds"
+#~ msgstr "Klänge"
+
+#~ msgid "Enable Sound Effects"
+#~ msgstr "Klangereignisse aktivieren"
+
+#~ msgid "Sound Effects Directory:"
+#~ msgstr "Verzeichnis für Klänge:"
+
+#~ msgid "Upload directory:"
+#~ msgstr "Upload-Verzeichnis:"
+
+#~ msgid "(NOT RECOMMENDED)"
+#~ msgstr "(NICHT EMPFOHLEN)"
+
+#~ msgid "Userinfo"
+#~ msgstr "Benutzerinfo"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "Add to list"
+#~ msgstr "Zu Liste hinzufügen"
+
+#~ msgid "Save pic"
+#~ msgstr "Bild speichern"
 
 #, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
+#~ msgid ""
+#~ "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
+#~ msgstr ""
+#~ "IP-Adresse von %(user)s ist %(ip)s, Name %(host)s, Port %(port)i, "
+#~ "%(country)s"
+
+#~ msgid "Checking for changes"
+#~ msgstr "Suche nach Änderungen"
 
 #, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
+#~ msgid "Scanning %s"
+#~ msgstr "Durchsuche %s"
+
+#~ msgid "Building DataBase"
+#~ msgstr "Baue Datenbank"
+
+#~ msgid "Building Index"
+#~ msgstr "Baue Index"
 
 #, python-format
-msgid "%d Bytes"
-msgstr ""
+#~ msgid ""
+#~ "You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
+#~ "connections for your protection. If you get this message often you should "
+#~ "search for less generic terms, or increase your per-process file "
+#~ "descriptor limit."
+#~ msgstr ""
+#~ "Du hast gerade deine Verbindungsgrenze von %(limit)s erreicht. Nicotine+ "
+#~ "wird nun anfangen, zu deiner Sicherheit Verbindungen fallenzulassen. Wenn "
+#~ "du diese Meldung öfter erhältst, sollest du deine Suchanfragen weniger "
+#~ "allgemein gestalten oder deine File-Descriptor-Grenze pro Prozess erhöhen."
 
 #, python-format
-msgid "%.2f GB/s"
-msgstr ""
+#~ msgid "Failed download: user %(user)s, file %(file)s"
+#~ msgstr "Download fehlgeschlagen: Benutzer %(user)s, Datei %(file)s"
+
+#~ msgid "Nicotine+ :: directory completed"
+#~ msgstr "Nicotine+: Verzeichnis-Download abgeschlossen"
 
 #, python-format
-msgid "%.2f MB/s"
-msgstr ""
+#~ msgid "Retrying failed download: %(user)s, file %(file)s"
+#~ msgstr ""
+#~ "Wiederhole fehlgeschlagenen Download: Benutzer %(user)s, Datei %(file)s"
+
+#~ msgid "room"
+#~ msgstr "Raum"
+
+#~ msgid "Reattach a chat window to the notebook"
+#~ msgstr "Einen Chat-Tab wieder einklinken"
+
+#~ msgid "Detach a chat tab from the notebook"
+#~ msgstr "Einen Chat-Tab ausklinken"
+
+#~ msgid "user"
+#~ msgstr "Benutzer"
+
+#~ msgid "command"
+#~ msgstr "Befehl"
+
+#~ msgid "definition"
+#~ msgstr "Definition"
+
+#~ msgid "process"
+#~ msgstr "Prozess"
+
+#~ msgid "Add a new alias that runs a process"
+#~ msgstr "Einen neuen Alias hinzufügen, der einen Prozess ausführt"
+
+#~ msgid "query"
+#~ msgstr "Suchanfrage"
+
+#~ msgid "Enable Private Rooms"
+#~ msgstr "Private Räume aktivieren"
+
+#~ msgid "Disable Private Rooms"
+#~ msgstr "Private Räume deaktivieren"
+
+#~ msgid "Set ticker message"
+#~ msgstr "Ticker-Nachricht setzen"
+
+#~ msgid "Set room ticker message:"
+#~ msgstr "Ticker-Nachricht für diesen Raum setzen:"
+
+#~ msgid "Just this time"
+#~ msgstr "Nur dieses Mal"
+
+#~ msgid "Always for this channel"
+#~ msgstr "Immer für diesen Raum"
+
+#~ msgid "Default for all channels"
+#~ msgstr "Standard für alle Räume"
 
 #, python-format
-msgid "%.2f KB/s"
-msgstr ""
+#~ msgid "Nicotine+ Chatroom: %s"
+#~ msgstr "Nicotine+ Chat-Raum: %s"
 
 #, python-format
-msgid "%d B/s"
-msgstr ""
+#~ msgid "%i people in room"
+#~ msgstr "%i Leute im Raum"
+
+#~ msgid "You are alone"
+#~ msgstr "Du bist allein."
+
+#~ msgid "Detach this tab"
+#~ msgstr "Diesen Tab ausklinken"
+
+#~ msgid "Clear Queued Transfers"
+#~ msgstr "Entferne Wartende"
+
+#~ msgid "Nicotine+: Get User Info"
+#~ msgstr "Nicotine+: Benutzerinfo abrufen"
+
+#~ msgid "Add thing I like"
+#~ msgstr "Etwas hinzufügen, das ich mag"
+
+#~ msgid "Add thing I don't like"
+#~ msgstr "Etwas hinzufügen, das ich nicht mag"
+
+#~ msgid "I don't like"
+#~ msgstr "Ich mag nicht"
+
+#, python-format
+#~ msgid ""
+#~ "%(myusername)s, the user, %(username)s has mentioned your name in the "
+#~ "room, %(place)s."
+#~ msgstr ""
+#~ "%(myusername)s, der Benutzer %(username)s hat dich im Raum „%(place)s“ "
+#~ "erwähnt."
+
+#~ msgid "Nicotine+ Wishlist"
+#~ msgstr "Nicotine+-Wunschliste"
+
+#~ msgid "Add Wish..."
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Wish:"
+#~ msgstr "Wunsch:"
+
+#~ msgid "Number"
+#~ msgstr "Nummer"
+
+#~ msgid "Download containing _folder(s)"
+#~ msgstr "Mit Verzeichnis(sen) herunterladen"
+
+#~ msgid "Download containing f_older(s) to..."
+#~ msgstr "Mit Verzeichnis(sen) herunterladen nach ..."
+
+#~ msgid "Auto-Replace"
+#~ msgstr "Auto-Ersetzen"
+
+#, python-format
+#~ msgid "%.2f GB"
+#~ msgstr "%.2f GB"
+
+#, python-format
+#~ msgid "%.2f MB"
+#~ msgstr "%.2f MB"
+
+#, python-format
+#~ msgid "%.2f KB"
+#~ msgstr "%.2f KB"

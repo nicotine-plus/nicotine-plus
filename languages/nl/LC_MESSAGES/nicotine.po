@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-11 07:35+0300\n"
+"POT-Creation-Date: 2020-08-11 17:37+0300\n"
 "PO-Revision-Date: 2009-06-11 22:48+0200\n"
 "Last-Translator: Kenny Verstraete <verstraete_kenny@skynet.be>\n"
 "Language-Team: Dutch <>\n"
@@ -31,6 +31,9 @@ msgid ""
 msgstr ""
 
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
+msgstr ""
+
+msgid "Cannot find pytaglib, please install it."
 msgstr ""
 
 msgid ""
@@ -79,35 +82,32 @@ msgstr "Vriendenlijst"
 msgid "Add Buddy: "
 msgstr "Vriend toevoegen: "
 
+msgid "Add"
+msgstr "Toevoegen"
+
 msgid "Configure banned users"
 msgstr ""
 
 msgid "Chat Room"
 msgstr ""
 
-msgid "Hide/Show Status log"
-msgstr "Verberg/Toon statuslog"
-
-msgid "Hide/Show User list"
-msgstr "Verberg/Toon gebruikerslijst"
+msgid "Log"
+msgstr "Logboek"
 
 msgid "Toggle Text-To-Speech"
 msgstr "Status van Tekst-Naar-Spraak omschakelen"
 
+msgid "Room wall"
+msgstr ""
+
 msgid "Chat room command help"
 msgstr "Chatkamer commando's help"
 
-msgid "0 people in room"
-msgstr "0 mensen in kamer"
+msgid "User List"
+msgstr ""
 
-msgid "Log"
-msgstr "Logboek"
-
-msgid "Auto-join"
-msgstr "Automatisch betreden"
-
-msgid "Leave"
-msgstr "Verlaten"
+msgid "Auto-join Room"
+msgstr ""
 
 msgid "<b>Welcome to Nicotine+!</b>"
 msgstr ""
@@ -118,9 +118,11 @@ msgid ""
 msgstr ""
 
 msgid ""
-"To create a new user just fill in the username and password you want.\n"
+"To create a new user, fill in the username and password you want. If you "
+"already have an account at the server, fill in those details.\n"
 "\n"
-"If you already have an account at the server fill in those details."
+"Please keep in mind that more common usernames may be taken. If you're "
+"unable to connect later, change your username in the settings."
 msgstr ""
 
 msgid "Username"
@@ -144,7 +146,9 @@ msgstr ""
 msgid "The page says my port is closed"
 msgstr ""
 
-msgid "Use UPnP to map the port on my router"
+msgid ""
+"Only select \"The page says my port is closed\" if all attempts at opening "
+"the port were unsuccessful. This can happen if your ISP blocks ports."
 msgstr ""
 
 msgid "Use the first available port in the range from "
@@ -158,9 +162,6 @@ msgstr ""
 
 msgid "Share the following directories:"
 msgstr ""
-
-msgid "Add"
-msgstr "Toevoegen"
 
 msgid "Remove"
 msgstr "Verwijderen"
@@ -238,12 +239,6 @@ msgstr "Toon debug-informatie"
 msgid "Show _room list"
 msgstr ""
 
-msgid "Show _tickers"
-msgstr ""
-
-msgid "Show _chat room log and list toggles"
-msgstr ""
-
 msgid "Show _flag columns in user lists"
 msgstr ""
 
@@ -269,12 +264,6 @@ msgid "_Rescan Public shares"
 msgstr ""
 
 msgid "Rescan B_uddy shares"
-msgstr ""
-
-msgid "Re_build Public shares"
-msgstr ""
-
-msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
 msgid "_Browse Public shares"
@@ -316,12 +305,6 @@ msgstr "Vrienden_lijst"
 msgid "_Help"
 msgstr ""
 
-msgid "Project _Website"
-msgstr ""
-
-msgid "Project _Github Page"
-msgstr ""
-
 msgid "About _chat room commands"
 msgstr "_Commando's in chatkamer"
 
@@ -331,8 +314,8 @@ msgstr "Commando's in _privégesprek"
 msgid "About _search filters"
 msgstr "Over filter_s"
 
-msgid "Check _latest"
-msgstr "Controleer op _laatste versie"
+msgid "Check _latest version"
+msgstr ""
 
 msgid "Report a _bug"
 msgstr "Rapporteer een _bug"
@@ -340,8 +323,11 @@ msgstr "Rapporteer een _bug"
 msgid "About _Nicotine+"
 msgstr ""
 
-msgid "Start Message"
-msgstr "Start gesprek"
+msgid "User:"
+msgstr "Gebruiker:"
+
+msgid "Start Messaging"
+msgstr ""
 
 msgid "Configure logging"
 msgstr ""
@@ -355,14 +341,11 @@ msgstr "Bestanden: 0"
 msgid "Expand / Collapse all"
 msgstr "Alles invouwen/ uitvouwen"
 
-msgid "Group by Users"
-msgstr "Groepeer volgens gebruikers"
+msgid "Autoclear finished / filtered"
+msgstr ""
 
-msgid "Auto-retry failed"
-msgstr "Automatisch opnieuw proberen mislukt"
-
-msgid "Every 3 minutes"
-msgstr "Elke 3 minuten"
+msgid "File grouping mode"
+msgstr ""
 
 msgid "Configure downloads"
 msgstr ""
@@ -379,14 +362,14 @@ msgstr "Opnieuw proberen"
 msgid "Abort"
 msgstr "Afbreken"
 
-msgid "Abort & Delete"
-msgstr "Afbreken & Verwijderen"
+msgid "Delete"
+msgstr ""
 
 msgid "Ban User(s)"
 msgstr "Verban gebruiker(s)"
 
-msgid "Autoclear Finished"
-msgstr "Voltooide overdrachten Automatisch Wissen"
+msgid "Autoclear finished / aborted"
+msgstr ""
 
 msgid "Configure uploads"
 msgstr ""
@@ -394,10 +377,10 @@ msgstr ""
 msgid "Clear Finished / Failed"
 msgstr ""
 
-msgid "Abort User's Upload(s)"
-msgstr "Upload(s) van gebruiker afbreken"
+msgid "Abort User's Uploads"
+msgstr ""
 
-msgid "Wishlist"
+msgid "Search scope"
 msgstr ""
 
 msgid "Search patterns: with a word = term, without a word = -term"
@@ -409,14 +392,14 @@ msgstr "Wis alle zoekpogingen"
 msgid "Search"
 msgstr "Zoeken"
 
-msgid "Search scope"
+msgid "Wishlist"
 msgstr ""
 
 msgid "Configure searches"
 msgstr ""
 
-msgid "Get Userinfo"
-msgstr "Vraag gebruikersinfo op"
+msgid "Show Info"
+msgstr ""
 
 msgid "Configure user info"
 msgstr ""
@@ -424,23 +407,32 @@ msgstr ""
 msgid "Browse Shares"
 msgstr "Verken gedeelde bestanden"
 
-msgid "Load From Disk"
-msgstr "Laden van schijf"
+msgid "Load from Disk"
+msgstr ""
 
 msgid "Configure shares"
 msgstr ""
 
-msgid "Similar users"
-msgstr "Gelijkaardige gebruikers"
+msgid "Your interests"
+msgstr ""
 
 msgid "Recommendations"
 msgstr "Aanbevelingen"
 
-msgid "Global recommendations"
-msgstr "Globale aanbevelingen"
+msgid "Personal"
+msgstr ""
+
+msgid "Global"
+msgstr "Globaal"
 
 msgid "Unrecommendations"
 msgstr "Niet-Aanbevolen"
+
+msgid "Similar users"
+msgstr "Gelijkaardige gebruikers"
+
+msgid "Show Similar Users"
+msgstr ""
 
 msgid "Debug output:"
 msgstr "Debug uitvoer:"
@@ -469,8 +461,8 @@ msgstr "Gedeelde bestanden voor vrienden aan het scannen"
 msgid "Scanning Shares"
 msgstr "Gedeelde bestanden aan het scannen"
 
-msgid "Nicotine+: Configure Now Playing"
-msgstr "Nicotine+: Configureer 'Nu aan het afspelen'"
+msgid "Configure Now Playing"
+msgstr ""
 
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr ""
@@ -519,14 +511,23 @@ msgstr "Samenstelling:"
 msgid "Example:"
 msgstr "Voorbeeld:"
 
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Execute"
+msgstr ""
+
 msgid "Test the configuration"
 msgstr ""
+
+msgid "OK"
+msgstr "Ok"
 
 msgid "PrivateChat"
 msgstr "Privégesprek"
 
-msgid "Direct"
-msgstr "Direct"
+msgid "Direct Message"
+msgstr ""
 
 msgid ""
 "Send the private message directly to the user (not supported on most clients)"
@@ -534,26 +535,31 @@ msgstr ""
 "Stuur het privé-bericht direct naar de andere gebruiker (niet ondersteund op "
 "de meeste clients)"
 
-msgid "Close"
-msgstr "Sluiten"
+msgid "Private chat command help"
+msgstr ""
 
 msgid "Room List"
 msgstr ""
 
-msgid "Chatrooms"
+msgid "Chat Rooms"
+msgstr "Chatkamers"
+
+msgid "Refresh room list"
 msgstr ""
 
-msgid "Create: "
-msgstr "Creëer: "
+msgid "Accept private room invitations"
+msgstr ""
 
-msgid "Hide room list"
-msgstr "Verberg kamerlijst"
+msgid "Room Wall"
+msgstr ""
 
-msgid "Search: "
-msgstr "Zoeken: "
+msgid ""
+"The room wall feature allows users in a room to specify a unique message to "
+"display to others."
+msgstr ""
 
-msgid "Query"
-msgstr "Zoekopdracht"
+msgid "Set Message"
+msgstr ""
 
 msgid "Results: 0/0"
 msgstr ""
@@ -573,6 +579,9 @@ msgstr ""
 "en zal nieuwe verzoeken sturen op server-ingestelde intervals (gewoonlijk "
 "rond 1 uur)"
 
+msgid "Result grouping mode"
+msgstr ""
+
 msgid "Clear all results"
 msgstr "Wis alle resultaten"
 
@@ -581,10 +590,6 @@ msgstr "Nieuwe zoekresultaten niet meer weergeven"
 
 msgid "Ignore"
 msgstr "Negeer"
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-"Zoek-tab sluiten; druk op negeren om te voorkomen dat deze tab heropent"
 
 msgid "Filter in:"
 msgstr "Filter inkomend:"
@@ -604,873 +609,11 @@ msgstr "Land:"
 msgid "Free slot"
 msgstr "Vrij slot"
 
-msgid ""
-"Enable automatic replacement of chat words you've\n"
-"typed incorrectly or as an acronym"
+msgid "Search filter help"
 msgstr ""
-"Automatisch vervangen van chatwoorden die u\n"
-"verkeerd hebt getypt (of als afkorting hebt getypt) inschakelen"
-
-msgid "Add..."
-msgstr "Toevoegen..."
-
-msgid "Clear"
-msgstr "Wis"
-
-msgid "Load Defaults"
-msgstr "Standaardwaarden laden"
-
-msgid "Auto-Replace List"
-msgstr "Auto-vervang lijst"
-
-msgid "Away"
-msgstr "Afwezig"
-
-msgid "Toggle away after "
-msgstr "Zet status op afwezig na "
-
-msgid " minutes of inactivity"
-msgstr " minuten zonder activiteit"
-
-msgid "Auto-reply when away:  "
-msgstr "Automatisch antwoord bij afwezigheid:  "
-
-msgid "Away mode"
-msgstr "Afwezigheid"
-
-msgid "Ban"
-msgstr "Verbannen"
-
-msgid "Banned Users:"
-msgstr "Verbannen gebruikers:"
-
-msgid "Blocked IP Addresses:"
-msgstr "Geblokkeerde IP adressen:"
-
-msgid "Use custom ban message:"
-msgstr "Gebruik een aangepast verban bericht:"
-
-msgid "Banning"
-msgstr "Verbannen"
-
-msgid "Bloat"
-msgstr "Opgeblazen"
-
-msgid "Enable spell checker (requires a restart)"
-msgstr "Spellingscontrole inschakelen (vereist een herstart)"
-
-msgid "Show Buttons in Transfers Tabs"
-msgstr "Toon knoppen in overdracht-tabs"
-
-msgid "Chat Font:"
-msgstr "Chatkamer-lettertype:"
-
-msgid "List Font:"
-msgstr "Lijst-lettertype:"
-
-msgid "Transfers Font:"
-msgstr "Overdrachten-lettertype:"
-
-msgid "Search Font:"
-msgstr "Zoeken-lettertype:"
-
-msgid "Browse Font:"
-msgstr "Verkennen-lettertype:"
-
-msgid "Decimal separator:"
-msgstr "Decimale scheidingsteken:"
-
-msgid "Extra stuff for your comfort"
-msgstr "Extra's voor uw comfort"
-
-msgid "Enable Censorship"
-msgstr "Censuur inschakelen"
-
-msgid ""
-"Add spaces around words if you don't wish to match strings inside words (may "
-"fail at beginning and end of lines)"
-msgstr ""
-
-msgid "Replace censored letters with:"
-msgstr "Vervang gecensureerde letters door:"
-
-msgid "Censor List"
-msgstr "Censuurlijst"
-
-msgid "Chat"
-msgstr "Chat"
-
-msgid "Choose <b>Away mode</b> to configure your auto-away settings."
-msgstr ""
-
-msgid ""
-"Choose <b>Logging</b> to configure what's logged and where to save the logs."
-msgstr ""
-"Kies <b>Logboek</> om te bepalen wat er in het logboek komt en waar het "
-"opgeslagen wordt."
-
-msgid ""
-"Choose <b>Ignore List</b> to configure users and/or IPs you want to ignore."
-msgstr ""
-
-msgid ""
-"Choose <b>Censor List</b> to configure what unwanted words you want to "
-"censor."
-msgstr ""
-
-msgid ""
-"Choose <b>Auto-Replace</b> to configure auto-replacement of words (such as "
-"common typos)."
-msgstr ""
-
-msgid ""
-"Choose <b>URL Catching</b> to configure the programs used when clicking on "
-"links."
-msgstr ""
-"Kies 'URL afvanger' om te kiezen welke programma's worden gebruikt wanneer "
-"er geklikt wordt op links."
-
-msgid "Choose <b>Completion</b> to configure auto-completion in chats."
-msgstr ""
-
-msgid "Chat Settings"
-msgstr "Chat Instellingen"
-
-msgid "Colors"
-msgstr ""
-
-msgid "Default Colors"
-msgstr ""
-
-msgid "URL Link text"
-msgstr "URL linktekst"
-
-msgid "Default"
-msgstr "Standaard"
-
-msgid "Username Font Style:"
-msgstr "Gebruikersnaam-lettertype:"
-
-msgid "Offline"
-msgstr "Afgemeld"
-
-msgid "Online"
-msgstr "Online"
-
-msgid "Username Colors and Hotspots"
-msgstr ""
-
-msgid "Display away colors"
-msgstr "Toon afwezig kleuren"
-
-msgid "Highlight text"
-msgstr "Gemarkeerde tekst"
-
-msgid "/me text"
-msgstr "/me tekst"
-
-msgid "Local text"
-msgstr "Eigen tekst"
-
-msgid "Remote text"
-msgstr "Tekst partner"
-
-msgid "<b>Chat colors</b>"
-msgstr ""
-
-msgid "Input Text"
-msgstr "Invoertekst"
-
-msgid "Background"
-msgstr "Achtergrond"
-
-msgid "Input and lists colors"
-msgstr ""
-
-msgid "Offline Search"
-msgstr "Offline zoekopdracht"
-
-msgid "With queue"
-msgstr "Met wachtrij"
-
-msgid "List Text"
-msgstr "Lijsttekst"
-
-msgid "<b>List and search colors</b>"
-msgstr ""
-
-msgid "Notebook tab labels change to these colors."
-msgstr ""
-
-msgid "Changed"
-msgstr "Gewijzigd"
-
-msgid "Highlight"
-msgstr "Markeren"
-
-msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid "Text Completion"
-msgstr "Tekstaanvulling"
-
-msgid "Enable tab-key completion"
-msgstr "Tab-toets aanvulling inschakelen"
-
-msgid "Cycle completions instead of showing a dropdown"
-msgstr "Doorloop aanvullingen in plaats van een drop-down lijst te tonen"
-
-msgid "Complete room names in chat rooms"
-msgstr "Namen van kamers in chatkamers aanvullen"
-
-msgid "Complete Buddy Names"
-msgstr "Namen van vrienden aanvullen"
-
-msgid "Complete usernames in chat rooms"
-msgstr "Gebruikersnamen in chatkamers aanvullen"
-
-msgid "Complete built-in /Commands"
-msgstr "Ingebouwde /commando's aanvullen"
-
-msgid "Complete alias /Commands"
-msgstr "Alias /commando's aanvullen"
-
-msgid "Allowed Completions"
-msgstr "Toegestane aanvullingen"
-
-msgid "Enable completion drop-down list"
-msgstr "Drop-down lijst bij aanvullen inschakelen"
-
-msgid "Minimum characters required to display drop-down:"
-msgstr "Minimum aantal karakters vereist alvorens drop-down lijst te tonen:"
-
-msgid "Hide drop-down when only one matches"
-msgstr "Verberg drop-down lijst wanneer er maar één passende term is"
-
-msgid "Drop-down list"
-msgstr "drop-down lijst"
-
-msgid "Chat text completion"
-msgstr "Chattekst aanvulling"
-
-msgid "Shares"
-msgstr "Gedeelde mappen"
-
-msgid "Incomplete file directory:"
-msgstr "Map voor onvoltooide bestanden:"
-
-msgid "Download directory:"
-msgstr "Map voor voltooide bestanden:"
-
-msgid "Share download directory"
-msgstr "De map met voltooide downloads delen"
-
-msgid "Limit total download speeds to (KBytes/sec):"
-msgstr ""
-
-msgid "Where incomplete downloads are stored temporarily"
-msgstr "Waar onvolledige downloads tijdelijk worden opgeslagen"
-
-msgid "Select a directory"
-msgstr ""
-
-msgid "<b>Directories</b>"
-msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr "<b>Download deze bestandstypen niet:</b>"
-
-msgid "Enable Filters"
-msgstr "Filters inschakelen"
-
-msgid ""
-"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
-"are supported if escaping is disabled. For simple filters, keep escaping "
-"enabled."
-msgstr ""
-"<b>Syntaxis:</b> Letters zijn hoofdletter ongevoelig. Alle reguliere "
-"expressies van Python zijn ondersteund als ontsnappen is uitgeschakeld. Hou "
-"ontsnappen ingeschakeld voor simpele filters."
-
-msgid "Verify Filters"
-msgstr "Controleer filters"
-
-msgid "<b>Unverified</b>"
-msgstr "<b>Niet gecontroleerd</b>"
-
-msgid "Edit Filter"
-msgstr "Filter bewerken"
-
-msgid "<b>Download Filters:</b>"
-msgstr "<b>Download Filters:</b>"
-
-msgid "Downloads"
-msgstr "Downloads"
-
-msgid "Events"
-msgstr "Gebeurtenissen"
-
-msgid "Show notification popup in tray after..."
-msgstr "Toon notificatie popup in systeemvak na..."
-
-msgid "...each file"
-msgstr "elk bestand"
-
-msgid "...each directory"
-msgstr "elke map"
-
-msgid "Run command after download finishes ($ for filename):"
-msgstr "Voer commando uit na voltooiing download(s) ($ voor bestandsnaam):"
-
-msgid "Run command after folder finishes ($ for folder path):"
-msgstr "Voer commando uit na voltooiing map(pen) ($ voor pad):"
-
-msgid "File Manager command ($ for folder path):"
-msgstr "Commando voor bestandsbeheerder ($ voor pad):"
-
-msgid "Double-clicking on..."
-msgstr "Dubbelklikken op..."
-
-msgid "Download transfers"
-msgstr "Download-overdrachten - Actie:"
-
-msgid "Upload transfers"
-msgstr "Upload-overdrachten - Actie:"
-
-msgid "Nothing"
-msgstr ""
-
-msgid "Send to player"
-msgstr ""
-
-msgid "Open Directory"
-msgstr "Map Openen"
-
-msgid "GeoBlock"
-msgstr "GeoBlock"
-
-msgid "Enable geographical blocker"
-msgstr "Geografische blokkeerder inschakelen"
-
-msgid "Geographical paranoia (block unresolvable IPs)"
-msgstr "Geografische paranoia (blokkeer onoplosbare IP's)"
-
-msgid "Country codes to block (comma separated):"
-msgstr "Landcodes die geblokkeerd moeten worden (kommagescheiden):"
-
-msgid ""
-"Geo Block controls from which countries users are allowed access to your "
-"shares."
-msgstr ""
-
-msgid "Geographical Blocking"
-msgstr "Geografisch Blokkeren"
-
-msgid "Icons"
-msgstr "Iconen"
-
-msgid "Display Tray Icon"
-msgstr "Toon icoon in systeemvak"
-
-msgid "Show confirmation dialog when closing the main window"
-msgstr "Toon bevestigingsdialoog bij afsluiten van het hoofdvenster"
-
-msgid "Always send Nicotine+ to tray when main window is closed"
-msgstr ""
-
-msgid "Always quit when main window is closed"
-msgstr "Nicotine+ altijd afsluiten wanneer het hoofdvenster wordt gesloten"
-
-msgid "Icon Theme Directory (requires restart):"
-msgstr "Map iconenthema (vereist herstart):"
-
-msgid "Current Icons:"
-msgstr "Huidige iconen:"
-
-msgid "<b>Status</b>"
-msgstr "<b>Status</b>"
-
-msgid "Online:"
-msgstr "Online:"
-
-msgid "Away:"
-msgstr "Afwezig:"
-
-msgid "Offline:"
-msgstr "Afgemeld:"
-
-msgid "Nick Hilite:"
-msgstr ""
-
-msgid "Hilite:"
-msgstr "Markeer:"
-
-msgid "Disconnected:"
-msgstr "Verbinding verbroken:"
-
-msgid "Connected:"
-msgstr "Verbonden:"
-
-msgid "<b>Trayicon</b>"
-msgstr "<b>Systeemvakpictogram</b>"
-
-msgid "Notify:"
-msgstr "melding geven:"
-
-msgid "Window:"
-msgstr "Venster:"
-
-msgid "Tray & Icons"
-msgstr "Systeemvak & Iconen"
-
-msgid "Ignored users:"
-msgstr "Genegeerde gebruikers:"
-
-msgid "Ignored IPs:"
-msgstr "Genegeerde IP's:"
-
-msgid "Ignoring"
-msgstr "Negeren"
-
-msgid "Logs directory:"
-msgstr "Map voor logboek:"
-
-msgid "Chatroom Logs directory:"
-msgstr "Map voor logboek van chatkamergesprekken:"
-
-msgid "Private Chat Logs directory:"
-msgstr "Map voor logboek van privé-gesprekken:"
-
-msgid "Log chatrooms by default"
-msgstr "Sla chatkamergesprekken standaard op in logboek"
-
-msgid "Log private chat by default"
-msgstr "Sla privé-gesprekken standaard op in logboek"
-
-msgid "Log transfers"
-msgstr "Sla overdrachten op in logboek"
-
-msgid "Display logged chat room messages when a room is rejoined"
-msgstr ""
-"Toon chatkamergesprekken die gelogd zijn wanneer een kamer opnieuw betreden "
-"wordt"
-
-msgid "Read"
-msgstr "Lezen"
-
-msgid "lines"
-msgstr "lijnen"
-
-msgid "Reopen last Private Chat messages"
-msgstr "Heropen laatste privé-gesprekken"
-
-msgid "<b>Timestamps</b>"
-msgstr "<b>Tijdstempels</b>"
-
-msgid "Display timestamps"
-msgstr "Toon tijdstempels"
-
-msgid "Log file format:"
-msgstr "Formaat van Logbestand:"
-
-msgid "Chat room format:"
-msgstr "Formaat van chatkamers"
-
-msgid "Private chat format:"
-msgstr "Formaat van Privé-gesprek:"
-
-msgid "Logging"
-msgstr "Loggen "
-
-msgid "Misc"
-msgstr "Diversen"
-
-msgid "Choose <b>Plugins</b> to activate additional plugins (experimental)."
-msgstr ""
-
-msgid ""
-"Choose <b>Sounds</b> to configure sounds notifications and Text-to-Speech."
-msgstr ""
-
-msgid ""
-"Choose <b>Searches</b> to configure search settings and to set default "
-"search filters."
-msgstr ""
-
-msgid "Choose <b>User info</b> to add text and an image to your personal info."
-msgstr ""
-
-msgid "Miscellaneous Settings"
-msgstr "Diverse instellingen"
-
-msgid "Notebooks"
-msgstr "Notebooks"
-
-msgid "Select previous tab on startup"
-msgstr ""
-
-msgid "Close-buttons on tabs"
-msgstr "Sluitknoppen op tabs"
-
-msgid "Notification icons on tabs"
-msgstr "Notificatie iconen op tabs"
-
-msgid "Tabs can be repositioned"
-msgstr "Tabs kunnen verplaatst worden"
-
-msgid "Notification changes the tab's text color"
-msgstr "Notificatie veranderd de tekstkleur van de tab"
-
-msgid "Show user status icons instead of status text"
-msgstr ""
-
-msgid "Main"
-msgstr "hoofdvenster"
-
-msgid "Label Angle:"
-msgstr "Labelhoek:"
-
-msgid "Chat rooms"
-msgstr "Chatkamers"
-
-msgid "Private chat"
-msgstr "Privé-gesprek"
-
-msgid "User info"
-msgstr "Gebruikers-info"
-
-msgid "User browse"
-msgstr "Gebruiker verkennen"
-
-msgid "Notebook Tabs"
-msgstr "Notebook Tabs"
-
-msgid "UrlCatch"
-msgstr "URL afvanger"
-
-msgid "Enable Plugins"
-msgstr ""
-
-msgid "Version: "
-msgstr ""
-
-msgid "Author(s): "
-msgstr ""
-
-msgid "Description: "
-msgstr ""
-
-msgid "<b>No Plugin Selected</b>"
-msgstr ""
-
-msgid "Properties"
-msgstr ""
-
-msgid "Plugin Manager"
-msgstr ""
-
-# , python-format
-msgid "Nicotine+ - Plugin Properties"
-msgstr ""
-
-msgid "Plugin"
-msgstr ""
-
-msgid "Enable sending search results to other users"
-msgstr "Schakel het sturen van zoekresultaten naar andere gebruikers in"
-
-msgid "Send out a max of"
-msgstr "Stuur een maximum uit van"
-
-msgid "results per search request"
-msgstr "resultaten per verzoek"
-
-msgid "Toggle responding to distributed searches every"
-msgstr "Wissel om van beantwoorde naar uitgestuurde zoekopdrachten iedere"
-
-msgid "seconds"
-msgstr "seconden"
-
-msgid "Network Searches:"
-msgstr "Netwerk Zoekopdrachten:"
-
-msgid "Your Searches:"
-msgstr "Uw Zoekopdrachten:"
-
-msgid "Use regular expressions for filter in & out"
-msgstr "Gebruik reguliere expressies voor inkomende & uitgaande filters"
-
-msgid "Enable filters by default"
-msgstr "Filters standaard inschakelen"
-
-msgid ""
-"Reopen closed search tabs that haven't been ignored\n"
-"when new results come in"
-msgstr ""
-"Heropen gesloten zoek-tabs die niet werden genegeerd\n"
-"wanneer er nieuwe resultaten binnenkomen"
-
-msgid "Max visible results per search:"
-msgstr "Maximum zichtbare resultaten per zoekopdracht:"
-
-msgid "Max stored results per search:"
-msgstr "Maximum opgeslagen resultaten per zoekopdracht:"
-
-msgid "Searches"
-msgstr "Zoekopdrachten"
-
-msgid "Server Settings"
-msgstr "Server Instellingen"
-
-msgid "Login:"
-msgstr "Gebruiker:"
-
-msgid "Password:"
-msgstr "Wachtwoord:"
-
-msgid "Change password"
-msgstr "Wachtwoord veranderen"
-
-# Zinsdelen omgekeerd voor een grammaticaal correcter resultaat in het Nederlands.
-msgid ""
-"For a new account\n"
-" enter desired details"
-msgstr ""
-
-msgid "Your IP address has not been retrieved from the server"
-msgstr "Uw IP adres is niet opgehaald van de server"
-
-msgid "Use the first available listening port from the following range:"
-msgstr "Gebruik de eerste poort die beschikbaar is uit het volgende bereik:"
-
-msgid "Client port is not set"
-msgstr "Client poort is niet ingesteld"
-
-msgid "Check port status"
-msgstr ""
-
-msgid "Use the above ports to configure your router or firewall."
-msgstr ""
-"Gebruik de bovenstaande poorten om je router of firewall in te stellen."
-
-msgid ""
-"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
-"bindings)"
-msgstr ""
-
-msgid ""
-"If you wish to use UPnP to fix portmapping on your router please install "
-"MiniUPnP client binary or the MiniUPnP client module for Python."
-msgstr ""
-
-msgid "I can receive direct connections"
-msgstr "Ik kan directe verbindingen ontvangen"
-
-msgid "(only use if the above ports are remotely accessible)"
-msgstr "(alleen gebruiken als de bovenstaande verbindingspoorten open zijn)"
-
-msgid "Enable CTCP-like PM responses (Client Version)"
-msgstr "Maak CTCP (Cliënt-To-Cliënt Protocol) privéberichten mogelijk"
-
-msgid "Server"
-msgstr "Server"
-
-msgid "Rescan shares on startup"
-msgstr "Herlees gedeelde bestanden bij opstarten"
-
-msgid "<b>Public Shares</b>"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Enable Buddy-Only shares"
-msgstr "Alleen voor vrienden gedeelde mappen inschakelen"
-
-# ?
-msgid ""
-"If buddy shares are enabled, they will be shared. Otherwise normal shares "
-"will be used."
-msgstr ""
-"Als je bepaalde mappen alleen met vrienden deelt, zullen deze worden "
-"gedeeld. Anders worden de normale gedeelde mappen gebruikt."
-
-msgid "Share only to buddies"
-msgstr ""
-
-msgid "<b>Buddies-Only Shares</b>"
-msgstr ""
-
-msgid "Sounds"
-msgstr "Geluiden"
-
-msgid "Enable Sound Effects"
-msgstr "Geluiden gebruiken"
-
-msgid "Sound Effects Directory:"
-msgstr "Map met geluiden:"
-
-msgid "Enable Text To Speech"
-msgstr "Tekst-Naar-Spraak inschakelen"
-
-msgid "Text To Speech command:"
-msgstr "Tekst-Naar-Spraak commando:"
-
-msgid "Chat room message:"
-msgstr "Chatkamerbericht:"
-
-msgid "Private chat message:"
-msgstr "Privé-gesprek bericht:"
-
-msgid "Audio Player Command ($ for filename):"
-msgstr "Commando mediaspeler ($ is bestandsnaam):"
-
-msgid "Upload directory:"
-msgstr "Map voor uploads:"
-
-msgid ""
-"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
-msgstr ""
-"Waar de uploads van vrienden zullen worden opgeslagen (met een submap voor "
-"elke vriend)"
-
-msgid "Upload Queue type:"
-msgstr "Type uitgaande wachtrij:"
-
-msgid "Round Robin"
-msgstr "Round Robin"
-
-msgid "Users will be sent one file and then another user will be selected"
-msgstr "Gebruikers krijgen om de beurt elk één bestand"
-
-msgid "First In, First Out"
-msgstr "FIFO (First In, First Out)"
-
-msgid "Files will be sent in the order they were queued"
-msgstr "Bestanden zullen worden verstuurd in de volgorde van de wachtrij"
-
-msgid "Queue Uploads if total transfer speed reaches"
-msgstr "Zet uploads in de wachtrij als de totale overdrachtssnelheid komt op"
-
-msgid "KBytes/sec"
-msgstr "KBytes/sec"
-
-msgid "Limit number of upload slots to"
-msgstr "Aantal upload slots beperken tot"
-
-msgid ""
-"If disabled, slots will automatically be determined by available bandwidth "
-"limitations"
-msgstr ""
-"Indien uitgeschakeld, zal het aantal slots bepaald worden door "
-"beschikbarebandbreedte-beperkingen"
-
-msgid "(NOT RECOMMENDED)"
-msgstr "(NIET AANGERADEN)"
-
-msgid "Limit uploads speed to"
-msgstr "Beperk uitgaande snelheid tot"
-
-msgid "per transfer"
-msgstr "per overdracht"
-
-msgid "total transfers"
-msgstr "voor het totaal aan overdrachten"
-
-msgid "Each user may queue a maximum of"
-msgstr "Een gebruiker mag maximaal"
-
-msgid "Megabytes"
-msgstr "MB in de wachtrij plaatsen"
-
-msgid "Files"
-msgstr "bestanden in de wachtrij plaatsen"
-
-msgid "Queue size limit does not apply to friends"
-msgstr "Wachtrij-beperkingen gelden niet voor vrienden"
-
-msgid "Allow these users to send you files:"
-msgstr "Sta deze gebruikers toe bestanden naar u te sturen:"
-
-msgid ""
-"The users will be able to send you files. These files will be downloaded "
-"into the Buddy Uploads subdirectory in your Download directory"
-msgstr ""
-"Deze gebruikers kunnen u bestanden sturen, welke opgeslagen worden in de "
-"Uploads van vrienden map in je inkomende map."
-
-msgid "<b>Upload Queue:</b>"
-msgstr "<b>Uitgaande wachtrij:</b>"
-
-msgid "Privilege all my friends"
-msgstr "Geef al mijn vrienden privileges"
-
-msgid ""
-"Friends will have higher priority in the queue, the same as globally "
-"privileged users"
-msgstr ""
-"Vrienden hebben voorrang in de wachtrij, net als gebruikers met globale "
-"privileges"
-
-msgid "<b>Privileges:</b>"
-msgstr "<b>Privileges:</b>"
-
-msgid "Lock incoming files (turn off for NFS)"
-msgstr "Inkomende bestanden vergrendelen (uitzetten voor NFS)"
-
-msgid "Download folders in reverse alphanumerical order"
-msgstr "Download mappen in omgekeerde alfanumerieke volgorde"
-
-msgid "Download SFV/MD5 before anything else"
-msgstr "Download eerst SFV/MD5 vooraleer iets anders te downloaden"
-
-msgid "Nicotine+ Settings"
-msgstr ""
-
-msgid "Enable URL catching"
-msgstr "URL afvanger inschakelen"
-
-msgid "Humanize slsk:// urls"
-msgstr "slsk:// urls menselijker maken"
-
-msgid ""
-"Instances of $ will be replaced by the link, add empty handlers to use the "
-"system default web browser.\n"
-"Protocols handlers: "
-msgstr ""
-"$ zal vervangen worden door de link. Voeg lege afhandelaars toe om de "
-"systeemstandaard webbrowser te gebruiken.\n"
-"Protocol afhandelaars: "
-
-msgid "Handler:"
-msgstr "Afhandelaar:"
-
-msgid "Protocol:"
-msgstr "Protocol:"
-
-msgid "URL Catching"
-msgstr "URL afvanger"
-
-msgid "Userinfo"
-msgstr "Gebruikersinfo"
-
-msgid "Self description:"
-msgstr "Beschrijving van jezelf:"
-
-msgid "Image:"
-msgstr "Afbeelding:"
-
-msgid "Select an image"
-msgstr ""
-
-msgid "Personal settings"
-msgstr "Persoonlijke instellingen"
 
 msgid "UserBrowse"
 msgstr "Gebruiker verkennen"
-
-msgid "Search file and folder names (exact match):"
-msgstr "Doorzoek bestanden en mappen (exacte overeenkomst):"
 
 msgid "Dirs: Unknown"
 msgstr "Mappen: onbekend"
@@ -1478,14 +621,20 @@ msgstr "Mappen: onbekend"
 msgid "Shared: Unknown"
 msgstr "Gedeeld: onbekend"
 
-msgid "Save"
-msgstr "Opslaan"
+msgid "Search files and folders (exact match)"
+msgstr ""
 
-msgid "Refresh"
-msgstr "Verversen"
+msgid "Refresh files"
+msgstr ""
+
+msgid "Save file list to disk"
+msgstr ""
 
 msgid "UserInfo"
 msgstr ""
+
+msgid "Self description:"
+msgstr "Beschrijving van jezelf:"
 
 msgid "Information:"
 msgstr "Informatie:"
@@ -1521,17 +670,1006 @@ msgstr "Interesses:"
 msgid "Picture:"
 msgstr "Afbeelding:"
 
-msgid "Browse"
-msgstr "Verken"
+msgid "Send Message"
+msgstr "Verstuur bericht"
 
-msgid "Show IP"
-msgstr "Toon IP"
+msgid "Browse Files"
+msgstr ""
 
-msgid "Add to list"
-msgstr "Toevoegen aan lijst"
+msgid "Show IP Address"
+msgstr ""
 
-msgid "Save pic"
-msgstr "Afbeelding opslaan"
+msgid "Add to Buddy List"
+msgstr ""
+
+msgid "Ban User"
+msgstr ""
+
+msgid "Ignore User"
+msgstr ""
+
+msgid "Save Picture"
+msgstr ""
+
+msgid "Refresh Info"
+msgstr ""
+
+msgid "Search Wishlist"
+msgstr "Verken Wenslijst"
+
+msgid "Add..."
+msgstr "Toevoegen..."
+
+msgid "Select All"
+msgstr ""
+
+msgid "About Nicotine+"
+msgstr ""
+
+msgid ""
+"A graphical client for the Soulseek peer-to-peer system\n"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
+msgstr ""
+
+msgid "About chat room commands"
+msgstr "Over chatkamer commando's"
+
+msgid "/join /j 'room'"
+msgstr ""
+
+msgid "Join room 'room'"
+msgstr "Kamer 'room' betreden"
+
+msgid "/leave /l /part /p 'room'"
+msgstr ""
+
+msgid "Leave room 'room'"
+msgstr "Verlaat kamer 'room'"
+
+msgid "/clear /cl"
+msgstr ""
+
+msgid "Clear the chat window"
+msgstr "Wis het chatvenster"
+
+msgid "/tick /t"
+msgstr ""
+
+msgid "Set your personal ticker"
+msgstr "Persoonlijke klok instellen"
+
+msgid "/tickers"
+msgstr ""
+
+msgid "Show all the tickers"
+msgstr ""
+
+msgid "/me 'message'"
+msgstr ""
+
+msgid "Say something in the third-person"
+msgstr "Zeg iets in de derde-persoon"
+
+msgid "/now"
+msgstr ""
+
+msgid "Display the Now Playing script's output"
+msgstr "Toon wat je mediaspeler nu afspeelt"
+
+msgid "Users"
+msgstr "Gebruikers"
+
+msgid "/add /ad 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your user list"
+msgstr "Voeg gebruiker 'user' toe aan uw vriendenlijst "
+
+msgid "/rem /unbuddy 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your user list"
+msgstr "Verwijder gebruiker 'user' uit uw vriendenlijst"
+
+msgid "/ban 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ban list"
+msgstr "Verban gebruiker 'user'"
+
+msgid "/unban 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ban list"
+msgstr "Hef de verbanning van gebruiker 'user' op"
+
+msgid "/ignore 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ignore list"
+msgstr "Negeer gebruiker 'user'"
+
+msgid "/unignore 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ignore list"
+msgstr "Gebruiker 'user' niet meer negeren"
+
+msgid "/browse /b 'user'"
+msgstr ""
+
+msgid "Browse files of user 'user'"
+msgstr "Blader door de bestanden van gebruiker 'user'"
+
+msgid "/whois /w 'user'"
+msgstr ""
+
+msgid "Request user info for user 'user'"
+msgstr "Gebruikersinfo van gebruiker 'user' opvragen "
+
+msgid "/ip 'user'"
+msgstr ""
+
+msgid "Show IP for user 'user'"
+msgstr "Toon IP van gebruiker 'user'"
+
+msgid "Aliases"
+msgstr "Aliassen"
+
+msgid "/alias /al 'command' 'definition'"
+msgstr ""
+
+msgid "Add a new alias"
+msgstr "Een nieuwe alias toevoegen"
+
+msgid "/unalias /un 'command'"
+msgstr ""
+
+msgid "Remove an alias"
+msgstr "Verwijder een alias"
+
+msgid "/search /s 'query'"
+msgstr ""
+
+msgid "Start a new search for 'query'"
+msgstr "Start nieuwe zoekopdracht naar '...'"
+
+msgid "/rsearch /rs 'query'"
+msgstr ""
+
+msgid "Search the joined rooms for 'query'"
+msgstr "Doorzoek de betreden kamers naar '...'"
+
+msgid "/bsearch /bs '%s'"
+msgstr ""
+
+msgid "Search the buddy list for 'query'"
+msgstr "Doorzoek de vriendenlijst naar '...'"
+
+msgid "/usearch /us 'user' 'query'"
+msgstr ""
+
+msgid "Search a user's shares for 'query'"
+msgstr "Doorzoek de bestanden van een gebruiker naar '...' "
+
+msgid "Private Chat"
+msgstr "Privégesprek"
+
+msgid "/msg 'user' 'message'"
+msgstr ""
+
+msgid "Send message 'message' to user 'user'"
+msgstr "Verstuur bericht 'message' naar gebruiker 'user'"
+
+msgid "/pm 'user'"
+msgstr ""
+
+msgid "Open private chat window for user 'user'"
+msgstr "Start privégesprek met gebruiker 'user'"
+
+msgid "/away /a"
+msgstr ""
+
+msgid "Toggles your away status"
+msgstr "Schakelt de status aanwezig / afwezig om"
+
+msgid "/rescan"
+msgstr ""
+
+msgid "Rescan shares"
+msgstr "Herlees gedeelde bestanden"
+
+msgid "/quit /q /exit"
+msgstr ""
+
+msgid "Quit Nicotine+"
+msgstr ""
+
+msgid "About private chat commands"
+msgstr "Over privégesprek commando's"
+
+msgid "/close /c"
+msgstr ""
+
+msgid "Close the current private chat"
+msgstr "Sluit het huidige privégesprek"
+
+msgid "/toggle 'plugin'"
+msgstr ""
+
+msgid "Toggle plugin on/off state"
+msgstr ""
+
+msgid "About search filters"
+msgstr "Over zoekfilters"
+
+msgid ""
+"You can use this to refine which results are displayed. The full results\n"
+"from the server are always available if you clear all the search terms.\n"
+"\n"
+"You can filter by:\n"
+"\n"
+"- Included text:\n"
+"      Files are shown if they contain this text.\n"
+"      Case is insensitive, but word order is important.\n"
+"      'Spears Brittany' will not show any 'Brittany Spears'\n"
+"\n"
+"- Excluded text:\n"
+"      As above, but files will not be displayed if the text matches\n"
+"\n"
+"- Size:\n"
+"      Shows results based on size. use > and < to find files larger or "
+"smaller.\n"
+"      Files exactly the same as this term will always match.\n"
+"      Use = to specify an exact match. Use k or m to specify kilo or "
+"megabytes.\n"
+"      >10M will find files larger than 10 megabytes.\n"
+"      <4000k will find files smaller than 4000k.\n"
+"\n"
+"- Bitrate:\n"
+"      Find files based on bitrate. Use < and > to find lower or higher.\n"
+"      >192 finds 192 and higher, <192 finds 192 or lower.\n"
+"      =192 only finds 192.\n"
+"      For VBR, the average bitrate is used.\n"
+"\n"
+"- Free slot:\n"
+"      Show only those results from users which have at least\n"
+"      one upload slot free.\n"
+"\n"
+"- To set the filter, press Enter. This will apply to any existing results, "
+"and any more that are returned.\n"
+"- To filter in a different way, just set the relevant terms.\n"
+"- You do not need to do another search to apply a different filter."
+msgstr ""
+
+msgid ""
+"Enable automatic replacement of chat words you've typed incorrectly or as an "
+"acronym"
+msgstr ""
+
+msgid "Clear"
+msgstr "Wis"
+
+msgid "Load Defaults"
+msgstr "Standaardwaarden laden"
+
+msgid "Toggle away after "
+msgstr "Zet status op afwezig na "
+
+msgid " minutes of inactivity"
+msgstr " minuten zonder activiteit"
+
+msgid "Auto-reply when away:  "
+msgstr "Automatisch antwoord bij afwezigheid:  "
+
+msgid "Banned Users:"
+msgstr "Verbannen gebruikers:"
+
+msgid "Blocked IP Addresses:"
+msgstr "Geblokkeerde IP adressen:"
+
+msgid "Use custom ban message:"
+msgstr "Gebruik een aangepast verban bericht:"
+
+msgid "Enable Censorship"
+msgstr "Censuur inschakelen"
+
+msgid ""
+"Add spaces around words if you don't wish to match strings inside words (may "
+"fail at beginning and end of lines)"
+msgstr ""
+
+msgid "Replace censored letters with:"
+msgstr "Vervang gecensureerde letters door:"
+
+msgid "<b>Chat Colors</b>"
+msgstr ""
+
+msgid "URL Link Text"
+msgstr ""
+
+msgid "Default"
+msgstr "Standaard"
+
+msgid "Username Font Style:"
+msgstr "Gebruikersnaam-lettertype:"
+
+msgid "Away"
+msgstr "Afwezig"
+
+msgid "Offline"
+msgstr "Afgemeld"
+
+msgid "Online"
+msgstr "Online"
+
+msgid "Username Colors and Hotspots"
+msgstr ""
+
+msgid "Display away colors"
+msgstr "Toon afwezig kleuren"
+
+msgid "Highlight Text"
+msgstr ""
+
+msgid "/me Text"
+msgstr ""
+
+msgid "Local Text"
+msgstr ""
+
+msgid "Remote Text"
+msgstr ""
+
+msgid "<b>List and Search Colors</b>"
+msgstr ""
+
+msgid "Input Text"
+msgstr "Invoertekst"
+
+msgid "Input Background"
+msgstr ""
+
+msgid "Offline Search"
+msgstr "Offline zoekopdracht"
+
+msgid "With Queue"
+msgstr ""
+
+msgid "List Text"
+msgstr "Lijsttekst"
+
+msgid "Default Colors"
+msgstr ""
+
+msgid "<b>Tab Label Colors</b>"
+msgstr ""
+
+msgid "Changed"
+msgstr "Gewijzigd"
+
+msgid "Highlight"
+msgstr "Markeren"
+
+msgid "<b>General</b>"
+msgstr ""
+
+msgid "Enable spell checker (requires a restart)"
+msgstr "Spellingscontrole inschakelen (vereist een herstart)"
+
+msgid "Enable tab-key completion"
+msgstr "Tab-toets aanvulling inschakelen"
+
+msgid "Cycle completions instead of showing a dropdown"
+msgstr "Doorloop aanvullingen in plaats van een drop-down lijst te tonen"
+
+msgid "<b>Allowed Completions</b>"
+msgstr ""
+
+msgid "Complete room names in chat rooms"
+msgstr "Namen van kamers in chatkamers aanvullen"
+
+msgid "Complete Buddy Names"
+msgstr "Namen van vrienden aanvullen"
+
+msgid "Complete usernames in chat rooms"
+msgstr "Gebruikersnamen in chatkamers aanvullen"
+
+msgid "Complete built-in /Commands"
+msgstr "Ingebouwde /commando's aanvullen"
+
+msgid "Complete alias /Commands"
+msgstr "Alias /commando's aanvullen"
+
+msgid "<b>Drop-down list</b>"
+msgstr ""
+
+msgid "Enable completion drop-down list"
+msgstr "Drop-down lijst bij aanvullen inschakelen"
+
+msgid "Minimum characters required to display drop-down:"
+msgstr "Minimum aantal karakters vereist alvorens drop-down lijst te tonen:"
+
+msgid "Hide drop-down when only one matches"
+msgstr "Verberg drop-down lijst wanneer er maar één passende term is"
+
+msgid "Lock incoming files (turn off for NFS)"
+msgstr "Inkomende bestanden vergrendelen (uitzetten voor NFS)"
+
+msgid "Download folders in reverse alphanumerical order"
+msgstr "Download mappen in omgekeerde alfanumerieke volgorde"
+
+msgid "Download SFV/MD5 before anything else"
+msgstr "Download eerst SFV/MD5 vooraleer iets anders te downloaden"
+
+msgid "Limit total download speeds to (KBytes/sec):"
+msgstr ""
+
+msgid "Allow these users to send you files:"
+msgstr "Sta deze gebruikers toe bestanden naar u te sturen:"
+
+msgid ""
+"The users will be able to send you files. These files will be downloaded "
+"into the Buddy Uploads subdirectory in your Download directory"
+msgstr ""
+"Deze gebruikers kunnen u bestanden sturen, welke opgeslagen worden in de "
+"Uploads van vrienden map in je inkomende map."
+
+msgid "<b>Folders</b>"
+msgstr ""
+
+msgid "Incomplete file folder:"
+msgstr ""
+
+msgid "Download folder:"
+msgstr ""
+
+msgid "Save buddies' uploads to:"
+msgstr ""
+
+msgid "Where buddies' uploads will be stored (with a subfolder for each buddy)"
+msgstr ""
+
+msgid "Select a directory"
+msgstr ""
+
+msgid "Share download folder"
+msgstr ""
+
+msgid "Where incomplete downloads are stored temporarily"
+msgstr "Waar onvolledige downloads tijdelijk worden opgeslagen"
+
+msgid "Select a folder"
+msgstr ""
+
+msgid "<b>Download Filters</b>"
+msgstr ""
+
+msgid "Enable Filters"
+msgstr "Filters inschakelen"
+
+msgid ""
+"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
+"are supported if escaping is disabled. For simple filters, keep escaping "
+"enabled."
+msgstr ""
+"<b>Syntaxis:</b> Letters zijn hoofdletter ongevoelig. Alle reguliere "
+"expressies van Python zijn ondersteund als ontsnappen is uitgeschakeld. Hou "
+"ontsnappen ingeschakeld voor simpele filters."
+
+msgid "Verify Filters"
+msgstr "Controleer filters"
+
+msgid "<b>Unverified</b>"
+msgstr "<b>Niet gecontroleerd</b>"
+
+msgid "Edit Filter"
+msgstr "Filter bewerken"
+
+msgid "<b>Commands</b>"
+msgstr ""
+
+msgid "Run command after download finishes ($ for filename):"
+msgstr "Voer commando uit na voltooiing download(s) ($ voor bestandsnaam):"
+
+msgid "Run command after folder finishes ($ for folder path):"
+msgstr "Voer commando uit na voltooiing map(pen) ($ voor pad):"
+
+msgid "File Manager command ($ for folder path):"
+msgstr "Commando voor bestandsbeheerder ($ voor pad):"
+
+msgid "Audio Player Command ($ for filename):"
+msgstr "Commando mediaspeler ($ is bestandsnaam):"
+
+msgid "<b>Double-clicking on...</b>"
+msgstr ""
+
+msgid "Download transfers"
+msgstr "Download-overdrachten - Actie:"
+
+msgid "Upload transfers"
+msgstr "Upload-overdrachten - Actie:"
+
+msgid "Nothing"
+msgstr ""
+
+msgid "Send to player"
+msgstr ""
+
+msgid "Open Directory"
+msgstr "Map Openen"
+
+msgid "Show Buttons in Transfers Tabs"
+msgstr "Toon knoppen in overdracht-tabs"
+
+msgid "Chat Font:"
+msgstr "Chatkamer-lettertype:"
+
+msgid "List Font:"
+msgstr "Lijst-lettertype:"
+
+msgid "Transfers Font:"
+msgstr "Overdrachten-lettertype:"
+
+msgid "Search Font:"
+msgstr "Zoeken-lettertype:"
+
+msgid "Browse Font:"
+msgstr "Verkennen-lettertype:"
+
+msgid "Decimal separator:"
+msgstr "Decimale scheidingsteken:"
+
+msgid ""
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
+msgstr ""
+
+msgid "Enable geographical blocker"
+msgstr "Geografische blokkeerder inschakelen"
+
+msgid "Geographical paranoia (block unresolvable IPs)"
+msgstr "Geografische paranoia (blokkeer onoplosbare IP's)"
+
+msgid "Country codes to block (comma separated):"
+msgstr "Landcodes die geblokkeerd moeten worden (kommagescheiden):"
+
+msgid "<b>Tray</b>"
+msgstr ""
+
+msgid "Display tray icon"
+msgstr ""
+
+msgid "Show confirmation dialog when closing the main window"
+msgstr "Toon bevestigingsdialoog bij afsluiten van het hoofdvenster"
+
+msgid "Always send Nicotine+ to tray when main window is closed"
+msgstr ""
+
+msgid "Always quit when main window is closed"
+msgstr "Nicotine+ altijd afsluiten wanneer het hoofdvenster wordt gesloten"
+
+msgid "<b>Icon Theme</b>"
+msgstr ""
+
+msgid "Icon theme folder (requires restart):"
+msgstr ""
+
+msgid "<b>Status</b>"
+msgstr "<b>Status</b>"
+
+msgid "Online:"
+msgstr "Online:"
+
+msgid "Away:"
+msgstr "Afwezig:"
+
+msgid "Offline:"
+msgstr "Afgemeld:"
+
+msgid "Nick Hilite:"
+msgstr ""
+
+msgid "Hilite:"
+msgstr "Markeer:"
+
+msgid "Disconnected:"
+msgstr "Verbinding verbroken:"
+
+msgid "Connected:"
+msgstr "Verbonden:"
+
+msgid "<b>Trayicon</b>"
+msgstr "<b>Systeemvakpictogram</b>"
+
+msgid "Notify:"
+msgstr "melding geven:"
+
+msgid "Window:"
+msgstr "Venster:"
+
+msgid "Ignored users:"
+msgstr "Genegeerde gebruikers:"
+
+msgid "Ignored IPs:"
+msgstr "Genegeerde IP's:"
+
+msgid "Log chatrooms by default"
+msgstr "Sla chatkamergesprekken standaard op in logboek"
+
+msgid "Log private chat by default"
+msgstr "Sla privé-gesprekken standaard op in logboek"
+
+msgid "Log transfers"
+msgstr "Sla overdrachten op in logboek"
+
+msgid "Logs directory:"
+msgstr "Map voor logboek:"
+
+msgid "Chatroom Logs directory:"
+msgstr "Map voor logboek van chatkamergesprekken:"
+
+msgid "Private Chat Logs directory:"
+msgstr "Map voor logboek van privé-gesprekken:"
+
+msgid "Display logged chat room messages when a room is rejoined"
+msgstr ""
+"Toon chatkamergesprekken die gelogd zijn wanneer een kamer opnieuw betreden "
+"wordt"
+
+msgid "Read"
+msgstr "Lezen"
+
+msgid "lines"
+msgstr "lijnen"
+
+msgid "Reopen last Private Chat messages"
+msgstr "Heropen laatste privé-gesprekken"
+
+msgid "<b>Timestamps</b>"
+msgstr "<b>Tijdstempels</b>"
+
+msgid "Display timestamps"
+msgstr "Toon tijdstempels"
+
+msgid "Log file format:"
+msgstr "Formaat van Logbestand:"
+
+msgid "Chat room format:"
+msgstr "Formaat van chatkamers"
+
+msgid "Private chat format:"
+msgstr "Formaat van Privé-gesprek:"
+
+msgid "Select previous tab on startup"
+msgstr ""
+
+msgid "Close-buttons on tabs"
+msgstr "Sluitknoppen op tabs"
+
+msgid "Tabs can be repositioned"
+msgstr "Tabs kunnen verplaatst worden"
+
+msgid "Show user status icons instead of status text"
+msgstr ""
+
+msgid "<b>Tab Positioning</b>"
+msgstr ""
+
+msgid "Main"
+msgstr "hoofdvenster"
+
+msgid "Label Angle:"
+msgstr "Labelhoek:"
+
+msgid "Chat rooms"
+msgstr "Chatkamers"
+
+msgid "Private chat"
+msgstr "Privé-gesprek"
+
+msgid "User info"
+msgstr "Gebruikers-info"
+
+msgid "User browse"
+msgstr "Gebruiker verkennen"
+
+msgid "Show notification for private chat and mentions in window title"
+msgstr ""
+
+msgid "Show notification icons on tabs"
+msgstr ""
+
+msgid "Notification changes the tab's text color"
+msgstr "Notificatie veranderd de tekstkleur van de tab"
+
+msgid "Play sound for notification popups"
+msgstr ""
+
+msgid "<b>Show a notification popup...</b>"
+msgstr ""
+
+msgid "When a file has finished downloading"
+msgstr ""
+
+msgid "When a folder has finished downloading"
+msgstr ""
+
+msgid "When you receive a private message"
+msgstr ""
+
+msgid "When someone sends a message in a chat room"
+msgstr ""
+
+msgid "When you're mentioned in a chat room"
+msgstr ""
+
+msgid "Enable Plugins"
+msgstr ""
+
+msgid "<b>No Plugin Selected</b>"
+msgstr ""
+
+msgid "Version: "
+msgstr ""
+
+msgid "Author(s): "
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Plugin Properties"
+msgstr ""
+
+msgid "<b>Network Searches</b>"
+msgstr ""
+
+msgid "Enable sending search results to other users"
+msgstr "Schakel het sturen van zoekresultaten naar andere gebruikers in"
+
+msgid "Send out a max of"
+msgstr "Stuur een maximum uit van"
+
+msgid "results per search request"
+msgstr "resultaten per verzoek"
+
+msgid "Toggle responding to distributed searches every"
+msgstr "Wissel om van beantwoorde naar uitgestuurde zoekopdrachten iedere"
+
+msgid "seconds"
+msgstr "seconden"
+
+msgid "<b>Your Searches</b>"
+msgstr ""
+
+msgid ""
+"Remove special characters from search terms (some clients don't send search "
+"results if they're included)"
+msgstr ""
+
+msgid ""
+"Reopen closed search tabs that haven't been ignored when new results come in"
+msgstr ""
+
+msgid "Max visible results per search:"
+msgstr "Maximum zichtbare resultaten per zoekopdracht:"
+
+msgid "Max stored results per search:"
+msgstr "Maximum opgeslagen resultaten per zoekopdracht:"
+
+msgid "<b>Search Filters</b>"
+msgstr ""
+
+msgid "Use regular expressions for filter in & out"
+msgstr "Gebruik reguliere expressies voor inkomende & uitgaande filters"
+
+msgid "Enable filters by default"
+msgstr "Filters standaard inschakelen"
+
+msgid "<b>Login Details</b>"
+msgstr ""
+
+msgid ""
+"You can create a new account by entering the desired details below. Please "
+"keep in mind that some usernames may already be taken. If you're unable to "
+"connect with your selected username, choose another one."
+msgstr ""
+
+msgid "Server:"
+msgstr ""
+
+msgid "Username:"
+msgstr ""
+
+msgid "Password:"
+msgstr "Wachtwoord:"
+
+msgid "Change password"
+msgstr "Wachtwoord veranderen"
+
+msgid "Your IP address has not been retrieved from the server"
+msgstr "Uw IP adres is niet opgehaald van de server"
+
+msgid "<b>Ports</b>"
+msgstr ""
+
+msgid "Use the first available listening port from the following range:"
+msgstr "Gebruik de eerste poort die beschikbaar is uit het volgende bereik:"
+
+msgid "Client port is not set"
+msgstr "Client poort is niet ingesteld"
+
+msgid "Check port status"
+msgstr ""
+
+msgid "Use UPnP to map the port on my router (requires restart)"
+msgstr ""
+
+msgid ""
+"If you wish to use UPnP to fix portmapping on your router please install "
+"MiniUPnP client binary or the MiniUPnP client module for Python."
+msgstr ""
+
+msgid "I can receive direct connections"
+msgstr "Ik kan directe verbindingen ontvangen"
+
+msgid ""
+"Only disable direct connections if the above ports aren't accessible after "
+"attempting UPnP and manual port forwarding, if possible. This can happen if "
+"your ISP blocks ports."
+msgstr ""
+
+msgid "<b>Miscellaneous</b>"
+msgstr ""
+
+msgid "Enable CTCP-like PM responses (Client Version)"
+msgstr "Maak CTCP (Cliënt-To-Cliënt Protocol) privéberichten mogelijk"
+
+msgid "Nicotine+ Settings"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Rescan shares on startup"
+msgstr "Herlees gedeelde bestanden bij opstarten"
+
+msgid "<b>Public Shares</b>"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Enable Buddy-Only shares"
+msgstr "Alleen voor vrienden gedeelde mappen inschakelen"
+
+# ?
+msgid ""
+"If buddy shares are enabled, they will be shared. Otherwise normal shares "
+"will be used."
+msgstr ""
+"Als je bepaalde mappen alleen met vrienden deelt, zullen deze worden "
+"gedeeld. Anders worden de normale gedeelde mappen gebruikt."
+
+msgid "Share only to buddies"
+msgstr ""
+
+msgid "<b>Buddies-Only Shares</b>"
+msgstr ""
+
+msgid "Enable Text To Speech"
+msgstr "Tekst-Naar-Spraak inschakelen"
+
+msgid "Text To Speech command:"
+msgstr "Tekst-Naar-Spraak commando:"
+
+msgid "Chat room message:"
+msgstr "Chatkamerbericht:"
+
+msgid "Private chat message:"
+msgstr "Privé-gesprek bericht:"
+
+msgid "<b>Upload Queue</b>"
+msgstr ""
+
+msgid "Upload Queue type:"
+msgstr "Type uitgaande wachtrij:"
+
+msgid "Round Robin"
+msgstr "Round Robin"
+
+msgid "Users will be sent one file and then another user will be selected"
+msgstr "Gebruikers krijgen om de beurt elk één bestand"
+
+msgid "First In, First Out"
+msgstr "FIFO (First In, First Out)"
+
+msgid "Files will be sent in the order they were queued"
+msgstr "Bestanden zullen worden verstuurd in de volgorde van de wachtrij"
+
+msgid "Queue Uploads if total transfer speed reaches"
+msgstr "Zet uploads in de wachtrij als de totale overdrachtssnelheid komt op"
+
+msgid "KBytes/sec"
+msgstr "KBytes/sec"
+
+msgid "Limit number of upload slots to"
+msgstr "Aantal upload slots beperken tot"
+
+msgid ""
+"If disabled, slots will automatically be determined by available bandwidth "
+"limitations"
+msgstr ""
+"Indien uitgeschakeld, zal het aantal slots bepaald worden door "
+"beschikbarebandbreedte-beperkingen"
+
+msgid "Limit uploads speed to"
+msgstr "Beperk uitgaande snelheid tot"
+
+msgid "per transfer"
+msgstr "per overdracht"
+
+msgid "total transfers"
+msgstr "voor het totaal aan overdrachten"
+
+msgid "Each user may queue a maximum of"
+msgstr "Een gebruiker mag maximaal"
+
+msgid "Megabytes"
+msgstr "MB in de wachtrij plaatsen"
+
+msgid "Files"
+msgstr "bestanden in de wachtrij plaatsen"
+
+msgid "Queue size limit does not apply to friends"
+msgstr "Wachtrij-beperkingen gelden niet voor vrienden"
+
+msgid "<b>Privileges</b>"
+msgstr ""
+
+msgid "Privilege all my friends"
+msgstr "Geef al mijn vrienden privileges"
+
+msgid ""
+"Friends will have higher priority in the queue, the same as globally "
+"privileged users"
+msgstr ""
+"Vrienden hebben voorrang in de wachtrij, net als gebruikers met globale "
+"privileges"
+
+msgid "Enable URL catching"
+msgstr "URL afvanger inschakelen"
+
+msgid "Humanize slsk:// urls"
+msgstr "slsk:// urls menselijker maken"
+
+msgid ""
+"Instances of $ will be replaced by the link, add empty handlers to use the "
+"system default web browser.\n"
+"Protocols handlers: "
+msgstr ""
+"$ zal vervangen worden door de link. Voeg lege afhandelaars toe om de "
+"systeemstandaard webbrowser te gebruiken.\n"
+"Protocol afhandelaars: "
+
+msgid "Handler:"
+msgstr "Afhandelaar:"
+
+msgid "Protocol:"
+msgstr "Protocol:"
+
+msgid "Image:"
+msgstr "Afbeelding:"
+
+msgid "Select an image"
+msgstr ""
 
 # , python-format
 #, python-format
@@ -1604,6 +1742,18 @@ msgstr "Kan geen reservekopie maken van configuratiebestand, fout: %s"
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Kan configuratiebestand niet hernoemen, fout: %s"
+
+#, python-format
+msgid "Can't save %s: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while opening your alias file: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while saving your alias file: %s"
+msgstr ""
 
 #, python-format
 msgid "No such alias (%s)"
@@ -1764,12 +1914,6 @@ msgstr ""
 msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr "Server meldde poort 0 voor gebruiker %(user)s, probeert opnieuw"
 
-#, python-format
-msgid ""
-"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr ""
-"IP adres van %(user)s is %(ip)s, naam %(host)s, poort %(port)i%(country)s"
-
 # !
 #, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
@@ -1852,6 +1996,12 @@ msgstr "Kon niet naar overdrachtenlogboek schrijven: %s"
 msgid "Downloaded"
 msgstr ""
 
+msgid "Shares"
+msgstr "Gedeelde mappen"
+
+msgid "Buddy Shares"
+msgstr "Gedeelde bestanden voor vrienden"
+
 #, python-format
 msgid ""
 "Failed to rebuild share, serious error occurred. If this problem persists "
@@ -1859,9 +2009,6 @@ msgid ""
 "with the stack trace included (see terminal output after this message). "
 "Technical details: %s"
 msgstr ""
-
-msgid "Buddy Shares"
-msgstr "Gedeelde bestanden voor vrienden"
 
 #, python-format
 msgid "ERROR: No %(type)s shares database available"
@@ -1899,54 +2046,33 @@ msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr ""
 "Gebruiker %(user)s zoekt naar %(query)s, beantwoord met %(num)i resultaten"
 
-msgid "Checking for changes"
-msgstr "Controleren op veranderingen"
-
 #, python-format
-msgid "%(num)s directories found before rescan/rebuild"
+msgid "%(num)s directories found before rescan, rebuilding..."
 msgstr ""
 
 #, python-format
-msgid "%(num)s directories found after rescan/rebuild"
+msgid "%(num)s directories found after rescan"
 msgstr ""
 
 #, python-format
-msgid "Scanning %s"
-msgstr "%s lezen"
-
-msgid "Building DataBase"
-msgstr "DataBase Opbouwen"
-
-msgid "Building Index"
-msgstr "Index Opbouwen"
-
-#, python-format
-msgid "Scanning Directory Error: %(error)s Path: %(path)s"
-msgstr "Fout bij het lezen van map: %(error)s Pad: %(path)s"
-
-#, python-format
-msgid "Scanning Error: %(error)s Path: %(path)s"
-msgstr "Scanfout: %(error)s Pad: %(path)s"
-
-#, python-format
-msgid ""
-"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
-"\". Repair or remove this link."
+msgid "Error while scanning %(path)s: %(error)s"
 msgstr ""
-"Scanfout: Gebroken link naar map: \"%(link)s\" van pad: \"%(path)s\". "
-"Repareer of verwijder deze link."
+
+#, python-format
+msgid "Error while scanning folder %(path)s: %(error)s"
+msgstr ""
 
 #, python-format
 msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 msgstr ""
 
 #, python-format
-msgid "Dropping missing directory %(dir)s"
+msgid "Dropping missing folder %(dir)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning File Error: %(error)s Path: %(path)s"
-msgstr "Fout bij lezen van bestand: %(error)s Pad: %(path)s"
+msgid "Error while scanning file %(path)s: %(error)s"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1970,10 +2096,6 @@ msgstr "Kan inkomend bericht, class %s, niet verwerken"
 #, python-format
 msgid "Exception during parsing %(area)s: %(exception)s"
 msgstr "Uitzondering tijdens verwerken %(area)s: %(exception)s"
-
-#, python-format
-msgid "Offending package: %(bytes)s"
-msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
 msgstr "Kon niet verbinden met een locale poort, verbinding annuleren"
@@ -2052,18 +2174,6 @@ msgstr ""
 "Kan bericht niet versturen over de gesloten verbinding: %(type)s %(msg_obj)s"
 
 #, python-format
-msgid ""
-"You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
-"connections for your protection. If you get this message often you should "
-"search for less generic terms, or increase your per-process file descriptor "
-"limit."
-msgstr ""
-"U hebt net uw verbindingslimiet van %(limit)s bereikt. Nicotine+ zal "
-"verbindingen verbreken voor uw veiligheid. Als u deze boodschap vaak krijgt "
-"kunt kunt u best naar minder algemene zoektermen zoeken of uw limiet "
-"aanpassen."
-
-#, python-format
 msgid "User %s does not exist"
 msgstr "Gebruiker %s bestaat niet"
 
@@ -2075,10 +2185,6 @@ msgstr "Gefilterd: %s"
 msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr ""
 "Mislukte download opnieuw proberen: gebruiker %(user)s, bestand %(file)s"
-
-#, python-format
-msgid "Failed download: user %(user)s, file %(file)s"
-msgstr "Download mislukt: gebruiker %(user)s, bestand %(file)s"
 
 #, python-format
 msgid "Got transfer request %s but cannot determine requestor"
@@ -2128,8 +2234,9 @@ msgstr "Onbekend bestandsverzoek: %s"
 msgid "OS error: %s"
 msgstr "OS fout: %s"
 
-msgid "Nicotine+ :: Directory download error"
-msgstr "Nicotine+ :: Map download fout"
+# , python-format
+msgid "Folder download error"
+msgstr ""
 
 # , python-format
 #, python-format
@@ -2200,8 +2307,8 @@ msgstr ""
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s gedownload van %(user)s"
 
-msgid "Nicotine+ :: file downloaded"
-msgstr "Nicotine+ :: bestand gedownload"
+msgid "File downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing '%s'"
@@ -2216,8 +2323,8 @@ msgstr "Uitgevoerd: %s"
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s gedownload van %(user)s"
 
-msgid "Nicotine+ :: directory completed"
-msgstr "Nicotine+ :: map voltooid"
+msgid "Folder downloaded"
+msgstr ""
 
 # , python-format
 #, python-format
@@ -2237,10 +2344,6 @@ msgstr "(vriend)"
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Upload voltooid: %(user)s, bestand %(file)s"
-
-#, python-format
-msgid "Retrying failed download: %(user)s, file %(file)s"
-msgstr "Mislukte Download opnieuw proberen: %(user)s, bestand %(file)s"
 
 #, python-format
 msgid "I/O error: %s"
@@ -2302,208 +2405,17 @@ msgstr ""
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 
-msgid "About Nicotine+"
-msgstr ""
-
-msgid ""
-"A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek\n"
-"\n"
-"This product includes IP2Location LITE data, available from:\n"
-"https://www.ip2location.com"
-msgstr ""
-
-msgid "About search filters"
-msgstr "Over zoekfilters"
-
-msgid ""
-"Search filtering\n"
-"\n"
-"You can use this to refine which results are displayed. The full results\n"
-"from the server are always available if you clear all the search terms.\n"
-"\n"
-"You can filter by:\n"
-"\n"
-"Included text: Files are shown if they contain this text.\n"
-"Case is insensitive, but word order is important.\n"
-"'Spears Brittany' will not show any 'Brittany Spears'\n"
-"\n"
-"Excluded text: As above, but files will not be displayed if the text "
-"matches\n"
-"\n"
-"Size: Shows results based on size. use > and < to find files larger or "
-"smaller.\n"
-"Files exactly the same as this term will always match.\n"
-"Use = to specify an exact match. Use k or m to specify kilo or megabytes.\n"
-">10M will find files larger than 10 megabytes.\n"
-"<4000k will find files smaller than 4000k.\n"
-"\n"
-"Bitrate: Find files based on bitrate. Use < and > to find lower or higher.\n"
-">192 finds 192 and higher, <192 finds 192 or lower.\n"
-"=192 only finds 192.\n"
-"For VBR, the average bitrate is used.\n"
-"\n"
-"Free slot: Show only those results from users which have at least\n"
-"one upload slot free.\n"
-"\n"
-"To set the filter, press Enter.\n"
-"This will apply to any existing results, and any more that are returned.\n"
-"To filter in a different way, just set the relevant terms.\n"
-"You do not need to do another search to apply a different filter."
-msgstr ""
-
-msgid "room"
-msgstr "kamer"
-
-msgid "Join room 'room'"
-msgstr "Kamer 'room' betreden"
-
-msgid "Leave room 'room'"
-msgstr "Verlaat kamer 'room'"
-
-msgid "Clear the chat window"
-msgstr "Wis het chatvenster"
-
-msgid "Set your personal ticker"
-msgstr "Persoonlijke klok instellen"
-
-msgid "Show all the tickers"
-msgstr ""
-
-msgid "Reattach a chat window to the notebook"
-msgstr "Koppel een chat-tab terug vast aan het notebook"
-
-msgid "Detach a chat tab from the notebook"
-msgstr "Koppel een chat-tab los van het notebook"
-
-msgid "message"
-msgstr "bericht"
-
-msgid "Say something in the third-person"
-msgstr "Zeg iets in de derde-persoon"
-
-msgid "Display the Now Playing script's output"
-msgstr "Toon wat je mediaspeler nu afspeelt"
-
-msgid "Users"
-msgstr "Gebruikers"
-
-msgid "user"
-msgstr "gebruiker"
-
-msgid "Add user 'user' to your user list"
-msgstr "Voeg gebruiker 'user' toe aan uw vriendenlijst "
-
-msgid "Remove user 'user' from your user list"
-msgstr "Verwijder gebruiker 'user' uit uw vriendenlijst"
-
-msgid "Add user 'user' to your ban list"
-msgstr "Verban gebruiker 'user'"
-
-msgid "Remove user 'user' from your ban list"
-msgstr "Hef de verbanning van gebruiker 'user' op"
-
-msgid "Add user 'user' to your ignore list"
-msgstr "Negeer gebruiker 'user'"
-
-msgid "Remove user 'user' from your ignore list"
-msgstr "Gebruiker 'user' niet meer negeren"
-
-msgid "Browse files of user 'user'"
-msgstr "Blader door de bestanden van gebruiker 'user'"
-
-msgid "Request user info for user 'user'"
-msgstr "Gebruikersinfo van gebruiker 'user' opvragen "
-
-msgid "Show IP for user 'user'"
-msgstr "Toon IP van gebruiker 'user'"
-
-msgid "Aliases"
-msgstr "Aliassen"
-
-msgid "command"
-msgstr "commando"
-
-msgid "definition"
-msgstr "definitie"
-
-msgid "Add a new alias"
-msgstr "Een nieuwe alias toevoegen"
-
-msgid "process"
-msgstr "proces"
-
-msgid "Add a new alias that runs a process"
-msgstr "Een nieuwe alias toevoegen die een proces draait "
-
-msgid "Remove an alias"
-msgstr "Verwijder een alias"
-
-msgid "query"
-msgstr "zoekopdracht"
-
-msgid "Start a new search for 'query'"
-msgstr "Start nieuwe zoekopdracht naar '...'"
-
-msgid "Search the joined rooms for 'query'"
-msgstr "Doorzoek de betreden kamers naar '...'"
-
-msgid "Search the buddy list for 'query'"
-msgstr "Doorzoek de vriendenlijst naar '...'"
-
-msgid "Search a user's shares for 'query'"
-msgstr "Doorzoek de bestanden van een gebruiker naar '...' "
-
-msgid "Private Chat"
-msgstr "Privégesprek"
-
-msgid "Send message 'message' to user 'user'"
-msgstr "Verstuur bericht 'message' naar gebruiker 'user'"
-
-msgid "Open private chat window for user 'user'"
-msgstr "Start privégesprek met gebruiker 'user'"
-
-msgid "Toggles your away status"
-msgstr "Schakelt de status aanwezig / afwezig om"
-
-msgid "Rescan shares"
-msgstr "Herlees gedeelde bestanden"
-
-msgid "Quit Nicotine+"
-msgstr ""
-
-msgid "About chat room commands"
-msgstr "Over chatkamer commando's"
-
-msgid "Close the current private chat"
-msgstr "Sluit het huidige privégesprek"
-
-msgid "plugin"
-msgstr ""
-
-msgid "Toggle plugin on/off state"
-msgstr ""
-
-msgid "Chat Rooms"
-msgstr "Chatkamers"
-
-msgid "About private chat commands"
-msgstr "Over privégesprek commando's"
-
 msgid "Room"
 msgstr "Kamer"
 
-msgid "Join room"
-msgstr "Kamer betreden"
+msgid "Join Room"
+msgstr ""
 
-msgid "Leave room"
-msgstr "Verlaat kamer"
+msgid "Leave Room"
+msgstr ""
 
-msgid "Enable Private Rooms"
-msgstr "Privékamers inschakelen"
-
-msgid "Disable Private Rooms"
-msgstr "Privékamers uitschakelen"
+msgid "Create Room"
+msgstr ""
 
 msgid "Create Private Room"
 msgstr "Creëer Privékamer"
@@ -2511,14 +2423,20 @@ msgstr "Creëer Privékamer"
 msgid "Disown Private Room"
 msgstr "Geef beheer van de privékamer op"
 
-msgid "Cancel room membership"
-msgstr "Annuleer kamer lidmaatschap"
+msgid "Cancel Room Membership"
+msgstr ""
 
 msgid "Join Public Room"
 msgstr "Publieke kamer betreden"
 
-msgid "Nicotine+:"
-msgstr "Nicotine+:"
+msgid "Refresh"
+msgstr "Verversen"
+
+msgid "Create Public Room"
+msgstr ""
+
+msgid "Enter the name of the public room you wish to create"
+msgstr ""
 
 msgid "Enter the name of the private room you wish to create"
 msgstr "Geef de naam op van de privékamer die je wenst te creëren"
@@ -2538,21 +2456,6 @@ msgstr ""
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr ""
-
-msgid "Set ticker message"
-msgstr "Stel klok boodschap in"
-
-msgid "Set room ticker message:"
-msgstr "Stel kamer klokbericht in:"
-
-msgid "Just this time"
-msgstr "Alleen deze keer"
-
-msgid "Always for this channel"
-msgstr "Altijd voor dit kanaal"
-
-msgid "Default for all channels"
-msgstr "Standaard voor elk kanaal"
 
 msgid "Status"
 msgstr "Status"
@@ -2634,6 +2537,14 @@ msgid "Add as operator of %s"
 msgstr "Toevoegen als operator van %s"
 
 #, python-format
+msgid "%s mentioned you in the %s room"
+msgstr ""
+
+#, python-format
+msgid "Message by %s in the %s room"
+msgstr ""
+
+#, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr ""
 
@@ -2642,13 +2553,8 @@ msgid "Command %s is not recognized"
 msgstr "Commando %s is niet herkend"
 
 #, python-format
-msgid "All ticker messages for %(room)s:"
+msgid "All tickers / wall messages for %(room)s:"
 msgstr ""
-
-# , python-format
-#, python-format
-msgid "Nicotine+ Chatroom: %s"
-msgstr "Nicotine+ Chatkamer: %s"
 
 #, python-format
 msgid "%s joined the room"
@@ -2660,11 +2566,8 @@ msgstr "%s heeft de kamer verlaten"
 
 # , python-format
 #, python-format
-msgid "%i people in room"
-msgstr "%i mensen in de kamer"
-
-msgid "You are alone"
-msgstr "U bent alleen"
+msgid "User List (%i)"
+msgstr ""
 
 #, python-format
 msgid "%s has gone away"
@@ -2680,9 +2583,6 @@ msgstr "--- verbinding verbroken ---"
 msgid "--- reconnected ---"
 msgstr "--- opnieuw verbonden ---"
 
-msgid "Detach this tab"
-msgstr "Deze tab losmaken"
-
 msgid "Leave this room"
 msgstr "Verlaat deze kamer"
 
@@ -2694,24 +2594,67 @@ msgstr ""
 "Kon versie informatie niet ophalen!\n"
 "Fout: %s"
 
-msgid "Check Latest Version"
-msgstr "Controleer op laatste versie"
-
 #, python-format
-msgid ""
-"A newer version ('%s') is available. Check Nicotine+ releases page\n"
-"(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest "
-"version."
+msgid "A newer version %s is available, released on %s."
 msgstr ""
 
-msgid ""
-"You appear to be using a development version of Nicotine+.\n"
-"Check out the latest version from the Git repository at https://github.com/"
-"Nicotine-Plus/nicotine-plus/"
+msgid "You appear to be using a development version of Nicotine+."
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Je gebruikt de laatste versie van Nicotine+."
+
+msgid "Browse"
+msgstr "Verken"
+
+msgid "<b>List Position:</b>"
+msgstr "<b>Positie in lijst:</b>"
+
+msgid "<b>File Name:</b>"
+msgstr "<b>Bestandsnaam:</b>"
+
+msgid "<b>Directory:</b>"
+msgstr "<b>Map:</b>"
+
+msgid "<b>File Size:</b>"
+msgstr "<b>Bestandsgrootte:</b>"
+
+msgid "<b>Length:</b>"
+msgstr "<b>Lengte:</b>"
+
+msgid "<b>Bitrate:</b>"
+msgstr "<b>Bitrate:</b>"
+
+msgid "<b>Immediate Downloads:</b>"
+msgstr "<b>Directe downloads:</b>"
+
+msgid "<b>Queue:</b>"
+msgstr "<b>Wachtrij:</b>"
+
+msgid "<b>Last Speed:</b>"
+msgstr "<b>Laatste snelheid:</b>"
+
+msgid "Download"
+msgstr "Download"
+
+msgid "Download All"
+msgstr "Download alle"
+
+#, python-format
+msgid "<b>%s</b> File(s) Selected"
+msgstr "<b>%s</b> bestand(en) geselecteerd"
+
+msgid "Previous"
+msgstr "Vorige"
+
+msgid "Next"
+msgstr "Volgende"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "<b>Country Code:</b> "
+msgstr "<b>Landcode:</b> "
 
 msgid "_Open"
 msgstr ""
@@ -2764,81 +2707,32 @@ msgstr "Opnieuw Proberen"
 msgid "Abor_t"
 msgstr "Afbreken"
 
+msgid "Abort & Delete"
+msgstr "Afbreken & Verwijderen"
+
 msgid "_Clear"
 msgstr "Wis"
 
 msgid "Clear Groups"
 msgstr "Wis groepen"
 
-msgid "Clear All Queued Downloads?"
-msgstr "Alle downloads in de wachtrij wissen?"
+msgid "Clear Queued Downloads"
+msgstr ""
 
-msgid "Clear Queued Transfers"
-msgstr "Wis overdrachten in wachtrij"
+msgid "Are you sure you wish to clear all queued downloads?"
+msgstr ""
 
 msgid " KB/s"
 msgstr " KB/s"
+
+msgid "Nicotine+:"
+msgstr "Nicotine+:"
 
 msgid "Downloads Metadata"
 msgstr "Downloads Metadata"
 
 msgid "<b>Metadata</b> for Downloads"
 msgstr "<b>Metadata</b> voor downloads"
-
-msgid "Select User's Transfers"
-msgstr "Selecteer de overdrachten van deze gebruiker"
-
-msgid "<b>List Position:</b>"
-msgstr "<b>Positie in lijst:</b>"
-
-msgid "<b>File Name:</b>"
-msgstr "<b>Bestandsnaam:</b>"
-
-msgid "<b>Directory:</b>"
-msgstr "<b>Map:</b>"
-
-msgid "<b>File Size:</b>"
-msgstr "<b>Bestandsgrootte:</b>"
-
-msgid "<b>Length:</b>"
-msgstr "<b>Lengte:</b>"
-
-msgid "<b>Bitrate:</b>"
-msgstr "<b>Bitrate:</b>"
-
-msgid "<b>Immediate Downloads:</b>"
-msgstr "<b>Directe downloads:</b>"
-
-msgid "<b>Queue:</b>"
-msgstr "<b>Wachtrij:</b>"
-
-msgid "<b>Last Speed:</b>"
-msgstr "<b>Laatste snelheid:</b>"
-
-msgid "Download"
-msgstr "Download"
-
-msgid "Download All"
-msgstr "Download alle"
-
-#, python-format
-msgid "<b>%s</b> File(s) Selected"
-msgstr "<b>%s</b> bestand(en) geselecteerd"
-
-msgid "Previous"
-msgstr "Vorige"
-
-msgid "Next"
-msgstr "Volgende"
-
-msgid "<b>Country Code:</b> "
-msgstr "<b>Landcode:</b> "
-
-msgid "Cancel"
-msgstr "Annuleren"
-
-msgid "OK"
-msgstr "Ok"
 
 msgid "Virtual Directory"
 msgstr ""
@@ -2878,14 +2772,22 @@ msgstr "Waarschuwing"
 msgid "The chosen virtual name is empty"
 msgstr ""
 
-msgid "The chosen virtual name already exist"
+msgid "The chosen virtual name already exists"
 msgstr ""
 
 msgid "The chosen directory is already shared"
 msgstr ""
 
+# , python-format
+#, python-format
+msgid "%(current)s/%(limit)s Connections"
+msgstr ""
+
 msgid "Search files"
 msgstr "Zoek bestanden"
+
+msgid "Downloads"
+msgstr "Downloads"
 
 msgid "Uploads"
 msgstr "Uploads"
@@ -2897,11 +2799,30 @@ msgstr "Interesses"
 msgid "Hide %(tab)s"
 msgstr "Verberg %(tab)s"
 
+# , python-format
+#, python-format
+msgid "Users: %s"
+msgstr "Gebruikers: %s"
+
+#, python-format
+msgid "Files: %s"
+msgstr "Bestanden: %s"
+
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr "In: %(num)i gebruiker(s), %(speed).1f KB/s"
+
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr "Uit: %(num)i gebruiker(s), %(speed).1f KB/s"
+
+#, python-format
+msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+msgstr ""
+"Nicotine+ Overdrachten: %(speeddown).1f KB/s In, %(speedup).1f KB/s Uit"
+
 msgid "Joined Rooms "
 msgstr "Betreden kamers"
-
-msgid "Global"
-msgstr "Globaal"
 
 msgid "Buddies"
 msgstr "Vrienden"
@@ -2918,9 +2839,8 @@ msgstr ""
 msgid "Send to tray"
 msgstr "Zend naar systeemvak"
 
-#, python-format
-msgid "Notification Error: %s"
-msgstr "Notificatiefout: %s"
+msgid "Remember choice"
+msgstr ""
 
 msgid "I like"
 msgstr "Ik hou van"
@@ -2953,6 +2873,10 @@ msgid "_Recommendations for this item"
 msgstr "_Aanbevelingen voor dit item"
 
 #, python-format
+msgid "Download %(num)i files?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory "
 "%(folder)s?"
@@ -2968,27 +2892,6 @@ msgstr "Kan map '%(folder)s' niet aanmaken, fout: %(error)s"
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Lezen gedeelde mappen van schijf mislukt: %(error)s"
 
-msgid "Enter the User who you wish to send a private message:"
-msgstr "Geef de gebruiker op naar wie je een privébericht wil sturen:"
-
-msgid "Nicotine+: Get User Info"
-msgstr "Nicotine+: Vraag gebruikersinfo op"
-
-msgid "Enter the User whose User Info you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's IP"
-msgstr "Nicotine+: Verkrijg een gebruiker zijn IP-adres"
-
-msgid "Enter the User whose IP Address you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's Shares List"
-msgstr "Nicotine+: Verkrijg de lijst met gedeelde mappen van een gebruiker"
-
-msgid "Enter the User whose Shares List you wish to receive:"
-msgstr ""
-
 #, python-format
 msgid "button_press error, %(error)s"
 msgstr ""
@@ -2997,36 +2900,9 @@ msgstr ""
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Bezig met verbinden met: %(host)s:%(port)s"
 
-# , python-format
-#, python-format
-msgid "%(current)s/%(limit)s Connections"
-msgstr ""
-
 #, python-format
 msgid "Error loading image for %(flag)s: %(error)s"
 msgstr ""
-
-# , python-format
-#, python-format
-msgid "Users: %s"
-msgstr "Gebruikers: %s"
-
-#, python-format
-msgid "Files: %s"
-msgstr "Bestanden: %s"
-
-#, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "In: %(num)i gebruiker(s), %(speed).1f KB/s"
-
-#, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Uit: %(num)i gebruiker(s), %(speed).1f KB/s"
-
-#, python-format
-msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
-msgstr ""
-"Nicotine+ Overdrachten: %(speeddown).1f KB/s In, %(speedup).1f KB/s Uit"
 
 msgid "Rescanning started"
 msgstr "Herlezing gestart"
@@ -3060,6 +2936,9 @@ msgstr "Fout: %(num)d Downloadfilters gefaald! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
+msgid "Buddy list"
+msgstr ""
+
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Foutieve SoulSeek meta-url: %s"
@@ -3069,15 +2948,6 @@ msgstr "Geef op waar je naar wilt zoeken:"
 
 msgid "Nicotine+: Find string"
 msgstr "Nicotine+: Zoek tekenreeks"
-
-msgid "Add thing I like"
-msgstr "Geliefd item toevoegen"
-
-msgid "Add thing I don't like"
-msgstr "Gehaat item toevoegen"
-
-msgid "I don't like"
-msgstr "Ik haat"
 
 #, python-format
 msgid "Recommendations for %s"
@@ -3096,16 +2966,8 @@ msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s noemde jou in de kamer %(room)s"
 
 #, python-format
-msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, "
-"%(place)s."
-msgstr ""
-"%(myusername)s, de gebruiker %(username)s heeft u naam genoemd in de kamer "
-"%(place)s."
-
-#, python-format
-msgid "%(myusername)s, you have recieved a private message from %(username)s."
-msgstr ""
+msgid "Notification Error: %s"
+msgstr "Notificatiefout: %s"
 
 msgid "Username;APIKEY :"
 msgstr ""
@@ -3242,6 +3104,10 @@ msgstr "Negeer deze gebruiker"
 msgid "Close this tab"
 msgstr "Deze tab sluiten"
 
+#, python-format
+msgid "Private message from %s"
+msgstr ""
+
 msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
@@ -3249,39 +3115,17 @@ msgstr ""
 "* Bericht(en) gestuurd toen je afgemeld was. Tijdstempels zijn gerapporteerd "
 "door de server."
 
-#, python-format
-msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
-msgstr "Nicotine+ Privé chat: %(user)s (%(status)s)"
-
-msgid "Nicotine+ Wishlist"
-msgstr "Nicotine+ Wenslijst"
-
-msgid "Search Wishlist"
-msgstr "Verken Wenslijst"
-
-msgid "Select all"
+msgid "ID"
 msgstr ""
 
-msgid "Wishes"
-msgstr ""
-
-msgid "Add Wish..."
-msgstr "Wens Toevoegen..."
-
-msgid "Wish:"
-msgstr "Wens:"
-
-msgid "Number"
-msgstr "Nummer"
-
-msgid "Filename"
-msgstr "Bestandsnaam"
+msgid "Immediate Download"
+msgstr "Directe download"
 
 msgid "In queue"
 msgstr "In wachtrij"
 
-msgid "Immediate Download"
-msgstr "Directe download"
+msgid "Filename"
+msgstr "Bestandsnaam"
 
 msgid "_Download file(s)"
 msgstr "_Download bestand(en)"
@@ -3289,18 +3133,19 @@ msgstr "_Download bestand(en)"
 msgid "Download file(s) _to..."
 msgstr "Download bestanden, _naar..."
 
-msgid "Download containing _folder(s)"
-msgstr "Download bevattende map(pen)"
+msgid "Download _folder(s)"
+msgstr ""
 
-msgid "Download containing f_older(s) to..."
-msgstr "Download bevattende map(pen) naar..."
+msgid "Download f_older(s) to..."
+msgstr ""
 
 msgid "Copy folder U_RL"
 msgstr "Kopieer URL van de map"
 
-# , python-format
-#, python-format
-msgid "Nicotine+ %(mode)s Search: %(term)s"
+msgid "Filtered out excluded search result "
+msgstr ""
+
+msgid "Filtered out inexact or incorrect search result "
 msgstr ""
 
 msgid "Select User's Results"
@@ -3312,6 +3157,9 @@ msgstr "Nicotine+: Zoekresultaten"
 #, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Metadata</b> voor zoekopdracht: <i>%s</i>"
+
+msgid "Wishes"
+msgstr ""
 
 #, python-format
 msgid "Client port is <b>%(port)s</b>"
@@ -3333,42 +3181,6 @@ msgstr "Pas op: ongeldige poorten"
 msgid "Client ports are invalid."
 msgstr "Clientpoorten zijn ongeldig. "
 
-msgid "Filter"
-msgstr "Filter"
-
-msgid "Escaped"
-msgstr "Ontsnapt"
-
-#, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr "Veiligheidsrisico: de map %s kun je beter niet delen!"
-
-msgid "Nicotine+: Add a download filter"
-msgstr "Nicotine+: Een download-filter toevoegen"
-
-msgid "Enter a new download filter:"
-msgstr "Geef een nieuwe download-filter op:"
-
-msgid "Nicotine+: Edit a download filter"
-msgstr "Nicotine+: wijzig een download-filter"
-
-msgid "Modify this download filter:"
-msgstr "Wijzig deze download-filter:"
-
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d mislukt! %(error)s"
-
-msgid "The chosen virtual name is either empty or already exist"
-msgstr ""
-
-msgid "Add a shared buddy directory"
-msgstr "Een gedeelde map voor vrienden toevoegen"
-
-#, python-format
-msgid "Enter new virtual name for '%(dir)s':"
-msgstr ""
-
 msgid "No one"
 msgstr "Niemand"
 
@@ -3381,14 +3193,47 @@ msgstr "Gebruikers in lijst"
 msgid "Trusted Users"
 msgstr "Vertrouwde vrienden"
 
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Escaped"
+msgstr "Ontsnapt"
+
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
+msgstr "Veiligheidsrisico: de map %s kun je beter niet delen!"
+
+msgid "Add a download filter"
+msgstr ""
+
+msgid "Enter a new download filter:"
+msgstr "Geef een nieuwe download-filter op:"
+
+msgid "Edit a download filter"
+msgstr ""
+
+msgid "Modify this download filter:"
+msgstr "Wijzig deze download-filter:"
+
+#, python-format
+msgid "%(num)d Failed! %(error)s "
+msgstr "%(num)d mislukt! %(error)s"
+
+msgid "The chosen virtual name is either empty or already exists"
+msgstr ""
+
+msgid "Add a shared buddy directory"
+msgstr "Een gedeelde map voor vrienden toevoegen"
+
+#, python-format
+msgid "Enter new virtual name for '%(dir)s':"
+msgstr ""
+
 msgid "Addresses"
 msgstr "Adressen"
 
 msgid "Ignore user..."
 msgstr "Negeer gebruiker..."
-
-msgid "User:"
-msgstr "Gebruiker:"
 
 msgid "Ignore IP Address..."
 msgstr "Negeer IP adres..."
@@ -3432,8 +3277,29 @@ msgstr ""
 msgid "Could not disable plugin."
 msgstr ""
 
+msgid "General"
+msgstr ""
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Searches"
+msgstr "Zoekopdrachten"
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Text To Speech"
+msgstr ""
+
+msgid "User Info"
+msgstr ""
+
 msgid "Ban List"
 msgstr "Verban-lijst"
+
+msgid "Events"
+msgstr "Gebeurtenissen"
 
 msgid "Geo Block"
 msgstr "Geo Block"
@@ -3441,11 +3307,38 @@ msgstr "Geo Block"
 msgid "Interface"
 msgstr "Uiterlijk"
 
+msgid "Fonts"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Icons"
+msgstr "Iconen"
+
+msgid "Notebook Tabs"
+msgstr "Notebook Tabs"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Away Mode"
+msgstr ""
+
+msgid "Logging"
+msgstr "Loggen "
+
 msgid "Ignore List"
 msgstr "Negeerlijst"
 
-msgid "Auto-Replace"
-msgstr "Auto-vervangen"
+msgid "Censor List"
+msgstr "Censuurlijst"
+
+msgid "Auto-Replace List"
+msgstr "Auto-vervang lijst"
+
+msgid "URL Catching"
+msgstr "URL afvanger"
 
 msgid "Completion"
 msgstr "Aanvulling"
@@ -3453,63 +3346,8 @@ msgstr "Aanvulling"
 msgid "Categories"
 msgstr "Categorieën"
 
-msgid "Getting status"
-msgstr "Opvragen van status"
-
-msgid "Waiting for download"
-msgstr "Wachten op download"
-
-msgid "Waiting for upload"
-msgstr "Wachten op upload"
-
-msgid "Getting address"
-msgstr "Opvragen van adres"
-
-msgid "Connecting"
-msgstr "Bezig met verbinden"
-
-msgid "Waiting for peer to connect"
-msgstr "Wacht op verbinding van peer"
-
-msgid "Cannot connect"
-msgstr "Kan niet verbinden"
-
-msgid "User logged off"
-msgstr "Gebruiker afgemeld"
-
-msgid "Requesting file"
-msgstr "Bestand opvragen"
-
-msgid "Initializing transfer"
-msgstr "Overdracht wordt gestart"
-
-msgid "Filtered"
-msgstr "Gefilterd"
-
-# !
-msgid "Download directory error"
-msgstr "Fout inkomende map"
-
-msgid "Local file error"
-msgstr "Lokale bestandsfout"
-
-msgid "File not shared"
-msgstr "Bestand niet gedeeld"
-
-msgid "Aborted"
-msgstr "Afgebroken"
-
-msgid "Paused"
-msgstr "Gepauzeerd"
-
-msgid "Queued"
-msgstr "In de wachtrij"
-
-msgid "Transferring"
-msgstr "Overdragend"
-
-msgid "Finished"
-msgstr "Voltooid"
+msgid "Path"
+msgstr "Pad"
 
 msgid "Queue Position"
 msgstr "Positie in de wachtrij"
@@ -3523,14 +3361,72 @@ msgstr "Verstreken tijd"
 msgid "Time left"
 msgstr "Resterende tijd"
 
-msgid "Path"
-msgstr "Pad"
+msgid "Waiting for download"
+msgstr "Wachten op download"
+
+msgid "Waiting for upload"
+msgstr "Wachten op upload"
+
+msgid "Requesting file"
+msgstr "Bestand opvragen"
+
+msgid "Initializing transfer"
+msgstr "Overdracht wordt gestart"
+
+msgid "Cannot connect"
+msgstr "Kan niet verbinden"
+
+msgid "Waiting for peer to connect"
+msgstr "Wacht op verbinding van peer"
+
+msgid "Connecting"
+msgstr "Bezig met verbinden"
+
+msgid "Getting address"
+msgstr "Opvragen van adres"
+
+msgid "Getting status"
+msgstr "Opvragen van status"
+
+msgid "Queued"
+msgstr "In de wachtrij"
+
+msgid "User logged off"
+msgstr "Gebruiker afgemeld"
+
+msgid "Aborted"
+msgstr "Afgebroken"
+
+msgid "Finished"
+msgstr "Voltooid"
+
+msgid "Paused"
+msgstr "Gepauzeerd"
+
+msgid "Transferring"
+msgstr "Overdragend"
+
+msgid "Filtered"
+msgstr "Gefilterd"
 
 msgid "Connection closed by peer"
 msgstr "Verbinding gesloten door peer"
 
+msgid "File not shared"
+msgstr "Bestand niet gedeeld"
+
 msgid "Establishing connection"
 msgstr "Bezig met verbinden"
+
+# !
+msgid "Download directory error"
+msgstr "Fout inkomende map"
+
+msgid "Local file error"
+msgstr "Lokale bestandsfout"
+
+msgid "Remote file error"
+msgstr ""
 
 #, python-format
 msgid "All %(ext)s"
@@ -3539,6 +3435,9 @@ msgstr "Alle %(ext)s"
 #, python-format
 msgid "%(number)2s files "
 msgstr "%(number)2s bestanden "
+
+msgid "Select User's Transfers"
+msgstr "Selecteer de overdrachten van deze gebruiker"
 
 msgid "Connect"
 msgstr "Verbinden"
@@ -3551,9 +3450,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Instellingen"
-
-msgid "Send Message"
-msgstr "Verstuur bericht"
 
 msgid "Lookup a User's IP"
 msgstr "Zoek IP-adres van gebruiker op"
@@ -3574,6 +3470,27 @@ msgstr "Afsluiten"
 msgid "ERROR: tray menu, %(error)s"
 msgstr ""
 
+msgid "Enter the User who you wish to send a private message:"
+msgstr "Geef de gebruiker op naar wie je een privébericht wil sturen:"
+
+msgid "Get User Info"
+msgstr ""
+
+msgid "Enter the User whose User Info you wish to receive:"
+msgstr ""
+
+msgid "Get A User's IP"
+msgstr ""
+
+msgid "Enter the User whose IP Address you wish to receive:"
+msgstr ""
+
+msgid "Get A User's Shares List"
+msgstr ""
+
+msgid "Enter the User whose Shares List you wish to receive:"
+msgstr ""
+
 #, python-format
 msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
@@ -3584,8 +3501,11 @@ msgstr ""
 msgid "Clear failed"
 msgstr "Wis mislukt"
 
-msgid "Clear All Queued Uploads?"
-msgstr "Alle uploads in wacht wissen?"
+msgid "Clear Queued Uploads"
+msgstr ""
+
+msgid "Are you sure you wish to clear all queued uploads?"
+msgstr ""
 
 msgid "Directories"
 msgstr "Mappen"
@@ -3622,11 +3542,6 @@ msgstr "Open in bestandsbeheerder"
 
 # , python-format
 #, python-format
-msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
-msgstr ""
-
-# , python-format
-#, python-format
 msgid "Shared: %s"
 msgstr "Gedeelde Mappen: %s"
 
@@ -3639,13 +3554,13 @@ msgstr "Mappen: %s"
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Kan gedeelde mappen niet opslaan, '%(user)s', fout: %(error)s"
 
-msgid "Nicotine+: Upload Directory's Contents"
+msgid "Upload Directory's Contents"
 msgstr ""
 
 msgid "Enter the User you wish to upload to:"
 msgstr "Naar wie wil je Uploaden:"
 
-msgid "Nicotine+: Upload File(s)"
+msgid "Upload File(s)"
 msgstr ""
 
 #, python-format
@@ -3673,10 +3588,6 @@ msgstr "Zoom Uit"
 
 msgid "Save Image"
 msgstr "Afbeelding Opslaan"
-
-#, python-format
-msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
-msgstr ""
 
 #, python-format
 msgid "Total uploads allowed: %i"
@@ -3781,38 +3692,354 @@ msgstr "Hoeveel dagen globale privileges voor deze gebruiker?"
 msgid "%(days)s days left"
 msgstr "%(days)s dagen over"
 
+#~ msgid "Hide/Show Status log"
+#~ msgstr "Verberg/Toon statuslog"
+
+#~ msgid "Hide/Show User list"
+#~ msgstr "Verberg/Toon gebruikerslijst"
+
+#~ msgid "0 people in room"
+#~ msgstr "0 mensen in kamer"
+
+#~ msgid "Leave"
+#~ msgstr "Verlaten"
+
+#~ msgid "Check _latest"
+#~ msgstr "Controleer op _laatste versie"
+
+#~ msgid "Group by Users"
+#~ msgstr "Groepeer volgens gebruikers"
+
+#~ msgid "Auto-retry failed"
+#~ msgstr "Automatisch opnieuw proberen mislukt"
+
+#~ msgid "Every 3 minutes"
+#~ msgstr "Elke 3 minuten"
+
+#~ msgid "Global recommendations"
+#~ msgstr "Globale aanbevelingen"
+
+#~ msgid "Nicotine+: Configure Now Playing"
+#~ msgstr "Nicotine+: Configureer 'Nu aan het afspelen'"
+
+#~ msgid "Direct"
+#~ msgstr "Direct"
+
+#~ msgid "Create: "
+#~ msgstr "Creëer: "
+
+#~ msgid "Search: "
+#~ msgstr "Zoeken: "
+
+#~ msgid "Query"
+#~ msgstr "Zoekopdracht"
+
+#~ msgid "Close search tab; press ignore to prevent this tab from reopening"
+#~ msgstr ""
+#~ "Zoek-tab sluiten; druk op negeren om te voorkomen dat deze tab heropent"
+
+#~ msgid "Ban"
+#~ msgstr "Verbannen"
+
+#~ msgid "Banning"
+#~ msgstr "Verbannen"
+
+#~ msgid "Bloat"
+#~ msgstr "Opgeblazen"
+
+#~ msgid "Extra stuff for your comfort"
+#~ msgstr "Extra's voor uw comfort"
+
+#~ msgid ""
+#~ "Choose <b>Logging</b> to configure what's logged and where to save the "
+#~ "logs."
+#~ msgstr ""
+#~ "Kies <b>Logboek</> om te bepalen wat er in het logboek komt en waar het "
+#~ "opgeslagen wordt."
+
+#~ msgid ""
+#~ "Choose <b>URL Catching</b> to configure the programs used when clicking "
+#~ "on links."
+#~ msgstr ""
+#~ "Kies 'URL afvanger' om te kiezen welke programma's worden gebruikt "
+#~ "wanneer er geklikt wordt op links."
+
+#~ msgid "Chat Settings"
+#~ msgstr "Chat Instellingen"
+
+#~ msgid "Text Completion"
+#~ msgstr "Tekstaanvulling"
+
+#~ msgid "Chat text completion"
+#~ msgstr "Chattekst aanvulling"
+
+#~ msgid "<b>Do not download these file types:</b>"
+#~ msgstr "<b>Download deze bestandstypen niet:</b>"
+
+#~ msgid "...each file"
+#~ msgstr "elk bestand"
+
+#~ msgid "...each directory"
+#~ msgstr "elke map"
+
+#~ msgid "GeoBlock"
+#~ msgstr "GeoBlock"
+
+#~ msgid "Geographical Blocking"
+#~ msgstr "Geografisch Blokkeren"
+
+#~ msgid "Current Icons:"
+#~ msgstr "Huidige iconen:"
+
+#~ msgid "Tray & Icons"
+#~ msgstr "Systeemvak & Iconen"
+
+#~ msgid "Ignoring"
+#~ msgstr "Negeren"
+
+#~ msgid "Misc"
+#~ msgstr "Diversen"
+
+#~ msgid "Notebooks"
+#~ msgstr "Notebooks"
+
+#~ msgid "UrlCatch"
+#~ msgstr "URL afvanger"
+
+#~ msgid "Server Settings"
+#~ msgstr "Server Instellingen"
+
+#~ msgid "Login:"
+#~ msgstr "Gebruiker:"
+
+#~ msgid "Use the above ports to configure your router or firewall."
+#~ msgstr ""
+#~ "Gebruik de bovenstaande poorten om je router of firewall in te stellen."
+
+#~ msgid "(only use if the above ports are remotely accessible)"
+#~ msgstr "(alleen gebruiken als de bovenstaande verbindingspoorten open zijn)"
+
+#~ msgid "Sounds"
+#~ msgstr "Geluiden"
+
+#~ msgid "Enable Sound Effects"
+#~ msgstr "Geluiden gebruiken"
+
+#~ msgid "Sound Effects Directory:"
+#~ msgstr "Map met geluiden:"
+
+#~ msgid "Upload directory:"
+#~ msgstr "Map voor uploads:"
+
+#~ msgid "(NOT RECOMMENDED)"
+#~ msgstr "(NIET AANGERADEN)"
+
+#~ msgid "Userinfo"
+#~ msgstr "Gebruikersinfo"
+
+#~ msgid "Save"
+#~ msgstr "Opslaan"
+
+#~ msgid "Add to list"
+#~ msgstr "Toevoegen aan lijst"
+
+#~ msgid "Save pic"
+#~ msgstr "Afbeelding opslaan"
+
+#, python-format
+#~ msgid ""
+#~ "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
+#~ msgstr ""
+#~ "IP adres van %(user)s is %(ip)s, naam %(host)s, poort %(port)i%(country)s"
+
+#~ msgid "Checking for changes"
+#~ msgstr "Controleren op veranderingen"
+
+#, python-format
+#~ msgid "Scanning %s"
+#~ msgstr "%s lezen"
+
+#~ msgid "Building DataBase"
+#~ msgstr "DataBase Opbouwen"
+
+#~ msgid "Building Index"
+#~ msgstr "Index Opbouwen"
+
+#, python-format
+#~ msgid "Scanning Directory Error: %(error)s Path: %(path)s"
+#~ msgstr "Fout bij het lezen van map: %(error)s Pad: %(path)s"
+
+#, python-format
+#~ msgid "Scanning Error: %(error)s Path: %(path)s"
+#~ msgstr "Scanfout: %(error)s Pad: %(path)s"
+
+#, python-format
+#~ msgid ""
+#~ "Scanning Error: Broken link to directory: \"%(link)s\" from Path: "
+#~ "\"%(path)s\". Repair or remove this link."
+#~ msgstr ""
+#~ "Scanfout: Gebroken link naar map: \"%(link)s\" van pad: \"%(path)s\". "
+#~ "Repareer of verwijder deze link."
+
+#, python-format
+#~ msgid "Scanning File Error: %(error)s Path: %(path)s"
+#~ msgstr "Fout bij lezen van bestand: %(error)s Pad: %(path)s"
+
+#, python-format
+#~ msgid ""
+#~ "You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
+#~ "connections for your protection. If you get this message often you should "
+#~ "search for less generic terms, or increase your per-process file "
+#~ "descriptor limit."
+#~ msgstr ""
+#~ "U hebt net uw verbindingslimiet van %(limit)s bereikt. Nicotine+ zal "
+#~ "verbindingen verbreken voor uw veiligheid. Als u deze boodschap vaak "
+#~ "krijgt kunt kunt u best naar minder algemene zoektermen zoeken of uw "
+#~ "limiet aanpassen."
+
+#, python-format
+#~ msgid "Failed download: user %(user)s, file %(file)s"
+#~ msgstr "Download mislukt: gebruiker %(user)s, bestand %(file)s"
+
+#~ msgid "Nicotine+ :: Directory download error"
+#~ msgstr "Nicotine+ :: Map download fout"
+
+#~ msgid "Nicotine+ :: directory completed"
+#~ msgstr "Nicotine+ :: map voltooid"
+
+#, python-format
+#~ msgid "Retrying failed download: %(user)s, file %(file)s"
+#~ msgstr "Mislukte Download opnieuw proberen: %(user)s, bestand %(file)s"
+
+#~ msgid "room"
+#~ msgstr "kamer"
+
+#~ msgid "Reattach a chat window to the notebook"
+#~ msgstr "Koppel een chat-tab terug vast aan het notebook"
+
+#~ msgid "Detach a chat tab from the notebook"
+#~ msgstr "Koppel een chat-tab los van het notebook"
+
+#~ msgid "user"
+#~ msgstr "gebruiker"
+
+#~ msgid "command"
+#~ msgstr "commando"
+
+#~ msgid "definition"
+#~ msgstr "definitie"
+
+#~ msgid "process"
+#~ msgstr "proces"
+
+#~ msgid "Add a new alias that runs a process"
+#~ msgstr "Een nieuwe alias toevoegen die een proces draait "
+
+#~ msgid "query"
+#~ msgstr "zoekopdracht"
+
+#~ msgid "Enable Private Rooms"
+#~ msgstr "Privékamers inschakelen"
+
+#~ msgid "Disable Private Rooms"
+#~ msgstr "Privékamers uitschakelen"
+
+#~ msgid "Set ticker message"
+#~ msgstr "Stel klok boodschap in"
+
+#~ msgid "Set room ticker message:"
+#~ msgstr "Stel kamer klokbericht in:"
+
+#~ msgid "Just this time"
+#~ msgstr "Alleen deze keer"
+
+#~ msgid "Always for this channel"
+#~ msgstr "Altijd voor dit kanaal"
+
+#~ msgid "Default for all channels"
+#~ msgstr "Standaard voor elk kanaal"
+
+# , python-format
+#, python-format
+#~ msgid "Nicotine+ Chatroom: %s"
+#~ msgstr "Nicotine+ Chatkamer: %s"
+
+# , python-format
+#, python-format
+#~ msgid "%i people in room"
+#~ msgstr "%i mensen in de kamer"
+
+#~ msgid "You are alone"
+#~ msgstr "U bent alleen"
+
+#~ msgid "Detach this tab"
+#~ msgstr "Deze tab losmaken"
+
+#~ msgid "Clear Queued Transfers"
+#~ msgstr "Wis overdrachten in wachtrij"
+
+#~ msgid "Nicotine+: Get User Info"
+#~ msgstr "Nicotine+: Vraag gebruikersinfo op"
+
+#~ msgid "Add thing I like"
+#~ msgstr "Geliefd item toevoegen"
+
+#~ msgid "Add thing I don't like"
+#~ msgstr "Gehaat item toevoegen"
+
+#~ msgid "I don't like"
+#~ msgstr "Ik haat"
+
+#, python-format
+#~ msgid ""
+#~ "%(myusername)s, the user, %(username)s has mentioned your name in the "
+#~ "room, %(place)s."
+#~ msgstr ""
+#~ "%(myusername)s, de gebruiker %(username)s heeft u naam genoemd in de "
+#~ "kamer %(place)s."
+
+#, python-format
+#~ msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+#~ msgstr "Nicotine+ Privé chat: %(user)s (%(status)s)"
+
+#~ msgid "Nicotine+ Wishlist"
+#~ msgstr "Nicotine+ Wenslijst"
+
+#~ msgid "Add Wish..."
+#~ msgstr "Wens Toevoegen..."
+
+#~ msgid "Wish:"
+#~ msgstr "Wens:"
+
+#~ msgid "Number"
+#~ msgstr "Nummer"
+
+#~ msgid "Download containing _folder(s)"
+#~ msgstr "Download bevattende map(pen)"
+
+#~ msgid "Download containing f_older(s) to..."
+#~ msgstr "Download bevattende map(pen) naar..."
+
+#~ msgid "Auto-Replace"
+#~ msgstr "Auto-vervangen"
+
 # encoding=UTF8
 #, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
+#~ msgid "%.2f GB"
+#~ msgstr "%.2f GB"
 
 #, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
+#~ msgid "%.2f MB"
+#~ msgstr "%.2f MB"
 
 #, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
+#~ msgid "%.2f KB"
+#~ msgstr "%.2f KB"
 
 #, python-format
-msgid "%d Bytes"
-msgstr "%s Bytes"
-
-# encoding=UTF8, python-format
-#, python-format
-msgid "%.2f GB/s"
-msgstr ""
-
-# , python-format
-#, python-format
-msgid "%.2f MB/s"
-msgstr ""
-
-# , python-format
-#, python-format
-msgid "%.2f KB/s"
-msgstr ""
+#~ msgid "%d Bytes"
+#~ msgstr "%s Bytes"
 
 #, python-format
-msgid "%d B/s"
-msgstr "%s B/s"
+#~ msgid "%d B/s"
+#~ msgstr "%s B/s"

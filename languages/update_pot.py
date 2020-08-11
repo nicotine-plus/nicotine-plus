@@ -45,6 +45,16 @@ files["../pynicotine/gtkgui/ui/"] = [
     if isfile(join("../pynicotine/gtkgui/ui/", f))
 ]
 
+files["../pynicotine/gtkgui/ui/about/"] = [
+    f for f in sorted(listdir("../pynicotine/gtkgui/ui/about/"))
+    if isfile(join("../pynicotine/gtkgui/ui/about/", f))
+]
+
+files["../pynicotine/gtkgui/ui/settings/"] = [
+    f for f in sorted(listdir("../pynicotine/gtkgui/ui/settings/"))
+    if isfile(join("../pynicotine/gtkgui/ui/settings/", f))
+]
+
 
 def isPythonScript(dir, file):
     if file.rsplit(".")[-1].lower() in ("py"):
