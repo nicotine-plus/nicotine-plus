@@ -238,7 +238,7 @@ def run():
 
             profiler.dump_stats(dumpfile)
         else:
-            app.MainLoop()
+            app.run(None)
     else:
         print(result)
 
