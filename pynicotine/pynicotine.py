@@ -167,7 +167,7 @@ class NetworkEventProcessor:
         self.servertimer = None
         self.servertimeout = -1
 
-        self.distribcache = {}
+        self.parentconn = None
         self.branchlevel = 0
         self.branchroot = None
 
@@ -600,8 +600,8 @@ class NetworkEventProcessor:
                     if self.transfers is not None:
                         self.transfers.ConnClose(conn, addr)
 
-                    if i == self.GetDistribConn():
-                        self.DistribConnClosed(i)
+                    if self.parentconn is not None and i == self.parentconn:
+                        self.ParentConnClosed()
 
                     self.peerconns.remove(i)
                     break
@@ -639,8 +639,7 @@ class NetworkEventProcessor:
             for thing in self.config.sections["interests"]["dislikes"]:
                 self.queue.put(slskmessages.AddThingIHate(thing))
 
-            if not len(self.distribcache):
-                self.queue.put(slskmessages.HaveNoParent(1))
+            self.queue.put(slskmessages.HaveNoParent(1))
 
             """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
             redirecting results to children is not implemented yet. Tell the server we don't accept
@@ -975,10 +974,6 @@ class NetworkEventProcessor:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def DistribChildDepth(self, msg):
-        # TODO: Implement me
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-
-    def DistribBranchLevel(self, msg):
         # TODO: Implement me
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -1477,8 +1472,8 @@ class NetworkEventProcessor:
                 if i.conntimer is not None:
                     i.conntimer.cancel()
 
-                if i == self.GetDistribConn():
-                    self.DistribConnClosed(i)
+                if self.parentconn is not None and i == self.parentconn:
+                    self.ParentConnClosed()
 
                 self.peerconns.remove(i)
 
@@ -1495,8 +1490,8 @@ class NetworkEventProcessor:
 
             if i == msg.conn:
 
-                if i == self.GetDistribConn():
-                    self.DistribConnClosed(i)
+                if self.parentconn is not None and i == self.parentconn:
+                    self.ParentConnClosed()
 
                 self.peerconns.remove(i)
 
@@ -1696,43 +1691,49 @@ class NetworkEventProcessor:
 
     def PossibleParents(self, msg):
 
-        self.distribcache.update(msg.list)
+        """ Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
+        We attempt to connect to them all at once, since connection errors are fairly common. """
 
-        if len(self.distribcache) > 0:
+        potential_parents = msg.list
 
-            self.queue.put(slskmessages.HaveNoParent(0))
+        if not self.parentconn and potential_parents:
 
-            if not self.GetDistribConn():
-
-                user = list(self.distribcache.keys())[0]
-                addr = self.distribcache[user]
-
-                self.queue.put(slskmessages.SearchParent(addr[0]))
+            for user in potential_parents:
+                addr = potential_parents[user]
 
                 self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def GetDistribConn(self):
-        for i in self.peerconns:
-            if i.init.type == 'D':
-                return i
-        return None
+    def ParentConnClosed(self):
+        self.parentconn = None
 
-    def DistribConnClosed(self, conn):
+        """ Tell the server it needs to send us a NetInfo message with a new list of
+        potential parents. """
 
-        del self.distribcache[conn.username]
+        self.queue.put(slskmessages.HaveNoParent(1))
 
-        if len(self.distribcache) > 0:
+    def DistribBranchLevel(self, msg):
+        """ This message is received when we have a successful connection with a potential
+        parent. Tell the server who our parent is, and stop requesting new potential parents. """
 
-            user = list(self.distribcache.keys())[0]
-            addr = self.distribcache[user]
+        if self.parentconn is None:
 
-            self.queue.put(slskmessages.SearchParent(addr[0]))
+            for i in self.peerconns[:]:
+                if i.init.type == 'D':
+                    """ We previously attempted to connect to all potential parents. Since we now
+                    have a parent, stop connecting to the others. """
 
-            self.ProcessRequestToPeer(user, slskmessages.DistribConn(), None, addr)
-        else:
-            self.queue.put(slskmessages.HaveNoParent(1))
+                    if i.conn is not None and i.conn != msg.conn.conn:
+                        self.queue.put(slskmessages.ConnClose(i.conn))
+
+                    self.peerconns.remove(i)
+
+            self.queue.put(slskmessages.HaveNoParent(0))
+            self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
+            self.parentconn = msg.conn
+
+        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def GlobalRecommendations(self, msg):
         self.frame.GlobalRecommendations(msg)
