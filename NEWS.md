@@ -14,11 +14,14 @@ Changes
    On large file shares, this cuts down startup times from tens of seconds to 1-2 seconds, depending on your hardware.
  * Numbers are now appended to the file names of duplicate downloads
  * In folder/user grouping mode, selecting a user or folder now allows you to retry/cancel all downloads under them
- * Several UI changes and improvements
+ * Added quick-access checkbox for enabling/disabling private room invitations
+ * Replaced ticker banner with room wall, which displays individual messages from room users
+ * Improved notification settings
+ * Improved readability in search results and transfer views
+ * Several other UI fixes and improvements
  * Using non-Latin characters in the Windows client now works properly again
  * The Windows installer size was reduced from ~40 MB to ~25 MB
  * The Windows installer now removes old Nicotine+ system files before updating installations
- * Added quick-access checkbox for enabling/disabling private room invitations
  * Removed support for detachable tabs due to low usage and bugs
  * Replaced Mutagen with pytaglib for audio file metadata scanning due to performance issues
 
@@ -26,16 +29,27 @@ Issues closed on GitHub
 
  * Brew OSX Install (#58)
  * Flatpak build (#102)
+ * Fix remaining GTK warnings (#290)
  * right click user implicitly selects all files downloading from that user. (#308)
  * two cds saved in the same folder (#313)
  * Fatal error detected" when trying to run Nicotine on Windows 10 (#413)
+ * RAM usage (#416)
  * if no close button on tabs it's not possible to close User search file notebook (#428)
  * Question; what diff between scanning and rebuilding share ? (#430)
+ * notify sharelist is empty (#434)
  * double click is received on selection despite being performed on blank space (#437)
+ * align columns text to left, right or center (#438)
  * Font worrie > (#458)
  * url catching stop to work since update of 2 days ago (#457)
  * progress bar stuck at 100% (#454)
  * Question : how to auto-join a room ? (#464)
+ * Every you can right click a user, but not in the chat, there it's left click. (#466)
+ * Tree view expand/collapse is not respected on new transfer (#473)
+ * application content is not diplayed properly with tabs set to side (#474)
+ * Completed downloads are re-Queued (#477)
+ * search tab "close thistab" missing if 3 tabs are open (#481)
+ * close button in About Nicotine+ doesn't work (#485)
+ * Wishlist has issues with chinese characters (#498)
 
 
 Version 2.0.1 (16 July 2020)
