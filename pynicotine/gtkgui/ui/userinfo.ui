@@ -375,6 +375,7 @@
                       <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <signal name="scroll-event" handler="OnScrollEvent" swapped="no"/>
                         <child>
                           <object class="GtkViewport">
                             <property name="visible">True</property>
@@ -385,7 +386,6 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <signal name="button-press-event" handler="OnImageClick" swapped="no"/>
-                                <signal name="scroll-event" handler="OnScrollEvent" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="image">
                                     <property name="visible">True</property>
