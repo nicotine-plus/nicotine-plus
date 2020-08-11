@@ -2020,7 +2020,8 @@
                                         <property name="can_focus">False</property>
                                         <property name="halign">start</property>
                                         <property name="margin_start">10</property>
-                                        <property name="label" translatable="yes">Your interests</property>
+                                        <property name="label" translatable="yes">&lt;b&gt;Your Interests&lt;/b&gt;</property>
+                                        <property name="use_markup">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2033,15 +2034,12 @@
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="margin_start">5</property>
-                                        <property name="margin_end">5</property>
                                         <property name="spacing">5</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                          <object class="GtkScrolledWindow" id="scrolledwindow23">
+                                          <object class="GtkScrolledWindow">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="shadow_type">in</property>
                                             <child>
                                               <object class="GtkTreeView" id="LikesList">
                                                 <property name="visible">True</property>
@@ -2063,6 +2061,7 @@
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
                                             <property name="spacing">5</property>
                                             <child>
                                               <object class="GtkEntry" id="AddLikeEntry">
@@ -2115,14 +2114,12 @@
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="border_width">5</property>
                                         <property name="spacing">5</property>
                                         <property name="orientation">vertical</property>
                                         <child>
                                           <object class="GtkScrolledWindow">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="shadow_type">in</property>
                                             <child>
                                               <object class="GtkTreeView" id="DislikesList">
                                                 <property name="visible">True</property>
@@ -2144,6 +2141,7 @@
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
                                             <property name="spacing">5</property>
                                             <child>
                                               <object class="GtkEntry" id="AddDislikeEntry">
@@ -2206,7 +2204,6 @@
                                       <object class="GtkBox" id="RecommendationsVbox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="border_width">5</property>
                                         <property name="orientation">vertical</property>
                                         <child>
                                           <object class="GtkBox">
@@ -2217,6 +2214,7 @@
                                               <object class="GtkBox">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="border_width">5</property>
                                                 <property name="margin_bottom">5</property>
                                                 <property name="spacing">5</property>
                                                 <child>
@@ -2224,7 +2222,8 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                     <property name="halign">start</property>
-                                                    <property name="label" translatable="yes">Recommendations</property>
+                                                    <property name="label" translatable="yes">&lt;b&gt;Recommendations&lt;/b&gt;</property>
+                                                    <property name="use_markup">True</property>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
@@ -2313,10 +2312,9 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkScrolledWindow" id="RecScrolledWindow">
+                                              <object class="GtkScrolledWindow">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="shadow_type">in</property>
                                                 <child>
                                                   <object class="GtkTreeView" id="RecommendationsList">
                                                     <property name="visible">True</property>
@@ -2344,6 +2342,7 @@
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
                                             <property name="orientation">vertical</property>
                                             <child>
                                               <object class="GtkLabel" id="UnrecommendationsLabel">
@@ -2351,7 +2350,8 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">5</property>
-                                                <property name="label" translatable="yes">Unrecommendations</property>
+                                                <property name="label" translatable="yes">&lt;b&gt;Unrecommendations&lt;/b&gt;</property>
+                                                <property name="use_markup">True</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2361,10 +2361,9 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkScrolledWindow" id="UnRecScrolledWindow">
+                                              <object class="GtkScrolledWindow">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="shadow_type">in</property>
                                                 <child>
                                                   <object class="GtkTreeView" id="UnrecommendationsList">
                                                     <property name="visible">True</property>
@@ -2399,12 +2398,12 @@
                                         <property name="width_request">280</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="border_width">5</property>
                                         <property name="orientation">vertical</property>
                                         <child>
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
                                             <property name="margin_bottom">5</property>
                                             <property name="spacing">5</property>
                                             <child>
@@ -2412,7 +2411,8 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="label" translatable="yes">Similar users</property>
+                                                <property name="label" translatable="yes">&lt;b&gt;Similar Users&lt;/b&gt;</property>
+                                                <property name="use_markup">True</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2468,7 +2468,6 @@
                                           <object class="GtkScrolledWindow">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="shadow_type">in</property>
                                             <child>
                                               <object class="GtkTreeView" id="RecommendationUsersList">
                                                 <property name="visible">True</property>
