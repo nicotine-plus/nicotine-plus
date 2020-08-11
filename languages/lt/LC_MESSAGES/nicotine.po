@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nicotine+ HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-11 07:35+0300\n"
+"POT-Creation-Date: 2020-08-11 17:37+0300\n"
 "PO-Revision-Date: 2009-07-06 12:41+0300\n"
 "Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -33,6 +33,9 @@ msgid ""
 msgstr ""
 
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
+msgstr ""
+
+msgid "Cannot find pytaglib, please install it."
 msgstr ""
 
 msgid ""
@@ -80,35 +83,32 @@ msgstr "Bičiulių sąrašas"
 msgid "Add Buddy: "
 msgstr "Pridėti bičiulį:"
 
+msgid "Add"
+msgstr "Pridėti"
+
 msgid "Configure banned users"
 msgstr ""
 
 msgid "Chat Room"
 msgstr ""
 
-msgid "Hide/Show Status log"
-msgstr "Slėpti / rodyti būsenos žurnalą"
-
-msgid "Hide/Show User list"
-msgstr "Slėpti / rodyti naudotojų sąrašą"
+msgid "Log"
+msgstr "Žurnalas"
 
 msgid "Toggle Text-To-Speech"
 msgstr "Perjungti „Tekstas į kalbą“"
 
+msgid "Room wall"
+msgstr ""
+
 msgid "Chat room command help"
 msgstr "Pokalbių kambarių komandų žinynas"
 
-msgid "0 people in room"
-msgstr "0 žmonių kambaryje"
+msgid "User List"
+msgstr ""
 
-msgid "Log"
-msgstr "Žurnalas"
-
-msgid "Auto-join"
-msgstr "Autoprijungimas"
-
-msgid "Leave"
-msgstr "Išeiti"
+msgid "Auto-join Room"
+msgstr ""
 
 msgid "<b>Welcome to Nicotine+!</b>"
 msgstr ""
@@ -119,9 +119,11 @@ msgid ""
 msgstr ""
 
 msgid ""
-"To create a new user just fill in the username and password you want.\n"
+"To create a new user, fill in the username and password you want. If you "
+"already have an account at the server, fill in those details.\n"
 "\n"
-"If you already have an account at the server fill in those details."
+"Please keep in mind that more common usernames may be taken. If you're "
+"unable to connect later, change your username in the settings."
 msgstr ""
 
 msgid "Username"
@@ -145,7 +147,9 @@ msgstr ""
 msgid "The page says my port is closed"
 msgstr ""
 
-msgid "Use UPnP to map the port on my router"
+msgid ""
+"Only select \"The page says my port is closed\" if all attempts at opening "
+"the port were unsuccessful. This can happen if your ISP blocks ports."
 msgstr ""
 
 msgid "Use the first available port in the range from "
@@ -159,9 +163,6 @@ msgstr ""
 
 msgid "Share the following directories:"
 msgstr ""
-
-msgid "Add"
-msgstr "Pridėti"
 
 msgid "Remove"
 msgstr "Pašalinti"
@@ -239,12 +240,6 @@ msgstr "Rodyti _derinimo informaciją"
 msgid "Show _room list"
 msgstr ""
 
-msgid "Show _tickers"
-msgstr ""
-
-msgid "Show _chat room log and list toggles"
-msgstr ""
-
 msgid "Show _flag columns in user lists"
 msgstr ""
 
@@ -270,12 +265,6 @@ msgid "_Rescan Public shares"
 msgstr ""
 
 msgid "Rescan B_uddy shares"
-msgstr ""
-
-msgid "Re_build Public shares"
-msgstr ""
-
-msgid "Rebuild Bu_ddy shares"
 msgstr ""
 
 msgid "_Browse Public shares"
@@ -317,12 +306,6 @@ msgstr "Bičiulių _sąrašas"
 msgid "_Help"
 msgstr ""
 
-msgid "Project _Website"
-msgstr ""
-
-msgid "Project _Github Page"
-msgstr ""
-
 msgid "About _chat room commands"
 msgstr "Apie _pokalbių kambarių komandas"
 
@@ -332,8 +315,8 @@ msgstr "Apie _asmeninių pokalbių komandas"
 msgid "About _search filters"
 msgstr "Apie pa_ieškos filtrus"
 
-msgid "Check _latest"
-msgstr "Ieškoti _naujausios versijos"
+msgid "Check _latest version"
+msgstr ""
 
 msgid "Report a _bug"
 msgstr "Pranešti apie _klaidą"
@@ -341,8 +324,11 @@ msgstr "Pranešti apie _klaidą"
 msgid "About _Nicotine+"
 msgstr ""
 
-msgid "Start Message"
-msgstr "Rašyti žinutę"
+msgid "User:"
+msgstr "Naudotojas:"
+
+msgid "Start Messaging"
+msgstr ""
 
 msgid "Configure logging"
 msgstr ""
@@ -356,14 +342,11 @@ msgstr "Rinkmenos: 0"
 msgid "Expand / Collapse all"
 msgstr "Išplėsti / sutraukti visus"
 
-msgid "Group by Users"
-msgstr "Grupuoti pagal naudotojus"
+msgid "Autoclear finished / filtered"
+msgstr ""
 
-msgid "Auto-retry failed"
-msgstr "Automatiškai kartoti nepavykusius"
-
-msgid "Every 3 minutes"
-msgstr "Kas 3 minutes"
+msgid "File grouping mode"
+msgstr ""
 
 msgid "Configure downloads"
 msgstr ""
@@ -380,14 +363,14 @@ msgstr "Bandyti dar kartą"
 msgid "Abort"
 msgstr "Nutraukti"
 
-msgid "Abort & Delete"
-msgstr "Nutraukti ir ištrinti"
+msgid "Delete"
+msgstr ""
 
 msgid "Ban User(s)"
 msgstr "Užblokuoti naudotoją(us)"
 
-msgid "Autoclear Finished"
-msgstr "Automatiškai išvalyti baigtus"
+msgid "Autoclear finished / aborted"
+msgstr ""
 
 msgid "Configure uploads"
 msgstr ""
@@ -395,10 +378,10 @@ msgstr ""
 msgid "Clear Finished / Failed"
 msgstr ""
 
-msgid "Abort User's Upload(s)"
-msgstr "Nutraukti išsiuntimus naudotojui"
+msgid "Abort User's Uploads"
+msgstr ""
 
-msgid "Wishlist"
+msgid "Search scope"
 msgstr ""
 
 msgid "Search patterns: with a word = term, without a word = -term"
@@ -410,14 +393,14 @@ msgstr "Išvalyti visus paieškos bandymus"
 msgid "Search"
 msgstr "Ieškoti"
 
-msgid "Search scope"
+msgid "Wishlist"
 msgstr ""
 
 msgid "Configure searches"
 msgstr ""
 
-msgid "Get Userinfo"
-msgstr "Gauti naudotojo informaciją"
+msgid "Show Info"
+msgstr ""
 
 msgid "Configure user info"
 msgstr ""
@@ -425,23 +408,32 @@ msgstr ""
 msgid "Browse Shares"
 msgstr "Naršyti viešinius"
 
-msgid "Load From Disk"
-msgstr "Įkelti iš disko"
+msgid "Load from Disk"
+msgstr ""
 
 msgid "Configure shares"
 msgstr ""
 
-msgid "Similar users"
-msgstr "Panašūs naudotojai"
+msgid "Your interests"
+msgstr ""
 
 msgid "Recommendations"
 msgstr "Rekomendacijos"
 
-msgid "Global recommendations"
-msgstr "Visuotinės rekomendacijos"
+msgid "Personal"
+msgstr ""
+
+msgid "Global"
+msgstr "Visur"
 
 msgid "Unrecommendations"
 msgstr "Nerekomendacijos"
+
+msgid "Similar users"
+msgstr "Panašūs naudotojai"
+
+msgid "Show Similar Users"
+msgstr ""
 
 msgid "Debug output:"
 msgstr "Derinimo išvestis:"
@@ -470,8 +462,8 @@ msgstr "Skenuojami bičiulių viešiniai"
 msgid "Scanning Shares"
 msgstr "Skenuojami viešiniai"
 
-msgid "Nicotine+: Configure Now Playing"
-msgstr "Nicotine+: konfigūruoti _Dabar grojama"
+msgid "Configure Now Playing"
+msgstr ""
 
 msgid "Display what your Media Player is playing in Chat with the /now command"
 msgstr "Pokalbių lange nurodžius komandą /now, rodyti, ką groja jūsų grotuvas"
@@ -518,14 +510,23 @@ msgstr "Grojamos dainos rodymo formatas:"
 msgid "Example:"
 msgstr "Pavyzdys:"
 
+msgid "Cancel"
+msgstr "Atšaukti"
+
+msgid "Execute"
+msgstr ""
+
 msgid "Test the configuration"
 msgstr ""
+
+msgid "OK"
+msgstr "Gerai"
 
 msgid "PrivateChat"
 msgstr "AsmeninisPokalbis"
 
-msgid "Direct"
-msgstr "Tiesiogiai"
+msgid "Direct Message"
+msgstr ""
 
 msgid ""
 "Send the private message directly to the user (not supported on most clients)"
@@ -533,26 +534,31 @@ msgstr ""
 "Siųsti asmeninį pranešimą tiesiogiai naudotojui (dauguma klientų to "
 "nepalaiko)"
 
-msgid "Close"
-msgstr "Užverti"
+msgid "Private chat command help"
+msgstr ""
 
 msgid "Room List"
 msgstr ""
 
-msgid "Chatrooms"
+msgid "Chat Rooms"
+msgstr "Pokalbių kambariai"
+
+msgid "Refresh room list"
 msgstr ""
 
-msgid "Create: "
-msgstr "Sukurti: "
+msgid "Accept private room invitations"
+msgstr ""
 
-msgid "Hide room list"
-msgstr "Paslėpti kambarių sąrašą"
+msgid "Room Wall"
+msgstr ""
 
-msgid "Search: "
-msgstr "Ieškoti:"
+msgid ""
+"The room wall feature allows users in a room to specify a unique message to "
+"display to others."
+msgstr ""
 
-msgid "Query"
-msgstr "Užklausa"
+msgid "Set Message"
+msgstr ""
 
 msgid "Results: 0/0"
 msgstr "Rezultatai: 0/0"
@@ -572,6 +578,9 @@ msgstr ""
 "naujos paieškos užklausos po serveryje nurodytiems laiko intervalams "
 "(paprastai apie vieną valandą)"
 
+msgid "Result grouping mode"
+msgstr ""
+
 msgid "Clear all results"
 msgstr "Išvalyti visus rezultatus"
 
@@ -580,11 +589,6 @@ msgstr "Nerodyti naujų paieškos rezultatų"
 
 msgid "Ignore"
 msgstr "Nepaisyti"
-
-msgid "Close search tab; press ignore to prevent this tab from reopening"
-msgstr ""
-"Užverti paieškos kortelę; spustelėkite Nepaisyti, jeigu nenorite, kad "
-"kortelė būtų vėl atverta"
 
 msgid "Filter in:"
 msgstr "Rodyti:"
@@ -604,870 +608,11 @@ msgstr "Valstybė:"
 msgid "Free slot"
 msgstr "Laisva skiltis"
 
-msgid ""
-"Enable automatic replacement of chat words you've\n"
-"typed incorrectly or as an acronym"
+msgid "Search filter help"
 msgstr ""
-"Įjungti automatinį žodžių, kuriuos parašėte neteisingai\n"
-"arba kaip akronimus, pakeitimą pokalbyje"
-
-msgid "Add..."
-msgstr "Pridėti..."
-
-msgid "Clear"
-msgstr "Išvalyti"
-
-msgid "Load Defaults"
-msgstr "Įkelti numatytuosius"
-
-msgid "Auto-Replace List"
-msgstr "Automatinio pakeitimo sąrašas"
-
-msgid "Away"
-msgstr "Pasitraukęs"
-
-msgid "Toggle away after "
-msgstr "Įjungti nebuvimą po "
-
-msgid " minutes of inactivity"
-msgstr " minučių neveiklumo"
-
-msgid "Auto-reply when away:  "
-msgstr "Automatinis atsakymas pasitraukus:  "
-
-msgid "Away mode"
-msgstr "Nebuvimo veiksena"
-
-msgid "Ban"
-msgstr "Užblokuoti"
-
-msgid "Banned Users:"
-msgstr "Užblokuoti naudotojai:"
-
-msgid "Blocked IP Addresses:"
-msgstr "Užblokuoti IP adresai:"
-
-msgid "Use custom ban message:"
-msgstr "Naudoti pasirinktinę blokavimo žinutę:"
-
-msgid "Banning"
-msgstr "Blokavimas"
-
-msgid "Bloat"
-msgstr "Šlamštas"
-
-msgid "Enable spell checker (requires a restart)"
-msgstr "Įjungti rašybos tikrinimą (reikia paleisti programą iš naujo)"
-
-msgid "Show Buttons in Transfers Tabs"
-msgstr "Siuntimų kortelėse rodyti mygtukus"
-
-msgid "Chat Font:"
-msgstr "Pokalbio šriftas:"
-
-msgid "List Font:"
-msgstr "Sąrašo šriftas:"
-
-msgid "Transfers Font:"
-msgstr "Siuntimų šriftas:"
-
-msgid "Search Font:"
-msgstr "Paieškos šriftas:"
-
-msgid "Browse Font:"
-msgstr "Naršymo šriftas:"
-
-msgid "Decimal separator:"
-msgstr "Dešimtainis skirtukas:"
-
-msgid "Extra stuff for your comfort"
-msgstr "Papildomi įrankiai jūsų patogumui"
-
-msgid "Enable Censorship"
-msgstr "Įjungti cenzūrą"
-
-msgid ""
-"Add spaces around words if you don't wish to match strings inside words (may "
-"fail at beginning and end of lines)"
-msgstr ""
-
-msgid "Replace censored letters with:"
-msgstr "Pakeisti cenzūruotas raides:"
-
-msgid "Censor List"
-msgstr "Cenzūros sąrašas"
-
-msgid "Chat"
-msgstr "Pokalbis"
-
-msgid "Choose <b>Away mode</b> to configure your auto-away settings."
-msgstr ""
-
-msgid ""
-"Choose <b>Logging</b> to configure what's logged and where to save the logs."
-msgstr ""
-"Pasirinkite <b>Žurnalų vedimas</b> norėdami nurodyti kas rašoma į žurnalus "
-"ir kur juos saugoti."
-
-msgid ""
-"Choose <b>Ignore List</b> to configure users and/or IPs you want to ignore."
-msgstr ""
-
-msgid ""
-"Choose <b>Censor List</b> to configure what unwanted words you want to "
-"censor."
-msgstr ""
-
-msgid ""
-"Choose <b>Auto-Replace</b> to configure auto-replacement of words (such as "
-"common typos)."
-msgstr ""
-
-msgid ""
-"Choose <b>URL Catching</b> to configure the programs used when clicking on "
-"links."
-msgstr ""
-"Pasirinkite <b>URL surinkimas</b> norėdami nurodyti kokios programos "
-"paleidžiamos spustelėjus nuorodas."
-
-msgid "Choose <b>Completion</b> to configure auto-completion in chats."
-msgstr ""
-
-msgid "Chat Settings"
-msgstr "Pokalbio parametrai"
-
-msgid "Colors"
-msgstr ""
-
-msgid "Default Colors"
-msgstr ""
-
-msgid "URL Link text"
-msgstr "URL nuorodos tekstas"
-
-msgid "Default"
-msgstr "Numatytoji"
-
-msgid "Username Font Style:"
-msgstr "Naudotojo vardo šrifto stilius:"
-
-msgid "Offline"
-msgstr "Atsijungęs"
-
-msgid "Online"
-msgstr "Prisijungęs"
-
-msgid "Username Colors and Hotspots"
-msgstr ""
-
-msgid "Display away colors"
-msgstr "Rodyti nebuvimo spalvas"
-
-msgid "Highlight text"
-msgstr "Paryškinimo tekstas"
-
-msgid "/me text"
-msgstr "/me tekstas"
-
-msgid "Local text"
-msgstr "Vietinis tekstas"
-
-msgid "Remote text"
-msgstr "Nutolęs tekstas"
-
-msgid "<b>Chat colors</b>"
-msgstr ""
-
-msgid "Input Text"
-msgstr "Įvesties tekstas"
-
-msgid "Background"
-msgstr "Fonas"
-
-msgid "Input and lists colors"
-msgstr ""
-
-msgid "Offline Search"
-msgstr "Paieška atsijungus"
-
-msgid "With queue"
-msgstr "Eilėje"
-
-msgid "List Text"
-msgstr "Sąrašo tekstas"
-
-msgid "<b>List and search colors</b>"
-msgstr ""
-
-msgid "Notebook tab labels change to these colors."
-msgstr ""
-
-msgid "Changed"
-msgstr "Pakeista"
-
-msgid "Highlight"
-msgstr "Paryškinti"
-
-msgid "<b>Tab colors</b>"
-msgstr ""
-
-msgid "Text Completion"
-msgstr "Teksto užbaigimas"
-
-msgid "Enable tab-key completion"
-msgstr "Įjungti užbaigimą Tab klavišu"
-
-msgid "Cycle completions instead of showing a dropdown"
-msgstr "Paeiliui keisti užbaigimo variantus, užuot rodžius sąrašą"
-
-msgid "Complete room names in chat rooms"
-msgstr "Užbaigti kambarių pavadinimus pokalbių kambariuose"
-
-msgid "Complete Buddy Names"
-msgstr "Užbaigti bičiulių vardus"
-
-msgid "Complete usernames in chat rooms"
-msgstr "Užbaigti naudotojų vardus pokalbių kambariuose"
-
-msgid "Complete built-in /Commands"
-msgstr "Užbaigti įtaisytąsias /Komandas"
-
-msgid "Complete alias /Commands"
-msgstr "Užbaigti susietąsias /Komandas"
-
-msgid "Allowed Completions"
-msgstr "Leidžiami užbaigimai"
-
-msgid "Enable completion drop-down list"
-msgstr "Įjungti užbaigimo išskleidžiamą sąrašą"
-
-msgid "Minimum characters required to display drop-down:"
-msgstr "Minimalus simbolių skaičius, kad būtų rodomas išskleidžiamas sąrašas:"
-
-msgid "Hide drop-down when only one matches"
-msgstr "Paslėpti išskleidžiamą sąrašą, kai yra tik vienas atitikmuo"
-
-msgid "Drop-down list"
-msgstr "Išskleidžiamas sąrašas"
-
-msgid "Chat text completion"
-msgstr "Pokalbio teksto užbaigimas"
-
-msgid "Shares"
-msgstr "V_iešiniai"
-
-msgid "Incomplete file directory:"
-msgstr "Nebaigtų siųsti rinkmenų aplankas:"
-
-msgid "Download directory:"
-msgstr "Atsiuntimo aplankas:"
-
-msgid "Share download directory"
-msgstr "Viešinti atsiuntimų aplanką"
-
-msgid "Limit total download speeds to (KBytes/sec):"
-msgstr ""
-
-msgid "Where incomplete downloads are stored temporarily"
-msgstr "Kur laikinai saugomi nebaigtos siųsti rinkmenos"
-
-msgid "Select a directory"
-msgstr ""
-
-msgid "<b>Directories</b>"
-msgstr ""
-
-msgid "<b>Do not download these file types:</b>"
-msgstr "<b>Neatsiųsti šių tipų rinkmenų:</b>"
-
-msgid "Enable Filters"
-msgstr "Įjungti filtrus"
-
-msgid ""
-"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
-"are supported if escaping is disabled. For simple filters, keep escaping "
-"enabled."
-msgstr ""
-"<b>Sintaksė:</b> raidžių registras nesvarbus, palaikomos visos Python "
-"reguliarios išraiškos, jeigu išjungti kaitos simboliai. Naudodami paprastus "
-"filtrus, įjunkite kaitos simbolius."
-
-msgid "Verify Filters"
-msgstr "Patikrinti filtrus"
-
-msgid "<b>Unverified</b>"
-msgstr "<b>Nepatikrinta</b>"
-
-msgid "Edit Filter"
-msgstr "Keisti filtrą"
-
-msgid "<b>Download Filters:</b>"
-msgstr "<b>Atsiuntimo filtrai:</b>"
-
-msgid "Downloads"
-msgstr "Atsiuntimai"
-
-msgid "Events"
-msgstr "Įvykiai"
-
-msgid "Show notification popup in tray after..."
-msgstr "Rodyti iškylantį pranešimą skydelyje po..."
-
-msgid "...each file"
-msgstr "...kiekvieno failo"
-
-msgid "...each directory"
-msgstr "...kiekvieno aplanko"
-
-msgid "Run command after download finishes ($ for filename):"
-msgstr "Atsiuntus paleisti komandą ($ – rinkmenos pavadinimas):"
-
-msgid "Run command after folder finishes ($ for folder path):"
-msgstr "Atsiuntus aplanką paleisti komandą ($ – aplanko kelias):"
-
-msgid "File Manager command ($ for folder path):"
-msgstr "Rinkmenų naršyklės komanda ($ – aplanko kelias):"
-
-msgid "Double-clicking on..."
-msgstr "Dukart spustelėjus..."
-
-msgid "Download transfers"
-msgstr "Atsiunčiamas rinkmenas"
-
-msgid "Upload transfers"
-msgstr "Išsiunčiamas rinkmenas"
-
-msgid "Nothing"
-msgstr ""
-
-msgid "Send to player"
-msgstr ""
-
-msgid "Open Directory"
-msgstr "Atverti aplanką"
-
-msgid "GeoBlock"
-msgstr "GeoBlock"
-
-msgid "Enable geographical blocker"
-msgstr "Įjungti geografinį blokavimą"
-
-msgid "Geographical paranoia (block unresolvable IPs)"
-msgstr "Geografinė paranoja (blokuoti neišaiškinamus IP)"
-
-msgid "Country codes to block (comma separated):"
-msgstr "Blokuotinų valstybių kodai (atskirti kableliu):"
-
-msgid ""
-"Geo Block controls from which countries users are allowed access to your "
-"shares."
-msgstr ""
-
-msgid "Geographical Blocking"
-msgstr "Geografinis blokavimas"
-
-msgid "Icons"
-msgstr "Piktogramos"
-
-msgid "Display Tray Icon"
-msgstr "Rodyti piktogramą skydelyje"
-
-msgid "Show confirmation dialog when closing the main window"
-msgstr "Užveriant pagrindinį langą, rodyti patvirtinimo dialogą"
-
-msgid "Always send Nicotine+ to tray when main window is closed"
-msgstr ""
-
-msgid "Always quit when main window is closed"
-msgstr "Užveriant pagrindinį langą, uždaryti programą"
-
-msgid "Icon Theme Directory (requires restart):"
-msgstr "Piktogramų temos aplankas (reikia paleisti programą iš naujo):"
-
-msgid "Current Icons:"
-msgstr "Dabartinės piktogramos:"
-
-msgid "<b>Status</b>"
-msgstr "<b>Būsena</b>"
-
-msgid "Online:"
-msgstr "Prisijungęs:"
-
-msgid "Away:"
-msgstr "Neaktyvus:"
-
-msgid "Offline:"
-msgstr "Atsijungęs:"
-
-msgid "Nick Hilite:"
-msgstr "Slapyvardžio paryškinimas:"
-
-msgid "Hilite:"
-msgstr "Paryškinti:"
-
-msgid "Disconnected:"
-msgstr "Atsijungta:"
-
-msgid "Connected:"
-msgstr "Prisijungta:"
-
-msgid "<b>Trayicon</b>"
-msgstr "<b>Pranešimų vietos piktograma</b>"
-
-msgid "Notify:"
-msgstr "Pranešti:"
-
-msgid "Window:"
-msgstr "Langas:"
-
-msgid "Tray & Icons"
-msgstr "Skydelis ir piktogramos"
-
-msgid "Ignored users:"
-msgstr "Nepaisomi naudotojai:"
-
-msgid "Ignored IPs:"
-msgstr "Nepaisomi IP:"
-
-msgid "Ignoring"
-msgstr "Nepaisoma"
-
-msgid "Logs directory:"
-msgstr "Žurnalų aplankas:"
-
-msgid "Chatroom Logs directory:"
-msgstr "Pokalbių kambarių žurnalų aplankas:"
-
-msgid "Private Chat Logs directory:"
-msgstr "Asmeninių pokalbių žurnalų aplankas:"
-
-msgid "Log chatrooms by default"
-msgstr "Vesti pokalbių kambarių žurnalus"
-
-msgid "Log private chat by default"
-msgstr "Vesti asmeninių pokalbių žurnalus"
-
-msgid "Log transfers"
-msgstr "Vesti siuntimų žurnalą"
-
-msgid "Display logged chat room messages when a room is rejoined"
-msgstr "Įėjus į pokalbių kambarį iš naujo, rodyti išsaugotas kambario žinutes"
-
-msgid "Read"
-msgstr "Skaityti"
-
-msgid "lines"
-msgstr "eilutes (-čių)"
-
-msgid "Reopen last Private Chat messages"
-msgstr "Vėl atverti paskutinius asmeninio pokalbio pranešimus"
-
-msgid "<b>Timestamps</b>"
-msgstr "<b>Laiko žymos</b>"
-
-msgid "Display timestamps"
-msgstr "Rodyti laiko žymas"
-
-msgid "Log file format:"
-msgstr "Žurnalų failų formatas:"
-
-msgid "Chat room format:"
-msgstr "Pokalbių kambarių formatas:"
-
-msgid "Private chat format:"
-msgstr "Asmeninių pokalbių formatas:"
-
-msgid "Logging"
-msgstr "Žurnalų vedimas"
-
-msgid "Misc"
-msgstr "Įvairūs"
-
-msgid "Choose <b>Plugins</b> to activate additional plugins (experimental)."
-msgstr ""
-
-msgid ""
-"Choose <b>Sounds</b> to configure sounds notifications and Text-to-Speech."
-msgstr ""
-
-msgid ""
-"Choose <b>Searches</b> to configure search settings and to set default "
-"search filters."
-msgstr ""
-
-msgid "Choose <b>User info</b> to add text and an image to your personal info."
-msgstr ""
-
-msgid "Miscellaneous Settings"
-msgstr "Įvairūs parametrai"
-
-msgid "Notebooks"
-msgstr "Kortelės"
-
-msgid "Select previous tab on startup"
-msgstr ""
-
-msgid "Close-buttons on tabs"
-msgstr "Užvėrimo mygtukai kortelėse"
-
-msgid "Notification icons on tabs"
-msgstr "Pranešimų piktogramos kortelėse"
-
-msgid "Tabs can be repositioned"
-msgstr "Gali būti keičiama kortelių padėtis"
-
-msgid "Notification changes the tab's text color"
-msgstr "Pranešimas keičia kortelės teksto spalvą"
-
-msgid "Show user status icons instead of status text"
-msgstr "Rodyti naudotojo būsenų piktogramas, o ne tekstą"
-
-msgid "Main"
-msgstr "Pagrindinė"
-
-msgid "Label Angle:"
-msgstr "Užrašo kampas:"
-
-msgid "Chat rooms"
-msgstr "Kambariai"
-
-msgid "Private chat"
-msgstr "Pokalbiai"
-
-msgid "User info"
-msgstr "Naudotojo informacija"
-
-msgid "User browse"
-msgstr "Naršyti naudotoją"
-
-msgid "Notebook Tabs"
-msgstr "Kortelės"
-
-msgid "UrlCatch"
-msgstr "UrlCatch"
-
-msgid "Enable Plugins"
-msgstr "Įjungti įskiepius"
-
-msgid "Version: "
-msgstr "Versija: "
-
-msgid "Author(s): "
-msgstr "Autorius(-iai): "
-
-msgid "Description: "
-msgstr "Aprašymas: "
-
-msgid "<b>No Plugin Selected</b>"
-msgstr "<b>Nepasirinkta jokių įskiepių</b>"
-
-msgid "Properties"
-msgstr "Savybės"
-
-msgid "Plugin Manager"
-msgstr "Įskiepių valdyklė"
-
-msgid "Nicotine+ - Plugin Properties"
-msgstr "Nicotine+ – Įskiepių savybės"
-
-msgid "Plugin"
-msgstr "Įskiepis"
-
-msgid "Enable sending search results to other users"
-msgstr "Leisti siųsti paieškos rezultatus kitiems naudotojams"
-
-msgid "Send out a max of"
-msgstr "Išsiųsti daugiausiai "
-
-msgid "results per search request"
-msgstr "rezultatų paieškos užklausoje"
-
-msgid "Toggle responding to distributed searches every"
-msgstr "Įjungti / išjungti atsakymą į paskirstytas paieškas kas"
-
-msgid "seconds"
-msgstr "sekundžių"
-
-msgid "Network Searches:"
-msgstr "Tinklo paieškos:"
-
-msgid "Your Searches:"
-msgstr "Jūsų paieškos:"
-
-msgid "Use regular expressions for filter in & out"
-msgstr "Filtravimui naudoti reguliariasias išraiškas"
-
-msgid "Enable filters by default"
-msgstr "Įjungti filtrus iš karto"
-
-msgid ""
-"Reopen closed search tabs that haven't been ignored\n"
-"when new results come in"
-msgstr ""
-"Iš naujo atverti užvertas paieškos korteles, kurių\n"
-"nebuvo nepaisoma, gavus naujų rezultatų"
-
-msgid "Max visible results per search:"
-msgstr "Daugiausiai rodomų paieškos rezultatų:"
-
-msgid "Max stored results per search:"
-msgstr "Daugiausiai išsaugomų paieškos rezultatų:"
-
-msgid "Searches"
-msgstr "Paieškos"
-
-msgid "Server Settings"
-msgstr "Serverio parametrai"
-
-msgid "Login:"
-msgstr "Naudotojo vardas:"
-
-msgid "Password:"
-msgstr "Slaptažodis:"
-
-msgid "Change password"
-msgstr "Pakeisti slaptažodį"
-
-msgid ""
-"For a new account\n"
-" enter desired details"
-msgstr ""
-
-msgid "Your IP address has not been retrieved from the server"
-msgstr "Jūsų IP adreso gauti iš serverio nepavyko"
-
-msgid "Use the first available listening port from the following range:"
-msgstr "Naudoti pirmąjį prieinamą atvirą prievadą šiame diapazone:"
-
-msgid "Client port is not set"
-msgstr "Nenurodytas kliento prievadas"
-
-msgid "Check port status"
-msgstr ""
-
-msgid "Use the above ports to configure your router or firewall."
-msgstr ""
-"Naudokite šiuos prievadus savo maršrutizatoriaus ar užkardos konfigūravimui."
-
-msgid ""
-"Use UPnP to fix portmapping (requires MiniUPnPc, preferably with python "
-"bindings)"
-msgstr ""
-
-msgid ""
-"If you wish to use UPnP to fix portmapping on your router please install "
-"MiniUPnP client binary or the MiniUPnP client module for Python."
-msgstr ""
-
-msgid "I can receive direct connections"
-msgstr "Galiu priimti tiesioginius prisijungimus"
-
-msgid "(only use if the above ports are remotely accessible)"
-msgstr "(naudokite tik jei aukščiau nurodyti prievadai pasiekiami iš išorės)"
-
-msgid "Enable CTCP-like PM responses (Client Version)"
-msgstr "Įjungti į CTCP panašius AŽ atsakymus (kliento versija)"
-
-msgid "Server"
-msgstr "Serveris"
-
-msgid "Rescan shares on startup"
-msgstr "Paleidus perskanuoti viešinius"
-
-msgid "<b>Public Shares</b>"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Enable Buddy-Only shares"
-msgstr "Įjungti viešinius tik bičiuliams"
-
-msgid ""
-"If buddy shares are enabled, they will be shared. Otherwise normal shares "
-"will be used."
-msgstr ""
-"Jeigu bičiųlių viešiniai įjungti, bus viešinami jie. Kitu atveju, bus "
-"naudojami normalūs viešiniai."
-
-msgid "Share only to buddies"
-msgstr ""
-
-msgid "<b>Buddies-Only Shares</b>"
-msgstr ""
-
-msgid "Sounds"
-msgstr "Garsai"
-
-msgid "Enable Sound Effects"
-msgstr "Įjungti garso efektus"
-
-msgid "Sound Effects Directory:"
-msgstr "Garso efektų aplankas:"
-
-msgid "Enable Text To Speech"
-msgstr "Įjungti teksto vertimą į kalbą"
-
-msgid "Text To Speech command:"
-msgstr "Teksto vertimo į kalbą komanda:"
-
-msgid "Chat room message:"
-msgstr "Pokalbių kambario pranešimas:"
-
-msgid "Private chat message:"
-msgstr "Asmeninio pokalbio pranešimas:"
-
-msgid "Audio Player Command ($ for filename):"
-msgstr "Audio grotuvo komanda ($ – rinkmenos pavadinimas):"
-
-msgid "Upload directory:"
-msgstr "Išsiuntimo aplankas:"
-
-msgid ""
-"Where buddies' uploads will be stored (with a subdirectory for each buddy)"
-msgstr ""
-"Kur bus saugomos bičiulių įkeltos rinkmenos (su kiekvieno bičiulio "
-"poaplankiu)"
-
-msgid "Upload Queue type:"
-msgstr "Išsiuntimo eilės tipas:"
-
-msgid "Round Robin"
-msgstr "Round Robin"
-
-msgid "Users will be sent one file and then another user will be selected"
-msgstr ""
-"Naudotojams bus išsiųsta viena rinkmena, tada bus pasirinktas kitas "
-"naudotojas"
-
-msgid "First In, First Out"
-msgstr "First In, First Out"
-
-msgid "Files will be sent in the order they were queued"
-msgstr "Rinkmenos bus siunčiamos tokia tvarka, kokia buvo padėtos į eilę"
-
-msgid "Queue Uploads if total transfer speed reaches"
-msgstr "Padėti išsiuntimus į eilę, jei pasiekiamas bendras siuntimo greitis"
-
-msgid "KBytes/sec"
-msgstr "KBaitų/sek"
-
-msgid "Limit number of upload slots to"
-msgstr "Riboti išsiuntimų kiekį iki"
-
-msgid ""
-"If disabled, slots will automatically be determined by available bandwidth "
-"limitations"
-msgstr ""
-"Jeigu išjungta, skiltys bus automatiškai nustatomos pagal prieinamus ryšio "
-"apribojimus"
-
-msgid "(NOT RECOMMENDED)"
-msgstr "(NEREKOMENDUOJAMA)"
-
-msgid "Limit uploads speed to"
-msgstr "Riboti išsiuntimų greitį iki"
-
-msgid "per transfer"
-msgstr "vienam siuntimui"
-
-msgid "total transfers"
-msgstr "bendrai visiems siuntimams"
-
-msgid "Each user may queue a maximum of"
-msgstr "Kiekvienas naudotojas gali įdėti į eilę daugiausiai"
-
-msgid "Megabytes"
-msgstr "Megabaitų"
-
-msgid "Files"
-msgstr "Rinkmenos"
-
-msgid "Queue size limit does not apply to friends"
-msgstr "Eilių dydžio limitas netaikomas draugams"
-
-msgid "Allow these users to send you files:"
-msgstr "Leisti šiems naudotojams atsiųsti jums rinkmenas:"
-
-msgid ""
-"The users will be able to send you files. These files will be downloaded "
-"into the Buddy Uploads subdirectory in your Download directory"
-msgstr ""
-"Naudotojai galės atsiųsti jums rinkmenas. Šios rinkmenos bus atsiųstos į "
-"bičiulių išsiuntimų pooaplankį jūsų atsiuntimo aplanke"
-
-msgid "<b>Upload Queue:</b>"
-msgstr "<b>Išsiuntimo eilė:</b>"
-
-msgid "Privilege all my friends"
-msgstr "Privilegijuoti visus mano draugus"
-
-msgid ""
-"Friends will have higher priority in the queue, the same as globally "
-"privileged users"
-msgstr ""
-"Draugai turės didesnę pirmenybę eilėje, tokią pačią kaip visuotinai "
-"privilegijuoti naudotojai"
-
-msgid "<b>Privileges:</b>"
-msgstr "<b>Privilegijos:</b>"
-
-msgid "Lock incoming files (turn off for NFS)"
-msgstr "Užrakinti atsiunčiamas rinkmenas (išjunkite NFS sistemoje)"
-
-msgid "Download folders in reverse alphanumerical order"
-msgstr "Atsiųsti aplankus atvirkštine tekstine tvarka"
-
-msgid "Download SFV/MD5 before anything else"
-msgstr "Atsiųsti SFV/MD5 anksčiau už visa kita"
-
-msgid "Nicotine+ Settings"
-msgstr ""
-
-msgid "Enable URL catching"
-msgstr "Įjungti URL surinkimą"
-
-msgid "Humanize slsk:// urls"
-msgstr "Supaprastinti slsk:// URL"
-
-msgid ""
-"Instances of $ will be replaced by the link, add empty handlers to use the "
-"system default web browser.\n"
-"Protocols handlers: "
-msgstr ""
-"$ egzemplioriai bus pakeisti nuoroda. Pridėkite tuščias dorokles, jei norite "
-"naudoti numatytąją sistemos žiniatinklio naršyklę.\n"
-"Protokolų doroklės:"
-
-msgid "Handler:"
-msgstr "Valdiklis:"
-
-msgid "Protocol:"
-msgstr "Protokolas:"
-
-msgid "URL Catching"
-msgstr "URL surinkimas"
-
-msgid "Userinfo"
-msgstr "Naudotojo informacija"
-
-msgid "Self description:"
-msgstr "Saviaprašymas:"
-
-msgid "Image:"
-msgstr "Paveikslėlis:"
-
-msgid "Select an image"
-msgstr ""
-
-msgid "Personal settings"
-msgstr "Asmeniniai parametrai"
 
 msgid "UserBrowse"
 msgstr "Naršyti naudotoją"
-
-msgid "Search file and folder names (exact match):"
-msgstr "Ieškoti rinkmenų ir aplankų pavadinimų (tikslių atitikmenų):"
 
 msgid "Dirs: Unknown"
 msgstr "Aplankai: nežinoma"
@@ -1475,14 +620,20 @@ msgstr "Aplankai: nežinoma"
 msgid "Shared: Unknown"
 msgstr "Viešinama: nežinoma"
 
-msgid "Save"
-msgstr "Išsaugoti"
+msgid "Search files and folders (exact match)"
+msgstr ""
 
-msgid "Refresh"
-msgstr "Atnaujinti"
+msgid "Refresh files"
+msgstr ""
+
+msgid "Save file list to disk"
+msgstr ""
 
 msgid "UserInfo"
 msgstr ""
+
+msgid "Self description:"
+msgstr "Saviaprašymas:"
 
 msgid "Information:"
 msgstr "Informacija:"
@@ -1517,17 +668,1005 @@ msgstr "Pomėgiai:"
 msgid "Picture:"
 msgstr "Paveikslėlis"
 
-msgid "Browse"
-msgstr "Naršyti"
+msgid "Send Message"
+msgstr "Siųsti žinutę"
 
-msgid "Show IP"
-msgstr "Rodyti IP"
+msgid "Browse Files"
+msgstr ""
 
-msgid "Add to list"
-msgstr "Įtraukti į sąrašą"
+msgid "Show IP Address"
+msgstr ""
 
-msgid "Save pic"
-msgstr "Išsaugoti paveikslėlį"
+msgid "Add to Buddy List"
+msgstr ""
+
+msgid "Ban User"
+msgstr ""
+
+msgid "Ignore User"
+msgstr ""
+
+msgid "Save Picture"
+msgstr ""
+
+msgid "Refresh Info"
+msgstr ""
+
+msgid "Search Wishlist"
+msgstr "Ieškoti pageidavimų sąraše"
+
+msgid "Add..."
+msgstr "Pridėti..."
+
+msgid "Select All"
+msgstr ""
+
+msgid "About Nicotine+"
+msgstr ""
+
+msgid ""
+"A graphical client for the Soulseek peer-to-peer system\n"
+"Based on code from Nicotine and PySoulSeek\n"
+"\n"
+"This product includes IP2Location LITE data, available from:\n"
+"https://www.ip2location.com"
+msgstr ""
+
+msgid "About chat room commands"
+msgstr "Apie pokalbių kambario komandas"
+
+msgid "/join /j 'room'"
+msgstr ""
+
+msgid "Join room 'room'"
+msgstr "Įeiti į kambarį „kambarys“"
+
+msgid "/leave /l /part /p 'room'"
+msgstr ""
+
+msgid "Leave room 'room'"
+msgstr "Išeiti iš kambario „kambarys“"
+
+msgid "/clear /cl"
+msgstr ""
+
+msgid "Clear the chat window"
+msgstr "Išvalyti pokalbio langą"
+
+msgid "/tick /t"
+msgstr ""
+
+msgid "Set your personal ticker"
+msgstr "Nurodykite savo asmeninę bėgančią eilutę"
+
+msgid "/tickers"
+msgstr ""
+
+msgid "Show all the tickers"
+msgstr ""
+
+msgid "/me 'message'"
+msgstr ""
+
+msgid "Say something in the third-person"
+msgstr "Pasakykite ką nors trečiuoju asmeniu"
+
+msgid "/now"
+msgstr ""
+
+msgid "Display the Now Playing script's output"
+msgstr "Rodyti scenarijaus Dabar grojama išvestį"
+
+msgid "Users"
+msgstr "Naudotojai"
+
+msgid "/add /ad 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your user list"
+msgstr "Įtraukti naudotoją „naudotojas“ į Jūsų naudotojų sąrašą"
+
+msgid "/rem /unbuddy 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your user list"
+msgstr "Pašalinti naudotoją „naudotojas“ iš naudotojų sąrašo"
+
+msgid "/ban 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ban list"
+msgstr "Įtraukti naudotoją „naudotojas“ į užblokuotų sąrašą"
+
+msgid "/unban 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ban list"
+msgstr "Pašalinti naudotoją „naudotojas“ iš užblokuotų sąrašo"
+
+msgid "/ignore 'user'"
+msgstr ""
+
+msgid "Add user 'user' to your ignore list"
+msgstr "Įtraukti naudotoją „naudotojas“ į nepaisomųjų sąrašą"
+
+msgid "/unignore 'user'"
+msgstr ""
+
+msgid "Remove user 'user' from your ignore list"
+msgstr "Pašalinti naudotoją „naudotojas“ iš nepaisomųjų sąrašo"
+
+msgid "/browse /b 'user'"
+msgstr ""
+
+msgid "Browse files of user 'user'"
+msgstr "Naršyti naudotojo „naudotojas“ rinkmenas"
+
+msgid "/whois /w 'user'"
+msgstr ""
+
+msgid "Request user info for user 'user'"
+msgstr "Užklausti naudotojo „naudotojas“ informacijos"
+
+msgid "/ip 'user'"
+msgstr ""
+
+msgid "Show IP for user 'user'"
+msgstr "Parodyti naudotojo „naudotojas“ IP"
+
+msgid "Aliases"
+msgstr "Alternatyvūs vardai"
+
+msgid "/alias /al 'command' 'definition'"
+msgstr ""
+
+msgid "Add a new alias"
+msgstr "Pridėti naują alternatyvų vardą"
+
+msgid "/unalias /un 'command'"
+msgstr ""
+
+msgid "Remove an alias"
+msgstr "Pašalinti alternatyvų vardą"
+
+msgid "/search /s 'query'"
+msgstr ""
+
+msgid "Start a new search for 'query'"
+msgstr "Pradėti naują „užklausa“ paiešką"
+
+msgid "/rsearch /rs 'query'"
+msgstr ""
+
+msgid "Search the joined rooms for 'query'"
+msgstr "Ieškoti „užklausa“ kambariuose, kuriuose esate"
+
+msgid "/bsearch /bs '%s'"
+msgstr ""
+
+msgid "Search the buddy list for 'query'"
+msgstr "Ieškoti „užklausa“ pas bičiulius"
+
+msgid "/usearch /us 'user' 'query'"
+msgstr ""
+
+msgid "Search a user's shares for 'query'"
+msgstr "Ieškoti „užklausa“ naudotojo viešiniuose"
+
+msgid "Private Chat"
+msgstr "Asmeninis pokalbis"
+
+msgid "/msg 'user' 'message'"
+msgstr ""
+
+msgid "Send message 'message' to user 'user'"
+msgstr "Siųsti žinutę „žinutė“ naudotojui „naudotojas“"
+
+msgid "/pm 'user'"
+msgstr ""
+
+msgid "Open private chat window for user 'user'"
+msgstr "Atverti asmeninio pokalbio su naudotoju „naudotojas“ langą"
+
+msgid "/away /a"
+msgstr ""
+
+msgid "Toggles your away status"
+msgstr "Perjungia Jūsų nebuvimo būseną"
+
+msgid "/rescan"
+msgstr ""
+
+msgid "Rescan shares"
+msgstr "Perskanuoti viešinius"
+
+msgid "/quit /q /exit"
+msgstr ""
+
+msgid "Quit Nicotine+"
+msgstr ""
+
+msgid "About private chat commands"
+msgstr "Apie privataus pokalbio komandas"
+
+msgid "/close /c"
+msgstr ""
+
+msgid "Close the current private chat"
+msgstr "Užverti esamą privatų pokalbį"
+
+msgid "/toggle 'plugin'"
+msgstr ""
+
+msgid "Toggle plugin on/off state"
+msgstr ""
+
+msgid "About search filters"
+msgstr "Apie paieškos filtrus"
+
+msgid ""
+"You can use this to refine which results are displayed. The full results\n"
+"from the server are always available if you clear all the search terms.\n"
+"\n"
+"You can filter by:\n"
+"\n"
+"- Included text:\n"
+"      Files are shown if they contain this text.\n"
+"      Case is insensitive, but word order is important.\n"
+"      'Spears Brittany' will not show any 'Brittany Spears'\n"
+"\n"
+"- Excluded text:\n"
+"      As above, but files will not be displayed if the text matches\n"
+"\n"
+"- Size:\n"
+"      Shows results based on size. use > and < to find files larger or "
+"smaller.\n"
+"      Files exactly the same as this term will always match.\n"
+"      Use = to specify an exact match. Use k or m to specify kilo or "
+"megabytes.\n"
+"      >10M will find files larger than 10 megabytes.\n"
+"      <4000k will find files smaller than 4000k.\n"
+"\n"
+"- Bitrate:\n"
+"      Find files based on bitrate. Use < and > to find lower or higher.\n"
+"      >192 finds 192 and higher, <192 finds 192 or lower.\n"
+"      =192 only finds 192.\n"
+"      For VBR, the average bitrate is used.\n"
+"\n"
+"- Free slot:\n"
+"      Show only those results from users which have at least\n"
+"      one upload slot free.\n"
+"\n"
+"- To set the filter, press Enter. This will apply to any existing results, "
+"and any more that are returned.\n"
+"- To filter in a different way, just set the relevant terms.\n"
+"- You do not need to do another search to apply a different filter."
+msgstr ""
+
+msgid ""
+"Enable automatic replacement of chat words you've typed incorrectly or as an "
+"acronym"
+msgstr ""
+
+msgid "Clear"
+msgstr "Išvalyti"
+
+msgid "Load Defaults"
+msgstr "Įkelti numatytuosius"
+
+msgid "Toggle away after "
+msgstr "Įjungti nebuvimą po "
+
+msgid " minutes of inactivity"
+msgstr " minučių neveiklumo"
+
+msgid "Auto-reply when away:  "
+msgstr "Automatinis atsakymas pasitraukus:  "
+
+msgid "Banned Users:"
+msgstr "Užblokuoti naudotojai:"
+
+msgid "Blocked IP Addresses:"
+msgstr "Užblokuoti IP adresai:"
+
+msgid "Use custom ban message:"
+msgstr "Naudoti pasirinktinę blokavimo žinutę:"
+
+msgid "Enable Censorship"
+msgstr "Įjungti cenzūrą"
+
+msgid ""
+"Add spaces around words if you don't wish to match strings inside words (may "
+"fail at beginning and end of lines)"
+msgstr ""
+
+msgid "Replace censored letters with:"
+msgstr "Pakeisti cenzūruotas raides:"
+
+msgid "<b>Chat Colors</b>"
+msgstr ""
+
+msgid "URL Link Text"
+msgstr ""
+
+msgid "Default"
+msgstr "Numatytoji"
+
+msgid "Username Font Style:"
+msgstr "Naudotojo vardo šrifto stilius:"
+
+msgid "Away"
+msgstr "Pasitraukęs"
+
+msgid "Offline"
+msgstr "Atsijungęs"
+
+msgid "Online"
+msgstr "Prisijungęs"
+
+msgid "Username Colors and Hotspots"
+msgstr ""
+
+msgid "Display away colors"
+msgstr "Rodyti nebuvimo spalvas"
+
+msgid "Highlight Text"
+msgstr ""
+
+msgid "/me Text"
+msgstr ""
+
+msgid "Local Text"
+msgstr ""
+
+msgid "Remote Text"
+msgstr ""
+
+msgid "<b>List and Search Colors</b>"
+msgstr ""
+
+msgid "Input Text"
+msgstr "Įvesties tekstas"
+
+msgid "Input Background"
+msgstr ""
+
+msgid "Offline Search"
+msgstr "Paieška atsijungus"
+
+msgid "With Queue"
+msgstr ""
+
+msgid "List Text"
+msgstr "Sąrašo tekstas"
+
+msgid "Default Colors"
+msgstr ""
+
+msgid "<b>Tab Label Colors</b>"
+msgstr ""
+
+msgid "Changed"
+msgstr "Pakeista"
+
+msgid "Highlight"
+msgstr "Paryškinti"
+
+msgid "<b>General</b>"
+msgstr ""
+
+msgid "Enable spell checker (requires a restart)"
+msgstr "Įjungti rašybos tikrinimą (reikia paleisti programą iš naujo)"
+
+msgid "Enable tab-key completion"
+msgstr "Įjungti užbaigimą Tab klavišu"
+
+msgid "Cycle completions instead of showing a dropdown"
+msgstr "Paeiliui keisti užbaigimo variantus, užuot rodžius sąrašą"
+
+msgid "<b>Allowed Completions</b>"
+msgstr ""
+
+msgid "Complete room names in chat rooms"
+msgstr "Užbaigti kambarių pavadinimus pokalbių kambariuose"
+
+msgid "Complete Buddy Names"
+msgstr "Užbaigti bičiulių vardus"
+
+msgid "Complete usernames in chat rooms"
+msgstr "Užbaigti naudotojų vardus pokalbių kambariuose"
+
+msgid "Complete built-in /Commands"
+msgstr "Užbaigti įtaisytąsias /Komandas"
+
+msgid "Complete alias /Commands"
+msgstr "Užbaigti susietąsias /Komandas"
+
+msgid "<b>Drop-down list</b>"
+msgstr ""
+
+msgid "Enable completion drop-down list"
+msgstr "Įjungti užbaigimo išskleidžiamą sąrašą"
+
+msgid "Minimum characters required to display drop-down:"
+msgstr "Minimalus simbolių skaičius, kad būtų rodomas išskleidžiamas sąrašas:"
+
+msgid "Hide drop-down when only one matches"
+msgstr "Paslėpti išskleidžiamą sąrašą, kai yra tik vienas atitikmuo"
+
+msgid "Lock incoming files (turn off for NFS)"
+msgstr "Užrakinti atsiunčiamas rinkmenas (išjunkite NFS sistemoje)"
+
+msgid "Download folders in reverse alphanumerical order"
+msgstr "Atsiųsti aplankus atvirkštine tekstine tvarka"
+
+msgid "Download SFV/MD5 before anything else"
+msgstr "Atsiųsti SFV/MD5 anksčiau už visa kita"
+
+msgid "Limit total download speeds to (KBytes/sec):"
+msgstr ""
+
+msgid "Allow these users to send you files:"
+msgstr "Leisti šiems naudotojams atsiųsti jums rinkmenas:"
+
+msgid ""
+"The users will be able to send you files. These files will be downloaded "
+"into the Buddy Uploads subdirectory in your Download directory"
+msgstr ""
+"Naudotojai galės atsiųsti jums rinkmenas. Šios rinkmenos bus atsiųstos į "
+"bičiulių išsiuntimų pooaplankį jūsų atsiuntimo aplanke"
+
+msgid "<b>Folders</b>"
+msgstr ""
+
+msgid "Incomplete file folder:"
+msgstr ""
+
+msgid "Download folder:"
+msgstr ""
+
+msgid "Save buddies' uploads to:"
+msgstr ""
+
+msgid "Where buddies' uploads will be stored (with a subfolder for each buddy)"
+msgstr ""
+
+msgid "Select a directory"
+msgstr ""
+
+msgid "Share download folder"
+msgstr ""
+
+msgid "Where incomplete downloads are stored temporarily"
+msgstr "Kur laikinai saugomi nebaigtos siųsti rinkmenos"
+
+msgid "Select a folder"
+msgstr ""
+
+msgid "<b>Download Filters</b>"
+msgstr ""
+
+msgid "Enable Filters"
+msgstr "Įjungti filtrus"
+
+msgid ""
+"<b>Syntax:</b> Letters are Case Insensitive, All Python Regular Expressions "
+"are supported if escaping is disabled. For simple filters, keep escaping "
+"enabled."
+msgstr ""
+"<b>Sintaksė:</b> raidžių registras nesvarbus, palaikomos visos Python "
+"reguliarios išraiškos, jeigu išjungti kaitos simboliai. Naudodami paprastus "
+"filtrus, įjunkite kaitos simbolius."
+
+msgid "Verify Filters"
+msgstr "Patikrinti filtrus"
+
+msgid "<b>Unverified</b>"
+msgstr "<b>Nepatikrinta</b>"
+
+msgid "Edit Filter"
+msgstr "Keisti filtrą"
+
+msgid "<b>Commands</b>"
+msgstr ""
+
+msgid "Run command after download finishes ($ for filename):"
+msgstr "Atsiuntus paleisti komandą ($ – rinkmenos pavadinimas):"
+
+msgid "Run command after folder finishes ($ for folder path):"
+msgstr "Atsiuntus aplanką paleisti komandą ($ – aplanko kelias):"
+
+msgid "File Manager command ($ for folder path):"
+msgstr "Rinkmenų naršyklės komanda ($ – aplanko kelias):"
+
+msgid "Audio Player Command ($ for filename):"
+msgstr "Audio grotuvo komanda ($ – rinkmenos pavadinimas):"
+
+msgid "<b>Double-clicking on...</b>"
+msgstr ""
+
+msgid "Download transfers"
+msgstr "Atsiunčiamas rinkmenas"
+
+msgid "Upload transfers"
+msgstr "Išsiunčiamas rinkmenas"
+
+msgid "Nothing"
+msgstr ""
+
+msgid "Send to player"
+msgstr ""
+
+msgid "Open Directory"
+msgstr "Atverti aplanką"
+
+msgid "Show Buttons in Transfers Tabs"
+msgstr "Siuntimų kortelėse rodyti mygtukus"
+
+msgid "Chat Font:"
+msgstr "Pokalbio šriftas:"
+
+msgid "List Font:"
+msgstr "Sąrašo šriftas:"
+
+msgid "Transfers Font:"
+msgstr "Siuntimų šriftas:"
+
+msgid "Search Font:"
+msgstr "Paieškos šriftas:"
+
+msgid "Browse Font:"
+msgstr "Naršymo šriftas:"
+
+msgid "Decimal separator:"
+msgstr "Dešimtainis skirtukas:"
+
+msgid ""
+"Geo Block controls from which countries users are allowed access to your "
+"shares."
+msgstr ""
+
+msgid "Enable geographical blocker"
+msgstr "Įjungti geografinį blokavimą"
+
+msgid "Geographical paranoia (block unresolvable IPs)"
+msgstr "Geografinė paranoja (blokuoti neišaiškinamus IP)"
+
+msgid "Country codes to block (comma separated):"
+msgstr "Blokuotinų valstybių kodai (atskirti kableliu):"
+
+msgid "<b>Tray</b>"
+msgstr ""
+
+msgid "Display tray icon"
+msgstr ""
+
+msgid "Show confirmation dialog when closing the main window"
+msgstr "Užveriant pagrindinį langą, rodyti patvirtinimo dialogą"
+
+msgid "Always send Nicotine+ to tray when main window is closed"
+msgstr ""
+
+msgid "Always quit when main window is closed"
+msgstr "Užveriant pagrindinį langą, uždaryti programą"
+
+msgid "<b>Icon Theme</b>"
+msgstr ""
+
+msgid "Icon theme folder (requires restart):"
+msgstr ""
+
+msgid "<b>Status</b>"
+msgstr "<b>Būsena</b>"
+
+msgid "Online:"
+msgstr "Prisijungęs:"
+
+msgid "Away:"
+msgstr "Neaktyvus:"
+
+msgid "Offline:"
+msgstr "Atsijungęs:"
+
+msgid "Nick Hilite:"
+msgstr "Slapyvardžio paryškinimas:"
+
+msgid "Hilite:"
+msgstr "Paryškinti:"
+
+msgid "Disconnected:"
+msgstr "Atsijungta:"
+
+msgid "Connected:"
+msgstr "Prisijungta:"
+
+msgid "<b>Trayicon</b>"
+msgstr "<b>Pranešimų vietos piktograma</b>"
+
+msgid "Notify:"
+msgstr "Pranešti:"
+
+msgid "Window:"
+msgstr "Langas:"
+
+msgid "Ignored users:"
+msgstr "Nepaisomi naudotojai:"
+
+msgid "Ignored IPs:"
+msgstr "Nepaisomi IP:"
+
+msgid "Log chatrooms by default"
+msgstr "Vesti pokalbių kambarių žurnalus"
+
+msgid "Log private chat by default"
+msgstr "Vesti asmeninių pokalbių žurnalus"
+
+msgid "Log transfers"
+msgstr "Vesti siuntimų žurnalą"
+
+msgid "Logs directory:"
+msgstr "Žurnalų aplankas:"
+
+msgid "Chatroom Logs directory:"
+msgstr "Pokalbių kambarių žurnalų aplankas:"
+
+msgid "Private Chat Logs directory:"
+msgstr "Asmeninių pokalbių žurnalų aplankas:"
+
+msgid "Display logged chat room messages when a room is rejoined"
+msgstr "Įėjus į pokalbių kambarį iš naujo, rodyti išsaugotas kambario žinutes"
+
+msgid "Read"
+msgstr "Skaityti"
+
+msgid "lines"
+msgstr "eilutes (-čių)"
+
+msgid "Reopen last Private Chat messages"
+msgstr "Vėl atverti paskutinius asmeninio pokalbio pranešimus"
+
+msgid "<b>Timestamps</b>"
+msgstr "<b>Laiko žymos</b>"
+
+msgid "Display timestamps"
+msgstr "Rodyti laiko žymas"
+
+msgid "Log file format:"
+msgstr "Žurnalų failų formatas:"
+
+msgid "Chat room format:"
+msgstr "Pokalbių kambarių formatas:"
+
+msgid "Private chat format:"
+msgstr "Asmeninių pokalbių formatas:"
+
+msgid "Select previous tab on startup"
+msgstr ""
+
+msgid "Close-buttons on tabs"
+msgstr "Užvėrimo mygtukai kortelėse"
+
+msgid "Tabs can be repositioned"
+msgstr "Gali būti keičiama kortelių padėtis"
+
+msgid "Show user status icons instead of status text"
+msgstr "Rodyti naudotojo būsenų piktogramas, o ne tekstą"
+
+msgid "<b>Tab Positioning</b>"
+msgstr ""
+
+msgid "Main"
+msgstr "Pagrindinė"
+
+msgid "Label Angle:"
+msgstr "Užrašo kampas:"
+
+msgid "Chat rooms"
+msgstr "Kambariai"
+
+msgid "Private chat"
+msgstr "Pokalbiai"
+
+msgid "User info"
+msgstr "Naudotojo informacija"
+
+msgid "User browse"
+msgstr "Naršyti naudotoją"
+
+msgid "Show notification for private chat and mentions in window title"
+msgstr ""
+
+msgid "Show notification icons on tabs"
+msgstr ""
+
+msgid "Notification changes the tab's text color"
+msgstr "Pranešimas keičia kortelės teksto spalvą"
+
+msgid "Play sound for notification popups"
+msgstr ""
+
+msgid "<b>Show a notification popup...</b>"
+msgstr ""
+
+msgid "When a file has finished downloading"
+msgstr ""
+
+msgid "When a folder has finished downloading"
+msgstr ""
+
+msgid "When you receive a private message"
+msgstr ""
+
+msgid "When someone sends a message in a chat room"
+msgstr ""
+
+msgid "When you're mentioned in a chat room"
+msgstr ""
+
+msgid "Enable Plugins"
+msgstr "Įjungti įskiepius"
+
+msgid "<b>No Plugin Selected</b>"
+msgstr "<b>Nepasirinkta jokių įskiepių</b>"
+
+msgid "Version: "
+msgstr "Versija: "
+
+msgid "Author(s): "
+msgstr "Autorius(-iai): "
+
+msgid "Description: "
+msgstr "Aprašymas: "
+
+msgid "Properties"
+msgstr "Savybės"
+
+msgid "Plugin Properties"
+msgstr ""
+
+msgid "<b>Network Searches</b>"
+msgstr ""
+
+msgid "Enable sending search results to other users"
+msgstr "Leisti siųsti paieškos rezultatus kitiems naudotojams"
+
+msgid "Send out a max of"
+msgstr "Išsiųsti daugiausiai "
+
+msgid "results per search request"
+msgstr "rezultatų paieškos užklausoje"
+
+msgid "Toggle responding to distributed searches every"
+msgstr "Įjungti / išjungti atsakymą į paskirstytas paieškas kas"
+
+msgid "seconds"
+msgstr "sekundžių"
+
+msgid "<b>Your Searches</b>"
+msgstr ""
+
+msgid ""
+"Remove special characters from search terms (some clients don't send search "
+"results if they're included)"
+msgstr ""
+
+msgid ""
+"Reopen closed search tabs that haven't been ignored when new results come in"
+msgstr ""
+
+msgid "Max visible results per search:"
+msgstr "Daugiausiai rodomų paieškos rezultatų:"
+
+msgid "Max stored results per search:"
+msgstr "Daugiausiai išsaugomų paieškos rezultatų:"
+
+msgid "<b>Search Filters</b>"
+msgstr ""
+
+msgid "Use regular expressions for filter in & out"
+msgstr "Filtravimui naudoti reguliariasias išraiškas"
+
+msgid "Enable filters by default"
+msgstr "Įjungti filtrus iš karto"
+
+msgid "<b>Login Details</b>"
+msgstr ""
+
+msgid ""
+"You can create a new account by entering the desired details below. Please "
+"keep in mind that some usernames may already be taken. If you're unable to "
+"connect with your selected username, choose another one."
+msgstr ""
+
+msgid "Server:"
+msgstr ""
+
+msgid "Username:"
+msgstr ""
+
+msgid "Password:"
+msgstr "Slaptažodis:"
+
+msgid "Change password"
+msgstr "Pakeisti slaptažodį"
+
+msgid "Your IP address has not been retrieved from the server"
+msgstr "Jūsų IP adreso gauti iš serverio nepavyko"
+
+msgid "<b>Ports</b>"
+msgstr ""
+
+msgid "Use the first available listening port from the following range:"
+msgstr "Naudoti pirmąjį prieinamą atvirą prievadą šiame diapazone:"
+
+msgid "Client port is not set"
+msgstr "Nenurodytas kliento prievadas"
+
+msgid "Check port status"
+msgstr ""
+
+msgid "Use UPnP to map the port on my router (requires restart)"
+msgstr ""
+
+msgid ""
+"If you wish to use UPnP to fix portmapping on your router please install "
+"MiniUPnP client binary or the MiniUPnP client module for Python."
+msgstr ""
+
+msgid "I can receive direct connections"
+msgstr "Galiu priimti tiesioginius prisijungimus"
+
+msgid ""
+"Only disable direct connections if the above ports aren't accessible after "
+"attempting UPnP and manual port forwarding, if possible. This can happen if "
+"your ISP blocks ports."
+msgstr ""
+
+msgid "<b>Miscellaneous</b>"
+msgstr ""
+
+msgid "Enable CTCP-like PM responses (Client Version)"
+msgstr "Įjungti į CTCP panašius AŽ atsakymus (kliento versija)"
+
+msgid "Nicotine+ Settings"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Rescan shares on startup"
+msgstr "Paleidus perskanuoti viešinius"
+
+msgid "<b>Public Shares</b>"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Enable Buddy-Only shares"
+msgstr "Įjungti viešinius tik bičiuliams"
+
+msgid ""
+"If buddy shares are enabled, they will be shared. Otherwise normal shares "
+"will be used."
+msgstr ""
+"Jeigu bičiųlių viešiniai įjungti, bus viešinami jie. Kitu atveju, bus "
+"naudojami normalūs viešiniai."
+
+msgid "Share only to buddies"
+msgstr ""
+
+msgid "<b>Buddies-Only Shares</b>"
+msgstr ""
+
+msgid "Enable Text To Speech"
+msgstr "Įjungti teksto vertimą į kalbą"
+
+msgid "Text To Speech command:"
+msgstr "Teksto vertimo į kalbą komanda:"
+
+msgid "Chat room message:"
+msgstr "Pokalbių kambario pranešimas:"
+
+msgid "Private chat message:"
+msgstr "Asmeninio pokalbio pranešimas:"
+
+msgid "<b>Upload Queue</b>"
+msgstr ""
+
+msgid "Upload Queue type:"
+msgstr "Išsiuntimo eilės tipas:"
+
+msgid "Round Robin"
+msgstr "Round Robin"
+
+msgid "Users will be sent one file and then another user will be selected"
+msgstr ""
+"Naudotojams bus išsiųsta viena rinkmena, tada bus pasirinktas kitas "
+"naudotojas"
+
+msgid "First In, First Out"
+msgstr "First In, First Out"
+
+msgid "Files will be sent in the order they were queued"
+msgstr "Rinkmenos bus siunčiamos tokia tvarka, kokia buvo padėtos į eilę"
+
+msgid "Queue Uploads if total transfer speed reaches"
+msgstr "Padėti išsiuntimus į eilę, jei pasiekiamas bendras siuntimo greitis"
+
+msgid "KBytes/sec"
+msgstr "KBaitų/sek"
+
+msgid "Limit number of upload slots to"
+msgstr "Riboti išsiuntimų kiekį iki"
+
+msgid ""
+"If disabled, slots will automatically be determined by available bandwidth "
+"limitations"
+msgstr ""
+"Jeigu išjungta, skiltys bus automatiškai nustatomos pagal prieinamus ryšio "
+"apribojimus"
+
+msgid "Limit uploads speed to"
+msgstr "Riboti išsiuntimų greitį iki"
+
+msgid "per transfer"
+msgstr "vienam siuntimui"
+
+msgid "total transfers"
+msgstr "bendrai visiems siuntimams"
+
+msgid "Each user may queue a maximum of"
+msgstr "Kiekvienas naudotojas gali įdėti į eilę daugiausiai"
+
+msgid "Megabytes"
+msgstr "Megabaitų"
+
+msgid "Files"
+msgstr "Rinkmenos"
+
+msgid "Queue size limit does not apply to friends"
+msgstr "Eilių dydžio limitas netaikomas draugams"
+
+msgid "<b>Privileges</b>"
+msgstr ""
+
+msgid "Privilege all my friends"
+msgstr "Privilegijuoti visus mano draugus"
+
+msgid ""
+"Friends will have higher priority in the queue, the same as globally "
+"privileged users"
+msgstr ""
+"Draugai turės didesnę pirmenybę eilėje, tokią pačią kaip visuotinai "
+"privilegijuoti naudotojai"
+
+msgid "Enable URL catching"
+msgstr "Įjungti URL surinkimą"
+
+msgid "Humanize slsk:// urls"
+msgstr "Supaprastinti slsk:// URL"
+
+msgid ""
+"Instances of $ will be replaced by the link, add empty handlers to use the "
+"system default web browser.\n"
+"Protocols handlers: "
+msgstr ""
+"$ egzemplioriai bus pakeisti nuoroda. Pridėkite tuščias dorokles, jei norite "
+"naudoti numatytąją sistemos žiniatinklio naršyklę.\n"
+"Protokolų doroklės:"
+
+msgid "Handler:"
+msgstr "Valdiklis:"
+
+msgid "Protocol:"
+msgstr "Protokolas:"
+
+msgid "Image:"
+msgstr "Paveikslėlis:"
+
+msgid "Select an image"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1601,6 +1740,18 @@ msgstr ""
 #, python-format
 msgid "Can't rename config file, error: %s"
 msgstr "Nepavyko pervadinti konfigūracijos rinkmenos, klaida: %s"
+
+#, python-format
+msgid "Can't save %s: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while opening your alias file: %s"
+msgstr ""
+
+#, python-format
+msgid "Something went wrong while saving your alias file: %s"
+msgstr ""
 
 #, python-format
 msgid "No such alias (%s)"
@@ -1759,13 +1910,6 @@ msgid "Server reported port 0 for user %(user)s, retrying"
 msgstr "Serveris grąžino prievadą 0 naudotojui %(user)s, bandoma dar kartą"
 
 #, python-format
-msgid ""
-"IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
-msgstr ""
-"Naudotojo %(user)s IP adresas yra %(ip)s, vardas %(host)s, prievadas %(port)i"
-"%(country)s"
-
-#, python-format
 msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr ""
 "Naudotojo %(user)s IP adresas yra %(ip)s, prievadas %(port)i%(country)s"
@@ -1845,6 +1989,12 @@ msgstr "Nepavyko įrašyti į siuntimų žurnalą: %s"
 msgid "Downloaded"
 msgstr ""
 
+msgid "Shares"
+msgstr "V_iešiniai"
+
+msgid "Buddy Shares"
+msgstr "Bičiulių viešiniai"
+
 #, python-format
 msgid ""
 "Failed to rebuild share, serious error occurred. If this problem persists "
@@ -1852,9 +2002,6 @@ msgid ""
 "with the stack trace included (see terminal output after this message). "
 "Technical details: %s"
 msgstr ""
-
-msgid "Buddy Shares"
-msgstr "Bičiulių viešiniai"
 
 #, python-format
 msgid "ERROR: No %(type)s shares database available"
@@ -1890,54 +2037,33 @@ msgstr ""
 msgid "User %(user)s is searching for %(query)s, returning %(num)i results"
 msgstr "Naudotojas %(user)s ieško %(query)s, grąžinama %(num)i rezultatai"
 
-msgid "Checking for changes"
-msgstr "Ieškoma pakeitimų"
-
 #, python-format
-msgid "%(num)s directories found before rescan/rebuild"
+msgid "%(num)s directories found before rescan, rebuilding..."
 msgstr ""
 
 #, python-format
-msgid "%(num)s directories found after rescan/rebuild"
+msgid "%(num)s directories found after rescan"
 msgstr ""
 
 #, python-format
-msgid "Scanning %s"
-msgstr "Skanuojama %s"
-
-msgid "Building DataBase"
-msgstr "Kuriama duomenų bazė"
-
-msgid "Building Index"
-msgstr "Kuriamas indeksas"
-
-#, python-format
-msgid "Scanning Directory Error: %(error)s Path: %(path)s"
-msgstr "Aplanko skenavimo klaida: %(error)s Kelias: %(path)s"
-
-#, python-format
-msgid "Scanning Error: %(error)s Path: %(path)s"
-msgstr "Skenavimo klaida: %(error)s Kelias: %(path)s"
-
-#, python-format
-msgid ""
-"Scanning Error: Broken link to directory: \"%(link)s\" from Path: \"%(path)s"
-"\". Repair or remove this link."
+msgid "Error while scanning %(path)s: %(error)s"
 msgstr ""
-"Skenavimo klaida: sugadinta nuoroda į aplanką: „%(link)s“ iš kelio: "
-"„%(path)s. Pataisykite arba pašalinkite šią nuorodą."
+
+#, python-format
+msgid "Error while scanning folder %(path)s: %(error)s"
+msgstr ""
 
 #, python-format
 msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 msgstr ""
 
 #, python-format
-msgid "Dropping missing directory %(dir)s"
+msgid "Dropping missing folder %(dir)s"
 msgstr ""
 
 #, python-format
-msgid "Scanning File Error: %(error)s Path: %(path)s"
-msgstr "Failo skenavimo klaida: %(error)s Kelias: %(path)s"
+msgid "Error while scanning file %(path)s: %(error)s"
+msgstr ""
 
 #, python-format
 msgid ""
@@ -1961,10 +2087,6 @@ msgstr "Nepavyko apdoroti įeinančios žinutės, klasė %s"
 #, python-format
 msgid "Exception during parsing %(area)s: %(exception)s"
 msgstr "Išimtis apdorojant %(area)s: %(exception)s"
-
-#, python-format
-msgid "Offending package: %(bytes)s"
-msgstr ""
 
 msgid "Could not bind to a local port, aborting connection"
 msgstr "Nepavyko susieti su vietiniu prievadu, nutraukiamas ryšys"
@@ -2036,18 +2158,6 @@ msgstr ""
 "%(msg_obj)s"
 
 #, python-format
-msgid ""
-"You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
-"connections for your protection. If you get this message often you should "
-"search for less generic terms, or increase your per-process file descriptor "
-"limit."
-msgstr ""
-"Ką tik pasiekėte savo %(limit)s prisijungimų ribą. Nicotine+ atmetinės "
-"prisijungimus saugumo sumetimais. Jei dažnai gaunate šį pranešimą, "
-"turėtumėte ieškoti ne tokių bendrų terminų arba padidinti savo vieno proceso "
-"failų aprašų ribą."
-
-#, python-format
 msgid "User %s does not exist"
 msgstr "Naudotojas %s neegzistuoja"
 
@@ -2060,10 +2170,6 @@ msgid "Retrying failed download: user %(user)s, file %(file)s"
 msgstr ""
 "Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %(user)s, rinkmena "
 "%(file)s"
-
-#, python-format
-msgid "Failed download: user %(user)s, file %(file)s"
-msgstr "Nepavyko atsiųsti: naudotojas %(user)s, rinkmena %(file)s"
 
 #, python-format
 msgid "Got transfer request %s but cannot determine requestor"
@@ -2111,8 +2217,8 @@ msgstr "Nežinoma rinkmenos užklausa: %s"
 msgid "OS error: %s"
 msgstr "OS klaida: %s"
 
-msgid "Nicotine+ :: Directory download error"
-msgstr "Nicotine+ :: Aplanko atsiuntimo klaida"
+msgid "Folder download error"
+msgstr ""
 
 #, python-format
 msgid "Download I/O error: %s"
@@ -2178,8 +2284,8 @@ msgstr ""
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s atsiųsta iš %(user)s"
 
-msgid "Nicotine+ :: file downloaded"
-msgstr "Nicotine+ :: rinkmena atsiųsta"
+msgid "File downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing '%s'"
@@ -2193,8 +2299,8 @@ msgstr "Įvykdyta: %s"
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s atsiųsta iš %(user)s"
 
-msgid "Nicotine+ :: directory completed"
-msgstr "Nicotine+ :: aplankas baigtas"
+msgid "Folder downloaded"
+msgstr ""
 
 #, python-format
 msgid "Trouble executing on folder: %s"
@@ -2213,12 +2319,6 @@ msgstr "(draugas)"
 #, python-format
 msgid "Upload finished: %(user)s, file %(file)s"
 msgstr "Išsiųsta: naudotojas %(user)s, rinkmena %(file)s"
-
-#, python-format
-msgid "Retrying failed download: %(user)s, file %(file)s"
-msgstr ""
-"Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %(user)s, rinkmena "
-"%(file)s"
 
 #, python-format
 msgid "I/O error: %s"
@@ -2280,208 +2380,17 @@ msgstr ""
 msgid "Failed to find a suitable external WAN port, bailing out."
 msgstr ""
 
-msgid "About Nicotine+"
-msgstr ""
-
-msgid ""
-"A graphical client for the Soulseek peer-to-peer system\n"
-"Based on code from Nicotine and PySoulSeek\n"
-"\n"
-"This product includes IP2Location LITE data, available from:\n"
-"https://www.ip2location.com"
-msgstr ""
-
-msgid "About search filters"
-msgstr "Apie paieškos filtrus"
-
-msgid ""
-"Search filtering\n"
-"\n"
-"You can use this to refine which results are displayed. The full results\n"
-"from the server are always available if you clear all the search terms.\n"
-"\n"
-"You can filter by:\n"
-"\n"
-"Included text: Files are shown if they contain this text.\n"
-"Case is insensitive, but word order is important.\n"
-"'Spears Brittany' will not show any 'Brittany Spears'\n"
-"\n"
-"Excluded text: As above, but files will not be displayed if the text "
-"matches\n"
-"\n"
-"Size: Shows results based on size. use > and < to find files larger or "
-"smaller.\n"
-"Files exactly the same as this term will always match.\n"
-"Use = to specify an exact match. Use k or m to specify kilo or megabytes.\n"
-">10M will find files larger than 10 megabytes.\n"
-"<4000k will find files smaller than 4000k.\n"
-"\n"
-"Bitrate: Find files based on bitrate. Use < and > to find lower or higher.\n"
-">192 finds 192 and higher, <192 finds 192 or lower.\n"
-"=192 only finds 192.\n"
-"For VBR, the average bitrate is used.\n"
-"\n"
-"Free slot: Show only those results from users which have at least\n"
-"one upload slot free.\n"
-"\n"
-"To set the filter, press Enter.\n"
-"This will apply to any existing results, and any more that are returned.\n"
-"To filter in a different way, just set the relevant terms.\n"
-"You do not need to do another search to apply a different filter."
-msgstr ""
-
-msgid "room"
-msgstr "kambarys"
-
-msgid "Join room 'room'"
-msgstr "Įeiti į kambarį „kambarys“"
-
-msgid "Leave room 'room'"
-msgstr "Išeiti iš kambario „kambarys“"
-
-msgid "Clear the chat window"
-msgstr "Išvalyti pokalbio langą"
-
-msgid "Set your personal ticker"
-msgstr "Nurodykite savo asmeninę bėgančią eilutę"
-
-msgid "Show all the tickers"
-msgstr ""
-
-msgid "Reattach a chat window to the notebook"
-msgstr "Prikabinti pokalbio langą prie kortelių"
-
-msgid "Detach a chat tab from the notebook"
-msgstr "Atkabinti pokalbio kortelę"
-
-msgid "message"
-msgstr "žinutė"
-
-msgid "Say something in the third-person"
-msgstr "Pasakykite ką nors trečiuoju asmeniu"
-
-msgid "Display the Now Playing script's output"
-msgstr "Rodyti scenarijaus Dabar grojama išvestį"
-
-msgid "Users"
-msgstr "Naudotojai"
-
-msgid "user"
-msgstr "naudotojas"
-
-msgid "Add user 'user' to your user list"
-msgstr "Įtraukti naudotoją „naudotojas“ į Jūsų naudotojų sąrašą"
-
-msgid "Remove user 'user' from your user list"
-msgstr "Pašalinti naudotoją „naudotojas“ iš naudotojų sąrašo"
-
-msgid "Add user 'user' to your ban list"
-msgstr "Įtraukti naudotoją „naudotojas“ į užblokuotų sąrašą"
-
-msgid "Remove user 'user' from your ban list"
-msgstr "Pašalinti naudotoją „naudotojas“ iš užblokuotų sąrašo"
-
-msgid "Add user 'user' to your ignore list"
-msgstr "Įtraukti naudotoją „naudotojas“ į nepaisomųjų sąrašą"
-
-msgid "Remove user 'user' from your ignore list"
-msgstr "Pašalinti naudotoją „naudotojas“ iš nepaisomųjų sąrašo"
-
-msgid "Browse files of user 'user'"
-msgstr "Naršyti naudotojo „naudotojas“ rinkmenas"
-
-msgid "Request user info for user 'user'"
-msgstr "Užklausti naudotojo „naudotojas“ informacijos"
-
-msgid "Show IP for user 'user'"
-msgstr "Parodyti naudotojo „naudotojas“ IP"
-
-msgid "Aliases"
-msgstr "Alternatyvūs vardai"
-
-msgid "command"
-msgstr "komanda"
-
-msgid "definition"
-msgstr "apibrėžimas"
-
-msgid "Add a new alias"
-msgstr "Pridėti naują alternatyvų vardą"
-
-msgid "process"
-msgstr "procesas"
-
-msgid "Add a new alias that runs a process"
-msgstr "Pridėti naują alternatyvų vardą paleidžiantį procesą"
-
-msgid "Remove an alias"
-msgstr "Pašalinti alternatyvų vardą"
-
-msgid "query"
-msgstr "užklausa"
-
-msgid "Start a new search for 'query'"
-msgstr "Pradėti naują „užklausa“ paiešką"
-
-msgid "Search the joined rooms for 'query'"
-msgstr "Ieškoti „užklausa“ kambariuose, kuriuose esate"
-
-msgid "Search the buddy list for 'query'"
-msgstr "Ieškoti „užklausa“ pas bičiulius"
-
-msgid "Search a user's shares for 'query'"
-msgstr "Ieškoti „užklausa“ naudotojo viešiniuose"
-
-msgid "Private Chat"
-msgstr "Asmeninis pokalbis"
-
-msgid "Send message 'message' to user 'user'"
-msgstr "Siųsti žinutę „žinutė“ naudotojui „naudotojas“"
-
-msgid "Open private chat window for user 'user'"
-msgstr "Atverti asmeninio pokalbio su naudotoju „naudotojas“ langą"
-
-msgid "Toggles your away status"
-msgstr "Perjungia Jūsų nebuvimo būseną"
-
-msgid "Rescan shares"
-msgstr "Perskanuoti viešinius"
-
-msgid "Quit Nicotine+"
-msgstr ""
-
-msgid "About chat room commands"
-msgstr "Apie pokalbių kambario komandas"
-
-msgid "Close the current private chat"
-msgstr "Užverti esamą privatų pokalbį"
-
-msgid "plugin"
-msgstr ""
-
-msgid "Toggle plugin on/off state"
-msgstr ""
-
-msgid "Chat Rooms"
-msgstr "Pokalbių kambariai"
-
-msgid "About private chat commands"
-msgstr "Apie privataus pokalbio komandas"
-
 msgid "Room"
 msgstr "Kambarys"
 
-msgid "Join room"
-msgstr "Prisijungti prie kambario"
+msgid "Join Room"
+msgstr ""
 
-msgid "Leave room"
-msgstr "Išeiti iš kambario"
+msgid "Leave Room"
+msgstr ""
 
-msgid "Enable Private Rooms"
-msgstr "Įjungti asmeninius kambarius"
-
-msgid "Disable Private Rooms"
-msgstr "Išjungti asmeninius kambarius"
+msgid "Create Room"
+msgstr ""
 
 msgid "Create Private Room"
 msgstr "Sukurti asmeninį kambarį"
@@ -2489,14 +2398,20 @@ msgstr "Sukurti asmeninį kambarį"
 msgid "Disown Private Room"
 msgstr "Nebeturėti asmeninio kambario"
 
-msgid "Cancel room membership"
-msgstr "Nutraukti narystę kambaryje"
+msgid "Cancel Room Membership"
+msgstr ""
 
 msgid "Join Public Room"
 msgstr "Prisijungti prie viešo kambario"
 
-msgid "Nicotine+:"
-msgstr "Nicotine+:"
+msgid "Refresh"
+msgstr "Atnaujinti"
+
+msgid "Create Public Room"
+msgstr ""
+
+msgid "Enter the name of the public room you wish to create"
+msgstr ""
 
 msgid "Enter the name of the private room you wish to create"
 msgstr "Įveskite pageidaujamo sukurti asmeninio kambario pavadinimą"
@@ -2516,21 +2431,6 @@ msgstr ""
 #, python-format
 msgid "You have been added to a private room: %(room)s"
 msgstr ""
-
-msgid "Set ticker message"
-msgstr "Nurodyti bėgančią eilutę"
-
-msgid "Set room ticker message:"
-msgstr "Nurodyti kambario bėgančios eilutės tekstą:"
-
-msgid "Just this time"
-msgstr "Tik šį kartą"
-
-msgid "Always for this channel"
-msgstr "Visada šiam kanalui"
-
-msgid "Default for all channels"
-msgstr "Numatytoji visiems kanalams"
 
 msgid "Status"
 msgstr "Būsena"
@@ -2612,6 +2512,14 @@ msgid "Add as operator of %s"
 msgstr "Įtraukti kaip %s operatorių"
 
 #, python-format
+msgid "%s mentioned you in the %s room"
+msgstr ""
+
+#, python-format
+msgid "Message by %s in the %s room"
+msgstr ""
+
+#, python-format
 msgid "Alias \"%s\" returned nothing"
 msgstr ""
 
@@ -2620,12 +2528,8 @@ msgid "Command %s is not recognized"
 msgstr "Komanda %s neatpažinta"
 
 #, python-format
-msgid "All ticker messages for %(room)s:"
+msgid "All tickers / wall messages for %(room)s:"
 msgstr ""
-
-#, python-format
-msgid "Nicotine+ Chatroom: %s"
-msgstr "Nicotine+ pokalbių kambarys: %s"
 
 #, python-format
 msgid "%s joined the room"
@@ -2636,11 +2540,8 @@ msgid "%s left the room"
 msgstr "%s išėjo iš kambario"
 
 #, python-format
-msgid "%i people in room"
-msgstr "%i žmonių kambaryje"
-
-msgid "You are alone"
-msgstr "Jūs esate vieni"
+msgid "User List (%i)"
+msgstr ""
 
 #, python-format
 msgid "%s has gone away"
@@ -2656,9 +2557,6 @@ msgstr "--- atsijungta ---"
 msgid "--- reconnected ---"
 msgstr "--- prisijungta iš naujo ---"
 
-msgid "Detach this tab"
-msgstr "Atkabinti šią kortelę"
-
 msgid "Leave this room"
 msgstr "Išeiti iš šio kambario"
 
@@ -2670,24 +2568,67 @@ msgstr ""
 "Nepavyko gauti versijos informacija!\n"
 "Klaida: %s"
 
-msgid "Check Latest Version"
-msgstr "Ieškoti naujausios versijos"
-
 #, python-format
-msgid ""
-"A newer version ('%s') is available. Check Nicotine+ releases page\n"
-"(https://github.com/Nicotine-Plus/nicotine-plus/releases) for the latest "
-"version."
+msgid "A newer version %s is available, released on %s."
 msgstr ""
 
-msgid ""
-"You appear to be using a development version of Nicotine+.\n"
-"Check out the latest version from the Git repository at https://github.com/"
-"Nicotine-Plus/nicotine-plus/"
+msgid "You appear to be using a development version of Nicotine+."
 msgstr ""
 
 msgid "You are using the latest version of Nicotine+."
 msgstr "Jūs naudojate naujausią Nicotine+ versiją."
+
+msgid "Browse"
+msgstr "Naršyti"
+
+msgid "<b>List Position:</b>"
+msgstr "<b>Pozicija sąraše:</b>"
+
+msgid "<b>File Name:</b>"
+msgstr "<b>Rinkmenos vardas:</b>"
+
+msgid "<b>Directory:</b>"
+msgstr "<b>Aplankas:</b>"
+
+msgid "<b>File Size:</b>"
+msgstr "<b>Rinkmenos dydis:</b>"
+
+msgid "<b>Length:</b>"
+msgstr "<b>Ilgis:</b>"
+
+msgid "<b>Bitrate:</b>"
+msgstr "<b>Bitų dažnis:</b>"
+
+msgid "<b>Immediate Downloads:</b>"
+msgstr "<b>Skubūs atsiuntimai:</b>"
+
+msgid "<b>Queue:</b>"
+msgstr "<b>Eilė:</b>"
+
+msgid "<b>Last Speed:</b>"
+msgstr "<b>Paskutinysis greitis:</b>"
+
+msgid "Download"
+msgstr "Atsiųsti"
+
+msgid "Download All"
+msgstr "Atsiųsti visas"
+
+#, python-format
+msgid "<b>%s</b> File(s) Selected"
+msgstr "Pasirinkta (-os) <b>%s</b> rinkmena (-os)"
+
+msgid "Previous"
+msgstr "Ankstesnis"
+
+msgid "Next"
+msgstr "Kitas"
+
+msgid "Close"
+msgstr "Užverti"
+
+msgid "<b>Country Code:</b> "
+msgstr "<b>Šalies kodas:</b>"
 
 msgid "_Open"
 msgstr ""
@@ -2740,81 +2681,32 @@ msgstr "_Bandyti dar kartą"
 msgid "Abor_t"
 msgstr "Nu_traukti"
 
+msgid "Abort & Delete"
+msgstr "Nutraukti ir ištrinti"
+
 msgid "_Clear"
 msgstr "Iš_valyti"
 
 msgid "Clear Groups"
 msgstr "Išvalymo grupės"
 
-msgid "Clear All Queued Downloads?"
-msgstr "Išvalyti visus eilėje esančius atsiuntimus?"
+msgid "Clear Queued Downloads"
+msgstr ""
 
-msgid "Clear Queued Transfers"
-msgstr "Išvalyti eilėje esančius siuntimus"
+msgid "Are you sure you wish to clear all queued downloads?"
+msgstr ""
 
 msgid " KB/s"
 msgstr " KB/s"
+
+msgid "Nicotine+:"
+msgstr "Nicotine+:"
 
 msgid "Downloads Metadata"
 msgstr "Atsiunčia metaduomenis"
 
 msgid "<b>Metadata</b> for Downloads"
 msgstr "<b>Metaduomenys</b> Atsiuntimams"
-
-msgid "Select User's Transfers"
-msgstr "Pasirinkite naudotojų siuntimus"
-
-msgid "<b>List Position:</b>"
-msgstr "<b>Pozicija sąraše:</b>"
-
-msgid "<b>File Name:</b>"
-msgstr "<b>Rinkmenos vardas:</b>"
-
-msgid "<b>Directory:</b>"
-msgstr "<b>Aplankas:</b>"
-
-msgid "<b>File Size:</b>"
-msgstr "<b>Rinkmenos dydis:</b>"
-
-msgid "<b>Length:</b>"
-msgstr "<b>Ilgis:</b>"
-
-msgid "<b>Bitrate:</b>"
-msgstr "<b>Bitų dažnis:</b>"
-
-msgid "<b>Immediate Downloads:</b>"
-msgstr "<b>Skubūs atsiuntimai:</b>"
-
-msgid "<b>Queue:</b>"
-msgstr "<b>Eilė:</b>"
-
-msgid "<b>Last Speed:</b>"
-msgstr "<b>Paskutinysis greitis:</b>"
-
-msgid "Download"
-msgstr "Atsiųsti"
-
-msgid "Download All"
-msgstr "Atsiųsti visas"
-
-#, python-format
-msgid "<b>%s</b> File(s) Selected"
-msgstr "Pasirinkta (-os) <b>%s</b> rinkmena (-os)"
-
-msgid "Previous"
-msgstr "Ankstesnis"
-
-msgid "Next"
-msgstr "Kitas"
-
-msgid "<b>Country Code:</b> "
-msgstr "<b>Šalies kodas:</b>"
-
-msgid "Cancel"
-msgstr "Atšaukti"
-
-msgid "OK"
-msgstr "Gerai"
 
 msgid "Virtual Directory"
 msgstr ""
@@ -2853,14 +2745,21 @@ msgstr "Dėmesio"
 msgid "The chosen virtual name is empty"
 msgstr ""
 
-msgid "The chosen virtual name already exist"
+msgid "The chosen virtual name already exists"
 msgstr ""
 
 msgid "The chosen directory is already shared"
 msgstr ""
 
+#, python-format
+msgid "%(current)s/%(limit)s Connections"
+msgstr ""
+
 msgid "Search files"
 msgstr "Paieška"
+
+msgid "Downloads"
+msgstr "Atsiuntimai"
 
 msgid "Uploads"
 msgstr "Išsiuntimai"
@@ -2872,11 +2771,29 @@ msgstr "Pomėgiai"
 msgid "Hide %(tab)s"
 msgstr "Paslėpti %(tab)s"
 
+#, python-format
+msgid "Users: %s"
+msgstr "Naudotojai: %s"
+
+#, python-format
+msgid "Files: %s"
+msgstr "Rinkmenos: %s"
+
+#, python-format
+msgid "Down: %(num)i users, %(speed).1f KB/s"
+msgstr "Ats.: %(num)i naudot., %(speed).1f KB/s"
+
+#, python-format
+msgid "Up: %(num)i users, %(speed).1f KB/s"
+msgstr "Išs.: %(num)i naudot., %(speed).1f KB/s"
+
+#, python-format
+msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
+msgstr ""
+"Nicotine+ siuntimai: %(speeddown).1f KB/s ats., %(speedup).1f KB/s išs."
+
 msgid "Joined Rooms "
 msgstr "Kambariai, kuriuose esate "
-
-msgid "Global"
-msgstr "Visur"
 
 msgid "Buddies"
 msgstr "Pas bičiulius"
@@ -2893,9 +2810,8 @@ msgstr ""
 msgid "Send to tray"
 msgstr "Sutraukti į skydelį"
 
-#, python-format
-msgid "Notification Error: %s"
-msgstr "Pranešimo klaida: %s"
+msgid "Remember choice"
+msgstr ""
 
 msgid "I like"
 msgstr "Man patinka"
@@ -2928,6 +2844,10 @@ msgid "_Recommendations for this item"
 msgstr "Šio elemento _rekomendacijos"
 
 #, python-format
+msgid "Download %(num)i files?"
+msgstr ""
+
+#, python-format
 msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's directory "
 "%(folder)s?"
@@ -2943,27 +2863,6 @@ msgstr "Nepavyko sukurti aplanko „%(folder)s“, gauta klaida: %(error)s"
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Nepavyko įkelti viešinių iš disko: %(error)s"
 
-msgid "Enter the User who you wish to send a private message:"
-msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
-
-msgid "Nicotine+: Get User Info"
-msgstr "Nicotine+: gauti naudotojo informaciją"
-
-msgid "Enter the User whose User Info you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's IP"
-msgstr "Nicotine+: gauti naudotojo IP"
-
-msgid "Enter the User whose IP Address you wish to receive:"
-msgstr ""
-
-msgid "Nicotine+: Get A User's Shares List"
-msgstr "Nicotine+: gauti naudotojo viešinių sąrašą"
-
-msgid "Enter the User whose Shares List you wish to receive:"
-msgstr ""
-
 #, python-format
 msgid "button_press error, %(error)s"
 msgstr "button_press klaida, %(error)s"
@@ -2973,33 +2872,8 @@ msgid "Connecting to %(host)s:%(port)s"
 msgstr "Jungiamasi prie %(host)s:%(port)s"
 
 #, python-format
-msgid "%(current)s/%(limit)s Connections"
-msgstr ""
-
-#, python-format
 msgid "Error loading image for %(flag)s: %(error)s"
 msgstr "Klaida įkeliant %(flag)s paveikslėlį: %(error)s"
-
-#, python-format
-msgid "Users: %s"
-msgstr "Naudotojai: %s"
-
-#, python-format
-msgid "Files: %s"
-msgstr "Rinkmenos: %s"
-
-#, python-format
-msgid "Down: %(num)i users, %(speed).1f KB/s"
-msgstr "Ats.: %(num)i naudot., %(speed).1f KB/s"
-
-#, python-format
-msgid "Up: %(num)i users, %(speed).1f KB/s"
-msgstr "Išs.: %(num)i naudot., %(speed).1f KB/s"
-
-#, python-format
-msgid "Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up"
-msgstr ""
-"Nicotine+ siuntimai: %(speeddown).1f KB/s ats., %(speedup).1f KB/s išs."
 
 msgid "Rescanning started"
 msgstr "Pradėtas pakartotinis skanavimas"
@@ -3034,6 +2908,9 @@ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Klaida: Atsiuntimų filtravimas nepavyko! Patikrinkite filtrus: Priežastis: %s"
 
+msgid "Buddy list"
+msgstr ""
+
 #, python-format
 msgid "Invalid SoulSeek meta-url: %s"
 msgstr "Netinkamas SoulSeek meta-url: %s"
@@ -3043,15 +2920,6 @@ msgstr "Įveskite ieškotiną eilutę:"
 
 msgid "Nicotine+: Find string"
 msgstr "Nicotine+: Rasti eilutę"
-
-msgid "Add thing I like"
-msgstr "Pridėti mano megstamus dalykus"
-
-msgid "Add thing I don't like"
-msgstr "Pridėti mano nemėgstamus dalykus"
-
-msgid "I don't like"
-msgstr "Man nepatinka"
 
 #, python-format
 msgid "Recommendations for %s"
@@ -3070,15 +2938,8 @@ msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s paminėjo jus kambaryje %(room)s"
 
 #, python-format
-msgid ""
-"%(myusername)s, the user, %(username)s has mentioned your name in the room, "
-"%(place)s."
-msgstr ""
-"%(myusername)s, naudotojas %(username)s paminėjo jus kambaryje %(place)s."
-
-#, python-format
-msgid "%(myusername)s, you have recieved a private message from %(username)s."
-msgstr ""
+msgid "Notification Error: %s"
+msgstr "Pranešimo klaida: %s"
 
 msgid "Username;APIKEY :"
 msgstr ""
@@ -3215,6 +3076,10 @@ msgstr "Nepaisyti šio naudotojo"
 msgid "Close this tab"
 msgstr "Užverti šią kortelę"
 
+#, python-format
+msgid "Private message from %s"
+msgstr ""
+
 msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
@@ -3222,39 +3087,17 @@ msgstr ""
 "* Atsiųsta žinučių, kol buvote atsijungę. Laiko įrašus praneša serveris, "
 "todėl jie gali būti neteisingi."
 
-#, python-format
-msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
-msgstr "Nicotine+ asmeninis pokalbis: %(user)s (%(status)s)"
-
-msgid "Nicotine+ Wishlist"
-msgstr "Nicotine+ pageidavimų sąrašas"
-
-msgid "Search Wishlist"
-msgstr "Ieškoti pageidavimų sąraše"
-
-msgid "Select all"
+msgid "ID"
 msgstr ""
 
-msgid "Wishes"
-msgstr ""
-
-msgid "Add Wish..."
-msgstr "Pridėti pageidavimą..."
-
-msgid "Wish:"
-msgstr "Pageidavimas:"
-
-msgid "Number"
-msgstr "Skaičius"
-
-msgid "Filename"
-msgstr "Rinkmenos pavadinimas"
+msgid "Immediate Download"
+msgstr "Skubus atsiuntimas"
 
 msgid "In queue"
 msgstr "Eilėje"
 
-msgid "Immediate Download"
-msgstr "Skubus atsiuntimas"
+msgid "Filename"
+msgstr "Rinkmenos pavadinimas"
 
 msgid "_Download file(s)"
 msgstr "_Atsiųsti rinkmeną(as)"
@@ -3262,17 +3105,19 @@ msgstr "_Atsiųsti rinkmeną(as)"
 msgid "Download file(s) _to..."
 msgstr "Atsiųsti _rinkmeną (-as) į..."
 
-msgid "Download containing _folder(s)"
-msgstr "Atsiųsti vidinį _aplanką (-us)"
+msgid "Download _folder(s)"
+msgstr ""
 
-msgid "Download containing f_older(s) to..."
-msgstr "Atsiųsti vidinį _aplanką (-us) į..."
+msgid "Download f_older(s) to..."
+msgstr ""
 
 msgid "Copy folder U_RL"
 msgstr "Kopijuoti aplanko U_RL"
 
-#, python-format
-msgid "Nicotine+ %(mode)s Search: %(term)s"
+msgid "Filtered out excluded search result "
+msgstr ""
+
+msgid "Filtered out inexact or incorrect search result "
 msgstr ""
 
 msgid "Select User's Results"
@@ -3284,6 +3129,9 @@ msgstr "Nicotine+: paieškos rezultatai"
 #, python-format
 msgid "<b>Metadata</b> for Search Query: <i>%s</i>"
 msgstr "<b>Metaduomenys</b> paieškos užklausai: <i>%s</i>"
+
+msgid "Wishes"
+msgstr ""
 
 #, python-format
 msgid "Client port is <b>%(port)s</b>"
@@ -3305,42 +3153,6 @@ msgstr "Dėmesio: netinkami prievadai"
 msgid "Client ports are invalid."
 msgstr "Kliento prievadai netinkami."
 
-msgid "Filter"
-msgstr "Filtruoti"
-
-msgid "Escaped"
-msgstr "Kaitos simbolis"
-
-#, python-format
-msgid "Security Risk: you should not share your %s directory!"
-msgstr "Rizikuojate saugumu: neturėtumėte viešinti savo %s aplanko!"
-
-msgid "Nicotine+: Add a download filter"
-msgstr "Nicotine+: pridėti atsiuntimo filtrą"
-
-msgid "Enter a new download filter:"
-msgstr "Įveskite naują atsiuntimo filtrą:"
-
-msgid "Nicotine+: Edit a download filter"
-msgstr "Nicotine+: keisti atsiuntimo filtrą"
-
-msgid "Modify this download filter:"
-msgstr "Keiskite šį atsiuntimo filtrą:"
-
-#, python-format
-msgid "%(num)d Failed! %(error)s "
-msgstr "%(num)d Nepavyko! %(error)s "
-
-msgid "The chosen virtual name is either empty or already exist"
-msgstr ""
-
-msgid "Add a shared buddy directory"
-msgstr "Pridėti viešinamą bičiulių aplanką"
-
-#, python-format
-msgid "Enter new virtual name for '%(dir)s':"
-msgstr ""
-
 msgid "No one"
 msgstr "Niekas"
 
@@ -3353,14 +3165,47 @@ msgstr "Sąraše esantys naudotojai"
 msgid "Trusted Users"
 msgstr "Patikimi naudotojai"
 
+msgid "Filter"
+msgstr "Filtruoti"
+
+msgid "Escaped"
+msgstr "Kaitos simbolis"
+
+#, python-format
+msgid "Security Risk: you should not share your %s directory!"
+msgstr "Rizikuojate saugumu: neturėtumėte viešinti savo %s aplanko!"
+
+msgid "Add a download filter"
+msgstr ""
+
+msgid "Enter a new download filter:"
+msgstr "Įveskite naują atsiuntimo filtrą:"
+
+msgid "Edit a download filter"
+msgstr ""
+
+msgid "Modify this download filter:"
+msgstr "Keiskite šį atsiuntimo filtrą:"
+
+#, python-format
+msgid "%(num)d Failed! %(error)s "
+msgstr "%(num)d Nepavyko! %(error)s "
+
+msgid "The chosen virtual name is either empty or already exists"
+msgstr ""
+
+msgid "Add a shared buddy directory"
+msgstr "Pridėti viešinamą bičiulių aplanką"
+
+#, python-format
+msgid "Enter new virtual name for '%(dir)s':"
+msgstr ""
+
 msgid "Addresses"
 msgstr "Adresai"
 
 msgid "Ignore user..."
 msgstr "Nepaisyti naudotojo..."
-
-msgid "User:"
-msgstr "Naudotojas:"
 
 msgid "Ignore IP Address..."
 msgstr "Nepaisyti IP adreso..."
@@ -3404,8 +3249,29 @@ msgstr "Nepavyko įjungti įskiepio."
 msgid "Could not disable plugin."
 msgstr "Nepavyko išjungti įskiepio."
 
+msgid "General"
+msgstr ""
+
+msgid "Server"
+msgstr "Serveris"
+
+msgid "Searches"
+msgstr "Paieškos"
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Text To Speech"
+msgstr ""
+
+msgid "User Info"
+msgstr ""
+
 msgid "Ban List"
 msgstr "Blokavimo sąrašas"
+
+msgid "Events"
+msgstr "Įvykiai"
 
 msgid "Geo Block"
 msgstr "Geoblokavimas"
@@ -3413,11 +3279,38 @@ msgstr "Geoblokavimas"
 msgid "Interface"
 msgstr "Sąsaja"
 
+msgid "Fonts"
+msgstr ""
+
+msgid "Colors"
+msgstr ""
+
+msgid "Icons"
+msgstr "Piktogramos"
+
+msgid "Notebook Tabs"
+msgstr "Kortelės"
+
+msgid "Chat"
+msgstr "Pokalbis"
+
+msgid "Away Mode"
+msgstr ""
+
+msgid "Logging"
+msgstr "Žurnalų vedimas"
+
 msgid "Ignore List"
 msgstr "Nepaisymo sąrašas"
 
-msgid "Auto-Replace"
-msgstr "Automatinis pakeitimas"
+msgid "Censor List"
+msgstr "Cenzūros sąrašas"
+
+msgid "Auto-Replace List"
+msgstr "Automatinio pakeitimo sąrašas"
+
+msgid "URL Catching"
+msgstr "URL surinkimas"
 
 msgid "Completion"
 msgstr "Užbaigimas"
@@ -3425,62 +3318,8 @@ msgstr "Užbaigimas"
 msgid "Categories"
 msgstr "Kategorijos"
 
-msgid "Getting status"
-msgstr "Gaunama būsena"
-
-msgid "Waiting for download"
-msgstr "Laukiama siuntimo"
-
-msgid "Waiting for upload"
-msgstr "Laukiama išsiuntimo"
-
-msgid "Getting address"
-msgstr "Gaunamas adresas"
-
-msgid "Connecting"
-msgstr "Jungiamasi"
-
-msgid "Waiting for peer to connect"
-msgstr "Laukiama porininko prisijungimui"
-
-msgid "Cannot connect"
-msgstr "Nepavyko prisijungti"
-
-msgid "User logged off"
-msgstr "Naudotojas atsijungęs"
-
-msgid "Requesting file"
-msgstr "Užklausiama rinkmenos"
-
-msgid "Initializing transfer"
-msgstr "Inicializuojamas siuntimas"
-
-msgid "Filtered"
-msgstr "Atfiltruota"
-
-msgid "Download directory error"
-msgstr "Atsiuntimo aplanko klaida"
-
-msgid "Local file error"
-msgstr "Vietinės rinkmenos klaida"
-
-msgid "File not shared"
-msgstr "Rinkmena neviešinama"
-
-msgid "Aborted"
-msgstr "Nutraukta"
-
-msgid "Paused"
-msgstr "Sulaikyta"
-
-msgid "Queued"
-msgstr "Eilėje"
-
-msgid "Transferring"
-msgstr "Siunčiama"
-
-msgid "Finished"
-msgstr "Baigta"
+msgid "Path"
+msgstr "Kelias"
 
 msgid "Queue Position"
 msgstr "Eilės padėtis"
@@ -3494,14 +3333,71 @@ msgstr "Praėjęs laikas"
 msgid "Time left"
 msgstr "Likęs laikas"
 
-msgid "Path"
-msgstr "Kelias"
+msgid "Waiting for download"
+msgstr "Laukiama siuntimo"
+
+msgid "Waiting for upload"
+msgstr "Laukiama išsiuntimo"
+
+msgid "Requesting file"
+msgstr "Užklausiama rinkmenos"
+
+msgid "Initializing transfer"
+msgstr "Inicializuojamas siuntimas"
+
+msgid "Cannot connect"
+msgstr "Nepavyko prisijungti"
+
+msgid "Waiting for peer to connect"
+msgstr "Laukiama porininko prisijungimui"
+
+msgid "Connecting"
+msgstr "Jungiamasi"
+
+msgid "Getting address"
+msgstr "Gaunamas adresas"
+
+msgid "Getting status"
+msgstr "Gaunama būsena"
+
+msgid "Queued"
+msgstr "Eilėje"
+
+msgid "User logged off"
+msgstr "Naudotojas atsijungęs"
+
+msgid "Aborted"
+msgstr "Nutraukta"
+
+msgid "Finished"
+msgstr "Baigta"
+
+msgid "Paused"
+msgstr "Sulaikyta"
+
+msgid "Transferring"
+msgstr "Siunčiama"
+
+msgid "Filtered"
+msgstr "Atfiltruota"
 
 msgid "Connection closed by peer"
 msgstr "Porininkas nutraukė ryšį"
 
+msgid "File not shared"
+msgstr "Rinkmena neviešinama"
+
 msgid "Establishing connection"
 msgstr "Įtvirtinamas ryšys"
+
+msgid "Download directory error"
+msgstr "Atsiuntimo aplanko klaida"
+
+msgid "Local file error"
+msgstr "Vietinės rinkmenos klaida"
+
+msgid "Remote file error"
+msgstr ""
 
 #, python-format
 msgid "All %(ext)s"
@@ -3510,6 +3406,9 @@ msgstr "Visi %(ext)s"
 #, python-format
 msgid "%(number)2s files "
 msgstr "%(number)2s failų "
+
+msgid "Select User's Transfers"
+msgstr "Pasirinkite naudotojų siuntimus"
 
 msgid "Connect"
 msgstr "Prisijungti"
@@ -3522,9 +3421,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Nustatymai"
-
-msgid "Send Message"
-msgstr "Siųsti žinutę"
 
 msgid "Lookup a User's IP"
 msgstr "Gauti naudotojo IP"
@@ -3545,6 +3441,27 @@ msgstr "Išeiti"
 msgid "ERROR: tray menu, %(error)s"
 msgstr "KLAIDA: skydelio meniu, %(error)s"
 
+msgid "Enter the User who you wish to send a private message:"
+msgstr "Įveskite naudotoją, kuriam norite nusiųsti asmeninę žinutę:"
+
+msgid "Get User Info"
+msgstr ""
+
+msgid "Enter the User whose User Info you wish to receive:"
+msgstr ""
+
+msgid "Get A User's IP"
+msgstr ""
+
+msgid "Enter the User whose IP Address you wish to receive:"
+msgstr ""
+
+msgid "Get A User's Shares List"
+msgstr ""
+
+msgid "Enter the User whose Shares List you wish to receive:"
+msgstr ""
+
 #, python-format
 msgid "ERROR: cannot set trayicon image: %(error)s"
 msgstr ""
@@ -3555,8 +3472,11 @@ msgstr ""
 msgid "Clear failed"
 msgstr "Išvalyti nepavykusius"
 
-msgid "Clear All Queued Uploads?"
-msgstr "Išvalyti visus eilėje esančius išsiuntimus?"
+msgid "Clear Queued Uploads"
+msgstr ""
+
+msgid "Are you sure you wish to clear all queued uploads?"
+msgstr ""
 
 msgid "Directories"
 msgstr "Aplankai"
@@ -3592,10 +3512,6 @@ msgid "Open in File Manager"
 msgstr "Atverti rinkmenų tvarkyklėje"
 
 #, python-format
-msgid "Nicotine+ User Browse: %(user)s (%(status)s)"
-msgstr ""
-
-#, python-format
 msgid "Shared: %s"
 msgstr "Viešinama: %s"
 
@@ -3607,13 +3523,13 @@ msgstr "Aplankai: %s"
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
 msgstr "Nepavyko išsaugoti viešinių, „%(user)s“, gauta klaida: %(error)s"
 
-msgid "Nicotine+: Upload Directory's Contents"
+msgid "Upload Directory's Contents"
 msgstr ""
 
 msgid "Enter the User you wish to upload to:"
 msgstr "Nurodkite naudotoją, kuriam norite nusiųsti:"
 
-msgid "Nicotine+: Upload File(s)"
+msgid "Upload File(s)"
 msgstr ""
 
 #, python-format
@@ -3641,10 +3557,6 @@ msgstr "Atitraukti"
 
 msgid "Save Image"
 msgstr "Išsaugoti paveikslėlį"
-
-#, python-format
-msgid "Nicotine+ Userinfo: %(user)s (%(status)s)"
-msgstr ""
 
 #, python-format
 msgid "Total uploads allowed: %i"
@@ -3749,34 +3661,365 @@ msgstr "Nurodykite kiek dienų privilegijų norite suteikti šiam naudotojui?"
 msgid "%(days)s days left"
 msgstr "liko %(days)s"
 
-#, python-format
-msgid "%.2f GB"
-msgstr "%.2f GB"
+#~ msgid "Hide/Show Status log"
+#~ msgstr "Slėpti / rodyti būsenos žurnalą"
+
+#~ msgid "Hide/Show User list"
+#~ msgstr "Slėpti / rodyti naudotojų sąrašą"
+
+#~ msgid "0 people in room"
+#~ msgstr "0 žmonių kambaryje"
+
+#~ msgid "Leave"
+#~ msgstr "Išeiti"
+
+#~ msgid "Check _latest"
+#~ msgstr "Ieškoti _naujausios versijos"
+
+#~ msgid "Group by Users"
+#~ msgstr "Grupuoti pagal naudotojus"
+
+#~ msgid "Auto-retry failed"
+#~ msgstr "Automatiškai kartoti nepavykusius"
+
+#~ msgid "Every 3 minutes"
+#~ msgstr "Kas 3 minutes"
+
+#~ msgid "Global recommendations"
+#~ msgstr "Visuotinės rekomendacijos"
+
+#~ msgid "Nicotine+: Configure Now Playing"
+#~ msgstr "Nicotine+: konfigūruoti _Dabar grojama"
+
+#~ msgid "Direct"
+#~ msgstr "Tiesiogiai"
+
+#~ msgid "Create: "
+#~ msgstr "Sukurti: "
+
+#~ msgid "Search: "
+#~ msgstr "Ieškoti:"
+
+#~ msgid "Query"
+#~ msgstr "Užklausa"
+
+#~ msgid "Close search tab; press ignore to prevent this tab from reopening"
+#~ msgstr ""
+#~ "Užverti paieškos kortelę; spustelėkite Nepaisyti, jeigu nenorite, kad "
+#~ "kortelė būtų vėl atverta"
+
+#~ msgid "Ban"
+#~ msgstr "Užblokuoti"
+
+#~ msgid "Banning"
+#~ msgstr "Blokavimas"
+
+#~ msgid "Bloat"
+#~ msgstr "Šlamštas"
+
+#~ msgid "Extra stuff for your comfort"
+#~ msgstr "Papildomi įrankiai jūsų patogumui"
+
+#~ msgid ""
+#~ "Choose <b>Logging</b> to configure what's logged and where to save the "
+#~ "logs."
+#~ msgstr ""
+#~ "Pasirinkite <b>Žurnalų vedimas</b> norėdami nurodyti kas rašoma į "
+#~ "žurnalus ir kur juos saugoti."
+
+#~ msgid ""
+#~ "Choose <b>URL Catching</b> to configure the programs used when clicking "
+#~ "on links."
+#~ msgstr ""
+#~ "Pasirinkite <b>URL surinkimas</b> norėdami nurodyti kokios programos "
+#~ "paleidžiamos spustelėjus nuorodas."
+
+#~ msgid "Chat Settings"
+#~ msgstr "Pokalbio parametrai"
+
+#~ msgid "Text Completion"
+#~ msgstr "Teksto užbaigimas"
+
+#~ msgid "Chat text completion"
+#~ msgstr "Pokalbio teksto užbaigimas"
+
+#~ msgid "<b>Do not download these file types:</b>"
+#~ msgstr "<b>Neatsiųsti šių tipų rinkmenų:</b>"
+
+#~ msgid "...each file"
+#~ msgstr "...kiekvieno failo"
+
+#~ msgid "...each directory"
+#~ msgstr "...kiekvieno aplanko"
+
+#~ msgid "GeoBlock"
+#~ msgstr "GeoBlock"
+
+#~ msgid "Geographical Blocking"
+#~ msgstr "Geografinis blokavimas"
+
+#~ msgid "Current Icons:"
+#~ msgstr "Dabartinės piktogramos:"
+
+#~ msgid "Tray & Icons"
+#~ msgstr "Skydelis ir piktogramos"
+
+#~ msgid "Ignoring"
+#~ msgstr "Nepaisoma"
+
+#~ msgid "Misc"
+#~ msgstr "Įvairūs"
+
+#~ msgid "Notebooks"
+#~ msgstr "Kortelės"
+
+#~ msgid "UrlCatch"
+#~ msgstr "UrlCatch"
+
+#~ msgid "Plugin Manager"
+#~ msgstr "Įskiepių valdyklė"
+
+#~ msgid "Nicotine+ - Plugin Properties"
+#~ msgstr "Nicotine+ – Įskiepių savybės"
+
+#~ msgid "Plugin"
+#~ msgstr "Įskiepis"
+
+#~ msgid "Server Settings"
+#~ msgstr "Serverio parametrai"
+
+#~ msgid "Login:"
+#~ msgstr "Naudotojo vardas:"
+
+#~ msgid "Use the above ports to configure your router or firewall."
+#~ msgstr ""
+#~ "Naudokite šiuos prievadus savo maršrutizatoriaus ar užkardos "
+#~ "konfigūravimui."
+
+#~ msgid "(only use if the above ports are remotely accessible)"
+#~ msgstr ""
+#~ "(naudokite tik jei aukščiau nurodyti prievadai pasiekiami iš išorės)"
+
+#~ msgid "Sounds"
+#~ msgstr "Garsai"
+
+#~ msgid "Enable Sound Effects"
+#~ msgstr "Įjungti garso efektus"
+
+#~ msgid "Sound Effects Directory:"
+#~ msgstr "Garso efektų aplankas:"
+
+#~ msgid "Upload directory:"
+#~ msgstr "Išsiuntimo aplankas:"
+
+#~ msgid "(NOT RECOMMENDED)"
+#~ msgstr "(NEREKOMENDUOJAMA)"
+
+#~ msgid "Userinfo"
+#~ msgstr "Naudotojo informacija"
+
+#~ msgid "Save"
+#~ msgstr "Išsaugoti"
+
+#~ msgid "Add to list"
+#~ msgstr "Įtraukti į sąrašą"
+
+#~ msgid "Save pic"
+#~ msgstr "Išsaugoti paveikslėlį"
 
 #, python-format
-msgid "%.2f MB"
-msgstr "%.2f MB"
+#~ msgid ""
+#~ "IP address of %(user)s is %(ip)s, name %(host)s, port %(port)i%(country)s"
+#~ msgstr ""
+#~ "Naudotojo %(user)s IP adresas yra %(ip)s, vardas %(host)s, prievadas "
+#~ "%(port)i%(country)s"
+
+#~ msgid "Checking for changes"
+#~ msgstr "Ieškoma pakeitimų"
 
 #, python-format
-msgid "%.2f KB"
-msgstr "%.2f KB"
+#~ msgid "Scanning %s"
+#~ msgstr "Skanuojama %s"
+
+#~ msgid "Building DataBase"
+#~ msgstr "Kuriama duomenų bazė"
+
+#~ msgid "Building Index"
+#~ msgstr "Kuriamas indeksas"
 
 #, python-format
-msgid "%d Bytes"
-msgstr "%d baitų"
+#~ msgid "Scanning Directory Error: %(error)s Path: %(path)s"
+#~ msgstr "Aplanko skenavimo klaida: %(error)s Kelias: %(path)s"
 
 #, python-format
-msgid "%.2f GB/s"
-msgstr ""
+#~ msgid "Scanning Error: %(error)s Path: %(path)s"
+#~ msgstr "Skenavimo klaida: %(error)s Kelias: %(path)s"
 
 #, python-format
-msgid "%.2f MB/s"
-msgstr ""
+#~ msgid ""
+#~ "Scanning Error: Broken link to directory: \"%(link)s\" from Path: "
+#~ "\"%(path)s\". Repair or remove this link."
+#~ msgstr ""
+#~ "Skenavimo klaida: sugadinta nuoroda į aplanką: „%(link)s“ iš kelio: "
+#~ "„%(path)s. Pataisykite arba pašalinkite šią nuorodą."
 
 #, python-format
-msgid "%.2f KB/s"
-msgstr ""
+#~ msgid "Scanning File Error: %(error)s Path: %(path)s"
+#~ msgstr "Failo skenavimo klaida: %(error)s Kelias: %(path)s"
 
 #, python-format
-msgid "%d B/s"
-msgstr "%d B/s"
+#~ msgid ""
+#~ "You have just hit your connection limit of %(limit)s. Nicotine+ will drop "
+#~ "connections for your protection. If you get this message often you should "
+#~ "search for less generic terms, or increase your per-process file "
+#~ "descriptor limit."
+#~ msgstr ""
+#~ "Ką tik pasiekėte savo %(limit)s prisijungimų ribą. Nicotine+ atmetinės "
+#~ "prisijungimus saugumo sumetimais. Jei dažnai gaunate šį pranešimą, "
+#~ "turėtumėte ieškoti ne tokių bendrų terminų arba padidinti savo vieno "
+#~ "proceso failų aprašų ribą."
+
+#, python-format
+#~ msgid "Failed download: user %(user)s, file %(file)s"
+#~ msgstr "Nepavyko atsiųsti: naudotojas %(user)s, rinkmena %(file)s"
+
+#~ msgid "Nicotine+ :: Directory download error"
+#~ msgstr "Nicotine+ :: Aplanko atsiuntimo klaida"
+
+#~ msgid "Nicotine+ :: directory completed"
+#~ msgstr "Nicotine+ :: aplankas baigtas"
+
+#, python-format
+#~ msgid "Retrying failed download: %(user)s, file %(file)s"
+#~ msgstr ""
+#~ "Pakartotinas bandymas atsisiųsti nesėkmingas: naudotojas %(user)s, "
+#~ "rinkmena %(file)s"
+
+#~ msgid "room"
+#~ msgstr "kambarys"
+
+#~ msgid "Reattach a chat window to the notebook"
+#~ msgstr "Prikabinti pokalbio langą prie kortelių"
+
+#~ msgid "Detach a chat tab from the notebook"
+#~ msgstr "Atkabinti pokalbio kortelę"
+
+#~ msgid "user"
+#~ msgstr "naudotojas"
+
+#~ msgid "command"
+#~ msgstr "komanda"
+
+#~ msgid "definition"
+#~ msgstr "apibrėžimas"
+
+#~ msgid "process"
+#~ msgstr "procesas"
+
+#~ msgid "Add a new alias that runs a process"
+#~ msgstr "Pridėti naują alternatyvų vardą paleidžiantį procesą"
+
+#~ msgid "query"
+#~ msgstr "užklausa"
+
+#~ msgid "Enable Private Rooms"
+#~ msgstr "Įjungti asmeninius kambarius"
+
+#~ msgid "Disable Private Rooms"
+#~ msgstr "Išjungti asmeninius kambarius"
+
+#~ msgid "Set ticker message"
+#~ msgstr "Nurodyti bėgančią eilutę"
+
+#~ msgid "Set room ticker message:"
+#~ msgstr "Nurodyti kambario bėgančios eilutės tekstą:"
+
+#~ msgid "Just this time"
+#~ msgstr "Tik šį kartą"
+
+#~ msgid "Always for this channel"
+#~ msgstr "Visada šiam kanalui"
+
+#~ msgid "Default for all channels"
+#~ msgstr "Numatytoji visiems kanalams"
+
+#, python-format
+#~ msgid "Nicotine+ Chatroom: %s"
+#~ msgstr "Nicotine+ pokalbių kambarys: %s"
+
+#, python-format
+#~ msgid "%i people in room"
+#~ msgstr "%i žmonių kambaryje"
+
+#~ msgid "You are alone"
+#~ msgstr "Jūs esate vieni"
+
+#~ msgid "Detach this tab"
+#~ msgstr "Atkabinti šią kortelę"
+
+#~ msgid "Clear Queued Transfers"
+#~ msgstr "Išvalyti eilėje esančius siuntimus"
+
+#~ msgid "Nicotine+: Get User Info"
+#~ msgstr "Nicotine+: gauti naudotojo informaciją"
+
+#~ msgid "Add thing I like"
+#~ msgstr "Pridėti mano megstamus dalykus"
+
+#~ msgid "Add thing I don't like"
+#~ msgstr "Pridėti mano nemėgstamus dalykus"
+
+#~ msgid "I don't like"
+#~ msgstr "Man nepatinka"
+
+#, python-format
+#~ msgid ""
+#~ "%(myusername)s, the user, %(username)s has mentioned your name in the "
+#~ "room, %(place)s."
+#~ msgstr ""
+#~ "%(myusername)s, naudotojas %(username)s paminėjo jus kambaryje %(place)s."
+
+#, python-format
+#~ msgid "Nicotine+ Private Chat: %(user)s (%(status)s)"
+#~ msgstr "Nicotine+ asmeninis pokalbis: %(user)s (%(status)s)"
+
+#~ msgid "Nicotine+ Wishlist"
+#~ msgstr "Nicotine+ pageidavimų sąrašas"
+
+#~ msgid "Add Wish..."
+#~ msgstr "Pridėti pageidavimą..."
+
+#~ msgid "Wish:"
+#~ msgstr "Pageidavimas:"
+
+#~ msgid "Number"
+#~ msgstr "Skaičius"
+
+#~ msgid "Download containing _folder(s)"
+#~ msgstr "Atsiųsti vidinį _aplanką (-us)"
+
+#~ msgid "Download containing f_older(s) to..."
+#~ msgstr "Atsiųsti vidinį _aplanką (-us) į..."
+
+#~ msgid "Auto-Replace"
+#~ msgstr "Automatinis pakeitimas"
+
+#, python-format
+#~ msgid "%.2f GB"
+#~ msgstr "%.2f GB"
+
+#, python-format
+#~ msgid "%.2f MB"
+#~ msgstr "%.2f MB"
+
+#, python-format
+#~ msgid "%.2f KB"
+#~ msgstr "%.2f KB"
+
+#, python-format
+#~ msgid "%d Bytes"
+#~ msgstr "%d baitų"
+
+#, python-format
+#~ msgid "%d B/s"
+#~ msgstr "%d B/s"
