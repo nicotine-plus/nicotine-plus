@@ -7,7 +7,7 @@
     <property name="title" translatable="yes">Nicotine+ Settings</property>
     <property name="window_position">center</property>
     <property name="default_width">1200</property>
-    <property name="default_height">800</property>
+    <property name="default_height">750</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="Main">
         <property name="visible">True</property>
