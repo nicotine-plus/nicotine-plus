@@ -590,22 +590,20 @@ class NetworkEventProcessor:
             self.frame.pluginhandler.ServerDisconnectNotification(userchoice)
 
         else:
-            for i in self.peerconns[:]:
-                if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
+            try:
+                self.peerconns.remove(conn)
 
-                    if i.conntimer is not None:
-                        i.conntimer.cancel()
+                self.logMessage(_("Connection closed by peer: %s") % conn, debugLevel=3)
 
-                    if self.transfers is not None:
-                        self.transfers.ConnClose(conn, addr)
+                if conn.conntimer is not None:
+                    conn.conntimer.cancel()
 
-                    if self.parentconn is not None and i == self.parentconn:
-                        self.ParentConnClosed()
+                if self.transfers is not None:
+                    self.transfers.ConnClose(conn, addr)
 
-                    self.peerconns.remove(i)
-                    break
-            else:
+                if self.parentconn is not None and conn == self.parentconn:
+                    self.ParentConnClosed()
+            except ValueError:
                 self.logMessage(
                     _("Removed connection closed by peer: %(conn_obj)s %(address)s") % {
                         'conn_obj': conn,
@@ -613,7 +611,6 @@ class NetworkEventProcessor:
                     },
                     3
                 )
-                self.queue.put(slskmessages.ConnClose(conn))
 
     def Login(self, msg):
 
@@ -1485,22 +1482,21 @@ class NetworkEventProcessor:
                 break
 
     def ConnectToPeerTimeout(self, msg):
+        conn = msg.conn
 
-        for i in self.peerconns[:]:
+        if self.parentconn is not None and conn == self.parentconn:
+            self.ParentConnClosed()
 
-            if i == msg.conn:
+        try:
+            self.peerconns.remove(conn)
+        except ValueError:
+            pass
 
-                if self.parentconn is not None and i == self.parentconn:
-                    self.ParentConnClosed()
+        self.logMessage(_("User %s does not respond to connect request, giving up") % (conn.username), 3)
 
-                self.peerconns.remove(i)
-
-                self.logMessage(_("User %s does not respond to connect request, giving up") % (i.username), 3)
-
-                for j in i.msgs:
-                    if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                        self.transfers.gotCantConnect(j.req)
-                break
+        for i in conn.msgs:
+            if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
+                self.transfers.gotCantConnect(i.req)
 
     def TransferTimeout(self, msg):
         if self.transfers is not None:
