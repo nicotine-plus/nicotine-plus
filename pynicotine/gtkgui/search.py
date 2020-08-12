@@ -219,7 +219,7 @@ class Searches(IconNotebook):
         self.frame.np.config.sections["server"]["autosearch"].append(wish)
 
         self.searchid += 1
-        self.searches[self.searchid] = [self.searchid, wish, None, 0, True]
+        self.searches[self.searchid] = [self.searchid, wish, None, 0, True, False]
 
         self.DoWishListSearch(self.searchid, wish)
 
@@ -322,14 +322,14 @@ class Searches(IconNotebook):
 
         return _("User")
 
-    def CreateTab(self, id, text, mode, remember=False, showtab=True):
+    def CreateTab(self, id, text, mode, remember=False, showtab=True, ignored=False):
 
         tab = Search(self, text, id, mode, remember, showtab)
 
         if showtab:
             self.ShowTab(tab, id, text, mode)
 
-        search = [id, text, tab, mode, remember]
+        search = [id, text, tab, mode, remember, ignored]
         self.searches[id] = search
 
         return search
@@ -346,10 +346,14 @@ class Searches(IconNotebook):
 
     def ShowResult(self, msg, username, country):
 
-        if msg.token not in self.searches:
+        try:
+            search = self.searches[msg.token]
+        except KeyError:
             return
 
-        search = self.searches[msg.token]
+        if search[5]:
+            # Tab is ignored
+            return
 
         if search[2] is None:
             search = self.CreateTab(search[0], search[1], search[3], search[4], showtab=False)
@@ -358,9 +362,8 @@ class Searches(IconNotebook):
 
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.maxstoredresults:
-            if search is not None:
-                del self.searches[msg.token]
-
+            # Ignore tab
+            search[5] = True
             return
 
         search[2].AddUserResults(msg, username, country)
@@ -382,7 +385,12 @@ class Searches(IconNotebook):
 
         if tab.id in self.searches:
             search = self.searches[tab.id]
-            search[2] = None
+
+            if search[5]:
+                # Tab is ignored, delete search
+                del self.searches[tab.id]
+            else:
+                search[2] = None
 
         self.remove_page(tab.Main)
         tab.Main.destroy()
@@ -1462,10 +1470,7 @@ class Search:
 
     def OnIgnore(self, widget):
 
-        try:
-            del self.Searches.searches[self.id]
-        except KeyError:
-            pass
+        self.Searches.searches[self.id][5] = True  # ignored
 
         self.Searches.WishListDialog.removeWish(self.text)
         widget.set_sensitive(False)
