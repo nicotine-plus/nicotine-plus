@@ -257,7 +257,7 @@ class NetworkEventProcessor:
             slskmessages.FileSearch: self.SearchRequest,
             slskmessages.RoomSearch: self.RoomSearchRequest,
             slskmessages.UserSearch: self.SearchRequest,
-            slskmessages.NetInfo: self.NetInfo,
+            slskmessages.PossibleParents: self.PossibleParents,
             slskmessages.DistribAlive: self.DummyMessage,
             slskmessages.DistribSearch: self.DistribSearch,
             slskmessages.DistribServerSearch: self.DistribSearch,
@@ -1689,7 +1689,7 @@ class NetworkEventProcessor:
             self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
         self.frame.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
-    def NetInfo(self, msg):
+    def PossibleParents(self, msg):
 
         self.distribcache.update(msg.list)
 

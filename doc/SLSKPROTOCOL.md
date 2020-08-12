@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 27 June 2020
+Last updated on 12 August 2020
 
 ## Sections
 
@@ -116,7 +116,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 92   | [Check Privileges](#server-code-92)               |
 | 93   | [Search Request](#server-code-93)                 |
 | 100  | [Accept Children](#server-code-100)               |
-| 102  | [Net Info](#server-code-102)                      |
+| 102  | [Possible Parents](#server-code-102)              |
 | 103  | [Wishlist Search](#server-code-103)               |
 | 104  | [Wishlist Interval](#server-code-104)             |
 | 110  | [Get Similar Users](#server-code-110)             |
@@ -299,7 +299,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 ### Server Code 6
 
-**Add User**
+**Remove User**
 
 #### Function Names
 
@@ -1156,7 +1156,7 @@ Nicotine: HaveNoParent
 
 #### Description
 
-We inform the server if we have a distributed parent or not. If not, the server eventually sends us a NetInfo message with a list of 10 possible parents to connect to.
+We inform the server if we have a distributed parent or not. If not, the server eventually sends us a PossibleParents message with a list of 10 possible parents to connect to.
 
 #### Data Order
 
@@ -1397,16 +1397,16 @@ Nicotine: AcceptChildren (not yet used)
 
 ### Server Code 102
 
-**Net Info**
+**Possible Parents**
 
 #### Description
 
-The server send us information about what nodes have been added/removed in the network. The list contains 10 possible distributed parents to connect to.
+The server send us a list of 10 possible distributed parents to connect to. Messages of this type are sent to us at regular intervals, until we tell the server we don't need more possible parents with a HaveNoParent message.
 
 #### Function Names
 
 Museekd: SNetInfo  
-Nicotine: NetInfo
+Nicotine: PossibleParents
 
 #### Data Order
 

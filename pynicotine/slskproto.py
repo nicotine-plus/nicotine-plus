@@ -87,7 +87,7 @@ from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MinParentsInCache
-from pynicotine.slskmessages import NetInfo
+from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import OutConn
 from pynicotine.slskmessages import ParentInactivityTimeout
@@ -313,7 +313,7 @@ class SlskProtoThread(threading.Thread):
         CheckPrivileges: 92,
         SearchRequest: 93,
         AcceptChildren: 100,
-        NetInfo: 102,
+        PossibleParents: 102,
         WishlistSearch: 103,
         WishlistInterval: 104,
         SimilarUsers: 110,
