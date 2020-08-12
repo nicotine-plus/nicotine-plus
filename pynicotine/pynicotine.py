@@ -642,6 +642,11 @@ class NetworkEventProcessor:
             if not len(self.distribcache):
                 self.queue.put(slskmessages.HaveNoParent(1))
 
+            """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
+            redirecting results to children is not implemented yet. Tell the server we don't accept
+            children for now. """
+            self.queue.put(slskmessages.AcceptChildren(0))
+
             self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
             self.privatechat.Login()
             self.queue.put(slskmessages.CheckPrivileges())
