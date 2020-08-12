@@ -1724,10 +1724,11 @@ class NetworkEventProcessor:
                     """ We previously attempted to connect to all potential parents. Since we now
                     have a parent, stop connecting to the others. """
 
-                    if i.conn is not None and i.conn != msg.conn.conn:
-                        self.queue.put(slskmessages.ConnClose(i.conn))
+                    if i.conn != msg.conn.conn:
+                        if i.conn is not None:
+                            self.queue.put(slskmessages.ConnClose(i.conn))
 
-                    self.peerconns.remove(i)
+                        self.peerconns.remove(i)
 
             self.queue.put(slskmessages.HaveNoParent(0))
             self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
