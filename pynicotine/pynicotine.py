@@ -900,8 +900,6 @@ class NetworkEventProcessor:
         if not msg.userexists:
             if msg.user not in self.users:
                 self.users[msg.user] = UserAddr(status=-1)
-            if self.search is not None:
-                self.search.NonExistantUser(msg.user)
 
         if self.transfers is not None:
             self.transfers.getAddUser(msg)
@@ -1019,9 +1017,6 @@ class NetworkEventProcessor:
 
         if self.userbrowse is not None:
             self.userbrowse.GetUserStatus(msg)
-
-        if self.search is not None:
-            self.search.GetUserStatus(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.GetUserStatus(msg)
