@@ -542,8 +542,11 @@ class Shares:
                 except IOError:
                     pass
 
-            if audio is not None and audio.length > 0:
-                fileinfo = (name, size, int(audio.bitrate), int(audio.length))
+            if audio is not None:
+                # TODO: Variable bitrate is always set to false now, perhaps detect it somehow
+                vbr = False
+                bitrateinfo = (int(audio.bitrate), int(vbr))
+                fileinfo = (name, size, bitrateinfo, int(audio.length))
             else:
                 fileinfo = (name, size, None, None)
 
@@ -633,19 +636,22 @@ class Shares:
         if fileinfo[2] is not None:
             try:
                 msgbytes = bytearray()
-                msgbytes.extend(message.packObject('mp3') + message.packObject(2))
+                msgbytes.extend(message.packObject('mp3') + message.packObject(3))
                 msgbytes.extend(
                     message.packObject(0) +
-                    message.packObject(NetworkIntType(fileinfo[2])) +
+                    message.packObject(NetworkIntType(fileinfo[2][0])) +
                     message.packObject(1) +
-                    message.packObject(NetworkIntType(fileinfo[3]))
+                    message.packObject(NetworkIntType(fileinfo[3])) +
+                    message.packObject(2) +
+                    message.packObject(NetworkIntType(fileinfo[2][1]))
                 )
                 stream.extend(msgbytes)
             except Exception:
-                log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs and a length of %(length)s seconds" % {
+                log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
                     'file': fileinfo[0],
-                    'bitrate': fileinfo[2],
-                    'length': fileinfo[3]
+                    'bitrate': fileinfo[2][0],
+                    'length': fileinfo[3],
+                    'vbr': fileinfo[2][1]
                 }))
                 stream.extend(message.packObject('') + message.packObject(0))
         else:

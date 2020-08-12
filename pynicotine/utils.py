@@ -159,7 +159,7 @@ def GetResultBitrateLength(filesize, attributes):
         a = attributes
 
         # Sometimes the vbr indicator is in second position
-        if a[0] > 0 and (a[1] == 0 or a[1] == 1):
+        if a[1] == 0 or a[1] == 1:
 
             # If it's a vbr file we can't deduce the length
             if a[1] == 1:

@@ -1870,12 +1870,14 @@ class FileSearchResult(PeerMessage):
                 msg.extend(self.packObject('') + self.packObject(0))
             else:
                 # FileExtension, NumAttributes,
-                msg.extend(self.packObject("mp3") + self.packObject(2))
+                msg.extend(self.packObject("mp3") + self.packObject(3))
                 msg.extend(
                     self.packObject(0) +
-                    self.packObject(NetworkIntType(i[2])) +
+                    self.packObject(NetworkIntType(i[2][0])) +
                     self.packObject(1) +
-                    self.packObject(NetworkIntType(i[3]))
+                    self.packObject(NetworkIntType(i[3])) +
+                    self.packObject(2) +
+                    self.packObject(i[2][1])
                 )
         msg.extend(
             bytes([self.freeulslots]) +
@@ -2025,8 +2027,8 @@ class FolderContentsResponse(PeerMessage):
             if i[2] is None:
                 msg = msg + self.packObject('') + self.packObject(0)
             else:
-                msg = msg + self.packObject("mp3") + self.packObject(2)
-                msg = msg + self.packObject(0) + self.packObject(i[2]) + self.packObject(1) + self.packObject(i[3])
+                msg = msg + self.packObject("mp3") + self.packObject(3)
+                msg = msg + self.packObject(0) + self.packObject(i[2][0]) + self.packObject(1) + self.packObject(i[3]) + self.packObject(2) + self.packObject(i[2][1])
         return zlib.compress(msg)
 
 
