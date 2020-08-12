@@ -359,7 +359,7 @@ class Searches(IconNotebook):
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.maxstoredresults:
             if search is not None:
-                del search
+                del self.searches[msg.token]
 
             return
 
