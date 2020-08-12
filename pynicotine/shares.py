@@ -543,9 +543,7 @@ class Shares:
                     pass
 
             if audio is not None:
-                # TODO: Variable bitrate is always set to false now, perhaps detect it somehow
-                vbr = False
-                bitrateinfo = (int(audio.bitrate), int(vbr))
+                bitrateinfo = (int(audio.bitrate), False)  # Second argument used to be VBR (variable bitrate)
                 fileinfo = (name, size, bitrateinfo, int(audio.length))
             else:
                 fileinfo = (name, size, None, None)
