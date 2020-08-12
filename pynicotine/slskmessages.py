@@ -1003,7 +1003,7 @@ class PrivilegedUsers(ServerMessage):
 class HaveNoParent(ServerMessage):
     """ Server code: 71 """
     """ We inform the server if we have a distributed parent or not.
-    If not, the server eventually sends us a NetInfo message with a
+    If not, the server eventually sends us a PossibleParents message with a
     list of 10 possible parents to connect to. """
     def __init__(self, noparent=None):
         self.noparent = noparent
@@ -1107,11 +1107,11 @@ class AcceptChildren(ServerMessage):
         return bytes([self.enabled])
 
 
-class NetInfo(ServerMessage):
+class PossibleParents(ServerMessage):
     """ Server code: 102 """
-    """ The server send us information about what nodes have been
-    added/removed in the network. The list contains 10 possible
-    distributed parents to connect to. """
+    """ The server send us a list of 10 possible distributed parents to connect to.
+    This message is sent to us at regular intervals until we tell the server we don't
+    need more possible parents, through a HaveNoParent message. """
     def parseNetworkMessage(self, message: bytes):
         self.list = {}
         pos, num = self.getObject(message, int)
