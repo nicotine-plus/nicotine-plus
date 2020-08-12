@@ -38,6 +38,7 @@ import shutil
 import threading
 import time
 from gettext import gettext as _
+from socket import socket
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -590,20 +591,22 @@ class NetworkEventProcessor:
             self.frame.pluginhandler.ServerDisconnectNotification(userchoice)
 
         else:
-            try:
-                self.peerconns.remove(conn)
+            for i in self.peerconns[:]:
+                if i.conn == conn:
+                    self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
 
-                self.logMessage(_("Connection closed by peer: %s") % conn, debugLevel=3)
+                    if i.conntimer is not None:
+                        i.conntimer.cancel()
 
-                if conn.conntimer is not None:
-                    conn.conntimer.cancel()
+                    if self.transfers is not None:
+                        self.transfers.ConnClose(conn, addr)
 
-                if self.transfers is not None:
-                    self.transfers.ConnClose(conn, addr)
+                    if self.parentconn is not None and i == self.parentconn:
+                        self.ParentConnClosed()
 
-                if self.parentconn is not None and conn == self.parentconn:
-                    self.ParentConnClosed()
-            except ValueError:
+                    self.peerconns.remove(i)
+                    break
+            else:
                 self.logMessage(
                     _("Removed connection closed by peer: %(conn_obj)s %(address)s") % {
                         'conn_obj': conn,
@@ -1285,17 +1288,28 @@ class NetworkEventProcessor:
         return 0
 
     def ClosePeerConnection(self, peerconn):
+        try:
+            conn = peerconn.conn
+        except AttributeError:
+            conn = peerconn
 
-        if peerconn is None:
+        if conn is None:
             return
 
-        if not self.protothread.socketStillActive(peerconn):
-            self.queue.put(slskmessages.ConnClose(peerconn))
+        if not self.protothread.socketStillActive(conn):
+            self.queue.put(slskmessages.ConnClose(conn))
 
-            for i in self.peerconns:
-                if i.conn == peerconn:
-                    self.peerconns.remove(i)
-                    break
+            if type(peerconn) is socket:
+
+                for i in self.peerconns:
+                    if i.conn == peerconn:
+                        self.peerconns.remove(i)
+                        break
+            else:
+                try:
+                    self.peerconns.remove(peerconn)
+                except ValueError:
+                    pass
 
     def UserInfoReply(self, msg):
         for i in self.peerconns:
@@ -1416,7 +1430,7 @@ class NetworkEventProcessor:
                 country = ""
 
             self.search.ShowResult(msg, msg.user, country)
-            self.ClosePeerConnection(msg.conn.conn)
+            self.ClosePeerConnection(msg.conn)
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
