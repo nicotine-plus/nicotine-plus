@@ -991,8 +991,6 @@ class Transfers:
                 self._FileRequestUpload(msg, i)
                 return
 
-        self.eventprocessor.logMessage(_("Unknown file request: %s") % str(vars(msg)), 1)
-
         self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _FileRequestDownload(self, msg, i):
@@ -1082,7 +1080,7 @@ class Transfers:
                         self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
                         self.eventprocessor.logMessage(_("Download started: %s") % ("%s" % f.name), 5)
 
-                        self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 5)
+                        self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 1)
                     else:
                         self.DownloadFinished(f, i)
                         needupdate = False
@@ -1247,70 +1245,53 @@ class Transfers:
         if not os.access(folder, os.F_OK):
             os.makedirs(folder)
 
-        newname, identicalfile = self.getRenamed(os.path.join(folder, basename), file.name)
+        newname = self.getRenamed(os.path.join(folder, basename))
 
-        if newname:
-            try:
-                shutil.move(file.name, newname)
-            except (IOError, OSError) as inst:
-                log.addwarning(
-                    _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
-                        'tempfile': "%s" % file.name,
-                        'file': newname,
-                        'error': inst
-                    }
-                )
+        try:
+            shutil.move(file.name, newname)
+        except (IOError, OSError) as inst:
+            log.addwarning(
+                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+                    'tempfile': "%s" % file.name,
+                    'file': newname,
+                    'error': inst
+                }
+            )
 
         i.status = "Finished"
         i.speed = 0
         i.timeleft = ""
 
-        if newname:
-            self.eventprocessor.logMessage(
-                _("Download finished: %(file)s") % {
-                    'file': newname
-                },
-                5
-            )
-            self.eventprocessor.logTransfer(
-                _("Download finished: user %(user)s, file %(file)s") % {
-                    'user': i.user,
-                    'file': i.filename
-                },
-                1
-            )
-        else:
-            self.eventprocessor.logMessage(
-                _("File %(file)s is identical to %(identical)s, not saving.") % {
-                    'file': "%s" % file.name,
-                    'identical': identicalfile
-                },
-                1
-            )
-            self.eventprocessor.logTransfer(
-                _("Download finished but not saved since it's a duplicate: user %(user)s, file %(file)s") % {
-                    'user': i.user,
-                    'file': i.filename
-                },
-                1
-            )
+        self.eventprocessor.logMessage(
+            _("Download finished: %(file)s") % {
+                'file': newname
+            },
+            5
+        )
+
+        self.eventprocessor.logTransfer(
+            _("Download finished: user %(user)s, file %(file)s") % {
+                'user': i.user,
+                'file': i.filename
+            },
+            1
+        )
 
         self.queue.put(slskmessages.ConnClose(i.conn))
         i.conn = None
 
-        if newname:
-            self.addToShared(newname)
-            self.eventprocessor.shares.sendNumSharedFoldersFiles()
+        self.addToShared(newname)
+        self.eventprocessor.shares.sendNumSharedFoldersFiles()
 
-            if config["notifications"]["notification_popup_file"]:
-                self.eventprocessor.frame.Notifications.NewNotificationPopup(
-                    _("%(file)s downloaded from %(user)s") % {
-                        'user': i.user,
-                        'file': newname.rsplit(os.sep, 1)[1]
-                    },
-                    title=_("File downloaded"),
-                    soundnamenotify="complete-download"
-                )
+        if config["notifications"]["notification_popup_file"]:
+            self.eventprocessor.frame.Notifications.NewNotificationPopup(
+                _("%(file)s downloaded from %(user)s") % {
+                    'user': i.user,
+                    'file': newname.rsplit(os.sep, 1)[1]
+                },
+                title=_("File downloaded"),
+                soundnamenotify="complete-download"
+            )
 
         self.SaveDownloads()
 
@@ -1318,7 +1299,7 @@ class Transfers:
         if not self.AutoClearDownload(i):
             self.downloadspanel.update(i)
 
-        if newname and config["transfers"]["afterfinish"]:
+        if config["transfers"]["afterfinish"]:
             if not executeCommand(config["transfers"]["afterfinish"], newname):
                 self.eventprocessor.logMessage(_("Trouble executing '%s'") % config["transfers"]["afterfinish"])
             else:
@@ -1781,45 +1762,21 @@ class Transfers:
 
         self.checkUploadQueue()
 
-    def getRenamed(self, name, originalfile):
+    def getRenamed(self, name):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
         prefix from the file's name.
 
-        Returns a tuple (newname, identicalfile) where precisely one of the two
-        is None, and the other is a complete path. If newname is None a file
-        with the same checksum value already exists as identicalfile, if
-        identicalfile is None the file can be saved under newname."""
+        Checks if a file with the same name already exists, and adds a number
+        to the file name if that's the case. """
 
-        if not os.path.exists(name):
-            # Filename doesn't exist, good for renaming
-            return (name, None)
+        filename, extension = os.path.splitext(name)
+        counter = 1
 
-        # A file with the same name already exists. First lets check whether it's a duplicate
-        ourchecksum = self.getChecksum(originalfile)
-        newname = name
+        while os.path.exists(name):
+            name = filename + " (" + str(counter) + ")" + extension
+            counter += 1
 
-        n = 1
-        while n < 1000:
-            existingchecksum = self.getChecksum(newname)
-            if ourchecksum == existingchecksum:
-                return (None, newname)
-            newname = name + "." + str(n)
-            if not os.path.exists(newname):
-                break
-            n += 1
-
-        return (newname, None)
-
-    def getChecksum(self, path):
-        try:
-            h = open(path, 'rb')
-            m = hashlib.md5()
-            m.update(h.read(-1))
-            digest = m.digest()
-            h.close()
-            return digest
-        except IOError:
-            return None
+        return name
 
     def PlaceInQueue(self, msg):
         """ The server tells us our place in queue for a particular transfer."""
@@ -1941,29 +1898,21 @@ class Transfers:
 
         destination = os.path.join(destination, parent)
 
+        if destination[0] != '/':
+            destination = os.path.join(
+                self.eventprocessor.config.sections["transfers"]["downloaddir"],
+                destination
+            )
+
         """ Make sure the target folder doesn't exist
         If it exists, append a number to the folder name """
 
-        downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
+        orig_destination = destination
+        counter = 1
 
-        if destination[0] == '/':
-            # We selected the folder to download to, real path already known
-            realpath = destination
-        else:
-            realpath = os.path.join(downloaddir, destination)
-
-        index = ""
-
-        while True:
-            if os.path.exists(realpath + index):
-                if index:
-                    index = " (" + str(int(index[2:-1]) + 1) + ")"
-                else:
-                    index = " (1)"
-                pass
-            else:
-                destination += index
-                break
+        while os.path.exists(destination):
+            destination = orig_destination + " (" + str(counter) + ")"
+            counter += 1
 
         return destination
 
