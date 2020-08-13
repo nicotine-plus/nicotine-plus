@@ -43,32 +43,6 @@ def newId():
     return Id
 
 
-class NetworkBaseType:
-    """Base class for other network types."""
-    def __init__(self, value):
-        self.value = value
-
-
-class NetworkShortIntType(NetworkBaseType):
-    """Cast to <H, little-endian unsigned short integer (2 bytes)"""
-    pass
-
-
-class NetworkIntType(NetworkBaseType):
-    """Cast to <I, little-endian unsigned integer (4 bytes)"""
-    pass
-
-
-class NetworkSignedIntType(NetworkBaseType):
-    """Cast to <i, little-endian signed integer (4 bytes)"""
-    pass
-
-
-class NetworkLongLongType(NetworkBaseType):
-    """Cast to <Q, little-endian unsigned long long (8 bytes)"""
-    pass
-
-
 class InternalMessage:
     pass
 
@@ -230,17 +204,27 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
     """ This is a parent class for all protocol messages. """
-    def getObject(self, message, type, start=0, getintasshort=0, getsignedint=0, printerror=True, rawbytes=False):
+    def getObject(self, message, type, start=0, getintasshort=False, getsignedint=False, getunsignedlonglong=False, printerror=True, rawbytes=False):
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
         intsize = struct.calcsize("<I")
         try:
             if type is int:
                 if getintasshort:
+
+                    # little-endian unsigned short integer (2 bytes)
                     return intsize + start, struct.unpack("<H", message[start:start + struct.calcsize("<H")])[0]
                 elif getsignedint:
+
+                    # little-endian signed integer (4 bytes)
                     return intsize + start, struct.unpack("<i", message[start:start + intsize])[0]
+                elif getunsignedlonglong:
+
+                    # little-endian unsigned long long (8 bytes)
+                    return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
                 else:
+
+                    # little-endian unsigned integer (4 bytes)
                     return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
             elif type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
@@ -250,8 +234,6 @@ class SlskMessage:
                     string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
 
                 return length + intsize + start, string
-            elif type is NetworkLongLongType:
-                return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
             else:
                 return start, None
         except struct.error as error:
@@ -273,12 +255,7 @@ class SlskMessage:
         elif type(object) is str:
             encoded = object.encode("utf-8", 'replace')
             return struct.pack("<i", len(encoded)) + encoded
-        elif type(object) is NetworkIntType:
-            return struct.pack("<I", object.value)
-        elif type(object) is NetworkSignedIntType:
-            return struct.pack("<i", object.value)
-        elif type(object) is NetworkLongLongType:
-            return struct.pack("<Q", object.value)
+
         log.addwarning(_("Warning: unknown object type %s") % type(object) + " " + "in message %(type)s" % {'type': self.__class__})
         return b""
 
@@ -339,10 +316,18 @@ class Login(ServerMessage):
         return 'Login({}, {}, {})'.format(self.username, self.version, self.ip)
 
     def makeNetworkMessage(self):
+        msg = bytearray()
+        msg.extend(self.packObject(self.username))
+        msg.extend(self.packObject(self.passwd))
+        msg.extend(self.packObject(self.version))
+
         payload = self.username + self.passwd
         md5hash = hashlib.md5(payload.encode()).hexdigest()
-        message = self.packObject(self.username) + self.packObject(self.passwd) + self.packObject(self.version) + self.packObject(md5hash) + self.packObject(self.minorversion)
-        return message
+        msg.extend(self.packObject(md5hash))
+
+        msg.extend(self.packObject(self.minorversion))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.success = 1, message[0]
@@ -353,7 +338,6 @@ class Login(ServerMessage):
             pos, self.banner = self.getObject(message, bytes, pos)
         if len(message[pos:]) > 0:
             try:
-                import socket
                 pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
                 # Unknown number
             except Exception as error:
@@ -379,7 +363,7 @@ class SetWaitPort(ServerMessage):
         return 'SetWaitPort({})'.format(self.port)
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.port))
+        return self.packObject(self.port)
 
 
 class GetPeerAddress(ServerMessage):
@@ -394,7 +378,6 @@ class GetPeerAddress(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
-        import socket
         pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
         pos, self.port = self.getObject(message, int, pos, 1)
 
@@ -423,7 +406,7 @@ class AddUser(ServerMessage):
         if message[pos:]:
             pos, self.status = self.getObject(message, int, pos)
             pos, self.avgspeed = self.getObject(message, int, pos)
-            pos, self.downloadnum = self.getObject(message, NetworkLongLongType, pos)
+            pos, self.downloadnum = self.getObject(message, int, pos, getunsignedlonglong=True)
 
             pos, self.files = self.getObject(message, int, pos)
             pos, self.dirs = self.getObject(message, int, pos)
@@ -520,7 +503,7 @@ class JoinRoom(ServerMessage):
             pos, users[i][1] = self.getObject(message, int, pos)
         pos, statslen = self.getObject(message, int, pos)
         for i in range(statslen):
-            pos, users[i][2] = self.getObject(message, int, pos, getsignedint=1)
+            pos, users[i][2] = self.getObject(message, int, pos, getsignedint=True)
             pos, users[i][3] = self.getObject(message, int, pos)
             pos, users[i][4] = self.getObject(message, int, pos)
             pos, users[i][5] = self.getObject(message, int, pos)
@@ -561,7 +544,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.username = self.getObject(message, bytes, pos)
         i = [None, None, None, None, None, None, None, None]
         pos, i[0] = self.getObject(message, int, pos)
-        pos, i[1] = self.getObject(message, int, pos, getsignedint=1)
+        pos, i[1] = self.getObject(message, int, pos, getsignedint=True)
         for j in range(2, 7):
             pos, i[j] = (self.getObject(message, int, pos))
         if len(message[pos:]) > 0:
@@ -590,15 +573,20 @@ class ConnectToPeer(ServerMessage):
         self.type = type
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.token)) + self.packObject(self.user) + self.packObject(self.type)
+        msg = bytearray()
+        msg.extend(self.packObject(self.token))
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.type))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.type = self.getObject(message, bytes, pos)
-        import socket
         pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
         pos, self.port = self.getObject(message, int, pos, 1)
         pos, self.token = self.getObject(message, int, pos)
+
         if len(message[pos:]) > 0:
             pos, self.privileged = pos + 1, message[pos]
 
@@ -611,7 +599,11 @@ class MessageUser(ServerMessage):
         self.msg = msg
 
     def makeNetworkMessage(self):
-        return self.packObject(self.user) + self.packObject(self.msg)
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.msg))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.msgid = self.getObject(message, int)
@@ -629,7 +621,7 @@ class MessageAcked(ServerMessage):
         self.msgid = msgid
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.msgid))
+        return self.packObject(self.msgid)
 
 
 class FileSearch(ServerMessage):
@@ -647,7 +639,11 @@ class FileSearch(ServerMessage):
             self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.searchid)) + self.packObject(self.searchterm)
+        msg = bytearray()
+        msg.extend(self.packObject(self.searchid))
+        msg.extend(self.packObject(self.searchterm))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -691,7 +687,11 @@ class SendSpeed(ServerMessage):
         self.speed = speed
 
     def makeNetworkMessage(self):
-        return self.packObject(self.user) + self.packObject(NetworkIntType(self.speed))
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.speed))
+
+        return msg
 
 
 class SharedFoldersFiles(ServerMessage):
@@ -703,7 +703,11 @@ class SharedFoldersFiles(ServerMessage):
         self.files = files
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.folders)) + self.packObject(NetworkIntType(self.files))
+        msg = bytearray()
+        msg.extend(self.packObject(self.folders))
+        msg.extend(self.packObject(self.files))
+
+        return msg
 
 
 class GetUserStats(ServerMessage):
@@ -721,8 +725,8 @@ class GetUserStats(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
-        pos, self.avgspeed = self.getObject(message, int, pos, getsignedint=1)
-        pos, self.downloadnum = self.getObject(message, NetworkLongLongType, pos)
+        pos, self.avgspeed = self.getObject(message, int, pos, getsignedint=True)
+        pos, self.downloadnum = self.getObject(message, int, pos, getunsignedlonglong=True)
         pos, self.files = self.getObject(message, int, pos)
         pos, self.dirs = self.getObject(message, int, pos)
 
@@ -755,9 +759,12 @@ class UserSearch(ServerMessage):
         self.searchterm = text
 
     def makeNetworkMessage(self):
-        return (self.packObject(self.suser) +
-                self.packObject(NetworkIntType(self.searchid)) +
-                self.packObject(self.searchterm))
+        msg = bytearray()
+        msg.extend(self.packObject(self.suser))
+        msg.extend(self.packObject(self.searchid))
+        msg.extend(self.packObject(self.searchterm))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -805,7 +812,7 @@ class Recommendations(ServerMessage):
         pos, num = self.getObject(message, int, pos)
         for i in range(num):
             pos, key = self.getObject(message, bytes, pos)
-            pos, rating = self.getObject(message, int, pos, getsignedint=1)
+            pos, rating = self.getObject(message, int, pos, getsignedint=True)
             self.recommendations[key] = rating
 
         if len(message[pos:]) == 0:
@@ -814,7 +821,7 @@ class Recommendations(ServerMessage):
         pos, num2 = self.getObject(message, int, pos)
         for i in range(num2):
             pos, key = self.getObject(message, bytes, pos)
-            pos, rating = self.getObject(message, int, pos, getsignedint=1)
+            pos, rating = self.getObject(message, int, pos, getsignedint=True)
             self.unrecommendations[key] = rating
 
 
@@ -864,7 +871,12 @@ class PlaceInLineResponse(ServerMessage):
         self.place = place
 
     def makeNetworkMessage(self):
-        return self.packObject(self.user) + self.packObject(NetworkIntType(self.req)) + self.packObject(NetworkIntType(self.place))
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.req))
+        msg.extend(self.packObject(self.place))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -937,7 +949,7 @@ class ExactFileSearch(ServerMessage):
         pos, self.req = self.getObject(message, int, pos)
         pos, self.file = self.getObject(message, bytes, pos)
         pos, self.folder = self.getObject(message, bytes, pos)
-        pos, self.size = self.getObject(message, NetworkLongLongType, pos)
+        pos, self.size = self.getObject(message, int, pos, getunsignedlonglong=True)
         pos, self.checksum = self.getObject(message, int, pos)
 
 
@@ -968,10 +980,13 @@ class TunneledMessage(ServerMessage):
         self.msg = msg
 
     def makeNetworkMessage(self, message):
-        return (self.packObject(self.user) +
-                self.packObject(NetworkIntType(self.req)) +
-                self.packObject(NetworkIntType(self.code)) +
-                self.packObject(self.msg))
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.req))
+        msg.extend(self.packObject(self.code))
+        msg.extend(self.packObject(self.msg))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -1019,9 +1034,7 @@ class SearchParent(ServerMessage):
         self.parentip = parentip
 
     def makeNetworkMessage(self):
-        import socket
-        ip = socket.inet_aton(self.strunreverse(self.parentip))
-        return self.packObject(ip)
+        return self.packObject(socket.inet_aton(self.strunreverse(self.parentip)))
 
 
 class ParentMinSpeed(ServerMessage):
@@ -1252,7 +1265,11 @@ class RoomTickerSet(ServerMessage):
         self.msg = msg
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.msg)
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.msg))
+
+        return msg
 
 
 class AddThingIHate(AddThingILike):
@@ -1275,9 +1292,12 @@ class RoomSearch(ServerMessage):
         self.searchterm = ' '.join([x for x in text.split() if x != '-'])
 
     def makeNetworkMessage(self):
-        return (self.packObject(self.room) +
-                self.packObject(NetworkIntType(self.searchid)) +
-                self.packObject(self.searchterm))
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.searchid))
+        msg.extend(self.packObject(self.searchterm))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -1296,7 +1316,7 @@ class SendUploadSpeed(ServerMessage):
         self.speed = speed
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.speed))
+        return self.packObject(self.speed)
 
 
 class UserPrivileged(ServerMessage):
@@ -1323,7 +1343,11 @@ class GivePrivileges(ServerMessage):
         self.days = days
 
     def makeNetworkMessage(self):
-        return self.packObject(self.user) + self.packObject(self.days)
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.days))
+
+        return msg
 
 
 class NotifyPrivileges(ServerMessage):
@@ -1338,7 +1362,11 @@ class NotifyPrivileges(ServerMessage):
         pos, self.user = self.getObject(message, bytes, pos)
 
     def makeNetworkMessage(self):
-        return self.packObject(self.token) + self.packObject(self.user)
+        msg = bytearray()
+        msg.extend(self.packObject(self.token))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
 
 class AckNotifyPrivileges(ServerMessage):
@@ -1350,7 +1378,7 @@ class AckNotifyPrivileges(ServerMessage):
         pos, self.token = self.getObject(message, int)
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.token))
+        return self.packObject(self.token)
 
 
 class BranchLevel(ServerMessage):
@@ -1417,7 +1445,11 @@ class PrivateRoomAddUser(ServerMessage):
         self.user = user
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.user)
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -1432,7 +1464,11 @@ class PrivateRoomRemoveUser(ServerMessage):
         self.user = user
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.user)
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -1530,7 +1566,11 @@ class PrivateRoomAddOperator(ServerMessage):
         self.user = user
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.user)
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -1545,7 +1585,11 @@ class PrivateRoomRemoveOperator(ServerMessage):
         self.user = user
 
     def makeNetworkMessage(self):
-        return self.packObject(self.room) + self.packObject(self.user)
+        msg = bytearray()
+        msg.extend(self.packObject(self.room))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
@@ -1631,8 +1675,11 @@ class CantConnectToPeer(ServerMessage):
         self.user = user
 
     def makeNetworkMessage(self):
-        return (self.packObject(NetworkIntType(self.token)) +
-                self.packObject(self.user))
+        msg = bytearray()
+        msg.extend(self.packObject(self.token))
+        msg.extend(self.packObject(self.user))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.token = self.getObject(message, int)
@@ -1664,7 +1711,7 @@ class PierceFireWall(PeerMessage):
         self.token = token
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.token))
+        return self.packObject(self.token)
 
     def parseNetworkMessage(self, message):
         pos, self.token = self.getObject(message, int)
@@ -1682,9 +1729,12 @@ class PeerInit(PeerMessage):
         self.token = token
 
     def makeNetworkMessage(self):
-        return (self.packObject(self.user) +
-                self.packObject(self.type) +
-                self.packObject(NetworkIntType(self.token)))
+        msg = bytearray()
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.type))
+        msg.extend(self.packObject(self.token))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -1734,7 +1784,7 @@ class SharedFileList(PeerMessage):
             for j in range(nfiles):
                 pos, code = pos + 1, message[pos]
                 pos, name = self.getObject(message, bytes, pos)
-                pos, size = self.getObject(message, NetworkLongLongType, pos, getsignedint=True, printerror=False)
+                pos, size = self.getObject(message, int, pos, getunsignedlonglong=True, printerror=False)
                 if message[pos - 1] == '\xff':
                     # Buggy SLSK?
                     # Some file sizes will be huge if unpacked as a signed
@@ -1761,12 +1811,14 @@ class SharedFileList(PeerMessage):
         # instead of repacking it, unless rebuild is True
         if not rebuild and self.built is not None:
             return self.built
+
         msg = bytearray()
         msg.extend(self.packObject(len(self.list)))
 
         for key in self.list:
             try:
-                msg.extend(self.packObject(key.replace(os.sep, "\\")) + self.list[key])
+                msg.extend(self.packObject(key.replace(os.sep, "\\")))
+                msg.extend(self.list[key])
             except KeyError:
                 pass
         if not nozlib:
@@ -1787,7 +1839,11 @@ class FileSearchRequest(PeerMessage):
         self.text = text
 
     def makeNetworkMessage(self):
-        return self.packObject(NetworkIntType(self.requestid)) + self.packObject(self.text)
+        msg = bytearray()
+        msg.extend(self.packObject(self.requestid))
+        msg.extend(self.packObject(self.text))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.searchid = self.getObject(message, int)
@@ -1828,7 +1884,7 @@ class FileSearchResult(PeerMessage):
             self.pos, code = self.pos + 1, message[self.pos]
             self.pos, name = self.getObject(message, bytes, self.pos)
             # suppressing errors with unpacking, can be caused by incorrect sizetype
-            self.pos, size = self.getObject(message, NetworkLongLongType, self.pos, printerror=False)
+            self.pos, size = self.getObject(message, int, self.pos, getunsignedlonglong=True, printerror=False)
             self.pos, ext = self.getObject(message, bytes, self.pos, printerror=False)
             self.pos, numattr = self.getObject(message, int, self.pos, printerror=False)
             attrs = []
@@ -1840,7 +1896,7 @@ class FileSearchResult(PeerMessage):
             shares.append([code, name, size, ext, attrs])
         self.list = shares
         self.pos, self.freeulslots = self.pos + 1, message[self.pos]
-        self.pos, self.ulspeed = self.getObject(message, int, self.pos, getsignedint=1)
+        self.pos, self.ulspeed = self.getObject(message, int, self.pos, getsignedint=True)
         self.pos, self.inqueue = self.getObject(message, int, self.pos)
 
     def makeNetworkMessage(self):
@@ -1854,36 +1910,34 @@ class FileSearchResult(PeerMessage):
         queuesize = self.inqueue[0]
 
         msg = bytearray()
-        msg.extend(
-            self.packObject(self.user) +
-            self.packObject(NetworkIntType(self.token)) +
-            self.packObject(NetworkIntType(len(filelist)))
-        )
+        msg.extend(self.packObject(self.user))
+        msg.extend(self.packObject(self.token))
+        msg.extend(self.packObject(len(filelist)))
+
         for i in filelist:
-            msg.extend(
-                bytes([1]) +
-                self.packObject(i[0]. replace(os. sep, "\\")) +
-                self.packObject(NetworkLongLongType(i[1]))
-            )
+            msg.extend(self.packObject(1))
+            msg.extend(self.packObject(i[0]. replace(os. sep, "\\")))
+            msg.extend(self.packObject(i[1]))
+
             if i[2] is None:
                 # No metadata
-                msg.extend(self.packObject('') + self.packObject(0))
+                msg.extend(self.packObject(''))
+                msg.extend(self.packObject(0))
             else:
                 # FileExtension, NumAttributes,
-                msg.extend(self.packObject("mp3") + self.packObject(3))
-                msg.extend(
-                    self.packObject(0) +
-                    self.packObject(NetworkIntType(i[2][0])) +
-                    self.packObject(1) +
-                    self.packObject(NetworkIntType(i[3])) +
-                    self.packObject(2) +
-                    self.packObject(i[2][1])
-                )
-        msg.extend(
-            bytes([self.freeulslots]) +
-            self.packObject(NetworkIntType(self.ulspeed)) +
-            self.packObject(NetworkIntType(queuesize))
-        )
+                msg.extend(self.packObject("mp3"))
+                msg.extend(self.packObject(3))
+
+                msg.extend(self.packObject(0))
+                msg.extend(self.packObject(i[2][0]))
+                msg.extend(self.packObject(1))
+                msg.extend(self.packObject(i[3]))
+                msg.extend(self.packObject(2))
+                msg.extend(self.packObject(i[2][1]))
+
+        msg.extend(self.packObject(self.freeulslots))
+        msg.extend(self.packObject(self.ulspeed))
+        msg.extend(self.packObject(queuesize))
 
         return zlib.compress(msg)
 
@@ -1927,17 +1981,21 @@ class UserInfoReply(PeerMessage):
             pos, self.uploadallowed = self.getObject(message, int, pos)
 
     def makeNetworkMessage(self):
-        if self.pic is not None:
-            pic = bytes([1]) + self.packObject(self.pic)
-        else:
-            pic = bytes([0])
+        msg = bytearray()
+        msg.extend(self.packObject(self.descr))
 
-        return (self.packObject(self.descr) +
-                pic +
-                self.packObject(NetworkIntType(self.totalupl)) +
-                self.packObject(NetworkIntType(self.queuesize)) +
-                bytes([self.slotsavail]) +
-                self.packObject(NetworkIntType(self.uploadallowed)))
+        if self.pic is not None:
+            msg.extend(self.packObject(1))
+            msg.extend(self.packObject(self.pic))
+        else:
+            msg.extend(self.packObject(0))
+
+        msg.extend(self.packObject(self.totalupl))
+        msg.extend(self.packObject(self.queuesize))
+        msg.extend(self.packObject(self.slotsavail))
+        msg.extend(self.packObject(self.uploadallowed))
+
+        return msg
 
 
 class PMessageUser(PeerMessage):
@@ -1970,7 +2028,11 @@ class FolderContentsRequest(PeerMessage):
         self.dir = directory
 
     def makeNetworkMessage(self):
-        return self.packObject(1) + self.packObject(self.dir)
+        msg = bytearray()
+        msg.extend(self.packObject(1))
+        msg.extend(self.packObject(self.dir))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.something = self.getObject(message, int)
@@ -2009,7 +2071,7 @@ class FolderContentsResponse(PeerMessage):
                 for j in range(nfiles):
                     pos, code = pos + 1, message[pos]
                     pos, name = self.getObject(message, bytes, pos, printerror=False)
-                    pos, size = self.getObject(message, NetworkLongLongType, pos, getsignedint=1, printerror=False)
+                    pos, size = self.getObject(message, int, pos, getunsignedlonglong=True, printerror=False)
                     pos, ext = self.getObject(message, bytes, pos, printerror=False)
                     pos, numattr = self.getObject(message, int, pos, printerror=False)
                     attrs = []
@@ -2021,14 +2083,33 @@ class FolderContentsResponse(PeerMessage):
         self.list = shares
 
     def makeNetworkMessage(self):
-        msg = self.packObject(1) + self.packObject(self.dir) + self.packObject(1) + self.packObject(self.dir) + self.packObject(len(self.list))
-        for i in self.list:
-            msg = msg + bytes([1]) + self.packObject(i[0]) + self.packObject(i[1]) + self.packObject(0)
-            if i[2] is None:
-                msg = msg + self.packObject('') + self.packObject(0)
+        msg = bytearray()
+        msg.extend(self.packObject(1))
+        msg.extend(self.packObject(self.dir))
+        msg.extend(self.packObject(1))
+        msg.extend(self.packObject(self.dir))
+        msg.extend(self.packObject(len(self.list)))
+
+        for fileinfo in self.list:
+            msg.extend(self.packObject(1))
+            msg.extend(self.packObject(fileinfo[0]))
+            msg.extend(self.packObject(fileinfo[1]))
+            msg.extend(self.packObject(0))
+
+            if fileinfo[2] is None:
+                msg.extend(self.packObject(''))
+                msg.extend(self.packObject(0))
             else:
-                msg = msg + self.packObject("mp3") + self.packObject(3)
-                msg = msg + self.packObject(0) + self.packObject(i[2][0]) + self.packObject(1) + self.packObject(i[3]) + self.packObject(2) + self.packObject(i[2][1])
+                msg.extend(self.packObject("mp3"))
+                msg.extend(self.packObject(3))
+
+                msg.extend(self.packObject(0))
+                msg.extend(self.packObject(fileinfo[2][0]))
+                msg.extend(self.packObject(1))
+                msg.extend(self.packObject(fileinfo[3]))
+                msg.extend(self.packObject(2))
+                msg.extend(self.packObject(fileinfo[2][1]))
+
         return zlib.compress(msg)
 
 
@@ -2045,9 +2126,13 @@ class TransferRequest(PeerMessage):
         self.filesize = filesize
 
     def makeNetworkMessage(self):
-        msg = self.packObject(self.direction) + self.packObject(self.req) + self.packObject(self.file)
+        msg = bytearray()
+        msg.extend(self.packObject(self.direction))
+        msg.extend(self.packObject(self.req))
+        msg.extend(self.packObject(self.file))
+
         if self.filesize is not None and self.direction == 1:
-            msg = msg + self.packObject(NetworkLongLongType(self.filesize))
+            msg.extend(self.packObject(self.filesize))
         return msg
 
     def parseNetworkMessage(self, message):
@@ -2055,7 +2140,7 @@ class TransferRequest(PeerMessage):
         pos, self.req = self.getObject(message, int, pos)
         pos, self.file = self.getObject(message, bytes, pos)
         if self.direction == 1:
-            pos, self.filesize = self.getObject(message, NetworkLongLongType, pos)
+            pos, self.filesize = self.getObject(message, int, pos, getunsignedlonglong=True)
 
 
 class TransferResponse(PeerMessage):
@@ -2070,11 +2155,16 @@ class TransferResponse(PeerMessage):
         self.filesize = filesize
 
     def makeNetworkMessage(self):
-        msg = self.packObject(NetworkIntType(self.req)) + bytes([self.allowed])
+        msg = bytearray()
+        msg.extend(self.packObject(self.req))
+        msg.extend(self.packObject(self.allowed))
+
         if self.reason is not None:
-            msg = msg + self.packObject(self.reason)
+            msg.extend(self.packObject(self.reason))
+
         if self.filesize is not None:
-            msg = msg + self.packObject(NetworkLongLongType(self.filesize))
+            msg.extend(self.packObject(self.filesize))
+
         return msg
 
     def parseNetworkMessage(self, message):
@@ -2082,7 +2172,7 @@ class TransferResponse(PeerMessage):
         pos, self.allowed = pos + 1, message[pos]
         if message[pos:]:
             if self.allowed:
-                pos, self.filesize = self.getObject(message, NetworkLongLongType, pos)
+                pos, self.filesize = self.getObject(message, int, pos, getunsignedlonglong=True)
             else:
                 pos, self.reason = self.getObject(message, bytes, pos)
 
@@ -2114,7 +2204,11 @@ class PlaceInQueue(PeerMessage):
         self.place = place
 
     def makeNetworkMessage(self):
-        return self.packObject(self.filename) + self.packObject(NetworkIntType(self.place))
+        msg = bytearray()
+        msg.extend(self.packObject(self.filename))
+        msg.extend(self.packObject(self.place))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.filename = self.getObject(message, bytes)
@@ -2134,7 +2228,11 @@ class QueueFailed(PeerMessage):
         self.reason = reason
 
     def makeNetworkMessage(self):
-        return self.packObject(self.file) + self.packObject(self.reason)
+        msg = bytearray()
+        msg.extend(self.packObject(self.file))
+        msg.extend(self.packObject(self.reason))
+
+        return msg
 
     def parseNetworkMessage(self, message):
         pos, self.file = self.getObject(message, bytes)
@@ -2280,7 +2378,7 @@ class DistribServerSearch(DistribMessage):
             return False
 
     def _parseNetworkMessage(self, message):
-        pos, self.unknown = self.getObject(message, NetworkLongLongType, printerror=False)
+        pos, self.unknown = self.getObject(message, int, getunsignedlonglong=True, printerror=False)
         pos, self.user = self.getObject(message, bytes, pos, printerror=False)
         pos, self.searchid = self.getObject(message, int, pos, printerror=False)
         pos, self.searchterm = self.getObject(message, bytes, pos, printerror=False)
