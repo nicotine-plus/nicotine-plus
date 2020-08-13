@@ -242,11 +242,11 @@ class SlskMessage:
             raise struct.error(error)
             # return start, None
 
-    def packObject(self, object):
+    def packObject(self, object, unsignedlonglong=False):
         """ Returns object (integer, long or string packed into a
         binary array."""
         if type(object) is int:
-            if object.bit_length() <= 32:
+            if not unsignedlonglong and object.bit_length() <= 32:
                 return struct.pack("<i", object)
             else:
                 return struct.pack("<Q", object)
@@ -261,13 +261,13 @@ class SlskMessage:
 
     def makeNetworkMessage(self):
         """ Returns binary array, that can be sent over the network"""
-        log.addwarning(_("Empty message made, class %s") % (self.__class__,))
+        log.addwarning(_("Empty message made, class %s") % self.__class__)
         return None
 
     def parseNetworkMessage(self, message):
         """ Extracts information from the message and sets up fields
         in an object"""
-        log.addwarning(_("Can't parse incoming messages, class %s") % (self.__class__,))
+        log.addwarning(_("Can't parse incoming messages, class %s") % self.__class__)
 
     def strrev(self, str):
         strlist = list(str)
@@ -341,7 +341,7 @@ class Login(ServerMessage):
                 pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
                 # Unknown number
             except Exception as error:
-                log.addwarning("Error unpacking IP address: %s" % (error,))
+                log.addwarning("Error unpacking IP address: %s" % error)
             try:
                 # MD5 hexdigest of the password you sent
                 if len(message[pos:]) > 0:
@@ -1024,7 +1024,7 @@ class HaveNoParent(ServerMessage):
         self.noparent = noparent
 
     def makeNetworkMessage(self):
-        return bytes((self.noparent,))
+        return bytes([self.noparent])
 
 
 class SearchParent(ServerMessage):
@@ -1536,7 +1536,7 @@ class PrivateRoomToggle(ServerMessage):
         self.enabled = None if enabled is None else int(enabled)
 
     def makeNetworkMessage(self):
-        return bytes((self.enabled,))
+        return bytes([self.enabled])
 
     def parseNetworkMessage(self, message):
         # When this is received, we store it in the config, and disable the appropriate menu item
@@ -1813,7 +1813,11 @@ class SharedFileList(PeerMessage):
             return self.built
 
         msg = bytearray()
-        msg.extend(self.packObject(len(self.list)))
+
+        try:
+            msg.extend(self.packObject(len(self.list)))
+        except TypeError:
+            msg.extend(self.packObject(len(list(self.list))))
 
         for key in self.list:
             try:
@@ -1914,12 +1918,12 @@ class FileSearchResult(PeerMessage):
         msg.extend(self.packObject(self.token))
         msg.extend(self.packObject(len(filelist)))
 
-        for i in filelist:
-            msg.extend(self.packObject(1))
-            msg.extend(self.packObject(i[0]. replace(os. sep, "\\")))
-            msg.extend(self.packObject(i[1]))
+        for fileinfo in filelist:
+            msg.extend(bytes([1]))
+            msg.extend(self.packObject(fileinfo[0].replace(os. sep, "\\")))
+            msg.extend(self.packObject(fileinfo[1], unsignedlonglong=True))
 
-            if i[2] is None:
+            if fileinfo[2] is None:
                 # No metadata
                 msg.extend(self.packObject(''))
                 msg.extend(self.packObject(0))
@@ -1929,13 +1933,13 @@ class FileSearchResult(PeerMessage):
                 msg.extend(self.packObject(3))
 
                 msg.extend(self.packObject(0))
-                msg.extend(self.packObject(i[2][0]))
+                msg.extend(self.packObject(fileinfo[2][0]))
                 msg.extend(self.packObject(1))
-                msg.extend(self.packObject(i[3]))
+                msg.extend(self.packObject(fileinfo[3]))
                 msg.extend(self.packObject(2))
-                msg.extend(self.packObject(i[2][1]))
+                msg.extend(self.packObject(fileinfo[2][1]))
 
-        msg.extend(self.packObject(self.freeulslots))
+        msg.extend(bytes([self.freeulslots]))
         msg.extend(self.packObject(self.ulspeed))
         msg.extend(self.packObject(queuesize))
 
@@ -1985,14 +1989,14 @@ class UserInfoReply(PeerMessage):
         msg.extend(self.packObject(self.descr))
 
         if self.pic is not None:
-            msg.extend(self.packObject(1))
+            msg.extend(bytes([1]))
             msg.extend(self.packObject(self.pic))
         else:
-            msg.extend(self.packObject(0))
+            msg.extend(bytes([0]))
 
         msg.extend(self.packObject(self.totalupl))
         msg.extend(self.packObject(self.queuesize))
-        msg.extend(self.packObject(self.slotsavail))
+        msg.extend(bytes([self.slotsavail]))
         msg.extend(self.packObject(self.uploadallowed))
 
         return msg
@@ -2091,7 +2095,7 @@ class FolderContentsResponse(PeerMessage):
         msg.extend(self.packObject(len(self.list)))
 
         for fileinfo in self.list:
-            msg.extend(self.packObject(1))
+            msg.extend(bytes([1]))
             msg.extend(self.packObject(fileinfo[0]))
             msg.extend(self.packObject(fileinfo[1]))
             msg.extend(self.packObject(0))
@@ -2132,7 +2136,7 @@ class TransferRequest(PeerMessage):
         msg.extend(self.packObject(self.file))
 
         if self.filesize is not None and self.direction == 1:
-            msg.extend(self.packObject(self.filesize))
+            msg.extend(self.packObject(self.filesize, unsignedlonglong=True))
         return msg
 
     def parseNetworkMessage(self, message):
@@ -2157,13 +2161,13 @@ class TransferResponse(PeerMessage):
     def makeNetworkMessage(self):
         msg = bytearray()
         msg.extend(self.packObject(self.req))
-        msg.extend(self.packObject(self.allowed))
+        msg.extend(bytes([self.allowed]))
 
         if self.reason is not None:
             msg.extend(self.packObject(self.reason))
 
         if self.filesize is not None:
-            msg.extend(self.packObject(self.filesize))
+            msg.extend(self.packObject(self.filesize, unsignedlonglong=True))
 
         return msg
 

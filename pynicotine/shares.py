@@ -27,7 +27,6 @@ import string
 import sys
 import taglib
 import _thread
-from collections import defaultdict
 from gettext import gettext as _
 
 from gi.repository import GLib
@@ -52,7 +51,11 @@ class Shares:
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     def real2virtual(self, path):
+        path = os.path.normpath(path)
+
         for (virtual, real) in self._virtualmapping():
+            real = os.path.normpath(real)
+
             if path == real:
                 return virtual
             if path.startswith(real + os.sep):
@@ -61,7 +64,11 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
+        path = os.path.normpath(path)
+
         for (virtual, real) in self._virtualmapping():
+            virtual = os.path.normpath(virtual)
+
             if path == virtual:
                 return real
             if path.startswith(virtual + '\\'):
@@ -100,8 +107,12 @@ class Shares:
             shared_db = "sharedfiles"
             index_db = "fileindex"
 
-        sharedfolders = len(conf["transfers"][shared_db])
-        sharedfiles = len(conf["transfers"][index_db])
+        try:
+            sharedfolders = len(conf["transfers"][shared_db])
+            sharedfiles = len(conf["transfers"][index_db])
+        except TypeError:
+            sharedfolders = len(list(conf["transfers"][shared_db]))
+            sharedfiles = len(list(conf["transfers"][index_db]))
 
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
@@ -312,6 +323,8 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
+        # Don't count excluded words as matches (words starting with -)
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
         terms = searchterm.lower().translate(self.translatepunctuation).split()
         length = 0
 
@@ -393,7 +406,12 @@ class Shares:
         # returns dict in format:  { Directory : mtime, ... }
         shared_directories = [x[1] for x in shared]
 
-        self.logMessage(_("%(num)s directories found before rescan, rebuilding...") % {"num": len(oldmtimes)})
+        try:
+            num_folders = len(oldmtimes)
+        except TypeError:
+            num_folders = len(list(oldmtimes))
+
+        self.logMessage(_("%(num)s folders found before rescan, rebuilding...") % {"num": num_folders})
 
         newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
 
@@ -411,7 +429,7 @@ class Shares:
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
         newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, newsharedfiles, yieldfunction, progress)
 
-        self.logMessage(_("%(num)s directories found after rescan") % {"num": len(newmtimes)})
+        self.logMessage(_("%(num)s folders found after rescan") % {"num": len(newmtimes)})
 
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
@@ -620,9 +638,9 @@ class Shares:
         stream.extend(message.packObject(len(dir)))
 
         for fileinfo in dir:
-            stream.extend(message.packObject(1))
+            stream.extend(bytes([1]))
             stream.extend(message.packObject(fileinfo[0]))
-            stream.extend(message.packObject(fileinfo[1]))
+            stream.extend(message.packObject(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is not None:
                 try:
@@ -679,7 +697,8 @@ class Shares:
                 file = j[0]
                 fileindex.append((virtualdir + '\\' + file,) + j[1:])
 
-                for k in (virtualdir + " " + file).lower().replace('\\', ' ').replace('/', ' ').replace('.', ' ').split():
+                # Collect words from filenames for Search index
+                for k in (virtualdir + " " + file).lower().translate(self.translatepunctuation).split():
                     try:
                         wordindex[k].append(index)
                     except KeyError:

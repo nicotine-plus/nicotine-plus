@@ -41,6 +41,15 @@ from os.path import exists
 import _thread
 from pynicotine.logfacility import log
 
+if sys.platform == "win32":
+    # Use semidbm for faster shelves on Windows
+
+    def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
+        import semidbm
+        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
+
+    shelve.open = shelve_open_semidbm
+
 
 class RestrictedUnpickler(pickle.Unpickler):
     """
