@@ -434,24 +434,6 @@ class Searches(IconNotebook):
                     search[2].saveColumns()
                     break
 
-    def GetUserStatus(self, msg):
-
-        for number, search in list(self.searches.items()):
-
-            if search[2] is None:
-                continue
-
-            search[2].GetUserStatus(msg)
-
-    def NonExistantUser(self, user):
-
-        for number, search in list(self.searches.items()):
-
-            if search[2] is None:
-                continue
-
-            search[2].NonExistantUser(user)
-
     def TabPopup(self, id):
 
         popup = PopupMenu(self.frame)
@@ -587,8 +569,7 @@ class Search:
             str,                  # (13) country
             gobject.TYPE_UINT64,  # (14) size
             gobject.TYPE_UINT64,  # (15) speed
-            gobject.TYPE_UINT64,  # (16) queue
-            gobject.TYPE_INT64    # (17) status
+            gobject.TYPE_UINT64   # (16) queue
         )
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
@@ -782,17 +763,6 @@ class Search:
         if user in self.users:
             return
 
-        if user not in self.Searches.users:
-
-            if user in self.frame.np.users and self.frame.np.users[user].status is not None:
-                self.Searches.users[user] = self.frame.np.users[user].status
-            else:
-                self.Searches.users[user] = 0
-                self.frame.np.queue.put(slskmessages.AddUser(user))
-
-            if user == self.frame.np.config.sections["server"]["login"]:
-                self.Searches.users[user] = 1
-
         self.users.add(user)
 
         counter = len(self.all_data) + 1
@@ -808,11 +778,6 @@ class Search:
             imdl = "N"
 
         h_queue = Humanize(inqueue)
-
-        status = self.Searches.users[user]
-
-        if status is None:
-            status = 0
 
         append = False
 
@@ -840,7 +805,7 @@ class Search:
             h_size = HumanSize(size)
             h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
 
-            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, status])
+            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue])
             append = True
             counter += 1
 
@@ -895,10 +860,7 @@ class Search:
                 CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
 
     def AddRowToModel(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue, status = row
-
-        if user in self.Searches.users and status != self.Searches.users[user]:
-            status = self.Searches.users[user]
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue = row
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -906,7 +868,7 @@ class Search:
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, status]
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue]
                 )
 
             parent = self.usersiters[user]
@@ -917,7 +879,7 @@ class Search:
                 if directory not in self.directoryiters:
                     self.directoryiters[directory] = self.resultsmodel.append(
                         self.usersiters[user],
-                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue, status]
+                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue]
                     )
 
                 row = row[:]
@@ -939,41 +901,6 @@ class Search:
             iter = None
 
         return iter
-
-    def updateStatus(self, user, status):
-
-        self.Searches.users[user] = status
-        pos = 0
-
-        for r in self.all_data:
-            if user == r[1]:
-                self.all_data[pos][17] = status
-
-            pos += 1
-
-        useriter = self.resultsmodel.get_iter_first()
-
-        while useriter is not None:
-            selected_user = self.resultsmodel.get_value(useriter, 1)
-
-            if selected_user == user:
-                self.resultsmodel.set_value(useriter, 17, status)
-
-                diriter = self.resultsmodel.iter_children(useriter)
-
-                while diriter is not None:
-                    self.resultsmodel.set_value(diriter, 17, status)
-
-                    fileiter = self.resultsmodel.iter_children(diriter)
-
-                    while fileiter is not None:
-                        self.resultsmodel.set_value(fileiter, 17, status)
-
-                        fileiter = self.resultsmodel.iter_next(fileiter)
-
-                    diriter = self.resultsmodel.iter_next(diriter)
-
-            useriter = self.resultsmodel.iter_next(useriter)
 
     def checkDigit(self, filter, value, factorize=True):
 
@@ -1194,20 +1121,6 @@ class Search:
 
         self.frame.ChangeListFont(self.ResultsList, font)
 
-    def GetUserStatus(self, msg):
-
-        if msg.user not in self.users:
-            return
-
-        self.updateStatus(msg.user, msg.status)
-
-    def NonExistantUser(self, user):
-
-        if user not in self.users:
-            return
-
-        self.updateStatus(user, -1)
-
     def saveColumns(self):
 
         columns = []
@@ -1287,21 +1200,10 @@ class Search:
         return True
 
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
-        status = model.get_value(iter, 17)
         imdl = model.get_value(iter, 3)
         color = imdl == "Y" and "search" or "searchq"
-        colour = None
 
-        if status == 0:
-            colour = self.frame.np.config.sections["ui"]["searchoffline"]
-            cellrenderer.set_property("background", None)
-        elif status == -1:
-            colour = "#ffffff"
-            cellrenderer.set_property("background", "#ff0000")
-        else:
-            colour = self.frame.np.config.sections["ui"][color] or None
-            cellrenderer.set_property("background", None)
-
+        colour = self.frame.np.config.sections["ui"][color] or None
         cellrenderer.set_property("foreground", colour)
 
     def MetaBox(self, title="Meta Data", message="", data=None, modal=True):

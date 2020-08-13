@@ -38,6 +38,7 @@ import shutil
 import threading
 import time
 from gettext import gettext as _
+from socket import socket
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -613,7 +614,6 @@ class NetworkEventProcessor:
                     },
                     3
                 )
-                self.queue.put(slskmessages.ConnClose(conn))
 
     def Login(self, msg):
 
@@ -903,8 +903,6 @@ class NetworkEventProcessor:
         if not msg.userexists:
             if msg.user not in self.users:
                 self.users[msg.user] = UserAddr(status=-1)
-            if self.search is not None:
-                self.search.NonExistantUser(msg.user)
 
         if self.transfers is not None:
             self.transfers.getAddUser(msg)
@@ -1022,9 +1020,6 @@ class NetworkEventProcessor:
 
         if self.userbrowse is not None:
             self.userbrowse.GetUserStatus(msg)
-
-        if self.search is not None:
-            self.search.GetUserStatus(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.GetUserStatus(msg)
@@ -1293,17 +1288,28 @@ class NetworkEventProcessor:
         return 0
 
     def ClosePeerConnection(self, peerconn):
+        try:
+            conn = peerconn.conn
+        except AttributeError:
+            conn = peerconn
 
-        if peerconn is None:
+        if conn is None:
             return
 
-        if not self.protothread.socketStillActive(peerconn):
-            self.queue.put(slskmessages.ConnClose(peerconn))
+        if not self.protothread.socketStillActive(conn):
+            self.queue.put(slskmessages.ConnClose(conn))
 
-            for i in self.peerconns:
-                if i.conn == peerconn:
-                    self.peerconns.remove(i)
-                    break
+            if type(peerconn) is socket:
+
+                for i in self.peerconns:
+                    if i.conn == peerconn:
+                        self.peerconns.remove(i)
+                        break
+            else:
+                try:
+                    self.peerconns.remove(peerconn)
+                except ValueError:
+                    pass
 
     def UserInfoReply(self, msg):
         for i in self.peerconns:
@@ -1424,7 +1430,7 @@ class NetworkEventProcessor:
                 country = ""
 
             self.search.ShowResult(msg, msg.user, country)
-            self.ClosePeerConnection(msg.conn.conn)
+            self.ClosePeerConnection(msg.conn)
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -1485,22 +1491,21 @@ class NetworkEventProcessor:
                 break
 
     def ConnectToPeerTimeout(self, msg):
+        conn = msg.conn
 
-        for i in self.peerconns[:]:
+        if self.parentconn is not None and conn == self.parentconn:
+            self.ParentConnClosed()
 
-            if i == msg.conn:
+        try:
+            self.peerconns.remove(conn)
+        except ValueError:
+            pass
 
-                if self.parentconn is not None and i == self.parentconn:
-                    self.ParentConnClosed()
+        self.logMessage(_("User %s does not respond to connect request, giving up") % (conn.username), 3)
 
-                self.peerconns.remove(i)
-
-                self.logMessage(_("User %s does not respond to connect request, giving up") % (i.username), 3)
-
-                for j in i.msgs:
-                    if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                        self.transfers.gotCantConnect(j.req)
-                break
+        for i in conn.msgs:
+            if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
+                self.transfers.gotCantConnect(i.req)
 
     def TransferTimeout(self, msg):
         if self.transfers is not None:

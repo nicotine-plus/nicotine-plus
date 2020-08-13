@@ -1055,42 +1055,6 @@
             <property name="row_spacing">10</property>
             <property name="column_spacing">10</property>
             <child>
-              <object class="GtkDrawingArea" id="Drawing_InputColor">
-                <property name="width_request">16</property>
-                <property name="height_request">16</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkDrawingArea" id="Drawing_BackgroundColor">
-                <property name="width_request">16</property>
-                <property name="height_request">16</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkDrawingArea" id="Drawing_OfflineSearchEntry">
-                <property name="width_request">16</property>
-                <property name="height_request">16</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkDrawingArea" id="Drawing_Queue">
                 <property name="width_request">16</property>
                 <property name="height_request">16</property>
@@ -1112,135 +1076,6 @@
               <packing>
                 <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="DefaultInput">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">view-refresh-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="DefaultBackground">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">view-refresh-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="DefaultOfflineSearch">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">view-refresh-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1284,180 +1119,6 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="InputColor">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="editable">False</property>
-                <property name="width_chars">20</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="BackgroundColor">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="editable">False</property>
-                <property name="width_chars">20</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="OfflineSearchEntry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="editable">False</property>
-                <property name="width_chars">20</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="PickInput">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">color-select-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Input Text</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="PickBackground">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">color-select-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Input Background</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="PickOfflineSearch">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">color-select-symbolic</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Offline Search</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
@@ -1627,12 +1288,51 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">&lt;b&gt;Text Entry Colors&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="row_spacing">10</property>
+            <property name="column_spacing">10</property>
             <child>
-              <object class="GtkButton" id="DefaultColours">
+              <object class="GtkDrawingArea" id="Drawing_InputColor">
+                <property name="width_request">16</property>
+                <property name="height_request">16</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkDrawingArea" id="Drawing_BackgroundColor">
+                <property name="width_request">16</property>
+                <property name="height_request">16</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultInput">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -1657,7 +1357,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Default Colors</property>
+                        <property name="label" translatable="yes">Default</property>
                         <property name="use_underline">True</property>
                       </object>
                       <packing>
@@ -1670,13 +1370,12 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="left_attach">3</property>
+                <property name="top_attach">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="ClearAllColours">
+              <object class="GtkButton" id="DefaultBackground">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -1689,7 +1388,7 @@
                       <object class="GtkImage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="icon_name">edit-clear-symbolic</property>
+                        <property name="icon_name">view-refresh-symbolic</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1701,7 +1400,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Clear</property>
+                        <property name="label" translatable="yes">Default</property>
                         <property name="use_underline">True</property>
                       </object>
                       <packing>
@@ -1714,16 +1413,131 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="left_attach">3</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="InputColor">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="editable">False</property>
+                <property name="width_chars">20</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="BackgroundColor">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="editable">False</property>
+                <property name="width_chars">20</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="PickInput">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">color-select-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Text</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="PickBackground">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">color-select-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Background</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -1737,7 +1551,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
@@ -2089,7 +1903,107 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">5</property>
+            <property name="position">7</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkButton" id="DefaultColours">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">view-refresh-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Default Colors</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="ClearAllColours">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">edit-clear-symbolic</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Clear</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">8</property>
           </packing>
         </child>
       </object>

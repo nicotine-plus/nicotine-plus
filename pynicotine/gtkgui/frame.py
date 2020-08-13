@@ -219,12 +219,6 @@ class NicotineFrame:
         self.MainWindow.connect("key_press_event", self.OnKeyPress)
         self.MainWindow.connect("motion-notify-event", self.OnButtonPress)
 
-        gobject.signal_new("network_event", gtk.Window, gobject.SignalFlags.RUN_FIRST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
-        gobject.signal_new("network_event_lo", gtk.Window, gobject.SignalFlags.RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
-
-        self.MainWindow.connect("network_event", self.OnNetworkEvent)
-        self.MainWindow.connect("network_event_lo", self.OnNetworkEvent)
-
         for thing in config["interests"]["likes"]:
             self.likes[thing] = self.likeslist.append([thing])
 
@@ -1170,22 +1164,7 @@ class NicotineFrame:
                 return True
         return False
 
-    def emit_network_event(self, msgs):
-        lo = [msg for msg in msgs if msg.__class__ is slskmessages.FileSearchResult]
-        hi = [msg for msg in msgs if msg.__class__ is not slskmessages.FileSearchResult]
-        if hi:
-            self.MainWindow.emit("network_event", hi)
-        if lo:
-            self.MainWindow.emit("network_event_lo", lo)
-        return False
-
-    # Recieved a network event via emit_network_event
-    # with at least one, but possibly more messages
-    # call the appropriate event class for these message
-    # @param self NicotineFrame (Class)
-    # @param widget the main window
-    # @param msgs a list of messages
-    def OnNetworkEvent(self, widget, msgs):
+    def OnNetworkEvent(self, msgs):
         for i in msgs:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
@@ -1194,7 +1173,7 @@ class NicotineFrame:
 
     def callback(self, msgs):
         if len(msgs) > 0:
-            GLib.idle_add(self.emit_network_event, msgs[:])
+            GLib.idle_add(self.OnNetworkEvent, msgs)
 
     def networkcallback(self, msgs):
         curtime = time.time()
@@ -1207,7 +1186,7 @@ class NicotineFrame:
         if curtime - self.transfermsgspostedtime > 1.0:
             msgs = self.postTransferMsgs(msgs, curtime)
         if len(msgs) > 0:
-            GLib.idle_add(self.emit_network_event, msgs[:])
+            GLib.idle_add(self.OnNetworkEvent, msgs)
 
     def postTransferMsgs(self, msgs, curtime):
         trmsgs = []

@@ -407,10 +407,10 @@ class SlskProtoThread(threading.Thread):
         self._eventprocessor = eventprocessor
         portrange = (port, port) if port else config.sections["server"]["portrange"]
         self.serverclasses = {}
-        for i in list(self.servercodes.keys()):
+        for i in self.servercodes:
             self.serverclasses[self.servercodes[i]] = i
         self.peerclasses = {}
-        for i in list(self.peercodes.keys()):
+        for i in self.peercodes:
             self.peerclasses[self.peercodes[i]] = i
         self._p = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._p.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -551,7 +551,7 @@ class SlskProtoThread(threading.Thread):
             if not queue.empty():
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
-            for i in list(conns.keys())[:]:
+            for i in conns.copy():
                 if conns[i].__class__ is ServerConnection and i is not server_socket:
                     del conns[i]
             outsocks = [i for i in list(conns.keys()) if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None)]
@@ -622,7 +622,7 @@ class SlskProtoThread(threading.Thread):
 
             # Manage Connections
             curtime = time.time()
-            for connection_in_progress in list(connsinprogress.keys())[:]:
+            for connection_in_progress in connsinprogress.copy():
                 if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
                     connection_in_progress.close()
                     del connsinprogress[connection_in_progress]
@@ -651,7 +651,7 @@ class SlskProtoThread(threading.Thread):
                                 self._ui_callback([OutConn(connection_in_progress, msgObj.addr)])
                         del connsinprogress[connection_in_progress]
             # Process Data
-            for connection in list(conns.keys())[:]:
+            for connection in conns.copy():
                 ip, port = self.getIpPort(conns[connection].addr)
                 # print("ip: {}:{}  p: {}, conn: {}".format(ip, port, p, connection))
                 if self.ipBlocked(ip) and connection is not self._server_socket:
@@ -701,7 +701,7 @@ class SlskProtoThread(threading.Thread):
             # ---------------------------
             # Timeout Connections
             curtime = time.time()
-            for connection in list(conns.keys())[:]:
+            for connection in conns.copy():
                 if connection is not server_socket and connection is not p:
                     if curtime - conns[connection].lastactive > self.CONNECTION_MAX_IDLE:
                         self._ui_callback([ConnClose(connection, conns[connection].addr)])

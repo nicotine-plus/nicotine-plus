@@ -1656,7 +1656,6 @@ class ColoursFrame(buildFrame):
                 "inputcolor": self.InputColor,
                 "search": self.Immediate,
                 "searchq": self.Queue,
-                "searchoffline": self.OfflineSearchEntry,
                 "useraway": self.AwayColor,
                 "useronline": self.OnlineColor,
                 "useroffline": self.OfflineColor,
@@ -1680,7 +1679,6 @@ class ColoursFrame(buildFrame):
                 "inputcolor": self.Drawing_InputColor,
                 "search": self.Drawing_Immediate,
                 "searchq": self.Drawing_Queue,
-                "searchoffline": self.Drawing_OfflineSearchEntry,
                 "useraway": self.Drawing_AwayColor,
                 "useronline": self.Drawing_OnlineColor,
                 "useroffline": self.Drawing_OfflineColor,
@@ -1702,7 +1700,6 @@ class ColoursFrame(buildFrame):
             "inputcolor",
             "search",
             "searchq",
-            "searchoffline",
             "useraway",
             "useronline",
             "useroffline",
@@ -1721,7 +1718,6 @@ class ColoursFrame(buildFrame):
         self.PickAway.connect("clicked", self.PickColour, self.AwayColor, self.Drawing_AwayColor)
         self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor, self.Drawing_OnlineColor)
         self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor, self.Drawing_OfflineColor)
-        self.PickOfflineSearch.connect("clicked", self.PickColour, self.OfflineSearchEntry, self.Drawing_OfflineSearchEntry)
         self.PickURL.connect("clicked", self.PickColour, self.URL, self.Drawing_URL)
         self.DefaultURL.connect("clicked", self.DefaultColour, self.URL)
 
@@ -1745,7 +1741,6 @@ class ColoursFrame(buildFrame):
         self.DefaultColours.connect("clicked", self.OnDefaultColours)
         self.ClearAllColours.connect("clicked", self.OnClearAllColours)
         self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
-        self.DefaultOfflineSearch.connect("clicked", self.DefaultColour, self.OfflineSearchEntry)
 
         self.PickHighlightTab.connect("clicked", self.PickColour, self.HighlightTab, self.Drawing_HighlightTab)
         self.PickDefaultTab.connect("clicked", self.PickColour, self.DefaultTab, self.Drawing_DefaultTab)
@@ -1763,7 +1758,6 @@ class ColoursFrame(buildFrame):
         self.BackgroundColor.connect("changed", self.FontsColorsChanged)
         self.Immediate.connect("changed", self.FontsColorsChanged)
         self.Queue.connect("changed", self.FontsColorsChanged)
-        self.OfflineSearchEntry.connect("changed", self.FontsColorsChanged)
         self.AwayColor.connect("changed", self.FontsColorsChanged)
         self.OnlineColor.connect("changed", self.FontsColorsChanged)
         self.OfflineColor.connect("changed", self.FontsColorsChanged)
@@ -1808,7 +1802,6 @@ class ColoursFrame(buildFrame):
                 "inputcolor": self.InputColor.get_text(),
                 "search": self.Immediate.get_text(),
                 "searchq": self.Queue.get_text(),
-                "searchoffline": self.OfflineSearchEntry.get_text(),
                 "showaway": int(self.DisplayAwayColours.get_active()),
                 "useraway": self.AwayColor.get_text(),
                 "useronline": self.OnlineColor.get_text(),

@@ -335,7 +335,6 @@ class Config:
                     "interests",
                     "userlist"
                 ],
-                "searchoffline": "#aa0000",
                 "showaway": 0,
                 "buddylistinchatrooms": 0,
                 "trayicon": 1,
@@ -582,6 +581,9 @@ class Config:
         self.removeOldOption("ui", "soundtheme")
         self.removeOldOption("ui", "tab_colors")
         self.removeOldOption("ui", "tab_icons")
+
+        # Remove dropped offline user text color in search results
+        self.removeOldOption("ui", "searchoffline")
 
         # Checking for unknown section/options
         unknown1 = [
