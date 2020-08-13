@@ -42,6 +42,14 @@ To install Nicotine+ on Void Linux, run the following:
 $ sudo xbps-install -S nicotine+
 ```
 
+### Fedora (Stable)
+
+To install Nicotine+ on Fedora, run the following:
+
+```console
+$ dnf install nicotine+
+```
+
 ### Flathub (Stable)
 [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
