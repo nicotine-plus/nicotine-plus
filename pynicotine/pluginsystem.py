@@ -33,7 +33,6 @@ from traceback import print_exc
 
 from gi.repository import GLib
 
-from _thread import start_new_thread
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import slskmessages
 
@@ -274,13 +273,13 @@ class PluginHandler(object):
         return hotpotato
 
     def SearchRequestNotification(self, searchterm, user, searchid):
-        start_new_thread(self.TriggerEvent, ("SearchRequestNotification", (searchterm, user, searchid)))
+        self.TriggerEvent("SearchRequestNotification", (searchterm, user, searchid))
 
     def DistribSearchNotification(self, searchterm, user, searchid):
-        start_new_thread(self.TriggerEvent, ("DistribSearchNotification", (searchterm, user, searchid)))
+        self.TriggerEvent("DistribSearchNotification", (searchterm, user, searchid))
 
     def PublicRoomMessageNotification(self, room, user, line):
-        start_new_thread(self.TriggerEvent, ("PublicRoomMessageNotification", (room, user, line)))
+        self.TriggerEvent("PublicRoomMessageNotification", (room, user, line))
 
     def IncomingPrivateChatEvent(self, user, line):
         if user != self.myUsername:
@@ -290,13 +289,13 @@ class PluginHandler(object):
             return (user, line)
 
     def IncomingPrivateChatNotification(self, user, line):
-        start_new_thread(self.TriggerEvent, ("IncomingPrivateChatNotification", (user, line)))
+        self.TriggerEvent("IncomingPrivateChatNotification", (user, line))
 
     def IncomingPublicChatEvent(self, room, user, line):
         return self.TriggerEvent("IncomingPublicChatEvent", (room, user, line))
 
     def IncomingPublicChatNotification(self, room, user, line):
-        start_new_thread(self.TriggerEvent, ("IncomingPublicChatNotification", (room, user, line)))
+        self.TriggerEvent("IncomingPublicChatNotification", (room, user, line))
 
     def OutgoingPrivateChatEvent(self, user, line):
         if line is not None:
@@ -306,13 +305,13 @@ class PluginHandler(object):
             return (user, line)
 
     def OutgoingPrivateChatNotification(self, user, line):
-        start_new_thread(self.TriggerEvent, ("OutgoingPrivateChatNotification", (user, line)))
+        self.TriggerEvent("OutgoingPrivateChatNotification", (user, line))
 
     def OutgoingPublicChatEvent(self, room, line):
         return self.TriggerEvent("OutgoingPublicChatEvent", (room, line))
 
     def OutgoingPublicChatNotification(self, room, line):
-        start_new_thread(self.TriggerEvent, ("OutgoingPublicChatNotification", (room, line)))
+        self.TriggerEvent("OutgoingPublicChatNotification", (room, line))
 
     def OutgoingGlobalSearchEvent(self, text):
         return self.TriggerEvent("OutgoingGlobalSearchEvent", (text,))
@@ -330,25 +329,25 @@ class PluginHandler(object):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        start_new_thread(self.TriggerEvent, ("UserResolveNotification", (user, ip, port, country)))
+        self.TriggerEvent("UserResolveNotification", (user, ip, port, country))
 
     def ServerConnectNotification(self):
-        start_new_thread(self.TriggerEvent, ("ServerConnectNotification", (),))
+        self.TriggerEvent("ServerConnectNotification", (),)
 
     def ServerDisconnectNotification(self, userchoice):
-        start_new_thread(self.TriggerEvent, ("ServerDisconnectNotification", (userchoice, )))
+        self.TriggerEvent("ServerDisconnectNotification", (userchoice, ))
 
     def JoinChatroomNotification(self, room):
-        start_new_thread(self.TriggerEvent, ("JoinChatroomNotification", (room,)))
+        self.TriggerEvent("JoinChatroomNotification", (room,))
 
     def LeaveChatroomNotification(self, room):
-        start_new_thread(self.TriggerEvent, ("LeaveChatroomNotification", (room,)))
+        self.TriggerEvent("LeaveChatroomNotification", (room,))
 
     def UploadQueuedNotification(self, user, virtualfile, realfile):
-        start_new_thread(self.TriggerEvent, ("UploadQueuedNotification", (user, virtualfile, realfile)))
+        self.TriggerEvent("UploadQueuedNotification", (user, virtualfile, realfile))
 
     def UserStatsNotification(self, user, stats):
-        start_new_thread(self.TriggerEvent, ("UserStatsNotification", (user, stats)))
+        self.TriggerEvent("UserStatsNotification", (user, stats))
 
     # other functions
     def appendqueue(self, item):
