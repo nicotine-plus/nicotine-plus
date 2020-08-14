@@ -267,17 +267,16 @@ class Downloads(TransferList):
 
         for fn in self.selected_transfers:
 
-            if fn.file is None:
-                continue
             playfile = None
 
-            if os.path.exists(fn.file.name):
+            if fn.file is not None and os.path.exists(fn.file.name):
                 playfile = fn.file.name
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed
                 # try looking in the download directory and match the original filename.
                 basename = str.split(fn.filename, '\\')[-1]
                 path = os.sep.join([downloaddir, basename])
+
                 if os.path.exists(path):
                     playfile = path
 
