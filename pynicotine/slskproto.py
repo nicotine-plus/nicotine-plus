@@ -391,6 +391,7 @@ class SlskProtoThread(threading.Thread):
     # - Linux seems okay, stale in progress conns get killed after a minute or two
     # - With Windows, based on #473, it would seem these connections are never removed
     CONNECTION_MAX_IDLE = 60
+    CONNCOUNT_UI_INTERVAL = 0.5
 
     def __init__(self, ui_callback, queue, bindip, port, config, eventprocessor):
         """ ui_callback is a UI callback function to be called with messages
@@ -420,6 +421,7 @@ class SlskProtoThread(threading.Thread):
         self._downloadlimit = (self._calcDLimitByTotal, self._config.sections["transfers"]["downloadlimit"])
         self._limits = {}
         self._dlimits = {}
+        self.last_conncount_ui_update = time.time()
         # GeoIP Config
         self._geoip = None
         # GeoIP Database
@@ -578,7 +580,12 @@ class SlskProtoThread(threading.Thread):
                     numsockets += 1
                 numsockets += len(conns) + len(connsinprogress)
 
-                self._ui_callback([SetCurrentConnectionCount(numsockets)])
+                curtime = time.time()
+                if (curtime - self.last_conncount_ui_update) > self.CONNCOUNT_UI_INTERVAL:
+                    # Avoid sending too many updates to the UI at once, if there are a lot of connections
+                    self._ui_callback([SetCurrentConnectionCount(numsockets)])
+                    self.last_conncount_ui_update = time.time()
+
             # print "Sockets open: %s = %s + %s + %s (+1)" % (len(conns.keys()+connsinprogress.keys()+[p]+outsock), len(conns.keys()),  len(connsinprogress.keys()), len(outsock))
             except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
