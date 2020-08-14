@@ -21,20 +21,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import stat
 import string
 import sys
 import taglib
 import _thread
-from collections import defaultdict
 from gettext import gettext as _
 
 from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import NetworkIntType
-from pynicotine.slskmessages import NetworkLongLongType
 from pynicotine.utils import displayTraceback
 from pynicotine.utils import GetUserDirectories
 
@@ -53,7 +51,11 @@ class Shares:
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     def real2virtual(self, path):
+        path = os.path.normpath(path)
+
         for (virtual, real) in self._virtualmapping():
+            real = os.path.normpath(real)
+
             if path == real:
                 return virtual
             if path.startswith(real + os.sep):
@@ -62,7 +64,11 @@ class Shares:
         return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
+        path = os.path.normpath(path)
+
         for (virtual, real) in self._virtualmapping():
+            virtual = os.path.normpath(virtual)
+
             if path == virtual:
                 return real
             if path.startswith(virtual + '\\'):
@@ -101,8 +107,12 @@ class Shares:
             shared_db = "sharedfiles"
             index_db = "fileindex"
 
-        sharedfolders = len(conf["transfers"][shared_db])
-        sharedfiles = len(conf["transfers"][index_db])
+        try:
+            sharedfolders = len(conf["transfers"][shared_db])
+            sharedfiles = len(conf["transfers"][index_db])
+        except TypeError:
+            sharedfolders = len(list(conf["transfers"][shared_db]))
+            sharedfiles = len(list(conf["transfers"][index_db]))
 
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
@@ -313,8 +323,9 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
-        terms = searchterm.translate(self.translatepunctuation).lower().split()
-
+        # Don't count excluded words as matches (words starting with -)
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
+        terms = searchterm.lower().translate(self.translatepunctuation).split()
         length = 0
 
         for i in terms:
@@ -395,7 +406,12 @@ class Shares:
         # returns dict in format:  { Directory : mtime, ... }
         shared_directories = [x[1] for x in shared]
 
-        self.logMessage(_("%(num)s directories found before rescan, rebuilding...") % {"num": len(oldmtimes)})
+        try:
+            num_folders = len(oldmtimes)
+        except TypeError:
+            num_folders = len(list(oldmtimes))
+
+        self.logMessage(_("%(num)s folders found before rescan, rebuilding...") % {"num": num_folders})
 
         newmtimes = self.getDirsMtimes(shared_directories, yieldfunction)
 
@@ -413,7 +429,7 @@ class Shares:
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
         newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, newsharedfiles, yieldfunction, progress)
 
-        self.logMessage(_("%(num)s directories found after rescan") % {"num": len(newmtimes)})
+        self.logMessage(_("%(num)s folders found after rescan") % {"num": len(newmtimes)})
 
         return newsharedfiles, newsharedfilesstreams, newwordindex, newfileindex, newmtimes
 
@@ -568,6 +584,7 @@ class Shares:
                 continue
 
             if not rebuild and folder in oldmtimes:
+
                 if mtimes[folder] == oldmtimes[folder]:
                     if os.path.exists(folder):
                         # No change
@@ -575,7 +592,7 @@ class Shares:
                             streams[virtualdir] = oldstreams[virtualdir]
                             continue
                         except KeyError:
-                            log.addwarning(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                            log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                 'vdir': virtualdir,
                                 'dir': folder
                             })
@@ -616,51 +633,45 @@ class Shares:
     # Pack all files and metadata in directory
     def getDirStream(self, dir):
 
-        stream = bytearray()
-        stream.extend(slskmessages.SlskMessage().packObject(NetworkIntType(len(dir))))
-
-        for file_and_meta in dir:
-            stream.extend(self.getByteStream(file_and_meta))
-
-        return stream
-
-    # Pack a file's metadata
-    def getByteStream(self, fileinfo):
-
         message = slskmessages.SlskMessage()
-
         stream = bytearray()
-        stream.extend(bytes([1]) + message.packObject(fileinfo[0]) + message.packObject(NetworkLongLongType(fileinfo[1])))
-        if fileinfo[2] is not None:
-            try:
-                msgbytes = bytearray()
-                msgbytes.extend(message.packObject('mp3') + message.packObject(3))
-                msgbytes.extend(
-                    message.packObject(0) +
-                    message.packObject(NetworkIntType(fileinfo[2][0])) +
-                    message.packObject(1) +
-                    message.packObject(NetworkIntType(fileinfo[3])) +
-                    message.packObject(2) +
-                    message.packObject(NetworkIntType(fileinfo[2][1]))
-                )
-                stream.extend(msgbytes)
-            except Exception:
-                log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
-                    'file': fileinfo[0],
-                    'bitrate': fileinfo[2][0],
-                    'length': fileinfo[3],
-                    'vbr': fileinfo[2][1]
-                }))
-                stream.extend(message.packObject('') + message.packObject(0))
-        else:
-            stream.extend(message.packObject('') + message.packObject(0))
+        stream.extend(message.packObject(len(dir)))
+
+        for fileinfo in dir:
+            stream.extend(bytes([1]))
+            stream.extend(message.packObject(fileinfo[0]))
+            stream.extend(message.packObject(fileinfo[1], unsignedlonglong=True))
+
+            if fileinfo[2] is not None:
+                try:
+                    stream.extend(message.packObject('mp3'))
+                    stream.extend(message.packObject(3))
+
+                    stream.extend(message.packObject(0))
+                    stream.extend(message.packObject(fileinfo[2][0]))
+                    stream.extend(message.packObject(1))
+                    stream.extend(message.packObject(fileinfo[3]))
+                    stream.extend(message.packObject(2))
+                    stream.extend(message.packObject(fileinfo[2][1]))
+                except Exception:
+                    log.addwarning(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
+                        'file': fileinfo[0],
+                        'bitrate': fileinfo[2][0],
+                        'length': fileinfo[3],
+                        'vbr': fileinfo[2][1]
+                    }))
+                    stream.extend(message.packObject(''))
+                    stream.extend(message.packObject(0))
+            else:
+                stream.extend(message.packObject(''))
+                stream.extend(message.packObject(0))
 
         return stream
 
     # Update Search index with new files
     def getFilesIndex(self, mtimes, oldmtimes, newsharedfiles, yieldcall=None, progress=None):
 
-        wordindex = defaultdict(list)
+        wordindex = {}
         fileindex = []
         index = 0
         count = len(mtimes)
@@ -686,11 +697,12 @@ class Shares:
                 file = j[0]
                 fileindex.append((virtualdir + '\\' + file,) + j[1:])
 
-                # Collect words from filenames for Search index (prevent duplicates with set)
-                words = set((virtualdir + " " + file).translate(self.translatepunctuation).lower().split())
-
-                for k in words:
-                    wordindex[k].append(index)
+                # Collect words from filenames for Search index
+                for k in (virtualdir + " " + file).lower().translate(self.translatepunctuation).split():
+                    try:
+                        wordindex[k].append(index)
+                    except KeyError:
+                        wordindex[k] = [index]
 
                 index += 1
 
