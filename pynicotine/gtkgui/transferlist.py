@@ -128,7 +128,6 @@ class TransferList:
         self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
 
     def UpdateColours(self):
-        self.frame.SetTextBG(self.widget)
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):

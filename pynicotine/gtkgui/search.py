@@ -416,7 +416,7 @@ class Searches(IconNotebook):
                 continue
             id[2].ChangeColours()
 
-        self.frame.SetTextBG(self.WishListDialog.WishlistView)
+        self.frame.SetTextBG(self.WishListDialog.AddWishEntry)
 
     def saveColumns(self):
 
@@ -1108,14 +1108,11 @@ class Search:
 
     def ChangeColours(self):
 
-        self.frame.SetTextBG(self.ResultsList)
         self.frame.SetTextBG(self.FilterIn.get_child())
         self.frame.SetTextBG(self.FilterOut.get_child())
         self.frame.SetTextBG(self.FilterSize.get_child())
         self.frame.SetTextBG(self.FilterBitrate.get_child())
         self.frame.SetTextBG(self.FilterCountry.get_child())
-        self.frame.SetTextBG(self.RememberCheckButton)
-        self.frame.SetTextBG(self.FilterFreeSlot)
 
         font = self.frame.np.config.sections["ui"]["searchfont"]
 

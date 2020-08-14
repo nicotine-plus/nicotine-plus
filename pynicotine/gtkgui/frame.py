@@ -442,6 +442,7 @@ class NicotineFrame:
         self.tray_tooltip_template = _("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up")
 
         self.UpdateBandwidth()
+        self.ShowTransferButtons.set_active(self.np.config.sections["transfers"]["enabletransferbuttons"])
         self.UpdateTransferButtons()
 
         # Search Methods
@@ -1223,8 +1224,6 @@ class NicotineFrame:
         font = self.np.config.sections["ui"]["chatfont"]
         self.tag_log.set_property("font", font)
 
-        self.SetTextBG(self.LogWindow)
-        self.SetTextBG(self.userlist.UserList)
         # self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
         for listview in [
             self.userlist.UserList,
@@ -1237,15 +1236,12 @@ class NicotineFrame:
         ]:
             self.ChangeListFont(listview, self.np.config.sections["ui"]["listfont"])
 
-        self.SetTextBG(self.RecommendationsList)
-        self.SetTextBG(self.UnrecommendationsList)
-        self.SetTextBG(self.RecommendationUsersList)
-        self.SetTextBG(self.LikesList)
-        self.SetTextBG(self.DislikesList)
         self.SetTextBG(self.UserPrivateCombo.get_child())
         self.SetTextBG(self.UserInfoCombo.get_child())
         self.SetTextBG(self.UserBrowseCombo.get_child())
         self.SetTextBG(self.SearchEntry)
+        self.SetTextBG(self.AddLikeEntry)
+        self.SetTextBG(self.AddDislikeEntry)
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
         if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
@@ -2115,8 +2111,6 @@ class NicotineFrame:
         if self.np.transfers is not None:
             self.np.transfers.checkUploadQueue()
 
-        self.UpdateTransferButtons()
-
         if needrescan:
             self.needrescan = True
 
@@ -2395,6 +2389,14 @@ class NicotineFrame:
             self.np.config.sections["columns"]["chatrooms"][room][1] = int(show)
         self.userlist.cols[1].set_visible(show)
         self.np.config.sections["columns"]["userlist"][1] = int(show)
+        self.np.config.writeConfiguration()
+
+    def OnShowTransferButtons(self, widget):
+
+        show = widget.get_active()
+
+        self.np.config.sections["transfers"]["enabletransferbuttons"] = show
+        self.UpdateTransferButtons()
         self.np.config.writeConfiguration()
 
     def OnShowRoomList(self, widget):

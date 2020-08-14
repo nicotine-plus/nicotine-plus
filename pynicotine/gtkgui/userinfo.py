@@ -375,10 +375,6 @@ class UserInfo:
 
         self.changecolour(self.tag_local, "chatremote")
 
-        self.frame.SetTextBG(self.descr)
-        self.frame.SetTextBG(self.Likes)
-        self.frame.SetTextBG(self.Hates)
-
         self.frame.ChangeListFont(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
         self.frame.ChangeListFont(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
 
