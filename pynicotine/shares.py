@@ -328,17 +328,17 @@ class Shares:
         terms = searchterm.lower().translate(self.translatepunctuation).split()
         length = 0
 
-        for i in terms:
-            if i in wordindex:
-                length += 1
-
-        if length == 0 or length != len(terms):
-            return
-
         try:
+            for i in terms:
+                if i in wordindex:
+                    length += 1
+
+            if length == 0 or length != len(terms):
+                return
+
             list = [wordindex[i] for i in terms if i in wordindex]
         except ValueError:
-            # Shelf is probably closed, perhaps when rescanning share
+            # DB is closed, perhaps when rescanning share or closing Nicotine+
             return
 
         shortest = min(list, key=len)
