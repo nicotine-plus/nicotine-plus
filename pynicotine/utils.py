@@ -87,7 +87,7 @@ def get_latest_version():
     latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
 
     response = urllib.request.urlopen(latesturl)
-    data = json.loads(response.read())
+    data = json.loads(response.read().decode('utf-8'))
     response.close()
     hlatest = data['tag_name']
     latest = int(make_version(hlatest))
