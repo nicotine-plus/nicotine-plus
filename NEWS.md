@@ -13,6 +13,7 @@ Changes
  * Consistent startup times no matter the number of shared files.
    On large file shares, this cuts down startup times from tens of seconds to 1-2 seconds, depending on your hardware.
  * Numbers are now appended to the file names of duplicate downloads
+ * Your personal upload speed is no longer reported as 0 B/s
  * In folder/user grouping mode, selecting a user or folder now allows you to retry/cancel all downloads under them
  * Added quick-access checkbox for enabling/disabling private room invitations
  * Replaced ticker banner with room wall, which displays individual messages from room users
