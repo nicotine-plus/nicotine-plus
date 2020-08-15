@@ -144,7 +144,6 @@ class RoomsControl:
         self.ChatNotebook.Notebook.connect("switch-page", self.OnSwitchPage)
         self.ChatNotebook.Notebook.connect("page-reordered", self.OnReorderedPage)
 
-        self.frame.SetTextBG(self.frame.roomlist.RoomsList)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
     def IsPrivateRoomOwned(self, room):
@@ -675,7 +674,6 @@ class RoomsControl:
 
     def UpdateColours(self):
 
-        self.frame.SetTextBG(self.frame.roomlist.RoomsList)
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
         for room in list(self.joinedrooms.values()):
@@ -1705,13 +1703,8 @@ class ChatRoom:
         logbuffer = self.RoomLog.get_buffer()
         self.tag_log = self.makecolour(logbuffer, "chatremote")
 
-        self.frame.SetTextBG(self.ChatScroll)
-        self.frame.SetTextBG(self.RoomLog)
-        self.frame.SetTextBG(self.UserList)
-
         self.frame.SetTextBG(self.ChatEntry)
-        self.frame.SetTextBG(self.AutoJoin)
-        self.frame.SetTextBG(self.Log)
+        self.frame.SetTextBG(self.RoomWall.RoomWallEntry)
 
     def getUserStatusColor(self, status):
 
@@ -1770,12 +1763,8 @@ class ChatRoom:
         for user in self.tag_users:
             self.getUserTag(user)
 
-        self.frame.SetTextBG(self.ChatScroll)
-        self.frame.SetTextBG(self.RoomLog)
-        self.frame.SetTextBG(self.UserList)
         self.frame.SetTextBG(self.ChatEntry)
-        self.frame.SetTextBG(self.AutoJoin)
-        self.frame.SetTextBG(self.Log)
+        self.frame.SetTextBG(self.RoomWall.RoomWallEntry)
         self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
     def OnLeave(self, widget=None):

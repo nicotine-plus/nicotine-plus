@@ -258,8 +258,6 @@ class UserBrowse:
         return True
 
     def ChangeColours(self):
-        self.frame.SetTextBG(self.FileTreeView)
-        self.frame.SetTextBG(self.FolderTreeView)
         self.frame.SetTextBG(self.SearchEntry)
 
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])

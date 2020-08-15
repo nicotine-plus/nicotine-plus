@@ -843,9 +843,7 @@ class PrivateChat:
             self.tag_username.set_property("underline", pango.Underline.NONE)
             self.tag_my_username.set_property("underline", pango.Underline.NONE)
 
-        self.frame.SetTextBG(self.ChatScroll)
         self.frame.SetTextBG(self.ChatLine)
-        self.frame.SetTextBG(self.Log)
         self.frame.SetTextBG(self.PeerPrivateMessages)
 
     def changecolour(self, tag, colour):
@@ -897,7 +895,6 @@ class PrivateChat:
         else:
             self.changecolour(self.tag_my_username, "useroffline")
 
-        self.frame.SetTextBG(self.ChatScroll)
         self.frame.SetTextBG(self.ChatLine)
 
     def getUserStatusColor(self, status):

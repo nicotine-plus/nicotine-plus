@@ -2092,9 +2092,6 @@ class FontsFrame(buildFrame):
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
                 "decimalsep": self.DecimalSep
-            },
-            "transfers": {
-                "enabletransferbuttons": self.ShowTransferButtons
             }
         }
 
@@ -2131,15 +2128,8 @@ class FontsFrame(buildFrame):
                 "searchfont": self.SelectSearchFont.get_font(),
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font()
-            },
-            "transfers": {
-                "enabletransferbuttons": self.ShowTransferButtons.get_active()
             }
         }
-
-    def OnTranslationCheckToggled(self, widget):
-        sensitive = widget.get_active()
-        self.TranslationCombo.set_sensitive(sensitive)
 
     def OnDefaultFont(self, widget):
         self.SelectChatFont.set_font_name("")
@@ -3406,7 +3396,7 @@ class SettingsWindow:
 
     def ColourWidgets(self, widget):
 
-        if type(widget) in (gtk.Entry, gtk.SpinButton, gtk.TextView, gtk.TreeView, gtk.CheckButton, gtk.RadioButton):
+        if type(widget) in (gtk.Entry, gtk.SpinButton):
             self.SetTextBG(widget)
         if type(widget) is gtk.TreeView:
             self.frame.ChangeListFont(widget, self.frame.np.config.sections["ui"]["listfont"])
