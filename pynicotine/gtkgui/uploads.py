@@ -216,7 +216,8 @@ class Uploads(TransferList):
             return
 
         for fn in self.selected_transfers:
-            file = fn.filename.replace("\\", os.sep)
+            file = fn.realfilename
+
             if os.path.exists(file):
                 executeCommand(executable, file, background=False)
 
