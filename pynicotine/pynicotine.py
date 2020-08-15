@@ -168,7 +168,7 @@ class NetworkEventProcessor:
         self.servertimer = None
         self.servertimeout = -1
 
-        self.parentconn = None
+        self.has_parent = False
         self.branchlevel = 0
         self.branchroot = None
 
@@ -601,7 +601,7 @@ class NetworkEventProcessor:
                     if self.transfers is not None:
                         self.transfers.ConnClose(conn, addr)
 
-                    if self.parentconn is not None and i == self.parentconn:
+                    if i == self.GetParentConn():
                         self.ParentConnClosed()
 
                     self.peerconns.remove(i)
@@ -1478,7 +1478,7 @@ class NetworkEventProcessor:
                 if i.conntimer is not None:
                     i.conntimer.cancel()
 
-                if self.parentconn is not None and i == self.parentconn:
+                if i == self.GetParentConn():
                     self.ParentConnClosed()
 
                 self.peerconns.remove(i)
@@ -1493,7 +1493,7 @@ class NetworkEventProcessor:
     def ConnectToPeerTimeout(self, msg):
         conn = msg.conn
 
-        if self.parentconn is not None and conn == self.parentconn:
+        if conn == self.GetParentConn():
             self.ParentConnClosed()
 
         try:
@@ -1701,7 +1701,7 @@ class NetworkEventProcessor:
 
         potential_parents = msg.list
 
-        if not self.parentconn and potential_parents:
+        if potential_parents:
 
             for user in potential_parents:
                 addr = potential_parents[user]
@@ -1710,19 +1710,25 @@ class NetworkEventProcessor:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-    def ParentConnClosed(self):
-        self.parentconn = None
+    def GetParentConn(self):
+        for i in self.peerconns:
+            if i.init.type == 'D':
+                return i
 
+        return None
+
+    def ParentConnClosed(self):
         """ Tell the server it needs to send us a NetInfo message with a new list of
         potential parents. """
 
+        self.has_parent = False
         self.queue.put(slskmessages.HaveNoParent(1))
 
     def DistribBranchLevel(self, msg):
         """ This message is received when we have a successful connection with a potential
         parent. Tell the server who our parent is, and stop requesting new potential parents. """
 
-        if self.parentconn is None:
+        if not self.has_parent:
 
             for i in self.peerconns[:]:
                 if i.init.type == 'D':
@@ -1735,9 +1741,14 @@ class NetworkEventProcessor:
 
                         self.peerconns.remove(i)
 
-            self.queue.put(slskmessages.HaveNoParent(0))
-            self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
-            self.parentconn = msg.conn
+            parent = self.GetParentConn()
+
+            if parent is not None:
+                self.queue.put(slskmessages.HaveNoParent(0))
+                self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
+                self.has_parent = True
+            else:
+                self.ParentConnClosed()
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
