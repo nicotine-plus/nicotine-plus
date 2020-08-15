@@ -1700,8 +1700,9 @@ class NetworkEventProcessor:
         We attempt to connect to them all at once, since connection errors are fairly common. """
 
         potential_parents = msg.list
+        print(msg.list)
 
-        if self.GetParentConn() is None and potential_parents:
+        if potential_parents:
 
             for user in potential_parents:
                 addr = potential_parents[user]
@@ -1713,6 +1714,7 @@ class NetworkEventProcessor:
     def GetParentConn(self):
         for i in self.peerconns:
             if i.init.type == 'D':
+                print(i)
                 return i
 
         return None
@@ -1742,6 +1744,10 @@ class NetworkEventProcessor:
 
             self.queue.put(slskmessages.HaveNoParent(0))
             self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
+            print("parent found!")
+        else:
+            print("distribbranchlevel fail")
+            self.ParentConnClosed()
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
