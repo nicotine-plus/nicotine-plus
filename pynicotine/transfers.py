@@ -1391,7 +1391,9 @@ class Transfers:
                 sleep(0.01)
             else:
                 if i.speed is not None:
-                    self.queue.put(slskmessages.SendUploadSpeed(int(i.speed * 1024)))
+                    speedbytes = int(i.speed * 1024)
+                    self.eventprocessor.speed = speedbytes
+                    self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
 
                 msg.file.close()
                 i.status = "Finished"
