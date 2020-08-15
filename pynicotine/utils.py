@@ -26,9 +26,14 @@ This module contains utility functions.
 """
 
 import gettext
+import json
 import locale
 import os
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from codecs import encode, decode
 from subprocess import PIPE
 from subprocess import Popen
@@ -76,6 +81,43 @@ def CleanPath(path, absolute=False):
         path = path.rstrip('.')
 
     return path
+
+
+def get_latest_version():
+    latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
+
+    response = urllib.request.urlopen(latesturl)
+    data = json.loads(response.read())
+    response.close()
+    hlatest = data['tag_name']
+    latest = int(make_version(hlatest))
+    date = data['created_at']
+
+    return latest, date
+
+
+def make_version(version):
+
+    if version.find("dev") >= 0:
+        # Example: 2.0.1.dev1
+
+        ix = version.find("dev") - 1
+        version = version[:ix]
+    elif version.find("rc") >= 0:
+        # Example: 2.0.1.rc1
+
+        ix = version.find("rc") - 1
+        version = version[:ix]
+
+    s = version.split(".")
+
+    if len(s) >= 4:
+        major, minor, micro, milli = [int(i) for i in s[:4]]
+    else:
+        major, minor, micro = [int(i) for i in s[:3]]
+        milli = 0
+
+    return (major << 24) + (minor << 16) + (micro << 8) + milli
 
 
 def GetUserDirectories():
