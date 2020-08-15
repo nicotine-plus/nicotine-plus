@@ -49,7 +49,6 @@ from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui import tray
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
-from pynicotine.gtkgui.checklatest import checklatest
 from pynicotine.gtkgui.dirchooser import ChooseFile
 from pynicotine.gtkgui.dirchooser import SaveFile
 from pynicotine.gtkgui.downloads import Downloads
@@ -2304,7 +2303,8 @@ class NicotineFrame:
             self.DownloadButtons.hide()
 
     def OnCheckLatest(self, widget):
-        checklatest(self.MainWindow)
+        url = "https://nicotine-plus.org"
+        OpenUri(url, self.MainWindow)
 
     def OnReportBug(self, widget):
         url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
