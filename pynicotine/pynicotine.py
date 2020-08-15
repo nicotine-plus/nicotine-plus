@@ -168,6 +168,7 @@ class NetworkEventProcessor:
         self.servertimer = None
         self.servertimeout = -1
 
+        self.has_parent = False
         self.branchlevel = 0
         self.branchroot = None
 
@@ -1690,7 +1691,6 @@ class NetworkEventProcessor:
 
     def DistribSearch(self, msg):
         if self.respondDistributed:  # set in ToggleRespondDistributed
-            print(msg.searchterm)
             self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
         self.frame.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
@@ -1700,7 +1700,6 @@ class NetworkEventProcessor:
         We attempt to connect to them all at once, since connection errors are fairly common. """
 
         potential_parents = msg.list
-        print(msg.list)
 
         if potential_parents:
 
@@ -1714,7 +1713,6 @@ class NetworkEventProcessor:
     def GetParentConn(self):
         for i in self.peerconns:
             if i.init.type == 'D':
-                print(i)
                 return i
 
         return None
@@ -1723,13 +1721,14 @@ class NetworkEventProcessor:
         """ Tell the server it needs to send us a NetInfo message with a new list of
         potential parents. """
 
+        self.has_parent = False
         self.queue.put(slskmessages.HaveNoParent(1))
 
     def DistribBranchLevel(self, msg):
         """ This message is received when we have a successful connection with a potential
         parent. Tell the server who our parent is, and stop requesting new potential parents. """
 
-        if self.GetParentConn():
+        if not self.has_parent:
 
             for i in self.peerconns[:]:
                 if i.init.type == 'D':
@@ -1742,12 +1741,14 @@ class NetworkEventProcessor:
 
                         self.peerconns.remove(i)
 
-            self.queue.put(slskmessages.HaveNoParent(0))
-            self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
-            print("parent found!")
-        else:
-            print("distribbranchlevel fail")
-            self.ParentConnClosed()
+            parent = self.GetParentConn()
+
+            if parent is not None:
+                self.queue.put(slskmessages.HaveNoParent(0))
+                self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
+                self.has_parent = True
+            else:
+                self.ParentConnClosed()
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
