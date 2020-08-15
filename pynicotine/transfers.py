@@ -475,7 +475,7 @@ class Transfers:
     def TransferRequestDownloads(self, msg, user, conn, addr):
 
         for i in self.downloads:
-            if i.filename == msg.file and user == i.user and i.status == "Queued":
+            if i.filename == msg.file and user == i.user:
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
                 """ If the file is larger than 2GB, the SoulseekQt client seems to
@@ -517,8 +517,7 @@ class Transfers:
                     self.queue.put(slskmessages.AddUser(user))
 
                 self.queue.put(slskmessages.GetUserStatus(user))
-                if user != self.eventprocessor.config.sections["server"]["login"]:
-                    response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=transfer.req)
+                response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=transfer.req)
                 self.downloadspanel.update(transfer)
             else:
                 response = slskmessages.TransferResponse(conn, 0, reason="Cancelled", req=msg.req)

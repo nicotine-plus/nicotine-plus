@@ -181,7 +181,7 @@ class Uploads(TransferList):
                 continue
 
             self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
-            self.frame.np.transfers.pushFile(user, filename, path, transfer)
+            self.frame.np.transfers.pushFile(user, filename, path, transfer=transfer)
 
         self.frame.np.transfers.checkUploadQueue()
 
@@ -297,6 +297,8 @@ class Uploads(TransferList):
             self.OnClearTransfer(None)
 
     def OnAbortTransfer(self, widget, remove=False, clear=False):
+
+        self.select_transfers()
 
         TransferList.OnAbortTransfer(self, widget, remove, clear)
         self.frame.np.transfers.calcUploadQueueSizes()
