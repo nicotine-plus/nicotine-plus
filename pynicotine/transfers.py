@@ -1390,13 +1390,13 @@ class Transfers:
                 self.checkUploadQueue()
                 sleep(0.01)
             else:
+                if i.speed is not None:
+                    self.queue.put(slskmessages.SendUploadSpeed(int(i.speed * 1024)))
+
                 msg.file.close()
                 i.status = "Finished"
                 i.speed = 0
                 i.timeleft = ""
-
-                if i.speed is not None:
-                    self.queue.put(slskmessages.SendUploadSpeed(int(i.speed * 1024)))
 
                 for j in self.uploads:
                     if j.user == i.user:
