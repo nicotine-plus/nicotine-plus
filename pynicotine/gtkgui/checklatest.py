@@ -63,7 +63,7 @@ def checklatest(frame):
         response = urllib.request.urlopen(latesturl)
         data = json.loads(response.read())
         response.close()
-        hlatest = data['name']
+        hlatest = data['tag_name']
         latest = makeversion(hlatest)
         date = data['created_at']
     except Exception as m:
