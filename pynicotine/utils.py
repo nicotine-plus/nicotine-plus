@@ -248,7 +248,10 @@ def ApplyTranslation():
 
     else:
         # Unix locales handling: We let the system handle the locales
-        locale.setlocale(locale.LC_ALL, '')
+        try:
+            locale.setlocale(locale.LC_ALL, '')
+        except Exception as e:
+            print("Error while attempting to set locale: %s" % e)
 
     # Gettext handling
     if gettext.find(PACKAGE, localedir=LOCAL_MO_PATH) is None:
