@@ -35,6 +35,9 @@ SOURCE_DIR  = $(abspath $(PACKAGE_DIR)/../)
 #  embedded directly in the Python source...
 VERSION_UPSTREAM_DISTUTILS = $(shell sed -n 's/^version\s*=\s*"\(\S*\)"$$/\1/p' $(SOURCE_DIR)/pynicotine/utils.py)
 
+# Disable tests in pybuild, we run them later...
+export PYBUILD_DISABLE=test
+
 # Catch all debhelper rule...
 %:
 	dh $@ --with python3 --buildsystem=pybuild
