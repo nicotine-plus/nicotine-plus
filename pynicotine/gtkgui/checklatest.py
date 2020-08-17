@@ -19,53 +19,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
-import urllib.error
-import urllib.parse
-import urllib.request
-
 from gettext import gettext as _
 
 from gi.repository import Gtk as gtk
 
+from pynicotine.utils import get_latest_version
+from pynicotine.utils import make_version
 from pynicotine.utils import version
-
-
-def makeversion(version):
-
-    if version.find("dev") >= 0:
-        # Example: 2.0.1.dev1
-
-        ix = version.find("dev") - 1
-        version = version[:ix]
-    elif version.find("rc") >= 0:
-        # Example: 2.0.1.rc1
-
-        ix = version.find("rc") - 1
-        version = version[:ix]
-
-    s = version.split(".")
-
-    if len(s) >= 4:
-        major, minor, micro, milli = [int(i) for i in s[:4]]
-    else:
-        major, minor, micro = [int(i) for i in s[:3]]
-        milli = 0
-
-    return (major << 24) + (minor << 16) + (micro << 8) + milli
 
 
 def checklatest(frame):
 
-    latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
-
     try:
-        response = urllib.request.urlopen(latesturl)
-        data = json.loads(response.read())
-        response.close()
-        hlatest = data['name']
-        latest = makeversion(hlatest)
-        date = data['created_at']
+        latest, date = get_latest_version()
+        myversion = int(make_version(version))
     except Exception as m:
         dlg = gtk.MessageDialog(
             transient_for=frame,
@@ -75,15 +42,13 @@ def checklatest(frame):
             text=_("Could not retrieve version information!\nError: %s") % m
         )
     else:
-        myversion = makeversion(version)
-
         if latest > myversion:
             dlg = gtk.MessageDialog(
                 transient_for=frame,
                 flags=0,
                 type=gtk.MessageType.INFO,
                 buttons=gtk.ButtonsType.OK,
-                text=_("A newer version %s is available, released on %s.") % (hlatest, date)
+                text=_("A newer version %s is available, released on %s.") % (latest, date)
             )
         elif myversion > latest:
             dlg = gtk.MessageDialog(
