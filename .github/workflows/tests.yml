@@ -78,4 +78,5 @@ jobs:
 
       - name: Unit tests
         run: |
-          pytest
+          # Disable version test due to macOS machines hitting GitHub's rate limits
+          pytest -v -k 'not version'
