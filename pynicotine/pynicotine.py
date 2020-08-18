@@ -505,7 +505,7 @@ class NetworkEventProcessor:
         else:
             self.logMessage("%s %s %s" % (msg.err, msg.__class__, vars(msg)), 4)
 
-            self.ClosedConnection(msg.connobj.conn, msg.connobj.addr)
+            self.ClosedConnection(msg.connobj.conn, msg.connobj.addr, msg.err)
 
     def IncPort(self, msg):
         self.waitport = msg.port
@@ -559,7 +559,7 @@ class NetworkEventProcessor:
     def ConnClose(self, msg):
         self.ClosedConnection(msg.conn, msg.addr)
 
-    def ClosedConnection(self, conn, addr):
+    def ClosedConnection(self, conn, addr, error=None):
 
         if conn == self.serverconn:
 
@@ -599,7 +599,7 @@ class NetworkEventProcessor:
                         i.conntimer.cancel()
 
                     if self.transfers is not None:
-                        self.transfers.ConnClose(conn, addr)
+                        self.transfers.ConnClose(conn, addr, i.username, error)
 
                     if i == self.GetParentConn():
                         self.ParentConnClosed()
