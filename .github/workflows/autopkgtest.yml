@@ -10,6 +10,11 @@ jobs:
       matrix:
         os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Install autopkgtest dependencies
         run: |
           sudo apt update
@@ -20,8 +25,8 @@ jobs:
           set +e
 
           # Ubuntu 16.04 uses adt-run
-          if ! sudo autopkgtest https://github.com/nicotine-plus/nicotine-plus -- null; then
-            sudo adt-run --git-source https://github.com/nicotine-plus/nicotine-plus --- null
+          if ! sudo autopkgtest . -- null; then
+            sudo adt-run --unbuilt-tree . --- null
           fi
 
           # autopkgtest exit code 2 signifies skipped tests

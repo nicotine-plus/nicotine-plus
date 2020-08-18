@@ -35,6 +35,10 @@ SOURCE_DIR  = $(abspath $(PACKAGE_DIR)/../)
 #  embedded directly in the Python source...
 VERSION_UPSTREAM_DISTUTILS = $(shell sed -n 's/^version\s*=\s*"\(\S*\)"$$/\1/p' $(SOURCE_DIR)/pynicotine/utils.py)
 
+# Disable version test during Pybuild process, since Pybuild sets the proxy to 127.0.0.1:9.
+# We don't have internet access...
+export PYBUILD_TEST_ARGS=-k-test_version
+
 # Catch all debhelper rule...
 %:
 	dh $@ --with python3 --buildsystem=pybuild
