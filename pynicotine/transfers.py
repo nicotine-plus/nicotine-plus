@@ -1707,7 +1707,7 @@ class Transfers:
         else:
             return False
 
-    def ConnClose(self, conn, addr):
+    def ConnClose(self, conn, addr, user, error):
         """ The remote user has closed the connection either because
         he logged off, or because there's a network problem. """
 
@@ -1718,7 +1718,10 @@ class Transfers:
             self._ConnClose(conn, addr, i, "download")
 
         for i in self.uploads:
-            if i.conn != conn:
+            if type(error) is not ConnectionRefusedError and i.conn != conn:
+                continue
+            elif i.user != user:
+                # Connection refused, cancel all of user's transfers
                 continue
 
             self._ConnClose(conn, addr, i, "upload")
