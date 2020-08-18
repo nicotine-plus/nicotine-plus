@@ -29,7 +29,6 @@ from gi.repository import Gdk
 from gi.repository import Gtk as gtk
 
 from _thread import start_new_thread
-from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import MetaDialog
 from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.transferlist import TransferList
@@ -61,8 +60,6 @@ class Downloads(TransferList):
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
-            ("#" + _("Get place in _queue"), self.OnGetPlaceInQueue),
-            ("", None),
             ("#" + _("Copy _URL"), self.OnCopyURL),
             ("#" + _("Copy folder URL"), self.OnCopyDirURL),
             ("#" + _("Send to _player"), self.OnPlayFiles),
@@ -359,15 +356,6 @@ class Downloads(TransferList):
             widget.stop_emission_by_name("button_press_event")
 
         return True
-
-    def OnGetPlaceInQueue(self, widget):
-
-        self.select_transfers()
-
-        for i in self.selected_transfers:
-            if i.status != "Queued":
-                continue
-            self.frame.np.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
 
     def OnRetryTransfer(self, widget):
 

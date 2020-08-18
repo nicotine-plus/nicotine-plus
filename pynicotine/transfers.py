@@ -1465,7 +1465,8 @@ class Transfers:
     def startCheckDownloadQueueTimer(self):
         GLib.timeout_add(60000, self.checkDownloadQueue)
 
-    # Find failed or stuck downloads and attempt to queue them
+    # Find failed or stuck downloads and attempt to queue them.
+    # Also ask for the queue position of downloads.
     def checkDownloadQueue(self):
 
         statuslist = self.FAILED_TRANSFERS + \
@@ -1475,6 +1476,8 @@ class Transfers:
             if transfer.status in statuslist:
                 self.AbortTransfer(transfer)
                 self.getFile(transfer.user, transfer.filename, transfer.path, transfer)
+            elif transfer.status == "Queued":
+                self.eventprocessor.ProcessRequestToPeer(transfer.user, slskmessages.PlaceInQueueRequest(None, transfer.filename))
 
         self.startCheckDownloadQueueTimer()
 
