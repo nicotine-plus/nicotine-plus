@@ -2725,6 +2725,8 @@
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">3</property>
+                <property name="margin_bottom">3</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2738,6 +2740,8 @@
                 <property name="width_request">200</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">3</property>
+                <property name="margin_bottom">3</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2751,6 +2755,8 @@
                 <property name="width_request">150</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">3</property>
+                <property name="margin_bottom">3</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2764,6 +2770,8 @@
                 <property name="width_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">3</property>
+                <property name="margin_bottom">3</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2778,6 +2786,7 @@
                 <property name="valign">center</property>
                 <property name="pulse_step">0.10000000149</property>
                 <property name="text" translatable="yes">Scanning Buddy Shares</property>
+                <property name="show_text">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2792,6 +2801,7 @@
                 <property name="valign">center</property>
                 <property name="pulse_step">0.10000000149</property>
                 <property name="text" translatable="yes">Scanning Shares</property>
+                <property name="show_text">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2804,6 +2814,8 @@
               <object class="GtkStatusbar" id="Statusbar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_top">3</property>
+                <property name="margin_bottom">3</property>
               </object>
               <packing>
                 <property name="expand">True</property>
