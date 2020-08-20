@@ -29,7 +29,6 @@ import sre_constants
 from gettext import gettext as _
 
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -48,6 +47,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import SelectUserRowIter
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import GetResultBitrateLength
 
@@ -58,13 +58,10 @@ class Searches(IconNotebook):
 
         self.frame = frame
 
-        self.interval = 0
         self.searchid = int(random.random() * (2 ** 31 - 1))
         self.searches = {}
         self.usersearches = {}
         self.users = {}
-        self.timer = None
-        self.disconnected = 0
         self.maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
         self.maxstoredresults = self.frame.np.config.sections['searches']["max_stored_results"]
 
@@ -82,7 +79,7 @@ class Searches(IconNotebook):
 
         self.popup_enable()
 
-        self.WishListDialog = WishList(frame)
+        self.WishList = WishList(frame, self)
 
         self.UpdateColours()
 
@@ -100,50 +97,6 @@ class Searches(IconNotebook):
 
         for i in templist:
             self.frame.SearchEntryCombo_List.append([i])
-
-        self.frame.WishList.connect("clicked", self.WishListDialog.Toggle)
-
-    def SetInterval(self, msg):
-
-        self.interval = msg.seconds
-
-        if not self.disconnected:
-            # Create wishlist searches (without tabs)
-            for term in self.frame.np.config.sections["server"]["autosearch"]:
-                self.searches[self.searchid] = [self.searchid, term, None, 0, True]
-                self.searchid = (self.searchid + 1) % (2**31)
-
-        self.OnAutoSearch()
-        self.timer = GLib.timeout_add(self.interval * 1000, self.OnAutoSearch)
-
-    def ConnClose(self):
-
-        self.disconnected = 1
-
-        if self.timer is not None:
-            GLib.source_remove(self.timer)
-            self.timer = None
-
-    def OnAutoSearch(self, *args):
-
-        # Wishlists supported by server?
-        if self.interval == 0:
-            log.addwarning("The server forbid us from doing wishlist searches.")
-            return False
-
-        searches = self.frame.np.config.sections["server"]["autosearch"]
-        if not searches:
-            return True
-
-        # Search for a maximum of 3 items at each search interval
-        for term in searches[0:3]:
-            for i in list(self.searches.values()):
-                if i[1] == term and i[4]:
-                    self.DoWishListSearch(i[0], term)
-                    oldsearch = searches.pop()
-                    searches.insert(0, oldsearch)
-
-        return True
 
     def OnClearSearchHistory(self):
 
@@ -211,18 +164,6 @@ class Searches(IconNotebook):
             self.DoSearch(text, mode, users, room)
             self.frame.SearchEntry.set_text("")
 
-    def NewWish(self, wish):
-
-        if wish in self.frame.np.config.sections["server"]["autosearch"]:
-            return
-
-        self.frame.np.config.sections["server"]["autosearch"].append(wish)
-
-        self.searchid += 1
-        self.searches[self.searchid] = [self.searchid, wish, None, 0, True, False]
-
-        self.DoWishListSearch(self.searchid, wish)
-
     def DoSearch(self, text, mode, users=[], room=None):
 
         # Get excluded words (starting with "-")
@@ -289,9 +230,6 @@ class Searches(IconNotebook):
 
     def DoGlobalSearch(self, id, text):
         self.frame.np.queue.put(slskmessages.FileSearch(id, text))
-
-    def DoWishListSearch(self, id, text):
-        self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
 
     def DoRoomsSearch(self, id, text, room=None):
         if room is not None:
@@ -368,19 +306,6 @@ class Searches(IconNotebook):
 
         search[2].AddUserResults(msg, username, country)
 
-    def RemoveAutoSearch(self, id):
-
-        if id not in self.searches:
-            return
-
-        search = self.searches[id]
-        if search[1] in self.frame.np.config.sections["server"]["autosearch"]:
-            self.frame.np.config.sections["server"]["autosearch"].remove(search[1])
-            self.frame.np.config.writeConfiguration()
-
-        search[4] = 0
-        self.WishListDialog.removeWish(search[1])
-
     def RemoveTab(self, tab):
 
         if tab.id in self.searches:
@@ -395,20 +320,6 @@ class Searches(IconNotebook):
         self.remove_page(tab.Main)
         tab.Main.destroy()
 
-    def AutoSearch(self, id):
-
-        if id not in self.searches:
-            return
-
-        i = self.searches[id]
-        if i[1] in self.frame.np.config.sections["server"]["autosearch"]:
-            return
-
-        self.frame.np.config.sections["server"]["autosearch"].append(i[1])
-        self.frame.np.config.writeConfiguration()
-        i[4] = 1
-        self.WishListDialog.addWish(i[1])
-
     def UpdateColours(self):
 
         for id in list(self.searches.values()):
@@ -416,7 +327,7 @@ class Searches(IconNotebook):
                 continue
             id[2].ChangeColours()
 
-        self.frame.SetTextBG(self.WishListDialog.AddWishEntry)
+        self.frame.SetTextBG(self.WishList.AddWishEntry)
 
     def saveColumns(self):
 
@@ -1371,7 +1282,7 @@ class Search:
 
         self.Searches.searches[self.id][5] = True  # ignored
 
-        self.Searches.WishListDialog.removeWish(self.text)
+        self.Searches.WishList.remove_wish(self.text)
         widget.set_sensitive(False)
 
     def OnClear(self, widget):
@@ -1391,11 +1302,12 @@ class Search:
     def OnToggleRemember(self, widget):
 
         self.remember = widget.get_active()
+        search = self.Searches.searches[self.id]
 
         if not self.remember:
-            self.Searches.RemoveAutoSearch(self.id)
+            self.Searches.WishList.remove_wish(search[1])
         else:
-            self.Searches.AutoSearch(self.id)
+            self.Searches.WishList.add_wish(search[1])
 
     def PushHistory(self, widget, title):
 
@@ -1435,103 +1347,3 @@ class Search:
 
     def OnAboutFilters(self, widget):
         self.frame.OnAboutFilters(widget)
-
-
-class WishList:
-
-    def __init__(self, frame):
-
-        builder = gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
-
-        self.WishList = builder.get_object("WishList")
-        builder.connect_signals(self)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.WishList.set_transient_for(frame.MainWindow)
-
-        self.frame = frame
-        self.WishList.connect("destroy", self.quit)
-        self.WishList.connect("destroy-event", self.quit)
-        self.WishList.connect("delete-event", self.quit)
-        self.WishList.connect("delete_event", self.quit)
-
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
-
-        column = gtk.TreeViewColumn(_("Wishes"), gtk.CellRendererText(), text=0)
-        self.WishlistView.append_column(column)
-        self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
-
-        column.set_sort_column_id(0)
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
-        self.wishes = {}
-
-        for wish in self.frame.np.config.sections["server"]["autosearch"]:
-            self.wishes[wish] = self.store.append([wish])
-
-    def OnAddWish(self, widget):
-        wish = self.AddWishEntry.get_text()
-        self.AddWishEntry.set_text("")
-
-        if wish and wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
-            self.frame.Searches.NewWish(wish)
-
-    def OnRemoveWish(self, widget):
-        iters = []
-        self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
-
-        for iter in iters:
-            wish = self.store.get_value(iter, 0)
-            self.removeWish(wish)
-
-    def _RemoveWish(self, model, path, iter, line):
-        line.append(iter)
-
-    def OnSelectAllWishes(self, widget):
-        self.WishlistView.get_selection().select_all()
-
-    def addWish(self, wish):
-        if wish and wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
-
-    def removeWish(self, wish):
-
-        if wish in self.wishes:
-            self.store.remove(self.wishes[wish])
-            del self.wishes[wish]
-
-        if wish in self.frame.np.config.sections["server"]["autosearch"]:
-
-            self.frame.np.config.sections["server"]["autosearch"].remove(wish)
-
-            for number, search in list(self.frame.Searches.searches.items()):
-
-                if search[1] == wish and search[4] == 1:
-
-                    search[4] = 0
-                    self.frame.Searches.searches[number] = search
-
-                    if search[2] is not None:
-                        search[2].RememberCheckButton.set_active(False)
-
-                    break
-
-    def quit(self, w=None, event=None):
-        self.WishList.hide()
-        return True
-
-    def Toggle(self, widget):
-
-        if self.WishList.get_property("visible"):
-            self.WishList.hide()
-        else:
-            self.WishList.show()

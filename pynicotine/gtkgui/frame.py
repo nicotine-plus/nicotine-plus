@@ -1411,10 +1411,10 @@ class NicotineFrame:
         self.TrayApp.tray_status["status"] = "disconnect"
         self.TrayApp.SetImage()
 
-        self.Searches.interval = 0
+        self.Searches.WishList.interval = 0
         self.chatrooms.ConnClose()
         self.privatechats.ConnClose()
-        self.Searches.ConnClose()
+        self.Searches.WishList.conn_close()
         self.uploads.ConnClose()
         self.downloads.ConnClose()
         self.userlist.ConnClose()
