@@ -981,7 +981,7 @@ class NetworkEventProcessor:
 
     def WishlistInterval(self, msg):
         if self.search is not None:
-            self.search.SetInterval(msg)
+            self.search.WishList.set_interval(msg)
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
