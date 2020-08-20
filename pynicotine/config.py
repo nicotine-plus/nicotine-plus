@@ -100,7 +100,7 @@ class Config:
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
                 "passw": '',
-                "firewalled": 1,
+                "firewalled": 0,
                 "ctcpmsgs": 0,
                 "autosearch": [],
                 "autoreply": "",
