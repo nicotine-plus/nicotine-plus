@@ -521,8 +521,9 @@ class NicotineFrame:
             if ConfigUnset > 1:
                 self.connect1.set_sensitive(False)
                 self.rescan_public.set_sensitive(True)
-                # Display FastConfigure
-                self.OnFastConfigure(None)
+
+                # Set up fast configure dialog
+                self.OnFastConfigure(None, show=False)
             else:
                 # Connect anyway
                 self.OnConnect(-1)
@@ -1973,14 +1974,15 @@ class NicotineFrame:
     def OnSettingsBanIgnore(self, widget):
         self.OnSettings(widget, 'Ban List')
 
-    def OnFastConfigure(self, widget):
+    def OnFastConfigure(self, widget, show=True):
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
         if self.settingswindow is not None and self.settingswindow.SettingsWindow.get_property("visible"):
             return
 
-        self.fastconfigure.show()
+        if show:
+            self.fastconfigure.show()
 
     def OnSettings(self, widget, page=None):
         if self.settingswindow is None:
@@ -3151,3 +3153,6 @@ class MainApp(gtk.Application):
 
         if not start_hidden:
             self.frame.MainWindow.show()
+
+            if self.frame.fastconfigure is not None:
+                self.frame.fastconfigure.show()
