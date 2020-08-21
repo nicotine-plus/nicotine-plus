@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 12 August 2020
+Last updated on 21 August 2020
 
 ## Sections
 
@@ -2407,9 +2407,9 @@ Order](#peer-connection-message-order)
 | 36   | [Folder Contents Request](#peer-code-36)   |
 | 37   | [Folder Contents Reply](#peer-code-37)     |
 | 40   | [Transfer Request](#peer-code-40)          |
-| 41   | [Upload Reply](#peer-code-41a)             |
-| 41   | [Download Reply](#peer-code-41b)           |
-| 41   | [Transfer Reply](#peer-code-41c)           |
+| 41   | [Upload Reply](#peer-code-41-a)            |
+| 41   | [Download Reply](#peer-code-41-b)          |
+| 41   | [Transfer Reply](#peer-code-41-c)          |
 | 42   | [Upload Placehold](#peer-code-42)          |
 | 43   | [Queue Download](#peer-code-43)            |
 | 44   | [Upload Queue Notification](#peer-code-44) |
@@ -2522,7 +2522,7 @@ The peer sends this when it has a file search match. The token/ticket is taken f
     4.  Iterate for number of results
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
-        3.  **int** <ins>size</ins>
+        3.  **off\_t** <ins>size</ins>
         4.  **string** <ins>ext</ins>
         5.  **int** <ins>attribute size</ins>
         6.  Iterate <ins>number of attributes</ins>

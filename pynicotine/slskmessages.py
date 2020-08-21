@@ -221,7 +221,10 @@ class SlskMessage:
                 elif getunsignedlonglong:
 
                     # little-endian unsigned long long (8 bytes)
-                    return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
+                    try:
+                        return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
+                    except Exception:
+                        return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
                 else:
 
                     # little-endian unsigned integer (4 bytes)
@@ -1903,7 +1906,7 @@ class FileSearchResult(PeerMessage):
         self.list = shares
         self.pos, self.freeulslots = self.pos + 1, message[self.pos]
         self.pos, self.ulspeed = self.getObject(message, int, self.pos, getsignedint=True)
-        self.pos, self.inqueue = self.getObject(message, int, self.pos)
+        self.pos, self.inqueue = self.getObject(message, int, self.pos, getunsignedlonglong=True)
 
     def makeNetworkMessage(self):
         filelist = []
@@ -1922,7 +1925,7 @@ class FileSearchResult(PeerMessage):
 
         for fileinfo in filelist:
             msg.extend(bytes([1]))
-            msg.extend(self.packObject(fileinfo[0].replace(os. sep, "\\")))
+            msg.extend(self.packObject(fileinfo[0].replace(os.sep, "\\")))
             msg.extend(self.packObject(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is None:
@@ -1943,7 +1946,7 @@ class FileSearchResult(PeerMessage):
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.packObject(self.ulspeed, unsignedint=True))
-        msg.extend(self.packObject(queuesize, unsignedint=True))
+        msg.extend(self.packObject(queuesize, unsignedlonglong=True))
 
         return zlib.compress(msg)
 
@@ -2094,12 +2097,12 @@ class FolderContentsResponse(PeerMessage):
         msg.extend(self.packObject(self.dir))
         msg.extend(self.packObject(1))
         msg.extend(self.packObject(self.dir))
-        msg.extend(self.packObject(len(self.list)))
+        msg.extend(self.packObject(len(self.list), unsignedint=True))
 
         for fileinfo in self.list:
             msg.extend(bytes([1]))
             msg.extend(self.packObject(fileinfo[0]))
-            msg.extend(self.packObject(fileinfo[1]))
+            msg.extend(self.packObject(fileinfo[1], unsignedlonglong=True))
             msg.extend(self.packObject(0))
 
             if fileinfo[2] is None:
@@ -2110,9 +2113,9 @@ class FolderContentsResponse(PeerMessage):
                 msg.extend(self.packObject(3))
 
                 msg.extend(self.packObject(0))
-                msg.extend(self.packObject(fileinfo[2][0]))
+                msg.extend(self.packObject(fileinfo[2][0], unsignedint=True))
                 msg.extend(self.packObject(1))
-                msg.extend(self.packObject(fileinfo[3]))
+                msg.extend(self.packObject(fileinfo[3], unsignedint=True))
                 msg.extend(self.packObject(2))
                 msg.extend(self.packObject(fileinfo[2][1]))
 
