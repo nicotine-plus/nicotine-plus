@@ -1830,35 +1830,35 @@ class Transfers:
 
             self.checkUploadQueue()
 
-    def FolderContentsResponse(self, msg):
+    def FolderContentsResponse(self, conn, file_list):
         """ When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders"""
 
         username = None
         for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+            if i.conn is conn:
                 username = i.username
                 break
 
         if username is None:
             return
 
-        for i in list(msg.list):
-            for directory in list(msg.list[i]):
+        for i in file_list:
+            for directory in file_list[i]:
 
                 if os.path.commonprefix([i, directory]) == directory:
                     priorityfiles = []
                     normalfiles = []
 
                     if self.eventprocessor.config.sections["transfers"]["prioritize"]:
-                        for file in msg.list[i][directory]:
+                        for file in file_list[i][directory]:
                             parts = file[1].rsplit('.', 1)
                             if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
                                 priorityfiles.append(file)
                             else:
                                 normalfiles.append(file)
                     else:
-                        normalfiles = msg.list[i][directory][:]
+                        normalfiles = file_list[i][directory][:]
 
                     if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
                         deco = [(x[1], x) for x in normalfiles]
