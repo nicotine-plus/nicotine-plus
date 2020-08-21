@@ -890,11 +890,11 @@ class NicotineFrame:
 
         self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 
-    def download_large_folder(self, username, folder, files, numfiles, msg):
+    def download_large_folder(self, username, folder, numfiles, msg):
         OptionDialog(
             parent=self.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
-            message=_("Are you sure you wish to download %(num)i files from %(user)s's directory %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
+            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
             callback_data=msg
         )
