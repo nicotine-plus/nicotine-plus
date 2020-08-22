@@ -38,7 +38,6 @@ from ast import literal_eval
 from gettext import gettext as _
 from os.path import exists
 
-import _thread
 from pynicotine.logfacility import log
 
 if sys.platform == "win32":
@@ -71,7 +70,6 @@ class Config:
     setConfig(config_info_dict) - sets configuration information
     writeConfiguration - writes configuration information to file
     writeDownloadQueue - writes download queue to file
-    writeConfig - calls writeConfiguration followed by writeDownloadQueue
 
     The actual configuration information is stored as a two-level dictionary.
     First-level keys are config sections, second-level keys are config
@@ -80,8 +78,6 @@ class Config:
 
     def __init__(self, filename, data_dir):
 
-        self.config_lock = _thread.allocate_lock()
-        self.config_lock.acquire()
         self.frame = None
         self.filename = filename
         self.data_dir = data_dir
@@ -430,8 +426,6 @@ class Config:
         except Exception:
             self.aliases = {}
 
-        self.config_lock.release()
-
     def convertConfig(self):
         """ Converts the config to utf-8.
         Mainly for upgrading Windows build. (22 July, 2020) """
@@ -507,8 +501,6 @@ class Config:
         return errorlevel
 
     def readConfig(self):
-
-        self.config_lock.acquire()
 
         self.sections['transfers']['downloads'] = []
 
@@ -728,8 +720,6 @@ class Config:
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
 
-        self.config_lock.release()
-
     def removeOldOption(self, section, option):
         if section in self.parser.sections():
             if option in self.parser.options(section):
@@ -829,12 +819,8 @@ class Config:
             return None
         return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
 
-    def writeConfig(self):
-        self.writeConfiguration()
-        self.writeDownloadQueue()
-
     def writeDownloadQueue(self):
-        self.config_lock.acquire()
+
         realfile = os.path.join(self.data_dir, 'transfers.pickle')
         tmpfile = realfile + '.tmp'
         backupfile = realfile + ' .backup'
@@ -864,11 +850,8 @@ class Config:
                 handle.close()
             except Exception:
                 pass
-        self.config_lock.release()
 
     def writeConfiguration(self):
-
-        self.config_lock.acquire()
 
         external_sections = [
             "sharedfiles", "sharedfilesstreams", "wordindex", "fileindex",
@@ -898,14 +881,12 @@ class Config:
             f = open(self.filename + ".new", "w", encoding="utf-8")
         except IOError as e:
             log.addwarning(_("Can't save config file, I/O error: %s") % e)
-            self.config_lock.release()
             return
         else:
             try:
                 self.parser.write(f)
             except IOError as e:
                 log.addwarning(_("Can't save config file, I/O error: %s") % e)
-                self.config_lock.release()
                 return
             else:
                 f.close()
@@ -938,11 +919,7 @@ class Config:
         except OSError as error:
             log.addwarning(_("Can't rename config file, error: %s") % error)
 
-        self.config_lock.release()
-
     def writeConfigBackup(self, filename=None):
-
-        self.config_lock.acquire()
 
         if filename is None:
             filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -963,9 +940,8 @@ class Config:
             tar.close()
         except Exception as e:
             print(e)
-            self.config_lock.release()
             return (1, "Cannot write backup archive: %s" % e)
-        self.config_lock.release()
+
         return (0, filename)
 
     def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
@@ -994,8 +970,6 @@ class Config:
 
     def storeObjects(self, storable_objects):
 
-        self.config_lock.acquire()
-
         for (source, destination, filename) in storable_objects:
             try:
                 self.sections["transfers"][destination].close()
@@ -1015,18 +989,8 @@ class Config:
                 log.addwarning(_("Can't save %s: %s") % (filename, e))
                 return
 
-        self.config_lock.release()
-
-    def pushHistory(self, history, text, max):
-        if text in history:
-            history.remove(text)
-        elif len(history) >= max:
-            del history[-1]
-        history.insert(0, text)
-        self.writeConfig()
-
     def writeAliases(self):
-        self.config_lock.acquire()
+
         try:
             f = open(self.filename + ".alias", "wb")
         except Exception as e:
@@ -1042,7 +1006,6 @@ class Config:
                 f.close()
             except Exception:
                 pass
-        self.config_lock.release()
 
     def AddAlias(self, rest):
         if rest:

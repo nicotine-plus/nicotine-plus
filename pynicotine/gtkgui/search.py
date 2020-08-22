@@ -1317,7 +1317,14 @@ class Search:
 
         text = text.strip()
         history = self.frame.np.config.sections["searches"][title]
-        self.frame.np.config.pushHistory(history, text, 5)
+
+        if text in history:
+            history.remove(text)
+        elif len(history) >= 5:
+            del history[-1]
+
+        history.insert(0, text)
+        self.frame.np.config.writeConfiguration()
 
         self.AddCombo(widget, text)
         widget.get_child().set_text(text)
