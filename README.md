@@ -50,6 +50,13 @@ To install Nicotine+ on Fedora, run the following:
 $ dnf install nicotine+
 ```
 
+### Guix
+To install Nicotine+ on Guix, run the following:
+
+```console
+$ guix install nicotine+
+```
+
 ### Flathub (Stable)
 [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
