@@ -662,7 +662,7 @@ class NetworkEventProcessor:
     def ChangePassword(self, msg):
         password = msg.password
         self.config.sections["server"]["passw"] = password
-        self.config.writeConfig()
+        self.config.writeConfiguration()
         self.callback([PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
 
     def NotifyPrivileges(self, msg):

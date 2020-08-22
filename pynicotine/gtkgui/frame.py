@@ -1347,7 +1347,8 @@ class NicotineFrame:
         if not self.manualdisconnect:
             self.OnDisconnect(None)
 
-        self.np.config.writeConfig()
+        self.np.config.writeConfiguration()
+        self.np.config.writeDownloadQueue()
 
         # Cleaning up the trayicon
         if self.TrayApp.trayicon:

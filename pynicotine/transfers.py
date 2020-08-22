@@ -1460,7 +1460,8 @@ class Transfers:
             self.uploadspanel.ClearByUser(user)
         if user not in self.eventprocessor.config.sections["server"]["banlist"]:
             self.eventprocessor.config.sections["server"]["banlist"].append(user)
-            self.eventprocessor.config.writeConfig()
+            self.eventprocessor.config.writeConfiguration()
+            self.eventprocessor.config.writeDownloadQueue()
 
     def startCheckDownloadQueueTimer(self):
         GLib.timeout_add(60000, self.checkDownloadQueue)
