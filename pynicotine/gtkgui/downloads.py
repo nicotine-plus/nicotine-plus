@@ -64,7 +64,7 @@ class Downloads(TransferList):
             ("#" + _("Copy folder URL"), self.OnCopyDirURL),
             ("#" + _("Send to _player"), self.OnPlayFiles),
             ("#" + _("View Metadata of file(s)"), self.OnDownloadMeta),
-            ("#" + _("Open Directory"), self.OnOpenDirectory),
+            ("#" + _("Open folder"), self.OnOpenDirectory),
             ("#" + _("Search"), self.OnFileSearch),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
             ("", None),
@@ -172,6 +172,9 @@ class Downloads(TransferList):
                     pass
                 bitratestr = str(transfer.bitrate)
                 length = str(transfer.length)
+                break
+        else:
+            return
 
         directory = fullname.rsplit("\\", 1)[0]
 
@@ -312,31 +315,22 @@ class Downloads(TransferList):
 
         users = len(self.selected_users) > 0
         files = len(self.selected_transfers) > 0
-        multi_files = len(self.selected_transfers) > 1
 
         items = self.popup_menu.get_children()
         if users:
-            items[8].set_sensitive(True)  # Users Menu
+            items[6].set_sensitive(True)  # Users Menu
         else:
-            items[8].set_sensitive(False)  # Users Menu
+            items[6].set_sensitive(False)  # Users Menu
 
         if files:
             act = True
         else:
+            # Disable options
+            # Copy URL, Copy Folder URL, Send to player, View Meta, File manager, Search filename
             act = False
 
-        items[0].set_sensitive(act)  # Place
-        items[4].set_sensitive(act)  # Send to player
-        items[5].set_sensitive(act)  # View Meta
-        items[6].set_sensitive(act)  # File manager
-        items[7].set_sensitive(act)  # Search filename
-
-        act = False
-        if not multi_files and files:
-            act = True
-
-        items[2].set_sensitive(act)  # Copy URL
-        items[3].set_sensitive(act)  # Copy Folder URL
+        for i in range(0, 6):
+            items[i].set_sensitive(act)
 
         if not users or not files:
             # Disable options
@@ -345,7 +339,7 @@ class Downloads(TransferList):
         else:
             act = True
 
-        for i in range(10, 15):
+        for i in range(8, 13):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)
