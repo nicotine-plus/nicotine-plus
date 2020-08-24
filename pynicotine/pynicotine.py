@@ -520,7 +520,6 @@ class NetworkEventProcessor:
             }
         )
 
-        time.sleep(1)
         self.serverconn = msg.conn
         self.servertimeout = -1
         self.users = {}
