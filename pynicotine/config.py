@@ -96,8 +96,8 @@ class Config:
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
                 "passw": '',
-                "firewalled": 0,
-                "ctcpmsgs": 0,
+                "firewalled": False,
+                "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
                 "portrange": (2234, 2239),
@@ -109,51 +109,51 @@ class Config:
                 "ipblocklist": {"72.172.88.*": "MediaDefender Bots"},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
-                "private_chatrooms": 0
+                "private_chatrooms": False
             },
 
             "transfers": {
                 "incompletedir": os.path.join(data_dir, 'incompletefiles'),
                 "downloaddir": os.path.join(os.path.expanduser("~"), 'nicotine-downloads'),
                 "uploaddir": os.path.join(os.path.expanduser("~"), 'nicotine-uploads'),
-                "sharedownloaddir": 0,
+                "sharedownloaddir": False,
                 "shared": [],
                 "buddyshared": [],
                 "uploadbandwidth": 10,
-                "uselimit": 0,
+                "uselimit": False,
                 "uploadlimit": 150,
                 "downloadlimit": 0,
-                "preferfriends": 0,
-                "useupslots": 0,
+                "preferfriends": False,
+                "useupslots": False,
                 "uploadslots": 2,
                 "afterfinish": "",
                 "afterfolder": "",
-                "lock": 1,
-                "reverseorder": 0,
-                "prioritize": 0,
-                "fifoqueue": 0,
-                "usecustomban": 0,
-                "limitby": 1,
+                "lock": True,
+                "reverseorder": False,
+                "prioritize": False,
+                "fifoqueue": False,
+                "usecustomban": False,
+                "limitby": True,
                 "customban": "Banned, don't bother retrying",
                 "queuelimit": 10000,
                 "filelimit": 1000,
-                "friendsonly": 0,
-                "friendsnolimits": 0,
-                "enablebuddyshares": 0,
-                "enabletransferbuttons": 1,
+                "friendsonly": False,
+                "friendsnolimits": False,
+                "enablebuddyshares": False,
+                "enabletransferbuttons": True,
                 "groupdownloads": True,
                 "groupuploads": True,
-                "geoblock": 0,
-                "geopanic": 0,
+                "geoblock": False,
+                "geopanic": False,
                 "geoblockcc": [""],
-                "remotedownloads": 1,
+                "remotedownloads": True,
                 "uploadallowed": 2,
-                "autoclear_downloads": 0,
-                "autoclear_uploads": 0,
+                "autoclear_downloads": False,
+                "autoclear_uploads": False,
                 "downloads": [],
                 "sharedfiles": {},
                 "sharedfilesstreams": {},
-                "uploadsinsubdirs": 1,
+                "uploadsinsubdirs": True,
                 "wordindex": {},
                 "fileindex": {},
                 "sharedmtimes": {},
@@ -163,7 +163,7 @@ class Config:
                 "bfileindex": {},
                 "bsharedmtimes": {},
                 "rescanonstartup": 0,
-                "enablefilters": 1,
+                "enablefilters": True,
                 "downloadregexp": "",
                 "downloadfilters": [
                     ["desktop.ini", 1],
@@ -212,25 +212,25 @@ class Config:
             "logging": {
                 "debug": False,
                 "debugmodes": [0, 1],
-                "logcollapsed": 0,
+                "logcollapsed": False,
                 "logsdir": LOGDIR,
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
-                "timestamps": 1,
-                "privatechat": 0,
-                "chatrooms": 0,
-                "transfers": 0,
+                "timestamps": True,
+                "privatechat": False,
+                "chatrooms": False,
+                "transfers": False,
                 "roomlogsdir": os.path.join(LOGDIR, "rooms"),
                 "privatelogsdir": os.path.join(LOGDIR, "private"),
-                "readroomlogs": 1,
+                "readroomlogs": True,
                 "readroomlines": 15,
                 "readprivatelines": 15,
                 "rooms": []
             },
 
             "privatechat": {
-                "store": 0,
+                "store": False,
                 "users": []
             },
 
@@ -252,11 +252,11 @@ class Config:
 
             "searches": {
                 "expand_searches": True,
-                "group_searches": True,
+                "group_searches": 1,
                 "maxresults": 50,
-                "re_filter": 0,
+                "re_filter": False,
                 "history": [],
-                "enablefilters": 0,
+                "enablefilters": False,
                 "defilter": ["", "", "", "", 0, ""],
                 "filtercc": [],
                 "reopen_tabs": False,
@@ -264,9 +264,9 @@ class Config:
                 "filterout": [],
                 "filtersize": [],
                 "filterbr": [],
-                "distrib_timer": 0,
+                "distrib_timer": False,
                 "distrib_ignore": 60,
-                "search_results": 1,
+                "search_results": True,
                 "max_displayed_results": 1000,
                 "max_stored_results": 1500,
                 "remove_special_chars": True
@@ -282,28 +282,28 @@ class Config:
                 "useronline": "BLACK",
                 "useraway": "ORANGE",
                 "useroffline": "#aa0000",
-                "usernamehotspots": 1,
+                "usernamehotspots": True,
                 "usernamestyle": "bold",
                 "textbg": "",
                 "search": "",
                 "searchq": "GREY",
                 "inputcolor": "",
-                "spellcheck": 1,
+                "spellcheck": True,
                 "exitdialog": 1,
-                "notexists": 1,
+                "notexists": True,
                 "tab_default": "",
                 "tab_hilite": "red",
                 "tab_changed": "#0000ff",
-                "tab_select_previous": 1,
-                "tab_reorderable": 1,
+                "tab_select_previous": True,
+                "tab_reorderable": True,
                 "tabmain": "Top",
                 "tabrooms": "Top",
                 "tabprivate": "Top",
                 "tabinfo": "Top",
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
-                "tab_status_icons": 1,
-                "chat_hidebuttons": 0,
+                "tab_status_icons": True,
+                "chat_hidebuttons": False,
                 "labelmain": 0,
                 "labelrooms": 0,
                 "labelprivate": 0,
@@ -312,8 +312,8 @@ class Config:
                 "labelsearch": 0,
                 "decimalsep": ",",
                 "chatfont": "",
-                "roomlistcollapsed": 0,
-                "tabclosers": 1,
+                "roomlistcollapsed": False,
+                "tabclosers": True,
                 "searchfont": "",
                 "listfont": "",
                 "browserfont": "",
@@ -340,11 +340,11 @@ class Config:
                     "interests",
                     "userlist"
                 ],
-                "showaway": 0,
+                "showaway": False,
                 "buddylistinchatrooms": 0,
-                "trayicon": 1,
+                "trayicon": True,
                 "filemanager": "xdg-open $",
-                "speechenabled": 0,
+                "speechenabled": False,
                 "speechprivate": "%(user)s told you.. %(message)s",
                 "speechrooms": "In %(room)s, %(user)s said %(message)s",
                 "speechcommand": "flite -t $",
@@ -357,14 +357,13 @@ class Config:
             },
 
             "private_rooms": {
-                "rooms": {},
-                "enabled": 0
+                "rooms": {}
             },
 
             "urls": {
-                "urlcatching": 1,
+                "urlcatching": True,
                 "protocols": {},
-                "humanizeurls": 1
+                "humanizeurls": True
             },
 
             "interests": {
@@ -375,7 +374,7 @@ class Config:
             "ticker": {
                 "default": "",
                 "rooms": {},
-                "hide": 0
+                "hide": False
             },
 
             "players": {
@@ -387,19 +386,19 @@ class Config:
             },
 
             "notifications": {
-                "notification_window_title": 1,
-                "notification_tab_colors": 0,
-                "notification_tab_icons": 1,
-                "notification_popup_sound": 1,
-                "notification_popup_file": 1,
-                "notification_popup_folder": 1,
-                "notification_popup_private_message": 1,
-                "notification_popup_chatroom": 0,
-                "notification_popup_chatroom_mention": 1
+                "notification_window_title": True,
+                "notification_tab_colors": False,
+                "notification_tab_icons": True,
+                "notification_popup_sound": True,
+                "notification_popup_file": True,
+                "notification_popup_folder": True,
+                "notification_popup_private_message": True,
+                "notification_popup_chatroom": False,
+                "notification_popup_chatroom_mention": True
             },
 
             "plugins": {
-                "enable": 1,
+                "enable": True,
                 "enabled": []
             }
         }
@@ -585,6 +584,9 @@ class Config:
 
         # Remove dropped offline user text color in search results
         self.removeOldOption("ui", "searchoffline")
+
+        # Seems to be superseded by ("server", "private_chatrooms")
+        self.removeOldOption("private_rooms", "enabled")
 
         # Checking for unknown section/options
         unknown1 = [
