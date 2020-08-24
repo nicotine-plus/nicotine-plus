@@ -753,13 +753,6 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
 
             self.chatrooms.roomsctrl.JoinRoom(msg)
-            ticker = ""
-
-            if msg.room in self.config.sections["ticker"]["rooms"]:
-                ticker = self.config.sections["ticker"]["rooms"][msg.room]
-
-            if ticker:
-                self.queue.put(slskmessages.RoomTickerSet(msg.room, ticker))
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
