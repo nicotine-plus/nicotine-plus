@@ -890,19 +890,19 @@ class NicotineFrame:
 
         self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
 
-    def download_large_folder(self, username, folder, numfiles, msg):
+    def download_large_folder(self, username, folder, numfiles, conn, file_list):
         OptionDialog(
             parent=self.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
-            callback_data=msg
+            callback_data=(conn, file_list)
         )
 
     def folder_download_response(self, dialog, response, data):
 
         if response == gtk.ResponseType.OK:
-            self.np.transfers.FolderContentsResponse(data)
+            self.np.transfers.FolderContentsResponse(data[0], data[1])
 
         dialog.destroy()
 
