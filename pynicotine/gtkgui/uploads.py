@@ -62,7 +62,7 @@ class Uploads(TransferList):
             ("#" + _("Copy _URL"), self.OnCopyURL),
             ("#" + _("Copy folder URL"), self.OnCopyDirURL),
             ("#" + _("Send to _player"), self.OnPlayFiles),
-            ("#" + _("Open Directory"), self.OnOpenDirectory),
+            ("#" + _("Open folder"), self.OnOpenDirectory),
             ("#" + _("Search"), self.OnFileSearch),
             (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
             ("", None),
@@ -235,7 +235,6 @@ class Uploads(TransferList):
 
         users = len(self.selected_users) > 0
         files = len(self.selected_transfers) > 0
-        multi_files = len(self.selected_transfers) > 1
 
         items = self.popup_menu.get_children()
         if users:
@@ -243,23 +242,23 @@ class Uploads(TransferList):
         else:
             items[5].set_sensitive(False)  # Users Menu
 
-        if files and not multi_files:
+        if files:
             act = True
         else:
+            # Disable options
+            # Copy URL, Copy Folder URL, Send to player, File manager, Search filename
             act = False
 
-        items[0].set_sensitive(act)
-        items[1].set_sensitive(act)
+        for i in range(0, 5):
+            items[i].set_sensitive(act)
 
         if users and files:
             act = True
         else:
             act = False
 
-        for i in list(range(3, 5)) + list(range(6, 10)):
+        for i in range(7, 10):
             items[i].set_sensitive(act)
-
-        items[2].set_sensitive(act)  # send to player
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)
 
