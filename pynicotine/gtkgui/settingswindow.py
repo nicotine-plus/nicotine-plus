@@ -1802,7 +1802,7 @@ class ColoursFrame(buildFrame):
                 "inputcolor": self.InputColor.get_text(),
                 "search": self.Immediate.get_text(),
                 "searchq": self.Queue.get_text(),
-                "showaway": int(self.DisplayAwayColours.get_active()),
+                "showaway": self.DisplayAwayColours.get_active(),
                 "useraway": self.AwayColor.get_text(),
                 "useronline": self.OnlineColor.get_text(),
                 "useroffline": self.OfflineColor.get_text(),
