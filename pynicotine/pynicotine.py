@@ -1396,12 +1396,11 @@ class NetworkEventProcessor:
             totalupl = self.transfers.getTotalUploadsAllowed()
             queuesize = self.transfers.getUploadQueueSizes()[0]
             slotsavail = self.transfers.allowNewUploads()
-            ua = self.frame.np.config.sections["transfers"]["remotedownloads"]
 
-            if ua:
+            if self.frame.np.config.sections["transfers"]["remotedownloads"]:
                 uploadallowed = self.frame.np.config.sections["transfers"]["uploadallowed"]
             else:
-                uploadallowed = ua
+                uploadallowed = 0
 
             self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
