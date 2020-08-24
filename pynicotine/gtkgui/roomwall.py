@@ -62,12 +62,13 @@ class RoomWall:
 
         self.RoomWallList.get_buffer().set_text("")
 
-        tickers = self.room.Tickers.get_tickers()
         login = config["server"]["login"]
-        AppendLine(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False)
 
         if result:
-            AppendLine(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False)
+            AppendLine(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False, scroll=False)
+
+        tickers = self.room.Tickers.get_tickers()
+        AppendLine(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False, scroll=False)
 
     def hide(self, w=None, event=None):
         self.RoomWallList.get_buffer().set_text("")
@@ -89,7 +90,7 @@ class Tickers:
     def add_ticker(self, user, message):
 
         message = message.replace("\n", " ")
-        self.messages.append([user, message])
+        self.messages.insert(0, [user, message])
 
     def remove_ticker(self, user):
 
