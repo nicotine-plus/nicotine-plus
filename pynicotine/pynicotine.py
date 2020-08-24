@@ -1606,7 +1606,7 @@ class NetworkEventProcessor:
                         username = i.username
                         break
 
-                self.frame.download_large_folder(username, folder, numfiles, msg)
+                self.frame.download_large_folder(username, folder, numfiles, conn, file_list)
             else:
                 self.transfers.FolderContentsResponse(conn, file_list)
         else:
