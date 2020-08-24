@@ -432,10 +432,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         # scrolledwindow may have disappeared already while Nicotine+ was shutting down
         return
 
-    try:
-        bottom = va.value >= (va.upper - int(va.page_size * 1.5))
-    except AttributeError:
-        bottom = True
+    bottom = (va.get_value() + va.get_page_size()) >= va.get_upper()
 
     buffer = textview.get_buffer()
     text_iter_start, text_iter_end = buffer.get_bounds()
