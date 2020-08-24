@@ -371,12 +371,6 @@ class Config:
                 "dislikes": []
             },
 
-            "ticker": {
-                "default": "",
-                "rooms": {},
-                "hide": False
-            },
-
             "players": {
                 "default": "xdg-open $",
                 "npothercommand": "",
@@ -460,7 +454,7 @@ class Config:
                         continue
 
                     if self.sections[i][j] is None or self.sections[i][j] == '' \
-                       and i not in ("userinfo", "ui", "ticker", "players") \
+                       and i not in ("userinfo", "ui", "players") \
                        and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp'):
 
                         # Repair options set to None with defaults
@@ -587,6 +581,9 @@ class Config:
 
         # Seems to be superseded by ("server", "private_chatrooms")
         self.removeOldOption("private_rooms", "enabled")
+
+        # Remove everything ticker-related, no longer necessary after the introduction of room walls
+        self.removeOldSection("ticker")
 
         # Checking for unknown section/options
         unknown1 = [
