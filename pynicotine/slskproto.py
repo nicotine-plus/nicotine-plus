@@ -203,15 +203,11 @@ class Connection:
     addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
     init is a PeerInit object (see slskmessages docstrings).
     """
-    def __init__(self, conn=None, addr=None, ibuf=b"", obuf=b""):
-        if not isinstance(ibuf, bytes):
-            raise ValueError('ibuf is of type {}: {}'.format(type(ibuf).__name__, ibuf))
-        if not isinstance(obuf, bytes):
-            raise ValueError('obuf is of type {}: {}'.format(type(obuf).__name__, ibuf))
+    def __init__(self, conn=None, addr=None):
         self.conn = conn
         self.addr = addr
-        self.ibuf = ibuf  # type: bytes
-        self.obuf = obuf  # type: bytes
+        self.ibuf = bytearray()
+        self.obuf = bytearray()
         self.init = None
         self.lastreadlength = 100 * 1024
 
@@ -220,14 +216,14 @@ class ServerConnection(Connection):
     """
     Server socket
     """
-    def __init__(self, conn=None, addr=None, ibuf=b"", obuf=b""):
-        Connection.__init__(self, conn, addr, ibuf, obuf)
+    def __init__(self, conn=None, addr=None):
+        Connection.__init__(self, conn, addr)
         self.lastping = time.time()
 
 
 class PeerConnection(Connection):
-    def __init__(self, conn=None, addr=None, ibuf=b"", obuf=b"", init=None):
-        Connection.__init__(self, conn, addr, ibuf, obuf)
+    def __init__(self, conn=None, addr=None, init=None):
+        Connection.__init__(self, conn, addr)
         self.filereq = None
         self.filedown = None
         self.fileupl = None
@@ -421,7 +417,7 @@ class SlskProtoThread(threading.Thread):
 
         self._conns = {}
         self._connsinprogress = {}
-        self._uploadlimit = (None, 0)
+        self._uploadlimit = (self._calcLimitNone, 0)
         self._downloadlimit = (self._calcDownloadLimitByTotal, self._config.sections["transfers"]["downloadlimit"])
         self._limits = {}
         self._dlimits = {}
@@ -533,6 +529,9 @@ class SlskProtoThread(threading.Thread):
             return int(0)
 
         return int(limit)
+
+    def _calcLimitNone(self, conns, i):
+        return None
 
     def select(self, input_list, output_list, selector):
         # Select Networking Input and Output sockets
@@ -658,7 +657,7 @@ class SlskProtoThread(threading.Thread):
                         })
                         log.add(message, 3)
                     else:
-                        conns[incconn] = PeerConnection(incconn, incaddr, b"", b"")
+                        conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
 
             # Manage Connections
@@ -683,7 +682,7 @@ class SlskProtoThread(threading.Thread):
                 else:
                     if connection_in_progress in output:
                         if connection_in_progress is server_socket:
-                            conns[server_socket] = ServerConnection(server_socket, msgObj.addr, b"", b"")
+                            conns[server_socket] = ServerConnection(conn=server_socket, addr=msgObj.addr)
 
                             self._ui_callback([ServerConn(server_socket, msgObj.addr)])
 
@@ -695,7 +694,7 @@ class SlskProtoThread(threading.Thread):
                                 log.add(message, 3)
                                 connection_in_progress.close()
                             else:
-                                conns[connection_in_progress] = PeerConnection(connection_in_progress, msgObj.addr, b"", b"", msgObj.init)
+                                conns[connection_in_progress] = PeerConnection(conn=connection_in_progress, addr=msgObj.addr, init=msgObj.init)
                                 self._ui_callback([OutConn(connection_in_progress, msgObj.addr)])
 
                         del connsinprogress[connection_in_progress]
@@ -888,7 +887,7 @@ class SlskProtoThread(threading.Thread):
                         bytestoread = bytes_send * 2 - len(conns[i].obuf) + 10 * 1024
                         if bytestoread > 0:
                             read = conns[i].fileupl.file.read(bytestoread)
-                            conns[i].obuf = conns[i].obuf + read
+                            conns[i].obuf.extend(read)
                 except IOError as strerror:
                     self._ui_callback([FileError(conns[i], conns[i].fileupl.file, strerror)])
                 except ValueError:
@@ -909,7 +908,7 @@ class SlskProtoThread(threading.Thread):
         if limit is None:
             # Unlimited download data
             data = i.recv(conns[i].lastreadlength)
-            conns[i].ibuf = conns[i].ibuf + data
+            conns[i].ibuf.extend(data)
 
             if len(data) >= conns[i].lastreadlength // 2:
                 conns[i].lastreadlength = conns[i].lastreadlength * 2
@@ -917,7 +916,7 @@ class SlskProtoThread(threading.Thread):
         else:
             # Speed Limited Download data (transfers)
             data = i.recv(conns[i].lastreadlength)
-            conns[i].ibuf += data
+            conns[i].ibuf.extend(data)
             conns[i].lastreadlength = limit
             conns[i].readbytes2 += len(data)
 
@@ -999,7 +998,7 @@ class SlskProtoThread(threading.Thread):
                     pass
 
             self._ui_callback([DownloadFile(conn.conn, len(msgBuffer[:leftbytes]), conn.filedown.file)])
-            conn.filereadbytes = conn.filereadbytes + len(msgBuffer[:leftbytes])
+            conn.filereadbytes += len(msgBuffer[:leftbytes])
             msgBuffer = msgBuffer[leftbytes:]
 
         elif conn.fileupl is not None:
@@ -1141,7 +1140,7 @@ class SlskProtoThread(threading.Thread):
             if msgsize >= 0:
                 msgBuffer = msgBuffer[msgsize + 4:]
             else:
-                msgBuffer = b""
+                msgBuffer = bytearray()
 
         conn.ibuf = msgBuffer
         return msgs, conn
@@ -1177,7 +1176,7 @@ class SlskProtoThread(threading.Thread):
             if msgsize >= 0:
                 msgBuffer = msgBuffer[msgsize + 4:]
             else:
-                msgBuffer = b""
+                msgBuffer = bytearray()
 
         conn.ibuf = msgBuffer
         return msgs, conn
@@ -1217,13 +1216,9 @@ class SlskProtoThread(threading.Thread):
                 try:
                     msg = msgObj.makeNetworkMessage()
 
-                    if msg == '' or msg is None:
-                        msg = b''
-
                     if server_socket in conns:
-                        conns[server_socket].obuf += \
-                            struct.pack("<ii", len(msg) + 4, self.servercodes[msgObj.__class__]) + \
-                            msg
+                        conns[server_socket].obuf.extend(struct.pack("<ii", len(msg) + 4, self.servercodes[msgObj.__class__]))
+                        conns[server_socket].obuf.extend(msg)
                     else:
                         queue.put(msgObj)
                         needsleep = True
@@ -1238,24 +1233,28 @@ class SlskProtoThread(threading.Thread):
                     # Pack Peer and File and Search Messages
                     if msgObj.__class__ is PierceFireWall:
                         conns[msgObj.conn].piercefw = msgObj
+
                         msg = msgObj.makeNetworkMessage()
-                        conns[msgObj.conn].obuf += struct.pack("<i", len(msg) + 1) + \
-                            bytes(chr(0), 'ascii') + \
-                            msg
+
+                        conns[msgObj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+                        conns[msgObj.conn].obuf.extend(bytes(chr(0), 'ascii'))
+                        conns[msgObj.conn].obuf.extend(msg)
 
                     elif msgObj.__class__ is PeerInit:
                         conns[msgObj.conn].init = msgObj
                         msg = msgObj.makeNetworkMessage()
 
                         if conns[msgObj.conn].piercefw is None:
-                            conns[msgObj.conn].obuf += struct.pack("<i", len(msg) + 1) + \
-                                bytes(chr(1), 'ascii') + \
-                                msg
+                            conns[msgObj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+                            conns[msgObj.conn].obuf.extend(bytes(chr(1), 'ascii'))
+                            conns[msgObj.conn].obuf.extend(msg)
 
                     elif msgObj.__class__ is FileRequest:
                         conns[msgObj.conn].filereq = msgObj
+
                         msg = msgObj.makeNetworkMessage()
-                        conns[msgObj.conn].obuf += msg
+                        conns[msgObj.conn].obuf.extend(msg)
+
                         self._ui_callback([msgObj])
 
                     else:
@@ -1271,8 +1270,8 @@ class SlskProtoThread(threading.Thread):
 
                         if checkuser:
                             msg = msgObj.makeNetworkMessage()
-                            conns[msgObj.conn].obuf += struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]) + \
-                                msg
+                            conns[msgObj.conn].obuf.extend(struct.pack("<ii", len(msg) + 4, self.peercodes[msgObj.__class__]))
+                            conns[msgObj.conn].obuf.extend(msg)
 
                 else:
                     if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
@@ -1334,9 +1333,9 @@ class SlskProtoThread(threading.Thread):
                 elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
                     conns[msgObj.conn].filedown = msgObj
 
-                    conns[msgObj.conn].obuf = conns[msgObj.conn].obuf \
-                        + struct.pack("<Q", msgObj.offset) \
-                        + struct.pack("<i", 0)
+                    conns[msgObj.conn].obuf.extend(struct.pack("<Q", msgObj.offset))
+                    conns[msgObj.conn].obuf.extend(struct.pack("<i", 0))
+
                     conns[msgObj.conn].bytestoread = msgObj.filesize - msgObj.offset
 
                     self._ui_callback([DownloadFile(msgObj.conn, 0, msgObj.file)])
@@ -1356,7 +1355,7 @@ class SlskProtoThread(threading.Thread):
                             cb = self._calcUploadLimitByTransfer
 
                     else:
-                        cb = None
+                        cb = self._calcLimitNone
 
                     self._resetCounters(conns)
                     self._uploadlimit = (cb, msgObj.limit)
