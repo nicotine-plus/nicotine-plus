@@ -1165,7 +1165,7 @@ class Search:
         self.ResultsList.get_selection().selected_foreach(self.SelectedResultsAllData, data)
 
         if data != {}:
-            self.MetaBox(title=_("Nicotine+: Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
+            self.MetaBox(title=_("Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
 
     def OnDownloadFiles(self, widget, prefix=""):
 

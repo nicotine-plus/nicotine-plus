@@ -7,7 +7,7 @@
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="logo_icon_name">org.nicotine_plus.Nicotine</property>
-    <property name="program_name" translatable="yes">Nicotine+</property>
+    <property name="program_name">Nicotine+</property>
     <property name="comments" translatable="yes">A graphical client for the Soulseek peer-to-peer system
 Based on code from Nicotine and PySoulSeek
 

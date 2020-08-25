@@ -410,7 +410,7 @@ class FastConfigureAssistant(object):
 
             selected = ChooseDir(
                 self.window.get_toplevel(),
-                title=_("Nicotine+") + ": " + _("Add a shared directory")
+                title=_("Add a shared directory")
             )
 
             if selected:
