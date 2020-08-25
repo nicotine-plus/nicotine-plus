@@ -475,7 +475,7 @@ class Transfers:
     def TransferRequestDownloads(self, msg, user, conn, addr):
 
         for i in self.downloads:
-            if i.filename == msg.file and user == i.user:
+            if i.filename == msg.file and user == i.user and i.status not in ["Aborted", "Paused"]:
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
                 """ If the file is larger than 2GB, the SoulseekQt client seems to
