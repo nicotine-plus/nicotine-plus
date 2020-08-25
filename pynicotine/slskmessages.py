@@ -1981,7 +1981,7 @@ class UserInfoReply(PeerMessage):
         pos, self.descr = self.getObject(message, bytes)
         pos, self.has_pic = pos + 1, message[pos]
         if self.has_pic:
-            pos, self.pic = self.getObject(message, bytes, pos, 0, 0, True, True)  # Raw bytes
+            pos, self.pic = self.getObject(message, bytes, pos, rawbytes=True)
         pos, self.totalupl = self.getObject(message, int, pos)
         pos, self.queuesize = self.getObject(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]
