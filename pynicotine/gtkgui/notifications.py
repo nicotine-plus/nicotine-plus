@@ -99,25 +99,25 @@ class Notifications:
 
         if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
             # Reset Title
-            if self.frame.MainWindow.get_title() != _("Nicotine+") + " " + version:
-                self.frame.MainWindow.set_title(_("Nicotine+") + " " + version)
+            if self.frame.MainWindow.get_title() != "Nicotine+" + " " + version:
+                self.frame.MainWindow.set_title("Nicotine+" + " " + version)
         elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
             # Private Chats have a higher priority
             if len(self.frame.hilites["private"]) > 0:
                 user = self.frame.hilites["private"][-1]
                 self.frame.MainWindow.set_title(
-                    _("Nicotine+") + " " + version + " :: " + _("Private Message from %(user)s") % {'user': user}
+                    "Nicotine+" + " " + version + " :: " + _("Private Message from %(user)s") % {'user': user}
                 )
             # Allow for the possibility the username is not available
             elif len(self.frame.hilites["rooms"]) > 0:
                 room = self.frame.hilites["rooms"][-1]
                 if user is None:
                     self.frame.MainWindow.set_title(
-                        _("Nicotine+") + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
+                        "Nicotine+" + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
                     )
                 else:
                     self.frame.MainWindow.set_title(
-                        _("Nicotine+") + " " + version + " :: " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
+                        "Nicotine+" + " " + version + " :: " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                     )
 
     def new_tts(self, message):

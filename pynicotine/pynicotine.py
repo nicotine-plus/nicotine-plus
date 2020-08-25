@@ -118,6 +118,10 @@ class NetworkEventProcessor:
             self.config = Config(config, data_dir)
             self.callback([PopupMessage(short, long)])
 
+        # These strings are accessed frequently. We store them to prevent requesting the translation every time.
+        self.conn_close_template = _("Connection closed by peer: %s")
+        self.conn_remove_template = _("Removed connection closed by peer: %(conn_obj)s %(address)s")
+
         self.bindip = bindip
         self.port = port
         self.config.frame = frame
@@ -592,7 +596,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns:
                 if i.conn == conn:
-                    self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
+                    self.logMessage(self.conn_close_template % vars(i), debugLevel=3)
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -607,7 +611,7 @@ class NetworkEventProcessor:
                     break
             else:
                 self.logMessage(
-                    _("Removed connection closed by peer: %(conn_obj)s %(address)s") % {
+                    self.conn_remove_template % {
                         'conn_obj': conn,
                         'address': addr
                     },
@@ -621,7 +625,6 @@ class NetworkEventProcessor:
 
         if msg.success:
 
-            self.setStatus(_("Logged in, getting the list of rooms..."))
             self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
 
             if msg.ip is not None:
@@ -1225,9 +1228,9 @@ class NetworkEventProcessor:
 
         if user in self.config.sections["server"]["banlist"]:
             if self.config.sections["transfers"]["usecustomban"]:
-                return 0, _("Banned (%s)") % self.config.sections["transfers"]["customban"]
+                return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
             else:
-                return 0, _("Banned")
+                return 0, "Banned"
 
         if user in [i[0] for i in self.config.sections["server"]["userlist"]] and self.config.sections["transfers"]["enablebuddyshares"]:
             # For sending buddy-only shares
@@ -1237,10 +1240,10 @@ class NetworkEventProcessor:
             return 1, ""
 
         if self.config.sections["transfers"]["friendsonly"]:
-            return 0, _("Sorry, friends only")
+            return 0, "Sorry, friends only"
 
         if not self.config.sections["transfers"]["geoblock"]:
-            return 1, _("geoip")
+            return 1, ""
 
         cc = "-"
         if addr is not None:
@@ -1248,12 +1251,12 @@ class NetworkEventProcessor:
 
         if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
-                return 0, _("Sorry, geographical paranoia")
+                return 0, "Sorry, geographical paranoia"
             else:
                 return 1, ""
 
         if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
-            return 0, _("Sorry, your country is blocked")
+            return 0, "Sorry, your country is blocked"
 
         return 1, ""
 

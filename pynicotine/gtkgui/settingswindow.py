@@ -788,7 +788,7 @@ class SharesFrame(buildFrame):
 
         dir1 = ChooseDir(
             self.Main.get_toplevel(),
-            title=_("Nicotine+") + ": " + _("Add a shared directory")
+            title=_("Add a shared directory")
         )
 
         if dir1 is not None:
@@ -854,7 +854,7 @@ class SharesFrame(buildFrame):
 
         dir1 = ChooseDir(
             self.Main.get_toplevel(),
-            title=_("Nicotine+") + ": " + _("Add a shared buddy directory")
+            title=_("Add a shared buddy directory")
         )
 
         if dir1 is not None:

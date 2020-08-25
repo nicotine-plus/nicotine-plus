@@ -202,7 +202,7 @@ class Downloads(TransferList):
         self.widget.get_selection().selected_foreach(self.SelectedResultsAllData, data)
 
         if data != {}:
-            self.MetaBox(title=_("Nicotine+:") + " " + _("Downloads Metadata"), message=_("<b>Metadata</b> for Downloads"), data=data, modal=True, Search=False)
+            self.MetaBox(title=_("Downloads Metadata"), message=_("<b>Metadata</b> for Downloads"), data=data, modal=True, Search=False)
 
     def OnOpenDirectory(self, widget):
 

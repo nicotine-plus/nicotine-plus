@@ -157,7 +157,7 @@ class NicotineFrame:
         # Disable a few elements until we're logged in (search field, download buttons etc.)
         self.SetWidgetOnlineStatus(False)
 
-        self.MainWindow.set_title(_("Nicotine+") + " " + version)
+        self.MainWindow.set_title("Nicotine+" + " " + version)
         self.MainWindow.set_default_icon(self.images["n"])
         self.MainWindow.set_icon(self.images["n"])
         # self.MainWindow.selection_add_target("PRIMARY", "STRING", 1)
@@ -264,6 +264,8 @@ class NicotineFrame:
             self.InterestsTabLabel: "interestsvbox"
         }
 
+        hide_tab_template = _("Hide %(tab)s")
+
         # Initialize tabs labels
         for label_tab in [
             self.ChatTabLabel,
@@ -296,7 +298,7 @@ class NicotineFrame:
 
             popup.setup(
                 (
-                    "#" + _("Hide %(tab)s") % {"tab": translated_tablabels[label_tab]}, self.HideTab, [label_tab, map_tablabels_to_box[label_tab]]
+                    "#" + hide_tab_template % {"tab": translated_tablabels[label_tab]}, self.HideTab, [label_tab, map_tablabels_to_box[label_tab]]
                 )
             )
 
@@ -466,8 +468,9 @@ class NicotineFrame:
         # Space after Joined Rooms is important, so it doesn't conflict
         # with any possible real room, but if it's not translated with the space
         # nothing awful will happen
-        self.searchroomslist[_("Joined Rooms ")] = self.RoomSearchCombo_List.append([_("Joined Rooms ")])
-        self.RoomSearchCombo.set_active_iter(self.searchroomslist[_("Joined Rooms ")])
+        joined_rooms = _("Joined Rooms ")
+        self.searchroomslist[joined_rooms] = self.RoomSearchCombo_List.append([joined_rooms])
+        self.RoomSearchCombo.set_active_iter(self.searchroomslist[joined_rooms])
 
         for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
             self.searchmethods[method] = self.SearchMethod_List.append([method])
