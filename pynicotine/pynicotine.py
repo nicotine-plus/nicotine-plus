@@ -456,7 +456,7 @@ class NetworkEventProcessor:
 
         elif msg.connobj.__class__ is slskmessages.OutConn:
 
-            for i in self.peerconns[:]:
+            for i in self.peerconns:
 
                 if i.addr == msg.connobj.addr and i.conn is None:
 
@@ -590,7 +590,7 @@ class NetworkEventProcessor:
             self.frame.pluginhandler.ServerDisconnectNotification(userchoice)
 
         else:
-            for i in self.peerconns[:]:
+            for i in self.peerconns:
                 if i.conn == conn:
                     self.logMessage(_("Connection closed by peer: %s") % vars(i), debugLevel=3)
 
@@ -1462,7 +1462,7 @@ class NetworkEventProcessor:
 
     def CantConnectToPeer(self, msg):
 
-        for i in self.peerconns[:]:
+        for i in self.peerconns:
 
             if i.token == msg.token:
 
