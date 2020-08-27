@@ -23,11 +23,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
-from math import ceil
 from sys import maxsize
 from time import time
 
-from gi.repository import GLib
 from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
@@ -41,18 +39,42 @@ from pynicotine.gtkgui.utils import SelectUserRowIter
 
 class TransferList:
 
-    MINIMUM_GUI_DELAY = 1  # in seconds
-    MINIMUM_GUI_DELAY_SLEEP = int(ceil(MINIMUM_GUI_DELAY * 2000))  # in ms
-
     def __init__(self, frame, widget, type):
         self.frame = frame
         self.widget = widget
         self.type = type
+        self.last_ui_update = self.last_save = time()
         self.list = None
         self.users = {}
         self.paths = {}
-        self.lastupdate = 0
-        self.finalupdatetimerid = None
+
+        # Status list
+        self.statuses = {}
+        self.statuses["Waiting for download"] = _("Waiting for download")
+        self.statuses["Requesting file"] = _("Requesting file")
+        self.statuses["Initializing transfer"] = _("Initializing transfer")
+        self.statuses["Cannot connect"] = _("Cannot connect")
+        self.statuses["Waiting for peer to connect"] = _("Waiting for peer to connect")
+        self.statuses["Connecting"] = _("Connecting")
+        self.statuses["Getting address"] = _("Getting address")
+        self.statuses["Getting status"] = _("Getting status")
+        self.statuses["Queued"] = _("Queued")
+        self.statuses["User logged off"] = _("User logged off")
+        self.statuses["Aborted"] = _("Aborted")
+        self.statuses["Finished"] = _("Finished")
+        self.statuses["Paused"] = _("Paused")
+        self.statuses["Transferring"] = _("Transferring")
+        self.statuses["Filtered"] = _("Filtered")
+        self.statuses["Connection closed by peer"] = _("Connection closed by peer")
+        self.statuses["File not shared"] = _("File not shared")
+        self.statuses["Establishing connection"] = _("Establishing connection")
+        self.statuses["Download directory error"] = _("Download directory error")
+        self.statuses["Local file error"] = _("Local file error")
+        self.statuses["Remote file error"] = _("Remote file error")
+
+        # String templates
+        self.extension_list_template = _("All %(ext)s")
+        self.files_template = _("%(number)2s files ")
 
         widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         widget.set_enable_tree_lines(True)
@@ -79,19 +101,21 @@ class TransferList:
             gobject.TYPE_UINT64,   # (17) queue position
         )
 
+        text_color = self.frame.np.config.sections["ui"]["search"]
+
         widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
         self.cols = cols = InitialiseColumns(
             widget,
-            [_("User"), widths[0], "text", self.CellDataFunc],
-            [_("Path"), widths[1], "text", self.CellDataFunc],
-            [_("Filename"), widths[2], "text", self.CellDataFunc],
-            [_("Status"), widths[3], "text", self.CellDataFunc],
-            [_("Queue Position"), widths[4], "number", self.CellDataFunc],
+            [_("User"), widths[0], "text", None, (text_color, None)],
+            [_("Path"), widths[1], "text", None, (text_color, None)],
+            [_("Filename"), widths[2], "text", None, (text_color, None)],
+            [_("Status"), widths[3], "text", None, (text_color, None)],
+            [_("Queue Position"), widths[4], "number", None, (text_color, None)],
             [_("Percent"), widths[5], "progress"],
-            [_("Size"), widths[6], "number", self.CellDataFunc],
-            [_("Speed"), widths[7], "number", self.CellDataFunc],
-            [_("Time elapsed"), widths[8], "number", self.CellDataFunc],
-            [_("Time left"), widths[9], "number", self.CellDataFunc]
+            [_("Size"), widths[6], "number", None, (text_color, None)],
+            [_("Speed"), widths[7], "number", None, (text_color, None)],
+            [_("Time elapsed"), widths[8], "number", None, (text_color, None)],
+            [_("Time left"), widths[9], "number", None, (text_color, None)],
         )
 
         self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
@@ -129,14 +153,6 @@ class TransferList:
 
     def UpdateColours(self):
         self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
-
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
-
-        colour = self.frame.np.config.sections["ui"]["search"]
-        if colour == "":
-            colour = None
-
-        cellrenderer.set_property("foreground", colour)
 
     def InitInterface(self, list):
         self.list = list
@@ -203,124 +219,84 @@ class TransferList:
 
     def TranslateStatus(self, status):
 
-        if status == "Waiting for download":
-            newstatus = _("Waiting for download")
-        elif status == "Waiting for upload":
-            newstatus = _("Waiting for upload")
-        elif status == "Requesting file":
-            newstatus = _("Requesting file")
-        elif status == "Initializing transfer":
-            newstatus = _("Initializing transfer")
-        elif status == "Cannot connect":
-            newstatus = _("Cannot connect")
-        elif status == "Waiting for peer to connect":
-            newstatus = _("Waiting for peer to connect")
-        elif status == "Connecting":
-            newstatus = _("Connecting")
-        elif status == "Getting address":
-            newstatus = _("Getting address")
-        elif status == "Getting status":
-            newstatus = _("Getting status")
-        elif status == "Queued":
-            newstatus = _("Queued")
-        elif status == "User logged off":
-            newstatus = _("User logged off")
-        elif status == "Aborted":
-            newstatus = _("Aborted")
-        elif status == "Finished":
-            newstatus = _("Finished")
-        elif status == "Paused":
-            newstatus = _("Paused")
-        elif status == "Transferring":
-            newstatus = _("Transferring")
-        elif status == "Filtered":
-            newstatus = _("Filtered")
-        elif status == "Connection closed by peer":
-            newstatus = _("Connection closed by peer")
-        elif status == "File not shared":
-            newstatus = _("File not shared")
-        elif status == "Establishing connection":
-            newstatus = _("Establishing connection")
-        elif status == "Download directory error":
-            newstatus = _("Download directory error")
-        elif status == "Local file error":
-            newstatus = _("Local file error")
-        elif status == "Remote file error":
-            newstatus = _("Remote file error")
-        else:
+        try:
+            newstatus = self.statuses[status]
+        except KeyError:
             newstatus = status
 
         return newstatus
 
-    def finalupdate(self, func):
+    def update(self, transfer=None, forceupdate=False):
 
-        now = time()
+        if (time() - self.last_save) > 15:
 
-        # I had a logical explanation about why it has to be 3*delay, but I
-        # forgot. Something to do with the timeout being 2*delay
-        if (now - self.lastupdate) < (3 * self.MINIMUM_GUI_DELAY):
-            # The list has been updated recently,
-            # trying again later.
-            return True
+            """ Save downloads list to file every 15 seconds """
 
-        self.update(forced=True)  # delayed updates can never trigger a new timer
-        self.finalupdatetimerid = None
+            if self.frame.np.transfers is not None:
+                self.frame.np.transfers.SaveDownloads()
 
-        return False  # Stopping timeout
+            self.last_save = time()
 
-    def update(self, transfer=None, forced=False, nochildupdate=False):
+        transferring = (transfer is not None and transfer.status == "Transferring")
 
-        current_page = self.frame.MainNotebook.get_current_page()
-        my_page = self.frame.MainNotebook.page_num(self.myvbox)
+        if not forceupdate and \
+            transferring and \
+                (time() - self.last_ui_update) <= 1:
 
-        if (current_page == my_page):
-            self._update(transfer, forced, nochildupdate)
+            """ We save CPU by not updating the transfer list every time a part of
+            a file is transferred """
 
-    def _update(self, transfer=None, forced=True, nochildupdate=False):
+            return
 
-        now = time()
+        if not forceupdate:
+            current_page = self.frame.MainNotebook.get_current_page()
+            my_page = self.frame.MainNotebook.page_num(self.myvbox)
 
-        if forced:
-            self.lastupdate = time()  # ...we're working...
+            if (current_page != my_page):
+                """ No need to do unnecessary work if transfers are not visible """
+                return
 
         if transfer is not None:
             self.update_specific(transfer)
-        elif not nochildupdate and self.list is not None:
+        elif self.list is not None:
 
             for i in self.list:
                 self.update_specific(i)
 
-        self.frame.UpdateBandwidth()
+        if transferring:
+            finished = False
+        else:
+            finished = (transfer is not None and transfer.status == "Finished")
 
-        # The rest is just summarizing so it's not too important.
-        # It's fairly CPU intensive though, so we only do it if we haven't updated it recently
-        if not forced and (now - self.lastupdate) < self.MINIMUM_GUI_DELAY:
-            if not self.finalupdatetimerid:
-                self.finalupdatetimerid = True  # I'm not sure if gobject returns fast enough
-                self.finalupdatetimerid = GLib.timeout_add(self.MINIMUM_GUI_DELAY_SLEEP, self.finalupdate, self.update)
+        if not forceupdate and \
+            not finished and \
+                (time() - self.last_ui_update) <= 1:
+
+            """ Unless a transfer finishes, use a cooldown to avoid updating
+            too often """
+
             return
 
-        self.lastupdate = time()  # ...we're working...
+        self.frame.UpdateBandwidth()
+        self.update_parent_rows()
 
-        # Save downloads to file
-        if self.frame.np.transfers is not None:
-            self.frame.np.transfers.SaveDownloads()
+    def update_parent_rows(self, only_remove=False):
 
         # Remove empty parent rows
-        for (path, pathiter) in [x for x in self.paths.items()]:
+        for (path, pathiter) in list(self.paths.items()):
             if not self.transfersmodel.iter_has_child(pathiter):
                 self.transfersmodel.remove(pathiter)
                 del self.paths[path]
-            else:
+            elif not only_remove:
                 self.update_parent_row(pathiter)
 
-        for (username, useriter) in [x for x in self.users.items()]:
+        for (username, useriter) in list(self.users.items()):
             if useriter != 0:
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
                     self.frame.UpdateBandwidth()
-                else:
+                elif not only_remove:
                     self.update_parent_row(useriter)
             else:
                 # No grouping
@@ -332,10 +308,10 @@ class TransferList:
                     del self.users[username]
                     self.frame.UpdateBandwidth()
 
-        self.lastupdate = time()  # ...and we're done
+            self.last_ui_update = time()
 
     def update_parent_row(self, initer):
-        files = self.transfersmodel.iter_n_children(initer)
+
         speed = 0.0
         percent = totalsize = position = 0
         hspeed = helapsed = left = ""
@@ -344,9 +320,10 @@ class TransferList:
         salientstatus = ""
         extensions = {}
 
-        for f in range(files):
+        iter = self.transfersmodel.iter_children(initer)
 
-            iter = self.transfersmodel.iter_nth_child(initer, f)
+        while iter is not None:
+
             status = self.transfersmodel.get_value(iter, 11)
 
             if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
@@ -378,6 +355,8 @@ class TransferList:
             if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
                 salientstatus = status
 
+            iter = self.transfersmodel.iter_next(iter)
+
         if totalsize > 0:
             percent = ((100 * position) / totalsize)
 
@@ -391,7 +370,7 @@ class TransferList:
         if len(extensions) == 0:
             extensions = ""
         elif len(extensions) == 1:
-            extensions = " (" + _("All %(ext)s") % {'ext': list(extensions.keys())[0]} + ")"
+            extensions = " (" + self.extension_list_template % {'ext': list(extensions.keys())[0]} + ")"
         else:
             extensionlst = [(extensions[key], key) for key in extensions]
             extensionlst.sort(reverse=True)
@@ -399,7 +378,7 @@ class TransferList:
 
         self.transfersmodel.set(
             initer,
-            2, _("%(number)2s files ") % {'number': filecount} + extensions,
+            2, self.files_template % {'number': filecount} + extensions,
             3, self.TranslateStatus(salientstatus),
             5, percent,
             6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
@@ -556,7 +535,7 @@ class TransferList:
         if transfer.iter is not None:
             self.transfersmodel.remove(transfer.iter)
 
-        self.update(nochildupdate=True)
+        self.update_parent_rows(only_remove=True)
 
     def Clear(self):
         self.users.clear()

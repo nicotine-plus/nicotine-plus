@@ -594,7 +594,7 @@ class SlskProtoThread(threading.Thread):
 
             for part in parts:
                 # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
+                if part != s_address[seg] and part != "*":
                     break
 
                 seg += 1
@@ -1160,22 +1160,22 @@ class SlskProtoThread(threading.Thread):
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
 
-            outsocks = [i for i in conns if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None)]
             outsock = []
 
             self._limits = {}
             self._dlimits = {}
 
-            for i in outsocks:
-                if self._isUpload(conns[i]):
-                    limit = self._uploadlimit[0](conns, conns[i])
+            for i in conns:
+                if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None):
+                    if self._isUpload(conns[i]):
+                        limit = self._uploadlimit[0](conns, conns[i])
 
-                    if limit is None or limit > 0:
-                        self._limits[i] = limit
+                        if limit is None or limit > 0:
+                            self._limits[i] = limit
+                            outsock.append(i)
+
+                    else:
                         outsock.append(i)
-
-                else:
-                    outsock.append(i)
 
             try:
                 # Select Networking Input and Output sockets
