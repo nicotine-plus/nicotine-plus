@@ -34,6 +34,7 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 import _thread
+from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import ChooseDir
 from pynicotine.gtkgui.dialogs import ComboBoxDialog
 from pynicotine.gtkgui.dialogs import EntryDialog
@@ -218,7 +219,7 @@ class ServerFrame(buildFrame):
         }
 
     def OnChangePassword(self, widget):
-        self.frame.OnChangePassword(self.Password.get_text())
+        self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
     def OnCheckPort(self, widget):
         OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)

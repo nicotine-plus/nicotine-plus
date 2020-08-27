@@ -40,7 +40,6 @@ class NowPlaying:
 
         # Build the window
         self.frame = frame
-        self.accel_group = gtk.AccelGroup()
 
         builder = gtk.Builder()
 
@@ -58,7 +57,6 @@ class NowPlaying:
                 pass
 
         self.NowPlaying.set_transient_for(self.frame.MainWindow)
-        self.NowPlaying.add_accel_group(self.accel_group)
 
         self.NowPlaying.connect("destroy", self.quit)
         self.NowPlaying.connect("destroy-event", self.quit)

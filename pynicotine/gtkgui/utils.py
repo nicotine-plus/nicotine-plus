@@ -1085,16 +1085,16 @@ class PopupMenu(gtk.Menu):
         self.frame.BrowseUser(self.user)
 
     def OnPrivateRoomAddUser(self, widget, room):
-        self.frame.PrivateRoomAddUser(room, self.user)
+        self.frame.np.queue.put(slskmessages.PrivateRoomAddUser(room, self.user))
 
     def OnPrivateRoomRemoveUser(self, widget, room):
-        self.frame.PrivateRoomRemoveUser(room, self.user)
+        self.frame.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, self.user))
 
     def OnPrivateRoomAddOperator(self, widget, room):
-        self.frame.PrivateRoomAddOperator(room, self.user)
+        self.frame.np.queue.put(slskmessages.PrivateRoomAddOperator(room, self.user))
 
     def OnPrivateRoomRemoveOperator(self, widget, room):
-        self.frame.PrivateRoomRemoveOperator(room, self.user)
+        self.frame.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, self.user))
 
     def OnAddToList(self, widget):
 
@@ -1170,7 +1170,7 @@ class PopupMenu(gtk.Menu):
         if text:
             try:
                 days = int(text)
-                self.frame.GivePrivileges(self.user, days)
+                self.frame.np.queue.put(slskmessages.GivePrivileges(self.user, days))
             except Exception as e:
                 print(e)
 
