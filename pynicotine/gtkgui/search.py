@@ -235,7 +235,7 @@ class Searches(IconNotebook):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
-            for room in list(self.frame.chatrooms.roomsctrl.joinedrooms.keys()):
+            for room in self.frame.chatrooms.roomsctrl.joinedrooms:
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
     def DoBuddiesSearch(self, id, text):
@@ -322,7 +322,7 @@ class Searches(IconNotebook):
 
     def UpdateColours(self):
 
-        for id in list(self.searches.values()):
+        for id in self.searches.values():
             if id[2] is None:
                 continue
             id[2].ChangeColours()
@@ -337,7 +337,7 @@ class Searches(IconNotebook):
 
             page = self.get_nth_page(page_num)
 
-            for name, search in list(self.searches.items()):
+            for name, search in self.searches.items():
 
                 if search[2] is None:
                     continue
@@ -362,7 +362,7 @@ class Searches(IconNotebook):
             n = self.page_num(child)
             page = self.get_nth_page(n)
 
-            for search, data in list(self.searches.items()):
+            for search, data in self.searches.items():
 
                 if data[2] is None:
                     continue
@@ -790,7 +790,7 @@ class Search:
                 if directory not in self.directoryiters:
                     self.directoryiters[directory] = self.resultsmodel.append(
                         self.usersiters[user],
-                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, "", country, 0, speed, queue]
+                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue]
                     )
 
                 row = row[:]
@@ -1043,22 +1043,23 @@ class Search:
     def SelectedResultsCallback(self, model, path, iter):
 
         user = model.get_value(iter, 1)
-        directory = model.get_value(iter, 6)
-        bitrate = model.get_value(iter, 9)
-        length = model.get_value(iter, 10)
-        path = model.get_value(iter, 12)
-        size = model.get_value(iter, 14)
 
         if user is None:
             return
 
         self.selected_users.add(user)
 
-        if directory == "" and path == "":
+        path = model.get_value(iter, 12)
+
+        if path == "":
             # Result is not a file or directory, don't add it
             return
 
-        self.selected_results.add((user, path, size, bitrate, length, directory))
+        bitrate = model.get_value(iter, 9)
+        length = model.get_value(iter, 10)
+        size = model.get_value(iter, 14)
+
+        self.selected_results.add((user, path, size, bitrate, length))
 
     def OnListClicked(self, widget, event):
 
@@ -1095,12 +1096,13 @@ class Search:
         items[8].set_sensitive(users)
 
         for result in self.selected_results:
-            if result[1]:
+            if not result[1].endswith('\\'):
                 # At least one selected result is a file, activate file-related items
                 items[0].set_sensitive(True)
                 items[1].set_sensitive(True)
                 items[4].set_sensitive(True)
                 items[6].set_sensitive(True)
+                break
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
         widget.stop_emission_by_name("button_press_event")
@@ -1174,7 +1176,7 @@ class Search:
 
         for file in self.selected_results:
             # Make sure the selected result is not a directory
-            if file[1]:
+            if not file[1].endswith('\\'):
                 self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def OnDownloadFilesTo(self, widget):
@@ -1193,9 +1195,9 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            directory = '\\'.join(reversed(i[5].split('\\')))
+            folder = i[1].rsplit('\\', 1)[0]
 
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, directory))
+            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def OnDownloadFoldersTo(self, widget):
 
@@ -1209,13 +1211,13 @@ class Search:
         for i in self.selected_results:
 
             user = i[0]
-            dir = '\\'.join(reversed(i[5].split('\\')))
+            folder = i[1].rsplit('\\', 1)[0]
 
             if user not in self.frame.np.requestedFolders:
                 self.frame.np.requestedFolders[user] = {}
 
-            self.frame.np.requestedFolders[user][dir] = destination
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, dir))
+            self.frame.np.requestedFolders[user][folder] = destination
+            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def OnCopyURL(self, widget):
         user, path = self.selected_results[0][:2]
