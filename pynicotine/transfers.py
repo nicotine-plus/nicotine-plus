@@ -1196,8 +1196,7 @@ class Transfers:
                 oldelapsed = i.timeelapsed
                 i.timeelapsed = curtime - i.starttime
 
-                if (time.time() - self.last_speed_update) > 1 and \
-                    curtime > i.starttime and \
+                if curtime > i.starttime and \
                         i.currentbytes > i.lastbytes:
 
                     try:
@@ -1208,8 +1207,6 @@ class Transfers:
                         i.timeleft = "∞"
                     else:
                         i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed / 1024)
-
-                    self.last_speed_update = time.time()
 
                 i.lastbytes = i.currentbytes
                 i.lasttime = curtime

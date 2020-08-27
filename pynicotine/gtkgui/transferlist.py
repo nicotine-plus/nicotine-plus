@@ -277,7 +277,6 @@ class TransferList:
 
             return
 
-        self.frame.UpdateBandwidth()
         self.update_parent_rows()
 
     def update_parent_rows(self, only_remove=False):
@@ -295,7 +294,6 @@ class TransferList:
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
-                    self.frame.UpdateBandwidth()
                 elif not only_remove:
                     self.update_parent_row(useriter)
             else:
@@ -306,9 +304,9 @@ class TransferList:
                         break
                 else:
                     del self.users[username]
-                    self.frame.UpdateBandwidth()
 
-            self.last_ui_update = time()
+        self.frame.UpdateBandwidth()
+        self.last_ui_update = time()
 
     def update_parent_row(self, initer):
 

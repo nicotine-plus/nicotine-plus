@@ -421,7 +421,7 @@ class SlskProtoThread(threading.Thread):
         self._limits = {}
         self._dlimits = {}
 
-        self.last_conncount_ui_update = time.time()
+        self.last_conncount_ui_update = self.last_file_update = time.time()
 
         # GeoIP Config
         self._geoip = None
@@ -662,7 +662,7 @@ class SlskProtoThread(threading.Thread):
         return msgs, msgBuffer
 
     def process_file_input(self, conn, msgBuffer):
-        """ We have a "F" connection (filetransfer) , peer has sent us
+        """ We have a "F" connection (filetransfer), peer has sent us
         something, this function retrieves messages
         from the msgBuffer, creates message objects and returns them
         and the rest of the msgBuffer.
@@ -678,17 +678,28 @@ class SlskProtoThread(threading.Thread):
 
         elif conn.filedown is not None:
             leftbytes = conn.bytestoread - conn.filereadbytes
+            addedbytes = msgBuffer[:leftbytes]
 
             if leftbytes > 0:
                 try:
-                    conn.filedown.file.write(msgBuffer[:leftbytes])
+                    conn.filedown.file.write(addedbytes)
                 except IOError as strerror:
                     self._ui_callback([FileError(conn, conn.filedown.file, strerror)])
                 except ValueError:
                     pass
 
-            self._ui_callback([DownloadFile(conn.conn, len(msgBuffer[:leftbytes]), conn.filedown.file)])
-            conn.filereadbytes += len(msgBuffer[:leftbytes])
+            addedbyteslen = len(addedbytes)
+
+            if (leftbytes - addedbyteslen) == 0 or \
+                    (time.time() - self.last_file_update) > 1:
+
+                """ We save resources by not sending data back to the UI every time
+                a part of a file is transferred """
+
+                self._ui_callback([DownloadFile(conn.conn, addedbyteslen, conn.filedown.file)])
+                self.last_file_update = time.time()
+
+            conn.filereadbytes += addedbyteslen
             msgBuffer = msgBuffer[leftbytes:]
 
         elif conn.fileupl is not None:
