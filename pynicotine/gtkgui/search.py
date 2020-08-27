@@ -1192,12 +1192,20 @@ class Search:
 
     def OnDownloadFolders(self, widget):
 
+        requested_folders = {}
+
         for i in self.selected_results:
 
             user = i[0]
             folder = i[1].rsplit('\\', 1)[0]
 
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
+            if user not in requested_folders:
+                requested_folders[user] = []
+
+            if folder not in requested_folders[user]:
+
+                self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
+                requested_folders[user].append(folder)
 
     def OnDownloadFoldersTo(self, widget):
 
@@ -1216,8 +1224,10 @@ class Search:
             if user not in self.frame.np.requestedFolders:
                 self.frame.np.requestedFolders[user] = {}
 
-            self.frame.np.requestedFolders[user][folder] = destination
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
+            if folder not in self.frame.np.requestedFolders[user]:
+
+                self.frame.np.requestedFolders[user][folder] = destination
+                self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def OnCopyURL(self, widget):
         user, path = self.selected_results[0][:2]
