@@ -117,7 +117,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="fastconfigure">
+                      <object class="GtkMenuItem">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Fast Configure</property>
@@ -177,7 +177,7 @@
                       <object class="GtkCheckMenuItem" id="show_debug_info1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show _debug info</property>
+                        <property name="label" translatable="yes">Show _debug output controls</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="OnShowDebug" swapped="no"/>
                       </object>
@@ -2579,14 +2579,11 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkBox" id="debugButtonsBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">5</property>
-                    <property name="spacing">4</property>
+                    <property name="spacing">5</property>
                     <child>
                       <object class="GtkLabel" id="debugLabel">
                         <property name="visible">True</property>
@@ -2597,7 +2594,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="padding">10</property>
+                        <property name="padding">5</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -2695,7 +2692,35 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="pack_type">end</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="LogScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="min_content_height">90</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <object class="GtkTextView" id="LogWindow">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="editable">False</property>
+                        <property name="cursor_visible">False</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="pixels_below_lines">1</property>
+                        <property name="left_margin">10</property>
+                        <property name="right_margin">10</property>
+                        <property name="top_margin">5</property>
+                        <property name="bottom_margin">5</property>
+                        <signal name="button-press-event" handler="OnPopupLogMenu" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
