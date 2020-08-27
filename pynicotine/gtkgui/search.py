@@ -1203,6 +1203,8 @@ class Search:
                 requested_folders[user] = []
 
             if folder not in requested_folders[user]:
+                """ Ensure we don't send folder content requests for a folder more than once,
+                e.g. when several selected resuls belong to the same folder. """
 
                 self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
                 requested_folders[user].append(folder)
@@ -1225,6 +1227,8 @@ class Search:
                 self.frame.np.requestedFolders[user] = {}
 
             if folder not in self.frame.np.requestedFolders[user]:
+                """ Ensure we don't send folder content requests for a folder more than once,
+                e.g. when several selected resuls belong to the same folder. """
 
                 self.frame.np.requestedFolders[user][folder] = destination
                 self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
