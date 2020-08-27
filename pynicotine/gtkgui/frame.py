@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import re
-import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -114,7 +113,7 @@ class NicotineFrame:
 
         self.np = NetworkEventProcessor(
             self,
-            self.callback,
+            self.networkcallback,
             self.logMessage,
             self.SetStatusText,
             self.bindip,
@@ -1176,31 +1175,9 @@ class NicotineFrame:
             else:
                 self.logMessage("No handler for class %s %s" % (i.__class__, dir(i)))
 
-    def callback(self, msgs):
-        if len(msgs) > 0:
-            GLib.idle_add(self.OnNetworkEvent, msgs)
-
     def networkcallback(self, msgs):
-        curtime = time.time()
-        for i in msgs[:]:
-            if i.__class__ is slskmessages.DownloadFile or i.__class__ is slskmessages.UploadFile:
-                self.transfermsgs[i.conn] = i
-                msgs.remove(i)
-            if i.__class__ is slskmessages.ConnClose:
-                msgs = self.postTransferMsgs(msgs, curtime)
-        if curtime - self.transfermsgspostedtime > 1.0:
-            msgs = self.postTransferMsgs(msgs, curtime)
         if len(msgs) > 0:
             GLib.idle_add(self.OnNetworkEvent, msgs)
-
-    def postTransferMsgs(self, msgs, curtime):
-        trmsgs = []
-        for (key, value) in self.transfermsgs.items():
-            trmsgs.append(value)
-        msgs = trmsgs + msgs
-        self.transfermsgs = {}
-        self.transfermsgspostedtime = curtime
-        return msgs
 
     def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
         colour = self.np.config.sections["ui"]["search"]
@@ -1351,7 +1328,7 @@ class NicotineFrame:
             self.OnDisconnect(None)
 
         self.np.config.writeConfiguration()
-        self.np.config.writeDownloadQueue()
+        self.np.transfers.SaveDownloads()
 
         # Cleaning up the trayicon
         if self.TrayApp.trayicon:
@@ -1681,9 +1658,9 @@ class NicotineFrame:
             if "privatechats" in self.__dict__:
                 self.privatechats.OnSwitchPage(n.Notebook, None, p, 1)
         elif page_nr == self.MainNotebook.page_num(self.uploadsvbox):
-            self.uploads._update()
+            self.uploads.update(forceupdate=True)
         elif page_nr == self.MainNotebook.page_num(self.downloadsvbox):
-            self.downloads._update()
+            self.downloads.update(forceupdate=True)
 
     def UpdateBandwidth(self):
 

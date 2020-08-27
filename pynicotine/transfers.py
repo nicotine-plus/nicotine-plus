@@ -127,6 +127,8 @@ class Transfers:
         self.RequestedUploadQueue = []
         getstatus = {}
 
+        self.last_speed_update = time.time()
+
         for i in downloads:
             size = currentbytes = bitrate = length = None
 
@@ -168,10 +170,9 @@ class Transfers:
             )
             getstatus[i[0]] = ""
 
-        for i in list(getstatus.keys()):
+        for i in getstatus:
             if i not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(i))
-            self.queue.put(slskmessages.GetUserStatus(i))
 
         self.users = users
         self.downloadspanel = None
@@ -487,7 +488,7 @@ class Transfers:
 
                 i.req = msg.req
                 i.status = "Waiting for download"
-                transfertimeout = TransferTimeout(i.req, self.eventprocessor.frame.callback)
+                transfertimeout = TransferTimeout(i.req, self.eventprocessor.frame.networkcallback)
 
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
@@ -594,7 +595,7 @@ class Transfers:
         size = self.getFileSize(realpath)
         response = slskmessages.TransferResponse(conn, 1, req=msg.req, filesize=size)
 
-        transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.callback)
+        transfertimeout = TransferTimeout(msg.req, self.eventprocessor.frame.networkcallback)
         transferobj = Transfer(
             user=user, realfilename=realpath, filename=msg.file,
             path=os.path.dirname(realpath), status="Waiting for upload",
@@ -1195,7 +1196,10 @@ class Transfers:
                 oldelapsed = i.timeelapsed
                 i.timeelapsed = curtime - i.starttime
 
-                if curtime > i.starttime and i.currentbytes > i.offset:
+                if (time.time() - self.last_speed_update) > 1 and \
+                    curtime > i.starttime and \
+                        i.currentbytes > i.lastbytes:
+
                     try:
                         i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
                     except ZeroDivisionError:
@@ -1205,13 +1209,14 @@ class Transfers:
                     else:
                         i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed / 1024)
 
+                    self.last_speed_update = time.time()
+
                 i.lastbytes = i.currentbytes
                 i.lasttime = curtime
 
                 if i.size > i.currentbytes:
                     if oldelapsed == i.timeelapsed:
                         needupdate = False
-                    i.status = "Transferring"
                 else:
                     self.DownloadFinished(msg.file, i)
                     needupdate = False
@@ -1357,7 +1362,10 @@ class Transfers:
             oldelapsed = i.timeelapsed
             i.timeelapsed = curtime - i.starttime
 
-            if curtime > i.starttime and i.currentbytes > i.offset:
+            if (time.time() - self.last_speed_update) > 1 and \
+                curtime > i.starttime and \
+                    i.currentbytes > i.lastbytes:
+
                 try:
                     i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
                 except ZeroDivisionError:
@@ -1371,6 +1379,8 @@ class Transfers:
                     i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed / 1024)
 
                 self.checkUploadQueue()
+
+                self.last_speed_update = time.time()
 
             i.lastbytes = i.currentbytes
             i.lasttime = curtime

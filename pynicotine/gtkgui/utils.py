@@ -184,9 +184,6 @@ def InitialiseColumns(treeview, *args):
 
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
             column.set_alignment(0.9)
-        elif c[2] == "colored":
-            renderer = gtk.CellRendererText()
-            column = gtk.TreeViewColumn(c[0], renderer, text=i, foreground=c[3][0], background=c[3][1])
         elif c[2] == "edit":
             renderer = gtk.CellRendererText()
             renderer.set_property('editable', True)
@@ -221,6 +218,19 @@ def InitialiseColumns(treeview, *args):
 
         if len(c) > 3 and type(c[3]) is not list:
             column.set_cell_data_func(renderer, c[3])
+
+        if len(c) > 4:
+            foreground = c[4][0]
+            background = c[4][1]
+
+            if foreground == "":
+                foreground = None
+
+            if background == "":
+                background = None
+
+            renderer.set_property("foreground", foreground)
+            renderer.set_property("background", background)
 
         column.set_reorderable(False)
         column.set_widget(gtk.Label.new(c[0]))
