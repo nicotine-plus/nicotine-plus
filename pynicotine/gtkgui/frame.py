@@ -437,7 +437,7 @@ class NicotineFrame:
         """ Element Visibility """
 
         self.show_log_window1.set_active(not config["logging"]["logcollapsed"])
-        self.show_debug_info1.set_active(not config["logging"]["debug"])
+        self.show_debug_info1.set_active(config["logging"]["debug"])
 
         self.OnShowLog(self.show_log_window1)
         self.OnShowDebug(self.show_debug_info1)
@@ -851,7 +851,7 @@ class NicotineFrame:
     def OnShowDebug(self, widget):
 
         show = widget.get_active()
-        self.np.config.sections["logging"]["debug"] = (not show)
+        self.np.config.sections["logging"]["debug"] = show
 
         if show:
             self.debugButtonsBox.show()
@@ -2579,41 +2579,45 @@ class NicotineFrame:
 
     """ Log Window """
 
-    def logCallback(self, timestamp, level, msg):
-        GLib.idle_add(self.updateLog, msg, level, priority=GLib.PRIORITY_DEFAULT)
+    def check_log_debug(self, level):
+
+        debug = self.np.config.sections["logging"]["debug"]
+
+        if debug and level != 0 and \
+                level not in self.np.config.sections["logging"]["debugmodes"]:
+            return False
+
+        elif not debug and level != 0 and level == 1:
+            return False
+
+        return True
+
+    def logCallback(self, timestamp, debugLevel, msg):
+
+        if self.check_log_debug(debugLevel):
+            GLib.idle_add(self.updateLog, msg, debugLevel, priority=GLib.PRIORITY_DEFAULT)
 
     def logMessage(self, msg, debugLevel=0):
-        log.add(msg, debugLevel)
+
+        if self.check_log_debug(debugLevel):
+            log.add(msg, debugLevel)
 
     def updateLog(self, msg, debugLevel=None):
         '''For information about debug levels see
         pydoc pynicotine.logfacility.logger.add
         '''
 
-        logcollapsed = self.np.config.sections["logging"]["logcollapsed"]
-
-        if logcollapsed:
+        if self.np.config.sections["logging"]["logcollapsed"]:
             # Make sure we don't attempt to scroll in the log window
             # if it's hidden, to prevent those nasty GTK warnings :)
+
             shouldscroll = False
+            self.SetStatusText(msg)
         else:
             shouldscroll = True
 
-        if self.np.config.sections["logging"]["debug"]:
-            if debugLevel in (None, 0) or debugLevel in self.np.config.sections["logging"]["debugmodes"]:
-                AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
+        AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
 
-                if logcollapsed:
-                    self.SetStatusText(msg)
-        else:
-            if debugLevel in (None, 0, 1):
-                try:
-                    AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
-
-                    if logcollapsed:
-                        self.SetStatusText(msg)
-                except Exception as e:
-                    print(e)
         return False
 
     def OnPopupLogMenu(self, widget, event):

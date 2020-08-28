@@ -126,6 +126,7 @@ class NetworkEventProcessor:
         self.port = port
         self.config.frame = frame
         self.config.readConfig()
+
         self.peerconns = []
         self.watchedusers = []
         self.ipblock_requested = {}

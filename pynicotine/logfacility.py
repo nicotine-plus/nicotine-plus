@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import textwrap
 import time
-from collections import deque
 from sys import stdout
 
 
@@ -26,14 +25,8 @@ class logger(object):
     not yet present right at startup."""
 
     def __init__(self, maxlogitems=100):
-        # self.pop is used to support older versions of python
+
         self.listeners = set()
-        try:
-            self.history = deque([], maxlogitems)
-            self.pop = -1  # -1 means 'let python do the popping'
-        except TypeError:
-            self.history = deque([])
-            self.pop = maxlogitems + 1  # value is how many items to go before we start popping. Python < 2.6 support
 
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
@@ -54,12 +47,9 @@ class logger(object):
         5    - Transfers
         6    - Connection, Bandwidth and Usage Statistics
         """
+
         timestamp = time.localtime()
-        self.history.append((timestamp, level, msg))
-        if self.pop > 0:
-            self.pop -= 1
-        if self.pop == 0:
-            self.history.popleft()
+
         for callback in self.listeners:
             try:
                 callback(timestamp, level, msg)
