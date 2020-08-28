@@ -22,7 +22,6 @@
 This module implements Soulseek networking protocol.
 """
 
-import select
 import selectors
 import socket
 import struct
@@ -174,12 +173,9 @@ from pynicotine.slskmessages import WishlistSearch
 # If this limit is set too close to our artificial MAXFILELIMIT
 # limit, Nicotine+ will freak out due to too many open files
 if sys.platform == "win32":
-    from pynicotine.multiselect import multiselect
-    import ctypes
 
-    ctypes.cdll.msvcrt._setmaxstdio(8192)
-
-    MAXFILELIMIT = 1024
+    # For Windows, FD_SETSIZE is set to 512 in Python
+    MAXFILELIMIT = int(512 * 0.9)
 else:
     import resource
     softlimit, hardlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
@@ -958,6 +954,7 @@ class SlskProtoThread(threading.Thread):
 
                         except socket.error as err:
                             self._ui_callback([ConnectError(msgObj, err)])
+                            server_socket.close()
 
                 elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
                     msgObj.conn.close()
@@ -984,6 +981,7 @@ class SlskProtoThread(threading.Thread):
 
                         except socket.error as err:
                             self._ui_callback([ConnectError(msgObj, err)])
+                            conn.close()
 
                 elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
                     conns[msgObj.conn].filedown = msgObj
@@ -1090,23 +1088,6 @@ class SlskProtoThread(threading.Thread):
             i.close()
             del conns[i]
 
-    def createOutsockList(self, conns, server_socket):
-        outsock = []
-
-        for i in conns:
-            if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None):
-                if self._isUpload(conns[i]):
-                    limit = self._uploadlimit[0](conns, conns[i])
-
-                    if limit is None or limit > 0:
-                        self._limits[i] = limit
-                        outsock.append(i)
-
-                else:
-                    outsock.append(i)
-
-        return outsock
-
     def run(self):
         """ Actual networking loop is here."""
 
@@ -1126,59 +1107,40 @@ class SlskProtoThread(threading.Thread):
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
 
+            self._limits = {}
+            self._dlimits = {}
+
             try:
                 # Select Networking Input and Output sockets
+                selector = selectors.DefaultSelector()
+
                 timeout = 0.5
 
-                self._limits = {}
-                self._dlimits = {}
+                for i in conns:
+                    event_masks = selectors.EVENT_READ
 
-                try:
-                    if sys.platform != "win32":
-                        selector = selectors.DefaultSelector()
+                    if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None):
+                        if self._isUpload(conns[i]):
+                            limit = self._uploadlimit[0](conns, conns[i])
 
-                        for i in conns:
-                            event_masks = selectors.EVENT_READ
+                            if limit is None or limit > 0:
+                                self._limits[i] = limit
+                                event_masks |= selectors.EVENT_WRITE
 
-                            if len(conns[i].obuf) > 0 or (i is not server_socket and conns[i].fileupl is not None and conns[i].fileupl.offset is not None):
-                                if self._isUpload(conns[i]):
-                                    limit = self._uploadlimit[0](conns, conns[i])
+                        else:
+                            event_masks |= selectors.EVENT_WRITE
 
-                                    if limit is None or limit > 0:
-                                        self._limits[i] = limit
-                                        event_masks |= selectors.EVENT_WRITE
+                    selector.register(i, event_masks)
 
-                                else:
-                                    event_masks |= selectors.EVENT_WRITE
+                for i in connsinprogress:
+                    event_masks = selectors.EVENT_READ | selectors.EVENT_WRITE
+                    selector.register(i, event_masks)
 
-                            selector.register(i, event_masks)
+                selector.register(p, selectors.EVENT_READ)
 
-                        for i in connsinprogress:
-                            event_masks = selectors.EVENT_READ | selectors.EVENT_WRITE
-                            selector.register(i, event_masks)
-
-                        selector.register(p, selectors.EVENT_READ)
-
-                        key_events = selector.select(timeout)
-                        input = [key.fileobj for key, event in key_events if event & selectors.EVENT_READ]
-                        output = [key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE]
-
-                    else:
-                        input_list = list(conns.keys()) + list(connsinprogress.keys()) + [p]
-                        output_list = list(connsinprogress.keys()) + self.createOutsockList(conns, server_socket)
-
-                        """ Custom multiselect implementation is used on Windows due to severe
-                        limitations of the select() syscall """
-
-                        input, output, exc = multiselect(input_list, output_list, [], timeout)
-
-                except Exception:
-                    # The selector chosen by the selectors module didn't work? Fall back to the select() syscall
-
-                    input_list = list(conns.keys()) + list(connsinprogress.keys()) + [p]
-                    output_list = list(connsinprogress.keys()) + self.createOutsockList(conns, server_socket)
-
-                    input, output, exc = select.select(input_list, output_list, [], timeout)
+                key_events = selector.select(timeout)
+                input = [key.fileobj for key, event in key_events if event & selectors.EVENT_READ]
+                output = [key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE]
 
             except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
@@ -1203,15 +1165,7 @@ class SlskProtoThread(threading.Thread):
             if (curtime - self.last_conncount_ui_update) > self.CONNCOUNT_UI_INTERVAL:
                 # Avoid sending too many updates to the UI at once, if there are a lot of connections
                 self._ui_callback([SetCurrentConnectionCount(numsockets)])
-                self.last_conncount_ui_update = time.time()
-
-            # Write Output
-            for conn in conns:
-                if conn in output:
-                    try:
-                        self.writeData(server_socket, conns, conn)
-                    except socket.error as err:
-                        self._ui_callback([ConnectError(conns[conn], err)])
+                self.last_conncount_ui_update = curtime
 
             # Listen / Peer Port
             if p in input:
@@ -1236,6 +1190,7 @@ class SlskProtoThread(threading.Thread):
             curtime = time.time()
 
             for connection_in_progress in connsinprogress.copy():
+
                 if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
                     connection_in_progress.close()
                     del connsinprogress[connection_in_progress]
@@ -1248,6 +1203,7 @@ class SlskProtoThread(threading.Thread):
 
                 except socket.error as err:
                     self._ui_callback([ConnectError(msgObj, err)])
+
                     connection_in_progress.close()
                     del connsinprogress[connection_in_progress]
 
@@ -1275,6 +1231,18 @@ class SlskProtoThread(threading.Thread):
             curtime = time.time()
 
             for connection in conns.copy():
+                if connection in output:
+                    # Write Output
+
+                    try:
+                        self.writeData(server_socket, conns, connection)
+                    except socket.error as err:
+                        self._ui_callback([ConnectError(conns[connection], err)])
+
+                        connection.close()
+                        del conns[connection]
+                        continue
+
                 if connection is not server_socket:
                     if connection is not p:
                         # Timeout Connections
@@ -1291,6 +1259,7 @@ class SlskProtoThread(threading.Thread):
                     if self.ipBlocked(ip):
                         message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % {"ip": ip, "port": port}
                         log.add(message, 3)
+
                         connection.close()
                         del conns[connection]
                         continue
@@ -1317,6 +1286,10 @@ class SlskProtoThread(threading.Thread):
 
                     except socket.error as err:
                         self._ui_callback([ConnectError(conns[connection], err)])
+
+                        connection.close()
+                        del conns[connection]
+                        continue
 
                 try:
                     if len(conns[connection].ibuf) > 0:
