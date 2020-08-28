@@ -511,7 +511,7 @@ class NicotineFrame:
         self.SetMainTabsVisibility()
         self.SetLastSessionTab()
 
-        self.MainNotebook.connect("page-removed", self.OnPageRemoved)
+        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.OnPageRemoved)
         self.MainNotebook.connect("page-reordered", self.OnPageReordered)
         self.MainNotebook.connect("page-added", self.OnPageAdded)
 
@@ -3031,9 +3031,11 @@ class NicotineFrame:
         dialog.destroy()
 
     def OnDestroy(self, widget):
-        self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
 
-        self.SaveColumns()
+        # Prevent triggering the page removal event, which sets the tab visibility to false
+        self.MainNotebook.disconnect(self.page_removed_signal)
+
+        self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
 
         self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
 
@@ -3044,8 +3046,10 @@ class NicotineFrame:
         if not self.manualdisconnect:
             self.OnDisconnect(None)
 
-        self.np.config.writeConfiguration()
-        self.np.transfers.SaveDownloads()
+        self.SaveColumns()
+
+        if self.np.transfers is not None:
+            self.np.transfers.SaveDownloads()
 
         # Cleaning up the trayicon
         if self.TrayApp.trayicon:
@@ -3063,6 +3067,7 @@ class NicotineFrame:
     def SaveColumns(self):
         for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
             i.saveColumns()
+
         self.np.config.writeConfiguration()
 
 
