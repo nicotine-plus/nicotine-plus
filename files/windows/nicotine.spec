@@ -2,9 +2,16 @@
 
 block_cipher = None
 
+from PyInstaller.utils.hooks import get_gi_typelibs
+
 import sys
+
 sys.modules['FixTk'] = None
 sys.modules['lib2to3'] = None
+
+# HarfBuzz has seemingly been added as a dependency for GTK on Windows (and perhaps MacOS?) recently
+# TODO: investigate why this is the case, and potentially check with PyInstaller devs (30 August 2020)
+binaries, datas, hiddenimports = get_gi_typelibs('HarfBuzz', '0.0')
 
 # Files to be added to the frozen app
 added_files = [
@@ -25,11 +32,13 @@ added_files = [
     ('../../languages', 'share/locale'),
 ]
 
+datas += added_files
+
 a = Analysis(['../../nicotine'],
              pathex=['.'],
-             binaries=[],
-             datas=added_files,
-             hiddenimports=[],
+             binaries=binaries,
+             datas=datas,
+             hiddenimports=hiddenimports,
              hookspath=[],
              runtime_hooks=[],
              excludes=['FixTk', 'lib2to3', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
