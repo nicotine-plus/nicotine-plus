@@ -331,46 +331,61 @@ class Transfers:
                 )
                 break
 
-    def gettingAddress(self, req):
+    def gettingAddress(self, req, direction):
 
-        for i in self.downloads:
-            if i.req == req:
-                i.status = "Getting address"
-                self.downloadspanel.update(i)
+        if direction == 1:
+            for i in self.downloads:
+                if i.req == req:
+                    i.status = "Getting address"
+                    self.downloadspanel.update(i)
+                    break
 
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Getting address"
-                self.uploadspanel.update(i)
+        elif direction == 0:
 
-    def gotAddress(self, req):
+            for i in self.uploads:
+                if i.req == req:
+                    i.status = "Getting address"
+                    self.uploadspanel.update(i)
+                    break
+
+    def gotAddress(self, req, direction):
         """ A connection is in progress, we got the address for a user we need
         to connect to."""
 
-        for i in self.downloads:
-            if i.req == req:
-                i.status = "Connecting"
-                self.downloadspanel.update(i)
+        if direction == 1:
+            for i in self.downloads:
+                if i.req == req:
+                    i.status = "Connecting"
+                    self.downloadspanel.update(i)
+                    break
 
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Connecting"
-                self.uploadspanel.update(i)
+        elif direction == 0:
 
-    def gotConnectError(self, req):
+            for i in self.uploads:
+                if i.req == req:
+                    i.status = "Connecting"
+                    self.uploadspanel.update(i)
+                    break
+
+    def gotConnectError(self, req, direction):
         """ We couldn't connect to the user, now we are waitng for him to
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
-        for i in self.downloads:
-            if i.req == req:
-                i.status = "Waiting for peer to connect"
-                self.downloadspanel.update(i)
+        if direction == 1:
+            for i in self.downloads:
+                if i.req == req:
+                    i.status = "Waiting for peer to connect"
+                    self.downloadspanel.update(i)
+                    break
 
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Waiting for peer to connect"
-                self.uploadspanel.update(i)
+        elif direction == 0:
+
+            for i in self.uploads:
+                if i.req == req:
+                    i.status = "Waiting for peer to connect"
+                    self.uploadspanel.update(i)
+                    break
 
     def gotCantConnect(self, req):
         """ We can't connect to the user, either way. """
@@ -378,10 +393,12 @@ class Transfers:
         for i in self.downloads:
             if i.req == req:
                 self._getCantConnectDownload(i)
+                break
 
         for i in self.uploads:
             if i.req == req:
                 self._getCantConnectUpload(i)
+                break
 
     def _getCantConnectDownload(self, i):
 
@@ -420,27 +437,34 @@ class Transfers:
             if i.req == req:
                 i.status = "Initializing transfer"
                 self.downloadspanel.update(i)
+                break
 
         for i in self.uploads:
             if i.req == req:
                 i.status = "Initializing transfer"
                 self.uploadspanel.update(i)
+                break
 
-    def gotConnect(self, req, conn):
+    def gotConnect(self, req, conn, direction):
         """ A connection has been established, now exchange initialisation
         messages."""
 
-        for i in self.downloads:
-            if i.req == req:
-                i.status = "Requesting file"
-                i.requestconn = conn
-                self.downloadspanel.update(i)
+        if direction == 1:
+            for i in self.downloads:
+                if i.req == req:
+                    i.status = "Requesting file"
+                    i.requestconn = conn
+                    self.downloadspanel.update(i)
+                    break
 
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Requesting file"
-                i.requestconn = conn
-                self.uploadspanel.update(i)
+        elif direction == 0:
+
+            for i in self.uploads:
+                if i.req == req:
+                    i.status = "Requesting file"
+                    i.requestconn = conn
+                    self.uploadspanel.update(i)
+                    break
 
     def TransferRequest(self, msg):
 
@@ -777,6 +801,7 @@ class Transfers:
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
+                break
 
         for i in self.downloads:
             if i.user == user and i.filename == msg.file and i.status == "Queued":
@@ -890,6 +915,7 @@ class Transfers:
                     self.eventprocessor.ProcessRequestToPeer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
 
                 self.checkUploadQueue()
+                break
 
             for i in self.uploads:
 
@@ -918,6 +944,7 @@ class Transfers:
                     self.AutoClearUpload(i)
 
                 self.checkUploadQueue()
+                break
 
         elif msg.filesize is not None:
             for i in self.downloads:
@@ -972,6 +999,8 @@ class Transfers:
                 self.downloadspanel.update(i)
             elif i in self.uploads:
                 self.uploadspanel.update(i)
+
+            break
 
         self.checkUploadQueue()
 
@@ -1228,6 +1257,8 @@ class Transfers:
             if needupdate:
                 self.downloadspanel.update(i)
 
+            break
+
     def DownloadFinished(self, file, i):
         file.close()
         i.file = None
@@ -1421,6 +1452,8 @@ class Transfers:
 
             if needupdate:
                 self.uploadspanel.update(i)
+
+            break
 
     def AutoClearDownload(self, transfer):
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
@@ -1722,6 +1755,7 @@ class Transfers:
                 continue
 
             self._ConnClose(conn, addr, i, "download")
+            break
 
         for i in self.uploads:
             if type(error) is not ConnectionRefusedError and i.conn != conn:
@@ -1731,6 +1765,7 @@ class Transfers:
                 continue
 
             self._ConnClose(conn, addr, i, "upload")
+            break
 
     def _ConnClose(self, conn, addr, i, type):
         if i.requestconn == conn and i.status == "Requesting file":
@@ -1807,6 +1842,7 @@ class Transfers:
 
                 i.place = msg.place
                 self.downloadspanel.update(i)
+                break
 
     def FileError(self, msg):
         """ Networking thread encountered a local file error"""

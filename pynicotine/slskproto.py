@@ -728,8 +728,8 @@ class SlskProtoThread(threading.Thread):
                         "{}".format(msgBuffer[5:msgsize + 4].__repr__())
                     ))
 
-                    conn.conn.close()
                     self._ui_callback([ConnClose(conn.conn, conn.addr)])
+                    conn.conn.close()
                     conn.conn = None
                     break
 
@@ -830,8 +830,8 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 msgs.append(_("Distrib message type %(type)i size %(size)i contents %(msgBuffer)s unknown") % {'type': msgtype, 'size': msgsize - 1, 'msgBuffer': msgBuffer[5:msgsize + 4].__repr__()})
-                conn.conn.close()
                 self._ui_callback([ConnClose(conn.conn, conn.addr)])
+                conn.conn.close()
                 conn.conn = None
                 break
 
@@ -956,8 +956,8 @@ class SlskProtoThread(threading.Thread):
                             server_socket.close()
 
                 elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
-                    msgObj.conn.close()
                     self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
+                    msgObj.conn.close()
                     del conns[msgObj.conn]
 
                 elif msgObj.__class__ is OutConn:
@@ -979,6 +979,7 @@ class SlskProtoThread(threading.Thread):
                             numsockets += 1
 
                         except socket.error as err:
+
                             self._ui_callback([ConnectError(msgObj, err)])
                             conn.close()
 
@@ -1048,7 +1049,8 @@ class SlskProtoThread(threading.Thread):
                     size = conns[i].fileupl.size
 
                     if totalsentbytes < size:
-                        bytestoread = bytes_send * 2 - len(conns[i].obuf) + 10 * 1024
+                        bytestoread = bytes_send * 2 - len(conns[i].obuf) + 10 * 4024
+
                         if bytestoread > 0:
                             read = conns[i].fileupl.file.read(bytestoread)
                             conns[i].obuf.extend(read)
@@ -1206,6 +1208,7 @@ class SlskProtoThread(threading.Thread):
             for connection_in_progress in connsinprogress.copy():
 
                 if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
+
                     connection_in_progress.close()
                     del connsinprogress[connection_in_progress]
                     continue
@@ -1216,6 +1219,7 @@ class SlskProtoThread(threading.Thread):
                         connection_in_progress.recv(0)
 
                 except socket.error as err:
+
                     self._ui_callback([ConnectError(msgObj, err)])
 
                     connection_in_progress.close()
