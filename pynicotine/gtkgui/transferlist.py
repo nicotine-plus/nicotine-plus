@@ -228,20 +228,22 @@ class TransferList:
 
     def update(self, transfer=None, forceupdate=False):
 
-        if (time() - self.last_save) > 15:
+        curtime = time()
+
+        if (curtime - self.last_save) > 15:
 
             """ Save downloads list to file every 15 seconds """
 
             if self.frame.np.transfers is not None:
                 self.frame.np.transfers.SaveDownloads()
 
-            self.last_save = time()
+            self.last_save = curtime
 
         transferring = (transfer is not None and transfer.status == "Transferring")
 
         if not forceupdate and \
             transferring and \
-                (time() - self.last_ui_update) <= 1:
+                (curtime - self.last_ui_update) <= 1:
 
             """ We save CPU by not updating the transfer list every time a part of
             a file is transferred """
@@ -270,7 +272,7 @@ class TransferList:
 
         if not forceupdate and \
             not finished and \
-                (time() - self.last_ui_update) <= 1:
+                (curtime - self.last_ui_update) <= 1:
 
             """ Unless a transfer finishes, use a cooldown to avoid updating
             too often """
