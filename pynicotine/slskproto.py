@@ -377,10 +377,7 @@ class SlskProtoThread(threading.Thread):
         93: DistribServerSearch
     }
 
-    IN_PROGRESS_STALE_AFTER = 30
-    # The value of 30 was pulled out of thin air. When we let the OS handle this:
-    # - Linux seems okay, stale in progress conns get killed after a minute or two
-    # - With Windows, based on #473, it would seem these connections are never removed
+    IN_PROGRESS_STALE_AFTER = 5
     CONNECTION_MAX_IDLE = 60
     CONNCOUNT_UI_INTERVAL = 0.5
 
