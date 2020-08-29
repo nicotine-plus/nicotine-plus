@@ -416,7 +416,8 @@ class SlskProtoThread(threading.Thread):
         self._limits = {}
         self._dlimits = {}
 
-        self.last_conncount_ui_update = self.last_file_update = time.time()
+        self.last_conncount_ui_update = self.last_file_input_update = \
+            self.last_file_output_update = time.time()
 
         # GeoIP Config
         self._geoip = None
@@ -650,15 +651,16 @@ class SlskProtoThread(threading.Thread):
                     pass
 
             addedbyteslen = len(addedbytes)
+            curtime = time.time()
 
             if (leftbytes - addedbyteslen) == 0 or \
-                    (time.time() - self.last_file_update) > 1:
+                    (curtime - self.last_file_input_update) > 1:
 
                 """ We save resources by not sending data back to the UI every time
-                a part of a file is transferred """
+                a part of a file is downloaded """
 
                 self._ui_callback([DownloadFile(conn.conn, addedbyteslen, conn.filedown.file)])
-                self.last_file_update = time.time()
+                self.last_file_input_update = curtime
 
             conn.filereadbytes += addedbyteslen
             msgBuffer = msgBuffer[leftbytes:]
@@ -1043,8 +1045,12 @@ class SlskProtoThread(threading.Thread):
                 conns[i].fileupl.sentbytes += bytes_send
                 conns[i].sentbytes2 += bytes_send
 
+                totalsentbytes = conns[i].fileupl.offset + conns[i].fileupl.sentbytes + len(conns[i].obuf)
+
                 try:
-                    if conns[i].fileupl.offset + conns[i].fileupl.sentbytes + len(conns[i].obuf) < conns[i].fileupl.size:
+                    size = conns[i].fileupl.size
+
+                    if totalsentbytes < size:
                         bytestoread = bytes_send * 2 - len(conns[i].obuf) + 10 * 1024
                         if bytestoread > 0:
                             read = conns[i].fileupl.file.read(bytestoread)
@@ -1056,8 +1062,19 @@ class SlskProtoThread(threading.Thread):
                 except ValueError:
                     pass
 
-                if bytes_send > 0:
+                if bytes_send <= 0:
+                    return
+
+                curtime = time.time()
+
+                if totalsentbytes == size or \
+                        (curtime - self.last_file_output_update) > 1:
+
+                    """ We save resources by not sending data back to the UI every time
+                    a part of a file is uploaded """
+
                     self._ui_callback([conns[i].fileupl])
+                    self.last_file_output_update = curtime
 
     def readData(self, conns, i):
         # Check for a download limit
