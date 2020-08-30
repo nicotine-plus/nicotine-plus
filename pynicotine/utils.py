@@ -40,7 +40,6 @@ from subprocess import Popen
 
 version = "2.1.0.dev1"
 
-log = 0
 win32 = sys.platform.startswith("win")
 
 illegalpathchars = []
@@ -326,33 +325,6 @@ def ApplyTranslation():
     gettext.textdomain(PACKAGE)
 
 
-def displayTraceback(exception=None):
-
-    global log
-    import traceback
-
-    if exception is None:
-        tb = traceback.format_tb(sys.exc_info()[2])
-    else:
-        tb = traceback.format_tb(exception)
-
-    if log:
-        log("Traceback: " + str(sys.exc_info()[0].__name__) + ": " + str(sys.exc_info()[1]))
-
-    for line in tb:
-        if type(line) is tuple:
-            xline = ""
-            for item in line:
-                xline += str(item) + " "
-            line = xline
-
-        line = line.strip("\n")
-        if log:
-            log(line)
-
-    traceback.print_exc()
-
-
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
@@ -458,28 +430,6 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
         return True
 
     return procs[-1].communicate()[0]
-
-
-def findBestEncoding(bytes, encodings, fallback=None):
-    """Tries to convert the bytes with the encodings, the first successful conversion is returned.
-
-    If none match the fallback encoding will be used with the 'replace' argument. If no fallback is
-    given the first encoding from the list is used."""
-
-    if isinstance(bytes, str):
-        return bytes
-
-    for encoding in encodings:
-        try:
-            return str(bytes, encoding)
-        except (UnicodeDecodeError, LookupError):
-            pass
-
-    # None were successful
-    if fallback:
-        return str(bytes, fallback, 'replace')
-    else:
-        return str(bytes, encodings[0], 'replace')
 
 
 def strace(function):

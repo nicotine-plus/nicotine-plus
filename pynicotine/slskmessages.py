@@ -28,7 +28,6 @@ from itertools import count
 
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
-from pynicotine.utils import findBestEncoding
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
@@ -234,7 +233,16 @@ class SlskMessage:
                 string = message[start + intsize:start + length + intsize]
 
                 if rawbytes is False:
-                    string = findBestEncoding(string, ['utf-8', 'iso-8859-1'])
+                    try:
+                        string = string.decode('utf-8')
+                    except Exception:
+                        # Older clients (Soulseek NS)
+
+                        try:
+                            string = string.decode('iso-8859-1')
+                        except Exception as error:
+                            if printerror:
+                                log.addwarning("Error trying to decode string '%s': %s" % (string, error))
 
                 return length + intsize + start, string
             else:
@@ -1511,7 +1519,6 @@ class PrivateRoomSomething(ServerMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
-        self.debug()
 
 
 class PrivateRoomAdded(ServerMessage):

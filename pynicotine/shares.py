@@ -33,7 +33,6 @@ from gi.repository import GLib
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.utils import displayTraceback
 from pynicotine.utils import GetUserDirectories
 
 
@@ -569,7 +568,6 @@ class Shares:
         except Exception as errtuple:
             message = _("Error while scanning file %(path)s: %(error)s") % {'path': pathname, 'error': errtuple}
             self.logMessage(message)
-            displayTraceback(sys.exc_info()[2])
 
     # Get streams of files
     def getFilesStreams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False, yieldcall=None):
