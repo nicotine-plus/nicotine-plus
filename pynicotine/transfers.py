@@ -333,14 +333,14 @@ class Transfers:
 
     def gettingAddress(self, req, direction):
 
-        if direction == 1:
+        if direction == 0:
             for i in self.downloads:
                 if i.req == req:
                     i.status = "Getting address"
                     self.downloadspanel.update(i)
                     break
 
-        elif direction == 0:
+        elif direction == 1:
 
             for i in self.uploads:
                 if i.req == req:
@@ -352,14 +352,14 @@ class Transfers:
         """ A connection is in progress, we got the address for a user we need
         to connect to."""
 
-        if direction == 1:
+        if direction == 0:
             for i in self.downloads:
                 if i.req == req:
                     i.status = "Connecting"
                     self.downloadspanel.update(i)
                     break
 
-        elif direction == 0:
+        elif direction == 1:
 
             for i in self.uploads:
                 if i.req == req:
@@ -372,14 +372,14 @@ class Transfers:
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
-        if direction == 1:
+        if direction == 0:
             for i in self.downloads:
                 if i.req == req:
                     i.status = "Waiting for peer to connect"
                     self.downloadspanel.update(i)
                     break
 
-        elif direction == 0:
+        elif direction == 1:
 
             for i in self.uploads:
                 if i.req == req:
@@ -449,7 +449,7 @@ class Transfers:
         """ A connection has been established, now exchange initialisation
         messages."""
 
-        if direction == 1:
+        if direction == 0:
             for i in self.downloads:
                 if i.req == req:
                     i.status = "Requesting file"
@@ -457,7 +457,7 @@ class Transfers:
                     self.downloadspanel.update(i)
                     break
 
-        elif direction == 0:
+        elif direction == 1:
 
             for i in self.uploads:
                 if i.req == req:
