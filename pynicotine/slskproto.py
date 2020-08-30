@@ -846,6 +846,29 @@ class SlskProtoThread(threading.Thread):
                 i.starttime = curtime
                 i.sentbytes2 = 0
 
+    def set_server_socket_keepalive(self, server_socket):
+        keep_idle = 10  # in seconds
+        keep_interval = 5  # in seconds
+        keep_count = 8
+
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+
+        if getattr(socket, 'TCP_KEEPINTVL', None) is not None:
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 5)
+
+        if getattr(socket, 'TCP_KEEPCNT', None) is not None:
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 8)
+
+        if getattr(socket, 'TCP_KEEPIDLE', None) is not None:
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 10)
+
+        elif getattr(socket, 'SIO_KEEPALIVE_VALS', None) is not None:
+            # Windows fallback
+
+            server_socket.ioctl(SIO_KEEPALIVE_VALS,
+                    (1, keep_idle * 1000, keep_interval * 1000)
+            )
+
     def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
         """ Processes messages sent by UI thread. server_socket is a server connection
         socket object, queue holds the messages, conns and connsinprogress
@@ -940,10 +963,7 @@ class SlskProtoThread(threading.Thread):
                             server_socket.setblocking(1)
 
                             # Detect if our connection to the server is still working
-                            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 10)
-                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 5)
-                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 8)
+                            self.set_server_socket_keepalive(server_socket)
 
                             connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
                             numsockets += 1
