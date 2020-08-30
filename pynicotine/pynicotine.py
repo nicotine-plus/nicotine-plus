@@ -133,6 +133,7 @@ class NetworkEventProcessor:
         self.ip_requested = []
         self.PrivateMessageQueue = {}
         self.users = {}
+        self.user_addr_requested = []
         self.queue = queue.Queue(0)
         self.shares = Shares(self)
 
@@ -312,10 +313,11 @@ class NetworkEventProcessor:
 
         conn = None
 
-        for i in self.peerconns:
-            if i.username == user and i.init.type == 'P' and message.__class__ is not slskmessages.FileRequest:
-                conn = i
-                break
+        if message.__class__ is not slskmessages.FileRequest:
+            for i in self.peerconns:
+                if i.username == user and i.init.type == 'P':
+                    conn = i
+                    break
 
         if conn is not None and conn.conn is not None:
 
@@ -327,7 +329,7 @@ class NetworkEventProcessor:
                 window.InitWindow(conn.username, conn.conn)
 
             if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                self.transfers.gotConnect(message.req, conn.conn)
+                self.transfers.gotConnect(message.req, conn.conn, message.direction)
 
             return
 
@@ -355,8 +357,9 @@ class NetworkEventProcessor:
 
             if firewalled:
                 if addr is None:
-                    self.queue.put(slskmessages.GetPeerAddress(user))
-                    addr = "in_progress"
+                    if user not in self.user_addr_requested:
+                        self.queue.put(slskmessages.GetPeerAddress(user))
+                        self.user_addr_requested.append(user)
                 elif behindfw is None:
                     self.queue.put(slskmessages.OutConn(None, addr))
                 else:
@@ -380,11 +383,11 @@ class NetworkEventProcessor:
         if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
 
             if conn.addr is None:
-                self.transfers.gettingAddress(message.req)
+                self.transfers.gettingAddress(message.req, message.direction)
             elif conn.token is None:
-                self.transfers.gotAddress(message.req)
+                self.transfers.gotAddress(message.req, message.direction)
             else:
-                self.transfers.gotConnectError(message.req)
+                self.transfers.gotConnectError(message.req, message.direction)
 
     def setServerTimer(self):
 
@@ -474,7 +477,7 @@ class NetworkEventProcessor:
 
                         for j in i.msgs:
                             if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                                self.transfers.gotConnectError(j.req)
+                                self.transfers.gotConnectError(j.req, j.direction)
 
                         conntimeout = ConnectToPeerTimeout(i, self.callback)
                         timer = threading.Timer(120.0, conntimeout.timeout)
@@ -1063,8 +1066,10 @@ class NetworkEventProcessor:
 
     def GetPeerAddress(self, msg):
 
+        user = msg.user
+
         for i in self.peerconns:
-            if i.username == msg.user and i.addr == "in_progress":
+            if i.username == user and i.addr is None:
                 if msg.port != 0 or i.tryaddr == 10:
                     if i.tryaddr == 10:
                         self.logMessage(
@@ -1089,21 +1094,20 @@ class NetworkEventProcessor:
 
                     for j in i.msgs:
                         if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                            self.transfers.gotAddress(j.req)
+                            self.transfers.gotAddress(j.req, j.direction)
                 else:
                     if i.tryaddr is None:
                         i.tryaddr = 1
                         self.logMessage(
                             _("Server reported port 0 for user %(user)s, retrying") % {
-                                'user': msg.user
+                                'user': user
                             },
                             3
                         )
                     else:
                         i.tryaddr += 1
 
-                    self.queue.put(slskmessages.GetPeerAddress(msg.user))
-                break
+                    self.queue.put(slskmessages.GetPeerAddress(user))
         else:
 
             if msg.user in self.users:
@@ -1161,6 +1165,8 @@ class NetworkEventProcessor:
             self.logMessage(message)
             self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 
+        self.user_addr_requested.remove(user)
+
     def Relogged(self, msg):
         self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
         self.frame.manualdisconnect = 1
@@ -1192,7 +1198,7 @@ class NetworkEventProcessor:
                         self.transfers.gotFileConnect(j.req, msg.conn)
 
                     if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                        self.transfers.gotConnect(j.req, msg.conn)
+                        self.transfers.gotConnect(j.req, msg.conn, j.direction)
 
                     j.conn = msg.conn
                     self.queue.put(j)
@@ -1453,7 +1459,7 @@ class NetworkEventProcessor:
                         self.transfers.gotFileConnect(j.req, msg.conn.conn)
 
                     if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                        self.transfers.gotConnect(j.req, msg.conn.conn)
+                        self.transfers.gotConnect(j.req, msg.conn.conn, j.direction)
 
                     j.conn = msg.conn.conn
                     self.queue.put(j)
