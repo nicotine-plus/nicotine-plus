@@ -9,6 +9,7 @@ Version 2.1.0-dev1 (unreleased)
 Changes
 
  * Major performance improvements when rescanning shared files and sending user browse responses to others
+ * Several performance and stability improvements related to connections and file transfers
  * Reduced memory usage while rescanning shared files
  * Consistent startup times no matter the number of shared files.
    On large file shares, this cuts down startup times from tens of seconds to 1-2 seconds, depending on your hardware.
@@ -17,9 +18,13 @@ Changes
  * In folder/user grouping mode, selecting a user or folder now allows you to retry/cancel all downloads under them
  * Added quick-access checkbox for enabling/disabling private room invitations
  * Replaced ticker banner with room wall, which displays individual messages from room users
+ * "Send to player"-feature is functional again
+ * Queue position of downloads is now asked automatically
+ * The wishlist feature now works as intended, sending one search at a time instead of three. Wishlist items can also be renamed.
  * Improved notification settings
  * Improved readability in search results and transfer views
  * Several other UI fixes and improvements
+ * A rare issue where all tabs were hidden on startup has been fixed
  * Using non-Latin characters in the Windows client now works properly again
  * The Windows installer size was reduced from ~40 MB to ~25 MB
  * The Windows installer now removes old Nicotine+ system files before updating installations
@@ -51,7 +56,21 @@ Issues closed on GitHub
  * search tab "close thistab" missing if 3 tabs are open ([#481](https://github.com/Nicotine-Plus/nicotine-plus/issues/481))
  * close button in About Nicotine+ doesn't work ([#485](https://github.com/Nicotine-Plus/nicotine-plus/issues/485))
  * Wishlist has issues with chinese characters ([#498](https://github.com/Nicotine-Plus/nicotine-plus/issues/498))
-
+ * Wishlist - Ability to rename wishlist searches ([#499](https://github.com/Nicotine-Plus/nicotine-plus/issues/499))
+ * Certain searches don't stop even after closing the tab, restarting the program, and/or disconnecting and reconnecting to Soulseek ([#520](https://github.com/Nicotine-Plus/nicotine-plus/issues/520))
+ * stacktrace: struct.error: required argument is not an integer ([#527](https://github.com/Nicotine-Plus/nicotine-plus/issues/527))
+ * something goes wrong .... ([#529](https://github.com/Nicotine-Plus/nicotine-plus/issues/529))
+ * Warning: unknown object type 'bool' in message 'pynicotine.slskmessages.FileSearchResult' ([#535](https://github.com/Nicotine-Plus/nicotine-plus/issues/535))
+ * regression on open files on OpenBSD ([#536](https://github.com/Nicotine-Plus/nicotine-plus/issues/536))
+ * Chat messages went nowhere and I got this trace. ([#545](https://github.com/Nicotine-Plus/nicotine-plus/issues/545))
+ * Mouse cursor does not indicate draggable borders ([#552](https://github.com/Nicotine-Plus/nicotine-plus/issues/552))
+ * Network share issue ([#559](https://github.com/Nicotine-Plus/nicotine-plus/issues/559))
+ * possibly worrie with upload stuck in connecting state if folder uploaded ([#564](https://github.com/Nicotine-Plus/nicotine-plus/issues/564))
+ * Let user choose for International flag ([#569](https://github.com/Nicotine-Plus/nicotine-plus/issues/569))
+ * Search -> Right Click -> Download folder(s) does nothing ([#574](https://github.com/Nicotine-Plus/nicotine-plus/issues/574))
+ * Some weird characters prevents download of file ([#578](https://github.com/Nicotine-Plus/nicotine-plus/issues/578))
+ * some margin lines are missing (possible qt/gtk issue) ([#593](https://github.com/Nicotine-Plus/nicotine-plus/issues/593))
+ * arrows are missing from the tree view collapse/expand ([#594](https://github.com/Nicotine-Plus/nicotine-plus/issues/594))
 
 Version 2.0.1 (16 July 2020)
 -----------------------------
