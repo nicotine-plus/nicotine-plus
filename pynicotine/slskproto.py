@@ -982,6 +982,8 @@ class SlskProtoThread(threading.Thread):
 
                             self._ui_callback([ConnectError(msgObj, err)])
                             conn.close()
+                    else:
+                        self._ui_callback([ConnectError(msgObj)])
 
                 elif msgObj.__class__ is DownloadFile and msgObj.conn in conns:
                     conns[msgObj.conn].filedown = msgObj
@@ -1207,14 +1209,17 @@ class SlskProtoThread(threading.Thread):
 
             for connection_in_progress in connsinprogress.copy():
 
+                msgObj = connsinprogress[connection_in_progress].msgObj
+
                 if (curtime - connsinprogress[connection_in_progress].lastactive) > self.IN_PROGRESS_STALE_AFTER:
+
+                    self._ui_callback([ConnClose(msgObj.conn, msgObj.addr)])
 
                     connection_in_progress.close()
                     del connsinprogress[connection_in_progress]
                     continue
 
                 try:
-                    msgObj = connsinprogress[connection_in_progress].msgObj
                     if connection_in_progress in input:
                         connection_in_progress.recv(0)
 
