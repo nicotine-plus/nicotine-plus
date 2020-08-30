@@ -341,6 +341,7 @@ class TransferList:
 
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
+                iter = self.transfersmodel.iter_next(iter)
                 continue
 
             elapsed += self.transfersmodel.get_value(iter, 15)

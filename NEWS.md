@@ -71,6 +71,7 @@ Issues closed on GitHub
  * Some weird characters prevents download of file ([#578](https://github.com/Nicotine-Plus/nicotine-plus/issues/578))
  * some margin lines are missing (possible qt/gtk issue) ([#593](https://github.com/Nicotine-Plus/nicotine-plus/issues/593))
  * arrows are missing from the tree view collapse/expand ([#594](https://github.com/Nicotine-Plus/nicotine-plus/issues/594))
+ * Nicotine Freezes With Too Many Transfers ([#609](https://github.com/Nicotine-Plus/nicotine-plus/issues/609))
 
 Version 2.0.1 (16 July 2020)
 -----------------------------
