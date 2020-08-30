@@ -39,7 +39,6 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import CleanFile
-from pynicotine.utils import displayTraceback
 from pynicotine.utils import executeCommand
 from pynicotine.utils import GetUserDirectories
 from pynicotine.utils import GetResultBitrateLength
@@ -525,8 +524,9 @@ class UserBrowse:
 
             try:
                 self.files[f[0]] = self.FileStore.append(f)
-            except Exception:
-                displayTraceback()
+            except Exception as msg:
+                error = _("Error while attempting to display folder '%(folder)s', reported error: %(error)s" % {'folder': directory, 'error': msg})
+                self.frame.logMessage(error)
 
     def OnSave(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")

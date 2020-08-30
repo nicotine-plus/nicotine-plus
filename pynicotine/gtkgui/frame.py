@@ -38,7 +38,6 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 import _thread
-import pynicotine.utils
 from pynicotine import pluginsystem
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -140,8 +139,6 @@ class NicotineFrame:
         utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
         utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         utils.NICOTINE = self
-
-        pynicotine.utils.log = self.logMessage
 
         log.addlistener(self.logCallback)
 

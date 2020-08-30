@@ -49,7 +49,6 @@ from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
-from pynicotine.utils import log
 from pynicotine.utils import unescape
 
 
@@ -114,7 +113,6 @@ class NetworkEventProcessor:
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
-            log.addwarning(int)
             self.config = Config(config, data_dir)
             self.callback([PopupMessage(short, long)])
 
