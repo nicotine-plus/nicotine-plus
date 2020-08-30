@@ -629,6 +629,8 @@ Nicotine: ServerPing
 
 #### Description
 
+**DEPRECIATED**
+
 We test if the server responds.
 
 #### Data Order
