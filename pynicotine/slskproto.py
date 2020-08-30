@@ -207,15 +207,6 @@ class Connection:
         self.lastreadlength = 100 * 1024
 
 
-class ServerConnection(Connection):
-    """
-    Server socket
-    """
-    def __init__(self, conn=None, addr=None):
-        Connection.__init__(self, conn, addr)
-        self.lastping = time.time()
-
-
 class PeerConnection(Connection):
     def __init__(self, conn=None, addr=None, init=None):
         Connection.__init__(self, conn, addr)
@@ -271,7 +262,7 @@ class SlskProtoThread(threading.Thread):
         MessageAcked: 23,
         FileSearch: 26,
         SetStatus: 28,
-        ServerPing: 32,
+        ServerPing: 32,  # Depreciated
         SendSpeed: 34,  # Depreciated
         SharedFoldersFiles: 35,
         GetUserStats: 36,
@@ -948,6 +939,12 @@ class SlskProtoThread(threading.Thread):
                             server_socket.connect_ex(msgObj.addr)
                             server_socket.setblocking(1)
 
+                            # Detect if our connection to the server is still working
+                            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 10)
+                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 5)
+                            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 8)
+
                             connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
                             numsockets += 1
 
@@ -1233,7 +1230,7 @@ class SlskProtoThread(threading.Thread):
                 else:
                     if connection_in_progress in output:
                         if connection_in_progress is server_socket:
-                            conns[server_socket] = ServerConnection(conn=server_socket, addr=msgObj.addr)
+                            conns[server_socket] = Connection(conn=server_socket, addr=msgObj.addr)
 
                             self._ui_callback([ServerConn(server_socket, msgObj.addr)])
 
@@ -1286,16 +1283,6 @@ class SlskProtoThread(threading.Thread):
                         connection.close()
                         del conns[connection]
                         continue
-
-                if connection is server_socket:
-                    # ---------------------------
-                    # Server Pings used to get us banned
-                    # ---------------------------
-                    # Was 30 seconds
-
-                    if curtime - conns[server_socket].lastping > 120:
-                        conns[server_socket].lastping = curtime
-                        queue.put(ServerPing())
 
                 if connection in input:
                     if self._isDownload(conns[connection]):

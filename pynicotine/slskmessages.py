@@ -683,7 +683,7 @@ class SetStatus(ServerMessage):
 
 class ServerPing(ServerMessage):
     """ Server code: 32 """
-    """ We test if the server responds. """
+    """ We test if the server responds. DEPRECIATED """
     def makeNetworkMessage(self):
         return b""
 
