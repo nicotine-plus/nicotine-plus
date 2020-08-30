@@ -20,7 +20,7 @@ $ sudo apt install nicotine
 ```
 
 ### Ubuntu PPA (Unstable)
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). It currently contains bleeding edge packages for _Xenial_, _Bionic_, _Eoan_, _Focal_, and _Groovy_. To use it, run the following:
+The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). It currently contains bleeding edge packages for _Xenial_, _Bionic_, _Focal_, and _Groovy_. To use it, run the following:
 
 ```console
 $ sudo add-apt-repository ppa:nicotine-team/unstable
