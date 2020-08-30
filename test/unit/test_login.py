@@ -59,7 +59,7 @@ def test_server_conn(config, monkeypatch) -> None:
     sleep(SLSKPROTO_RUN_TIME)
 
     proto.abort()
-    assert mock_socket.setsockopt.call_count == 1
+    assert mock_socket.setsockopt.call_count == 5
     assert mock_socket.setblocking.call_count == 2
     assert mock_socket.bind.call_count == 1
     assert mock_socket.connect_ex.call_count == 1
