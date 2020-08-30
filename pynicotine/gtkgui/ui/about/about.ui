@@ -8,14 +8,23 @@
     <property name="window_position">center-on-parent</property>
     <property name="logo_icon_name">org.nicotine_plus.Nicotine</property>
     <property name="program_name">Nicotine+</property>
-    <property name="comments" translatable="yes">A graphical client for the Soulseek peer-to-peer system
-Based on code from Nicotine and PySoulSeek
-
-This product includes IP2Location LITE data, available from:
-https://www.ip2location.com</property>
+    <property name="comments" translatable="yes">A graphical client for the Soulseek peer-to-peer system</property>
     <property name="website">https://nicotine-plus.org</property>
+    <property name="copyright">© 2001 Alexander Kanavin
+© 2003 Nicotine Team
+© 2006 Nicotine+ Team</property>
     <property name="license_type">GTK_LICENSE_GPL_3_0_ONLY</property>
-    <property name="authors"># Nicotine+ MAINTAINERS
+    <property name="authors"># ATTRIBUTIONS
+
+- This product includes IP2Location LITE data,
+  available from:
+  https://www.ip2location.com
+
+- Country flags licensed under the MIT License.
+  Copyright (c) 2013 Panayiotis Lipiridis
+  https://github.com/lipis/flag-icon-css
+
+# Nicotine+ MAINTAINERS
 
 ### Active
 
@@ -56,7 +65,8 @@ QuinoX
 hedonist (formerly known as alexbk)
 - OS X nicotine.app maintainer / developer
 - [ak(at)sensi(dot)org]
-- Author of original pyslsk, which is used for nicotine core
+- Author of original pyslsk, which is used for
+  nicotine core
 
 lee8oi
 - Bash Commander
@@ -129,10 +139,7 @@ SeeSchloss
 vasi
 - Mac developer
 - [djvasi@gmail.com]
-- Packaged nicotine on OSX PowerPc
-
-Country flags provided by flags.blogpotato.de,
-distributed under a CC BY-SA 3.0 Unported license.</property>
+- Packaged nicotine on OSX PowerPc</property>
     <property name="translator_credits">Dutch
  * nince78 (2007)
  * hyriand
