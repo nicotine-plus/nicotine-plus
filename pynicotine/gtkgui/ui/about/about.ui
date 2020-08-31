@@ -8,7 +8,7 @@
     <property name="window_position">center-on-parent</property>
     <property name="logo_icon_name">org.nicotine_plus.Nicotine</property>
     <property name="program_name">Nicotine+</property>
-    <property name="comments" translatable="yes">A graphical client for the Soulseek peer-to-peer system</property>
+    <property name="comments" translatable="yes">A graphical client for the Soulseek file sharing network</property>
     <property name="website">https://nicotine-plus.org</property>
     <property name="copyright">© 2001 Alexander Kanavin
 © 2003 Nicotine Team

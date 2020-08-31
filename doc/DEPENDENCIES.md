@@ -40,12 +40,13 @@ sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1 gir1.2-notify-0.7
 ```
 
 #### Check the Python version.
-To check that the Python version you are using is 3.5 or newer use `python -V`. On lots of systems this will return something like this:
+To check that the Python version you are using is 3.5 or newer, use `python -V`. On a lot of older systems, the response will look something like this:  
 ```
 % python -V
 Python 2.7.16
 ```
-Not to worry, python version 3 is often installed alongside and can be used like  this:
+
+Not to worry, Python 3 is often installed alongside and can be used like this:  
 ```
 % python3 -V
 Python 3.7.3
