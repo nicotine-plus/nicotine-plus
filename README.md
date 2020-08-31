@@ -1,6 +1,8 @@
 # Nicotine+
 
-Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network. It is an attempt to keep [Nicotine](https://web.archive.org/web/20150720173459/http://nicotine.thegraveyard.org/) working with the latest libraries, kill bugs, keep current with the Soulseek protocol, and add some new features that users want and/or need.
+Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network.
+
+Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to the official Soulseek client, providing additional functionality while keeping current with the Soulseek protocol.
 
 [Screenshots](files/screenshots/SCREENSHOTS.md)
 
@@ -50,7 +52,7 @@ To install Nicotine+ on Fedora, run the following:
 $ dnf install nicotine+
 ```
 
-### Guix
+### Guix (Stable)
 To install Nicotine+ on Guix, run the following:
 
 ```console
@@ -88,9 +90,8 @@ Please note that we haven't been able to test these packages. Please let us know
 
 - [Download Installer / Package](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
-## Building from git
-Building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md)
-Also do read the next section about getting involved.
+## Building from git (Unstable)
+For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
 
 # Getting Involved
 Please come and join us in the `#nicotine+` channel on Freenode!

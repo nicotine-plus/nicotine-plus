@@ -29,4 +29,4 @@ $ cd nicotine-plus
 $ sudo python3 setup.py install
 ```
 
-And after that you should be able to run `nicotine` just like a normal command.
+After that, you should be able to run `nicotine` like a normal command.

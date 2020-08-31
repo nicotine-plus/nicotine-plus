@@ -9,12 +9,13 @@
   <summary>A graphical client for the Soulseek file sharing network</summary>
   <description>
     <p>
-      Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing network.
+      Nicotine+ is a graphical client for the Soulseek peer-to-peer file
+      sharing network.
     </p>
     <p>
-      Nicotine+ is an attempt to keep Nicotine working with the latest
-      libraries, kill bugs, keep current with the Soulseek protocol and add some
-      new features that users want and/or need.
+      Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
+      alternative to the official Soulseek client, providing additional
+      functionality while keeping current with the Soulseek protocol.
     </p>
   </description>
   <categories>
