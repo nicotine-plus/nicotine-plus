@@ -683,7 +683,7 @@ class SetStatus(ServerMessage):
 
 class ServerPing(ServerMessage):
     """ Server code: 32 """
-    """ We test if the server responds. """
+    """ We test if the server responds. DEPRECATED """
     def makeNetworkMessage(self):
         return b""
 
@@ -694,7 +694,7 @@ class ServerPing(ServerMessage):
 class SendSpeed(ServerMessage):
     """ Server code: 34 """
     """ We used to send this after a finished download to let the server update
-    the speed statistics for a user. DEPRECIATED """
+    the speed statistics for a user. DEPRECATED """
     def __init__(self, user=None, speed=None):
         self.user = user
         self.speed = speed
@@ -747,7 +747,7 @@ class GetUserStats(ServerMessage):
 class QueuedDownloads(ServerMessage):
     """ Server code: 40 """
     """ The server sends this to indicate if someone has download slots available
-    or not. DEPRECIATED """
+    or not. DEPRECATED """
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.slotsfull = self.getObject(message, int, pos)
@@ -877,7 +877,7 @@ class UserInterests(ServerMessage):
 class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ Server sends this to indicate change in place in queue while we're
-    waiting for files from other peer. DEPRECIATED """
+    waiting for files from other peer. DEPRECATED """
     def __init__(self, user=None, req=None, place=None):
         self.req = req
         self.user = user
@@ -955,7 +955,7 @@ class RoomList(ServerMessage):
 
 class ExactFileSearch(ServerMessage):
     """ Server code: 65 """
-    """ Someone is searching for a file with an exact name. DEPRECIATED
+    """ Someone is searching for a file with an exact name. DEPRECATED
     (no results even with official client) """
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
@@ -975,7 +975,7 @@ class AdminMessage(ServerMessage):
 
 class GlobalUserList(JoinRoom):
     """ Server code: 67 """
-    """ We send this to get a global list of all users online. DEPRECIATED """
+    """ We send this to get a global list of all users online. DEPRECATED """
     def makeNetworkMessage(self):
         return b""
 
@@ -985,7 +985,7 @@ class GlobalUserList(JoinRoom):
 
 class TunneledMessage(ServerMessage):
     """ Server code: 68 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def __init__(self, user=None, req=None, code=None, msg=None):
         self.user = user
         self.req = req
@@ -1066,28 +1066,28 @@ class ParentSpeedRatio(ParentMinSpeed):
 
 class ParentInactivityTimeout(ServerMessage):
     """ Server code: 86 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
 
 class SearchInactivityTimeout(ServerMessage):
     """ Server code: 87 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
 
 class MinParentsInCache(ServerMessage):
     """ Server code: 88 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def parseNetworkMessage(self, message):
         pos, self.num = self.getObject(message, int)
 
 
 class DistribAliveInterval(ServerMessage):
     """ Server code: 90 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
@@ -2195,7 +2195,7 @@ class TransferResponse(PeerMessage):
 
 class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
-    """ DEPRECIATED """
+    """ DEPRECATED """
     def __init__(self, conn, file=None):
         self.conn = conn
         self.file = file

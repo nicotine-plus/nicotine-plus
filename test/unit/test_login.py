@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import socket
+
 from queue import Queue
 from time import sleep
 from unittest.mock import Mock, MagicMock
@@ -59,7 +61,17 @@ def test_server_conn(config, monkeypatch) -> None:
     sleep(SLSKPROTO_RUN_TIME)
 
     proto.abort()
-    assert mock_socket.setsockopt.call_count == 1
+
+    if hasattr(socket, 'TCP_KEEPIDLE'):
+        assert mock_socket.setsockopt.call_count == 5
+
+    elif hasattr(socket, 'TCP_KEEPALIVE'):
+        assert mock_socket.setsockopt.call_count == 3
+
+    elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+        assert mock_socket.ioctl.call_count == 1
+        assert mock_socket.setsockopt.call_count == 2
+
     assert mock_socket.setblocking.call_count == 2
     assert mock_socket.bind.call_count == 1
     assert mock_socket.connect_ex.call_count == 1

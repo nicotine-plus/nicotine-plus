@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 21 August 2020
+Last updated on 2 September 2020
 
 ## Sections
 
@@ -629,6 +629,8 @@ Nicotine: ServerPing
 
 #### Description
 
+**DEPRECATED**
+
 We test if the server responds.
 
 #### Data Order
@@ -649,7 +651,7 @@ Nicotine: SendSpeed
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 We used to send this after a finished download to let the server update the speed statistics for a user.
 
@@ -717,7 +719,7 @@ Nicotine: QueuedDownloads
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 The server sends this to indicate if someone has download slots available or not.
 
@@ -912,7 +914,7 @@ We ask the server for a user's liked and hated interests. The server responds wi
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 The server tells us a new room has been added.
 
@@ -938,7 +940,7 @@ Nicotine: PlaceInLineResponse
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 The server tells us a new room has been added.
 
@@ -960,7 +962,7 @@ Nicotine: RoomAdded
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 The server tells us a room has been removed.
 
@@ -1047,7 +1049,7 @@ Nicotine: ExactFileSearch
 
 #### Description
 
-**DEPRECIATED (no results even with official client)**
+**DEPRECATED (no results even with official client)**
 
 Someone is searching for a file with an exact name.
 
@@ -1094,7 +1096,7 @@ Nicotine: GlobalUserList
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 We send this to get a global list of all users online.
 
@@ -1232,7 +1234,7 @@ Nicotine: ParentSpeedRatio (unused)
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 #### Function Names
 
@@ -1252,7 +1254,7 @@ Nicotine: ParentInactivityTimeout
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 #### Function Names
 
@@ -1272,7 +1274,7 @@ Nicotine: SearchInactivityTimeout
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 #### Function Names
 
@@ -1294,7 +1296,7 @@ Nicotine: MinParentsInCache
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 #### Function Names
 
@@ -2802,7 +2804,7 @@ Nicotine: PlaceholdUpload
 
 #### Description
 
-**DEPRECIATED**
+**DEPRECATED**
 
 #### Data Order
 

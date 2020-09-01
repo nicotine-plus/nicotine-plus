@@ -207,15 +207,6 @@ class Connection:
         self.lastreadlength = 100 * 1024
 
 
-class ServerConnection(Connection):
-    """
-    Server socket
-    """
-    def __init__(self, conn=None, addr=None):
-        Connection.__init__(self, conn, addr)
-        self.lastping = time.time()
-
-
 class PeerConnection(Connection):
     def __init__(self, conn=None, addr=None, init=None):
         Connection.__init__(self, conn, addr)
@@ -271,7 +262,7 @@ class SlskProtoThread(threading.Thread):
         MessageAcked: 23,
         FileSearch: 26,
         SetStatus: 28,
-        ServerPing: 32,
+        ServerPing: 32,  # Depreciated
         SendSpeed: 34,  # Depreciated
         SharedFoldersFiles: 35,
         GetUserStats: 36,
@@ -855,6 +846,44 @@ class SlskProtoThread(threading.Thread):
                 i.starttime = curtime
                 i.sentbytes2 = 0
 
+    def set_server_socket_keepalive(self, server_socket, idle=10, interval=4, count=10):
+        """ Ensure we are disconnected from the server in case of connectivity issues,
+        by sending TCP keepalive pings. Assuming default values are used, once we reach
+        10 seconds of idle time, we start sending keepalive pings once every 4 seconds.
+        If 10 failed pings have been sent in a row (40 seconds), the connection is presumed
+        dead. """
+
+        if hasattr(socket, 'SO_KEEPALIVE'):
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+
+        if hasattr(socket, 'TCP_KEEPINTVL'):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, interval)
+
+        if hasattr(socket, 'TCP_KEEPCNT'):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)
+
+        if hasattr(socket, 'TCP_KEEPIDLE'):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)
+
+        elif hasattr(socket, 'TCP_KEEPALIVE'):
+            # macOS fallback
+
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)
+
+        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+            """ Windows fallback
+            Probe count is set to 10 on a system level, and can't be modified.
+            https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive """
+
+            server_socket.ioctl(
+                socket.SIO_KEEPALIVE_VALS,
+                (
+                    1,
+                    idle * 1000,
+                    interval * 1000
+                )
+            )
+
     def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
         """ Processes messages sent by UI thread. server_socket is a server connection
         socket object, queue holds the messages, conns and connsinprogress
@@ -940,6 +969,9 @@ class SlskProtoThread(threading.Thread):
                     if maxsockets == -1 or numsockets < maxsockets:
                         try:
                             server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+                            # Detect if our connection to the server is still alive
+                            self.set_server_socket_keepalive(server_socket)
 
                             if self._bindip:
                                 server_socket.bind((self._bindip, 0))
@@ -1233,7 +1265,7 @@ class SlskProtoThread(threading.Thread):
                 else:
                     if connection_in_progress in output:
                         if connection_in_progress is server_socket:
-                            conns[server_socket] = ServerConnection(conn=server_socket, addr=msgObj.addr)
+                            conns[server_socket] = Connection(conn=server_socket, addr=msgObj.addr)
 
                             self._ui_callback([ServerConn(server_socket, msgObj.addr)])
 
@@ -1286,16 +1318,6 @@ class SlskProtoThread(threading.Thread):
                         connection.close()
                         del conns[connection]
                         continue
-
-                if connection is server_socket:
-                    # ---------------------------
-                    # Server Pings used to get us banned
-                    # ---------------------------
-                    # Was 30 seconds
-
-                    if curtime - conns[server_socket].lastping > 120:
-                        conns[server_socket].lastping = curtime
-                        queue.put(ServerPing())
 
                 if connection in input:
                     if self._isDownload(conns[connection]):
