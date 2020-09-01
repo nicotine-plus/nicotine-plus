@@ -4,6 +4,7 @@ block_cipher = None
 
 from PyInstaller.utils.hooks import get_gi_typelibs
 
+import glob
 import sys
 
 sys.modules['FixTk'] = None
@@ -26,11 +27,30 @@ added_files = [
     ('../../img/tray', 'share/icons/hicolor/32x32/apps'),
 
     # GTK Builder files, plugins, geoip database
-    ('../../pynicotine', 'pynicotine'),
-
-    # Translation files
-    ('../../languages', 'share/locale'),
+    ('../../pynicotine', 'pynicotine')
 ]
+
+# Translation
+for po_file in glob.glob("po/*.po"):
+
+    lang = os.path.basename(po_file[:-3])
+
+    mo_dir = "build/mo/" + lang + "/LC_MESSAGES"
+    mo_file = mo_dir + "/" + "nicotine.mo"
+
+    if not os.path.exists(mo_dir):
+        os.makedirs(mo_dir)
+
+    os.system("msgfmt " + po_file + " -o " + mo_file)
+
+    targetpath = "share/locale/" + lang + "/LC_MESSAGES"
+
+    datas.append(
+        (
+            "../../" + mo_file,
+            targetpath
+        )
+    )
 
 datas += added_files
 
@@ -49,7 +69,7 @@ a = Analysis(['../../nicotine'],
 
 # Remove unwanted files
 for file in a.datas[:]:
-    excluded = ('.ani', '.cur', '.md', '.po', '.pot', '.py', '.pyc', 'merge_all', 'remove_fuzzy', 'remove_mo')
+    excluded = ('.ani', '.cur', '.md', '.py', '.pyc')
 
     if file[0].endswith(excluded) or \
         file[0].endswith('.png') and not 'org.nicotine_plus.Nicotine' in file[0]:

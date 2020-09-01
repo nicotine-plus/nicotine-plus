@@ -1,0 +1,72 @@
+nicotine
+pynicotine/config.py
+pynicotine/pluginsystem.py
+pynicotine/pynicotine.py
+pynicotine/shares.py
+pynicotine/slskmessages.py
+pynicotine/slskproto.py
+pynicotine/transfers.py
+pynicotine/upnp.py
+pynicotine/gtkgui/chatrooms.py
+pynicotine/gtkgui/checklatest.py
+pynicotine/gtkgui/dialogs.py
+pynicotine/gtkgui/dirchooser.py
+pynicotine/gtkgui/downloads.py
+pynicotine/gtkgui/fastconfigure.py
+pynicotine/gtkgui/frame.py
+pynicotine/gtkgui/notifications.py
+pynicotine/gtkgui/nowplaying.py
+pynicotine/gtkgui/privatechat.py
+pynicotine/gtkgui/roomlist.py
+pynicotine/gtkgui/roomwall.py
+pynicotine/gtkgui/search.py
+pynicotine/gtkgui/settingswindow.py
+pynicotine/gtkgui/transferlist.py
+pynicotine/gtkgui/tray.py
+pynicotine/gtkgui/uploads.py
+pynicotine/gtkgui/userbrowse.py
+pynicotine/gtkgui/userinfo.py
+pynicotine/gtkgui/userlist.py
+pynicotine/gtkgui/utils.py
+pynicotine/gtkgui/wishlist.py
+[type: gettext/glade] pynicotine/gtkgui/ui/buddylist.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/chatrooms.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/fastconfigure.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/mainwindow.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/nowplaying.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/privatechat.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/roomlist.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/roomwall.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/search.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/userbrowse.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/userinfo.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/wishlist.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/about/about.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/about/chatroomcommands.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/about/privatechatcommands.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/about/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/autoreplace.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/away.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/ban.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/censor.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/colours.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/completion.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/downloads.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/events.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/fonts.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/geoblock.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/icons.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/ignore.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/log.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/notebook.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/notifications.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/pluginproperties.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/plugin.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/search.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/server.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/settingswindow.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/shares.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/tts.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/uploads.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/urlcatch.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/userinfo.ui

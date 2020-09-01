@@ -100,23 +100,24 @@ for man in manpages:
     )
 
 # Translation
-mo_dirs = [x for x in glob.glob(os.path.join("languages", "*")) if os.path.isdir(x)]
+for po_file in glob.glob(os.path.join("po", "*.po")):
+    lang = os.path.basename(po_file[:-3])
 
-for mo in mo_dirs:
+    mo_dir = os.path.join("build", "mo", lang, "LC_MESSAGES")
+    mo_file = os.path.join(mo_dir, "nicotine.mo")
 
-    p, lang = os.path.split(mo)
-    lc_messages_path = os.path.join(mo, "LC_MESSAGES")
+    if not os.path.exists(mo_dir):
+        os.makedirs(mo_dir)
 
-    if lang in ("msgfmtall.py", "tr_gen.py", "mergeall", "nicotine.pot"):
-        continue
+    os.system("msgfmt " + po_file + " -o " + mo_file)
 
+    targetpath = os.path.join("share/locale", lang, "LC_MESSAGES")
     files.append(
         (
-            os.path.join("share/locale", lang, "LC_MESSAGES"),
-            [os.path.join(lc_messages_path, "nicotine.mo")]
+            targetpath,
+            [mo_file]
         )
     )
-
 
 if __name__ == '__main__':
 

@@ -90,7 +90,7 @@ class TrayApp:
         users.sort()
         user = ComboBoxDialog(
             parent=self.frame.MainWindow,
-            title=_('Nicotine+') + ": " + _("Start Messaging"),
+            title="Nicotine+" + ": " + _("Start Messaging"),
             message=_('Enter the User who you wish to send a private message:'),
             droplist=users
         )
@@ -109,7 +109,7 @@ class TrayApp:
         users.sort()
         user = ComboBoxDialog(
             parent=self.frame.MainWindow,
-            title=_('Nicotine+') + ": " + _("Get User Info"),
+            title="Nicotine+" + ": " + _("Get User Info"),
             message=_('Enter the User whose User Info you wish to receive:'),
             droplist=users
         )
@@ -126,7 +126,7 @@ class TrayApp:
         users.sort()
         user = ComboBoxDialog(
             parent=self.frame.MainWindow,
-            title=_('Nicotine+') + ": " + _("Get A User's IP"),
+            title="Nicotine+" + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
         )
@@ -142,7 +142,7 @@ class TrayApp:
         users.sort()
         user = ComboBoxDialog(
             parent=self.frame.MainWindow,
-            title=_('Nicotine+') + ": " + _("Get A User's Shares List"),
+            title="Nicotine+" + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
         )
