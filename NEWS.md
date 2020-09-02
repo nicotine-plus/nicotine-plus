@@ -63,6 +63,7 @@ Issues closed on GitHub
  * Warning: unknown object type 'bool' in message 'pynicotine.slskmessages.FileSearchResult' ([#535](https://github.com/Nicotine-Plus/nicotine-plus/issues/535))
  * regression on open files on OpenBSD ([#536](https://github.com/Nicotine-Plus/nicotine-plus/issues/536))
  * Chat messages went nowhere and I got this trace. ([#545](https://github.com/Nicotine-Plus/nicotine-plus/issues/545))
+ * filter out unspecific searches ([#551](https://github.com/Nicotine-Plus/nicotine-plus/issues/551))
  * Mouse cursor does not indicate draggable borders ([#552](https://github.com/Nicotine-Plus/nicotine-plus/issues/552))
  * Network share issue ([#559](https://github.com/Nicotine-Plus/nicotine-plus/issues/559))
  * possibly worrie with upload stuck in connecting state if folder uploaded ([#564](https://github.com/Nicotine-Plus/nicotine-plus/issues/564))
