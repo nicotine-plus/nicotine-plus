@@ -103,7 +103,7 @@ for man in manpages:
 for po_file in glob.glob(os.path.join("po", "*.po")):
     lang = os.path.basename(po_file[:-3])
 
-    mo_dir = os.path.join("build", "mo", lang, "LC_MESSAGES")
+    mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
     mo_file = os.path.join(mo_dir, "nicotine.mo")
 
     if not os.path.exists(mo_dir):
@@ -111,7 +111,7 @@ for po_file in glob.glob(os.path.join("po", "*.po")):
 
     os.system("msgfmt " + po_file + " -o " + mo_file)
 
-    targetpath = os.path.join("share/locale", lang, "LC_MESSAGES")
+    targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
     files.append(
         (
             targetpath,

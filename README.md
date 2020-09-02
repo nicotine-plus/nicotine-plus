@@ -98,6 +98,7 @@ Please come and join us in the `#nicotine+` channel on Freenode!
 
 If you'd like to contribute, you have a couple of options to get started:
 
+* If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * If you find a problem or have a feature request you can
   * discuss your findings on the `#nicotine+` channel on the [freenode IRC-Network](https://webchat.freenode.net/)
   * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
@@ -105,7 +106,6 @@ If you'd like to contribute, you have a couple of options to get started:
 * Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
 * For (unofficial) documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md)
 * For a current list of things to do, see the [issue tracker](https://github.com/Nicotine-Plus/nicotine-plus/issues).
-* If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * If you want to contact someone, see [MAINTAINERS.md](AUTHORS.md).
 
 # Continuous Integration Testing

@@ -240,7 +240,7 @@ def ApplyTranslation():
     If something goes wrong we fall back to no translation.
 
     This function also try to find translation files in the project path first:
-    $(PROJECT_PATH)/languages/$(LANG)/LC_MESSAGES/nicotine.mo
+    $(PROJECT_PATH)/mo/$(LANG)/LC_MESSAGES/nicotine.mo
 
     If no translations are found we fall back to the system path for locates:
     GNU/Linux: /usr/share/locale/$(LANG)/LC_MESSAGES
@@ -253,7 +253,7 @@ def ApplyTranslation():
     PACKAGE = 'nicotine'
 
     # Local path where to find translation (mo) files
-    LOCAL_MO_PATH = 'languages'
+    LOCAL_MO_PATH = 'mo'
 
     # Python 2.7.X is build via Visual Studio 2008 on Windows:
     # https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject

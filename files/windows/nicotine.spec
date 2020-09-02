@@ -35,7 +35,7 @@ for po_file in glob.glob("po/*.po"):
 
     lang = os.path.basename(po_file[:-3])
 
-    mo_dir = "build/mo/" + lang + "/LC_MESSAGES"
+    mo_dir = "mo/" + lang + "/LC_MESSAGES"
     mo_file = mo_dir + "/" + "nicotine.mo"
 
     if not os.path.exists(mo_dir):

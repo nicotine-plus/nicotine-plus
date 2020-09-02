@@ -6,59 +6,47 @@ If your name is missing, please contact us.
 
 ## For Translators
 
-### How To Translate
+### How to translate
 
-##### To create a new language:
+Translations are handled on the [Launchpad translations page](https://translations.launchpad.net/nicotine+).
 
-1. Create a directory `languages/$(your_lang)/LC_MESSAGES/` for your translation.
+To get started:
 
-2. Copy the `nicotine.pot` to that subdirectory and rename it to `nicotine.po`.
+- [Register a Launchpad account](https://login.launchpad.net/+new_account)
 
-3. Edit this file.
+- [Specify your preferred languages](https://translations.launchpad.net/+editmylanguages)
 
-4. **PLEASE** make sure that you are using UNIX style line ending and UTF-8 encoding.
+- Start suggesting translation changes
 
-##### To update the language you are working on:
+Once your translations have been approved, they will be merged into Nicotine+'s GitHub repository, at the very latest before a new Nicotine+ release.
 
-1. To update your translated .po file from the template you have two choices:
+## For Developers and Maintainers
 
-    * Go to the directory of the translation and run:
+### To update the translation template
 
-    `msgmerge -U nicotine.po ../../nicotine.pot`
+As strings change in the Nicotine+ source code, the translation template file should also be updated regularly.
 
-    * Or if using poedit use `Catalog -> Update from POT file` menu.
+To update the template (.pot) file:
 
-2. Edit your translation.
+- Enter the `po` folder by running `cd po`
 
-3. **PLEASE** make sure that you are using UNIX style line ending and UTF-8 encoding.
+- Run `intltool -p -g nicotine`
 
-### How To Test Translations
+A developer part of the [Nicotine+ Launchpad team](https://launchpad.net/~nicotine-team) should then [upload the updated .pot file](https://translations.launchpad.net/nicotine+/trunk/+translations-upload) to Launchpad, and [approve it](https://translations.launchpad.net/nicotine+/+imports).
 
-When finished editing the .po file you must compile the language file to a .mo file.
+### To import translations to GitHub
 
-You can do this either by:
+Translations should be imported to the GitHub repository regularly, at the very latest before a new Nicotine+ release is tagged.
 
-* Running `msgfmt nicotine.po -o nicotine.mo` from the command line.
+To do this:
 
-* Using poedit `File -> Compile to MO` menu.
+- [Export all translations](https://translations.launchpad.net/nicotine+/trunk/+export) in PO format
 
-When restarting Nicotine+ you should see the fruit of your labor :)
+- Add the updated files to the `po` folder
 
-## For Developers
+- Commit the files
 
-##### To update the .pot file (template):
-
-* Run the `update_pot.py` script from the `languages` directory.
-
-##### To update all languages .po files:
-
-* Run the `merge_all` script from the `languages` directory.
-
-* Then, each `nicotine.po` will need to be updated by translators.
-
-##### To compile all languages .po files:
-
-* Run the `msgfmtall.py` script from the `languages` directory.
+Also remember to add new translators to the list of translators, located in TRANSLATORS.md and `pynicotine/gtkgui/ui/about/about.ui`.
 
 ## More On Translation
 
@@ -70,14 +58,13 @@ For testing purposes Nicotine+ can be forced to use a specific language. You can
     * French: `LC_ALL=fr_FR.UTF-8 python nicotine`
     * ...
 
-Nicotine+ will first try to find your translation files in your project directory.
-It's particularly useful for testing translations from the git source tree or if your are using python virtualenv framework.
+Nicotine+ will first try to find your translation files in your project folder.
+It's particularly useful for testing translations from the git source tree or if your are using Python virtualenv framework.
 
-Your translation file should be located in:
-`$(your_git_clone_path)/languages/$(lang)/LC_MESSAGES/nicotine.{mo,po}`.
+To use translations when running Nicotine+ from your project folder, you need to generate .mo files by running `python3 setup.py build`. The files will be located in the `mo` folder.
 
-If Nicotine+ don't find the translation files in your project directory it will fall back to searching in your system locale path which is OS specific. A GNU/Linux distribution package will put them in the system locale path.
+If Nicotine+ doesn't find the .mo files in your project folder, it will fall back to searching in your system locale path which is OS specific. A GNU/Linux distribution package will put them in the system locale path.
 
-* On GNU/Linux: `/usr/share/locale/$(lang)/LC_MESSAGES/nicotine.{mo,po}`.
+* On GNU/Linux: `/usr/share/locale/$(lang)/LC_MESSAGES`.
 
 * On Windows: `%PYTHONHOME%\share\locale\$(lang)\LC_MESSAGES`.

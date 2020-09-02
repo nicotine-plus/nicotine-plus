@@ -14,6 +14,8 @@ $ cd nicotine-plus
 $ python3 nicotine
 ```
 
+To use translations, you need to generate .mo files by running `python3 setup.py build`. The files will be located in the `mo` folder.
+
 ## Updating your cloned Nicotine+
 If you want to update to the latest version of Nicotine+, proceed like this:
 ```
