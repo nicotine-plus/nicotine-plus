@@ -39,7 +39,8 @@ def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
     except AttributeError:
         dialog = gtk.FileChooserDialog(
             title,
-            parent
+            parent,
+            gtk.FileChooserAction.SELECT_FOLDER
         )
         dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
 

@@ -523,7 +523,7 @@
                               <object class="GtkImage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="icon_name">document-edit-symbolic</property>
+                                <property name="icon_name">text-editor-symbolic</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

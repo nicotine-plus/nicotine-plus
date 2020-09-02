@@ -4,7 +4,6 @@
   <object class="GtkDialog" id="WishList">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Search Wishlist</property>
-    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">600</property>
