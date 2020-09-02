@@ -313,6 +313,13 @@ class Shares:
         if maxresults == 0:
             return
 
+        # Don't count excluded words as matches (words starting with -)
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
+
+        if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
+            # Don't send search response if search term contains too few characters
+            return
+
         checkuser, reason = self.np.CheckUser(user, None)
         if not checkuser:
             return
@@ -322,8 +329,6 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
-        # Don't count excluded words as matches (words starting with -)
-        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
         terms = searchterm.lower().translate(self.translatepunctuation).split()
         length = 0
 

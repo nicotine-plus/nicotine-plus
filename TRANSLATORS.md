@@ -1,6 +1,7 @@
 # List of translators for Nicotine & Nicotine+:
 
 ##### English
+ * mathiascode (2020)
  * Michael Labouebe (2016) < gfarmerfr (at) free.fr >
  * hyriand
  * daelstorm

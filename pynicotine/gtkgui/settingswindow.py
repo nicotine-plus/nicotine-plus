@@ -2251,6 +2251,7 @@ class SearchFrame(buildFrame):
                 "search_results": self.ToggleResults,
                 "max_displayed_results": self.MaxDisplayedResults,
                 "max_stored_results": self.MaxStoredResults,
+                "min_search_chars": self.MinSearchChars,
                 "remove_special_chars": self.RemoveSpecialChars
             }
         }
@@ -2294,6 +2295,7 @@ class SearchFrame(buildFrame):
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
                 "max_stored_results": self.MaxStoredResults.get_value_as_int(),
+                "min_search_chars": self.MinSearchChars.get_value_as_int(),
                 "remove_special_chars": self.RemoveSpecialChars.get_active()
             }
         }
@@ -2305,7 +2307,9 @@ class SearchFrame(buildFrame):
 
     def OnEnableSearchResults(self, widget):
         active = widget.get_active()
-        for w in self.MaxResults, self.MaxResultsL1, self.MaxResultsL2, self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
+        for w in self.MinSearchCharsL1, self.MinSearchChars, self.MinSearchCharsL2, \
+                self.MaxResults, self.MaxResultsL1, self.MaxResultsL2, \
+                self.ToggleDistributed, self.ToggleDistributedInterval, self.secondsLabel:
             w.set_sensitive(active)
 
 
