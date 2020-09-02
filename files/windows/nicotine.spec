@@ -14,6 +14,9 @@ sys.modules['lib2to3'] = None
 # TODO: investigate why this is the case, and potentially check with PyInstaller devs (30 August 2020)
 binaries, datas, hiddenimports = get_gi_typelibs('HarfBuzz', '0.0')
 
+# Include CA bundle for update checker
+hiddenimports.append('certifi')
+
 # Files to be added to the frozen app
 added_files = [
     #
