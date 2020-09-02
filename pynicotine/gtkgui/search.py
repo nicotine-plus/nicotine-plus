@@ -1063,13 +1063,20 @@ class Search:
 
     def OnListClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.select_results()
-            self.OnDownloadFiles(widget)
-            self.ResultsList.get_selection().unselect_all()
-            return True
-        elif event.button == 3:
+        if event.button == 3:
             return self.OnPopupMenu(widget, event)
+
+        else:
+            pathinfo = widget.get_path_at_pos(event.x, event.y)
+
+            if pathinfo is None:
+                widget.get_selection().unselect_all()
+
+            elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+                self.select_results()
+                self.OnDownloadFiles(widget)
+                self.ResultsList.get_selection().unselect_all()
+                return True
 
         return False
 

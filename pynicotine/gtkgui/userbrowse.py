@@ -287,11 +287,16 @@ class UserBrowse:
 
     def OnFolderClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.OnDownloadDirectory(widget)
-            return True
-        elif event.button == 3:
-            return self.OnFolderPopupMenu(widget, event)
+        pathinfo = widget.get_path_at_pos(event.x, event.y)
+
+        if pathinfo is not None:
+
+            if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+                self.OnDownloadDirectory(widget)
+                return True
+
+            elif event.button == 3:
+                return self.OnFolderPopupMenu(widget, event)
 
         return False
 
@@ -313,14 +318,21 @@ class UserBrowse:
 
     def OnFileClicked(self, widget, event):
 
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.selected_files = []
-            self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
-            self.OnDownloadFiles(widget)
-            self.FileTreeView.get_selection().unselect_all()
-            return True
-        elif event.button == 3:
+        if event.button == 3:
             return self.OnFilePopupMenu(widget, event)
+
+        else:
+            pathinfo = widget.get_path_at_pos(event.x, event.y)
+
+            if pathinfo is None:
+                widget.get_selection().unselect_all()
+
+            elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+                self.selected_files = []
+                self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
+                self.OnDownloadFiles(widget)
+                self.FileTreeView.get_selection().unselect_all()
+                return True
 
         return False
 

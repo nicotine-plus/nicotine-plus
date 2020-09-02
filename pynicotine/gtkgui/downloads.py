@@ -304,12 +304,19 @@ class Downloads(TransferList):
     def OnPopupMenu(self, widget, event, kind):
 
         if kind == "mouse":
-            if event.button != 3:
-                if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                    self.DoubleClick(event)
-                return False
+            if event.button == 3:
+                SetTreeviewSelectedRow(widget, event)
 
-            SetTreeviewSelectedRow(widget, event)
+            else:
+                pathinfo = widget.get_path_at_pos(event.x, event.y)
+
+                if pathinfo is None:
+                    widget.get_selection().unselect_all()
+
+                elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+                    self.DoubleClick(event)
+
+                return False
 
         self.select_transfers()
 
