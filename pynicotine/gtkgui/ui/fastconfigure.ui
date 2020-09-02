@@ -14,9 +14,9 @@
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="can_focus">False</property>
     <property name="modal">True</property>
-    <property name="window_position">center</property>
+    <property name="window_position">center-on-parent</property>
     <property name="default_width">900</property>
-    <property name="default_height">400</property>
+    <property name="default_height">450</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
     <signal name="apply" handler="OnApply" swapped="no"/>
@@ -230,7 +230,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
         <property name="margin_top">5</property>
         <property name="margin_bottom">5</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">15</property>
+        <property name="spacing">20</property>
         <child>
           <object class="GtkBox" id="portselection">
             <property name="visible">True</property>
@@ -493,6 +493,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="height_request">150</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTreeView" id="shareddirectoriestree">

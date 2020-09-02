@@ -186,10 +186,12 @@ def InitialiseColumns(treeview, *args):
             column.set_alignment(0.9)
         elif c[2] == "edit":
             renderer = gtk.CellRendererText()
+            renderer.set_padding(10, 3)
             renderer.set_property('editable', True)
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "combo":
             renderer = gtk.CellRendererCombo()
+            renderer.set_padding(10, 3)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
             column = gtk.TreeViewColumn(c[0], renderer, text=i)
