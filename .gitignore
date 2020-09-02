@@ -1,5 +1,5 @@
-# Temporary translation files
-languages/nicotine-*.pot
+# Translation Machine Object files
+*.mo
 
 # Python byte code files
 *.pyc

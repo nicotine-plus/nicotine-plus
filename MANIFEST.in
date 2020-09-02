@@ -3,4 +3,5 @@ recursive-include pynicotine *
 recursive-include test *
 
 recursive-exclude * __pycache__
+recursive-exclude * *.mo
 recursive-exclude * *.pyc
