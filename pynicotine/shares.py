@@ -329,34 +329,46 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
-        terms = searchterm.lower().translate(self.translatepunctuation).split()
-        length = 0
-
         try:
-            for i in terms:
-                if i in wordindex:
-                    length += 1
+            searchtermlist = searchterm.lower().translate(self.translatepunctuation).split()
 
-            if length == 0 or length != len(terms):
+            """ Stage 1: Check if every word in the search term is included in our word list.
+            If not, we don't have relevant results. Exit. """
+
+            longest = None
+
+            for i in searchtermlist:
+                if i not in wordindex:
+                    return
+
+                if not longest or len(wordindex[i]) > longest:
+                    longest = len(wordindex[i])
+                    longest_i = i
+                
+
+            """ Stage 2: Every word in the search term exists in our word list. Collect every
+            file index that is common for the words. """
+
+            results = wordindex[longest_i]
+
+            if len(results) > maxresults:
+                results = results[:maxresults]
+
+            searchtermlist.remove(longest_i)
+
+            for i in searchtermlist:
+                results = list(filter(wordindex[i].__contains__, results))
+
+            """ Stage 3: If there were no files that included every word, exit. """
+
+            if not results:
                 return
 
-            list = [wordindex[i] for i in terms if i in wordindex]
         except ValueError:
             # DB is closed, perhaps when rescanning share or closing Nicotine+
             return
 
-        shortest = min(list, key=len)
-        list.remove(shortest)
-
-        for i in shortest[:]:
-            for j in list:
-                if i not in j:
-                    shortest.remove(i)
-                    break
-
-        results = shortest[:maxresults]
-
-        if len(results) > 0 and self.np.transfers is not None:
+        if self.np.transfers is not None:
 
             queuesizes = self.np.transfers.getUploadQueueSizes()
             slotsavail = self.np.transfers.allowNewUploads()
@@ -431,7 +443,7 @@ class Shares:
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, newsharedfiles, yieldfunction, progress)
+        newwordindex, newfileindex = self.getFilesIndex(newmtimes, newsharedfiles, yieldfunction, progress)
 
         self.logMessage(_("%(num)s folders found after rescan") % {"num": len(newmtimes)})
 
@@ -503,9 +515,6 @@ class Shares:
                     if percent > lastpercent and percent <= 1.0:
                         GLib.idle_add(progress.set_fraction, percent)
                         lastpercent = percent
-
-                if self.hiddenCheck(folder):
-                    continue
 
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
@@ -582,9 +591,6 @@ class Shares:
         for folder in mtimes:
 
             virtualdir = self.real2virtual(folder)
-
-            if self.hiddenCheck(folder):
-                continue
 
             if not rebuild and folder in oldmtimes:
 
@@ -672,7 +678,7 @@ class Shares:
         return stream
 
     # Update Search index with new files
-    def getFilesIndex(self, mtimes, oldmtimes, newsharedfiles, yieldcall=None, progress=None):
+    def getFilesIndex(self, mtimes, newsharedfiles, yieldcall=None, progress=None):
 
         wordindex = {}
         fileindex = []
@@ -693,15 +699,13 @@ class Shares:
                     GLib.idle_add(progress.set_fraction, percent)
                     lastpercent = percent
 
-            if self.hiddenCheck(folder):
-                continue
-
             for j in newsharedfiles[virtualdir]:
                 file = j[0]
                 fileindex.append((virtualdir + '\\' + file,) + j[1:])
 
                 # Collect words from filenames for Search index
-                for k in (virtualdir + " " + file).lower().translate(self.translatepunctuation).split():
+                # Use set to prevent duplicates
+                for k in set((virtualdir + " " + file).lower().translate(self.translatepunctuation).split()):
                     try:
                         wordindex[k].append(index)
                     except KeyError:
