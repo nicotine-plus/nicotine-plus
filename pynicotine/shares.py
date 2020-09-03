@@ -297,6 +297,10 @@ class Shares:
 
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
 
+        """ Note: since this section is accessed every time a search request arrives,
+        several times a second, please keep it as optimized and memory
+        sparse as possible! """
+
         if not self.config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
@@ -331,14 +335,14 @@ class Shares:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
         try:
-            searchtermlist = searchterm.split()
-
             """ Stage 1: Check if every word in the search term is included in our word list.
             If not, we don't have relevant results. Exit. """
 
             longest = None
 
-            for i in searchtermlist:
+            for i in re.finditer(r'\w+', searchterm):
+                i = i.group(0)
+
                 if i not in wordindex:
                     return
 
@@ -353,13 +357,13 @@ class Shares:
             file index that is common for the words. """
 
             results = wordindex[longest_i]
-            searchtermlist.remove(longest_i)
+            searchterm.replace(longest_i, '')
 
             if len(results) > maxresults:
                 results = results[:maxresults]
 
-            for i in searchtermlist:
-                results = list(filter(wordindex[i].__contains__, results))
+            for i in re.finditer(r'\w+', searchterm):
+                results = list(filter(wordindex[i.group(0)].__contains__, results))
 
             """ Stage 3: If there were no files that included every word, exit. """
 
