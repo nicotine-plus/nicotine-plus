@@ -1919,7 +1919,6 @@ class FileSearchResult(PeerMessage):
         queuesize = self.inqueue[0]
 
         msg = bytearray()
-
         msg.extend(self.packObject(self.user))
         msg.extend(self.packObject(self.token, unsignedint=True))
         msg.extend(self.packObject(len(self.list), unsignedint=True))

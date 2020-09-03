@@ -295,6 +295,59 @@ class Shares:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
+    def create_search_result_list(self, searchterm, wordindex, maxresults=50):
+
+        try:
+            """ Stage 1: Check if each word in the search term is included in our word index.
+            If this is the case, we select the word that has the most file matches in our
+            word index. If not, exit, since we don't have relevant results. """
+
+            longest = None
+
+            for i in re.finditer(r'\w+', searchterm):
+                i = i.group(0)
+
+                if i not in wordindex:
+                    return
+
+                index_length = len(wordindex[i])
+
+                if not longest or index_length > longest:
+                    longest = index_length
+                    longest_i = i
+
+            """ Stage 2: Start with the word that has the most file matches, which we selected
+            in the previous step, and gradually remove matches that other words in the search
+            term don't have. """
+
+            results = wordindex[longest_i]
+
+            if len(results) > maxresults:
+                results = results[:maxresults]
+
+            searchterm.replace(longest_i, '')
+
+            for i in re.finditer(r'\w+', searchterm):
+                results = filter(wordindex[i.group(0)].__contains__, results)
+
+            """ Stage 3: Iterate through the file matches that remain, and append them to a final
+            list. If no matches are left, exit. """
+
+            resultslist = None
+
+            for i in results:
+                try:
+                    resultslist.append(i)
+
+                except AttributeError:
+                    resultslist = [i]
+
+            return resultslist
+
+        except ValueError:
+            # DB is closed, perhaps when rescanning share or closing Nicotine+
+            return
+
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
 
         """ Note: since this section is accessed every time a search request arrives,
@@ -326,6 +379,7 @@ class Shares:
             return
 
         checkuser, reason = self.np.CheckUser(user, None)
+
         if not checkuser:
             return
 
@@ -334,57 +388,10 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
-        try:
-            """ Stage 1: Check if each word in the search term is included in our word index.
-            If this is the case, we select the word that has the most file matches in our
-            word index. If not, exit, since we don't have relevant results. """
+        # Find common file matches for each word in search term
+        resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)
 
-            longest = None
-
-            for i in re.finditer(r'\w+', searchterm):
-                i = i.group(0)
-
-                if i not in wordindex:
-                    return
-
-                index_length = len(wordindex[i])
-
-                if not longest or index_length > longest:
-                    longest = index_length
-                    longest_i = i
-                
-
-            """ Stage 2: Start with the word that has the most file matches, which we selected
-            in the previous step, and gradually remove matches that other words in the search
-            term don't have. """
-
-            results = wordindex[longest_i]
-
-            if len(results) > maxresults:
-                results = results[:maxresults]
-
-            searchterm.replace(longest_i, '')
-
-            for i in re.finditer(r'\w+', searchterm):
-                results = filter(wordindex[i.group(0)].__contains__, results)
-
-            """ Stage 3: Iterate through the file matches that remain, and append them to a final
-            list. If no matches are left, exit. """
-
-            resultslist = None
-
-            for i in results:
-                try:
-                    resultslist.append(i)
-
-                except AttributeError:
-                    resultslist = [i]
-
-            if not resultslist:
-                return
-
-        except ValueError:
-            # DB is closed, perhaps when rescanning share or closing Nicotine+
+        if not resultlist:
             return
 
         if self.np.transfers is not None:
@@ -407,7 +414,7 @@ class Shares:
             message = slskmessages.FileSearchResult(
                 None,
                 self.config.sections["server"]["login"],
-                geoip, searchid, resultslist, fileindex, slotsavail,
+                geoip, searchid, resultlist, fileindex, slotsavail,
                 self.np.speed, queuesizes, fifoqueue
             )
 
@@ -418,14 +425,14 @@ class Shares:
                     _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(resultslist)
+                        'num': len(resultlist)
                     }, 2)
             else:
                 self.logMessage(
                     _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(resultslist)
+                        'num': len(resultlist)
                     }, 2)
 
     # Rescan directories in shared databases
