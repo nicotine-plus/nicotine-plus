@@ -335,8 +335,9 @@ class Shares:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
         try:
-            """ Stage 1: Check if every word in the search term is included in our word list.
-            If not, we don't have relevant results. Exit. """
+            """ Stage 1: Check if each word in the search term is included in our word index.
+            If this is the case, we select the word that has the most file matches in our
+            word index. If not, exit, since we don't have relevant results. """
 
             longest = None
 
@@ -353,21 +354,33 @@ class Shares:
                     longest_i = i
                 
 
-            """ Stage 2: Every word in the search term exists in our word list. Collect every
-            file index that is common for the words. """
+            """ Stage 2: Start with the word that has the most file matches, which we selected
+            in the previous step, and gradually remove matches that other words in the search
+            term don't have. """
 
             results = wordindex[longest_i]
-            searchterm.replace(longest_i, '')
 
             if len(results) > maxresults:
                 results = results[:maxresults]
 
+            searchterm.replace(longest_i, '')
+
             for i in re.finditer(r'\w+', searchterm):
-                results = list(filter(wordindex[i.group(0)].__contains__, results))
+                results = filter(wordindex[i.group(0)].__contains__, results)
 
-            """ Stage 3: If there were no files that included every word, exit. """
+            """ Stage 3: Iterate through the file matches that remain, and append them to a final
+            list. If no matches are left, exit. """
 
-            if not results:
+            resultslist = None
+
+            for i in results:
+                try:
+                    resultslist.append(i)
+
+                except AttributeError:
+                    resultslist = [i]
+
+            if not resultslist:
                 return
 
         except ValueError:
@@ -394,7 +407,7 @@ class Shares:
             message = slskmessages.FileSearchResult(
                 None,
                 self.config.sections["server"]["login"],
-                geoip, searchid, results, fileindex, slotsavail,
+                geoip, searchid, resultslist, fileindex, slotsavail,
                 self.np.speed, queuesizes, fifoqueue
             )
 
@@ -405,14 +418,14 @@ class Shares:
                     _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(results)
+                        'num': len(resultslist)
                     }, 2)
             else:
                 self.logMessage(
                     _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(results)
+                        'num': len(resultslist)
                     }, 2)
 
     # Rescan directories in shared databases
