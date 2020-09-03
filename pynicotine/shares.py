@@ -701,7 +701,8 @@ class Shares:
                 fileindex.append((virtualdir + '\\' + file,) + j[1:])
 
                 # Collect words from filenames for Search index
-                for k in (virtualdir + " " + file).lower().translate(self.translatepunctuation).split():
+                # Use set to prevent duplicates
+                for k in set((virtualdir + " " + file).lower().translate(self.translatepunctuation).split()):
                     try:
                         wordindex[k].append(index)
                     except KeyError:
