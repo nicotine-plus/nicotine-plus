@@ -1925,9 +1925,7 @@ class FileSearchResult(PeerMessage):
         msg.extend(self.packObject(len(self.list), unsignedint=True))
 
         for index in self.list:
-            print(index)
             fileinfo = self.fileindex[str(index)]
-            print(fileinfo[0])
 
             msg.extend(bytes([1]))
             msg.extend(self.packObject(fileinfo[0].replace(os.sep, "\\")))

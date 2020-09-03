@@ -314,7 +314,8 @@ class Shares:
             return
 
         # Don't count excluded words as matches (words starting with -)
-        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
+        # Strip punctuation
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm).lower().translate(self.translatepunctuation)
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
@@ -330,7 +331,7 @@ class Shares:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
         try:
-            searchtermlist = searchterm.lower().translate(self.translatepunctuation).split()
+            searchtermlist = searchterm.split()
 
             """ Stage 1: Check if every word in the search term is included in our word list.
             If not, we don't have relevant results. Exit. """
@@ -341,8 +342,10 @@ class Shares:
                 if i not in wordindex:
                     return
 
-                if not longest or len(wordindex[i]) > longest:
-                    longest = len(wordindex[i])
+                index_length = len(wordindex[i])
+
+                if not longest or index_length > longest:
+                    longest = index_length
                     longest_i = i
                 
 
@@ -350,11 +353,10 @@ class Shares:
             file index that is common for the words. """
 
             results = wordindex[longest_i]
+            searchtermlist.remove(longest_i)
 
             if len(results) > maxresults:
                 results = results[:maxresults]
-
-            searchtermlist.remove(longest_i)
 
             for i in searchtermlist:
                 results = list(filter(wordindex[i].__contains__, results))
@@ -396,14 +398,14 @@ class Shares:
 
             if direct:
                 self.logMessage(
-                    _("User %(user)s is directly searching for %(query)s, returning %(num)i results") % {
+                    _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
                         'num': len(results)
                     }, 2)
             else:
                 self.logMessage(
-                    _("User %(user)s is searching for %(query)s, returning %(num)i results") % {
+                    _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
                         'num': len(results)
