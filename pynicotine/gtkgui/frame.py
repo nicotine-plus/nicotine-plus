@@ -378,6 +378,10 @@ class NicotineFrame:
         self.UserBrowseCombo.get_child().connect("activate", self.OnGetShares)
         self.userbrowse.show()
 
+        # For tab notifications
+        self.userinfo.SetTabLabel(self.UserInfoTabLabel)
+        self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
+
         self.UpdateColours(1)
 
         """ Tray/notifications """
