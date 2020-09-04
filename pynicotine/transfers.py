@@ -123,7 +123,7 @@ class Transfers:
         self.eventprocessor = eventprocessor
         self.downloads = []
         self.uploads = []
-        self.privilegedusers = []
+        self.privilegedusers = set()
         self.RequestedUploadQueue = []
         getstatus = {}
 
@@ -195,8 +195,7 @@ class Transfers:
 
     def addToPrivileged(self, user):
 
-        if user not in self.privilegedusers:
-            self.privilegedusers.append(user)
+        self.privilegedusers.add(user)
 
         if user in self.usersqueued:
             self.privusersqueued.setdefault(user, 0)
@@ -859,24 +858,24 @@ class Transfers:
         limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
         limit_upload_speed = self.eventprocessor.config.sections["transfers"]["uselimit"]
 
-        bandwidthlist = [i.speed for i in self.uploads if i.conn is not None and i.speed is not None]
+        bandwidthlist = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
         currently_negotiating = self.transferNegotiating()
 
         if limit_upload_slots:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            if len(bandwidthlist) + currently_negotiating >= maxupslots:
+            if bandwidthlist + currently_negotiating >= maxupslots:
                 return False
 
         if limit_upload_speed:
             max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
-            if sum(bandwidthlist) >= max_upload_speed:
+            if bandwidthlist >= max_upload_speed:
                 return False
             if currently_negotiating:
                 return False
 
         maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
         if maxbandwidth:
-            if sum(bandwidthlist) >= maxbandwidth:
+            if bandwidthlist >= maxbandwidth:
                 return False
 
         return True
@@ -1484,8 +1483,10 @@ class Transfers:
         else:
             banmsg = _("Banned")
 
-        list = [i for i in self.uploads if i.user == user]
-        for upload in list:
+        for upload in self.uploads:
+            if upload.user != user:
+                continue
+
             if upload.status == "Queued":
                 self.eventprocessor.ProcessRequestToPeer(user, slskmessages.QueueFailed(None, file=upload.filename, reason=banmsg))
             else:
@@ -1682,7 +1683,7 @@ class Transfers:
                     count += 1
             return count, count
         else:
-            if self.isPrivileged(username):
+            if username is not None and self.isPrivileged(username):
                 return len(self.privusersqueued), len(self.privusersqueued)
             else:
                 return len(self.usersqueued) + self.privcount, self.privcount
@@ -1717,22 +1718,23 @@ class Transfers:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
             return maxupslots
         else:
-            lst = [i for i in self.uploads if i.conn is not None]
+            lstlen = sum(i for i in self.uploads if i.conn is not None)
             if self.allowNewUploads():
-                return len(lst) + 1
+                return lstlen + 1
             else:
-                return len(lst)
+                return lstlen
 
     def UserListPrivileged(self, user):
 
         # All users
         if self.eventprocessor.config.sections["transfers"]["preferfriends"]:
-            return user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+            return any(user in i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
 
         # Only privileged users
-        userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
-        if user not in userlist:
+        if not all(user in i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
             return False
+
+        userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
 
         if self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][3]:
             return True
@@ -1755,7 +1757,6 @@ class Transfers:
                 continue
 
             self._ConnClose(conn, addr, i, "download")
-            break
 
         for i in self.uploads:
             if type(error) is not ConnectionRefusedError and i.conn != conn:
@@ -1765,7 +1766,6 @@ class Transfers:
                 continue
 
             self._ConnClose(conn, addr, i, "upload")
-            break
 
     def _ConnClose(self, conn, addr, i, type):
         if i.requestconn == conn and i.status == "Requesting file":

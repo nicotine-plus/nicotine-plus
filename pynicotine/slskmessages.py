@@ -1789,14 +1789,18 @@ class SharedFileList(PeerMessage):
     def _parseNetworkMessage(self, message):
         shares = []
         pos, ndir = self.getObject(message, int)
+
         for i in range(ndir):
             pos, directory = self.getObject(message, bytes, pos)
             pos, nfiles = self.getObject(message, int, pos)
+
             files = []
+
             for j in range(nfiles):
                 pos, code = pos + 1, message[pos]
                 pos, name = self.getObject(message, bytes, pos)
                 pos, size = self.getObject(message, int, pos, getunsignedlonglong=True, printerror=False)
+
                 if message[pos - 1] == '\xff':
                     # Buggy SLSK?
                     # Some file sizes will be huge if unpacked as a signed
@@ -1806,15 +1810,21 @@ class SharedFileList(PeerMessage):
                     # doesn't matter, it can never be worse than reporting 17
                     # exabytes for a single file)
                     size = struct.unpack("Q", '\xff' * struct.calcsize("Q"))[0] - size
+
                 pos, ext = self.getObject(message, bytes, pos, printerror=False)
                 pos, numattr = self.getObject(message, int, pos, printerror=False)
+
                 attrs = []
+
                 for k in range(numattr):
                     pos, attrnum = self.getObject(message, int, pos, printerror=False)
                     pos, attr = self.getObject(message, int, pos, printerror=False)
                     attrs.append(attr)
+
                 files.append([code, name, size, ext, attrs])
+
             shares.append((directory, files))
+
         self.list = shares
 
     def makeNetworkMessage(self, nozlib=0, rebuild=False):
@@ -2070,27 +2080,36 @@ class FolderContentsResponse(PeerMessage):
     def _parseNetworkMessage(self, message):
         shares = {}
         pos, nfolders = self.getObject(message, int)
+
         for h in range(nfolders):
             pos, folder = self.getObject(message, bytes, pos)
+
             shares[folder] = {}
+
             pos, ndir = self.getObject(message, int, pos)
 
             for i in range(ndir):
                 pos, directory = self.getObject(message, bytes, pos)
                 pos, nfiles = self.getObject(message, int, pos)
+
                 shares[folder][directory] = []
+
                 for j in range(nfiles):
                     pos, code = pos + 1, message[pos]
                     pos, name = self.getObject(message, bytes, pos, printerror=False)
                     pos, size = self.getObject(message, int, pos, getunsignedlonglong=True, printerror=False)
                     pos, ext = self.getObject(message, bytes, pos, printerror=False)
                     pos, numattr = self.getObject(message, int, pos, printerror=False)
+
                     attrs = []
+
                     for k in range(numattr):
                         pos, attrnum = self.getObject(message, int, pos, printerror=False)
                         pos, attr = self.getObject(message, int, pos, printerror=False)
                         attrs.append(attr)
+
                     shares[folder][directory].append([code, name, size, ext, attrs])
+
         self.list = shares
 
     def makeNetworkMessage(self):
