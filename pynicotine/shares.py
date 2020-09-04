@@ -28,6 +28,7 @@ import sys
 import taglib
 import _thread
 from gettext import gettext as _
+from itertools import islice
 
 from gi.repository import GLib
 
@@ -320,11 +321,7 @@ class Shares:
             in the previous step, and gradually remove matches that other words in the search
             term don't have. """
 
-            results = wordindex[longest_i]
-
-            if len(results) > maxresults:
-                results = results[:maxresults]
-
+            results = islice(wordindex[longest_i], maxresults)
             searchterm.replace(longest_i, '')
 
             for i in re.finditer(r'\w+', searchterm):
