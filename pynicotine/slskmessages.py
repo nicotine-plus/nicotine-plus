@@ -1916,21 +1916,16 @@ class FileSearchResult(PeerMessage):
         self.pos, self.inqueue = self.getObject(message, int, self.pos, getunsignedlonglong=True)
 
     def makeNetworkMessage(self):
-        filelist = []
-        for i in self.list:
-            try:
-                filelist.append(self.fileindex[str(i)])
-            except Exception:
-                pass
-
         queuesize = self.inqueue[0]
 
         msg = bytearray()
         msg.extend(self.packObject(self.user))
         msg.extend(self.packObject(self.token, unsignedint=True))
-        msg.extend(self.packObject(len(filelist), unsignedint=True))
+        msg.extend(self.packObject(len(self.list), unsignedint=True))
 
-        for fileinfo in filelist:
+        for index in self.list:
+            fileinfo = self.fileindex[str(index)]
+
             msg.extend(bytes([1]))
             msg.extend(self.packObject(fileinfo[0].replace(os.sep, "\\")))
             msg.extend(self.packObject(fileinfo[1], unsignedlonglong=True))

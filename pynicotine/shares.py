@@ -295,7 +295,64 @@ class Shares:
 
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
+    def create_search_result_list(self, searchterm, wordindex, maxresults=50):
+
+        try:
+            """ Stage 1: Check if each word in the search term is included in our word index.
+            If this is the case, we select the word that has the most file matches in our
+            word index. If not, exit, since we don't have relevant results. """
+
+            longest = None
+
+            for i in re.finditer(r'\w+', searchterm):
+                i = i.group(0)
+
+                if i not in wordindex:
+                    return
+
+                index_length = len(wordindex[i])
+
+                if not longest or index_length > longest:
+                    longest = index_length
+                    longest_i = i
+
+            """ Stage 2: Start with the word that has the most file matches, which we selected
+            in the previous step, and gradually remove matches that other words in the search
+            term don't have. """
+
+            results = wordindex[longest_i]
+
+            if len(results) > maxresults:
+                results = results[:maxresults]
+
+            searchterm.replace(longest_i, '')
+
+            for i in re.finditer(r'\w+', searchterm):
+                results = filter(wordindex[i.group(0)].__contains__, results)
+
+            """ Stage 3: Iterate through the file matches that remain, and append them to a final
+            list. If no matches are left, exit. """
+
+            resultslist = None
+
+            for i in results:
+                try:
+                    resultslist.append(i)
+
+                except AttributeError:
+                    resultslist = [i]
+
+            return resultslist
+
+        except ValueError:
+            # DB is closed, perhaps when rescanning share or closing Nicotine+
+            return
+
     def processSearchRequest(self, searchterm, user, searchid, direct=0):
+
+        """ Note: since this section is accessed every time a search request arrives,
+        several times a second, please keep it as optimized and memory
+        sparse as possible! """
 
         if not self.config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
@@ -314,13 +371,15 @@ class Shares:
             return
 
         # Don't count excluded words as matches (words starting with -)
-        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm)
+        # Strip punctuation
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm).lower().translate(self.translatepunctuation)
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
             return
 
         checkuser, reason = self.np.CheckUser(user, None)
+
         if not checkuser:
             return
 
@@ -329,34 +388,13 @@ class Shares:
         else:
             wordindex = self.config.sections["transfers"]["wordindex"]
 
-        terms = searchterm.lower().translate(self.translatepunctuation).split()
-        length = 0
+        # Find common file matches for each word in search term
+        resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)
 
-        try:
-            for i in terms:
-                if i in wordindex:
-                    length += 1
-
-            if length == 0 or length != len(terms):
-                return
-
-            list = [wordindex[i] for i in terms if i in wordindex]
-        except ValueError:
-            # DB is closed, perhaps when rescanning share or closing Nicotine+
+        if not resultlist:
             return
 
-        shortest = min(list, key=len)
-        list.remove(shortest)
-
-        for i in shortest[:]:
-            for j in list:
-                if i not in j:
-                    shortest.remove(i)
-                    break
-
-        results = shortest[:maxresults]
-
-        if len(results) > 0 and self.np.transfers is not None:
+        if self.np.transfers is not None:
 
             queuesizes = self.np.transfers.getUploadQueueSizes()
             slotsavail = self.np.transfers.allowNewUploads()
@@ -376,7 +414,7 @@ class Shares:
             message = slskmessages.FileSearchResult(
                 None,
                 self.config.sections["server"]["login"],
-                geoip, searchid, results, fileindex, slotsavail,
+                geoip, searchid, resultlist, fileindex, slotsavail,
                 self.np.speed, queuesizes, fifoqueue
             )
 
@@ -384,17 +422,17 @@ class Shares:
 
             if direct:
                 self.logMessage(
-                    _("User %(user)s is directly searching for %(query)s, returning %(num)i results") % {
+                    _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(results)
+                        'num': len(resultlist)
                     }, 2)
             else:
                 self.logMessage(
-                    _("User %(user)s is searching for %(query)s, returning %(num)i results") % {
+                    _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(results)
+                        'num': len(resultlist)
                     }, 2)
 
     # Rescan directories in shared databases
@@ -431,7 +469,7 @@ class Shares:
         # newwordindex is a dict in format {word: [num, num, ..], ... } with num matching
         # keys in newfileindex
         # newfileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        newwordindex, newfileindex = self.getFilesIndex(newmtimes, oldmtimes, newsharedfiles, yieldfunction, progress)
+        newwordindex, newfileindex = self.getFilesIndex(newmtimes, newsharedfiles, yieldfunction, progress)
 
         self.logMessage(_("%(num)s folders found after rescan") % {"num": len(newmtimes)})
 
@@ -503,9 +541,6 @@ class Shares:
                     if percent > lastpercent and percent <= 1.0:
                         GLib.idle_add(progress.set_fraction, percent)
                         lastpercent = percent
-
-                if self.hiddenCheck(folder):
-                    continue
 
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
@@ -582,9 +617,6 @@ class Shares:
         for folder in mtimes:
 
             virtualdir = self.real2virtual(folder)
-
-            if self.hiddenCheck(folder):
-                continue
 
             if not rebuild and folder in oldmtimes:
 
@@ -672,7 +704,7 @@ class Shares:
         return stream
 
     # Update Search index with new files
-    def getFilesIndex(self, mtimes, oldmtimes, newsharedfiles, yieldcall=None, progress=None):
+    def getFilesIndex(self, mtimes, newsharedfiles, yieldcall=None, progress=None):
 
         wordindex = {}
         fileindex = []
@@ -692,9 +724,6 @@ class Shares:
                 if percent > lastpercent and percent <= 1.0:
                     GLib.idle_add(progress.set_fraction, percent)
                     lastpercent = percent
-
-            if self.hiddenCheck(folder):
-                continue
 
             for j in newsharedfiles[virtualdir]:
                 file = j[0]
