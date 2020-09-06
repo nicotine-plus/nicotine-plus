@@ -21,7 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import math
+
 import os
 import re
 import sys
@@ -1226,26 +1226,34 @@ def WriteLog(logsdir, fn, msg):
     logfile.close()
 
 
+size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+
+
 def HumanSize(filesize):
     try:
-        if (filesize <= 0):
-            return "0 Bytes"
+        step_unit = 1024.0
 
-        p = int(math.floor(math.log(filesize, 2) / 10))
+        for i in size_suffixes:
+            if filesize < step_unit:
+                return "%3.1f %s" % (filesize, i)
 
-        return "%0.2f %s" % (filesize / math.pow(1024, p), ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][p])
+            filesize /= step_unit
     except TypeError:
         return filesize
 
 
+speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
+
+
 def HumanSpeed(filesize):
     try:
-        if (filesize <= 0):
-            return "0 B/s"
+        step_unit = 1000.0
 
-        p = int(math.floor(math.log(filesize, 2) / 10))
+        for i in speed_suffixes:
+            if filesize < step_unit:
+                return "%3.1f %s" % (filesize, i)
 
-        return "%0.2f %s" % (filesize / math.pow(1024, p), ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s', 'PB/s', 'EB/s', 'ZB/s', 'YB/s'][p])
+            filesize /= step_unit
     except TypeError:
         return filesize
 
