@@ -23,11 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import re
-import urllib.error
 import urllib.parse
-import urllib.request
 from gettext import gettext as _
-from urllib.parse import urlencode
 
 import gi
 from gi.repository import Gdk
@@ -777,9 +774,7 @@ class NicotineFrame:
 
     def OnGetPrivileges(self, widget):
         url = "%(url)s" % {
-            'url': 'https://www.slsknet.org/userlogin.php?' + urlencode({
-                'username': self.np.config.sections["server"]["login"]
-            })
+            'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(self.np.config.sections["server"]["login"])
         }
         OpenUri(url, self.MainWindow)
 
@@ -2526,7 +2521,7 @@ class NicotineFrame:
 
     def OnSoulSeek(self, url):
         try:
-            user, file = urllib.request.url2pathname(url[7:]).split("/", 1)
+            user, file = urllib.parse.unquote(url[7:]).split("/", 1)
             if file[-1] == "/":
                 self.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
             else:
@@ -2535,8 +2530,8 @@ class NicotineFrame:
             self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
 
     def SetClipboardURL(self, user, path):
-        self.clip.set_text("slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/"))), -1)
-        self.clip_data = "slsk://" + urllib.request.pathname2url("%s/%s" % (user, path.replace("\\", "/")))
+        self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
+        self.clip_data = "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
 
     def OnSelectionGet(self, widget, data, info, timestamp):
         data.set_text(self.clip_data, -1)

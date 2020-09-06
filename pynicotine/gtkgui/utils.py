@@ -27,9 +27,7 @@ import re
 import sys
 import time
 import types
-import urllib.error
 import urllib.parse
-import urllib.request
 import webbrowser
 from gettext import gettext as _
 
@@ -485,7 +483,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         line = line[match.end():]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
-            url = urllib.request.url2pathname(url)
+            url = urllib.parse.unquote(url)
 
         _append(buffer, url, urltag)
         # Match remaining url

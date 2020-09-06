@@ -26,13 +26,9 @@ This module contains utility functions.
 """
 
 import gettext
-import json
 import locale
 import os
 import sys
-import urllib.error
-import urllib.parse
-import urllib.request
 
 from codecs import encode, decode
 from subprocess import PIPE
@@ -83,11 +79,15 @@ def CleanPath(path, absolute=False):
 
 
 def get_latest_version():
-    latesturl = 'https://api.github.com/repos/Nicotine-Plus/nicotine-plus/releases/latest'
 
-    response = urllib.request.urlopen(latesturl)
-    data = json.loads(response.read().decode('utf-8'))
-    response.close()
+    import http.client
+    import json
+
+    conn = http.client.HTTPSConnection("api.github.com")
+    conn.request("GET", "/repos/Nicotine-Plus/nicotine-plus/releases/latest", headers={"User-Agent": "Nicotine+"})
+    resp = conn.getresponse()
+    data = json.loads(resp.read().decode("utf-8"))
+
     hlatest = data['tag_name']
     latest = int(make_version(hlatest))
     date = data['created_at']
