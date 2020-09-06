@@ -305,7 +305,7 @@ class Shares:
 
             longest = None
 
-            for i in re.finditer(r'\w+', searchterm):
+            for i in re.finditer(r'\S+', searchterm):
                 i = i.group(0)
 
                 if i not in wordindex:
@@ -324,7 +324,7 @@ class Shares:
             results = islice(wordindex[longest_i], maxresults)
             searchterm.replace(longest_i, '')
 
-            for i in re.finditer(r'\w+', searchterm):
+            for i in re.finditer(r'\S+', searchterm):
                 results = filter(wordindex[i.group(0)].__contains__, results)
 
             """ Stage 3: Iterate through the file matches that remain, and append them to a final
@@ -369,7 +369,7 @@ class Shares:
 
         # Don't count excluded words as matches (words starting with -)
         # Strip punctuation
-        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm).lower().translate(self.translatepunctuation)
+        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm).lower().translate(self.translatepunctuation).strip()
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters
