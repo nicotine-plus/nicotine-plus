@@ -1731,10 +1731,9 @@ class Transfers:
             return any(user in i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
 
         # Only privileged users
-        if not all(user in i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
-            return False
-
         userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+        if user not in userlist:
+            return False
 
         if self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][3]:
             return True

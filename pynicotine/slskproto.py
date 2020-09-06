@@ -29,6 +29,7 @@ import sys
 import threading
 import time
 
+from errno import EINTR
 from gettext import gettext as _
 
 from pynicotine.logfacility import log
@@ -173,7 +174,6 @@ from pynicotine.slskmessages import WishlistSearch
 # If this limit is set too close to our artificial MAXFILELIMIT
 # limit, Nicotine+ will freak out due to too many open files
 if sys.platform == "win32":
-    from errno import WSAEINVAL
 
     # For Windows, FD_SETSIZE is set to 512 in Python
     MAXFILELIMIT = int(512 * 0.9)
@@ -875,14 +875,11 @@ class SlskProtoThread(threading.Thread):
                 )
             )
 
-    def close_connection(self, connection_list, connection, selector):
-        # Stop monitoring connection
-        selector.unregister(connection)
-
+    def close_connection(self, connection_list, connection):
         connection.close()
         del connection_list[connection]
 
-    def process_queue(self, queue, conns, connsinprogress, server_socket, p, selector, maxsockets=MAXFILELIMIT):
+    def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
         """ Processes messages sent by UI thread. server_socket is a server connection
         socket object, queue holds the messages, conns and connsinprogress
         are dictionaries holding Connection and PeerConnectionInProgress
@@ -979,7 +976,6 @@ class SlskProtoThread(threading.Thread):
                             server_socket.setblocking(1)
 
                             connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msgObj)
-                            selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                             numsockets += 1
 
@@ -990,7 +986,7 @@ class SlskProtoThread(threading.Thread):
 
                 elif msgObj.__class__ is ConnClose and msgObj.conn in conns:
                     self._ui_callback([ConnClose(msgObj.conn, conns[msgObj.conn].addr)])
-                    self.close_connection(conns, msgObj.conn, selector)
+                    self.close_connection(conns, msgObj.conn)
 
                 elif msgObj.__class__ is OutConn:
                     if msgObj.addr[1] == 0:
@@ -1008,7 +1004,6 @@ class SlskProtoThread(threading.Thread):
                             conn.setblocking(1)
 
                             connsinprogress[conn] = PeerConnectionInProgress(conn, msgObj)
-                            selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                             numsockets += 1
 
@@ -1114,7 +1109,7 @@ class SlskProtoThread(threading.Thread):
                     self._ui_callback([conn.fileupl])
                     self.last_file_output_update = curtime
 
-    def readData(self, conns, i, selector):
+    def readData(self, conns, i):
         # Check for a download limit
         if i in self._dlimits:
             limit = self._dlimits[i]
@@ -1142,7 +1137,7 @@ class SlskProtoThread(threading.Thread):
 
         if not data:
             self._ui_callback([ConnClose(i, conn.addr)])
-            self.close_connection(conns, i, selector)
+            self.close_connection(conns, i)
 
     def run(self):
         """ Actual networking loop is here."""
@@ -1157,15 +1152,10 @@ class SlskProtoThread(threading.Thread):
         connsinprogress = self._connsinprogress
         queue = self._queue
 
-        selector = selectors.DefaultSelector()
-        timeout = -1
-
-        selector.register(p, selectors.EVENT_READ)
-
         while not self._want_abort:
 
             if not queue.empty():
-                conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket, p, selector)
+                conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
 
             self._ulimits = {}
@@ -1173,41 +1163,48 @@ class SlskProtoThread(threading.Thread):
 
             try:
                 # Select Networking Input and Output sockets
+                selector = selectors.DefaultSelector()
+
+                timeout = -1
 
                 for i in conns:
                     conn = conns[i]
                     event_masks = selectors.EVENT_READ
 
-                    if self._isUpload(conn):
-                        limit = self._uploadlimit[0](conns, conn)
+                    if len(conn.obuf) > 0 or (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
+                        if self._isUpload(conn):
+                            limit = self._uploadlimit[0](conns, conn)
 
-                        if limit is None or limit > 0:
-                            self._ulimits[i] = limit
+                            if limit is None or limit > 0:
+                                self._ulimits[i] = limit
+                                event_masks |= selectors.EVENT_WRITE
 
+                        else:
                             event_masks |= selectors.EVENT_WRITE
 
-                    elif len(conn.obuf) > 0:
-                        event_masks |= selectors.EVENT_WRITE
+                    selector.register(i, event_masks)
 
-                    selector.modify(i, event_masks)
+                for i in connsinprogress:
+                    event_masks = selectors.EVENT_READ | selectors.EVENT_WRITE
+                    selector.register(i, event_masks)
+
+                selector.register(p, selectors.EVENT_READ)
 
                 key_events = selector.select(timeout)
                 input = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
                 output = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
 
             except OSError as error:
-                if sys.platform == "win32" and error.args[0] == WSAEINVAL:
-                    # Windows-specific error if we don't have fds to do select on
-                    input = set()
-                    output = set()
+                if len(error.args) == 2 and error.args[0] == EINTR:
+                    # Error recieved; but we don't care :)
+                    continue
 
-                else:
-                    # Error recieved; terminate networking loop
-                    print(time.strftime("%H:%M:%S"), "select OSError:", error)
-                    self._want_abort = True
+                # Error recieved; terminate networking loop
+                print(time.strftime("%H:%M:%S"), "select OSError:", error)
+                self._want_abort = 1
 
-                    message = _("Major Socket Error: Networking terminated! %s" % str(error))
-                    log.addwarning(message)
+                message = _("Major Socket Error: Networking terminated! %s" % str(error))
+                log.addwarning(message)
 
             except ValueError:
                 # Possibly opened too many sockets
@@ -1238,7 +1235,6 @@ class SlskProtoThread(threading.Thread):
                         log.add(message, 3)
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
-                        selector.register(incconn, selectors.EVENT_READ | selectors.EVENT_WRITE)
                         self._ui_callback([IncConn(incconn, incaddr)])
 
             # Manage Connections
@@ -1252,7 +1248,7 @@ class SlskProtoThread(threading.Thread):
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
 
                     self._ui_callback([ConnectError(msgObj)])
-                    self.close_connection(connsinprogress, connection_in_progress, selector)
+                    self.close_connection(connsinprogress, connection_in_progress)
                     continue
 
                 try:
@@ -1262,7 +1258,7 @@ class SlskProtoThread(threading.Thread):
                 except socket.error as err:
 
                     self._ui_callback([ConnectError(msgObj, err)])
-                    self.close_connection(connsinprogress, connection_in_progress, selector)
+                    self.close_connection(connsinprogress, connection_in_progress)
 
                 else:
                     if connection_in_progress in output:
@@ -1298,7 +1294,7 @@ class SlskProtoThread(threading.Thread):
 
                     except socket.error as err:
                         self._ui_callback([ConnectError(conn_obj, err)])
-                        self.close_connection(conns, connection, selector)
+                        self.close_connection(conns, connection)
                         continue
 
                 if connection is not server_socket:
@@ -1309,13 +1305,13 @@ class SlskProtoThread(threading.Thread):
 
                         if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
                             self._ui_callback([ConnClose(connection, addr)])
-                            self.close_connection(conns, connection, selector)
+                            self.close_connection(conns, connection)
                             continue
 
                     if self.ipBlocked(addr[0]):
                         message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % {"ip": addr[0], "port": addr[1]}
                         log.add(message, 3)
-                        self.close_connection(conns, connection, selector)
+                        self.close_connection(conns, connection)
                         continue
 
                 if connection in input:
@@ -1323,14 +1319,14 @@ class SlskProtoThread(threading.Thread):
                         limit = self._downloadlimit[0](conns, connection)
 
                         if limit is None or limit > 0:
-                            self._dlimits[connection] = int(limit * 0.3)  # limit is per second, we loop 3 times a second
+                            self._dlimits[connection] = int(limit * 0.2)  # limit is per second, we loop 5 times a second
 
                     try:
-                        self.readData(conns, connection, selector)
+                        self.readData(conns, connection)
 
                     except socket.error as err:
                         self._ui_callback([ConnectError(conn_obj, err)])
-                        self.close_connection(conns, connection, selector)
+                        self.close_connection(conns, connection)
                         continue
 
                 if len(conn_obj.ibuf) > 0:
@@ -1355,7 +1351,7 @@ class SlskProtoThread(threading.Thread):
                             del conns[connection]
 
             # Don't exhaust the CPU
-            time.sleep(0.3)
+            time.sleep(0.2)
 
         # Close Server Port
         if server_socket is not None:

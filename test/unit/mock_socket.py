@@ -54,7 +54,6 @@ class MockSocket(Mock):
 def monkeypatch_socket(monkeypatch, datafile: str) -> MockSocket:
     mock_socket = MockSocket()
     mock_socket.set_data(datafile)
-    # mock_socket.fileno.return_value = 0
     monkeypatch.setattr(socket, 'socket', lambda family, type: mock_socket)
     return mock_socket
 
