@@ -155,65 +155,68 @@ def GetResultBitrateLength(filesize, attributes):
     # If there are 3 entries in the attribute list
     if len(attributes) == 3:
 
-        a = attributes
+        first = attributes[0]
+        second = attributes[1]
+        third = attributes[2]
 
         # Sometimes the vbr indicator is in third position
-        if a[2] == 0 or a[2] == 1:
+        if third == 0 or third == 1:
 
-            if a[2] == 1:
+            if third == 1:
                 h_bitrate = " (vbr)"
 
-            bitrate = a[0]
+            bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
-            h_length = '%i:%02i' % (a[1] / 60, a[1] % 60)
+            h_length = '%i:%02i' % (second / 60, second % 60)
 
         # Sometimes the vbr indicator is in second position
-        elif a[1] == 0 or a[1] == 1:
+        elif second == 0 or second == 1:
 
-            if a[1] == 1:
+            if second == 1:
                 h_bitrate = " (vbr)"
 
-            bitrate = a[0]
+            bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
-            h_length = '%i:%02i' % (a[2] / 60, a[2] % 60)
+            h_length = '%i:%02i' % (third / 60, third % 60)
 
         # Lossless audio, length is in first position
-        elif a[2] > 1:
+        elif third > 1:
 
             # Bitrate = sample rate (Hz) * word length (bits) * channel count
             # Bitrate = 44100 * 16 * 2
-            bitrate = (a[1] * a[2] * 2) / 1000
+            bitrate = (second * third * 2) / 1000
             h_bitrate = str(bitrate)
 
-            h_length = '%i:%02i' % (a[0] / 60, a[0] % 60)
+            h_length = '%i:%02i' % (first / 60, first % 60)
 
         else:
 
-            bitrate = a[0]
+            bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
     # If there are 2 entries in the attribute list
     elif len(attributes) == 2:
 
-        a = attributes
+        first = attributes[0]
+        second = attributes[1]
 
         # Sometimes the vbr indicator is in second position
-        if a[1] == 0 or a[1] == 1:
+        if second == 0 or second == 1:
 
             # If it's a vbr file we can't deduce the length
-            if a[1] == 1:
+            if second == 1:
 
                 h_bitrate = " (vbr)"
 
-                bitrate = a[0]
+                bitrate = first
                 h_bitrate = str(bitrate) + h_bitrate
 
             # If it's a constant bitrate we can deduce the length
             else:
 
-                bitrate = a[0]
+                bitrate = first
                 h_bitrate = str(bitrate) + h_bitrate
 
                 # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
@@ -224,10 +227,10 @@ def GetResultBitrateLength(filesize, attributes):
         # Sometimes the bitrate is in first position and the length in second position
         else:
 
-            bitrate = a[0]
+            bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
-            h_length = '%i:%02i' % (a[1] / 60, a[1] % 60)
+            h_length = '%i:%02i' % (second / 60, second % 60)
 
     return h_bitrate, bitrate, h_length
 

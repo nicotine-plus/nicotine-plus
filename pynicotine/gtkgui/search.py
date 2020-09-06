@@ -691,26 +691,29 @@ class Search:
         h_queue = Humanize(inqueue)
 
         append = False
+        maxstoredresults = self.Searches.maxstoredresults
 
         for result in msg.list:
 
-            if counter > self.Searches.maxstoredresults:
+            if counter > maxstoredresults:
                 break
 
             fullpath = result[1]
+            fullpath_lower = fullpath.lower()
 
-            if any(word in fullpath.lower() for word in self.searchterm_words_ignore):
+            if any(word in fullpath_lower for word in self.searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
                 log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
                 continue
 
-            if not any(word in fullpath.lower() for word in self.searchterm_words_include):
+            if not any(word in fullpath_lower for word in self.searchterm_words_include):
                 """ Some users may send us wrong results, filter out such ones """
                 log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
                 continue
 
-            name = fullpath.split('\\')[-1]
-            directory = '\\'.join(reversed(fullpath[:-len(name)].split('\\')))[1:]
+            fullpath_split = reversed(fullpath.split('\\'))
+            name = next(fullpath_split)
+            directory = '\\'.join(fullpath_split)
 
             size = result[2]
             h_size = HumanSize(size)
