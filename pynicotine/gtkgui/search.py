@@ -1244,13 +1244,13 @@ class Search:
                 self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def OnCopyURL(self, widget):
-        user, path = self.selected_results[0][:2]
+        user, path = next(iter(self.selected_results))[:2]
         self.frame.SetClipboardURL(user, path)
 
     def OnCopyDirURL(self, widget):
 
-        user, path = self.selected_results[0][:2]
-        path = "\\".join(path.split("\\")[:-1]) + "\\"
+        user, path = next(iter(self.selected_results))[:2]
+        path = "\\".join(path.split("\\")[:-1])
 
         if path[:-1] != "/":
             path += "/"
