@@ -973,16 +973,14 @@ class ChatRoom:
                 # Only show as many log lines as specified in config
                 lines = deque(lines, numlines)
 
-                for bytes in lines:
-                    li = bytes
+                for line in lines:
 
                     # Try to parse line for username
-                    if len(li) > 20 and li[10].isspace() and li[11].isdigit() and li[20] in ("[", "*"):
+                    if len(line) > 20 and line[10].isspace() and line[11].isdigit() and line[20] in ("[", "*"):
 
-                        line = li[11:]
-                        if li[20] == "[" and li[20:].find("] ") != -1:
-                            namepos = li[20:].find("] ")
-                            user = li[21:20 + namepos].strip()
+                        if line[20] == "[" and line[20:].find("] ") != -1:
+                            namepos = line[20:].find("] ")
+                            user = line[21:20 + namepos].strip()
                             self.getUserTag(user)
                             usertag = self.tag_users[user]
                         else:
@@ -991,14 +989,13 @@ class ChatRoom:
 
                         if user == config["server"]["login"]:
                             tag = self.tag_local
-                        elif li[20] == "*":
+                        elif line[20] == "*":
                             tag = self.tag_me
-                        elif li[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                        elif line[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
                             tag = self.tag_hilite
                         else:
                             tag = self.tag_remote
                     else:
-                        line = li
                         user = None
                         tag = None
                         usertag = None
