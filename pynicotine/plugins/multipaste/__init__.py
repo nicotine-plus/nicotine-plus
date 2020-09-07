@@ -24,7 +24,7 @@ class Plugin(BasePlugin):
     }
 
     def OutgoingPrivateChatEvent(self, nick, line):
-        lines = [x for x in line.split('\n') if x]
+        lines = [x for x in line.split(r'\n') if x]
         if len(lines) > 1:
             if len(lines) > self.settings['maxprivatelines']:
                 self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
@@ -35,7 +35,7 @@ class Plugin(BasePlugin):
             return returncode['zap']
 
     def OutgoingPublicChatEvent(self, room, line):
-        lines = [x for x in line.split('\n') if x]
+        lines = [x for x in line.split(r'\n') if x]
         if len(lines) > 1:
             if len(lines) > self.settings['maxpubliclines']:
                 self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
