@@ -969,7 +969,7 @@ class ChatRoom:
             numlines = 15
 
         try:
-            with open(log, 'r') as lines:
+            with open(log, 'r', encoding='utf-8') as lines:
                 # Only show as many log lines as specified in config
                 lines = deque(lines, numlines)
 
