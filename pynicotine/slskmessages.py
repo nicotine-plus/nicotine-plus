@@ -23,8 +23,10 @@ import os
 import socket
 import struct
 import zlib
+
 from gettext import gettext as _
 from itertools import count
+from itertools import islice
 
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
@@ -1880,7 +1882,7 @@ class FileSearchResult(PeerMessage):
     """ Peer code: 9 """
     """ The peer sends this when it has a file search match. The
     token/ticket is taken from original FileSearchRequest message. """
-    def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None):
+    def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
         self.geoip = geoip
@@ -1891,6 +1893,7 @@ class FileSearchResult(PeerMessage):
         self.ulspeed = ulspeed
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
+        self.numresults = numresults
         self.pos = 0
 
     def parseNetworkMessage(self, message):
@@ -1931,9 +1934,9 @@ class FileSearchResult(PeerMessage):
         msg = bytearray()
         msg.extend(self.packObject(self.user))
         msg.extend(self.packObject(self.token, unsignedint=True))
-        msg.extend(self.packObject(len(self.list), unsignedint=True))
+        msg.extend(self.packObject(self.numresults, unsignedint=True))
 
-        for index in self.list:
+        for index in islice(self.list, self.numresults):
             fileinfo = self.fileindex[str(index)]
 
             msg.extend(bytes([1]))

@@ -27,8 +27,8 @@ import string
 import sys
 import taglib
 import _thread
+
 from gettext import gettext as _
-from itertools import islice
 
 from gi.repository import GLib
 
@@ -303,7 +303,7 @@ class Shares:
             If this is the case, we select the word that has the most file matches in our
             word index. If not, exit, since we don't have relevant results. """
 
-            longest = None
+            largest = 0
 
             for i in re.finditer(r'\S+', searchterm):
                 i = i.group(0)
@@ -311,35 +311,23 @@ class Shares:
                 if i not in wordindex:
                     return
 
-                index_length = len(wordindex[i])
+                list_size = len(wordindex[i])
 
-                if not longest or index_length > longest:
-                    longest = index_length
-                    longest_i = i
+                if list_size > largest:
+                    largest = list_size
+                    largest_key = i
 
             """ Stage 2: Start with the word that has the most file matches, which we selected
             in the previous step, and gradually remove matches that other words in the search
-            term don't have. """
+            term don't have. Return the remaining matches, if any. """
 
-            results = wordindex[longest_i]
-            searchterm.replace(longest_i, '')
+            results = wordindex[largest_key]
+            searchterm.replace(largest_key, '')
 
             for i in re.finditer(r'\S+', searchterm):
                 results = set(results).intersection(wordindex[i.group(0)])
 
-            """ Stage 3: Iterate through the file matches that remain, and append them to a final
-            list. If no matches are left, exit. """
-
-            resultslist = None
-
-            for i in islice(results, maxresults):
-                try:
-                    resultslist.append(i)
-
-                except AttributeError:
-                    resultslist = [i]
-
-            return resultslist
+            return results
 
         except ValueError:
             # DB is closed, perhaps when rescanning share or closing Nicotine+
@@ -393,6 +381,7 @@ class Shares:
 
         if self.np.transfers is not None:
 
+            numresults = min(len(resultlist), maxresults)
             queuesizes = self.np.transfers.getUploadQueueSizes()
             slotsavail = self.np.transfers.allowNewUploads()
 
@@ -412,7 +401,7 @@ class Shares:
                 None,
                 self.config.sections["server"]["login"],
                 geoip, searchid, resultlist, fileindex, slotsavail,
-                self.np.speed, queuesizes, fifoqueue
+                self.np.speed, queuesizes, fifoqueue, numresults
             )
 
             self.np.ProcessRequestToPeer(user, message)
@@ -422,14 +411,14 @@ class Shares:
                     _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(resultlist)
+                        'num': numresults
                     }, 2)
             else:
                 self.logMessage(
                     _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
                         'user': user,
                         'query': searchterm,
-                        'num': len(resultlist)
+                        'num': numresults
                     }, 2)
 
     # Rescan directories in shared databases
