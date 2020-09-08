@@ -215,9 +215,13 @@ class FastConfigureAssistant(object):
         self.store()
         self.window.hide()
 
-        self.frame.logMessage(
-            _("Setup complete! Connecting...")
-        )
+        # Rescan public shares if needed
+        if not self.config.sections["transfers"]["friendsonly"]:
+            self.frame.OnRescan()
+
+        # Rescan buddy shares if needed
+        if self.config.sections["transfers"]["enablebuddyshares"]:
+            self.frame.OnBuddyRescan()
 
         if not self.frame.np.serverconn:
             self.frame.OnConnect(-1)
