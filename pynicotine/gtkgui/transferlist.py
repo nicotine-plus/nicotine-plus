@@ -67,6 +67,7 @@ class TransferList:
         self.statuses["Filtered"] = _("Filtered")
         self.statuses["Connection closed by peer"] = _("Connection closed by peer")
         self.statuses["File not shared"] = _("File not shared")
+        self.statuses["File not shared."] = _("File not shared")  # The official client sends a variant containing a dot
         self.statuses["Establishing connection"] = _("Establishing connection")
         self.statuses["Download directory error"] = _("Download directory error")
         self.statuses["Local file error"] = _("Local file error")
