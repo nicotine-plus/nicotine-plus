@@ -404,12 +404,12 @@ class Config:
             self.sections['ui']['filemanager'] = 'explorer $'
 
         self.defaults = {}
-        for key, value in list(self.sections.items()):
+        for key, value in self.sections.items():
             if type(value) is dict:
                 if key not in self.defaults:
                     self.defaults[key] = {}
 
-                for key2, value2 in list(value.items()):
+                for key2, value2 in value.items():
                     self.defaults[key][key2] = value2
             else:
                 self.defaults[key] = value
@@ -449,8 +449,8 @@ class Config:
         errorlevel = 0
 
         try:
-            for i in list(self.sections.keys()):
-                for j in list(self.sections[i].keys()):
+            for i in self.sections:
+                for j in self.sections[i]:
 
                     if type(self.sections[i][j]) not in [type(None), type("")]:
                         continue
@@ -508,7 +508,7 @@ class Config:
             else:
                 try:
                     self.sections['transfers']['downloads'] = RestrictedUnpickler(handle).load()
-                except (IOError, EOFError, ValueError) as inst:
+                except Exception as inst:
                     log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
             try:
                 handle.close()
@@ -860,10 +860,10 @@ class Config:
             "bwordindex", "bfileindex", "bsharedmtimes", "downloads"
         ]
 
-        for i in list(self.sections.keys()):
+        for i in self.sections:
             if not self.parser.has_section(i):
                 self.parser.add_section(i)
-            for j in list(self.sections[i].keys()):
+            for j in self.sections[i]:
                 if j not in external_sections:
                     self.parser.set(i, j, self.sections[i][j])
                 else:
