@@ -804,8 +804,12 @@ class Transfers:
 
         for i in self.downloads:
             if i.user == user and i.filename == msg.file and i.status not in ["Aborted", "Paused"]:
+                if i.status in self.TRANSFER:
+                    self.AbortTransfer(i, reason=msg.reason)
+
                 i.status = msg.reason
                 self.downloadspanel.update(i)
+
                 break
 
     def fileIsShared(self, user, virtualfilename, realfilename):
@@ -1490,7 +1494,7 @@ class Transfers:
             if upload.status == "Queued":
                 self.eventprocessor.ProcessRequestToPeer(user, slskmessages.QueueFailed(None, file=upload.filename, reason=banmsg))
             else:
-                self.AbortTransfer(upload)
+                self.AbortTransfer(upload, reason=banmsg)
 
         if self.uploadspanel is not None:
             self.uploadspanel.ClearByUser(user)
@@ -1972,14 +1976,14 @@ class Transfers:
                 self.AbortTransfer(i)
                 i.status = "Old"
 
-    def AbortTransfer(self, transfer, remove=0):
+    def AbortTransfer(self, transfer, remove=0, reason="Aborted"):
 
         transfer.req = None
         transfer.speed = 0
         transfer.timeleft = ""
 
         if transfer in self.uploads:
-            self.eventprocessor.ProcessRequestToPeer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason="Aborted"))
+            self.eventprocessor.ProcessRequestToPeer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
 
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
