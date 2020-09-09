@@ -34,7 +34,7 @@ $ sudo apt install nicotine
 Nicotine+ is available in the community repository of Arch Linux and Parabola. To install, run the following:
 
 ```console
-$ pacman -S nicotine+
+$ sudo pacman -S nicotine+
 ```
 
 ### Void Linux (Stable)
@@ -49,7 +49,7 @@ $ sudo xbps-install -S nicotine+
 To install Nicotine+ on Fedora, run the following:
 
 ```console
-$ dnf install nicotine+
+$ sudo dnf install nicotine+
 ```
 
 ### Guix (Stable)
