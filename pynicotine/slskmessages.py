@@ -1937,7 +1937,10 @@ class FileSearchResult(PeerMessage):
         msg.extend(self.packObject(self.numresults, unsignedint=True))
 
         for index in islice(self.list, self.numresults):
-            fileinfo = self.fileindex[str(index)]
+            try:
+                fileinfo = self.fileindex[str(index)]
+            except Exception:
+                continue
 
             msg.extend(bytes([1]))
             msg.extend(self.packObject(fileinfo[0].replace(os.sep, "\\")))
