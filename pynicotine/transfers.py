@@ -803,7 +803,7 @@ class Transfers:
                 break
 
         for i in self.downloads:
-            if i.user == user and i.filename == msg.file and i.status == "Queued":
+            if i.user == user and i.filename == msg.file and i.status not in ["Aborted", "Paused"]:
                 i.status = msg.reason
                 self.downloadspanel.update(i)
                 break
