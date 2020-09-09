@@ -453,7 +453,7 @@ class UserBrowse:
             """
 
             # Foreach subdir
-            for subdir in list(dictdir.keys()):
+            for subdir in dictdir:
 
                 if parent is None:
                     # The first sudirs are attached to the root (None)
