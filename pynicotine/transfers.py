@@ -654,9 +654,8 @@ class Transfers:
         if not uploadslimit:
             return False
 
-        sizelist = [i.size for i in self.uploads if i.user == user and i.status == "Queued"]
+        size = sum(i.size for i in self.uploads if i.user == user and i.status == "Queued")
 
-        size = sum(sizelist)
         return size >= uploadslimit
 
     def fileLimitReached(self, user):
@@ -666,7 +665,7 @@ class Transfers:
         if not filelimit:
             return False
 
-        numfiles = len([i for i in self.uploads if i.user == user and i.status == "Queued"])
+        numfiles = sum(1 for i in self.uploads if i.user == user and i.status == "Queued")
 
         return numfiles >= filelimit
 
@@ -862,24 +861,28 @@ class Transfers:
         limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
         limit_upload_speed = self.eventprocessor.config.sections["transfers"]["uselimit"]
 
-        bandwidthlist = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
+        bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
         currently_negotiating = self.transferNegotiating()
 
         if limit_upload_slots:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            if bandwidthlist + currently_negotiating >= maxupslots:
+            in_progress_count = sum(1 for i in self.uploads if i.conn is not None and i.speed is not None)
+
+            if in_progress_count + currently_negotiating >= maxupslots:
                 return False
 
         if limit_upload_speed:
             max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
-            if bandwidthlist >= max_upload_speed:
+
+            if bandwidth_sum >= max_upload_speed:
                 return False
+
             if currently_negotiating:
                 return False
 
         maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
         if maxbandwidth:
-            if bandwidthlist >= maxbandwidth:
+            if bandwidth_sum >= maxbandwidth:
                 return False
 
         return True
@@ -1722,7 +1725,7 @@ class Transfers:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
             return maxupslots
         else:
-            lstlen = sum(i for i in self.uploads if i.conn is not None)
+            lstlen = sum(1 for i in self.uploads if i.conn is not None)
             if self.allowNewUploads():
                 return lstlen + 1
             else:
