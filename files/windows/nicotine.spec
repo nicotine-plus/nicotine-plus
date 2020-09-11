@@ -17,6 +17,14 @@ binaries, datas, hiddenimports = get_gi_typelibs('HarfBuzz', '0.0')
 # Include CA bundle for update checker
 hiddenimports.append('certifi')
 
+if sys.platform == 'win32':
+    # Notification support on Windows
+    hiddenimports.append('plyer.platforms.win.notification')
+
+elif sys.platform == 'darwin':
+    # Notification support on macOS
+    hiddenimports.append('plyer.platforms.macosx.notification')
+
 # Files to be added to the frozen app
 added_files = [
     #
