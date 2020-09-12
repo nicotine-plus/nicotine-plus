@@ -13,7 +13,7 @@ The current stable version of Nicotine+ is 2.1.0, released on 12 September 2020.
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
 
 ### Ubuntu PPA (Stable)
-This repository also should work other Debian derivatives. For example Debian buster works fine.
+This repository also should work on Debian or any of its derivatives, provided dependencies can be satisfied. As an example Debian Buster works fine.
 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable), run the following:
 
