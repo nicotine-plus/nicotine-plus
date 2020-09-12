@@ -131,7 +131,7 @@ class NetworkEventProcessor:
         self.ip_requested = []
         self.PrivateMessageQueue = {}
         self.users = {}
-        self.user_addr_requested = []
+        self.user_addr_requested = set()
         self.queue = queue.Queue(0)
         self.shares = Shares(self)
 
@@ -357,7 +357,7 @@ class NetworkEventProcessor:
                 if addr is None:
                     if user not in self.user_addr_requested:
                         self.queue.put(slskmessages.GetPeerAddress(user))
-                        self.user_addr_requested.append(user)
+                        self.user_addr_requested.add(user)
                 elif behindfw is None:
                     self.queue.put(slskmessages.OutConn(None, addr))
                 else:
@@ -1085,6 +1085,9 @@ class NetworkEventProcessor:
                             3
                         )
 
+                    if user in self.user_addr_requested:
+                        self.user_addr_requested.remove(user)
+
                     i.addr = (msg.ip, msg.port)
                     i.tryaddr = None
 
@@ -1162,8 +1165,6 @@ class NetworkEventProcessor:
 
             self.logMessage(message)
             self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
-
-        self.user_addr_requested.remove(user)
 
     def Relogged(self, msg):
         self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
