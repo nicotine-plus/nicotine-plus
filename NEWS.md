@@ -3,13 +3,14 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 2.1.0-dev1 (unreleased)
+Version 2.1.0 (12 September 2020)
 -----------------------------
 
 Changes
 
  * Major performance improvements when rescanning shared files and sending user browse responses to others
  * Several performance and stability improvements related to connections and file transfers
+ * Several Windows fixes regarding memory leaks, unresponsiveness and issues when starting Nicotine+
  * Reduced memory usage while rescanning shared files
  * Consistent startup times no matter the number of shared files.
    On large file shares, this cuts down startup times from tens of seconds to 1-2 seconds, depending on your hardware.
