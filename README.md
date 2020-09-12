@@ -13,9 +13,12 @@ The current stable version of Nicotine+ is 2.1.0, released on 12 September 2020.
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
 
 ### Ubuntu PPA (Stable)
+This repository also should work other Debian derivatives. For example Debian buster works fine.
+
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable), run the following:
 
 ```console
+$ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:nicotine-team/stable
 $ sudo apt update
 $ sudo apt install nicotine
@@ -25,6 +28,7 @@ $ sudo apt install nicotine
 The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). It currently contains bleeding edge packages for _Xenial_, _Bionic_, _Focal_, and _Groovy_. To use it, run the following:
 
 ```console
+$ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:nicotine-team/unstable
 $ sudo apt update
 $ sudo apt install nicotine
@@ -45,7 +49,6 @@ $ sudo xbps-install -S nicotine+
 ```
 
 ### Fedora (Stable)
-
 To install Nicotine+ on Fedora, run the following:
 
 ```console
