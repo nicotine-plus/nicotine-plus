@@ -342,12 +342,11 @@ class UserList:
 
     def GetIter(self, user):
 
-        iters = [i.iter for i in self.usersmodel if i[2] == user]
+        for i in self.usersmodel:
+            if i[2] == user:
+                return i.iter
 
-        if iters:
-            return iters[0]
-        else:
-            return None
+        return None
 
     def GetUserStatus(self, msg):
 
