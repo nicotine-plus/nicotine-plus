@@ -34,7 +34,7 @@ from codecs import encode, decode
 from subprocess import PIPE
 from subprocess import Popen
 
-version = "2.1.0"
+version = "2.1.1.dev1"
 
 win32 = sys.platform.startswith("win")
 
@@ -92,31 +92,22 @@ def get_latest_version():
     latest = int(make_version(hlatest))
     date = data['created_at']
 
-    return latest, date
+    return hlatest, latest, date
 
 
 def make_version(version):
 
-    if version.find("dev") >= 0:
-        # Example: 2.0.1.dev1
-
-        ix = version.find("dev") - 1
-        version = version[:ix]
-    elif version.find("rc") >= 0:
-        # Example: 2.0.1.rc1
-
-        ix = version.find("rc") - 1
-        version = version[:ix]
-
     s = version.split(".")
+    major, minor, patch = (int(i) for i in s[:3])
+    stable = 1
 
-    if len(s) >= 4:
-        major, minor, micro, milli = [int(i) for i in s[:4]]
-    else:
-        major, minor, micro = [int(i) for i in s[:3]]
-        milli = 0
+    if "dev" in version or \
+            "rc" in version:
+        # Example: 2.0.1.dev1
+        # A dev version will be one less than a stable version
+        stable = 0
 
-    return (major << 24) + (minor << 16) + (micro << 8) + milli
+    return (major << 24) + (minor << 16) + (patch << 8) + stable
 
 
 def GetUserDirectories():

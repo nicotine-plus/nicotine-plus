@@ -31,7 +31,7 @@ from pynicotine.utils import version
 def checklatest(frame):
 
     try:
-        latest, date = get_latest_version()
+        hlatest, latest, date = get_latest_version()
         myversion = int(make_version(version))
     except Exception as m:
         dlg = gtk.MessageDialog(
@@ -48,7 +48,7 @@ def checklatest(frame):
                 flags=0,
                 type=gtk.MessageType.INFO,
                 buttons=gtk.ButtonsType.OK,
-                text=_("A newer version %s is available, released on %s.") % (latest, date)
+                text=_("A newer version %s is available, released on %s.") % (hlatest, date)
             )
         elif myversion > latest:
             dlg = gtk.MessageDialog(
