@@ -275,6 +275,7 @@ class Config:
             },
 
             "ui": {
+                "dark_mode": False,
                 "icontheme": "",
                 "chatme": "FOREST GREEN",
                 "chatremote": "",
@@ -354,7 +355,7 @@ class Config:
                 "height": 600,
                 "xposition": -1,
                 "yposition": -1,
-                "maximized": "True",
+                "maximized": True,
                 "urgencyhint": True
             },
 
@@ -605,7 +606,8 @@ class Config:
                 "chat_hidebuttons", "tab_status_icons", "notexists",
                 "speechenabled", "enablefilters", "width",
                 "height", "xposition", "yposition", "labelmain", "labelrooms",
-                "labelprivate", "labelinfo", "labelbrowse", "labelsearch"
+                "labelprivate", "labelinfo", "labelbrowse", "labelsearch", "maximized",
+                "dark_mode"
             ],
             'words': [
                 "completion", "censorwords", "replacewords", "autoreplaced",

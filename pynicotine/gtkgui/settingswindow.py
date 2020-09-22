@@ -573,7 +573,7 @@ class DownloadsFrame(buildFrame):
         if len(failed) >= 1:
             errors = ""
 
-            for filter, error in list(failed.items()):
+            for filter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
                     'filter': filter,
                     'error': error
@@ -1262,7 +1262,7 @@ class IgnoreFrame(buildFrame):
 
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
-            for ip, user in list(self.ignored_ips.items()):
+            for ip, user in self.ignored_ips.items():
                 self.ignored_ips_list.append([ip, user])
 
     def GetSettings(self):
@@ -1389,7 +1389,7 @@ class BanFrame(buildFrame):
 
         if server["ipblocklist"] is not None:
             self.blocked = server["ipblocklist"].copy()
-            for blocked, user in list(server["ipblocklist"].items()):
+            for blocked, user in server["ipblocklist"].items():
                 self.blockedlist.append([blocked, user])
 
         if transfers["usecustomban"] is not None:
@@ -1666,7 +1666,8 @@ class ColoursFrame(buildFrame):
                 "urlcolor": self.URL,
                 "tab_default": self.DefaultTab,
                 "tab_hilite": self.HighlightTab,
-                "tab_changed": self.ChangedTab
+                "tab_changed": self.ChangedTab,
+                "dark_mode": self.DarkMode
             }
         }
 
@@ -1772,7 +1773,7 @@ class ColoursFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         for option in self.colors:
-            for key, value in list(self.colorsd.items()):
+            for key, value in self.colorsd.items():
 
                 if option in value:
 
@@ -1811,7 +1812,8 @@ class ColoursFrame(buildFrame):
                 "usernamestyle": self.UsernameStyle.get_model().get(self.UsernameStyle.get_active_iter(), 0)[0],
                 "tab_hilite": self.HighlightTab.get_text(),
                 "tab_default": self.DefaultTab.get_text(),
-                "tab_changed": self.ChangedTab.get_text()
+                "tab_changed": self.ChangedTab.get_text(),
+                "dark_mode": self.DarkMode.get_active()
             }
         }
 
@@ -1831,7 +1833,7 @@ class ColoursFrame(buildFrame):
 
         defaults = self.frame.np.config.defaults
 
-        for key, value in list(self.options.items()):
+        for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
                 if type(widget) is gtk.Entry:
@@ -1843,7 +1845,7 @@ class ColoursFrame(buildFrame):
                 elif type(widget) is gtk.ComboBox:
                     widget.get_child().set_text(defaults[key][option])
 
-        for key, value in list(self.colorsd.items()):
+        for key, value in self.colorsd.items():
 
             if option in value:
 
@@ -1860,7 +1862,7 @@ class ColoursFrame(buildFrame):
     def OnClearAllColours(self, widget):
 
         for option in self.colors:
-            for section, value in list(self.options.items()):
+            for section, value in self.options.items():
 
                 if option in value:
 
@@ -1874,7 +1876,7 @@ class ColoursFrame(buildFrame):
                     elif type(widget) is gtk.ComboBox:
                         widget.get_child().set_text("")
 
-            for section, value in list(self.colorsd.items()):
+            for section, value in self.colorsd.items():
                 if option in value:
                     drawingarea = self.colorsd[section][option]
                     drawingarea.modify_bg(gtk.StateFlags.NORMAL, None)
@@ -1919,12 +1921,12 @@ class ColoursFrame(buildFrame):
             colourtext = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
             entry.set_text(colourtext)
 
-            for section in list(self.options.keys()):
+            for section in self.options.keys():
 
                 if section not in self.colorsd:
                     continue
 
-                for key, value in list(self.options[section].items()):
+                for key, value in self.options[section].items():
 
                     if key not in self.colorsd[section]:
                         continue
@@ -1938,8 +1940,8 @@ class ColoursFrame(buildFrame):
 
     def DefaultColour(self, widget, entry):
 
-        for section in list(self.options.keys()):
-            for key, value in list(self.options[section].items()):
+        for section in self.options:
+            for key, value in self.options[section].items():
                 if value is entry:
                     self.SetDefaultColor(key)
                     return
@@ -2501,7 +2503,7 @@ class UrlCatchFrame(buildFrame):
 
         if urls["protocols"] is not None:
 
-            for key in list(urls["protocols"].keys()):
+            for key in urls["protocols"].keys():
                 if urls["protocols"][key][-1:] == "&":
                     command = urls["protocols"][key][:-1].rstrip()
                 else:
@@ -2514,7 +2516,7 @@ class UrlCatchFrame(buildFrame):
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
-        for key, iter in list(self.protocols.items()):
+        for key, iter in self.protocols.items():
             if iter is not None:
                 selection.select_iter(iter)
                 break
@@ -2747,7 +2749,7 @@ class AutoReplaceFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
         words = config["words"]
         if words["autoreplaced"] is not None:
-            for word, replacement in list(words["autoreplaced"].items()):
+            for word, replacement in words["autoreplaced"].items():
                 self.replacelist.append([word, replacement])
 
         self.OnReplaceCheck(self.ReplaceCheck)
@@ -2810,7 +2812,7 @@ class AutoReplaceFrame(buildFrame):
             "tihs": "this"
         }
 
-        for word, replacement in list(defaults.items()):
+        for word, replacement in defaults.items():
             self.replacelist.append([word, replacement])
 
 
@@ -3001,7 +3003,7 @@ class buildDialog(gtk.Dialog):
 
         c = 0
 
-        for name, data in list(options.items()):
+        for name, data in options.items():
             if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
                 if plugin not in self.settings.frame.np.config.sections["plugins"]:
                     print("No1 " + plugin + ", " + repr(list(self.settings.frame.np.config.sections["plugins"].keys())))
@@ -3261,7 +3263,7 @@ class PluginFrame(buildFrame):
 
         if not self.PluginsEnable.get_active():
             # Disable all plugins
-            for plugin in list(self.frame.pluginhandler.enabled_plugins):
+            for plugin in self.frame.pluginhandler.enabled_plugins:
                 self.frame.pluginhandler.disable_plugin(plugin)
 
             # Uncheck all checkboxes in GUI
@@ -3408,11 +3410,11 @@ class SettingsWindow:
 
     def UpdateColours(self):
 
-        for widget in list(self.__dict__.values()):
+        for widget in self.__dict__.values():
             self.ColourWidgets(widget)
 
-        for name, page in list(self.pages.items()):
-            for widget in list(page.__dict__.values()):
+        for name, page in self.pages.items():
+            for widget in page.__dict__.values():
                 self.ColourWidgets(widget)
 
     def SetTextBG(self, widget, bgcolor="", fgcolor=""):
@@ -3474,7 +3476,7 @@ class SettingsWindow:
             iter = combobox.get_model().iter_next(iter)
 
     def SetWidgetsData(self, config, options):
-        for section, keys in list(options.items()):
+        for section, keys in options.items():
             if section not in config:
                 continue
             for key in keys:
@@ -3556,14 +3558,14 @@ class SettingsWindow:
                 widget.get_model().append([item])
 
     def InvalidSettings(self, domain, key):
-        for name, page in list(self.pages.items()):
+        for name, page in self.pages.items():
             if domain in page.options:
                 if key in page.options[domain]:
                     self.SwitchToPage(name)
                     break
 
     def SetSettings(self, config):
-        for page in list(self.pages.values()):
+        for page in self.pages.values():
             page.SetSettings(config)
 
     def GetSettings(self):
@@ -3584,9 +3586,9 @@ class SettingsWindow:
                 "plugins": {}
             }
 
-            for page in list(self.pages.values()):
+            for page in self.pages.values():
                 sub = page.GetSettings()
-                for (key, data) in list(sub.items()):
+                for key, data in sub.items():
                     config[key].update(data)
 
             return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config

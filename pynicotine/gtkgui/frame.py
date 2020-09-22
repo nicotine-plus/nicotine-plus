@@ -24,6 +24,7 @@
 import os
 import re
 import urllib.parse
+
 from gettext import gettext as _
 
 import gi
@@ -129,6 +130,10 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
+        # Dark mode
+        dark_mode_state = config["ui"]["dark_mode"]
+        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
         utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
@@ -183,7 +188,7 @@ class NicotineFrame:
 
         maximized = self.np.config.sections["ui"]["maximized"]
 
-        if maximized == "True":
+        if maximized:
             self.MainWindow.maximize()
 
         self.MainWindow.connect("delete-event", self.on_delete_event)
@@ -2064,7 +2069,7 @@ class NicotineFrame:
             # Send error messages for each failed filter to log window
             if len(failed) >= 1:
                 errors = ""
-                for filter, error in list(failed.items()):
+                for filter, error in failed.items():
                     errors += "Filter: %s Error: %s " % (filter, error)
                 error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(failed), 'error': errors})
                 self.logMessage(error)
@@ -2155,7 +2160,7 @@ class NicotineFrame:
     def AutoReplace(self, message):
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
-            for word, replacement in list(autoreplaced.items()):
+            for word, replacement in autoreplaced.items():
                 message = message.replace(word, replacement)
 
         return message
@@ -2262,25 +2267,25 @@ class NicotineFrame:
             self.np.transfers.BanUser(user)
 
     def UserIpIsBlocked(self, user):
-        for ip, username in list(self.np.config.sections["server"]["ipblocklist"].items()):
+        for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
             if user == username:
                 return True
         return False
 
     def BlockedUserIp(self, user):
-        for ip, username in list(self.np.config.sections["server"]["ipblocklist"].items()):
+        for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
             if user == username:
                 return ip
         return None
 
     def UserIpIsIgnored(self, user):
-        for ip, username in list(self.np.config.sections["server"]["ipignorelist"].items()):
+        for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
             if user == username:
                 return True
         return False
 
     def IgnoredUserIp(self, user):
-        for ip, username in list(self.np.config.sections["server"]["ipignorelist"].items()):
+        for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
             if user == username:
                 return ip
         return None
@@ -2852,7 +2857,7 @@ class NicotineFrame:
 
         needrescan, needcolors, needcompletion, config = output
 
-        for (key, data) in list(config.items()):
+        for key, data in config.items():
             self.np.config.sections[key].update(data)
 
         config = self.np.config.sections
@@ -2896,6 +2901,9 @@ class NicotineFrame:
         if needcompletion:
             self.chatrooms.roomsctrl.UpdateCompletions()
             self.privatechats.UpdateCompletions()
+
+        dark_mode_state = config["ui"]["dark_mode"]
+        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
             self.chatrooms.roomsctrl.UpdateColours()

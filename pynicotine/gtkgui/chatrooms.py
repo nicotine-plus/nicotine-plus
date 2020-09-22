@@ -95,7 +95,7 @@ class RoomsControl:
         self.PrivateRooms = config["private_rooms"]["rooms"]
 
         # Config cleanup
-        for room, data in list(self.PrivateRooms.items()):
+        for room, data in self.PrivateRooms.items():
             if "owner" not in data:
                 self.PrivateRooms[room]["owner"] = None
             if "operator" in data:
@@ -203,7 +203,7 @@ class RoomsControl:
         room_tab_order = {}
 
         # Find position of opened autojoined rooms
-        for name, room in list(self.joinedrooms.items()):
+        for name, room in self.joinedrooms.items():
 
             if name not in self.frame.np.config.sections["server"]["autojoin"]:
                 continue
@@ -235,7 +235,7 @@ class RoomsControl:
 
         page = notebook.get_nth_page(page_num)
 
-        for name, room in list(self.joinedrooms.items()):
+        for name, room in self.joinedrooms.items():
             if room.Main == page:
                 GLib.idle_add(room.ChatEntry.grab_focus)
 
@@ -249,7 +249,7 @@ class RoomsControl:
 
         page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
 
-        for name, room in list(self.joinedrooms.items()):
+        for name, room in self.joinedrooms.items():
             if room.Main == page:
                 # Remove hilite
                 self.frame.Notifications.Clear("rooms", None, name)
@@ -259,7 +259,7 @@ class RoomsControl:
         if not focused:
             return
 
-        for name, room in list(self.users.items()):
+        for name, room in self.users.items():
             if room.Main == page:
                 self.frame.Notifications.Clear("rooms", name)
 
@@ -614,15 +614,15 @@ class RoomsControl:
                 self.PrivateRooms[msg.room]["owner"] = None
 
     def GetUserStats(self, msg):
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.GetUserStats(msg.user, msg.avgspeed, msg.files)
 
     def GetUserStatus(self, msg):
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.GetUserStatus(msg.user, msg.status)
 
     def SetUserFlag(self, user, flag):
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.SetUserFlag(user, flag)
 
     def GetUserAddress(self, user):
@@ -676,7 +676,7 @@ class RoomsControl:
 
         self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
 
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.ChangeColours()
 
     def saveColumns(self):
@@ -689,7 +689,7 @@ class RoomsControl:
             if room not in self.joinedrooms:
                 del self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
 
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.saveColumns()
 
     def LeaveRoom(self, msg):
@@ -709,7 +709,7 @@ class RoomsControl:
 
         self.roomsmodel.clear()
 
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.ConnClose()
 
         self.autojoin = 1
@@ -738,7 +738,7 @@ class RoomsControl:
 
             self.clist = clist
 
-        for room in list(self.joinedrooms.values()):
+        for room in self.joinedrooms.values():
             room.GetCompletionList(clist=list(self.clist))
 
 
@@ -853,7 +853,7 @@ class ChatRoom:
             gobject.TYPE_STRING
         )
 
-        for (username, user) in users.items():
+        for username, user in users.items():
 
             img = self.frame.GetStatusImage(user.status)
             flag = user.country
@@ -1146,7 +1146,7 @@ class ChatRoom:
     def TickerSet(self, msg):
 
         self.Tickers.set_ticker([])
-        for user in list(msg.msgs.keys()):
+        for user in msg.msgs:
             if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
                 # User ignored, ignore Ticker messages
                 return
@@ -1505,7 +1505,9 @@ class ChatRoom:
         hspeed = HumanSpeed(userdata.avgspeed)
         hfiles = Humanize(userdata.files)
 
-        self.users[username] = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag])
+        self.users[username] = self.usersmodel.append(
+            [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag]
+        )
 
         self.getUserTag(username)
 
@@ -1816,7 +1818,7 @@ class ChatRoom:
         if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms_widths"]:
             del config["columns"]["chatrooms_widths"][self.room]
 
-        for tag in list(self.tag_users.values()):
+        for tag in self.tag_users.values():
             self.changecolour(tag, "useroffline")
 
         self.Tickers.set_ticker([])
@@ -2110,7 +2112,7 @@ class ChatRooms(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            room = [room for room, tab in list(self.roomsctrl.joinedrooms.items()) if tab.Main is page][0]
+            room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
 
             if event.button == 2:
                 self.roomsctrl.joinedrooms[room].OnLeave(widget)
