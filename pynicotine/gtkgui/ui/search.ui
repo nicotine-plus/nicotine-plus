@@ -193,6 +193,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry">
+                            <property name="can_focus">True</property>
+                            <property name="width_chars">10</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -230,6 +236,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry">
+                            <property name="can_focus">True</property>
+                            <property name="width_chars">10</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -267,6 +279,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry">
+                            <property name="can_focus">True</property>
+                            <property name="width_chars">5</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -304,6 +322,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry">
+                            <property name="can_focus">True</property>
+                            <property name="width_chars">5</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -341,6 +365,12 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry">
+                            <property name="can_focus">True</property>
+                            <property name="width_chars">5</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">True</property>
