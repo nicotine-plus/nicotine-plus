@@ -349,6 +349,8 @@ class Searches(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
+            ("#" + _("Copy search term"), self.searches[id][2].OnCopySearchTerm),
+            ("", None),
             ("#" + _("Close this tab"), self.searches[id][2].OnClose)
         )
 
@@ -1324,6 +1326,9 @@ class Search:
                 self.OnIgnore(widget)
 
         self.Searches.RemoveTab(self)
+
+    def OnCopySearchTerm(self, widget):
+        self.frame.clip.set_text(self.text, -1)
 
     def OnToggleRemember(self, widget):
 
