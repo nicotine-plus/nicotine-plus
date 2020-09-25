@@ -48,6 +48,7 @@ from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import ScrollBottom
+from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
@@ -783,6 +784,27 @@ class ChatRoom:
 
         self.clist = []
 
+        # Log Text Search
+        self.LogSearchBar.connect_entry(self.LogSearchEntry)
+
+        searchbar = TextSearchBar(self.RoomLog, self.LogSearchEntry)
+        self.LogSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
+        self.LogSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
+
+        self.LogSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
+        self.LogSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+
+        # Chat Text Search
+        self.ChatSearchBar.connect_entry(self.ChatSearchEntry)
+
+        searchbar = TextSearchBar(self.ChatScroll, self.ChatSearchEntry)
+        self.ChatSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
+        self.ChatSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
+
+        self.ChatSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
+        self.ChatSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+
+        # Spell Check
         if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
@@ -1017,24 +1039,11 @@ class ChatRoom:
 
         GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
 
-    def on_key_press_event(self, widget, event):
-
-        key = Gdk.keyval_name(event.keyval)
-
-        # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
-            self.OnFind(widget)
-        elif key in ("F3"):
-            self.OnFind(widget, repeat=True)
-
-    def OnFind(self, widget, repeat=False):
-        self.frame.OnFindTextview(None, widget, repeat=repeat)
-
     def OnFindLogWindow(self, widget):
-        self.frame.OnFindTextview(None, self.RoomLog)
+        self.LogSearchBar.set_search_mode(True)
 
     def OnFindChatLog(self, widget):
-        self.frame.OnFindTextview(None, self.ChatScroll)
+        self.ChatSearchBar.set_search_mode(True)
 
     def destroy(self):
         self.Main.destroy()

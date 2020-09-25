@@ -49,7 +49,6 @@ from pynicotine.gtkgui.checklatest import checklatest
 from pynicotine.gtkgui.dirchooser import ChooseFile
 from pynicotine.gtkgui.dirchooser import SaveFile
 from pynicotine.gtkgui.downloads import Downloads
-from pynicotine.gtkgui.dialogs import FindDialog
 from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.privatechat import PrivateChats
@@ -69,6 +68,7 @@ from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import OpenUri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import ScrollBottom
+from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
@@ -213,12 +213,23 @@ class NicotineFrame:
             ("#" + _("Clear log"), self.OnClearLogWindow)
         )
 
+        # Debug
         self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
         self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
         self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
         self.debugMessages.set_active((4 in config["logging"]["debugmodes"]))
         self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
         self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
+
+        # Text Search
+        self.LogSearchBar.connect_entry(self.LogSearchEntry)
+
+        searchbar = TextSearchBar(self.LogWindow, self.LogSearchEntry)
+        self.LogSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
+        self.LogSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
+
+        self.LogSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
+        self.LogSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
 
         """ Scanning """
 
@@ -2630,7 +2641,7 @@ class NicotineFrame:
         return True
 
     def OnFindLogWindow(self, widget):
-        self.OnFindTextview(None, self.LogWindow)
+        self.LogSearchBar.set_search_mode(True)
 
     def OnCopyLogWindow(self, widget):
         bound = self.LogWindow.get_buffer().get_selection_bounds()
@@ -2696,97 +2707,6 @@ class NicotineFrame:
             self.AddDebugLevel(6)
         else:
             self.RemoveDebugLevel(6)
-
-    """ Text View Search """
-
-    def OnFindTextview(self, widget, textview, repeat=False):
-
-        if "FindDialog" not in self.__dict__:
-            self.FindDialog = FindDialog(
-                self,
-                _('Enter the string to search for:'),
-                "",
-                textview=textview,
-                modal=False
-            )
-            self.FindDialog.set_title(_('Nicotine+: Find string'))
-            self.FindDialog.show()
-            self.FindDialog.connect("find-click", self.OnFindClicked)
-            return
-
-        if textview is not self.FindDialog.textview:
-            repeat = False
-
-        self.FindDialog.textview = textview
-        self.FindDialog.currentPosition = None
-        self.FindDialog.nextPosition = None
-
-        self.FindDialog.show()
-        self.FindDialog.deiconify()
-
-        if repeat:
-            self.OnFindClicked(widget, self.FindDialog.lastdirection)
-        else:
-            self.FindDialog.entry.set_text("")
-
-    def OnFindClicked(self, widget, direction):
-
-        if self.FindDialog.textview is None:
-            return
-
-        self.FindDialog.lastdirection = direction
-        textview = self.FindDialog.textview
-        buffer = textview.get_buffer()
-        start, end = buffer.get_bounds()
-        query = self.FindDialog.entry.get_text()
-
-        textview.emit("select-all", False)
-
-        if self.FindDialog.currentPosition is None:
-            self.FindDialog.currentPosition = buffer.create_mark(None, start, False)
-            self.FindDialog.nextPosition = buffer.create_mark(None, start, False)
-
-        if direction == "next":
-            current = buffer.get_mark("insert")
-            iter = buffer.get_iter_at_mark(current)
-            match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-            if match1 is not None and len(match1) == 2:
-                match_start, match_end = match1
-                buffer.place_cursor(match_end)
-                buffer.select_range(match_end, match_start)
-                textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-            else:
-                iter = start
-                match1 = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-                if match1 is not None and len(match1) == 2:
-                    match_start, match_end = match1
-                    buffer.place_cursor(match_end)
-                    buffer.select_range(match_end, match_start)
-                    textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-
-        elif direction == "previous":
-
-            current = buffer.get_mark("insert")
-            iter = buffer.get_iter_at_mark(current)
-            match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-            if match1 is not None and len(match1) == 2:
-                match_start, match_end = match1
-                buffer.place_cursor(match_start)
-                buffer.select_range(match_start, match_end)
-                textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-            else:
-                iter = end
-                match1 = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-                if match1 is not None and len(match1) == 2:
-                    match_start, match_end = match1
-                    buffer.place_cursor(match_start)
-                    buffer.select_range(match_start, match_end)
-                    textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-            return
 
     """ Status Bar """
 

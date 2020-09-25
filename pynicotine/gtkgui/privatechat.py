@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import ScrollBottom
+from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
@@ -359,6 +360,17 @@ class PrivateChat:
         self.status = -1
         self.clist = []
 
+        # Text Search
+        self.SearchBar.connect_entry(self.SearchEntry)
+
+        searchbar = TextSearchBar(self.ChatScroll, self.SearchEntry)
+        self.SearchEntry.connect("activate", searchbar.OnSearchNextMatch)
+        self.SearchEntry.connect("search-changed", searchbar.OnSearchChanged)
+
+        self.SearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
+        self.SearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+
+        # Spell Check
         if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatLine.get_buffer())
@@ -488,7 +500,7 @@ class PrivateChat:
         return True
 
     def OnFindChatLog(self, widget):
-        self.frame.OnFindTextview(widget, self.ChatScroll)
+        self.SearchBar.set_search_mode(True)
 
     def OnCopyChatLog(self, widget):
 
