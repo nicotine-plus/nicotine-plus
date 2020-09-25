@@ -1207,6 +1207,73 @@ class PopupMenu(gtk.Menu):
         return True
 
 
+class TextSearchBar:
+
+    def __init__(self, textview, entry):
+
+        self.textview = textview
+        self.entry = entry
+
+    def OnSearchChanged(self, widget):
+
+        buffer = self.textview.get_buffer()
+        start, end = buffer.get_bounds()
+        query = self.entry.get_text()
+
+        self.textview.emit("select-all", False)
+
+        iter = start
+        match = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+
+        if match is not None and len(match) == 2:
+            match_start, match_end = match
+            buffer.place_cursor(match_end)
+            buffer.select_range(match_end, match_start)
+            self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
+
+    def OnSearchPreviousMatch(self, widget):
+
+        buffer = self.textview.get_buffer()
+        query = self.entry.get_text()
+
+        self.textview.emit("select-all", False)
+
+        current = buffer.get_mark("insert")
+        iter = buffer.get_iter_at_mark(current)
+        match = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+
+        if match is not None and len(match) == 2:
+            match_start, match_end = match
+            buffer.place_cursor(match_start)
+            buffer.select_range(match_start, match_end)
+            self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
+        else:
+            start, end = buffer.get_bounds()
+            buffer.place_cursor(end)
+            self.OnSearchPreviousMatch(widget)
+
+    def OnSearchNextMatch(self, widget):
+
+        buffer = self.textview.get_buffer()
+        query = self.entry.get_text()
+
+        self.textview.emit("select-all", False)
+
+        current = buffer.get_mark("insert")
+        iter = buffer.get_iter_at_mark(current)
+        match = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+
+        if match is not None and len(match) == 2:
+            match_start, match_end = match
+            buffer.place_cursor(match_end)
+            buffer.select_range(match_end, match_start)
+            self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
+        else:
+            start, end = buffer.get_bounds()
+            buffer.place_cursor(start)
+            self.OnSearchNextMatch(widget)
+
+
 def WriteLog(logsdir, fn, msg):
 
     oldumask = os.umask(0o077)
