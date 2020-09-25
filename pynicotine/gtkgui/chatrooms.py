@@ -414,7 +414,9 @@ class RoomsControl:
                 room_list = self.frame.np.config.sections["server"]["autojoin"]
 
             for room in room_list:
-                if room[-1:] != ' ':
+                if room == 'Public ':
+                    self.OnJoinPublicRoom(None)
+                else:
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
         self.roomsmodel.clear()
