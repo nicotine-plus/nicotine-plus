@@ -1569,9 +1569,9 @@ class ChatRoom:
 
     def UserColumnDraw(self, column, cellrenderer, model, iter, dummy="dummy"):
 
-        user = self.usersmodel.get_value(iter, 2)
-
         if self.room in self.roomsctrl.PrivateRooms:
+            user = self.usersmodel.get_value(iter, 2)
+
             if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
                 cellrenderer.set_property("underline", pango.Underline.SINGLE)
                 cellrenderer.set_property("weight", pango.Weight.BOLD)
@@ -1581,9 +1581,6 @@ class ChatRoom:
             else:
                 cellrenderer.set_property("weight", pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", pango.Underline.NONE)
-        else:
-            cellrenderer.set_property("weight", pango.Weight.NORMAL)
-            cellrenderer.set_property("underline", pango.Underline.NONE)
 
         self.frame.CellDataFunc(column, cellrenderer, model, iter)
 
