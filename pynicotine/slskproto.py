@@ -31,6 +31,7 @@ import time
 
 from errno import EINTR
 from gettext import gettext as _
+from itertools import islice
 
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AcceptChildren
@@ -447,7 +448,7 @@ class SlskProtoThread(threading.Thread):
     def _isDownload(self, conn):
         return conn.__class__ is PeerConnection and conn.filedown is not None
 
-    def _calcUploadSpeed(self, i):
+    def _calcTransferSpeed(self, i):
         curtime = time.time()
 
         if i.starttime is None:
@@ -457,59 +458,42 @@ class SlskProtoThread(threading.Thread):
 
         if elapsed == 0:
             return 0
-        else:
+        elif self._isUpload(i):
             return i.sentbytes2 / elapsed
-
-    def _calcDownloadSpeed(self, i):
-        curtime = time.time()
-
-        if i.starttime is None:
-            i.starttime = curtime
-
-        elapsed = curtime - i.starttime
-
-        if elapsed == 0:
-            return 0
         else:
             return i.readbytes2 / elapsed
 
     def _calcUploadLimitByTransfer(self, conns, i):
-        max = self._uploadlimit[1] * 1024.0
-        limit = max - self._calcUploadSpeed(i) + 1024
-
-        if limit < 1024.0:
-            return int(0)
-
-        return int(limit)
+        return int(self._uploadlimit[1] * 1000.0)
 
     def _calcUploadLimitByTotal(self, conns, i):
-        max = self._uploadlimit[1] * 1024.0
+        max = self._uploadlimit[1] * 1000.0
         bw = 0.0
 
-        for j in conns.values():
-            if self._isUpload(j):
-                bw += self._calcUploadSpeed(j)
+        """ Skip first upload
+        If we have 2 or more uploads, we start reducing their individual speeds to
+        stay below the total limit """
 
-        limit = max - bw + 1024
+        uploads = islice((j for j in conns.values() if self._isUpload(j)), 1, None)
+        for j in uploads:
+            bw += self._calcTransferSpeed(j)
 
-        if limit < 1024.0:
-            return int(0)
-
+        limit = max - bw
         return int(limit)
 
     def _calcDownloadLimitByTotal(self, conns, i):
-        max = self._downloadlimit[1] * 1024.0
+        max = self._downloadlimit[1] * 1000.0
         bw = 0.0
 
-        for j in conns:
-            if self._isDownload(j):
-                bw += self._calcDownloadSpeed(j)
+        """ Skip first download
+        If we have 2 or more downloads, we start reducing their individual speeds to
+        stay below the total limit """
 
-        limit = max - bw + 1023
+        downloads = islice((j for j in conns.values() if self._isDownload(j)), 1, None)
+        for j in downloads:
+            bw += self._calcTransferSpeed(j)
 
-        if limit < 1024.0:
-            return int(0)
-
+        limit = max - bw
         return int(limit)
 
     def _calcLimitNone(self, conns, i):
@@ -1174,6 +1158,9 @@ class SlskProtoThread(threading.Thread):
                     if len(conn.obuf) > 0 or (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
                         if self._isUpload(conn):
                             limit = self._uploadlimit[0](conns, conn)
+
+                            if limit is not None:
+                                limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
 
                             if limit is None or limit > 0:
                                 self._ulimits[i] = limit
