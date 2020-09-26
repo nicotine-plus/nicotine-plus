@@ -1141,9 +1141,16 @@ class NicotineFrame:
         if buttons:
             buttons[-1].destroy()
 
+        # Override link handler with our own
+        self.About.connect("activate-link", self.OnAboutUri)
+
         self.About.set_transient_for(self.MainWindow)
         self.About.set_version(version)
         self.About.show()
+
+    def OnAboutUri(self, widget, uri):
+        OpenUri(uri, self.MainWindow)
+        return True
 
     """ Main Notebook """
 
