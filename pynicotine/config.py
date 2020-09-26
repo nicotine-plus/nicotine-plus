@@ -213,8 +213,9 @@ class Config:
             "logging": {
                 "debug": False,
                 "debugmodes": [0, 1],
+                "debuglogsdir": os.path.join(LOGDIR, "debug"),
                 "logcollapsed": False,
-                "logsdir": LOGDIR,
+                "transferslogsdir": os.path.join(LOGDIR, "transfers"),
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
@@ -222,6 +223,7 @@ class Config:
                 "privatechat": False,
                 "chatrooms": False,
                 "transfers": False,
+                "debug_file_output": False,
                 "roomlogsdir": os.path.join(LOGDIR, "rooms"),
                 "privatelogsdir": os.path.join(LOGDIR, "private"),
                 "readroomlogs": True,
@@ -588,13 +590,17 @@ class Config:
         # Remove everything ticker-related, no longer necessary after the introduction of room walls
         self.removeOldSection("ticker")
 
+        # Remove old log folder option, superseded by individual log folders for transfers and debug messages
+        self.removeOldOption("logging", "logsdir")
+
         # Checking for unknown section/options
         unknown1 = [
             'login', 'passw', 'enc', 'downloaddir', 'uploaddir', 'customban',
-            'descr', 'pic', 'logsdir', 'roomlogsdir', 'privatelogsdir',
+            'descr', 'pic', 'transferslogsdir', 'roomlogsdir', 'privatelogsdir',
             'incompletedir', 'autoreply', 'afterfinish', 'downloadregexp',
             'afterfolder', 'default', 'chatfont', 'npothercommand', 'npplayer',
-            'npformat', 'private_timestamp', 'rooms_timestamp', 'log_timestamp'
+            'npformat', 'private_timestamp', 'rooms_timestamp', 'log_timestamp',
+            'debuglogsdir'
         ]
 
         unknown2 = {

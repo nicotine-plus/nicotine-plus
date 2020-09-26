@@ -29,8 +29,10 @@ import gettext
 import locale
 import os
 import sys
+import time
 
 from codecs import encode, decode
+from gettext import gettext as _
 from subprocess import PIPE
 from subprocess import Popen
 
@@ -426,8 +428,40 @@ def executeCommand(command, replacement=None, background=True, returnoutput=Fals
     return procs[-1].communicate()[0]
 
 
+def cmp(a, b):
+    """Replacement for cmp() which is removed in Python 3"""
+    return (a > b) - (a < b)
+
+
+def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
+
+    oldumask = os.umask(0o077)
+    if not os.path.exists(logsdir):
+        os.makedirs(logsdir)
+
+    try:
+        with open(os.path.join(logsdir, CleanFile(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
+            os.umask(oldumask)
+
+            text = "%s %s\n" % (time.strftime(timestamp_format), msg)
+            logfile.write(text.encode('UTF-8', 'replace'))
+
+    except IOError as error:
+        print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
+
+
+""" Debugging """
+
+
+def debug(*args):
+    """ Prints debugging info. """
+
+    truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
+    print('*' * 8, truncated_args)
+
+
 def strace(function):
-    """Decorator for debugging"""
+    """ Decorator for debugging """
 
     from itertools import chain
 
@@ -439,17 +473,3 @@ def strace(function):
         return retvalue
 
     return newfunc
-
-
-def cmp(a, b):
-    """Replacement for cmp() which is removed in Python 3"""
-    return (a > b) - (a < b)
-
-
-def debug(*args):
-    """
-    Prints debugging info.
-    TODO: add CLI switch --debug for en-/disabling.
-    """
-    truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
-    print('*' * 8, truncated_args)

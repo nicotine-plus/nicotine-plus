@@ -2169,11 +2169,13 @@ class LogFrame(buildFrame):
         self.options = {
             "logging": {
                 "privatechat": self.LogPrivate,
-                "chatrooms": self.LogRooms,
-                "logsdir": self.LogDir,
-                "roomlogsdir": self.RoomLogDir,
                 "privatelogsdir": self.PrivateLogDir,
+                "chatrooms": self.LogRooms,
+                "roomlogsdir": self.RoomLogDir,
                 "transfers": self.LogTransfers,
+                "transferslogsdir": self.TransfersLogDir,
+                "debug_file_output": self.LogDebug,
+                "debuglogsdir": self.DebugLogDir,
                 "rooms_timestamp": self.ChatRoomFormat,
                 "private_timestamp": self.PrivateChatFormat,
                 "log_timestamp": self.LogFileFormat,
@@ -2191,28 +2193,49 @@ class LogFrame(buildFrame):
 
         self.p.SetWidgetsData(config, self.options)
 
-        if config["logging"]["logsdir"]:
-            self.LogDir.set_current_folder(config["logging"]["logsdir"])
+        roomlogsdir = config["logging"]["roomlogsdir"]
+        if roomlogsdir:
+            if not os.path.exists(roomlogsdir):
+                os.makedirs(roomlogsdir)
 
-        if config["logging"]["roomlogsdir"]:
-            self.RoomLogDir.set_current_folder(config["logging"]["roomlogsdir"])
+            self.RoomLogDir.set_current_folder(roomlogsdir)
 
-        if config["logging"]["privatelogsdir"]:
-            self.PrivateLogDir.set_current_folder(config["logging"]["privatelogsdir"])
+        privatelogsdir = config["logging"]["privatelogsdir"]
+        if privatelogsdir:
+            if not os.path.exists(privatelogsdir):
+                os.makedirs(privatelogsdir)
+
+            self.PrivateLogDir.set_current_folder(privatelogsdir)
+
+        transferslogsdir = config["logging"]["transferslogsdir"]
+        if transferslogsdir:
+            if not os.path.exists(transferslogsdir):
+                os.makedirs(transferslogsdir)
+
+            self.TransfersLogDir.set_current_folder(transferslogsdir)
+
+        debuglogsdir = config["logging"]["debuglogsdir"]
+        if debuglogsdir:
+            if not os.path.exists(debuglogsdir):
+                os.makedirs(debuglogsdir)
+
+            self.DebugLogDir.set_current_folder(debuglogsdir)
 
     def GetSettings(self):
 
         return {
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
-                "chatrooms": self.LogRooms.get_active(),
-                "logsdir": self.LogDir.get_file().get_path(),
-                "roomlogsdir": self.RoomLogDir.get_file().get_path(),
                 "privatelogsdir": self.PrivateLogDir.get_file().get_path(),
+                "chatrooms": self.LogRooms.get_active(),
+                "roomlogsdir": self.RoomLogDir.get_file().get_path(),
+                "transfers": self.LogTransfers.get_active(),
+                "transferslogsdir": self.TransfersLogDir.get_file().get_path(),
+                "debug_file_output": self.LogDebug.get_active(),
+                "debuglogsdir": self.DebugLogDir.get_file().get_path(),
                 "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "transfers": self.LogTransfers.get_active(),
                 "private_timestamp": self.PrivateChatFormat.get_text(),
                 "rooms_timestamp": self.ChatRoomFormat.get_text(),
                 "log_timestamp": self.LogFileFormat.get_text(),
@@ -3331,6 +3354,7 @@ class SettingsWindow:
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
         self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
         self.tree["User Info"] = model.append(row, [_("User Info"), "User Info"])
+        self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
@@ -3348,7 +3372,6 @@ class SettingsWindow:
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
         self.tree["Away Mode"] = model.append(row, [_("Away Mode"), "Away Mode"])
-        self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
         self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
         self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
         self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
@@ -3362,6 +3385,7 @@ class SettingsWindow:
         p["Plugins"] = PluginFrame(self)
         p["Text To Speech"] = TTSFrame(self)
         p["User Info"] = UserinfoFrame(self)
+        p["Logging"] = LogFrame(self)
 
         p["Shares"] = SharesFrame(self)
         p["Downloads"] = DownloadsFrame(self)
@@ -3376,7 +3400,6 @@ class SettingsWindow:
         p["Notebook Tabs"] = NotebookFrame(self)
 
         p["Away Mode"] = AwayFrame(self)
-        p["Logging"] = LogFrame(self)
         p["Ignore List"] = IgnoreFrame(self)
         p["Censor List"] = CensorFrame(self)
         p["Auto-Replace List"] = AutoReplaceFrame(self)
