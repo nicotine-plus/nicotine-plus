@@ -240,17 +240,6 @@ class TransferList:
 
             self.last_save = curtime
 
-        transferring = (transfer is not None and transfer.status == "Transferring")
-
-        if not forceupdate and \
-            transferring and \
-                (curtime - self.last_ui_update) <= 1:
-
-            """ We save CPU by not updating the transfer list every time a part of
-            a file is transferred """
-
-            return
-
         if not forceupdate:
             current_page = self.frame.MainNotebook.get_current_page()
             my_page = self.frame.MainNotebook.page_num(self.myvbox)
@@ -266,10 +255,7 @@ class TransferList:
             for i in self.list:
                 self.update_specific(i)
 
-        if transferring:
-            finished = False
-        else:
-            finished = (transfer is not None and transfer.status == "Finished")
+        finished = (transfer is not None and transfer.status == "Finished")
 
         if not forceupdate and \
             not finished and \
