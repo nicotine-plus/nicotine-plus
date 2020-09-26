@@ -47,6 +47,7 @@
 
 ##### Portuguese Brazilian
  * Suicide|Solution (2006) < felipe (at) bunghole.com.br >
+ * yyyyyyyan (2020)
 
 ##### Lithuanian
  * Žygimantas (2006) < uid0 (at) akl.lt >
