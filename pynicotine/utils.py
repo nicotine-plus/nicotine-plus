@@ -36,7 +36,7 @@ from gettext import gettext as _
 from subprocess import PIPE
 from subprocess import Popen
 
-version = "2.1.1.dev1"
+version = "2.1.1"
 
 win32 = sys.platform.startswith("win")
 
