@@ -376,8 +376,11 @@ def OpenUri(uri, window):
             PROTOCOL_HANDLERS[protocol](uri.strip())
             return
         if PROTOCOL_HANDLERS[protocol]:
-            executeCommand(PROTOCOL_HANDLERS[protocol], uri)
-            return
+            try:
+                executeCommand(PROTOCOL_HANDLERS[protocol], uri)
+                return
+            except RuntimeError as e:
+                print(e)
 
     # Situation 2, user did not define a way of handling the protocol
     if sys.platform == "win32" and webbrowser:
