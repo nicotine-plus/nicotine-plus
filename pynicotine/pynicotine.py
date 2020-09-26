@@ -272,8 +272,6 @@ class NetworkEventProcessor:
             ConnectToPeerTimeout: self.ConnectToPeerTimeout,
             RespondToDistributedSearchesTimeout: self.ToggleRespondDistributed,
             transfers.TransferTimeout: self.TransferTimeout,
-            slskmessages.RescanShares: self.shares.RescanShares,
-            slskmessages.RescanBuddyShares: self.shares.RescanBuddyShares,
             str: self.Notify,
             slskmessages.PopupMessage: self.PopupMessage,
             slskmessages.SetCurrentConnectionCount: self.SetCurrentConnectionCount,
