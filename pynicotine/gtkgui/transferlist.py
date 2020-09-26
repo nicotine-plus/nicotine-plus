@@ -240,17 +240,6 @@ class TransferList:
 
             self.last_save = curtime
 
-        transferring = (transfer is not None and transfer.status == "Transferring")
-
-        if not forceupdate and \
-            transferring and \
-                (curtime - self.last_ui_update) <= 1:
-
-            """ We save CPU by not updating the transfer list every time a part of
-            a file is transferred """
-
-            return
-
         if not forceupdate:
             current_page = self.frame.MainNotebook.get_current_page()
             my_page = self.frame.MainNotebook.page_num(self.myvbox)
@@ -266,10 +255,7 @@ class TransferList:
             for i in self.list:
                 self.update_specific(i)
 
-        if transferring:
-            finished = False
-        else:
-            finished = (transfer is not None and transfer.status == "Finished")
+        finished = (transfer is not None and transfer.status == "Finished")
 
         if not forceupdate and \
             not finished and \
@@ -397,9 +383,6 @@ class TransferList:
 
     def update_specific(self, transfer=None):
 
-        fn = transfer.filename
-        user = transfer.user
-        shortfn = fn.split("\\")[-1]
         currentbytes = transfer.currentbytes
         place = transfer.place
 
@@ -445,20 +428,10 @@ class TransferList:
             icurrentbytes = 0
             percent = 0
 
-        filecount = 1
-
         # Modify old transfer
         if transfer.iter is not None:
-            if self.TreeUsers == 1:
-                # Group by folder, path not visible
-                path = None
-            else:
-                path = '/'.join(reversed(transfer.path.split('/')))
-
             self.transfersmodel.set(
                 transfer.iter,
-                1, path,
-                2, shortfn,
                 3, hstatus,
                 4, str(place),
                 5, percent,
@@ -474,6 +447,11 @@ class TransferList:
                 17, place
             )
         else:
+            fn = transfer.filename
+            user = transfer.user
+            shortfn = fn.split("\\")[-1]
+            filecount = 1
+
             if self.TreeUsers > 0:
                 # Group by folder or user
 

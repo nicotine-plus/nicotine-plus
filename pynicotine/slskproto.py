@@ -32,6 +32,7 @@ import time
 from errno import EINTR
 from gettext import gettext as _
 from itertools import islice
+from random import uniform
 
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AcceptChildren
@@ -218,6 +219,7 @@ class PeerConnection(Connection):
         self.init = init
         self.piercefw = None
         self.lastactive = time.time()
+        self.lastcallback = time.time()
 
         self.starttime = None  # Used for upload bandwidth management
         self.sentbytes2 = 0
@@ -399,13 +401,14 @@ class SlskProtoThread(threading.Thread):
 
         self._conns = {}
         self._connsinprogress = {}
-        self._uploadlimit = (self._calcLimitNone, 0)
+        self._uploadlimit = (self._calcUploadLimitNone, 0)
         self._downloadlimit = (self._calcDownloadLimitByTotal, self._config.sections["transfers"]["downloadlimit"])
         self._ulimits = {}
         self._dlimits = {}
+        self.total_uploads = 0
+        self.total_downloads = 0
 
-        self.last_conncount_ui_update = self.last_file_input_update = \
-            self.last_file_output_update = time.time()
+        self.last_conncount_ui_update = time.time()
 
         # GeoIP Config
         self._geoip = None
@@ -464,11 +467,14 @@ class SlskProtoThread(threading.Thread):
             return i.readbytes2 / elapsed
 
     def _calcUploadLimitByTransfer(self, conns, i):
+        self.total_uploads = sum(1 for j in conns.values() if self._isUpload(j))
+
         return int(self._uploadlimit[1] * 1024.0)
 
     def _calcUploadLimitByTotal(self, conns, i):
         max_limit = self._uploadlimit[1] * 1024.0
         bw = 0.0
+        self.total_uploads = 1
 
         """ Skip first upload
         If we have 2 or more uploads, we start reducing their individual speeds to
@@ -477,13 +483,20 @@ class SlskProtoThread(threading.Thread):
         uploads = islice((j for j in conns.values() if self._isUpload(j)), 1, None)
         for j in uploads:
             bw += self._calcTransferSpeed(j)
+            self.total_uploads += 1
 
         limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum upload speed per transfer
         return limit
 
+    def _calcUploadLimitNone(self, conns, i):
+        self.total_uploads = sum(1 for j in conns.values() if self._isUpload(j))
+
+        return None
+
     def _calcDownloadLimitByTotal(self, conns, i):
         max_limit = self._downloadlimit[1] * 1024.0
         bw = 0.0
+        self.total_downloads = 1
 
         """ Skip first download
         If we have 2 or more downloads, we start reducing their individual speeds to
@@ -492,6 +505,7 @@ class SlskProtoThread(threading.Thread):
         downloads = islice((j for j in conns.values() if self._isDownload(j)), 1, None)
         for j in downloads:
             bw += self._calcTransferSpeed(j)
+            self.total_downloads += 1
 
         if max_limit == 0:
             # Download limit disabled
@@ -500,9 +514,6 @@ class SlskProtoThread(threading.Thread):
             limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum download speed per transfer
 
         return limit
-
-    def _calcLimitNone(self, conns, i):
-        return None
 
     def socketStillActive(self, conn):
         try:
@@ -621,14 +632,19 @@ class SlskProtoThread(threading.Thread):
             addedbyteslen = len(addedbytes)
             curtime = time.time()
 
+            """ Depending on the number of active downloads, the cooldown for UI callbacks
+            can be up to 15 seconds per transfer. We use a bit of randomness to give the
+            illusion that downloads are updated often. """
+            cooldown = max(1.0, min(self.total_downloads * uniform(0.8, 1.0), 15))
+
             if (leftbytes - addedbyteslen) == 0 or \
-                    (curtime - self.last_file_input_update) > 1:
+                    (curtime - conn.lastcallback) > cooldown:
 
                 """ We save resources by not sending data back to the UI every time
                 a part of a file is downloaded """
 
                 self._ui_callback([DownloadFile(conn.conn, addedbyteslen, conn.filedown.file)])
-                self.last_file_input_update = curtime
+                conn.lastcallback = curtime
 
             conn.filereadbytes += addedbyteslen
             msgBuffer = msgBuffer[leftbytes:]
@@ -1028,7 +1044,7 @@ class SlskProtoThread(threading.Thread):
                             cb = self._calcUploadLimitByTransfer
 
                     else:
-                        cb = self._calcLimitNone
+                        cb = self._calcUploadLimitNone
 
                     self._resetCounters(conns)
                     self._uploadlimit = (cb, msgObj.limit)
@@ -1089,14 +1105,19 @@ class SlskProtoThread(threading.Thread):
 
                 curtime = time.time()
 
+                """ Depending on the number of active uploads, the cooldown for UI callbacks
+                can be up to 15 seconds per transfer. We use a bit of randomness to give the
+                illusion that uploads are updated often. """
+                cooldown = max(1.0, min(self.total_uploads * uniform(0.8, 1.0), 15))
+
                 if totalsentbytes == size or \
-                        (curtime - self.last_file_output_update) > 1:
+                        (curtime - conn.lastcallback) > cooldown:
 
                     """ We save resources by not sending data back to the UI every time
                     a part of a file is uploaded """
 
                     self._ui_callback([conn.fileupl])
-                    self.last_file_output_update = curtime
+                    conn.lastcallback = curtime
 
     def readData(self, conns, i):
         # Check for a download limit
@@ -1313,8 +1334,11 @@ class SlskProtoThread(threading.Thread):
                     if self._isDownload(conn_obj):
                         limit = self._downloadlimit[0](conns, connection)
 
+                        if limit is not None:
+                            limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
+
                         if limit is None or limit > 0:
-                            self._dlimits[connection] = int(limit * 0.2)  # limit is per second, we loop 5 times a second
+                            self._dlimits[connection] = limit
 
                     try:
                         self.readData(conns, connection)
