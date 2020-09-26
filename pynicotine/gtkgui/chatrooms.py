@@ -783,24 +783,10 @@ class ChatRoom:
         self.clist = []
 
         # Log Text Search
-        self.LogSearchBar.connect_entry(self.LogSearchEntry)
-
-        searchbar = TextSearchBar(self.RoomLog, self.LogSearchEntry)
-        self.LogSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
-        self.LogSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
-
-        self.LogSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
-        self.LogSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+        TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
 
         # Chat Text Search
-        self.ChatSearchBar.connect_entry(self.ChatSearchEntry)
-
-        searchbar = TextSearchBar(self.ChatScroll, self.ChatSearchEntry)
-        self.ChatSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
-        self.ChatSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
-
-        self.ChatSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
-        self.ChatSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+        TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
         # Spell Check
         if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:

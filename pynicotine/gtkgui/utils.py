@@ -1207,10 +1207,21 @@ class PopupMenu(gtk.Menu):
 
 class TextSearchBar:
 
-    def __init__(self, textview, entry):
+    def __init__(self, textview, search_bar, entry):
 
         self.textview = textview
+        self.search_bar = search_bar
         self.entry = entry
+
+        self.search_bar.connect_entry(self.entry)
+
+        self.entry.connect("activate", self.OnSearchNextMatch)
+        self.entry.connect("search-changed", self.OnSearchChanged)
+
+        self.entry.connect("previous-match", self.OnSearchPreviousMatch)
+        self.entry.connect("next-match", self.OnSearchNextMatch)
+
+        self.textview.connect("key-press-event", self.OnKeyPress)
 
     def OnSearchChanged(self, widget):
 
@@ -1270,6 +1281,17 @@ class TextSearchBar:
             start, end = buffer.get_bounds()
             buffer.place_cursor(start)
             self.OnSearchNextMatch(widget)
+
+    def OnKeyPress(self, widget, event):
+        key = Gdk.keyval_name(event.keyval)
+
+        # Match against capslock + control and control
+        if key in ("f", "F") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+            self.ShowSearchBar()
+
+    def ShowSearchBar(self):
+        self.search_bar.set_search_mode(True)
+        self.entry.grab_focus_without_selecting()
 
 
 size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
