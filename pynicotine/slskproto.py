@@ -464,10 +464,10 @@ class SlskProtoThread(threading.Thread):
             return i.readbytes2 / elapsed
 
     def _calcUploadLimitByTransfer(self, conns, i):
-        return int(self._uploadlimit[1] * 1000.0)
+        return int(self._uploadlimit[1] * 1024.0)
 
     def _calcUploadLimitByTotal(self, conns, i):
-        max = self._uploadlimit[1] * 1000.0
+        max_limit = self._uploadlimit[1] * 1024.0
         bw = 0.0
 
         """ Skip first upload
@@ -478,11 +478,11 @@ class SlskProtoThread(threading.Thread):
         for j in uploads:
             bw += self._calcTransferSpeed(j)
 
-        limit = max - bw
-        return int(limit)
+        limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum upload speed per transfer
+        return limit
 
     def _calcDownloadLimitByTotal(self, conns, i):
-        max = self._downloadlimit[1] * 1000.0
+        max_limit = self._downloadlimit[1] * 1024.0
         bw = 0.0
 
         """ Skip first download
@@ -493,8 +493,13 @@ class SlskProtoThread(threading.Thread):
         for j in downloads:
             bw += self._calcTransferSpeed(j)
 
-        limit = max - bw
-        return int(limit)
+        if max_limit == 0:
+            # Download limit disabled
+            limit = 0
+        else:
+            limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum download speed per transfer
+
+        return limit
 
     def _calcLimitNone(self, conns, i):
         return None
