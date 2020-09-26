@@ -1312,7 +1312,7 @@ speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', '
 
 def HumanSpeed(filesize):
     try:
-        step_unit = 1000.0
+        step_unit = 1024.0
 
         for i in speed_suffixes:
             if filesize < step_unit:
