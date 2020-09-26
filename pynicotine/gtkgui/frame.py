@@ -222,14 +222,7 @@ class NicotineFrame:
         self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
 
         # Text Search
-        self.LogSearchBar.connect_entry(self.LogSearchEntry)
-
-        searchbar = TextSearchBar(self.LogWindow, self.LogSearchEntry)
-        self.LogSearchEntry.connect("activate", searchbar.OnSearchNextMatch)
-        self.LogSearchEntry.connect("search-changed", searchbar.OnSearchChanged)
-
-        self.LogSearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
-        self.LogSearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
 
         """ Scanning """
 

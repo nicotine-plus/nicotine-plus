@@ -361,14 +361,7 @@ class PrivateChat:
         self.clist = []
 
         # Text Search
-        self.SearchBar.connect_entry(self.SearchEntry)
-
-        searchbar = TextSearchBar(self.ChatScroll, self.SearchEntry)
-        self.SearchEntry.connect("activate", searchbar.OnSearchNextMatch)
-        self.SearchEntry.connect("search-changed", searchbar.OnSearchChanged)
-
-        self.SearchEntry.connect("previous-match", searchbar.OnSearchPreviousMatch)
-        self.SearchEntry.connect("next-match", searchbar.OnSearchNextMatch)
+        TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry)
 
         # Spell Check
         if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
