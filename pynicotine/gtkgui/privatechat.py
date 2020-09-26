@@ -40,12 +40,12 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.logfacility import log
 from pynicotine.utils import CleanFile
 from pynicotine.utils import version
+from pynicotine.utils import write_log
 
 
 CTCP_VERSION = "\x01VERSION\x01"
@@ -560,7 +560,8 @@ class PrivateChat:
             AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 
         if self.Log.get_active():
-            WriteLog(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
+            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
+            write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
@@ -602,7 +603,8 @@ class PrivateChat:
         AppendLine(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 
         if self.Log.get_active():
-            WriteLog(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line)
+            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
+            write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         if bytestring:
             payload = text

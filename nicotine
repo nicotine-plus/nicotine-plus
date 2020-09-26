@@ -30,7 +30,6 @@ import platform
 import sys
 from gettext import gettext as _
 
-from pynicotine.logfacility import log
 from pynicotine.utils import ApplyTranslation
 from pynicotine.utils import GetUserDirectories
 
@@ -143,7 +142,7 @@ def renameprocess(newname, debug=False):
         msg = [_("Errors occured while trying to change process name:")]
         for i in errors:
             msg.append("%s" % (i,))
-        log.addwarning('\n'.join(msg))
+        print('\n'.join(msg))
 
 
 def run():
@@ -230,10 +229,10 @@ def run():
             dumpfile = os.path.expanduser(config) + ".profile"
             profiler = cProfile.Profile()
 
-            log.add(_("Starting using the profiler (saving dump to %s)") % dumpfile)
+            print(_("Starting using the profiler (saving dump to %s)") % dumpfile)
 
             profiler.enable()
-            app.MainLoop()
+            app.run(None)
             profiler.disable()
 
             profiler.dump_stats(dumpfile)

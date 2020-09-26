@@ -49,14 +49,13 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import PressHeader
 from pynicotine.gtkgui.utils import ScrollBottom
 from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import WriteLog
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import showCountryTooltip
 from pynicotine.logfacility import log
 from pynicotine.utils import CleanFile
 from pynicotine.utils import cmp
-from pynicotine.utils import debug
+from pynicotine.utils import write_log
 
 
 def GetCompletion(part, list):
@@ -340,7 +339,6 @@ class RoomsControl:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
         except Exception as e:
             print(e)
-            pass
 
         self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
 
@@ -396,7 +394,7 @@ class RoomsControl:
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
         except Exception as e:
-            debug(e)
+            print(e)
 
         self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
 
@@ -1242,7 +1240,8 @@ class ChatRoom:
 
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
-            WriteLog(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line)
+            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
+            write_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
 
         self.getUserTag(user)
 

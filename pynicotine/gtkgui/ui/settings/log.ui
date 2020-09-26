@@ -71,7 +71,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="LogTransfers">
-                <property name="label" translatable="yes">Log transfers</property>
+                <property name="label" translatable="yes">Log transfers to file</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -85,24 +85,54 @@
               </packing>
             </child>
             <child>
+              <object class="GtkCheckButton" id="LogDebug">
+                <property name="label" translatable="yes">Log debug messages to file</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_underline">True</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">10</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;b&gt;Folder Locations&lt;/b&gt;</property>
+                <property name="halign">start</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="row_spacing">10</property>
                 <property name="column_spacing">10</property>
                 <property name="column_homogeneous">True</property>
-                <child>
-                  <object class="GtkLabel" id="LogDirLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Logs directory:</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkLabel" id="RoomLogDirLabel">
                     <property name="visible">True</property>
@@ -112,7 +142,7 @@
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -124,19 +154,31 @@
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="TransfersLogDirLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Transfer Logs directory:</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFileChooserButton" id="LogDir">
+                  <object class="GtkLabel" id="DebugLogDirLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="action">select-folder</property>
-                    <property name="title" translatable="yes">Select a directory</property>
+                    <property name="label" translatable="yes">Debug Logs directory:</property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -148,7 +190,7 @@
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -160,14 +202,65 @@
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFileChooserButton" id="TransfersLogDir">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="action">select-folder</property>
+                    <property name="title" translatable="yes">Select a directory</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
                     <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFileChooserButton" id="DebugLogDir">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="action">select-folder</property>
+                    <property name="title" translatable="yes">Select a directory</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">4</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">10</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">&lt;b&gt;Chat History&lt;/b&gt;</property>
+                <property name="halign">start</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -181,7 +274,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">5</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -230,7 +323,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">6</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -245,7 +338,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">7</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -294,14 +387,14 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">8</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">0</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -599,7 +692,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

@@ -15,18 +15,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import textwrap
 import time
+
 from sys import stdout
+
+from pynicotine.utils import write_log
 
 
 class logger(object):
     """Coordinates log messages. Has a message history for listeners that are
     not yet present right at startup."""
 
-    def __init__(self, maxlogitems=100):
+    def __init__(self):
 
         self.listeners = set()
+        self.log_to_file = False
+        self.folder = ""
+        self.file_name = "debug_" + str(int(time.time()))
+        self.timestamp_format = "%Y-%m-%d %H:%M:%S"
 
     def addwarning(self, msg):
         """Add a message with the level corresponding to warnings."""
@@ -50,6 +58,9 @@ class logger(object):
 
         timestamp = time.localtime()
 
+        if self.log_to_file:
+            write_log(self.folder, self.file_name, msg, self.timestamp_format)
+
         for callback in self.listeners:
             try:
                 callback(timestamp, level, msg)
@@ -65,6 +76,15 @@ class logger(object):
             self.listeners.remove(callback)
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
+
+    def set_log_to_file(self, write):
+        self.log_to_file = write
+
+    def set_folder(self, folder):
+        self.folder = folder
+
+    def set_timestamp_format(self, timestamp_format):
+        self.timestamp_format = timestamp_format
 
 
 useconsole = True

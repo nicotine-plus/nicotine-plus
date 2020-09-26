@@ -31,7 +31,6 @@ This is the actual client code. Actual GUI classes are in the separate modules
 
 import configparser
 import datetime
-import logging
 import os
 import queue
 import shutil
@@ -45,11 +44,13 @@ from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import Config
 from pynicotine.geoip import IP2Location
+from pynicotine.logfacility import log
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
 from pynicotine.utils import unescape
+from pynicotine.utils import write_log
 
 
 class PeerConnection:
@@ -138,6 +139,9 @@ class NetworkEventProcessor:
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
         self.geoip = IP2Location.IP2Location(file_path, "SHARED_MEMORY")
+
+        # Give the logger information about log folder
+        self.UpdateDebugLogOptions()
 
         self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.bindip, self.port, self.config, self)
 
@@ -397,7 +401,8 @@ class NetworkEventProcessor:
         self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
         self.servertimer.setDaemon(True)
         self.servertimer.start()
-        logging.info(_("The server seems to be down or not responding, retrying in %i seconds") % (self.servertimeout))
+
+        self.setStatus(_("The server seems to be down or not responding, retrying in %i seconds") % (self.servertimeout))
 
     def ServerTimeout(self):
         if self.config.needConfig() <= 1:
@@ -656,7 +661,6 @@ class NetworkEventProcessor:
         else:
             self.frame.manualdisconnect = 1
             self.setStatus(_("Can not log in, reason: %s") % (msg.reason))
-            self.logMessage(_("Can not log in, reason: %s") % (msg.reason))
 
             if self.frame.settingswindow is not None:
                 self.frame.settingswindow.SetSettings(self.config.sections)
@@ -1384,9 +1388,9 @@ class NetworkEventProcessor:
         try:
             userpic = self.config.sections["userinfo"]["pic"]
 
-            f = open(userpic, 'rb')
-            pic = f.read()
-            f.close()
+            with open(userpic, 'rb') as f:
+                pic = f.read()
+
         except Exception:
             pic = None
 
@@ -1789,17 +1793,22 @@ class NetworkEventProcessor:
     def logTransfer(self, message, toUI=0):
 
         if self.config.sections["logging"]["transfers"]:
-            fn = os.path.join(self.config.sections["logging"]["logsdir"], "transfers.log")
-            try:
-                f = open(fn, "a")
-                f.write(time.strftime("%c"))
-                f.write(" %s\n" % message)
-                f.close()
-            except IOError as error:
-                self.logMessage(_("Couldn't write to transfer log: %s") % error)
+            timestamp_format = self.config.sections["logging"]["log_timestamp"]
+            write_log(self.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
 
         if toUI:
             self.logMessage(message)
+
+    def UpdateDebugLogOptions(self):
+        """ Gives the logger updated logging settings """
+
+        should_log = self.config.sections["logging"]["debug_file_output"]
+        log_folder = self.config.sections["logging"]["debuglogsdir"]
+        timestamp_format = self.config.sections["logging"]["log_timestamp"]
+
+        log.set_log_to_file(should_log)
+        log.set_folder(log_folder)
+        log.set_timestamp_format(timestamp_format)
 
 
 class UserAddr:

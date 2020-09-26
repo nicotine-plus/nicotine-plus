@@ -2560,9 +2560,8 @@ class NicotineFrame:
                     userpic = self.np.config.sections["userinfo"]["pic"]
                     if os.path.exists(userpic):
                         has_pic = True
-                        f = open(userpic, 'rb')
-                        pic = f.read()
-                        f.close()
+                        with open(userpic, 'rb') as f:
+                            pic = f.read()
                     else:
                         has_pic = False
                         pic = None
@@ -2623,12 +2622,13 @@ class NicotineFrame:
             # Make sure we don't attempt to scroll in the log window
             # if it's hidden, to prevent those nasty GTK warnings :)
 
-            shouldscroll = False
-            self.SetStatusText(msg)
+            should_scroll = False
+            should_log = False
+            self.SetStatusText(msg, should_log)
         else:
-            shouldscroll = True
+            should_scroll = True
 
-        AppendLine(self.LogWindow, msg, self.tag_log, scroll=shouldscroll)
+        AppendLine(self.LogWindow, msg, self.tag_log, scroll=should_scroll)
 
         return False
 
@@ -2710,10 +2710,13 @@ class NicotineFrame:
 
     """ Status Bar """
 
-    def SetStatusText(self, msg):
+    def SetStatusText(self, msg, should_log=True):
         self.Statusbar.pop(self.status_context_id)
         self.Statusbar.push(self.status_context_id, msg)
         self.Statusbar.set_tooltip_text(msg)
+
+        if msg and should_log:
+            self.logMessage(msg)
 
     def SetUserStatus(self, status):
         self.UserStatus.pop(self.user_context_id)
@@ -2781,6 +2784,8 @@ class NicotineFrame:
             self.np.config.sections[key].update(data)
 
         config = self.np.config.sections
+
+        self.np.UpdateDebugLogOptions()
 
         # Write utils.py options
         utils.DECIMALSEP = config["ui"]["decimalsep"]

@@ -22,7 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import re
 import sys
 import time
@@ -40,7 +39,6 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.countrycodes import code2name
-from pynicotine.utils import CleanFile
 from pynicotine.utils import executeCommand
 
 
@@ -1272,23 +1270,6 @@ class TextSearchBar:
             start, end = buffer.get_bounds()
             buffer.place_cursor(start)
             self.OnSearchNextMatch(widget)
-
-
-def WriteLog(logsdir, fn, msg):
-
-    oldumask = os.umask(0o077)
-    if not os.path.exists(logsdir):
-        os.makedirs(logsdir)
-
-    logfile = open(os.path.join(logsdir, CleanFile(fn.replace(os.sep, "-")) + ".log"), 'ab', 0)
-
-    os.umask(oldumask)
-
-    text = "%s %s\n" % (time.strftime(NICOTINE.np.config.sections["logging"]["log_timestamp"]), msg)
-
-    logfile.write(text.encode('UTF-8', 'replace'))
-    logfile.flush()
-    logfile.close()
 
 
 size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
