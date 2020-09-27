@@ -35,6 +35,7 @@ from gettext import gettext as _
 from gi.repository import GLib
 
 from pynicotine import slskmessages
+from pynicotine.logfacility import log
 from pynicotine.utils import GetUserDirectories
 
 if sys.platform == "win32":
@@ -49,16 +50,19 @@ if sys.platform == "win32":
 
 class Shares:
 
-    def __init__(self, np):
+    def __init__(self, np, config, queue, logcallback):
         self.np = np
-        self.config = self.np.config
+        self.config = config
+        self.queue = queue
+        self.logMessage = logcallback
+        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
         # Convert fs-based shared to virtual shared (pre 1.4.0)
         def _convert_to_virtual(x):
             if isinstance(x, tuple):
                 return x
             virtual = x.replace('/', '_').replace('\\', '_').strip('_')
-            self.logMessage("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual), 1)
+            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
             return (virtual, x)
 
         self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
@@ -79,13 +83,10 @@ class Shares:
             ]
         )
 
-        self.queue = self.np.queue
-        self.logMessage = self.np.logMessage
         self.CompressedSharesBuddy = self.CompressedSharesNormal = None
         self.compress_shares("normal")
         self.compress_shares("buddy")
         self.newbuddyshares = self.newnormalshares = False
-        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     """ Shares-related actions """
 
@@ -140,7 +141,7 @@ class Shares:
                     os.unlink(shelvefile)
                     opened_shelves.append(shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL))
                 except Exception as ex:
-                    print(("Failed to unlink %s: %s" % (shelvefile, ex)))
+                    log.addwarning(("Failed to unlink %s: %s" % (shelvefile, ex)))
 
         self.config.sections["transfers"]["sharedfiles"] = opened_shelves.pop(0)
         self.config.sections["transfers"]["bsharedfiles"] = opened_shelves.pop(0)
@@ -154,13 +155,12 @@ class Shares:
         self.config.sections["transfers"]["bsharedmtimes"] = opened_shelves.pop(0)
 
         if errors:
-            self.logMessage(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)}, 1)
+            log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
 
             self.set_shares(sharestype="normal", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
             self.set_shares(sharestype="buddy", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
 
-            self.logMessage(_("Shared files database seems to be corrupted, rescan your shares"), 1)
-            return
+            log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
 
     def set_shares(self, sharestype="normal", files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
 
@@ -189,7 +189,7 @@ class Shares:
                     self.config.sections["transfers"][destination].update(source)
 
                 except Exception as e:
-                    self.logMessage(_("Can't save %s: %s") % (filename, e), 1)
+                    log.addwarning(_("Can't save %s: %s") % (filename, e))
                     return
 
     def compress_shares(self, sharestype):
@@ -200,9 +200,7 @@ class Shares:
             streams = self.config.sections["transfers"]["bsharedfilesstreams"]
 
         if streams is None:
-            message = _("ERROR: No %(type)s shares database available") % {"type": sharestype}
-            print(message)
-            self.logMessage(message, None)
+            log.addwarning(_("ERROR: No %(type)s shares database available") % {"type": sharestype})
             return
 
         m = slskmessages.SharedFileList(None, streams)
@@ -273,7 +271,7 @@ class Shares:
                 self.logMessage(
                     _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") % {
                         'user': user
-                    }, None)
+                    }, 1)
 
             if msg.conn.conn is not None:
                 self.queue.put(slskmessages.ConnClose(msg.conn.conn))
@@ -402,17 +400,13 @@ class Shares:
             )
 
             self.np.frame.RescanFinished(sharestype)
-
             self.compress_shares(sharestype)
-
-            if self.np.transfers is not None:
-                self.np.shares.send_num_shared_folders_files()
+            self.send_num_shared_folders_files()
 
         except Exception as ex:
             config_dir, data_dir = GetUserDirectories()
-            self.logMessage(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex),
-                1
+            log.add(
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
             )
             GLib.idle_add(self.np.frame.SharesProgress.hide)
             raise
@@ -432,7 +426,7 @@ class Shares:
         except TypeError:
             num_folders = len(list(oldmtimes))
 
-        self.logMessage(_("%(num)s folders found before rescan, rebuilding...") % {"num": num_folders})
+        log.add(_("%(num)s folders found before rescan, rebuilding...") % {"num": num_folders})
 
         newmtimes = self.get_dirs_mtimes(shared_directories)
 
@@ -452,7 +446,7 @@ class Shares:
         # fileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
         self.get_files_index(sharestype, newsharedfiles, progress)
 
-        self.logMessage(_("%(num)s folders found after rescan") % {"num": len(newsharedfiles)})
+        log.add(_("%(num)s folders found after rescan") % {"num": len(newsharedfiles)})
 
     def is_hidden(self, folder, filename=None):
         """ Stop sharing any dot/hidden directories/files """
@@ -593,13 +587,10 @@ class Shares:
                         try:
                             mtime = entry.stat().st_mtime
                         except OSError as errtuple:
-                            message = _("Error while scanning %(path)s: %(error)s") % {
+                            log.add(_("Error while scanning %(path)s: %(error)s") % {
                                 'path': path,
                                 'error': errtuple
-                            }
-
-                            print(str(message))
-                            self.logMessage(message)
+                            })
                             continue
 
                         list[path] = mtime
@@ -608,9 +599,7 @@ class Shares:
                             list[k] = dircontents[k]
 
             except OSError as errtuple:
-                message = _("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple}
-                print(str(message))
-                self.logMessage(message)
+                log.add(_("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple})
                 continue
 
         return list
@@ -643,12 +632,12 @@ class Shares:
                                 list[virtualdir] = oldlist[virtualdir]
                                 continue
                             except KeyError:
-                                self.logMessage(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                     'vdir': virtualdir,
                                     'dir': folder
-                                }, 6)
+                                })
                         else:
-                            self.logMessage(_("Dropping missing folder %(dir)s") % {'dir': folder}, 6)
+                            log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
                             continue
 
                 virtualdir = self.real2virtual(folder)
@@ -668,9 +657,7 @@ class Shares:
                             list[virtualdir].append(data)
 
             except OSError as errtuple:
-                message = _("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple}
-                print(str(message))
-                self.logMessage(message)
+                log.add(_("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple})
                 continue
 
         return list
@@ -697,8 +684,7 @@ class Shares:
             return fileinfo
 
         except Exception as errtuple:
-            message = _("Error while scanning file %(path)s: %(error)s") % {'path': pathname, 'error': errtuple}
-            self.logMessage(message)
+            log.add(_("Error while scanning file %(path)s: %(error)s") % {'path': pathname, 'error': errtuple})
 
     def get_files_streams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False):
         """ Get streams of files """
@@ -718,12 +704,12 @@ class Shares:
                             streams[virtualdir] = oldstreams[virtualdir]
                             continue
                         except KeyError:
-                            self.logMessage(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                            log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
                                 'vdir': virtualdir,
                                 'dir': folder
-                            }, 6)
+                            })
                     else:
-                        self.logMessage(_("Dropping missing folder %(dir)s") % {'dir': folder}, 6)
+                        log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
                         continue
 
             streams[virtualdir] = self.get_dir_stream(newsharedfiles[virtualdir])
@@ -754,12 +740,12 @@ class Shares:
                     stream.extend(message.packObject(2))
                     stream.extend(message.packObject(fileinfo[2][1]))
                 except Exception:
-                    self.logMessage(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
+                    log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
                         'file': fileinfo[0],
                         'bitrate': fileinfo[2][0],
                         'length': fileinfo[3],
                         'vbr': fileinfo[2][1]
-                    }), 1)
+                    }))
                     stream.extend(message.packObject(''))
                     stream.extend(message.packObject(0))
             else:

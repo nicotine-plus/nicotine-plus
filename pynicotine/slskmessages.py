@@ -1809,7 +1809,7 @@ class SharedFileList(PeerMessage):
                     pos, attr = self.getObject(message, int, pos, printerror=False)
                     attrs.append(attr)
 
-                files.append([code, name, size, ext, attrs])
+                files.append((code, name, size, ext, attrs))
 
             shares.append((directory, files))
 
