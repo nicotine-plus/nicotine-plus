@@ -998,13 +998,7 @@ class NicotineFrame:
 
         self.logMessage(_("Rescanning started"))
 
-        shared = self.np.config.sections["transfers"]["shared"][:]
-
-        if self.np.config.sections["transfers"]["sharedownloaddir"]:
-            shared.append((_('Downloaded'), self.np.config.sections["transfers"]["downloaddir"]))
-
-        msg = slskmessages.RescanShares(shared, None)
-        _thread.start_new_thread(self.np.shares.RescanShares, (msg, rebuild))
+        _thread.start_new_thread(self.np.shares.RescanShares, (rebuild,))
 
     def OnBuddyRescan(self, widget=None, rebuild=False):
 
@@ -1018,13 +1012,7 @@ class NicotineFrame:
 
         self.logMessage(_("Rescanning Buddy Shares started"))
 
-        shared = self.np.config.sections["transfers"]["buddyshared"][:] + self.np.config.sections["transfers"]["shared"][:]
-
-        if self.np.config.sections["transfers"]["sharedownloaddir"]:
-            shared.append((_('Downloaded'), self.np.config.sections["transfers"]["downloaddir"]))
-
-        msg = slskmessages.RescanBuddyShares(shared, None)
-        _thread.start_new_thread(self.np.shares.RescanBuddyShares, (msg, rebuild))
+        _thread.start_new_thread(self.np.shares.RescanBuddyShares, (rebuild,))
 
     def OnBrowsePublicShares(self, widget):
         """ Browse your own public shares """
@@ -1972,33 +1960,24 @@ class NicotineFrame:
 
     """ Scanning """
 
-    def RescanFinished(self, files, streams, wordindex, fileindex, mtimes, type):
+    def RescanFinished(self, type):
         if type == "buddy":
-            GLib.idle_add(self._BuddyRescanFinished, files, streams, wordindex, fileindex, mtimes)
+            GLib.idle_add(self._BuddyRescanFinished)
         elif type == "normal":
-            GLib.idle_add(self._RescanFinished, files, streams, wordindex, fileindex, mtimes)
+            GLib.idle_add(self._RescanFinished)
 
-    def _BuddyRescanFinished(self, files, streams, wordindex, fileindex, mtimes):
-
-        self.np.config.setBuddyShares(files, streams, wordindex, fileindex, mtimes)
+    def _BuddyRescanFinished(self):
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)
             self.browse_buddy_shares.set_sensitive(True)
-
-        if self.np.transfers is not None:
-            self.np.shares.sendNumSharedFoldersFiles()
 
         self.brescanning = False
         self.logMessage(_("Rescanning Buddy Shares finished"))
 
         self.BuddySharesProgress.hide()
 
-        self.np.shares.CompressShares("buddy")
-
-    def _RescanFinished(self, files, streams, wordindex, fileindex, mtimes):
-
-        self.np.config.setShares(files, streams, wordindex, fileindex, mtimes)
+    def _RescanFinished(self):
 
         if self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(True)
@@ -2008,11 +1987,6 @@ class NicotineFrame:
         self.logMessage(_("Rescanning finished"))
 
         self.SharesProgress.hide()
-
-        self.np.shares.CompressShares("normal")
-
-        if self.np.transfers is not None:
-            self.np.shares.sendNumSharedFoldersFiles()
 
     """ Search """
 

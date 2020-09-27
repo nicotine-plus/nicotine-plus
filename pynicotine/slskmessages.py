@@ -157,20 +157,6 @@ class SetGeoBlock(InternalMessage):
         self.config = config
 
 
-class RescanShares(InternalMessage):
-    """ Sent by the GUI thread to itself to indicate the need to rescan shares in the background"""
-    def __init__(self, shared, yieldfunction):
-        self.shared = shared
-        self.yieldfunction = yieldfunction
-
-
-class RescanBuddyShares(InternalMessage):
-    """ Sent by the GUI thread to itself to indicate the need to rescan shares in the background"""
-    def __init__(self, shared, yieldfunction):
-        self.shared = shared
-        self.yieldfunction = yieldfunction
-
-
 class DistribConn(InternalMessage):
     def __init__(self):
         pass
@@ -1823,7 +1809,7 @@ class SharedFileList(PeerMessage):
                     pos, attr = self.getObject(message, int, pos, printerror=False)
                     attrs.append(attr)
 
-                files.append([code, name, size, ext, attrs])
+                files.append((code, name, size, ext, attrs))
 
             shares.append((directory, files))
 
@@ -1938,7 +1924,7 @@ class FileSearchResult(PeerMessage):
 
         for index in islice(self.list, self.numresults):
             try:
-                fileinfo = self.fileindex[str(index)]
+                fileinfo = self.fileindex[repr(index)]
             except Exception:
                 continue
 

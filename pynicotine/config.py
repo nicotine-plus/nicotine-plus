@@ -31,7 +31,6 @@ This module contains configuration classes for Nicotine.
 import configparser
 import os
 import pickle
-import shelve
 import sys
 import time
 
@@ -40,15 +39,6 @@ from gettext import gettext as _
 from os.path import exists
 
 from pynicotine.logfacility import log
-
-if sys.platform == "win32":
-    # Use semidbm for faster shelves on Windows
-
-    def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        import semidbm
-        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
-
-    shelve.open = shelve_open_semidbm
 
 
 class RestrictedUnpickler(pickle.Unpickler):
@@ -642,90 +632,6 @@ class Config:
                         self.sections[i][j] = None
                         log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
 
-        # Convert fs-based shared to virtual shared (pre 1.4.0)
-        def _convert_to_virtual(x):
-            if isinstance(x, tuple):
-                return x
-            virtual = x.replace('/', '_').replace('\\', '_').strip('_')
-            log.addwarning("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
-            return (virtual, x)
-
-        self.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["shared"]]
-        self.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.sections["transfers"]["buddyshared"]]
-
-        sharedfiles = None
-        bsharedfiles = None
-        sharedfilesstreams = None
-        bsharedfilesstreams = None
-        wordindex = None
-        bwordindex = None
-        fileindex = None
-        bfileindex = None
-        sharedmtimes = None
-        bsharedmtimes = None
-
-        shelves = [
-            os.path.join(self.data_dir, "files.db"),
-            os.path.join(self.data_dir, "buddyfiles.db"),
-            os.path.join(self.data_dir, "streams.db"),
-            os.path.join(self.data_dir, "buddystreams.db"),
-            os.path.join(self.data_dir, "wordindex.db"),
-            os.path.join(self.data_dir, "buddywordindex.db"),
-            os.path.join(self.data_dir, "fileindex.db"),
-            os.path.join(self.data_dir, "buddyfileindex.db"),
-            os.path.join(self.data_dir, "mtimes.db"),
-            os.path.join(self.data_dir, "buddymtimes.db")
-        ]
-
-        _opened_shelves = []
-        _errors = []
-        for shelvefile in shelves:
-            try:
-                _opened_shelves.append(shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL))
-            except Exception:
-                _errors.append(shelvefile)
-                try:
-                    os.unlink(shelvefile)
-                    _opened_shelves.append(shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL))
-                except Exception as ex:
-                    print(("Failed to unlink %s: %s" % (shelvefile, ex)))
-
-        sharedfiles = _opened_shelves.pop(0)
-        bsharedfiles = _opened_shelves.pop(0)
-        sharedfilesstreams = _opened_shelves.pop(0)
-        bsharedfilesstreams = _opened_shelves.pop(0)
-        wordindex = _opened_shelves.pop(0)
-        bwordindex = _opened_shelves.pop(0)
-        fileindex = _opened_shelves.pop(0)
-        bfileindex = _opened_shelves.pop(0)
-        sharedmtimes = _opened_shelves.pop(0)
-        bsharedmtimes = _opened_shelves.pop(0)
-
-        if _errors:
-            log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(_errors)})
-
-            files = self.clearShares(
-                sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams,
-                wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
-            )
-
-            if files is not None:
-                sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes = files
-
-            log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
-
-        self.sections["transfers"]["sharedfiles"] = sharedfiles
-        self.sections["transfers"]["sharedfilesstreams"] = sharedfilesstreams
-        self.sections["transfers"]["wordindex"] = wordindex
-        self.sections["transfers"]["fileindex"] = fileindex
-        self.sections["transfers"]["sharedmtimes"] = sharedmtimes
-
-        self.sections["transfers"]["bsharedfiles"] = bsharedfiles
-        self.sections["transfers"]["bsharedfilesstreams"] = bsharedfilesstreams
-        self.sections["transfers"]["bwordindex"] = bwordindex
-        self.sections["transfers"]["bfileindex"] = bfileindex
-        self.sections["transfers"]["bsharedmtimes"] = bsharedmtimes
-
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
 
@@ -737,96 +643,6 @@ class Config:
     def removeOldSection(self, section):
         if section in self.parser.sections():
             self.parser.remove_section(section)
-
-    def clearShares(
-        self, sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams,
-        wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
-    ):
-
-        try:
-            if sharedfiles:
-                sharedfiles.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'files.db'))
-            except Exception:
-                pass
-            sharedfiles = shelve.open(os.path.join(self.data_dir, "files.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if bsharedfiles:
-                bsharedfiles.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'buddyfiles.db'))
-            except Exception:
-                pass
-            bsharedfiles = shelve.open(os.path.join(self.data_dir, "buddyfiles.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if sharedfilesstreams:
-                sharedfilesstreams.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'streams.db'))
-            except Exception:
-                pass
-            sharedfilesstreams = shelve.open(os.path.join(self.data_dir, "streams.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if bsharedfilesstreams:
-                bsharedfilesstreams.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'buddystreams.db'))
-            except Exception:
-                pass
-            bsharedfilesstreams = shelve.open(os.path.join(self.data_dir, "buddystreams.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if wordindex:
-                wordindex.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'wordindex.db'))
-            except Exception:
-                pass
-            wordindex = shelve.open(os.path.join(self.data_dir, "wordindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if bwordindex:
-                bwordindex.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'buddywordindex.db'))
-            except Exception:
-                pass
-            bwordindex = shelve.open(os.path.join(self.data_dir, "buddywordindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if fileindex:
-                fileindex.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'fileindex.db'))
-            except Exception:
-                pass
-            fileindex = shelve.open(os.path.join(self.data_dir, "fileindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if bfileindex:
-                bfileindex.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'buddyfileindex.db'))
-            except Exception:
-                pass
-            bfileindex = shelve.open(os.path.join(self.data_dir, "buddyfileindex.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if sharedmtimes:
-                sharedmtimes.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'mtimes.db'))
-            except Exception:
-                pass
-            sharedmtimes = shelve.open(os.path.join(self.data_dir, "mtimes.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-            if bsharedmtimes:
-                bsharedmtimes.close()
-            try:
-                os.unlink(os.path.join(self.data_dir, 'buddymtimes.db'))
-            except Exception:
-                pass
-            bsharedmtimes = shelve.open(os.path.join(self.data_dir, "buddymtimes.db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-        except Exception as error:
-            log.addwarning(_("Error while writing database files: %s") % error)
-            return None
-        return sharedfiles, bsharedfiles, sharedfilesstreams, bsharedfilesstreams, wordindex, bwordindex, fileindex, bfileindex, sharedmtimes, bsharedmtimes
 
     def writeDownloadQueue(self):
 
@@ -952,51 +768,6 @@ class Config:
             return (1, "Cannot write backup archive: %s" % e)
 
         return (0, filename)
-
-    def setBuddyShares(self, files, streams, wordindex, fileindex, mtimes):
-
-        storable_objects = [
-            (files, "bsharedfiles", "buddyfiles.db"),
-            (streams, "bsharedfilesstreams", "buddystreams.db"),
-            (mtimes, "bsharedmtimes", "buddymtimes.db"),
-            (wordindex, "bwordindex", "buddywordindex.db"),
-            (fileindex, "bfileindex", "buddyfileindex.db")
-        ]
-
-        self.storeObjects(storable_objects)
-
-    def setShares(self, files, streams, wordindex, fileindex, mtimes):
-
-        storable_objects = [
-            (files, "sharedfiles", "files.db"),
-            (streams, "sharedfilesstreams", "streams.db"),
-            (mtimes, "sharedmtimes", "mtimes.db"),
-            (wordindex, "wordindex", "wordindex.db"),
-            (fileindex, "fileindex", "fileindex.db")
-        ]
-
-        self.storeObjects(storable_objects)
-
-    def storeObjects(self, storable_objects):
-
-        for (source, destination, filename) in storable_objects:
-            try:
-                self.sections["transfers"][destination].close()
-                self.sections["transfers"][destination] = shelve.open(os.path.join(self.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-                if "fileindex" in destination:
-                    index = 0
-
-                    for value in source:
-                        # The file index db is a list
-                        self.sections["transfers"][destination][str(index)] = value
-                        index += 1
-                else:
-                    for key in source:
-                        self.sections["transfers"][destination][key] = source[key]
-            except Exception as e:
-                log.addwarning(_("Can't save %s: %s") % (filename, e))
-                return
 
     def writeAliases(self):
 
