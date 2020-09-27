@@ -169,7 +169,6 @@ class NetworkEventProcessor:
         self.search = None
         self.transfers = None
         self.userlist = None
-        self.logintime = None
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
@@ -624,7 +623,6 @@ class NetworkEventProcessor:
 
     def Login(self, msg):
 
-        self.logintime = time.time()
         conf = self.config.sections
 
         if msg.success:
@@ -719,19 +717,14 @@ class NetworkEventProcessor:
 
     def MessageUser(self, msg):
 
-        status = 0
-        if self.logintime:
-            if time.time() <= self.logintime + 2:
-                # Offline message
-                status = 1
-
         if self.privatechat is not None:
 
             tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
 
             if tuple is not None:
                 (u, msg.msg) = tuple
-                self.privatechat.ShowMessage(msg, msg.msg, status=status)
+                self.privatechat.ShowMessage(msg, msg.msg, msg.newmessage)
+
                 self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
 
             self.queue.put(slskmessages.MessageAcked(msg.msgid))
@@ -845,7 +838,7 @@ class NetworkEventProcessor:
             for data in self.PrivateMessageQueue[user][:]:
                 msg, text = data
                 self.PrivateMessageQueue[user].remove(data)
-                self.privatechat.ShowMessage(msg, text, status=0)
+                self.privatechat.ShowMessage(msg, text)
 
     def ipIgnored(self, address):
 

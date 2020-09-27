@@ -211,7 +211,7 @@ class PrivateChats(IconNotebook):
 
         return False
 
-    def ShowMessage(self, msg, text, status=None):
+    def ShowMessage(self, msg, text, newmessage=True):
 
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
@@ -220,7 +220,7 @@ class PrivateChats(IconNotebook):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ipIgnored(ip):
                 return
-        else:
+        elif newmessage:
             self.frame.np.queue.put(slskmessages.GetPeerAddress(msg.user))
             self.frame.np.PrivateMessageQueueAdd(msg, text)
             return
@@ -257,7 +257,7 @@ class PrivateChats(IconNotebook):
             ctcpversion = 1
             text = "CTCP VERSION"
 
-        self.users[msg.user].ShowMessage(text, status, msg.timestamp)
+        self.users[msg.user].ShowMessage(text, newmessage, msg.timestamp)
 
         if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
             self.SendMessage(msg.user, "Nicotine+ %s" % version)
@@ -514,7 +514,7 @@ class PrivateChat:
     def OnShowChatHelp(self, widget):
         self.frame.OnAboutPrivateChatCommands(widget)
 
-    def ShowMessage(self, text, status=None, timestamp=None):
+    def ShowMessage(self, text, newmessage=True, timestamp=None):
 
         self.UpdateColours()
 
@@ -528,7 +528,7 @@ class PrivateChat:
             tag = self.tag_remote
 
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
-        if status and not self.offlinemessage:
+        if not newmessage and not self.offlinemessage:
             AppendLine(
                 self.ChatScroll,
                 _("* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."),
@@ -537,10 +537,11 @@ class PrivateChat:
             )
             self.offlinemessage = 1
 
-        if not status and self.offlinemessage:
+        if newmessage and self.offlinemessage:
             self.offlinemessage = False
 
-        if status:
+        if not newmessage:
+
             # The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
             # Also, they are in UTC so we need to correct them
             if daylight:
