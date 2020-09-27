@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 2.1.1 (XX September 2020)
+Version 2.1.1 (26 September 2020)
 -----------------------------
 
 Changes
