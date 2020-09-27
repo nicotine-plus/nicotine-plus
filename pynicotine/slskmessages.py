@@ -612,6 +612,11 @@ class MessageUser(ServerMessage):
         pos, self.user = self.getObject(message, bytes, pos)
         pos, self.msg = self.getObject(message, bytes, pos)
 
+        if len(message[pos:]) > 0:
+            pos, self.newmessage = pos + 1, message[pos]
+        else:
+            self.newmessage = 1
+
 
 class MessageAcked(ServerMessage):
     """ Server code: 23 """

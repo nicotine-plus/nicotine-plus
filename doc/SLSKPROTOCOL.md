@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 2 September 2020
+Last updated on 28 September 2020
 
 ## Sections
 
@@ -543,8 +543,7 @@ Chat phrase sent to someone or received by us in private.
     2.  **int** <ins>timestamp</ins>
     3.  **string** <ins>username</ins>
     4.  **string** <ins>message</ins>
-    5.  **bool** <ins>isAdmin</ins> **1 if sent by
-        server, else not present**
+    5.  **bool** <ins>new message</ins> **1 if message is new, 0 if message is re-sent (e.g. if recipient was offline)**
 
 ### Server Code 23
 
