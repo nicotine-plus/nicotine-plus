@@ -7,7 +7,7 @@ Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to the 
 [Screenshots](files/screenshots/SCREENSHOTS.md)
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 2.1.1, released on XX September 2020. See the [changelog](NEWS.md).
+The current stable version of Nicotine+ is 2.1.1, released on 26 September 2020. See the [changelog](NEWS.md).
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
