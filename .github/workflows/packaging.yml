@@ -34,6 +34,7 @@ jobs:
 
       - name: Build installer
         run: |
+          export ARCH=${{ matrix.arch }}
           pyinstaller files/windows/nicotine.spec
           cd files/windows
           makensis -DARCH=${{ matrix.arch }} nicotine.nsi

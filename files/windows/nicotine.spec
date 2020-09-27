@@ -5,6 +5,7 @@ block_cipher = None
 from PyInstaller.utils.hooks import get_gi_typelibs
 
 import glob
+import os
 import sys
 
 sys.modules['FixTk'] = None
@@ -88,6 +89,12 @@ for file in a.datas[:]:
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
+enable_upx = True
+if sys.platform == 'win32' and os.environ['ARCH'] == 'i686':
+    # Disable UPX on 32-bit Windows, otherwise Nicotine+ won't start
+    enable_upx = False
+
 exe = EXE(pyz,
           a.scripts,
           [],
@@ -95,7 +102,7 @@ exe = EXE(pyz,
           name='Nicotine+',
           debug=False,
           strip=False,
-          upx=True,
+          upx=enable_upx,
           console=False,
           icon='nicotine-plus.ico')
 coll = COLLECT(exe,
@@ -103,5 +110,5 @@ coll = COLLECT(exe,
                a.zipfiles,
                a.datas,
                strip=False,
-               upx=True,
+               upx=enable_upx,
                name='Nicotine+')
