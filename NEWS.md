@@ -3,6 +3,31 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 2.1.1 (XX September 2020)
+-----------------------------
+
+Changes
+
+ * Improved speed limit calculations for file transfers
+ * Added option to enable dark mode theme
+ * Added option to copy a previous search term when right-clicking a search tab
+ * Replaced text search dialog with search bar
+ * If mutiple file transfers are in progress, the UI now updates properly
+ * Auto-joining the public chat room now works properly
+ * Copying text with Ctrl-C now works properly again
+ * Added option to log debug messages to file
+ * Several minor bug fixes
+
+Issues closed on GitHub
+
+ * Please put whole search string after/before "results: x/y" ([#383](https://github.com/Nicotine-Plus/nicotine-plus/issues/383))
+ * replace log search function with search/filter thingybob, send logs to logfile. ([#387](https://github.com/Nicotine-Plus/nicotine-plus/issues/387))
+ * Transfer connection initiation following an unallowed (queued) transfer response ([#653](https://github.com/Nicotine-Plus/nicotine-plus/issues/653))
+ * Minor issues to fix for 2.1.1 ([#659](https://github.com/Nicotine-Plus/nicotine-plus/issues/659))
+ * Windows 10 dark theme support ([#661](https://github.com/Nicotine-Plus/nicotine-plus/issues/661))
+ * Wrap filters into one line ([#669](https://github.com/Nicotine-Plus/nicotine-plus/issues/669))
+ * Public room cannot be auto-joined ([#672](https://github.com/Nicotine-Plus/nicotine-plus/issues/672))
+
 Version 2.1.0 (12 September 2020)
 -----------------------------
 
