@@ -72,10 +72,15 @@ Package maintainers, please insert instructions for users to install pre-compile
 
 ### Stable
 
-You can download stable Windows packages here:
+Stable Windows installers for Nicotine+ are available to download. Installing Nicotine+ requires administrator privileges.
 
-- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/Nicotine+-2.1.1-x86_64.exe)
-- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/Nicotine+-2.1.1-i686.exe)
+- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/windows-x86_64-installer.zip)
+- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/windows-i686-installer.zip)
+
+If you don't want to, or you aren't able to install Nicotine+ on your system, portable packages are also available. These can be run from your home directory.
+
+- [64-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/windows-x86_64-package.zip)
+- [32-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.1/windows-i686-package.zip)
 
 ### Unstable
 
