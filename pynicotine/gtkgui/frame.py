@@ -1966,7 +1966,7 @@ class NicotineFrame:
         elif type == "normal":
             GLib.idle_add(self._RescanFinished)
 
-    def _BuddyRescanFinished(self, files, streams, wordindex, fileindex, mtimes):
+    def _BuddyRescanFinished(self):
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)

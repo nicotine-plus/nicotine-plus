@@ -637,7 +637,7 @@ class NetworkEventProcessor:
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.frame.InitInterface(msg)
 
             self.transfers.setTransferPanels(downloads, uploads)
-            self.shares.sendNumSharedFoldersFiles()
+            self.shares.send_num_shared_folders_files()
             self.queue.put(slskmessages.SetStatus((not self.frame.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
@@ -1649,17 +1649,17 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn == msg.conn.conn:
                 user = i.username
-                self.shares.processSearchRequest(msg.searchterm, user, msg.searchid, direct=1)
+                self.shares.process_search_request(msg.searchterm, user, msg.searchid, direct=1)
                 break
 
     def SearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-        self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, direct=0)
+        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=0)
         self.frame.pluginhandler.SearchRequestNotification(msg.searchterm, msg.user, msg.searchid)
 
     def RoomSearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-        self.shares.processSearchRequest(msg.searchterm, msg.room, msg.searchid, direct=0)
+        self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=0)
 
     def ToggleRespondDistributed(self, msg, settings=False):
         """
@@ -1693,7 +1693,7 @@ class NetworkEventProcessor:
 
     def DistribSearch(self, msg):
         if self.respondDistributed:  # set in ToggleRespondDistributed
-            self.shares.processSearchRequest(msg.searchterm, msg.user, msg.searchid, 0)
+            self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
         self.frame.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
     def PossibleParents(self, msg):

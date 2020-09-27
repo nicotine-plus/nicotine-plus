@@ -42,7 +42,6 @@ from time import sleep
 
 from pynicotine import slskmessages
 from pynicotine import utils
-from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
@@ -1286,12 +1285,13 @@ class Transfers:
         try:
             shutil.move(file.name, newname)
         except (IOError, OSError) as inst:
-            log.addwarning(
+            self.eventprocessor.logMessage(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
                     'tempfile': "%s" % file.name,
                     'file': newname,
                     'error': inst
-                }
+                },
+                1
             )
 
         i.status = "Finished"
@@ -1317,7 +1317,7 @@ class Transfers:
         i.conn = None
 
         self.addToShared(newname)
-        self.eventprocessor.shares.sendNumSharedFoldersFiles()
+        self.eventprocessor.shares.send_num_shared_folders_files()
 
         if config["notifications"]["notification_popup_file"]:
             self.eventprocessor.frame.Notifications.NewNotificationPopup(
@@ -1366,7 +1366,7 @@ class Transfers:
     def addToShared(self, name):
         """ Add a file to the normal shares database """
 
-        self.eventprocessor.shares.addToShared(name)
+        self.eventprocessor.shares.add_file_to_shared(name)
 
     def FileUpload(self, msg):
         """ A file upload is in progress """
