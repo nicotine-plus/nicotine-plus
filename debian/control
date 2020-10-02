@@ -12,8 +12,7 @@ Build-Depends:
     python3 (>= 3.5),
     python3-taglib,
     python3-pep8-naming,
-    python3-pytest,
-    python3-setuptools
+    python3-pytest
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.5

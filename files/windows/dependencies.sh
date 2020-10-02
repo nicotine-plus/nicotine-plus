@@ -16,8 +16,6 @@ pacman --noconfirm -S --needed \
   mingw-w64-$ARCH-python3-flake8 \
   mingw-w64-$ARCH-taglib
 
-# pip should not pick up our setup.cfg
-cd ..
 pip install pep8-naming plyer semidbm
 
 # pyinstaller
@@ -25,6 +23,8 @@ wget https://github.com/pyinstaller/pyinstaller/releases/download/v3.6/PyInstall
 tar -zxvf PyInstaller-3.6.tar.gz
 cd PyInstaller-3.6/
 python setup.py install
+cd ..
+rm -rf PyInstaller-3.6/
 
 # pytaglib
 wget https://github.com/supermihi/pytaglib/archive/v1.4.6.tar.gz
@@ -32,3 +32,5 @@ tar -zxvf v1.4.6.tar.gz
 cd pytaglib-1.4.6/
 sed -i "/is_windows = / s/sys.platform.startswith('win')/False/" setup.py
 PYTAGLIB_CYTHONIZE=1 python setup.py install
+cd ..
+rm -rf pytaglib-1.4.6/

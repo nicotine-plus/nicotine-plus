@@ -27,17 +27,22 @@
     sudo python setup.py install
 """
 
-import os
 import glob
+import os
+import pynicotine
 
+from distutils.core import setup
+from pkgutil import walk_packages
 from pynicotine.utils import version
-from setuptools import find_packages, setup
 
-# Compute data_files
-files = []
+packages = ["pynicotine"] + \
+    [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
+
+package_data = dict((package, ["*"]) for package in packages)
+data_files = []
 
 # Program icon
-files.append(
+data_files.append(
     (
         "share/icons/hicolor/scalable/apps",
         ["files/org.nicotine_plus.Nicotine.svg"]
@@ -48,7 +53,7 @@ files.append(
 tray_icons = glob.glob(os.path.join("img", "tray", "*"))
 
 for icon_name in tray_icons:
-    files.append(
+    data_files.append(
         (
             "share/icons/hicolor/32x32/apps",
             [icon_name]
@@ -56,7 +61,7 @@ for icon_name in tray_icons:
     )
 
 # Desktop file
-files.append(
+data_files.append(
     (
         "share/applications",
         ["files/org.nicotine_plus.Nicotine.desktop"]
@@ -64,7 +69,7 @@ files.append(
 )
 
 # AppStream metainfo
-files.append(
+data_files.append(
     (
         "share/metainfo",
         ["files/appdata/org.nicotine_plus.Nicotine.appdata.xml"]
@@ -72,17 +77,17 @@ files.append(
 )
 
 # Documentation
-docfiles = glob.glob("[!404.md]*.md") + glob.glob(os.path.join("doc", "*.md"))
+doc_files = glob.glob("[!404.md]*.md") + glob.glob(os.path.join("doc", "*.md"))
 
-for doc in docfiles:
-    files.append(
+for doc in doc_files:
+    data_files.append(
         (
             "share/doc/nicotine",
             [doc]
         )
     )
 
-files.append(
+data_files.append(
     (
         "share/doc/nicotine",
         ["img/CREDITS.md"]
@@ -92,7 +97,7 @@ files.append(
 manpages = glob.glob(os.path.join("files", "*.1"))
 
 for man in manpages:
-    files.append(
+    data_files.append(
         (
             "share/man/man1",
             [man]
@@ -112,7 +117,7 @@ for po_file in glob.glob(os.path.join("po", "*.po")):
     os.system("msgfmt " + po_file + " -o " + mo_file)
 
     targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
-    files.append(
+    data_files.append(
         (
             targetpath,
             [mo_file]
@@ -128,8 +133,8 @@ if __name__ == '__main__':
         description="Nicotine+ is a graphical client for the Soulseek file sharing network",
         author="Nicotine+ Team",
         url="https://nicotine-plus.org/",
-        packages=find_packages(exclude=['*test*']),
-        include_package_data=True,
-        scripts=['nicotine'],
-        data_files=files
+        packages=packages,
+        package_data=package_data,
+        scripts=["nicotine"],
+        data_files=data_files
     )
