@@ -57,29 +57,19 @@ class Shares:
         self.logMessage = logcallback
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
-        # Convert fs-based shared to virtual shared (pre 1.4.0)
-        def _convert_to_virtual(x):
-            if isinstance(x, tuple):
-                return x
-            virtual = x.replace('/', '_').replace('\\', '_').strip('_')
-            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
-            return (virtual, x)
-
-        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
-        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
-
+        self.convert_shares()
         self.load_shares(
             [
-                os.path.join(self.config.data_dir, "files.db"),
-                os.path.join(self.config.data_dir, "buddyfiles.db"),
-                os.path.join(self.config.data_dir, "streams.db"),
-                os.path.join(self.config.data_dir, "buddystreams.db"),
-                os.path.join(self.config.data_dir, "wordindex.db"),
-                os.path.join(self.config.data_dir, "buddywordindex.db"),
-                os.path.join(self.config.data_dir, "fileindex.db"),
-                os.path.join(self.config.data_dir, "buddyfileindex.db"),
-                os.path.join(self.config.data_dir, "mtimes.db"),
-                os.path.join(self.config.data_dir, "buddymtimes.db")
+                ("sharedfiles", os.path.join(self.config.data_dir, "files.db")),
+                ("bsharedfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
+                ("sharedfilesstreams", os.path.join(self.config.data_dir, "streams.db")),
+                ("bsharedfilesstreams", os.path.join(self.config.data_dir, "buddystreams.db")),
+                ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
+                ("bwordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
+                ("fileindex", os.path.join(self.config.data_dir, "fileindex.db")),
+                ("bfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
+                ("sharedmtimes", os.path.join(self.config.data_dir, "mtimes.db")),
+                ("bsharedmtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
             ]
         )
 
@@ -128,37 +118,34 @@ class Shares:
 
         return mapping
 
+    def convert_shares(self):
+
+        """ Convert fs-based shared to virtual shared (pre 1.4.0) """
+
+        def _convert_to_virtual(x):
+            if isinstance(x, tuple):
+                return x
+            virtual = x.replace('/', '_').replace('\\', '_').strip('_')
+            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
+            return (virtual, x)
+
+        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
+        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
+
     def load_shares(self, dbs):
-        opened_shelves = []
+
         errors = []
 
-        for shelvefile in dbs:
+        for destination, shelvefile in dbs:
             try:
-                opened_shelves.append(shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL))
+                self.config.sections["transfers"][destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception:
                 errors.append(shelvefile)
-                try:
-                    os.unlink(shelvefile)
-                    opened_shelves.append(shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL))
-                except Exception as ex:
-                    log.addwarning(("Failed to unlink %s: %s" % (shelvefile, ex)))
-
-        self.config.sections["transfers"]["sharedfiles"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["bsharedfiles"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["sharedfilesstreams"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["bsharedfilesstreams"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["wordindex"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["bwordindex"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["fileindex"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["bfileindex"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["sharedmtimes"] = opened_shelves.pop(0)
-        self.config.sections["transfers"]["bsharedmtimes"] = opened_shelves.pop(0)
 
         if errors:
             log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
 
-            self.set_shares(sharestype="normal", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
-            self.set_shares(sharestype="buddy", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
+            self.clear_shares()
 
             log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
 
@@ -192,6 +179,11 @@ class Shares:
                     log.addwarning(_("Can't save %s: %s") % (filename, e))
                     return
 
+    def clear_shares(self):
+
+        self.set_shares(sharestype="normal", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
+        self.set_shares(sharestype="buddy", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
+
     def compress_shares(self, sharestype):
 
         if sharestype == "normal":
@@ -210,6 +202,15 @@ class Shares:
             self.CompressedSharesNormal = m
         elif sharestype == "buddy":
             self.CompressedSharesBuddy = m
+
+    def close_shares(self):
+        for db in [
+            "sharedfiles", "sharedfilesstreams", "wordindex",
+            "fileindex", "sharedmtimes",
+            "bsharedfiles", "bsharedfilesstreams", "bwordindex",
+            "bfileindex", "bsharedmtimes"
+        ]:
+            self.config.sections["transfers"][db].close()
 
     def send_num_shared_folders_files(self):
         """
@@ -363,8 +364,16 @@ class Shares:
 
     def _RescanShares(self, sharestype, rebuild=False):
 
+        progress = None
+
         if sharestype == "normal":
-            progress = self.np.frame.SharesProgress
+            log.add(_("Rescanning normal shares..."))
+
+            try:
+                progress = self.np.frame.SharesProgress
+            except AttributeError:
+                pass
+
             mtimes = self.config.sections["transfers"]["sharedmtimes"]
             files = self.config.sections["transfers"]["sharedfiles"]
             filesstreams = self.config.sections["transfers"]["sharedfilesstreams"]
@@ -375,7 +384,13 @@ class Shares:
                 shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
 
         else:
-            progress = self.np.frame.BuddySharesProgress
+            log.add(_("Rescanning buddy shares..."))
+
+            try:
+                progress = self.np.frame.BuddySharesProgress
+            except AttributeError:
+                pass
+
             mtimes = self.config.sections["transfers"]["bsharedmtimes"]
             files = self.config.sections["transfers"]["bsharedfiles"]
             filesstreams = self.config.sections["transfers"]["bsharedfilesstreams"]
@@ -386,8 +401,9 @@ class Shares:
                 shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
 
         try:
-            GLib.idle_add(progress.set_fraction, 0.0)
-            GLib.idle_add(progress.show)
+            if progress:
+                GLib.idle_add(progress.set_fraction, 0.0)
+                GLib.idle_add(progress.show)
 
             self.rescan_dirs(
                 sharestype,
@@ -399,7 +415,11 @@ class Shares:
                 rebuild=rebuild
             )
 
-            self.np.frame.RescanFinished(sharestype)
+            try:
+                self.np.frame.RescanFinished(sharestype)
+            except AttributeError:
+                pass
+
             self.compress_shares(sharestype)
             self.send_num_shared_folders_files()
 
@@ -408,7 +428,11 @@ class Shares:
             log.add(
                 _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
             )
-            GLib.idle_add(self.np.frame.SharesProgress.hide)
+            try:
+                GLib.idle_add(self.np.frame.SharesProgress.hide)
+            except AttributeError:
+                pass
+
             raise
 
     def rescan_dirs(self, sharestype, shared, oldmtimes, oldfiles, sharedfilesstreams, progress=None, rebuild=False):
@@ -422,7 +446,6 @@ class Shares:
 
         try:
             num_folders = len(oldmtimes)
-
         except TypeError:
             num_folders = len(list(oldmtimes))
 
@@ -517,7 +540,10 @@ class Shares:
 
             sharedstreams[vdir] = self.get_dir_stream(shared[vdir])
 
-            index = len(fileindex)
+            try:
+                index = len(fileindex)
+            except TypeError:
+                index = len(list(fileindex))
 
             self.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex, override_wordindex=True)
 
@@ -558,7 +584,10 @@ class Shares:
 
             bsharedstreams[vdir] = self.get_dir_stream(bshared[vdir])
 
-            index = len(bfileindex)
+            try:
+                index = len(bfileindex)
+            except TypeError:
+                index = len(list(bfileindex))
 
             self.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex, override_wordindex=True)
 

@@ -2577,7 +2577,7 @@ class NicotineFrame:
 
         return True
 
-    def logCallback(self, timestamp, debugLevel, msg):
+    def logCallback(self, timestamp_format, debugLevel, msg):
 
         if self.check_log_debug(debugLevel):
             GLib.idle_add(self.updateLog, msg, debugLevel, priority=GLib.PRIORITY_DEFAULT)
@@ -2963,13 +2963,7 @@ class NicotineFrame:
             self.TrayApp.destroy_trayicon()
 
         # Closing up all shelves db
-        for db in [
-            "sharedfiles", "sharedfilesstreams", "wordindex",
-            "fileindex", "sharedmtimes",
-            "bsharedfiles", "bsharedfilesstreams", "bwordindex",
-            "bfileindex", "bsharedmtimes"
-        ]:
-            self.np.config.sections["transfers"][db].close()
+        self.np.shares.close_shares()
 
     def SaveColumns(self):
         for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:

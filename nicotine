@@ -145,6 +145,32 @@ def renameprocess(newname, debug=False):
         print('\n'.join(msg))
 
 
+def rescanshares(config, data_dir):
+    import queue
+
+    from pynicotine.config import Config
+    from pynicotine.logfacility import console
+    from pynicotine.logfacility import log
+    from pynicotine.shares import Shares
+
+    config = Config(config, data_dir)
+    config.readConfig()
+
+    # Show normal log messages in console
+    console.set_levels((0,1))
+
+    print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
+your shares this way, keep Nicotine+ closed until rescanning is done."""))
+
+    queue = queue.Queue(0)
+    shares = Shares(None, config, queue, log)
+
+    shares.RescanShares()
+
+    if config.sections["transfers"]["enablebuddyshares"]:
+        shares.RescanBuddyShares()
+
+
 def run():
 
     renameprocess('nicotine')
@@ -153,9 +179,10 @@ def run():
     import os.path
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "hc:p:tdvswb:",
+                                   "hc:p:tdrvswb:",
                                    [
                                         "help",  # noqa: E126
+                                        "rescan",
                                         "config=",
                                         "plugins=",
                                         "profile",
@@ -187,6 +214,7 @@ def run():
 
     profile = 0
     trayicon = 1
+    rescan = False
     hidden = False
     bindip = None
     port = None
@@ -209,6 +237,9 @@ def run():
             trayicon = 1
         if o in ("-d", "--disable-trayicon"):
             trayicon = 0
+        if o in ('-r', '--rescan'):
+            """ Flag currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation) """
+            rescan = True
         if o in ('-s', '--hidden'):
             hidden = True
         if o in ("-v", "--version"):
@@ -218,8 +249,12 @@ def run():
     result = checkenv()
 
     if result is None:
-        from pynicotine.gtkgui import frame
 
+        if rescan:
+            rescanshares(config, data_dir)
+            return
+
+        from pynicotine.gtkgui import frame
         app = frame.MainApp(data_dir, config, plugins, trayicon, hidden, bindip, port)
 
         if profile:
