@@ -16,15 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import textwrap
 import time
-
-from sys import stdout
 
 from pynicotine.utils import write_log
 
 
-class logger(object):
+class Logger(object):
     """Coordinates log messages. Has a message history for listeners that are
     not yet present right at startup."""
 
@@ -56,14 +53,12 @@ class logger(object):
         6    - Connection, Bandwidth and Usage Statistics
         """
 
-        timestamp = time.localtime()
-
         if self.log_to_file:
             write_log(self.folder, self.file_name, msg, self.timestamp_format)
 
         for callback in self.listeners:
             try:
-                callback(timestamp, level, msg)
+                callback(self.timestamp_format, level, msg)
             except Exception as e:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
                 pass
@@ -87,51 +82,22 @@ class logger(object):
         self.timestamp_format = timestamp_format
 
 
-useconsole = True
-try:
-    CONSOLEENCODING = stdout.encoding
-except AttributeError:
-    print("stdout does not have an encoding attribute - disabling console logging.")
-    useconsole = False
+class Console(object):
 
-if useconsole:
-    if not CONSOLEENCODING or CONSOLEENCODING.lower() == 'ascii':
-        # ASCII is quite improbable, lets just hope the user hasnt set up
-        # everything properly and its really UTF8
-        CONSOLEENCODING = 'UTF8'
-    CONSOLEWIDTH = 80
-    try:
-        # Fixed, you better not resize your window!
-        import sys
-        import fcntl
-        import termios
-        import struct
-        data = fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, '1234')
-        CONSOLEWIDTH = struct.unpack('hh', data)[1]
-    except Exception:
-        pass
+    def __init__(self, logger):
+        self.levels = (1,)
+        logger.addlistener(self.consolelogger)
 
-    TIMEFORMAT = "%a %H:%M "
+    def consolelogger(self, timestamp_format, level, msg):
+        if level in self.levels:
+            print("[" + time.strftime(timestamp_format) + "] " + msg)
 
-    wrapper = textwrap.TextWrapper()
-    wrapper.width = CONSOLEWIDTH
-    wrapper.subsequent_indent = " " * len(time.strftime(TIMEFORMAT))
-    wrapper.expand_tabs = False
-    wrapper.replace_whitespace = True
-
-
-def consolelogger(timestamp, level, msg):
-    if level in (1,):
-        wrapper.initial_indent = time.strftime(TIMEFORMAT, timestamp)
-        for i in wrapper.wrap(msg):
-            print(i)
-    else:
-        pass
+    def set_levels(self, levels):
+        self.levels = levels
 
 
 try:
     log
 except NameError:
-    log = logger()
-    if useconsole:
-        log.addlistener(consolelogger)  # by default let's display important stuff in the console
+    log = Logger()
+    console = Console(log)
