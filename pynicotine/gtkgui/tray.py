@@ -55,9 +55,9 @@ class TrayApp:
             "status": "disconnect",
             "last": "disconnect"
         }
-        self.CreateMenu()
+        self.create_menu()
 
-    def CreateMenu(self):
+    def create_menu(self):
         try:
             self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
             popup0.setup(
@@ -67,18 +67,34 @@ class TrayApp:
 
             self.tray_popup_menu = popup = PopupMenu(self, False)
             popup.setup(
-                ("#" + _("Hide / Show Nicotine+"), self.HideUnhideWindow),
+                ("#" + _("Hide / Show Nicotine+"), self.OnHideUnhideWindow),
                 (1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
-                ("#" + _("Settings"), self.frame.OnSettings),
+                ("#" + _("Downloads"), self.OnDownloads),
+                ("#" + _("Uploads"), self.OnUploads),
                 ("#" + _("Send Message"), self.OnOpenPrivateChat),
                 ("#" + _("Lookup a User's IP"), self.OnGetAUsersIP),
                 ("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo),
                 ("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares),
                 ("$" + _("Toggle Away"), self.frame.OnAway),
+                ("#" + _("Settings"), self.frame.OnSettings),
                 ("#" + _("Quit"), self.frame.OnExit)
             )
         except Exception as e:
             log.addwarning(_('ERROR: tray menu, %(error)s') % {'error': e})
+
+    def OnHideUnhideWindow(self, widget):
+        if self.frame.MainWindow.get_property("visible"):
+            self.frame.MainWindow.hide()
+        else:
+            self.show_window()
+
+    def OnDownloads(self, widget):
+        self.frame.OnDownloads(None)
+        self.show_window()
+
+    def OnUploads(self, widget):
+        self.frame.OnUploads(None)
+        self.show_window()
 
     def OnOpenPrivateChat(self, widget, prefix=""):
 
@@ -98,6 +114,7 @@ class TrayApp:
         if user is not None:
             self.frame.privatechats.SendMessage(user, None, 1)
             self.frame.ChangeMainPage(None, "private")
+            self.show_window()
 
     def OnGetAUsersInfo(self, widget, prefix=""):
 
@@ -167,11 +184,11 @@ class TrayApp:
         if button == 3:
             self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
 
-    def Create(self):
-        self.Load()
-        self.Draw()
+    def create(self):
+        self.load()
+        self.draw()
 
-    def Load(self):
+    def load(self):
         """ Create """
         if self.trayicon is None:
             if self.appindicator is not None:
@@ -221,7 +238,7 @@ class TrayApp:
             self.trayicon.set_visible(True)
 
     def destroy_trayicon(self):
-        if not self.IsTrayIconVisible():
+        if not self.is_tray_icon_visible():
             return
 
         if self.appindicator is not None:
@@ -230,8 +247,8 @@ class TrayApp:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(False)
 
-    def Draw(self):
-        if not self.IsTrayIconVisible():
+    def draw(self):
+        if not self.is_tray_icon_visible():
             return
 
         if self.appindicator is not None:
@@ -240,22 +257,18 @@ class TrayApp:
             self.trayicon.set_secondary_activate_target(hide_unhide_item)
         else:
             # GtkStatusIcon fallback
-            self.trayicon.connect("activate", self.HideUnhideWindow)
+            self.trayicon.connect("activate", self.OnHideUnhideWindow)
             self.trayicon.connect("popup-menu", self.OnStatusIconPopup)
 
-        self.SetImage(self.tray_status["status"])
-        self.SetToolTip("Nicotine+")
+        self.set_image(self.tray_status["status"])
 
-    def HideUnhideWindow(self, widget):
-        if self.frame.MainWindow.get_property("visible"):
-            self.frame.MainWindow.hide()
-        else:
-            self.frame.MainWindow.show()
+    def show_window(self):
+        self.frame.MainWindow.show()
 
-            self.frame.chatrooms.roomsctrl.ClearNotifications()
-            self.frame.privatechats.ClearNotifications()
+        self.frame.chatrooms.roomsctrl.ClearNotifications()
+        self.frame.privatechats.ClearNotifications()
 
-    def IsTrayIconVisible(self):
+    def is_tray_icon_visible(self):
         if self.trayicon is None:
             return False
 
@@ -267,8 +280,8 @@ class TrayApp:
 
         return True
 
-    def SetImage(self, status=None):
-        if not self.IsTrayIconVisible():
+    def set_image(self, status=None):
+        if not self.is_tray_icon_visible():
             return
 
         try:
@@ -305,10 +318,7 @@ class TrayApp:
         except Exception as e:
             log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
 
-    def SetToolTip(self, string):
+    def set_transfer_status(self, download, upload):
         if self.trayicon is not None:
-            if self.appindicator is not None:
-                self.trayicon.set_title(string)
-            else:
-                # GtkStatusIcon fallback
-                self.trayicon.set_tooltip_text(string)
+            self.tray_popup_menu.get_children()[2].set_label(download)
+            self.tray_popup_menu.get_children()[3].set_label(upload)

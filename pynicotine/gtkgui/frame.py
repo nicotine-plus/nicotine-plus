@@ -103,9 +103,10 @@ class NicotineFrame:
         # Commonly accessed strings
         self.users_template = _("Users: %s")
         self.files_template = _("Files: %s")
-        self.down_template = _("Down: %(num)i users, %(speed).1f KB/s")
-        self.up_template = _("Up: %(num)i users, %(speed).1f KB/s")
-        self.tray_tooltip_template = _("Nicotine+ Transfers: %(speeddown).1f KB/s Down, %(speedup).1f KB/s Up")
+        self.down_template = _("Down: %(num)i users, %(speed)s")
+        self.up_template = _("Up: %(num)i users, %(speed)s")
+        self.tray_download_template = _("Downloads: %(speed)s")
+        self.tray_upload_template = _("Uploads: %(speed)s")
 
         try:
             # Spell checking support
@@ -402,7 +403,7 @@ class NicotineFrame:
 
         # Create the trayicon if needed
         if use_trayicon and config["ui"]["trayicon"]:
-            self.TrayApp.Create()
+            self.TrayApp.create()
 
         """ Connect """
 
@@ -556,7 +557,7 @@ class NicotineFrame:
             self.SetUserStatus(_("Online"))
 
             self.TrayApp.tray_status["status"] = "connect"
-            self.TrayApp.SetImage()
+            self.TrayApp.set_image()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
 
@@ -568,7 +569,7 @@ class NicotineFrame:
             self.SetUserStatus(_("Away"))
 
             self.TrayApp.tray_status["status"] = "away"
-            self.TrayApp.SetImage()
+            self.TrayApp.set_image()
 
         self.SetWidgetOnlineStatus(True)
 
@@ -678,7 +679,7 @@ class NicotineFrame:
         self.SetUserStatus(_("Offline"))
 
         self.TrayApp.tray_status["status"] = "disconnect"
-        self.TrayApp.SetImage()
+        self.TrayApp.set_image()
 
         self.Searches.WishList.interval = 0
         self.chatrooms.ConnClose()
@@ -726,7 +727,7 @@ class NicotineFrame:
         self.SetUserStatus(_("Offline"))
 
         self.TrayApp.tray_status["status"] = "disconnect"
-        self.TrayApp.SetImage()
+        self.TrayApp.set_image()
 
         self.uploads.ConnClose()
         self.downloads.ConnClose()
@@ -737,7 +738,7 @@ class NicotineFrame:
     def OnConnect(self, widget):
 
         self.TrayApp.tray_status["status"] = "connect"
-        self.TrayApp.SetImage()
+        self.TrayApp.set_image()
 
         if self.np.serverconn is not None:
             return
@@ -768,12 +769,12 @@ class NicotineFrame:
             self.SetUserStatus(_("Online"))
 
             self.TrayApp.tray_status["status"] = "connect"
-            self.TrayApp.SetImage()
+            self.TrayApp.set_image()
         else:
             self.SetUserStatus(_("Away"))
 
             self.TrayApp.tray_status["status"] = "away"
-            self.TrayApp.SetImage()
+            self.TrayApp.set_image()
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.privatechats.UpdateColours()
@@ -2710,7 +2711,7 @@ class NicotineFrame:
                 if speed is not None:
                     bandwidth = bandwidth + speed
 
-            return bandwidth
+            return HumanSpeed(bandwidth)
 
         def _users(transfers, users):
             return len(users), len(transfers)
@@ -2721,7 +2722,7 @@ class NicotineFrame:
             total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
             total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
         else:
-            down = up = 0.0
+            down = up = HumanSpeed(0.0)
             filesup = filesdown = total_usersdown = total_usersup = 0
 
         self.DownloadUsers.set_text(self.users_template % total_usersdown)
@@ -2734,7 +2735,7 @@ class NicotineFrame:
         self.DownStatus.push(self.down_context_id, self.down_template % {'num': total_usersdown, 'speed': down})
         self.UpStatus.push(self.up_context_id, self.up_template % {'num': total_usersup, 'speed': up})
 
-        self.TrayApp.SetToolTip(self.tray_tooltip_template % {'speeddown': down, 'speedup': up})
+        self.TrayApp.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
     """ Exit """
 
@@ -2791,11 +2792,10 @@ class NicotineFrame:
         self.UpdateDownloadFilters()
         self.np.config.writeConfiguration()
 
-        if not config["ui"]["trayicon"] and self.TrayApp.IsTrayIconVisible():
+        if not config["ui"]["trayicon"] and self.TrayApp.is_tray_icon_visible():
             self.TrayApp.destroy_trayicon()
-        elif config["ui"]["trayicon"] and not self.TrayApp.IsTrayIconVisible():
-            self.TrayApp.Load()
-            self.TrayApp.Draw()
+        elif config["ui"]["trayicon"] and not self.TrayApp.is_tray_icon_visible():
+            self.TrayApp.create()
 
         if needcompletion:
             self.chatrooms.roomsctrl.UpdateCompletions()
@@ -2888,12 +2888,12 @@ class NicotineFrame:
         if not self.np.config.sections["ui"]["exitdialog"]:
             return False
 
-        if self.TrayApp.IsTrayIconVisible() and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.TrayApp.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
             return True
 
-        if self.TrayApp.IsTrayIconVisible():
+        if self.TrayApp.is_tray_icon_visible():
             OptionDialog(
                 parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
