@@ -32,8 +32,6 @@ import _thread
 
 from gettext import gettext as _
 
-from gi.repository import GLib
-
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.utils import GetUserDirectories
@@ -50,11 +48,12 @@ if sys.platform == "win32":
 
 class Shares:
 
-    def __init__(self, np, config, queue, logcallback):
+    def __init__(self, np, config, queue, log_callback, ui_callback=None):
         self.np = np
+        self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.logMessage = logcallback
+        self.logMessage = log_callback
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
         self.convert_shares()
@@ -364,15 +363,8 @@ class Shares:
 
     def _RescanShares(self, sharestype, rebuild=False):
 
-        progress = None
-
         if sharestype == "normal":
             log.add(_("Rescanning normal shares..."))
-
-            try:
-                progress = self.np.frame.SharesProgress
-            except AttributeError:
-                pass
 
             mtimes = self.config.sections["transfers"]["sharedmtimes"]
             files = self.config.sections["transfers"]["sharedfiles"]
@@ -386,11 +378,6 @@ class Shares:
         else:
             log.add(_("Rescanning buddy shares..."))
 
-            try:
-                progress = self.np.frame.BuddySharesProgress
-            except AttributeError:
-                pass
-
             mtimes = self.config.sections["transfers"]["bsharedmtimes"]
             files = self.config.sections["transfers"]["bsharedfiles"]
             filesstreams = self.config.sections["transfers"]["bsharedfilesstreams"]
@@ -401,9 +388,9 @@ class Shares:
                 shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
 
         try:
-            if progress:
-                GLib.idle_add(progress.set_fraction, 0.0)
-                GLib.idle_add(progress.show)
+            if self.ui_callback:
+                self.ui_callback.SetScanProgress(sharestype, 0.0)
+                self.ui_callback.ShowScanProgress(sharestype)
 
             self.rescan_dirs(
                 sharestype,
@@ -411,14 +398,11 @@ class Shares:
                 mtimes,
                 files,
                 filesstreams,
-                progress=progress,
                 rebuild=rebuild
             )
 
-            try:
-                self.np.frame.RescanFinished(sharestype)
-            except AttributeError:
-                pass
+            if self.ui_callback:
+                self.ui_callback.RescanFinished(sharestype)
 
             self.compress_shares(sharestype)
             self.send_num_shared_folders_files()
@@ -428,14 +412,12 @@ class Shares:
             log.add(
                 _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
             )
-            try:
-                GLib.idle_add(self.np.frame.SharesProgress.hide)
-            except AttributeError:
-                pass
+            if self.ui_callback:
+                self.ui_callback.HideScanProgress(sharestype)
 
             raise
 
-    def rescan_dirs(self, sharestype, shared, oldmtimes, oldfiles, sharedfilesstreams, progress=None, rebuild=False):
+    def rescan_dirs(self, sharestype, shared, oldmtimes, oldfiles, sharedfilesstreams, rebuild=False):
         """
         Check for modified or new files via OS's last mtime on a directory,
         or, if rebuild is True, all directories
@@ -455,7 +437,7 @@ class Shares:
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
-        newsharedfiles = self.get_files_list(newmtimes, oldmtimes, oldfiles, progress, rebuild)
+        newsharedfiles = self.get_files_list(sharestype, newmtimes, oldmtimes, oldfiles, rebuild)
 
         # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
@@ -467,7 +449,7 @@ class Shares:
         # Update Search Index
         # wordindex is a dict in format {word: [num, num, ..], ... } with num matching keys in newfileindex
         # fileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
-        self.get_files_index(sharestype, newsharedfiles, progress)
+        self.get_files_index(sharestype, newsharedfiles)
 
         log.add(_("%(num)s folders found after rescan") % {"num": len(newsharedfiles)})
 
@@ -633,7 +615,7 @@ class Shares:
 
         return list
 
-    def get_files_list(self, mtimes, oldmtimes, oldlist, progress=None, rebuild=False):
+    def get_files_list(self, sharestype, mtimes, oldmtimes, oldlist, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
         list = {}
@@ -645,12 +627,12 @@ class Shares:
             try:
                 count += 1
 
-                if progress:
+                if self.ui_callback:
                     # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
                     percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
 
                     if percent > lastpercent and percent <= 1.0:
-                        GLib.idle_add(progress.set_fraction, percent)
+                        self.ui_callback.SetScanProgress(sharestype, percent)
                         lastpercent = percent
 
                 if not rebuild and folder in oldmtimes:
@@ -783,7 +765,7 @@ class Shares:
 
         return stream
 
-    def get_files_index(self, sharestype, sharedfiles, progress=None):
+    def get_files_index(self, sharestype, sharedfiles):
         """ Update Search index with new files """
 
         """ We dump data directly into the file index shelf to save memory """
@@ -809,12 +791,12 @@ class Shares:
         for folder in sharedfiles:
             count += 1
 
-            if progress:
+            if self.ui_callback:
                 # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
                 percent = float("%.2f" % (float(count) / len(sharedfiles) * 0.75))
 
                 if percent > lastpercent and percent <= 1.0:
-                    GLib.idle_add(progress.set_fraction, percent)
+                    self.ui_callback.SetScanProgress(sharestype, percent)
                     lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:

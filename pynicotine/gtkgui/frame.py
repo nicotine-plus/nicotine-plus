@@ -2701,6 +2701,24 @@ class NicotineFrame:
         self.SocketStatus.pop(self.socket_context_id)
         self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXFILELIMIT})
 
+    def ShowScanProgress(self, sharestype):
+        if sharestype == "normal":
+            GLib.idle_add(self.np.frame.SharesProgress.show)
+        else:
+            GLib.idle_add(self.np.frame.BuddySharesProgress.show)
+
+    def SetScanProgress(self, sharestype, value):
+        if sharestype == "normal":
+            GLib.idle_add(self.np.frame.SharesProgress.set_fraction, value)
+        else:
+            GLib.idle_add(self.np.frame.BuddySharesProgress.set_fraction, value)
+
+    def HideScanProgress(self, sharestype):
+        if sharestype == "normal":
+            GLib.idle_add(self.np.frame.SharesProgress.hide)
+        else:
+            GLib.idle_add(self.np.frame.BuddySharesProgress.hide)
+
     def UpdateBandwidth(self):
 
         def _bandwidth(line):

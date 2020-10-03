@@ -134,7 +134,7 @@ class NetworkEventProcessor:
         self.users = {}
         self.user_addr_requested = set()
         self.queue = queue.Queue(0)
-        self.shares = Shares(self, self.config, self.queue, self.logMessage)
+        self.shares = Shares(self, self.config, self.queue, self.logMessage, self.frame)
 
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
