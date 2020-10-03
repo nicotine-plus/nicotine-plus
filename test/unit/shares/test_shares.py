@@ -32,7 +32,7 @@ def test_shares_scan():
     config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
 
-    shares = Shares(None, config, queue.Queue(0), None)
+    shares = Shares(None, config, queue.Queue(0))
     shares.RescanShares()
 
     # Verify that modification time was saved for shares folder

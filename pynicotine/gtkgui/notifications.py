@@ -23,6 +23,7 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 
+from pynicotine.logfacility import log
 from pynicotine.utils import executeCommand
 from pynicotine.utils import version
 
@@ -175,7 +176,7 @@ class Notifications:
             try:
                 notification_popup.show()
             except Exception as error:
-                self.frame.logMessage(_("Notification Error: %s") % str(error))
+                log.add(_("Notification Error: %s"), str(error))
         except AttributeError:
             # Fall back to plyer
 

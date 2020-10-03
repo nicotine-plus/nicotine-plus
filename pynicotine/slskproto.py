@@ -693,7 +693,7 @@ class SlskProtoThread(threading.Thread):
                     try:
                         msg.parseNetworkMessage(msgBuffer[5:msgsize + 4])
                     except Exception as error:
-                        print(error)
+                        log.add_warning("%s", error)
                     else:
                         conn.piercefw = msg
                         msgs.append(msg)
@@ -704,7 +704,7 @@ class SlskProtoThread(threading.Thread):
                     try:
                         msg.parseNetworkMessage(msgBuffer[5:msgsize + 4])
                     except Exception as error:
-                        print(error)
+                        log.add_warning("%s", error)
                     else:
                         conn.init = msg
                         msgs.append(msg)
@@ -961,8 +961,7 @@ class SlskProtoThread(threading.Thread):
 
                 else:
                     if msgObj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-                        message = _("Can't send the message over the closed connection: %(type)s %(msg_obj)s") % {'type': msgObj.__class__, 'msg_obj': vars(msgObj)}
-                        log.add(message, 3)
+                        log.add_conn(_("Can't send the message over the closed connection: %(type)s %(msg_obj)s"), {'type': msgObj.__class__, 'msg_obj': vars(msgObj)})
 
             elif issubclass(msgObj.__class__, InternalMessage):
                 if msgObj.__class__ is ServerConn:
@@ -1217,8 +1216,7 @@ class SlskProtoThread(threading.Thread):
                 print(time.strftime("%H:%M:%S"), "select OSError:", error)
                 self._want_abort = 1
 
-                message = _("Major Socket Error: Networking terminated! %s" % str(error))
-                log.addwarning(message)
+                log.add_warning(_("Major Socket Error: Networking terminated! %s", str(error)))
 
             except ValueError as error:
                 # Possibly opened too many sockets
@@ -1244,11 +1242,10 @@ class SlskProtoThread(threading.Thread):
                     time.sleep(0.01)
                 else:
                     if self.ipBlocked(incaddr[0]):
-                        message = _("Ignoring connection request from blocked IP Address %(ip)s:%(port)s" % {
+                        log.add_conn(_("Ignoring connection request from blocked IP Address %(ip)s:%(port)s"), {
                             'ip': incaddr[0],
                             'port': incaddr[1]
                         })
-                        log.add(message, 3)
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
@@ -1287,8 +1284,7 @@ class SlskProtoThread(threading.Thread):
 
                         else:
                             if self.ipBlocked(addr[0]):
-                                message = "Blocking peer connection in progress to IP: %(ip)s Port: %(port)s" % {"ip": addr[0], "port": addr[1]}
-                                log.add(message, 3)
+                                log.add_conn("Blocking peer connection in progress to IP: %(ip)s Port: %(port)s", {"ip": addr[0], "port": addr[1]})
                                 connection_in_progress.close()
                             else:
                                 conns[connection_in_progress] = PeerConnection(conn=connection_in_progress, addr=addr, init=msgObj.init)
@@ -1325,8 +1321,7 @@ class SlskProtoThread(threading.Thread):
                             continue
 
                     if self.ipBlocked(addr[0]):
-                        message = "Blocking peer connection to IP: %(ip)s Port: %(port)s" % {"ip": addr[0], "port": addr[1]}
-                        log.add(message, 3)
+                        log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {"ip": addr[0], "port": addr[1]})
                         self.close_connection(conns, connection)
                         continue
 

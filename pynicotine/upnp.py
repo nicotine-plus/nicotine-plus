@@ -151,17 +151,17 @@ class UPnPPortMapping:
         try:
             functiontocall()
         except Exception as e:
-            log.addwarning(_('UPnP exception: %(error)s') % {'error': str(e)})
-            log.addwarning(
+            log.add_warning(_('UPnP exception: %(error)s'), {'error': str(e)})
+            log.add_warning(
                 _('Failed to automate the creation of ' +
                     'UPnP Port Mapping rule.'))
             return
 
-        log.adddebug(
+        log.add_debug(
             _('Managed to map external WAN port %(externalwanport)s ' +
                 'on your external IP %(externalipaddress)s ' +
                 'to your local host %(internalipaddress)s ' +
-                'port %(internallanport)s.') %
+                'port %(internallanport)s.'),
             {
                 'externalwanport': self.externalwanport,
                 'externalipaddress': self.externalipaddress,
@@ -185,7 +185,7 @@ class UPnPPortMapping:
         """
 
         # Listing existing ports mappings
-        log.adddebug('Listing existing Ports Mappings...')
+        log.add_debug('Listing existing Ports Mappings...')
 
         command = [self.upnpcbinary, '-l']
         try:
@@ -273,14 +273,12 @@ class UPnPPortMapping:
         self.FindSuitableExternalWANPort()
 
         # Do the port mapping
-        log.adddebug('Trying to redirect %s port %s TCP => %s port %s TCP' %
-                     (
-                         self.externalipaddress,
-                         self.externalwanport,
-                         self.internalipaddress,
-                         self.internallanport
-                     )
-                     )
+        log.add_debug('Trying to redirect %s port %s TCP => %s port %s TCP', (
+            self.externalipaddress,
+            self.externalwanport,
+            self.internalipaddress,
+            self.internallanport
+        ))
 
         command = [
             self.upnpcbinary,
@@ -302,10 +300,10 @@ class UPnPPortMapping:
         for line in output.split('\n'):
             if line.startswith("external ") and \
                line.find(" is redirected to internal ") > -1:
-                log.adddebug('Success')
+                log.add_debug('Success')
                 return
             if line.find(" failed with code ") > -1:
-                log.adddebug('Failed')
+                log.add_debug('Failed')
                 raise RuntimeError(
                     _('Failed to map the external WAN port: %(error)s') %
                     {'error': str(line)})
@@ -329,10 +327,10 @@ class UPnPPortMapping:
         u.discoverdelay = self.discoverdelay
 
         # Discovering devices
-        log.adddebug('Discovering... delay=%sms' % u.discoverdelay)
+        log.add_debug('Discovering... delay=%sms', u.discoverdelay)
 
         try:
-            log.adddebug('%s device(s) detected' % u.discover())
+            log.add_debug('%s device(s) detected', u.discover())
         except Exception as e:
             raise RuntimeError(
                 _('UPnP exception (should never happen): %(error)s') %
@@ -348,11 +346,10 @@ class UPnPPortMapping:
 
         self.internalipaddress = u.lanaddr
         self.externalipaddress = u.externalipaddress()
-        log.adddebug('IGD selected : External IP address: %s' %
-                     (self.externalipaddress))
+        log.add_debug('IGD selected : External IP address: %s', self.externalipaddress)
 
         # Build existing ports mappings list
-        log.adddebug('Listing existing Ports Mappings...')
+        log.add_debug('Listing existing Ports Mappings...')
 
         i = 0
         while True:
@@ -367,27 +364,25 @@ class UPnPPortMapping:
         self.FindSuitableExternalWANPort()
 
         # Do the port mapping
-        log.adddebug('Trying to redirect %s port %s TCP => %s port %s TCP' %
-                     (
-                         self.externalipaddress,
-                         self.externalwanport,
-                         self.internalipaddress,
-                         self.internallanport
-                     )
-                     )
+        log.add_debug('Trying to redirect %s port %s TCP => %s port %s TCP', (
+            self.externalipaddress,
+            self.externalwanport,
+            self.internalipaddress,
+            self.internallanport
+        ))
 
         try:
             u.addportmapping(self.externalwanport, 'TCP',
                              self.internalipaddress,
                              self.internallanport, 'Nicotine+', '')
         except Exception as e:
-            log.adddebug('Failed')
+            log.add_debug('Failed')
             raise RuntimeError(
                 _('Failed to map the external WAN port: %(error)s') %
                 {'error': str(e)}
             )
 
-        log.adddebug('Success')
+        log.add_debug('Success')
 
     def FindSuitableExternalWANPort(self):
         """Function to find a suitable external WAN port to map to the client.
@@ -397,7 +392,7 @@ class UPnPPortMapping:
 
         # Output format: (ePort, protocol, (intClient, iPort), desc, enabled,
         # rHost, duration)
-        log.adddebug('Existing Port Mappings: %s' % (
+        log.add_debug('Existing Port Mappings: %s', (
             sorted(self.existingportsmappings, key=lambda tup: tup[0])))
 
         # Analyze ports mappings
@@ -411,7 +406,7 @@ class UPnPPortMapping:
             if protocol == "TCP" and \
                str(intClient) == str(self.internalipaddress) and \
                iPort == self.internallanport:
-                log.adddebug('Port Mapping already in place: %s' % str(m))
+                log.add_debug('Port Mapping already in place: %s', str(m))
                 self.externalwanport = ePort
                 self.foundexistingmapping = True
                 break

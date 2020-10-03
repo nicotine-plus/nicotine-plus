@@ -67,7 +67,7 @@ class PluginHandler(object):
             # self.load_directory(self.plugindir)
             self.load_enabled()
         else:
-            log.add(_("It appears '%s' is not a directory, not loading plugins.") % plugindir)
+            log.add(_("It appears '%s' is not a directory, not loading plugins."), plugindir)
 
     def __findplugin(self, pluginname):
         for directory in self.plugindirs:
@@ -90,7 +90,7 @@ class PluginHandler(object):
         path = self.__findplugin(pluginname)
 
         if path is None:
-            log.add(_("Failed to load plugin '%s', could not find it.") % pluginname)
+            log.add(_("Failed to load plugin '%s', could not find it."), pluginname)
             return False
 
         sys.path.insert(0, path)
@@ -102,7 +102,7 @@ class PluginHandler(object):
         self.plugin_settings(instance)
         instance.LoadNotification()
 
-        # log.add("Loaded plugin %s (version %s) from %s" % (instance.__name__, instance.__version__, modulename))
+        # log.add("Loaded plugin %s (version %s) from %s", (instance.__name__, instance.__version__, modulename))
         # self.plugins.append((module, instance))
         sys.path = sys.path[1:]
 
@@ -121,13 +121,12 @@ class PluginHandler(object):
 
             plugin.enable(self)
             self.enabled_plugins[pluginname] = plugin
-            log.add(_("Enabled plugin %s") % plugin.PLUGIN.__name__)
+            log.add(_("Enabled plugin %s"), plugin.PLUGIN.__name__)
 
         except Exception:
             from traceback import print_exc
             print_exc()
-            log.addwarning(_("Unable to enable plugin %s") % pluginname)
-            # common.log_exception(logger)
+            log.add(_("Unable to enable plugin %s"), pluginname)
             return False
 
         return True
@@ -157,8 +156,7 @@ class PluginHandler(object):
         except Exception:
             from traceback import print_exc
             print_exc()
-            log.addwarning(_("Unable to fully disable plugin %s") % pluginname)
-            # common.log_exception(logger)
+            log.add(_("Unable to fully disable plugin %s"), pluginname)
             return False
 
         return True
@@ -218,10 +216,10 @@ class PluginHandler(object):
                     plugin.settings[key] = customsettings[key]
 
                 else:
-                    log.add(_("Stored setting '%(name)s' is no longer present in the plugin") % {'name': key})
+                    log.add(_("Stored setting '%(name)s' is no longer present in the plugin"), {'name': key})
 
         except KeyError:
-            log.add("No custom settings found for %s" % (plugin.__name__,))
+            log.add("No custom settings found for %s", (plugin.__name__,))
             pass
 
     def TriggerPublicCommandEvent(self, room, command, args):
@@ -247,14 +245,14 @@ class PluginHandler(object):
                     elif ret == returncode['pass']:
                         pass
                     else:
-                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': str(ret)})
+                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(ret)})
 
             except Exception:
                 from traceback import extract_stack
                 from traceback import extract_tb
                 from traceback import format_list
 
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s"), {
                     'module': module,
                     'errortype': sys.exc_info()[0],
                     'error': sys.exc_info()[1],
@@ -283,7 +281,7 @@ class PluginHandler(object):
                     elif ret == returncode['pass']:
                         pass
                     else:
-                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring") % {'module': module, 'value': ret})
+                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': ret})
 
                 if ret is not None:
                     hotpotato = ret
@@ -293,7 +291,7 @@ class PluginHandler(object):
                 from traceback import extract_tb
                 from traceback import format_list
 
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s") % {
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s"), {
                     'module': module,
                     'errortype': sys.exc_info()[0],
                     'error': sys.exc_info()[1],
@@ -472,7 +470,7 @@ class ResponseThrottle(object):
         if self.logging:
             if not willing_to_respond:
                 base_log_msg = "{} plugin request rejected - room '{}', nick '{}'".format(self.plugin_name, room, nick)
-                log.adddebug("{} - {}".format(base_log_msg, reason))
+                log.add_debug("{} - {}".format(base_log_msg, reason))
 
         return willing_to_respond
 

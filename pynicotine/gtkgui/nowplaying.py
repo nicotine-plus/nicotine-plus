@@ -276,7 +276,7 @@ class NowPlaying:
                 result = self.mpris()
 
         except RuntimeError:
-            log.addwarning(_("ERROR: Could not execute now playing code. Are you sure you picked the right player?"))
+            log.add_warning(_("ERROR: Could not execute now playing code. Are you sure you picked the right player?"))
             result = None
 
         if not result:
@@ -396,7 +396,7 @@ class NowPlaying:
             import dbus
             import dbus.glib
         except ImportError as error:
-            log.addwarning(_("ERROR: amarok: failed to load dbus module: %(error)s") % {"error": error})
+            log.add_warning(_("ERROR: amarok: failed to load dbus module: %(error)s"), {"error": error})
             return None
 
         self.bus = dbus.SessionBus()
@@ -479,7 +479,7 @@ class NowPlaying:
             path = self.audacious_command('current-song-filename')  # noqa: F841
 
         if not self.audacious_running:
-            log.addwarning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
+            log.add_warning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
             return False
 
         return True
@@ -506,7 +506,7 @@ class NowPlaying:
             import dbus
             import dbus.glib
         except ImportError as error:
-            log.addwarning(_("ERROR: MPRIS: failed to load dbus module: %(error)s") % {"error": error})
+            log.add_warning(_("ERROR: MPRIS: failed to load dbus module: %(error)s"), {"error": error})
             return None
 
         self.bus = dbus.SessionBus()
@@ -528,21 +528,21 @@ class NowPlaying:
                     players.append(name[len(dbus_mpris_service):])
 
             if not players:
-                log.addwarning(_("ERROR: MPRIS: Could not find a suitable MPRIS player."))
+                log.add_warning(_("ERROR: MPRIS: Could not find a suitable MPRIS player."))
                 return None
 
             player = players[0]
             if len(players) > 1:
-                log.addwarning(_("Found multiple MPRIS players: %(players)s. Using: %(player)s") % {'players': players, 'player': player})
+                log.add_warning(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
             else:
-                log.addwarning(_("Auto-detected MPRIS player: %s.") % player)
+                log.add_warning(_("Auto-detected MPRIS player: %s."), player)
 
         try:
             player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
             player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
             metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
         except Exception as exception:
-            log.addwarning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s") % {'player': player, 'exception': exception})
+            log.add_warning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"), {'player': player, 'exception': exception})
             return None
 
         self.title['program'] = player
@@ -589,10 +589,10 @@ class NowPlaying:
             try:
                 from win32gui import GetWindowText, FindWindow
             except ImportError as error:
-                log.addwarning(_("ERROR: foobar: failed to load win32gui module: %(error)s") % {"error": error})
+                log.add_warning(_("ERROR: foobar: failed to load win32gui module: %(error)s"), {"error": error})
                 return None
         else:
-            log.addwarning(_("ERROR: foobar: is only supported on windows."))
+            log.add_warning(_("ERROR: foobar: is only supported on windows."))
             return None
 
         wnd_ids = [
@@ -642,13 +642,13 @@ class NowPlaying:
         try:
             conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
         except Exception as error:
-            log.addwarning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s") % {"error": error})
+            log.add_warning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
         try:
             (user, apikey) = self.NPCommand.get_text().split(';')
         except ValueError:
-            log.addwarning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
+            log.add_warning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
             return None
 
         conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json", headers={"User-Agent": "Nicotine+"})
@@ -656,7 +656,7 @@ class NowPlaying:
         data = resp.read().decode("utf-8")
 
         if resp.status != 200 or resp.reason != "OK":
-            log.addwarning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s") % {"error": str(data)})
+            log.add_warning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"), {"error": str(data)})
             return None
 
         json_api = json.loads(data)
@@ -679,7 +679,7 @@ class NowPlaying:
             self.title["nowplaying"] = output
             return True
         except Exception as error:
-            log.addwarning(_("ERROR: Executing '%(command)s' failed: %(error)s") % {"command": othercommand, "error": error})
+            log.add_warning(_("ERROR: Executing '%(command)s' failed: %(error)s"), {"command": othercommand, "error": error})
             return None
 
     def xmms2(self):
@@ -689,7 +689,7 @@ class NowPlaying:
         try:
             import xmmsclient
         except ImportError as error:
-            log.addwarning(_("ERROR: xmms2: failed to load xmmsclient module: %(error)s") % {"error": error})
+            log.add_warning(_("ERROR: xmms2: failed to load xmmsclient module: %(error)s"), {"error": error})
             return None
 
         xmms = xmmsclient.XMMS("NPP")
@@ -698,21 +698,21 @@ class NowPlaying:
         try:
             xmms.connect(os.getenv("XMMS_PATH"))
         except IOError as error:
-            log.addwarning(_("ERROR: xmms2: connecting failed: %(error)s") % {"error": error})
+            log.add_warning(_("ERROR: xmms2: connecting failed: %(error)s"), {"error": error})
             return None
 
         # Retrieve the current playing entry
         result = xmms.playback_current_id()
         result.wait()
         if result.iserror():
-            log.addwarning(_("ERROR: xmms2: playback current id error: %(error)s") % {"error": result.get_error()})
+            log.add_warning(_("ERROR: xmms2: playback current id error: %(error)s"), {"error": result.get_error()})
             return None
 
         id = result.value()
 
         # Entry 0 is non valid
         if id == 0:
-            log.addwarning(_("ERROR: xmms2: nothing is playing"))
+            log.add_warning(_("ERROR: xmms2: nothing is playing"))
             return None
 
         result = xmms.medialib_get_info(id)
@@ -720,7 +720,7 @@ class NowPlaying:
 
         # This can return error if the id is not in the medialib
         if result.iserror():
-            log.addwarning(_("ERROR: xmms2: medialib get info error: %(error)s") % {"error": result.get_error()})
+            log.add_warning(_("ERROR: xmms2: medialib get info error: %(error)s"), {"error": result.get_error()})
             return None
 
         # Extract entries from the dict

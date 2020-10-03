@@ -157,7 +157,7 @@ class Searches(IconNotebook):
             if feedback is not None:
                 users = feedback[0]
         else:
-            print("Unknown search mode, not using plugin system. Fix me!")
+            log.add_warning(_("Unknown search mode, not using plugin system. Fix me!"))
             feedback = True
 
         if feedback is not None:
@@ -373,7 +373,7 @@ class Searches(IconNotebook):
                     break
 
             if id is None:
-                print("ID is none")
+                log.add_warning(_("Search ID was none when clicking tab"))
                 return
 
             if event.button == 2:
@@ -705,12 +705,12 @@ class Search:
 
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
-                log.add(_("Filtered out excluded search result " + fullpath + " from user " + user), 2)
+                log.add_search(_("Filtered out excluded search result " + fullpath + " from user " + user))
                 continue
 
             if not any(word in fullpath_lower for word in self.searchterm_words_include):
                 """ Some users may send us wrong results, filter out such ones """
-                log.add(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user), 2)
+                log.add_search(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user))
                 continue
 
             fullpath_split = reversed(fullpath.split('\\'))
@@ -813,7 +813,7 @@ class Search:
             types = []
             for i in row:
                 types.append(type(i))
-            print("Search row error:", e, row)
+            log.add_warning(_("Search row error: %(exception)s %(row)s"), {'exception': e, 'row': row})
             iter = None
 
         return iter
