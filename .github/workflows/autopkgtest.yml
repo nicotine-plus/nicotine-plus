@@ -18,7 +18,7 @@ jobs:
       - name: Install autopkgtest dependencies
         run: |
           sudo apt update
-          sudo apt -y install autopkgtest python3-taglib
+          sudo apt -y install autopkgtest
 
       - name: Run autopkgtest
         run: |

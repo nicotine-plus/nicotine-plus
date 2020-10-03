@@ -26,7 +26,7 @@ jobs:
           BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
 
           sudo apt update
-          sudo apt -y install $BUILD_DEPS python3-taglib
+          sudo apt -y install $BUILD_DEPS
 
       - name: Lint with flake8
         run: |
