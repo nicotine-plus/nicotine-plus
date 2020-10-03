@@ -347,7 +347,6 @@ class Login(ServerMessage):
                 # MD5 hexdigest of the password you sent
                 if len(message[pos:]) > 0:
                     pos, self.checksum = self.getObject(message, bytes, pos)
-                # print self.checksum
             except Exception:
                 # Not an official client on the official server
                 pass
@@ -1392,16 +1391,13 @@ class BranchLevel(ServerMessage):
     """ TODO: implement fully """
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
-        # print message.__repr__()
 
 
 class BranchRoot(ServerMessage):
     """ Server code: 127 """
     """ TODO: implement fully """
     def parseNetworkMessage(self, message):
-        # pos, self.value = self.getObject(message, types.IntType)
         pos, self.user = self.getObject(message, bytes)
-        # print self.something, self.user
 
 
 class ChildDepth(ServerMessage):
@@ -1462,23 +1458,10 @@ class PrivateRoomAddUser(ServerMessage):
         pos, self.user = self.getObject(message, bytes, pos)
 
 
-class PrivateRoomRemoveUser(ServerMessage):
+class PrivateRoomRemoveUser(PrivateRoomAddUser):
     """ Server code: 135 """
     """ We send this to inform the server that we've removed a user from a private room. """
-    def __init__(self, room=None, user=None):
-        self.room = room
-        self.user = user
-
-    def makeNetworkMessage(self):
-        msg = bytearray()
-        msg.extend(self.packObject(self.room))
-        msg.extend(self.packObject(self.user))
-
-        return msg
-
-    def parseNetworkMessage(self, message):
-        pos, self.room = self.getObject(message, bytes)
-        pos, self.user = self.getObject(message, bytes, pos)
+    pass
 
 
 class PrivateRoomDismember(ServerMessage):
@@ -1524,14 +1507,10 @@ class PrivateRoomAdded(ServerMessage):
         self.room = self.getObject(message, bytes)[1]
 
 
-class PrivateRoomRemoved(ServerMessage):
+class PrivateRoomRemoved(PrivateRoomAdded):
     """ Server code: 140 """
     """ The server sends us this message when we are removed from a private room. """
-    def __init__(self, room=None):
-        self.room = room
-
-    def parseNetworkMessage(self, message):
-        self.room = self.getObject(message, bytes)[1]
+    pass
 
 
 class PrivateRoomToggle(ServerMessage):
@@ -1563,42 +1542,16 @@ class ChangePassword(ServerMessage):
         pos, self.password = self.getObject(message, bytes)
 
 
-class PrivateRoomAddOperator(ServerMessage):
+class PrivateRoomAddOperator(PrivateRoomAddUser):
     """ Server code: 143 """
     """ We send this to the server to add private room operator abilities to a user. """
-    def __init__(self, room=None, user=None):
-        self.room = room
-        self.user = user
-
-    def makeNetworkMessage(self):
-        msg = bytearray()
-        msg.extend(self.packObject(self.room))
-        msg.extend(self.packObject(self.user))
-
-        return msg
-
-    def parseNetworkMessage(self, message):
-        pos, self.room = self.getObject(message, bytes)
-        pos, self.user = self.getObject(message, bytes, pos)
+    pass
 
 
-class PrivateRoomRemoveOperator(ServerMessage):
+class PrivateRoomRemoveOperator(PrivateRoomAddUser):
     """ Server code: 144 """
     """ We send this to the server to remove private room operator abilities from a user. """
-    def __init__(self, room=None, user=None):
-        self.room = room
-        self.user = user
-
-    def makeNetworkMessage(self):
-        msg = bytearray()
-        msg.extend(self.packObject(self.room))
-        msg.extend(self.packObject(self.user))
-
-        return msg
-
-    def parseNetworkMessage(self, message):
-        pos, self.room = self.getObject(message, bytes)
-        pos, self.user = self.getObject(message, bytes, pos)
+    pass
 
 
 class PrivateRoomOperatorAdded(ServerMessage):
@@ -2358,7 +2311,6 @@ class DistribBranchLevel(DistribMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
-        # print message.__repr__()
 
 
 class DistribBranchRoot(DistribMessage):
@@ -2368,9 +2320,7 @@ class DistribBranchRoot(DistribMessage):
         self.conn = conn
 
     def parseNetworkMessage(self, message):
-        # pos, self.value = self.getObject(message, types.IntType)
         pos, self.user = self.getObject(message, bytes)
-        # print self.something, self.user
 
 
 class DistribChildDepth(DistribMessage):
@@ -2381,7 +2331,6 @@ class DistribChildDepth(DistribMessage):
 
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
-        # print self.something, self.user
 
 
 class DistribServerSearch(DistribMessage):

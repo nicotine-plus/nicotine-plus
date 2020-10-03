@@ -296,7 +296,7 @@ class IP2Location(object):
     def _reads(self, offset):
         self._f.seek(offset - 1)
         n = struct.unpack('B', self._f.read(1))[0]
-        # return u(self._f.read(n))
+
         if sys.version < '3':
             return str(self._f.read(n).decode('iso-8859-1').encode('utf-8'))
         else:
@@ -422,7 +422,6 @@ class IP2Location(object):
         ''' Parses address and returns IP version. Raises exception on invalid argument '''
         ipv = 0
         try:
-            # socket.inet_pton(socket.AF_INET6, addr)
             a, b = struct.unpack('!QQ', socket.inet_pton(socket.AF_INET6, addr))
             ipnum = (a << 64) | b
             # Convert ::FFFF:x.y.z.y to IPv4
@@ -452,7 +451,6 @@ class IP2Location(object):
                     ipv = 6
         except Exception:
             ipnum = struct.unpack('!L', socket.inet_pton(socket.AF_INET, addr))[0]
-            # socket.inet_pton(socket.AF_INET, addr)
             ipv = 4
         return ipv, ipnum
 
@@ -461,11 +459,9 @@ class IP2Location(object):
         # global original_ip
         self.original_ip = ip
         low = 0
-        # ipv = self._parse_addr(ip)
         ipv = self._parse_addr(ip)[0]
         ipnum = self._parse_addr(ip)[1]
         if ipv == 4:
-            # ipno = struct.unpack('!L', socket.inet_pton(socket.AF_INET, ip))[0]
             if (ipnum == MAX_IPV4_RANGE):
                 ipno = ipnum - 1
             else:
@@ -481,8 +477,7 @@ class IP2Location(object):
         elif ipv == 6:
             if self._ipv6dbcount == 0:
                 raise ValueError('Please use IPv6 BIN file for IPv6 Address.')
-            # a, b = struct.unpack('!QQ', socket.inet_pton(socket.AF_INET6, ip))
-            # ipno = (a << 64) | b
+
             if (ipnum == MAX_IPV6_RANGE):
                 ipno = ipnum - 1
             else:

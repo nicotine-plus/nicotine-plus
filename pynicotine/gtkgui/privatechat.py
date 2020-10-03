@@ -91,8 +91,6 @@ class PrivateChats(IconNotebook):
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) and not force:
             return
 
-        page = notebook.get_nth_page(page_num)
-
         for user, tab in list(self.users.items()):
             if tab.Main == page:
                 GLib.idle_add(tab.ChatLine.grab_focus)

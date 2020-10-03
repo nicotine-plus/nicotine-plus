@@ -1434,28 +1434,7 @@ class NicotineFrame:
     def ChangeMainPage(self, widget, tab):
 
         page_num = self.MainNotebook.page_num
-
-        if tab == "chatrooms":
-            child = self.chathbox  # Chatrooms
-        elif tab == "private":
-            child = self.privatevbox  # Private rooms
-        elif tab == "downloads":
-            child = self.downloadsvbox  # Downloads
-        elif tab == "uploads":
-            child = self.uploadsvbox  # Uploads
-        elif tab == "search":
-            child = self.searchvbox  # Searches
-        elif tab == "userinfo":
-            child = self.userinfovbox  # Userinfo
-        elif tab == "userbrowse":
-            child = self.userbrowsevbox  # User browse
-        elif tab == "interests":
-            child = self.interestsvbox  # Interests
-        elif tab == "userlist":
-            child = self.userlist.userlistvbox  # Buddy list
-        else:
-            # this should never happen, unless you've renamed a widget
-            return
+        child = self.MatchMainNamePage(tab)
 
         if child in self.MainNotebook.get_children():
             self.MainNotebook.set_current_page(page_num(child))

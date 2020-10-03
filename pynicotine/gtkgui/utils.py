@@ -397,7 +397,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
     if type(line) not in (type(""), type("")):
         line = str(line)  # Error messages are sometimes tuples
 
-    def _makeurltag(buffer, tag, url):
+    def _makeurltag(buffer, url):
         props = {}
 
         color = NICOTINE.np.config.sections["ui"]["urlcolor"]
@@ -480,7 +480,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         start = line[:match.start()]
         _usertag(buffer, start)
         url = match.group()
-        urltag = _makeurltag(buffer, tag, url)
+        urltag = _makeurltag(buffer, url)
         line = line[match.end():]
 
         if url.startswith("slsk://") and HUMANIZE_URLS:
@@ -920,7 +920,6 @@ class IconNotebook:
 
     def dismiss_icon(self, notebook, page, page_num):
 
-        page = self.get_nth_page(page_num)
         self.set_image(page, 0)
         self.set_text_color(page, 0)
 
