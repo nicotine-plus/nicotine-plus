@@ -175,7 +175,7 @@ class WishList:
 
         # Wishlists supported by server?
         if self.interval == 0:
-            log.addwarning(_("The server forbid us from doing wishlist searches."))
+            log.add_warning(_("The server forbid us from doing wishlist searches."))
             return False
 
         searches = self.frame.np.config.sections["server"]["autosearch"]

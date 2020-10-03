@@ -22,8 +22,6 @@ from pynicotine.utils import write_log
 
 
 class Logger(object):
-    """Coordinates log messages. Has a message history for listeners that are
-    not yet present right at startup."""
 
     def __init__(self):
 
@@ -32,16 +30,9 @@ class Logger(object):
         self.folder = ""
         self.file_name = "debug_" + str(int(time.time()))
         self.timestamp_format = "%Y-%m-%d %H:%M:%S"
+        self.log_levels = (0, 1)
 
-    def addwarning(self, msg):
-        """Add a message with the level corresponding to warnings."""
-        self.add(msg, 1)
-
-    def adddebug(self, msg):
-        """Add a message with the level corresponding to debug info."""
-        self.add(msg, 6)
-
-    def add(self, msg, level=0):
+    def add(self, msg, msg_args=None, level=0):
         """Add a message. The list of logging levels is as follows:
         None - Deprecated (calls that haven't been updated yet)
         0    - Normal messages and (Human-Readable) Errors
@@ -53,6 +44,12 @@ class Logger(object):
         6    - Connection, Bandwidth and Usage Statistics
         """
 
+        if level not in self.log_levels:
+            return
+
+        if msg_args:
+            msg = msg % msg_args
+
         if self.log_to_file:
             write_log(self.folder, self.file_name, msg, self.timestamp_format)
 
@@ -63,10 +60,28 @@ class Logger(object):
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
                 pass
 
-    def addlistener(self, callback):
+    def add_warning(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=1)
+
+    def add_search(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=2)
+
+    def add_conn(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=3)
+
+    def add_msg_contents(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=4)
+
+    def add_transfer(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=5)
+
+    def add_debug(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level=6)
+
+    def add_listener(self, callback):
         self.listeners.add(callback)
 
-    def removelistener(self, callback):
+    def remove_listener(self, callback):
         try:
             self.listeners.remove(callback)
         except KeyError:
@@ -81,19 +96,22 @@ class Logger(object):
     def set_timestamp_format(self, timestamp_format):
         self.timestamp_format = timestamp_format
 
+    def set_log_levels(self, levels):
+        self.log_levels = levels
+
 
 class Console(object):
 
     def __init__(self, logger):
-        self.levels = (1,)
-        logger.addlistener(self.consolelogger)
+        self.log_levels = (1,)
+        logger.add_listener(self.console_logger)
 
-    def consolelogger(self, timestamp_format, level, msg):
-        if level in self.levels:
+    def console_logger(self, timestamp_format, level, msg):
+        if level in self.log_levels:
             print("[" + time.strftime(timestamp_format) + "] " + msg)
 
-    def set_levels(self, levels):
-        self.levels = levels
+    def set_log_levels(self, levels):
+        self.log_levels = levels
 
 
 try:

@@ -157,13 +157,13 @@ def rescanshares(config, data_dir):
     config.readConfig()
 
     # Show normal log messages in console
-    console.set_levels((0,1))
+    console.set_log_levels((0,1))
 
     print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
 your shares this way, keep Nicotine+ closed until rescanning is done."""))
 
     queue = queue.Queue(0)
-    shares = Shares(None, config, queue, log)
+    shares = Shares(None, config, queue)
 
     shares.RescanShares()
 

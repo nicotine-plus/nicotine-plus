@@ -38,6 +38,7 @@ from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.logfacility import log
 
 
 class UserList:
@@ -364,7 +365,7 @@ class UserList:
 
         if notify:
             status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
-            self.frame.logMessage(status_text % user)
+            log.add(status_text, user)
             self.frame.notifications.NewNotification(status_text % user)
 
         img = self.frame.GetStatusImage(status)

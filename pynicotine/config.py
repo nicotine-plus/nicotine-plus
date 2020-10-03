@@ -456,7 +456,7 @@ class Config:
 
                             self.sections[i][j] = self.defaults[i][j]
                             log.add(
-                                _("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {
+                                _("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s"), {
                                     'section': i,
                                     'option': j,
                                     'default': self.sections[i][j]
@@ -472,7 +472,7 @@ class Config:
                                 errorlevel = 2
 
         except Exception as error:
-            log.add(_("Config error: %s") % error)
+            log.add(_("Config error: %s"), error)
             if errorlevel < 3:
                 errorlevel = 3
 
@@ -487,12 +487,12 @@ class Config:
             try:
                 handle = open(os.path.join(self.data_dir, 'transfers.pickle'), 'rb')
             except IOError as inst:
-                log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
+                log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
             else:
                 try:
                     self.sections['transfers']['downloads'] = RestrictedUnpickler(handle).load()
                 except Exception as inst:
-                    log.addwarning(_("Something went wrong while reading your transfer list: %(error)s") % {'error': str(inst)})
+                    log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
             try:
                 handle.close()
             except Exception:
@@ -503,13 +503,13 @@ class Config:
             if not os.path.isdir(path):
                 os.makedirs(path)
         except OSError as msg:
-            log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
+            log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
 
         try:
             if not os.path.isdir(self.data_dir):
                 os.makedirs(self.data_dir)
         except OSError as msg:
-            log.addwarning("Can't create directory '%s', reported error: %s" % (path, msg))
+            log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
 
         # Transition from 1.2.16 -> 1.4.0
         # Do the cleanup early so we don't get the annoying
@@ -607,9 +607,9 @@ class Config:
             for j in self.parser.options(i):
                 val = self.parser.get(i, j, raw=1)
                 if i not in self.sections:
-                    log.addwarning(_("Unknown config section '%s'") % i)
+                    log.add_warning(_("Unknown config section '%s'"), i)
                 elif j not in self.sections[i] and not (j == "filter" or i in ('plugins',)):
-                    log.addwarning(_("Unknown config option '%(option)s' in section '%(section)s'") % {'option': j, 'section': i})
+                    log.add_warning(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
                 elif j in unknown1 or (i in unknown2 and j not in unknown2[i]):
                     if val is not None and val != "None":
                         self.sections[i][j] = val
@@ -620,7 +620,7 @@ class Config:
                         self.sections[i][j] = literal_eval(val)
                     except Exception:
                         self.sections[i][j] = None
-                        log.addwarning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'" % (str(j), str(i), str(val)))
+                        log.add_warning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'", (str(j), str(i), str(val)))
 
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
@@ -642,7 +642,7 @@ class Config:
         try:
             handle = open(tmpfile, 'wb')
         except Exception as inst:
-            log.addwarning(_("Something went wrong while opening your transfer list: %(error)s") % {'error': str(inst)})
+            log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
         else:
             try:
                 pickle.dump(self.sections['transfers']['downloads'], handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -659,7 +659,7 @@ class Config:
                     os.rename(realfile, backupfile)
                     os.rename(tmpfile, realfile)
             except Exception as inst:
-                log.addwarning(_("Something went wrong while writing your transfer list: %(error)s") % {'error': str(inst)})
+                log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
         finally:
             try:
                 handle.close()
@@ -688,20 +688,20 @@ class Config:
             if not os.path.isdir(path):
                 os.makedirs(path)
         except OSError as msg:
-            log.addwarning(_("Can't create directory '%(path)s', reported error: %(error)s") % {'path': path, 'error': msg})
+            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
 
         oldumask = os.umask(0o077)
 
         try:
             f = open(self.filename + ".new", "w", encoding="utf-8")
         except IOError as e:
-            log.addwarning(_("Can't save config file, I/O error: %s") % e)
+            log.add_warning(_("Can't save config file, I/O error: %s"), e)
             return
         else:
             try:
                 self.parser.write(f)
             except IOError as e:
-                log.addwarning(_("Can't save config file, I/O error: %s") % e)
+                log.add_warning(_("Can't save config file, I/O error: %s"), e)
                 return
             else:
                 f.close()
@@ -721,29 +721,29 @@ class Config:
                     if os.path.exists(self.filename + ".old"):
                         os.remove(self.filename + ".old")
                 except OSError:
-                    log.addwarning(_("Can't remove %s" % self.filename + ".old"))
+                    log.add_warning(_("Can't remove %s", self.filename + ".old"))
                 try:
                     os.rename(self.filename, self.filename + ".old")
                 except OSError as error:
-                    log.addwarning(_("Can't back config file up, error: %s") % error)
+                    log.add_warning(_("Can't back config file up, error: %s"), error)
         except OSError:
             pass
 
         try:
             os.rename(self.filename + ".new", self.filename)
         except OSError as error:
-            log.addwarning(_("Can't rename config file, error: %s") % error)
+            log.add_warning(_("Can't rename config file, error: %s"), error)
 
     def writeConfigBackup(self, filename=None):
 
         if filename is None:
-            filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
+            filename = "%s backup %s.tar.bz2", (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
         else:
             if filename[-8:-1] != ".tar.bz2":
                 filename += ".tar.bz2"
         try:
             if os.path.exists(filename):
-                raise BaseException("File %s exists" % filename)
+                raise BaseException("File %s exists", filename)
             import tarfile
             tar = tarfile.open(filename, "w:bz2")
             if not os.path.exists(self.filename):
@@ -755,7 +755,7 @@ class Config:
             tar.close()
         except Exception as e:
             print(e)
-            return (1, "Cannot write backup archive: %s" % e)
+            return (1, "Cannot write backup archive: %s", e)
 
         return (0, filename)
 
@@ -764,13 +764,13 @@ class Config:
         try:
             f = open(self.filename + ".alias", "wb")
         except Exception as e:
-            log.addwarning(_("Something went wrong while opening your alias file: %s") % e)
+            log.add_warning(_("Something went wrong while opening your alias file: %s"), e)
         else:
             try:
                 pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
                 f.close()
             except Exception as e:
-                log.addwarning(_("Something went wrong while saving your alias file: %s") % e)
+                log.add_warning(_("Something went wrong while saving your alias file: %s"), e)
         finally:
             try:
                 f.close()

@@ -48,12 +48,11 @@ if sys.platform == "win32":
 
 class Shares:
 
-    def __init__(self, np, config, queue, log_callback, ui_callback=None):
+    def __init__(self, np, config, queue, ui_callback=None):
         self.np = np
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.logMessage = log_callback
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
         self.convert_shares()
@@ -142,11 +141,11 @@ class Shares:
                 errors.append(shelvefile)
 
         if errors:
-            log.addwarning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
+            log.add_warning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
 
             self.clear_shares()
 
-            log.addwarning(_("Shared files database seems to be corrupted, rescan your shares"))
+            log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
 
     def set_shares(self, sharestype="normal", files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
 
@@ -175,7 +174,7 @@ class Shares:
                     self.config.sections["transfers"][destination].update(source)
 
                 except Exception as e:
-                    log.addwarning(_("Can't save %s: %s") % (filename, e))
+                    log.add_warning(_("Can't save %s: %s") % (filename, e))
                     return
 
     def clear_shares(self):
@@ -191,7 +190,7 @@ class Shares:
             streams = self.config.sections["transfers"]["bsharedfilesstreams"]
 
         if streams is None:
-            log.addwarning(_("ERROR: No %(type)s shares database available") % {"type": sharestype})
+            log.add_warning(_("ERROR: No %(type)s shares database available") % {"type": sharestype})
             return
 
         m = slskmessages.SharedFileList(None, streams)
@@ -235,117 +234,6 @@ class Shares:
             sharedfiles = len(list(config["transfers"][index_db]))
 
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
-
-    def GetSharedFileList(self, msg):
-
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
-        user = ip = port = None
-
-        # Get peer's username, ip and port
-        for i in self.np.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                if i.addr is not None:
-                    if len(i.addr) != 2:
-                        break
-                    ip, port = i.addr
-                break
-
-        if user is None:
-            # No peer connection
-            return
-
-        # Check address is spoofed, if possible
-        # if self.CheckSpoof(user, ip, port):
-        #     # Message IS spoofed
-        #     return
-        if user == self.config.sections["server"]["login"]:
-            if ip is not None and port is not None:
-                self.logMessage(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s") % {
-                        'user': user,
-                        'ip': ip,
-                        'port': port
-                    }, 1)
-            else:
-                self.logMessage(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port") % {
-                        'user': user
-                    }, 1)
-
-            if msg.conn.conn is not None:
-                self.queue.put(slskmessages.ConnClose(msg.conn.conn))
-            return
-
-        self.logMessage(_("%(user)s is making a BrowseShares request") % {
-            'user': user
-        }, 1)
-
-        addr = msg.conn.addr[0]
-        checkuser, reason = self.np.CheckUser(user, addr)
-
-        if checkuser == 1:
-            # Send Normal Shares
-            if self.newnormalshares:
-                self.compress_shares("normal")
-                self.newnormalshares = False
-            m = self.CompressedSharesNormal
-
-        elif checkuser == 2:
-            # Send Buddy Shares
-            if self.newbuddyshares:
-                self.compress_shares("buddy")
-                self.newbuddyshares = False
-            m = self.CompressedSharesBuddy
-
-        else:
-            # Nyah, Nyah
-            m = slskmessages.SharedFileList(msg.conn.conn, {})
-            m.makeNetworkMessage(nozlib=0)
-
-        m.conn = msg.conn.conn
-        self.queue.put(m)
-
-    def FolderContentsRequest(self, msg):
-
-        username = None
-        checkuser = None
-        reason = ""
-
-        for i in self.np.peerconns:
-            if i.conn is msg.conn.conn:
-                username = i.username
-                checkuser, reason = self.np.CheckUser(username, None)
-                break
-
-        if not username:
-            return
-        if not checkuser:
-            self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
-            return
-
-        if checkuser == 1:
-            shares = self.config.sections["transfers"]["sharedfiles"]
-        elif checkuser == 2:
-            shares = self.config.sections["transfers"]["bsharedfiles"]
-        else:
-            self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
-            shares = {}
-
-        if checkuser:
-            if msg.dir in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
-            elif msg.dir.rstrip('\\') in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip('\\')]))
-            else:
-                if checkuser == 2:
-                    shares = self.config.sections["transfers"]["sharedfiles"]
-                    if msg.dir in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
-                    elif msg.dir.rstrip("\\") in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip("\\")]))
-
-        self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     """ Scanning """
 
@@ -410,7 +298,7 @@ class Shares:
         except Exception as ex:
             config_dir, data_dir = GetUserDirectories()
             log.add(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s") % (data_dir, ex)
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s"), (data_dir, ex)
             )
             if self.ui_callback:
                 self.ui_callback.HideScanProgress(sharestype)
@@ -431,7 +319,7 @@ class Shares:
         except TypeError:
             num_folders = len(list(oldmtimes))
 
-        log.add(_("%(num)s folders found before rescan, rebuilding...") % {"num": num_folders})
+        log.add(_("%(num)s folders found before rescan, rebuilding..."), {"num": num_folders})
 
         newmtimes = self.get_dirs_mtimes(shared_directories)
 
@@ -451,7 +339,7 @@ class Shares:
         # fileindex is a dict in format { num: (path, size, (bitrate, vbr), length), ... }
         self.get_files_index(sharestype, newsharedfiles)
 
-        log.add(_("%(num)s folders found after rescan") % {"num": len(newsharedfiles)})
+        log.add(_("%(num)s folders found after rescan"), {"num": len(newsharedfiles)})
 
     def is_hidden(self, folder, filename=None):
         """ Stop sharing any dot/hidden directories/files """
@@ -598,7 +486,7 @@ class Shares:
                         try:
                             mtime = entry.stat().st_mtime
                         except OSError as errtuple:
-                            log.add(_("Error while scanning %(path)s: %(error)s") % {
+                            log.add(_("Error while scanning %(path)s: %(error)s"), {
                                 'path': path,
                                 'error': errtuple
                             })
@@ -610,7 +498,7 @@ class Shares:
                             list[k] = dircontents[k]
 
             except OSError as errtuple:
-                log.add(_("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple})
+                log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
                 continue
 
         return list
@@ -643,12 +531,12 @@ class Shares:
                                 list[virtualdir] = oldlist[virtualdir]
                                 continue
                             except KeyError:
-                                log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                                log.add_debug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
                                     'vdir': virtualdir,
                                     'dir': folder
                                 })
                         else:
-                            log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
+                            log.add_debug(_("Dropping missing folder %(dir)s"), {'dir': folder})
                             continue
 
                 virtualdir = self.real2virtual(folder)
@@ -668,7 +556,7 @@ class Shares:
                             list[virtualdir].append(data)
 
             except OSError as errtuple:
-                log.add(_("Error while scanning folder %(path)s: %(error)s") % {'path': folder, 'error': errtuple})
+                log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
                 continue
 
         return list
@@ -695,7 +583,7 @@ class Shares:
             return fileinfo
 
         except Exception as errtuple:
-            log.add(_("Error while scanning file %(path)s: %(error)s") % {'path': pathname, 'error': errtuple})
+            log.add(_("Error while scanning file %(path)s: %(error)s"), {'path': pathname, 'error': errtuple})
 
     def get_files_streams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False):
         """ Get streams of files """
@@ -715,12 +603,12 @@ class Shares:
                             streams[virtualdir] = oldstreams[virtualdir]
                             continue
                         except KeyError:
-                            log.adddebug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'") % {
+                            log.add_debug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
                                 'vdir': virtualdir,
                                 'dir': folder
                             })
                     else:
-                        log.adddebug(_("Dropping missing folder %(dir)s") % {'dir': folder})
+                        log.add_debug(_("Dropping missing folder %(dir)s"), {'dir': folder})
                         continue
 
             streams[virtualdir] = self.get_dir_stream(newsharedfiles[virtualdir])
@@ -751,12 +639,12 @@ class Shares:
                     stream.extend(message.packObject(2))
                     stream.extend(message.packObject(fileinfo[2][1]))
                 except Exception:
-                    log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s" % {
+                    log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s"), {
                         'file': fileinfo[0],
                         'bitrate': fileinfo[2][0],
                         'length': fileinfo[3],
                         'vbr': fileinfo[2][1]
-                    }))
+                    })
                     stream.extend(message.packObject(''))
                     stream.extend(message.packObject(0))
             else:
@@ -918,16 +806,16 @@ class Shares:
             self.np.ProcessRequestToPeer(user, message)
 
             if direct:
-                self.logMessage(
-                    _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results") % {
+                log.add_search(
+                    _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
                         'user': user,
                         'query': searchterm,
                         'num': numresults
-                    }, 2)
+                    })
             else:
-                self.logMessage(
-                    _("User %(user)s is searching for \"%(query)s\", returning %(num)i results") % {
+                log.add_search(
+                    _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
                         'user': user,
                         'query': searchterm,
                         'num': numresults
-                    }, 2)
+                    })

@@ -39,6 +39,7 @@ from gi.repository import Pango as pango
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import EntryDialog
 from pynicotine.gtkgui.countrycodes import code2name
+from pynicotine.logfacility import log
 from pynicotine.utils import executeCommand
 
 
@@ -378,7 +379,7 @@ def OpenUri(uri, window):
                 executeCommand(PROTOCOL_HANDLERS[protocol], uri)
                 return
             except RuntimeError as e:
-                print(e)
+                log.add_warning("%s", e)
 
     # Situation 2, user did not define a way of handling the protocol
     if sys.platform == "win32" and webbrowser:
@@ -1174,7 +1175,7 @@ class PopupMenu(gtk.Menu):
                 days = int(text)
                 self.frame.np.queue.put(slskmessages.GivePrivileges(self.user, days))
             except Exception as e:
-                print(e)
+                log.add_warning("%s", e)
 
     def OnPrivateRooms(self, widget):
 
@@ -1424,6 +1425,6 @@ def _expand_alias(aliases, cmd):
                 i = i + 1
         return ret
     except Exception as error:
-        print(error)
+        log.add_warning("%s", error)
         pass
     return ""

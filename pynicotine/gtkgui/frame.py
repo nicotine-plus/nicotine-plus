@@ -117,7 +117,6 @@ class NicotineFrame:
         self.np = NetworkEventProcessor(
             self,
             self.network_callback,
-            self.logMessage,
             self.SetStatusText,
             self.bindip,
             self.port,
@@ -142,7 +141,7 @@ class NicotineFrame:
         utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         utils.NICOTINE = self
 
-        log.addlistener(self.logCallback)
+        log.add_listener(self.log_callback)
 
         # Import GtkBuilder widgets
         builder = gtk.Builder()
@@ -423,7 +422,7 @@ class NicotineFrame:
                 # Display errors
                 if errors is not None:
                     for err in errors:
-                        log.addwarning(err)
+                        log.add_warning(err)
 
         ConfigUnset = self.np.config.needConfig()
         if ConfigUnset:
@@ -654,7 +653,7 @@ class NicotineFrame:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
             else:
-                self.logMessage("No handler for class %s %s" % (i.__class__, dir(i)))
+                log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
     def network_callback(self, msgs):
         if len(msgs) > 0:
@@ -744,7 +743,7 @@ class NicotineFrame:
 
         self.SetUserStatus("...")
         server = self.np.config.sections["server"]["server"]
-        self.SetStatusText(_("Connecting to %(host)s:%(port)s") % {'host': server[0], 'port': server[1]})
+        self.SetStatusText(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
         self.np.queue.put(slskmessages.ServerConn(None, server))
 
         if self.np.servertimer is not None:
@@ -830,9 +829,9 @@ class NicotineFrame:
         else:
             error, message = self.np.config.writeConfigBackup()
         if error:
-            self.logMessage("Error backing up config: %s" % message)
+            log.add("Error backing up config: %s", message)
         else:
-            self.logMessage("Config backed up to: %s" % message)
+            log.add("Config backed up to: %s", message)
 
     # View
 
@@ -992,7 +991,7 @@ class NicotineFrame:
         self.rescan_public.set_sensitive(False)
         self.browse_public_shares.set_sensitive(False)
 
-        self.logMessage(_("Rescanning started"))
+        log.add(_("Rescanning started"))
 
         _thread.start_new_thread(self.np.shares.RescanShares, (rebuild,))
 
@@ -1006,7 +1005,7 @@ class NicotineFrame:
         self.rescan_buddy.set_sensitive(False)
         self.browse_buddy_shares.set_sensitive(False)
 
-        self.logMessage(_("Rescanning Buddy Shares started"))
+        log.add(_("Rescanning Buddy Shares started"))
 
         _thread.start_new_thread(self.np.shares.RescanBuddyShares, (rebuild,))
 
@@ -1938,7 +1937,7 @@ class NicotineFrame:
             self.browse_buddy_shares.set_sensitive(True)
 
         self.brescanning = False
-        self.logMessage(_("Rescanning Buddy Shares finished"))
+        log.add(_("Rescanning Buddy Shares finished"))
 
         self.BuddySharesProgress.hide()
 
@@ -1949,7 +1948,7 @@ class NicotineFrame:
             self.browse_public_shares.set_sensitive(True)
 
         self.rescanning = False
-        self.logMessage(_("Rescanning finished"))
+        log.add(_("Rescanning finished"))
 
         self.SharesProgress.hide()
 
@@ -2021,11 +2020,11 @@ class NicotineFrame:
                 errors = ""
                 for filter, error in failed.items():
                     errors += "Filter: %s Error: %s " % (filter, error)
-                error = _("Error: %(num)d Download filters failed! %(error)s " % {'num': len(failed), 'error': errors})
-                self.logMessage(error)
+                error = _("Error: %(num)d Download filters failed! %(error)s ", {'num': len(failed), 'error': errors})
+                log.add(error)
         except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
-            self.logMessage(_("Error: Download Filter failed! Verify your filters. Reason: %s" % e))
+            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s", e))
             self.np.config.sections["transfers"]["downloadregexp"] = ""
 
     def OnSearch(self, widget):
@@ -2072,7 +2071,7 @@ class NicotineFrame:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
         except Exception as msg:
-            log.addwarning(_("Can't create directory '%(folder)s', reported error: %(error)s") % {'folder': sharesdir, 'error': msg})
+            log.add_warning(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
         shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
         if shares is None:
@@ -2091,7 +2090,7 @@ class NicotineFrame:
                 if username in self.userbrowse.users:
                     self.userbrowse.users[username].LoadShares(mylist)
             except Exception as msg:
-                log.addwarning(_("Loading Shares from disk failed: %(error)s") % {'error': msg})
+                log.add_warning(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
 
     """ Private Chat """
 
@@ -2367,7 +2366,7 @@ class NicotineFrame:
                 # Tell calling code that we have not handled this event pass it on.
             return False
         except Exception as e:
-            log.addwarning(_("button_press error, %(error)s") % {'error': e})
+            log.add_warning(_("button_press error, %(error)s"), {'error': e})
 
     def BuddiesCombosFill(self, nothing):
         for widget in self.BuddiesComboEntries:
@@ -2428,7 +2427,7 @@ class NicotineFrame:
                     loader.close()
                     img = loader.get_pixbuf()
                 except Exception as e:
-                    log.addwarning(_("Error loading image for %(flag)s: %(error)s") % {'flag': flag, 'error': e})
+                    log.add_warning(_("Error loading image for %(flag)s: %(error)s"), {'flag': flag, 'error': e})
                 self.flag_images[flag] = img
                 return img
             else:
@@ -2482,7 +2481,7 @@ class NicotineFrame:
             else:
                 self.np.transfers.getFile(user, file.replace("/", "\\"), "")
         except Exception:
-            self.logMessage(_("Invalid SoulSeek meta-url: %s") % url)
+            log.add(_("Invalid SoulSeek meta-url: %s"), url)
 
     def SetClipboardURL(self, user, path):
         self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
@@ -2529,30 +2528,10 @@ class NicotineFrame:
 
     """ Log Window """
 
-    def check_log_debug(self, level):
+    def log_callback(self, timestamp_format, debugLevel, msg):
+        GLib.idle_add(self.update_log, msg, debugLevel, priority=GLib.PRIORITY_DEFAULT)
 
-        debug = self.np.config.sections["logging"]["debug"]
-
-        if debug and level != 0 and \
-                level not in self.np.config.sections["logging"]["debugmodes"]:
-            return False
-
-        elif not debug and level != 0 and level != 1:
-            return False
-
-        return True
-
-    def logCallback(self, timestamp_format, debugLevel, msg):
-
-        if self.check_log_debug(debugLevel):
-            GLib.idle_add(self.updateLog, msg, debugLevel, priority=GLib.PRIORITY_DEFAULT)
-
-    def logMessage(self, msg, debugLevel=0):
-
-        if self.check_log_debug(debugLevel):
-            log.add(msg, debugLevel)
-
-    def updateLog(self, msg, debugLevel=None):
+    def update_log(self, msg, debugLevel=None):
         '''For information about debug levels see
         pydoc pynicotine.logfacility.logger.add
         '''
@@ -2562,8 +2541,7 @@ class NicotineFrame:
             # if it's hidden, to prevent those nasty GTK warnings :)
 
             should_scroll = False
-            should_log = False
-            self.SetStatusText(msg, should_log)
+            self.SetStatusText(msg, should_log=False)
         else:
             should_scroll = True
 
@@ -2600,10 +2578,12 @@ class NicotineFrame:
     def AddDebugLevel(self, debugLevel):
         if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
             self.np.config.sections["logging"]["debugmodes"].append(debugLevel)
+            log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
 
     def RemoveDebugLevel(self, debugLevel):
         if debugLevel in self.np.config.sections["logging"]["debugmodes"]:
             self.np.config.sections["logging"]["debugmodes"].remove(debugLevel)
+            log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
 
     def OnDebugWarnings(self, widget):
 
@@ -2649,13 +2629,18 @@ class NicotineFrame:
 
     """ Status Bar """
 
-    def SetStatusText(self, msg, should_log=True):
+    def SetStatusText(self, msg, msg_args=None, should_log=True):
+        orig_msg = msg
+
+        if msg_args:
+            msg = msg % msg_args
+
         self.Statusbar.pop(self.status_context_id)
         self.Statusbar.push(self.status_context_id, msg)
         self.Statusbar.set_tooltip_text(msg)
 
-        if msg and should_log:
-            self.logMessage(msg)
+        if orig_msg and should_log:
+            log.add(orig_msg, msg_args)
 
     def SetUserStatus(self, status):
         self.UserStatus.pop(self.user_context_id)

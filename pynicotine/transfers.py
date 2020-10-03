@@ -42,10 +42,12 @@ from time import sleep
 
 from pynicotine import slskmessages
 from pynicotine import utils
+from pynicotine.logfacility import log
 from pynicotine.slskmessages import newId
 from pynicotine.utils import executeCommand
 from pynicotine.utils import CleanFile
 from pynicotine.utils import GetResultBitrateLength
+from pynicotine.utils import write_log
 
 
 class Transfer(object):
@@ -205,12 +207,6 @@ class Transfers:
             self.privcount += self.usersqueued[user]
             del self.usersqueued[user]
 
-    def getAddUser(self, msg):
-        """ Server tells us it'll notify us about a change in user's status """
-
-        if not msg.userexists and self.eventprocessor.config.sections["ui"]["notexists"]:
-            self.eventprocessor.logMessage(_("User %s does not exist") % (msg.user), 1)
-
     def GetUserStatus(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
@@ -284,7 +280,7 @@ class Transfers:
             try:
                 downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
                 if downloadregexp.search(filename) is not None:
-                    self.eventprocessor.logMessage(_("Filtering: %s") % filename, 5)
+                    log.add_transfer(_("Filtering: %s"), filename)
                     self.AbortTransfer(transfer)
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
@@ -323,12 +319,12 @@ class Transfers:
             if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection", "Waiting for download"]):
                 self.AbortTransfer(i)
                 self.getFile(i.user, i.filename, i.path, i)
-                self.eventprocessor.logTransfer(
+                self.log_transfer(
                     _("Retrying failed download: user %(user)s, file %(file)s") % {
                         'user': i.user,
                         'file': i.filename
                     },
-                    1
+                    show_ui=1
                 )
                 break
 
@@ -483,7 +479,7 @@ class Transfers:
             addr = "127.0.0.1"
 
         if user is None:
-            self.eventprocessor.logMessage(_("Got transfer request %s but cannot determine requestor") % vars(msg), 5)
+            log.add_transfer(_("Got transfer request %s but cannot determine requestor"), vars(msg))
             return
 
         if msg.direction == 1:
@@ -545,10 +541,10 @@ class Transfers:
                 self.downloadsview.update(transfer)
             else:
                 response = slskmessages.TransferResponse(conn, 0, reason="Cancelled", req=msg.req)
-                self.eventprocessor.logMessage(_("Denied file request: User %(user)s, %(msg)s") % {
+                log.add_transfer(_("Denied file request: User %(user)s, %(msg)s"), {
                     'user': user,
                     'msg': str(vars(msg))
-                }, 5)
+                })
         return response
 
     def TransferRequestUploads(self, msg, user, conn, addr):
@@ -558,10 +554,10 @@ class Transfers:
         """
 
         response = self._TransferRequestUploads(msg, user, conn, addr)
-        self.eventprocessor.logMessage(_("Upload request: %(req)s Response: %(resp)s") % {
+        log.add_transfer(_("Upload request: %(req)s Response: %(resp)s"), {
             'req': str(vars(msg)),
             'resp': response
-        }, 5)
+        })
         return response
 
     def _TransferRequestUploads(self, msg, user, conn, addr):
@@ -733,10 +729,10 @@ class Transfers:
                     slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason="File not shared")
                 )
 
-        self.eventprocessor.logMessage(_("Queued upload request: User %(user)s, %(msg)s") % {
+        log.add_transfer(_("Queued upload request: User %(user)s, %(msg)s"), {
             'user': user,
             'msg': str(vars(msg))
-        }, 5)
+        })
 
         self.checkUploadQueue()
 
@@ -753,14 +749,14 @@ class Transfers:
             return
 
         if self.CanUpload(username):
-            self.eventprocessor.logMessage(_("Your buddy, %s, is attempting to upload file(s) to you.") % (username), None)
+            log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
             if username not in self.RequestedUploadQueue:
                 self.RequestedUploadQueue.append(username)
         else:
             self.queue.put(
                 slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
             )
-            self.eventprocessor.logMessage(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent.") % (username), None)
+            log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
             return
 
     def CanUpload(self, user):
@@ -981,7 +977,7 @@ class Transfers:
                 self.checkUploadQueue()
                 break
             else:
-                self.eventprocessor.logMessage(_("Got unknown transfer response: %s") % str(vars(msg)), 5)
+                log.add_transfer(_("Got unknown transfer response: %s"), str(vars(msg)))
 
     def TransferTimeout(self, msg):
 
@@ -1057,7 +1053,7 @@ class Transfers:
                     raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" % (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
 
             except OSError as strerror:
-                self.eventprocessor.logMessage(_("OS error: %s") % strerror)
+                log.add(_("OS error: %s"), strerror)
                 i.status = "Download directory error"
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
@@ -1086,7 +1082,7 @@ class Transfers:
                     f = open(fname, 'ab+')
 
                 except IOError as strerror:
-                    self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
+                    log.add(_("Download I/O error: %s"), strerror)
                     i.status = "Local file error"
                     try:
                         f.close()
@@ -1102,7 +1098,7 @@ class Transfers:
                             try:
                                 fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
                             except IOError as strerror:
-                                self.eventprocessor.logMessage(_("Can't get an exclusive lock on file - I/O error: %s") % strerror)
+                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), strerror)
                         except ImportError:
                             pass
 
@@ -1118,9 +1114,9 @@ class Transfers:
                     if i.size > size:
                         i.status = "Transferring"
                         self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
-                        self.eventprocessor.logMessage(_("Download started: %s") % ("%s" % f.name), 5)
+                        log.add_transfer(_("Download started: %s"), f.name)
 
-                        self.eventprocessor.logTransfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, 1)
+                        self.log_transfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, show_ui=1)
                     else:
                         self.DownloadFinished(f, i)
                         needupdate = False
@@ -1130,11 +1126,11 @@ class Transfers:
             if needupdate:
                 self.downloadsview.update(i)
         else:
-            self.eventprocessor.logMessage(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
+            log.add_warning(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename
-            }, 1)
+            })
 
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
@@ -1156,12 +1152,12 @@ class Transfers:
                 i.status = "Initializing transfer"
                 i.file = f
 
-                self.eventprocessor.logTransfer(_("Upload started: user %(user)s, file %(file)s") % {
+                self.log_transfer(_("Upload started: user %(user)s, file %(file)s") % {
                     'user': i.user,
                     'file': i.filename
                 })
             except IOError as strerror:
-                self.eventprocessor.logMessage(_("Upload I/O error: %s") % strerror)
+                log.add(_("Upload I/O error: %s"), strerror)
                 i.status = "Local file error"
                 try:
                     f.close()
@@ -1173,11 +1169,11 @@ class Transfers:
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
         else:
-            self.eventprocessor.logMessage(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)") % {
+            log.add_warning(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename
-            }, 1)
+            })
 
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
@@ -1232,7 +1228,7 @@ class Transfers:
                     self.DownloadFinished(msg.file, i)
                     needupdate = False
             except IOError as strerror:
-                self.eventprocessor.logMessage(_("Download I/O error: %s") % strerror)
+                log.add(_("Download I/O error: %s"), strerror)
                 i.status = "Local file error"
                 try:
                     msg.file.close()
@@ -1267,32 +1263,30 @@ class Transfers:
         try:
             shutil.move(file.name, newname)
         except (IOError, OSError) as inst:
-            self.eventprocessor.logMessage(
-                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s") % {
+            log.add_warning(
+                _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
                     'tempfile': "%s" % file.name,
                     'file': newname,
                     'error': inst
-                },
-                1
+                }
             )
 
         i.status = "Finished"
         i.speed = 0
         i.timeleft = ""
 
-        self.eventprocessor.logMessage(
-            _("Download finished: %(file)s") % {
+        log.add_transfer(
+            _("Download finished: %(file)s"), {
                 'file': newname
-            },
-            5
+            }
         )
 
-        self.eventprocessor.logTransfer(
+        self.log_transfer(
             _("Download finished: user %(user)s, file %(file)s") % {
                 'user': i.user,
                 'file': i.filename
             },
-            1
+            show_ui=1
         )
 
         self.queue.put(slskmessages.ConnClose(i.conn))
@@ -1319,9 +1313,9 @@ class Transfers:
 
         if config["transfers"]["afterfinish"]:
             if not executeCommand(config["transfers"]["afterfinish"], newname):
-                self.eventprocessor.logMessage(_("Trouble executing '%s'") % config["transfers"]["afterfinish"])
+                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
             else:
-                self.eventprocessor.logMessage(_("Executed: %s") % config["transfers"]["afterfinish"])
+                log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
 
         if i.path and (config["notifications"]["notification_popup_folder"] or config["transfers"]["afterfolder"]):
 
@@ -1341,9 +1335,9 @@ class Transfers:
                     )
                 if config["transfers"]["afterfolder"]:
                     if not executeCommand(config["transfers"]["afterfolder"], folder):
-                        self.eventprocessor.logMessage(_("Trouble executing on folder: %s") % config["transfers"]["afterfolder"])
+                        log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
                     else:
-                        self.eventprocessor.logMessage(_("Executed on folder: %s") % config["transfers"]["afterfolder"])
+                        log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
 
     def addToShared(self, name):
         """ Add a file to the normal shares database """
@@ -1424,7 +1418,7 @@ class Transfers:
                     if j.user == i.user:
                         j.timequeued = curtime
 
-                self.eventprocessor.logTransfer(
+                self.log_transfer(
                     _("Upload finished: %(user)s, file %(file)s") % {
                         'user': i.user,
                         'file': i.filename
@@ -1850,7 +1844,7 @@ class Transfers:
 
             i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn.conn))
-            self.eventprocessor.logMessage(_("I/O error: %s") % msg.strerror)
+            log.add(_("I/O error: %s"), msg.strerror)
 
             if i in self.downloads:
                 self.downloadsview.update(i)
@@ -1990,20 +1984,29 @@ class Transfers:
             transfer.file = None
 
             if transfer in self.uploads:
-                self.eventprocessor.logTransfer(
+                self.log_transfer(
                     _("Upload aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
                         'file': transfer.filename
                     }
                 )
             else:
-                self.eventprocessor.logTransfer(
+                self.log_transfer(
                     _("Download aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
                         'file': transfer.filename
                     },
-                    1
+                    show_ui=1
                 )
+
+    def log_transfer(self, message, show_ui=0):
+
+        if self.eventprocessor.config.sections["logging"]["transfers"]:
+            timestamp_format = self.eventprocessor.config.sections["logging"]["log_timestamp"]
+            write_log(self.eventprocessor.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
+
+        if show_ui:
+            log.add(message)
 
     def GetDownloads(self):
         """ Get a list of incomplete and not aborted downloads """

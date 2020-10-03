@@ -447,7 +447,7 @@ class RoomsControl:
             try:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] != myusername:
-                    log.addwarning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.") % {
+                    log.add_warning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s."), {
                         'room': room[0],
                         'previous': self.PrivateRooms[room[0]]['owner'],
                         'new': myusername
@@ -460,7 +460,7 @@ class RoomsControl:
             try:
                 self.PrivateRooms[room[0]]['joined'] = room[1]
                 if self.PrivateRooms[room[0]]['owner'] == myusername:
-                    log.addwarning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.") % {
+                    log.add_warning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true."), {
                         'room': room[0],
                         'old': self.PrivateRooms[room[0]]['owner'],
                     })
@@ -592,7 +592,7 @@ class RoomsControl:
 
         if room not in rooms:
             self.CreatePrivateRoom(room)
-            self.frame.logMessage(_("You have been added to a private room: %(room)s") % {"room": room})
+            log.add(_("You have been added to a private room: %(room)s"), {"room": room})
 
         self.SetPrivateRooms()
 
@@ -1272,7 +1272,7 @@ class ChatRoom:
 
         text = expand_alias(self.frame.np.config.aliases, alias)
         if not text:
-            log.add(_('Alias "%s" returned nothing') % alias)
+            log.add(_('Alias "%s" returned nothing'), alias)
             return
 
         if text[:2] == "//":
@@ -1443,7 +1443,7 @@ class ChatRoom:
             pass
 
         elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            self.frame.logMessage(_("Command %s is not recognized") % text)
+            log.add(_("Command %s is not recognized"), text)
             return
 
         else:
@@ -1462,7 +1462,7 @@ class ChatRoom:
     def showTickers(self):
         tickers = self.Tickers.get_tickers()
         header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
-        self.frame.logMessage("%s\n%s" % (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
+        log.add("%s\n%s" % (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
 
     def Say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -1781,7 +1781,7 @@ class ChatRoom:
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
                 self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
-                print("Unknown meta chatroom closed.")
+                log.add_warning(_("Unknown meta chatroom closed"))
 
         self.frame.np.pluginhandler.LeaveChatroomNotification(self.room)
 

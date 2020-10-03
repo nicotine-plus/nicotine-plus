@@ -38,6 +38,7 @@ from pynicotine.gtkgui.utils import HumanSize
 from pynicotine.gtkgui.utils import InitialiseColumns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
+from pynicotine.logfacility import log
 from pynicotine.utils import CleanFile
 from pynicotine.utils import executeCommand
 from pynicotine.utils import GetUserDirectories
@@ -537,8 +538,7 @@ class UserBrowse:
             try:
                 self.files[f[0]] = self.FileStore.append(f)
             except Exception as msg:
-                error = _("Error while attempting to display folder '%(folder)s', reported error: %(error)s" % {'folder': directory, 'error': msg})
-                self.frame.logMessage(error)
+                log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"), {'folder': directory, 'error': msg})
 
     def OnSave(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
@@ -547,8 +547,7 @@ class UserBrowse:
             if not os.path.exists(sharesdir):
                 os.mkdir(sharesdir)
         except Exception as msg:
-            error = _("Can't create directory '%(folder)s', reported error: %(error)s" % {'folder': sharesdir, 'error': msg})
-            self.frame.logMessage(error)
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
         try:
             import pickle as mypickle
@@ -557,8 +556,7 @@ class UserBrowse:
             mypickle.dump(self.shares, sharesfile, protocol=mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
         except Exception as msg:
-            error = _("Can't save shares, '%(user)s', reported error: %(error)s" % {'user': self.user, 'error': msg})
-            self.frame.logMessage(error)
+            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
 
     def saveColumns(self):
 
@@ -647,7 +645,7 @@ class UserBrowse:
         try:
             self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""))
         except IOError:  # failed to open
-            self.frame.logMessage('Failed to open %r for reading', dir[0])  # notify user
+            log.add('Failed to open %r for reading', dir[0])  # notify user
 
     def OnDownloadDirectoryRecursiveTo(self, widget):
 
@@ -659,7 +657,7 @@ class UserBrowse:
         try:
             self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""), 1)
         except IOError:  # failed to open
-            self.frame.logMessage('Failed to open %r for reading', dir[0])  # notify user
+            log.add('Failed to open %r for reading', dir[0])  # notify user
 
     def DownloadDirectory(self, dir, prefix="", recurse=0):
 
@@ -767,7 +765,7 @@ class UserBrowse:
         try:
             self.OnDownloadFiles(widget, ldir[0])
         except IOError:  # failed to open
-            self.frame.logMessage('failed to open %r for reading', ldir[0])  # notify user
+            log.add('failed to open %r for reading', ldir[0])  # notify user
 
     def OnUploadDirectoryTo(self, widget, recurse=0):
 

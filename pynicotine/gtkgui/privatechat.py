@@ -615,7 +615,7 @@ class PrivateChat:
 
         text = expand_alias(self.frame.np.config.aliases, alias)
         if not text:
-            log.add(_('Alias "%s" returned nothing') % alias)
+            log.add(_('Alias "%s" returned nothing'), alias)
             return
 
         if text[:2] == "//":
@@ -769,7 +769,7 @@ class PrivateChat:
             pass
 
         elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            self.frame.logMessage(_("Command %s is not recognized") % text)
+            log.add(_("Command %s is not recognized"), text)
             return
 
         else:

@@ -498,9 +498,9 @@ class UserInfo:
 
         if not os.path.exists(pathname):
             self.image_pixbuf.savev(pathname, "jpeg", ["quality"], ["100"])
-            log.add(_("Picture saved to %s") % pathname)
+            log.add(_("Picture saved to %s"), pathname)
         else:
-            log.add(_("Picture not saved, %s already exists.") % pathname)
+            log.add(_("Picture not saved, %s already exists."), pathname)
 
     def OnImageClick(self, widget, event):
 

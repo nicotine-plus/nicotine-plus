@@ -80,7 +80,7 @@ class TrayApp:
                 ("#" + _("Quit"), self.frame.OnExit)
             )
         except Exception as e:
-            log.addwarning(_('ERROR: tray menu, %(error)s') % {'error': e})
+            log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
 
     def OnHideUnhideWindow(self, widget):
         if self.frame.MainWindow.get_property("visible"):
@@ -316,7 +316,7 @@ class TrayApp:
                     self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
 
         except Exception as e:
-            log.addwarning(_("ERROR: cannot set trayicon image: %(error)s") % {'error': e})
+            log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})
 
     def set_transfer_status(self, download, upload):
         if self.trayicon is not None:
