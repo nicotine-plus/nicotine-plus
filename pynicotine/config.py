@@ -626,9 +626,8 @@ class Config:
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
 
     def removeOldOption(self, section, option):
-        if section in self.parser.sections():
-            if option in self.parser.options(section):
-                self.parser.remove_option(section, option)
+        if section in self.parser.sections() and option in self.parser.options(section):
+            self.parser.remove_option(section, option)
 
     def removeOldSection(self, section):
         if section in self.parser.sections():

@@ -247,11 +247,11 @@ class UPnPPortMapping:
 
             if internal_ip_match:
                 self.internalipaddress = internal_ip_match.group('ip')
-                next
+                continue
 
             if external_ip_match:
                 self.externalipaddress = external_ip_match.group('ip')
-                next
+                continue
 
             if mapping_match:
                 enabled = '1'

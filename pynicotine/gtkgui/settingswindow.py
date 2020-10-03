@@ -1859,7 +1859,7 @@ class ColoursFrame(buildFrame):
                 drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                 break
 
-    def OnClearAllColours(self, widget):
+    def OnClearAllColours(self, button):
 
         for option in self.colors:
             for section, value in self.options.items():
@@ -1900,7 +1900,7 @@ class ColoursFrame(buildFrame):
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
-    def PickColour(self, widget, entry, drawingarea):
+    def PickColour(self, widget, entry):
 
         dlg = gtk.ColorChooserDialog(_("Pick a color, any color"))
         colourtext = entry.get_text()

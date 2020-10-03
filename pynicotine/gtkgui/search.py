@@ -1054,9 +1054,9 @@ class Search:
 
         self.selected_users.add(user)
 
-        path = model.get_value(iter, 12)
+        filepath = model.get_value(iter, 12)
 
-        if path == "":
+        if filepath == "":
             # Result is not a file or directory, don't add it
             return
 
@@ -1064,7 +1064,7 @@ class Search:
         length = model.get_value(iter, 10)
         size = model.get_value(iter, 14)
 
-        self.selected_results.add((user, path, size, bitrate, length))
+        self.selected_results.add((user, filepath, size, bitrate, length))
 
     def OnListClicked(self, widget, event):
 

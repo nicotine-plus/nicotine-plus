@@ -364,7 +364,7 @@ class Shares:
 
         return False
 
-    def add_file_to_index(self, index, filename, folder, fileinfo, wordindex, fileindex, override_wordindex=False):
+    def add_file_to_index(self, index, filename, folder, fileinfo, wordindex, fileindex):
         """ Add a file to the file index database """
 
         fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
@@ -376,10 +376,6 @@ class Shares:
                 wordindex[k].append(index)
             except KeyError:
                 wordindex[k] = [index]
-
-        # If we're working directly on the shelve, we need to save it back
-        if override_wordindex:
-            wordindex[k] = wordindex[k]
 
     def add_file_to_shared(self, name):
         """ Add a file to the normal shares database """
@@ -415,7 +411,7 @@ class Shares:
             except TypeError:
                 index = len(list(fileindex))
 
-            self.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex, override_wordindex=True)
+            self.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex)
 
             sharedmtimes[vdir] = os.path.getmtime(dir)
             self.newnormalshares = True
@@ -459,7 +455,7 @@ class Shares:
             except TypeError:
                 index = len(list(bfileindex))
 
-            self.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex, override_wordindex=True)
+            self.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex)
 
             bsharedmtimes[vdir] = os.path.getmtime(dir)
             self.newbuddyshares = True

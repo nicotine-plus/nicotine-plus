@@ -434,10 +434,10 @@ class UserInfo:
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
             except TypeError:
-                name = tempfile.mktemp()
-                f = open(name, "w")
-                f.write(pic)
-                f.close()
+                name = tempfile.NamedTemporaryFile(delete=False)
+                with open(name, "w") as f:
+                    f.write(pic)
+
                 self.image.set_from_file(name)
                 os.remove(name)
 
