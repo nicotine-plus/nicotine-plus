@@ -50,7 +50,7 @@ class WishList:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
 
-        self.WishList = builder.get_object("WishList")
+        self.WishListDialog = builder.get_object("WishListDialog")
         builder.connect_signals(self)
 
         for i in builder.get_objects():
@@ -59,12 +59,12 @@ class WishList:
             except TypeError:
                 pass
 
-        self.WishList.set_transient_for(frame.MainWindow)
+        self.WishListDialog.set_transient_for(frame.MainWindow)
 
-        self.WishList.connect("destroy", self.quit)
-        self.WishList.connect("destroy-event", self.quit)
-        self.WishList.connect("delete-event", self.quit)
-        self.WishList.connect("delete_event", self.quit)
+        self.WishListDialog.connect("destroy", self.quit)
+        self.WishListDialog.connect("destroy-event", self.quit)
+        self.WishListDialog.connect("delete-event", self.quit)
+        self.WishListDialog.connect("delete_event", self.quit)
 
         self.store = gtk.ListStore(gobject.TYPE_STRING)
 
@@ -202,8 +202,8 @@ class WishList:
             self.timer = None
 
     def show(self, widget):
-        self.WishList.show()
+        self.WishListDialog.show()
 
     def quit(self, widget, event):
-        self.WishList.hide()
+        self.WishListDialog.hide()
         return True

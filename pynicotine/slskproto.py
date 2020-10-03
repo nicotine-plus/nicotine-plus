@@ -949,9 +949,7 @@ class SlskProtoThread(threading.Thread):
                         if msgObj.__class__ is FileSearchResult and msgObj.geoip and self.geoip and self._geoip:
                             cc = self.geoip.get_all(conns[msgObj.conn].addr[0]).country_short
 
-                            if cc == "-" and self._geoip[0]:
-                                checkuser = 0
-                            elif cc != "-" and self._geoip[1][0].find(cc) >= 0:
+                            if (cc == "-" and self._geoip[0]) or (cc != "-" and self._geoip[1][0].find(cc) >= 0):
                                 checkuser = 0
 
                         if checkuser:

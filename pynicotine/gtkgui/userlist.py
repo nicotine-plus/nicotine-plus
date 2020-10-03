@@ -89,7 +89,7 @@ class UserList:
 
         widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = InitialiseColumns(
-            self.UserList,
+            self.UserListTree,
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.CellDataFunc],
@@ -125,18 +125,18 @@ class UserList:
             config["columns"]["userlist"][1] = 0
 
         for render in self.col_trusted.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
 
         for render in self.col_notify.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 6)
 
         for render in self.col_privileged.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 7)
 
         for render in self.col_comments.get_cells():
-            render.connect('edited', self.cell_edited_callback, self.UserList, 9)
+            render.connect('edited', self.cell_edited_callback, self.UserListTree, 9)
 
-        self.UserList.set_model(self.usersmodel)
+        self.UserListTree.set_model(self.usersmodel)
 
         """ Buddy list """
 
@@ -210,7 +210,7 @@ class UserList:
         self.Menu_RemoveUser = items[14]
         self.Menu_PrivateRooms = items[15]
 
-        self.UserList.connect("button_press_event", self.OnPopupMenu)
+        self.UserListTree.connect("button_press_event", self.OnPopupMenu)
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
         return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
@@ -306,11 +306,11 @@ class UserList:
 
     def OnPopupMenu(self, widget, event):
 
-        d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
+        d = self.UserListTree.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
             path, column, x, y = d
-            model = self.UserList.get_model()
+            model = self.UserListTree.get_model()
             iter = model.get_iter(path)
             user = model.get_value(iter, 2)
             status = model.get_value(iter, 10)
@@ -476,7 +476,7 @@ class UserList:
 
         columns = []
         widths = []
-        for column in self.UserList.get_columns():
+        for column in self.UserListTree.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["userlist"] = columns

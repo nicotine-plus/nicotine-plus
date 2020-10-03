@@ -3302,7 +3302,7 @@ class PluginFrame(buildFrame):
         }
 
 
-class SettingsWindow:
+class Settings:
 
     def __init__(self, frame):
 

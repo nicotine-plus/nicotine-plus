@@ -275,7 +275,7 @@ class NetworkEventProcessor:
             slskmessages.Recommendations: self.Recommendations,
             slskmessages.ItemRecommendations: self.ItemRecommendations,
             slskmessages.SimilarUsers: self.SimilarUsers,
-            slskmessages.ItemSimilarUsers: self.ItemSimilarUsers,
+            slskmessages.ItemSimilarUsers: self.SimilarUsers,
             slskmessages.UserInterests: self.UserInterests,
             slskmessages.RoomTickerState: self.RoomTickerState,
             slskmessages.RoomTickerAdd: self.RoomTickerAdd,
@@ -1085,6 +1085,7 @@ class NetworkEventProcessor:
                         i.tryaddr += 1
 
                     self.queue.put(slskmessages.GetPeerAddress(user))
+                break
         else:
 
             if msg.user in self.users:
@@ -1840,9 +1841,6 @@ class NetworkEventProcessor:
 
     def SimilarUsers(self, msg):
         self.ui_callback.SimilarUsers(msg)
-
-    def ItemSimilarUsers(self, msg):
-        self.ui_callback.ItemSimilarUsers(msg)
 
     def RoomTickerState(self, msg):
 

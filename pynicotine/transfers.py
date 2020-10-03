@@ -849,9 +849,8 @@ class Transfers:
 
                 if i.req is not None:
                     count += 1
-                elif i.conn is not None and i.speed is None:
+                if i.conn is not None and i.speed is None:
                     count += 1
-
                 if i.status == "Getting status":
                     count += 1
 
@@ -1745,7 +1744,7 @@ class Transfers:
         for i in self.uploads:
             if type(error) is not ConnectionRefusedError and i.conn != conn:
                 continue
-            elif i.user != user:
+            if i.user != user:
                 # Connection refused, cancel all of user's transfers
                 continue
 

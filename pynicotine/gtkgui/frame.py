@@ -52,7 +52,7 @@ from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
-from pynicotine.gtkgui.settingswindow import SettingsWindow
+from pynicotine.gtkgui.settingswindow import Settings
 from pynicotine.gtkgui.tray import TrayApp
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
@@ -734,7 +734,7 @@ class NicotineFrame:
         self.TrayApp.tray_status["status"] = "connect"
         self.TrayApp.set_image()
 
-        if self.np.serverconn is not None:
+        if self.np.active_server_conn is not None:
             return
 
         if widget != -1:
@@ -753,7 +753,7 @@ class NicotineFrame:
     def OnDisconnect(self, event):
         self.disconnect1.set_sensitive(0)
         self.np.manualdisconnect = True
-        self.np.queue.put(slskmessages.ConnClose(self.np.serverconn))
+        self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
 
     def OnAway(self, widget):
 
@@ -789,7 +789,7 @@ class NicotineFrame:
 
     def OnSettings(self, widget, page=None):
         if self.settingswindow is None:
-            self.settingswindow = SettingsWindow(self)
+            self.settingswindow = Settings(self)
             self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 
         if self.fastconfigure is not None and self.fastconfigure.window.get_property("visible"):
@@ -1652,14 +1652,6 @@ class NicotineFrame:
             self.recommendation_users[user] = iter
             self.np.queue.put(slskmessages.AddUser(user))
 
-    def ItemSimilarUsers(self, msg):
-        self.recommendation_users_model.clear()
-        self.recommendation_users = {}
-        for user in msg.users:
-            iter = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
-            self.recommendation_users[user] = iter
-            self.np.queue.put(slskmessages.AddUser(user))
-
     def GetUserStatus(self, msg):
         if msg.user not in self.recommendation_users:
             return
@@ -1842,7 +1834,7 @@ class NicotineFrame:
 
         # self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
         for listview in [
-            self.userlist.UserList,
+            self.userlist.UserListTree,
             self.RecommendationsList,
             self.UnrecommendationsList,
             self.RecommendationUsersList,

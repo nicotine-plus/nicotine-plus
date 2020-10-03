@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="NowPlaying">
+  <object class="GtkDialog" id="NowPlayingDialog">
     <property name="border_width">10</property>
     <property name="width_request">800</property>
     <property name="can_focus">False</property>

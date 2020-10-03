@@ -626,9 +626,7 @@ class RoomsControl:
 
     def GetUserAddress(self, user):
 
-        if user not in self.frame.np.users:
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
-        elif self.frame.np.users[user].addr is None:
+        if user not in self.frame.np.users or self.frame.np.users[user].addr is None:
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
     def UserJoinedRoom(self, msg):
