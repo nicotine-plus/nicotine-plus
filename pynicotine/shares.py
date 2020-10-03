@@ -394,8 +394,8 @@ class Shares:
 
         sharedmtimes = config["transfers"]["sharedmtimes"]
 
-        dir = str(os.path.expanduser(os.path.dirname(name)))
-        vdir = self.real2virtual(dir)
+        rdir = str(os.path.expanduser(os.path.dirname(name)))
+        vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
         shared[vdir] = shared.get(vdir, [])
@@ -413,7 +413,7 @@ class Shares:
 
             self.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex)
 
-            sharedmtimes[vdir] = os.path.getmtime(dir)
+            sharedmtimes[vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
 
         if config["transfers"]["enablebuddyshares"]:
@@ -437,8 +437,8 @@ class Shares:
 
         bsharedmtimes = config["transfers"]["bsharedmtimes"]
 
-        dir = str(os.path.expanduser(os.path.dirname(name)))
-        vdir = self.real2virtual(dir)
+        rdir = str(os.path.expanduser(os.path.dirname(name)))
+        vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
         bshared[vdir] = bshared.get(vdir, [])
@@ -457,13 +457,13 @@ class Shares:
 
             self.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex)
 
-            bsharedmtimes[vdir] = os.path.getmtime(dir)
+            bsharedmtimes[vdir] = os.path.getmtime(rdir)
             self.newbuddyshares = True
 
     def get_dirs_mtimes(self, dirs):
         """ Get Modification Times """
 
-        list = {}
+        mtimes = {}
 
         for folder in dirs:
 
@@ -472,7 +472,7 @@ class Shares:
                     continue
 
                 mtime = os.path.getmtime(folder)
-                list[folder] = mtime
+                mtimes[folder] = mtime
 
                 for entry in os.scandir(folder):
                     if entry.is_dir():
@@ -488,21 +488,21 @@ class Shares:
                             })
                             continue
 
-                        list[path] = mtime
+                        mtimes[path] = mtime
                         dircontents = self.get_dirs_mtimes([path])
                         for k in dircontents:
-                            list[k] = dircontents[k]
+                            mtimes[k] = dircontents[k]
 
             except OSError as errtuple:
                 log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
                 continue
 
-        return list
+        return mtimes
 
-    def get_files_list(self, sharestype, mtimes, oldmtimes, oldlist, rebuild=False):
+    def get_files_list(self, sharestype, mtimes, oldmtimes, oldfiles, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
-        list = {}
+        files = {}
         count = 0
         lastpercent = 0.0
 
@@ -524,7 +524,7 @@ class Shares:
                         if os.path.exists(folder):
                             try:
                                 virtualdir = self.real2virtual(folder)
-                                list[virtualdir] = oldlist[virtualdir]
+                                files[virtualdir] = oldfiles[virtualdir]
                                 continue
                             except KeyError:
                                 log.add_debug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
@@ -536,7 +536,7 @@ class Shares:
                             continue
 
                 virtualdir = self.real2virtual(folder)
-                list[virtualdir] = []
+                files[virtualdir] = []
 
                 for entry in os.scandir(folder):
 
@@ -549,13 +549,13 @@ class Shares:
                         # Get the metadata of the file
                         data = self.get_file_info(filename, entry.path)
                         if data is not None:
-                            list[virtualdir].append(data)
+                            files[virtualdir].append(data)
 
             except OSError as errtuple:
                 log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
                 continue
 
-        return list
+        return files
 
     def get_file_info(self, name, pathname):
         """ Get metadata via taglib """

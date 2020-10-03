@@ -85,8 +85,8 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
         return False
 
     model = widget.get_model()
-    iter = model.get_iter(path)
-    value = model.get_value(iter, sourcecolumn)
+    iterator = model.get_iter(path)
+    value = model.get_value(iterator, sourcecolumn)
 
     # Avoid throwing an error in there's no flag
     if value is None:
@@ -129,18 +129,18 @@ def FillFileGroupingCombobox(combobox):
     combobox.add_attribute(renderer_text, "text", 0)
 
 
-def SelectUserRowIter(fmodel, sel, user_index, selected_user, iter):
-    while iter is not None:
-        user = fmodel.get_value(iter, user_index)
+def SelectUserRowIter(fmodel, sel, user_index, selected_user, iterator):
+    while iterator is not None:
+        user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iter),)
+            sel.select_path(fmodel.get_path(iterator),)
 
-        child = fmodel.iter_children(iter)
+        child = fmodel.iter_children(iterator)
 
         SelectUserRowIter(fmodel, sel, user_index, selected_user, child)
 
-        iter = fmodel.iter_next(iter)
+        iterator = fmodel.iter_next(iterator)
 
 
 def CollapseTreeview(treeview, groupingmode):
@@ -150,12 +150,12 @@ def CollapseTreeview(treeview, groupingmode):
         # Group by folder
 
         model = treeview.get_model()
-        iter = model.get_iter_first()
+        iterator = model.get_iter_first()
 
-        while iter is not None:
-            path = model.get_path(iter)
+        while iterator is not None:
+            path = model.get_path(iterator)
             treeview.expand_to_path(path)
-            iter = model.iter_next(iter)
+            iterator = model.iter_next(iterator)
 
 
 def InitialiseColumns(treeview, *args):
@@ -355,7 +355,7 @@ def ScrollBottom(widget):
     return False
 
 
-def UrlEvent(tag, widget, event, iter, url):
+def UrlEvent(tag, widget, event, iterator, url):
     if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
@@ -413,12 +413,12 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         return tag
 
     def _append(buffer, text, tag):
-        iter = buffer.get_end_iter()
+        iterator = buffer.get_end_iter()
 
         if tag is not None:
-            buffer.insert_with_tags(iter, text, tag)
+            buffer.insert_with_tags(iterator, text, tag)
         else:
-            buffer.insert(iter, text)
+            buffer.insert(iterator, text)
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
@@ -1234,8 +1234,8 @@ class TextSearchBar:
 
         self.textview.emit("select-all", False)
 
-        iter = start
-        match = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        iterator = start
+        match = iterator.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match
@@ -1251,8 +1251,8 @@ class TextSearchBar:
         self.textview.emit("select-all", False)
 
         current = buffer.get_mark("insert")
-        iter = buffer.get_iter_at_mark(current)
-        match = iter.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        iterator = buffer.get_iter_at_mark(current)
+        match = iterator.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match
@@ -1272,8 +1272,8 @@ class TextSearchBar:
         self.textview.emit("select-all", False)
 
         current = buffer.get_mark("insert")
-        iter = buffer.get_iter_at_mark(current)
-        match = iter.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        iterator = buffer.get_iter_at_mark(current)
+        match = iterator.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match

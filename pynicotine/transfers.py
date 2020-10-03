@@ -1512,28 +1512,28 @@ class Transfers:
         trusers = self.getTransferringUsers()
 
         # List of transfer instances of users who are not currently transferring
-        list = [i for i in self.uploads if i.user not in trusers and i.status == "Queued"]
+        list_queued = [i for i in self.uploads if i.user not in trusers and i.status == "Queued"]
 
         # Sublist of privileged users transfers
-        listprivileged = [i for i in list if self.isPrivileged(i.user)]
+        list_privileged = [i for i in list_queued if self.isPrivileged(i.user)]
 
-        if len(listprivileged) > 0:
+        if len(list_privileged) > 0:
             # Upload to a privileged user
             # Only Privileged users' files will get selected
-            list = listprivileged
+            list_queued = list_privileged
 
-        if len(list) == 0:
+        if len(list_queued) == 0:
             return
 
         if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
             # FIFO
             # Get the first item in the list
-            transfercandidate = list[0]
+            transfercandidate = list_queued[0]
         else:
             # Round Robin
             # Get first transfer that was queued less than one second from now
             mintimequeued = time.time() + 1
-            for i in list:
+            for i in list_queued:
                 if i.timequeued < mintimequeued:
                     transfercandidate = i
                     # Break loop
@@ -1598,7 +1598,7 @@ class Transfers:
                         break
         else:
             # Todo
-            list = listpriv = {user: time.time()}  # noqa: F841
+            listpriv = {user: time.time()}
             countpriv = 0
             trusers = self.getTransferringUsers()
             count = 0

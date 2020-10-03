@@ -331,13 +331,13 @@ class NetworkEventProcessor:
         else:
 
             if message.__class__ is slskmessages.FileRequest:
-                type = 'F'
+                message_type = 'F'
             elif message.__class__ is slskmessages.DistribConn:
-                type = 'D'
+                message_type = 'D'
             else:
-                type = 'P'
+                message_type = 'P'
 
-            init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], type, 0)
+            init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], message_type, 0)
             firewalled = self.config.sections["server"]["firewalled"]
             addr = None
             behindfw = None
@@ -362,7 +362,7 @@ class NetworkEventProcessor:
 
             if not firewalled:
                 token = newId()
-                self.queue.put(slskmessages.ConnectToPeer(token, user, type))
+                self.queue.put(slskmessages.ConnectToPeer(token, user, message_type))
 
             conn = PeerConnection(addr=addr, username=user, msgs=[message], token=token, init=init)
             self.peerconns.append(conn)
@@ -395,7 +395,7 @@ class NetworkEventProcessor:
         self.servertimer.setDaemon(True)
         self.servertimer.start()
 
-        self.setStatus(_("The server seems to be down or not responding, retrying in %i seconds"), (self.servertimeout))
+        self.setStatus(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))
 
     def ServerTimeout(self):
         if self.config.needConfig() <= 1:
@@ -706,10 +706,10 @@ class NetworkEventProcessor:
 
         if self.privatechat is not None:
 
-            tuple = self.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
+            event = self.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
 
-            if tuple is not None:
-                (u, msg.msg) = tuple
+            if event is not None:
+                (u, msg.msg) = event
                 self.privatechat.ShowMessage(msg, msg.msg, msg.newmessage)
 
                 self.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)

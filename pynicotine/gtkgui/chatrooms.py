@@ -185,18 +185,18 @@ class RoomsControl:
 
         return cmp(private1, private2)
 
-    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
-        if self.roomsmodel.get_value(iter, 2) >= 2:
+    def RoomStatus(self, column, cellrenderer, model, iterator, dummy='dummy'):
+        if self.roomsmodel.get_value(iterator, 2) >= 2:
             cellrenderer.set_property("underline", pango.Underline.SINGLE)
             cellrenderer.set_property("weight", pango.Weight.BOLD)
-        elif self.roomsmodel.get_value(iter, 2) >= 1:
+        elif self.roomsmodel.get_value(iterator, 2) >= 1:
             cellrenderer.set_property("weight", pango.Weight.BOLD)
             cellrenderer.set_property("underline", pango.Underline.NONE)
         else:
             cellrenderer.set_property("weight", pango.Weight.NORMAL)
             cellrenderer.set_property("underline", pango.Underline.NONE)
 
-        self.frame.CellDataFunc(column, cellrenderer, model, iter)
+        self.frame.CellDataFunc(column, cellrenderer, model, iterator)
 
     def OnReorderedPage(self, notebook, page, page_num, force=0):
 
@@ -466,11 +466,11 @@ class RoomsControl:
             except KeyError:
                 self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
-        iter = self.roomsmodel.get_iter_first()
-        while iter is not None:
-            room = self.roomsmodel.get_value(iter, 0)
-            lastiter = iter
-            iter = self.roomsmodel.iter_next(iter)
+        iterator = self.roomsmodel.get_iter_first()
+        while iterator is not None:
+            room = self.roomsmodel.get_value(iterator, 0)
+            lastiter = iterator
+            iterator = self.roomsmodel.iter_next(iterator)
             if self.IsPrivateRoomOwned(room) or self.IsPrivateRoomMember(room):
                 self.roomsmodel.remove(lastiter)
 
@@ -870,10 +870,10 @@ class ChatRoom:
 
             hspeed = HumanSpeed(user.avgspeed)
             hfiles = Humanize(user.files)
-            iter = self.usersmodel.append(
+            iterator = self.usersmodel.append(
                 [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
             )
-            self.users[username] = iter
+            self.users[username] = iterator
             self.roomsctrl.GetUserAddress(username)
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
@@ -955,7 +955,7 @@ class ChatRoom:
 
         self.CountUsers()
 
-    def RoomStatus(self, column, cellrenderer, model, iter, dummy='dummy'):
+    def RoomStatus(self, column, cellrenderer, model, iterator, dummy='dummy'):
         # cellrenderer.set_property("weight", colour)
         pass
 
@@ -1447,9 +1447,9 @@ class ChatRoom:
             if text[:2] == "//":
                 text = text[1:]
 
-            tuple = self.frame.np.pluginhandler.OutgoingPublicChatEvent(self.room, text)
-            if tuple is not None:
-                (r, text) = tuple
+            event = self.frame.np.pluginhandler.OutgoingPublicChatEvent(self.room, text)
+            if event is not None:
+                (r, text) = event
                 self.Say(self.frame.AutoReplace(text))
                 self.frame.np.pluginhandler.OutgoingPublicChatNotification(self.room, text)
 
@@ -1520,13 +1520,13 @@ class ChatRoom:
                 if self.frame.np.config.sections["words"]["dropdown"]:
                     liststore = self.ChatEntry.get_completion().get_model()
 
-                    iter = liststore.get_iter_first()
-                    while iter is not None:
-                        name = liststore.get_value(iter, 0)
+                    iterator = liststore.get_iter_first()
+                    while iterator is not None:
+                        name = liststore.get_value(iterator, 0)
                         if name == username:
-                            liststore.remove(iter)
+                            liststore.remove(iterator)
                             break
-                        iter = liststore.iter_next(iter)
+                        iterator = liststore.iter_next(iterator)
 
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
             AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
@@ -1547,20 +1547,20 @@ class ChatRoom:
             self.LabelPeople.hide()
 
         if self.room in self.roomsctrl.rooms:
-            iter = self.roomsctrl.roomsmodel.get_iter_first()
-            while iter:
-                if self.roomsctrl.roomsmodel.get_value(iter, 0) == self.room:
-                    self.roomsctrl.roomsmodel.set(iter, 1, numusers)
+            iterator = self.roomsctrl.roomsmodel.get_iter_first()
+            while iterator:
+                if self.roomsctrl.roomsmodel.get_value(iterator, 0) == self.room:
+                    self.roomsctrl.roomsmodel.set(iterator, 1, numusers)
                     break
-                iter = self.roomsctrl.roomsmodel.iter_next(iter)
+                iterator = self.roomsctrl.roomsmodel.iter_next(iterator)
         else:
             self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
             self.roomsctrl.rooms.append(self.room)
 
-    def UserColumnDraw(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def UserColumnDraw(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
         if self.room in self.roomsctrl.PrivateRooms:
-            user = self.usersmodel.get_value(iter, 2)
+            user = self.usersmodel.get_value(iterator, 2)
 
             if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
                 cellrenderer.set_property("underline", pango.Underline.SINGLE)
@@ -1572,7 +1572,7 @@ class ChatRoom:
                 cellrenderer.set_property("weight", pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", pango.Underline.NONE)
 
-        self.frame.CellDataFunc(column, cellrenderer, model, iter)
+        self.frame.CellDataFunc(column, cellrenderer, model, iterator)
 
     def GetUserStats(self, user, avgspeed, files):
 
@@ -1644,7 +1644,7 @@ class ChatRoom:
 
         return tag
 
-    def UserNameEvent(self, tag, widget, event, iter, user):
+    def UserNameEvent(self, tag, widget, event, iterator, user):
 
         """
         Mouse buttons:
@@ -1923,11 +1923,11 @@ class ChatRoom:
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
-            max = adj.upper - adj.page_size
+            maximum = adj.upper - adj.page_size
             new = adj.value + adj.page_increment
 
-            if new > max:
-                new = max
+            if new > maximum:
+                new = maximum
 
             adj.set_value(new)
 

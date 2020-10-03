@@ -204,24 +204,24 @@ class TransferList:
         self.Clear()
         self.update()
 
-    def SelectedTransfersCallback(self, model, path, iter):
+    def SelectedTransfersCallback(self, model, path, iterator):
 
-        self.SelectTransfer(model, iter, selectuser=True)
+        self.SelectTransfer(model, iterator, selectuser=True)
 
         # If we're in grouping mode, select any transfers under the selected
         # user or folder
-        self.SelectChildTransfers(model, model.iter_children(iter))
+        self.SelectChildTransfers(model, model.iter_children(iterator))
 
-    def SelectChildTransfers(self, model, iter):
+    def SelectChildTransfers(self, model, iterator):
 
-        while iter is not None:
-            self.SelectTransfer(model, iter)
-            self.SelectChildTransfers(model, model.iter_children(iter))
-            iter = model.iter_next(iter)
+        while iterator is not None:
+            self.SelectTransfer(model, iterator)
+            self.SelectChildTransfers(model, model.iter_children(iterator))
+            iterator = model.iter_next(iterator)
 
-    def SelectTransfer(self, model, iter, selectuser=False):
-        user = model.get_value(iter, 0)
-        file = model.get_value(iter, 10)
+    def SelectTransfer(self, model, iterator, selectuser=False):
+        user = model.get_value(iterator, 0)
+        file = model.get_value(iterator, 10)
 
         for i in self.list:
             if i.user == user and i.filename == file:
@@ -320,16 +320,16 @@ class TransferList:
         salientstatus = ""
         extensions = {}
 
-        iter = self.transfersmodel.iter_children(initer)
+        iterator = self.transfersmodel.iter_children(initer)
 
-        while iter is not None:
+        while iterator is not None:
 
-            status = self.transfersmodel.get_value(iter, 11)
+            status = self.transfersmodel.get_value(iterator, 11)
 
             if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
                 salientstatus = status
 
-            filename = self.transfersmodel.get_value(iter, 10)
+            filename = self.transfersmodel.get_value(iterator, 10)
             parts = filename.rsplit('.', 1)
 
             if len(parts) == 2:
@@ -341,22 +341,22 @@ class TransferList:
 
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
-                iter = self.transfersmodel.iter_next(iter)
+                iterator = self.transfersmodel.iter_next(iterator)
                 continue
 
-            elapsed += self.transfersmodel.get_value(iter, 15)
-            totalsize += self.transfersmodel.get_value(iter, 12)
-            position += self.transfersmodel.get_value(iter, 13)
-            filecount += self.transfersmodel.get_value(iter, 16)
+            elapsed += self.transfersmodel.get_value(iterator, 15)
+            totalsize += self.transfersmodel.get_value(iterator, 12)
+            position += self.transfersmodel.get_value(iterator, 13)
+            filecount += self.transfersmodel.get_value(iterator, 16)
 
             if status == "Transferring":
-                speed += float(self.transfersmodel.get_value(iter, 14))
-                left = self.transfersmodel.get_value(iter, 9)
+                speed += float(self.transfersmodel.get_value(iterator, 14))
+                left = self.transfersmodel.get_value(iterator, 9)
 
             if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
                 salientstatus = status
 
-            iter = self.transfersmodel.iter_next(iter)
+            iterator = self.transfersmodel.iter_next(iterator)
 
         if totalsize > 0:
             percent = ((100 * position) / totalsize)
@@ -509,15 +509,15 @@ class TransferList:
             else:
                 path = '/'.join(reversed(transfer.path.split('/')))
 
-            iter = self.transfersmodel.append(
+            iterator = self.transfersmodel.append(
                 parent,
                 (user, path, shortfn, status, str(place), percent, str(hsize), hspeed, helapsed, left, fn, transfer.status, size, icurrentbytes, speed, elapsed, filecount, place)
             )
-            transfer.iter = iter
+            transfer.iter = iterator
 
             # Expand path
             if parent is not None:
-                path = self.transfersmodel.get_path(iter)
+                path = self.transfersmodel.get_path(iterator)
                 self.expand(path)
 
     def remove_specific(self, transfer, cleartreeviewonly=False):
@@ -609,9 +609,9 @@ class TransferList:
         fmodel = self.widget.get_model()
         sel.unselect_all()
 
-        iter = fmodel.get_iter_first()
+        iterator = fmodel.get_iter_first()
 
-        SelectUserRowIter(fmodel, sel, 0, selected_user, iter)
+        SelectUserRowIter(fmodel, sel, 0, selected_user, iterator)
 
         self.select_transfers()
 

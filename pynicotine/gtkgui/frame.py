@@ -1648,8 +1648,8 @@ class NicotineFrame:
         self.recommendation_users_model.clear()
         self.recommendation_users = {}
         for user in msg.users:
-            iter = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
-            self.recommendation_users[user] = iter
+            iterator = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
+            self.recommendation_users[user] = iterator
             self.np.queue.put(slskmessages.AddUser(user))
 
     def GetUserStatus(self, msg):
@@ -1703,8 +1703,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.likes_model.get_iter(path)
-        thing = self.likes_model.get_value(iter, 0)
+        iterator = self.likes_model.get_iter(path)
+        thing = self.likes_model.get_value(iterator, 0)
         self.til_popup_menu.set_user(thing)
         self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1725,8 +1725,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.dislikes_model.get_iter(path)
-        thing = self.dislikes_model.get_value(iter, 0)
+        iterator = self.dislikes_model.get_iter(path)
+        thing = self.dislikes_model.get_value(iterator, 0)
         self.tidl_popup_menu.set_user(thing)
         self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1775,8 +1775,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.recommendations_model.get_iter(path)
-        thing = self.recommendations_model.get_value(iter, 0)
+        iterator = self.recommendations_model.get_iter(path)
+        thing = self.recommendations_model.get_value(iterator, 0)
         items = self.r_popup_menu.get_children()
         self.r_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
@@ -1790,8 +1790,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.unrecommendations_model.get_iter(path)
-        thing = self.unrecommendations_model.get_value(iter, 0)
+        iterator = self.unrecommendations_model.get_iter(path)
+        thing = self.unrecommendations_model.get_value(iterator, 0)
         items = self.ur_popup_menu.get_children()
         self.ur_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
@@ -1806,7 +1806,7 @@ class NicotineFrame:
 
     """ Fonts and Colors """
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
         colour = self.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
@@ -2094,9 +2094,9 @@ class NicotineFrame:
 
         return message
 
-    def EntryCompletionFindMatch(self, completion, entry_text, iter, widget):
+    def EntryCompletionFindMatch(self, completion, entry_text, iterator, widget):
         model = completion.get_model()
-        item_text = model.get_value(iter, 0)
+        item_text = model.get_value(iterator, 0)
         ix = widget.get_position()
         config = self.np.config.sections["words"]
 
@@ -2114,7 +2114,7 @@ class NicotineFrame:
             return True
         return False
 
-    def EntryCompletionFoundMatch(self, completion, model, iter, widget):
+    def EntryCompletionFoundMatch(self, completion, model, iterator, widget):
         current_text = widget.get_text()
         ix = widget.get_position()
         # if more than a word has been typed, we throw away the
@@ -2126,13 +2126,13 @@ class NicotineFrame:
             suffix = " ".join(current_text[ix:].split(" "))
 
             # add the matching word
-            new_text = "%s %s%s" % (prefix, model[iter][0], suffix)
+            new_text = "%s %s%s" % (prefix, model[iterator][0], suffix)
             # set back the whole text
             widget.set_text(new_text)
             # move the cursor at the end
-            widget.set_position(len(prefix) + len(model[iter][0]) + 1)
+            widget.set_position(len(prefix) + len(model[iterator][0]) + 1)
         else:
-            new_text = "%s" % (model[iter][0])
+            new_text = "%s" % (model[iterator][0])
             widget.set_text(new_text)
             widget.set_position(-1)
         # stop the event propagation

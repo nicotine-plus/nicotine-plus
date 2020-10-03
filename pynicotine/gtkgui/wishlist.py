@@ -90,8 +90,8 @@ class WishList:
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
         store = treeview.get_model()
-        iter = store.get_iter(index)
-        old_value = store.get_value(iter, 0)
+        iterator = store.get_iter(index)
+        old_value = store.get_value(iterator, 0)
 
         if value != "" and not value.isspace():
             self.remove_wish(old_value)
@@ -108,12 +108,12 @@ class WishList:
         iters = []
         self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
 
-        for iter in iters:
-            wish = self.store.get_value(iter, 0)
+        for iterator in iters:
+            wish = self.store.get_value(iterator, 0)
             self.remove_wish(wish)
 
-    def _RemoveWish(self, model, path, iter, line):
-        line.append(iter)
+    def _RemoveWish(self, model, path, iterator, line):
+        line.append(iterator)
 
     def OnSelectAllWishes(self, widget):
         self.WishlistView.get_selection().select_all()

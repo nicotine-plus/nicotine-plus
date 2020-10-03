@@ -165,13 +165,13 @@ class Downloads(TransferList):
 
         return win.ret
 
-    def SelectedResultsAllData(self, model, path, iter, data):
-        if iter in self.selected_users:
+    def SelectedResultsAllData(self, model, path, iterator, data):
+        if iterator in self.selected_users:
             return
 
-        user = model.get_value(iter, 0)
-        filename = model.get_value(iter, 2)
-        fullname = model.get_value(iter, 10)
+        user = model.get_value(iterator, 0)
+        filename = model.get_value(iterator, 2)
+        fullname = model.get_value(iterator, 10)
         size = speed = "0"
         length = None
         queue = immediate = num = country = bitratestr = ""
