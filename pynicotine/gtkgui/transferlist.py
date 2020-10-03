@@ -171,6 +171,19 @@ class TransferList:
 
         self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
 
+    def new_transfer_notification(self):
+        current_page = self.frame.MainNotebook.get_current_page()
+        my_page = self.frame.MainNotebook.page_num(self.myvbox)
+
+        if (current_page == my_page):
+            return
+
+        tablabel = self.frame.GetTabLabel(self.frame.MainNotebook.get_tab_label(self.myvbox))
+        if not tablabel:
+            return
+
+        tablabel.set_image(self.frame.images["online"])
+
     def OnBan(self, widget):
         self.select_transfers()
 
@@ -632,6 +645,12 @@ class TransferList:
 
     def OnClearTransfer(self, widget):
         self.OnAbortTransfer(widget, False, True)
+
+    def on_clear_response(self, dialog, response, data=None):
+        if response == gtk.ResponseType.OK:
+            self.ClearTransfers(["Queued"])
+
+        dialog.destroy()
 
     def ClearTransfers(self, status):
 

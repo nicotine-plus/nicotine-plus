@@ -95,7 +95,7 @@ class UPnPPortMapping:
             self.mode = 'Module'
             return (True, None)
 
-    def AddPortMapping(self, frame, np):
+    def AddPortMapping(self, np):
         """Wrapper to redirect the Port Mapping creation to either:
 
         - The MiniUPnPc binary: upnpc.
@@ -104,9 +104,7 @@ class UPnPPortMapping:
         Both method support creating a Port Mapping
         via the UPnP IGDv1 and IGDv2 protocol.
 
-        Need a reference to NicotineFrame to update the interface with the WAN
-        external port chosen and connect to the slsk network.
-        Also need a reference to the np object to extract the internal LAN
+        Need a reference to the np object to extract the internal LAN
         local from the protothread socket.
 
         From the UPnP IGD reference:

@@ -158,7 +158,7 @@ class Notifications:
 
         executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
-    def NewNotificationPopup(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
+    def NewNotification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
 
         if self.notification_provider is None:
             return

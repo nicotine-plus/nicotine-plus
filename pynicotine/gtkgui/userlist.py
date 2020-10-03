@@ -365,7 +365,7 @@ class UserList:
         if notify:
             status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
             self.frame.logMessage(status_text % user)
-            self.frame.Notifications.NewNotificationPopup(status_text % user)
+            self.frame.notifications.NewNotification(status_text % user)
 
         img = self.frame.GetStatusImage(status)
         self.usersmodel.set(

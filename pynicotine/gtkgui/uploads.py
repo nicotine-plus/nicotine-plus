@@ -94,14 +94,11 @@ class Uploads(TransferList):
         self.OnExpandUploads(None)
 
     def OnTryClearQueued(self, widget):
-
-        direction = "up"
         OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
             message=_('Are you sure you wish to clear all queued uploads?'),
-            callback=self.frame.on_clear_response,
-            callback_data=direction
+            callback=self.on_clear_response
         )
 
     def OnOpenDirectory(self, widget):

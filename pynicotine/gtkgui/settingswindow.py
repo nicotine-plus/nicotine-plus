@@ -3103,7 +3103,7 @@ class buildDialog(gtk.Dialog):
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
         self.PluginProperties.hide()
-        self.settings.frame.pluginhandler.plugin_settings(self.settings.frame.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+        self.settings.frame.np.pluginhandler.plugin_settings(self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def Show(self):
         self.PluginProperties.show()
@@ -3133,7 +3133,7 @@ class NotificationsFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        if self.frame.Notifications.notification_provider is not None:
+        if self.frame.notifications.notification_provider is not None:
             self.NotificationPopupSound.set_sensitive(True)
             self.NotificationPopupFile.set_sensitive(True)
             self.NotificationPopupFolder.set_sensitive(True)
@@ -3214,7 +3214,7 @@ class PluginFrame(buildFrame):
 
         self.dialog.addOptions(
             self.selected_plugin,
-            self.frame.pluginhandler.get_plugin_settings(self.selected_plugin)
+            self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
         self.dialog.Show()
@@ -3227,7 +3227,7 @@ class PluginFrame(buildFrame):
             return
 
         self.selected_plugin = model.get_value(iter, 2)
-        info = self.frame.pluginhandler.get_plugin_info(self.selected_plugin)
+        info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
 
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info['Version']})
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
@@ -3244,18 +3244,18 @@ class PluginFrame(buildFrame):
         self.pluginlist.set(iter, pos, not value)
 
         if not value:
-            if not self.frame.pluginhandler.enable_plugin(plugin):
+            if not self.frame.np.pluginhandler.enable_plugin(plugin):
                 log.add(_('Could not enable plugin.'))
                 return
         else:
-            if not self.frame.pluginhandler.disable_plugin(plugin):
+            if not self.frame.np.pluginhandler.disable_plugin(plugin):
                 log.add(_('Could not disable plugin.'))
                 return
 
         self.CheckPropertiesButton(plugin)
 
     def CheckPropertiesButton(self, plugin):
-        settings = self.frame.pluginhandler.get_plugin_settings(plugin)
+        settings = self.frame.np.pluginhandler.get_plugin_settings(plugin)
 
         if settings is not None:
             self.PluginProperties.set_sensitive(True)
@@ -3268,15 +3268,15 @@ class PluginFrame(buildFrame):
         self.OnPluginsEnable(None)
         self.pluginsiters = {}
         self.pluginlist.clear()
-        plugins = self.frame.pluginhandler.list_installed_plugins()
+        plugins = self.frame.np.pluginhandler.list_installed_plugins()
         plugins.sort()
 
         for plugin in plugins:
             try:
-                info = self.frame.pluginhandler.get_plugin_info(plugin)
+                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
             except IOError:
                 continue
-            enabled = (plugin in self.frame.pluginhandler.enabled_plugins)
+            enabled = (plugin in self.frame.np.pluginhandler.enabled_plugins)
             self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
 
         return {}
@@ -3286,8 +3286,8 @@ class PluginFrame(buildFrame):
 
         if not self.PluginsEnable.get_active():
             # Disable all plugins
-            for plugin in self.frame.pluginhandler.enabled_plugins:
-                self.frame.pluginhandler.disable_plugin(plugin)
+            for plugin in self.frame.np.pluginhandler.enabled_plugins:
+                self.frame.np.pluginhandler.disable_plugin(plugin)
 
             # Uncheck all checkboxes in GUI
             for plugin in self.pluginlist:
@@ -3297,7 +3297,7 @@ class PluginFrame(buildFrame):
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
-                "enabled": list(self.frame.pluginhandler.enabled_plugins.keys())
+                "enabled": list(self.frame.np.pluginhandler.enabled_plugins.keys())
             }
         }
 
