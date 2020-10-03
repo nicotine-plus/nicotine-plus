@@ -35,6 +35,7 @@ from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import CollapseTreeview
 from pynicotine.gtkgui.utils import FillFileGroupingCombobox
 from pynicotine.gtkgui.utils import HumanSize
+from pynicotine.gtkgui.utils import HumanSpeed
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
 from pynicotine.utils import executeCommand
@@ -166,8 +167,7 @@ class Downloads(TransferList):
             if transfer.user == user and fullname == transfer.filename:
                 size = HumanSize(transfer.size)
                 try:
-                    speed = str(int(transfer.speed))
-                    speed += _(" KB/s")
+                    speed = HumanSpeed(transfer.speed)
                 except Exception:
                     pass
                 bitratestr = str(transfer.bitrate)

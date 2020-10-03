@@ -55,7 +55,7 @@ class Notifications:
             if room not in self.frame.hilites["rooms"]:
                 self.frame.hilites["rooms"].append(room)
 
-                self.frame.TrayApp.SetImage()
+                self.frame.TrayApp.set_image()
         elif location == "private":
             if user in self.frame.hilites[location]:
                 self.frame.hilites[location].remove(user)
@@ -63,7 +63,7 @@ class Notifications:
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
 
-                self.frame.TrayApp.SetImage()
+                self.frame.TrayApp.set_image()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
             self.frame.MainWindow.set_urgency_hint(True)
@@ -93,7 +93,7 @@ class Notifications:
                 self.frame.hilites["private"].remove(user)
             self.SetTitle(user)
 
-        self.frame.TrayApp.SetImage()
+        self.frame.TrayApp.set_image()
 
     def SetTitle(self, user=None):
 

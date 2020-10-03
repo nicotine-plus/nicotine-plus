@@ -871,7 +871,7 @@ class Transfers:
                 return False
 
         if limit_upload_speed:
-            max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+            max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"] * 1024
 
             if bandwidth_sum >= max_upload_speed:
                 return False
@@ -879,7 +879,7 @@ class Transfers:
             if currently_negotiating:
                 return False
 
-        maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"]
+        maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
         if maxbandwidth:
             if bandwidth_sum >= maxbandwidth:
                 return False
@@ -1232,13 +1232,13 @@ class Transfers:
                         i.currentbytes > i.lastbytes:
 
                     try:
-                        i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
+                        i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime))
                     except ZeroDivisionError:
                         i.speed = 0
                     if i.speed <= 0.0:
                         i.timeleft = "∞"
                     else:
-                        i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed / 1024)
+                        i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed)
 
                 i.lastbytes = i.currentbytes
                 i.lasttime = curtime
@@ -1398,7 +1398,7 @@ class Transfers:
                     i.currentbytes > i.lastbytes:
 
                 try:
-                    i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime) / 1024)
+                    i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime))
                 except ZeroDivisionError:
                     i.speed = lastspeed  # too fast!
 
@@ -1407,7 +1407,7 @@ class Transfers:
                 else:
                     if (i.currentbytes == i.size) and i.speed == 0:
                         i.speed = lastspeed
-                    i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed / 1024)
+                    i.timeleft = self.getTime((i.size - i.currentbytes) / i.speed)
 
                 self.checkUploadQueue()
 
@@ -1429,7 +1429,7 @@ class Transfers:
                 sleep(0.01)
             else:
                 if i.speed is not None:
-                    speedbytes = int(i.speed * 1024)
+                    speedbytes = int(i.speed)
                     self.eventprocessor.speed = speedbytes
                     self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
 

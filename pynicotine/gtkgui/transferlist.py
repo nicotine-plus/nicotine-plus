@@ -350,7 +350,7 @@ class TransferList:
 
         if speed > 0:
             hspeed = HumanSpeed(speed)
-            left = self.frame.np.transfers.getTime((totalsize - position) / speed / 1024)
+            left = self.frame.np.transfers.getTime((totalsize - position) / speed)
 
         if elapsed > 0:
             helapsed = self.frame.np.transfers.getTime(elapsed)
@@ -411,8 +411,7 @@ class TransferList:
         left = transfer.timeleft
 
         if speed > 0:
-            # transfer.speed is in KB
-            speed = float(speed) * 1024
+            speed = float(speed)
             hspeed = HumanSpeed(speed)
 
         if elapsed > 0:
