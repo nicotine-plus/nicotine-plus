@@ -157,7 +157,7 @@ class NetworkEventProcessor:
         else:
             self.queue.put(slskmessages.SetGeoBlock(None))
 
-        self.serverconn = None
+        self.active_server_conn = None
         self.waitport = None
         self.chatrooms = None
         self.privatechat = None
@@ -170,11 +170,9 @@ class NetworkEventProcessor:
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
-        self.servertimeout = -1
+        self.server_timeout_value = -1
 
         self.has_parent = False
-        self.branchlevel = 0
-        self.branchroot = None
 
         self.requestedInfo = {}
         self.requestedFolders = {}
@@ -388,12 +386,12 @@ class NetworkEventProcessor:
 
     def setServerTimer(self):
 
-        if self.servertimeout == -1:
-            self.servertimeout = 15
-        elif 0 < self.servertimeout < 600:
-            self.servertimeout = self.servertimeout * 2
+        if self.server_timeout_value == -1:
+            self.server_timeout_value = 15
+        elif 0 < self.server_timeout_value < 600:
+            self.server_timeout_value = self.server_timeout_value * 2
 
-        self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
+        self.servertimer = threading.Timer(self.server_timeout_value, self.ServerTimeout)
         self.servertimer.setDaemon(True)
         self.servertimer.start()
 
@@ -454,8 +452,8 @@ class NetworkEventProcessor:
 
             self.setServerTimer()
 
-            if self.serverconn is not None:
-                self.serverconn = None
+            if self.active_server_conn is not None:
+                self.active_server_conn = None
 
             self.ui_callback.ConnectError(msg)
 
@@ -522,8 +520,8 @@ class NetworkEventProcessor:
             }
         )
 
-        self.serverconn = msg.conn
-        self.servertimeout = -1
+        self.active_server_conn = msg.conn
+        self.server_timeout_value = -1
         self.users = {}
         self.queue.put(
             slskmessages.Login(
@@ -562,7 +560,7 @@ class NetworkEventProcessor:
 
     def ClosedConnection(self, conn, addr, error=None):
 
-        if conn == self.serverconn:
+        if conn == self.active_server_conn:
 
             self.setStatus(
                 _("Disconnected from server %(host)s:%(port)s"), {
@@ -580,7 +578,7 @@ class NetworkEventProcessor:
             if self.respondDistributedTimer is not None:
                 self.respondDistributedTimer.cancel()
 
-            self.serverconn = None
+            self.active_server_conn = None
             self.watchedusers = []
 
             if self.transfers is not None:

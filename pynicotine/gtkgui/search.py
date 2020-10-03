@@ -1290,10 +1290,10 @@ class Search:
     def OnToggleFilters(self, widget):
 
         if widget.get_active():
-            self.Filters.show()
+            self.FiltersContainer.show()
             self.OnRefilter(None)
         else:
-            self.Filters.hide()
+            self.FiltersContainer.hide()
             self.ResultsList.set_model(None)
             self.set_filters(0, None, None, None, None, None, "")
             self.ResultsList.set_model(self.resultsmodel)

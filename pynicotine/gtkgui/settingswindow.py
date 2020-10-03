@@ -1349,8 +1349,8 @@ class BanFrame(buildFrame):
 
         self.options = {
             "server": {
-                "banlist": self.Banned,
-                "ipblocklist": self.Blocked
+                "banlist": self.BannedList,
+                "ipblocklist": self.BlockedList
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan,
@@ -1358,39 +1358,39 @@ class BanFrame(buildFrame):
             }
         }
 
-        self.banned = []
-        self.banlist = gtk.ListStore(gobject.TYPE_STRING)
+        self.banlist = []
+        self.banlist_model = gtk.ListStore(gobject.TYPE_STRING)
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
-        self.Banned.append_column(column)
-        self.Banned.set_model(self.banlist)
-        self.Banned.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BannedList.append_column(column)
+        self.BannedList.set_model(self.banlist_model)
+        self.BannedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        self.blocked = {}
-        self.blockedlist = gtk.ListStore(str, str)
+        self.blocked_list = {}
+        self.blocked_list_model = gtk.ListStore(str, str)
         cols = InitialiseColumns(
-            self.Blocked,
+            self.BlockedList,
             [_("Addresses"), -1, "text", self.frame.CellDataFunc],
             [_("Users"), -1, "text", self.frame.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
 
-        self.Blocked.set_model(self.blockedlist)
-        self.Blocked.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BlockedList.set_model(self.blocked_list_model)
+        self.BlockedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
         transfers = config["transfers"]
-        self.banlist.clear()
-        self.blockedlist.clear()
+        self.banlist_model.clear()
+        self.blocked_list_model.clear()
 
-        self.banned = server["banlist"][:]
+        self.banlist = server["banlist"][:]
         self.p.SetWidgetsData(config, self.options)
 
         if server["ipblocklist"] is not None:
-            self.blocked = server["ipblocklist"].copy()
+            self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
-                self.blockedlist.append([blocked, user])
+                self.blocked_list_model.append([blocked, user])
 
         if transfers["usecustomban"] is not None:
             self.UseCustomBan.set_active(transfers["usecustomban"])
@@ -1403,8 +1403,8 @@ class BanFrame(buildFrame):
     def GetSettings(self):
         return {
             "server": {
-                "banlist": self.banned[:],
-                "ipblocklist": self.blocked.copy()
+                "banlist": self.banlist[:],
+                "ipblocklist": self.blocked_list.copy()
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan.get_active(),
@@ -1420,24 +1420,24 @@ class BanFrame(buildFrame):
             _("User:")
         )
 
-        if user and user not in self.banned:
-            self.banned.append(user)
-            self.banlist.append([user])
+        if user and user not in self.banlist:
+            self.banlist.append(user)
+            self.banlist_model.append([user])
 
     def _AppendItem(self, model, path, iter, line):
         line.append(iter)
 
     def OnRemoveBanned(self, widget):
         iters = []
-        self.Banned.get_selection().selected_foreach(self._AppendItem, iters)
+        self.BannedList.get_selection().selected_foreach(self._AppendItem, iters)
         for iter in iters:
-            user = self.banlist.get_value(iter, 0)
-            self.banned.remove(user)
-            self.banlist.remove(iter)
+            user = self.banlist_model.get_value(iter, 0)
+            self.banlist.remove(user)
+            self.banlist_model.remove(iter)
 
     def OnClearBanned(self, widget):
-        self.banned = []
-        self.banlist.clear()
+        self.banlist = []
+        self.banlist_model.clear()
 
     def OnUseCustomBanToggled(self, widget):
         self.CustomBan.set_sensitive(widget.get_active())
@@ -1466,21 +1466,21 @@ class BanFrame(buildFrame):
             except Exception:
                 return
 
-        if ip not in self.blocked:
-            self.blocked[ip] = ""
-            self.blockedlist.append([ip, ""])
+        if ip not in self.blocked_list:
+            self.blocked_list[ip] = ""
+            self.blocked_list_model.append([ip, ""])
 
     def OnRemoveBlocked(self, widget):
         iters = []
-        self.Blocked.get_selection().selected_foreach(self._AppendItem, iters)
+        self.BlockedList.get_selection().selected_foreach(self._AppendItem, iters)
         for iter in iters:
-            ip = self.blockedlist.get_value(iter, 0)
-            del self.blocked[ip]
-            self.blockedlist.remove(iter)
+            ip = self.blocked_list_model.get_value(iter, 0)
+            del self.blocked_list[ip]
+            self.blocked_list_model.remove(iter)
 
     def OnClearBlocked(self, widget):
-        self.blocked = {}
-        self.blockedlist.clear()
+        self.blocked_list = {}
+        self.blocked_list_model.clear()
 
 
 class TTSFrame(buildFrame):
@@ -2630,7 +2630,7 @@ class CensorFrame(buildFrame):
             }
         }
 
-        self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
+        self.censor_list_model = gtk.ListStore(gobject.TYPE_STRING)
 
         cols = InitialiseColumns(
             self.CensorList,
@@ -2639,7 +2639,7 @@ class CensorFrame(buildFrame):
 
         cols[0].set_sort_column_id(0)
 
-        self.CensorList.set_model(self.censorlist)
+        self.CensorList.set_model(self.censor_list_model)
 
         # Combobox for the replacement letter
         self.CensorReplaceCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2668,7 +2668,7 @@ class CensorFrame(buildFrame):
 
     def SetSettings(self, config):
 
-        self.censorlist.clear()
+        self.censor_list_model.clear()
 
         self.p.SetWidgetsData(config, self.options)
 
@@ -2689,11 +2689,11 @@ class CensorFrame(buildFrame):
         censored = []
 
         try:
-            iter = self.censorlist.get_iter_first()
+            iter = self.censor_list_model.get_iter_first()
             while iter is not None:
-                word = self.censorlist.get_value(iter, 0)
+                word = self.censor_list_model.get_value(iter, 0)
                 censored.append(word)
-                iter = self.censorlist.iter_next(iter)
+                iter = self.censor_list_model.iter_next(iter)
         except Exception:
             pass
 
@@ -2707,7 +2707,7 @@ class CensorFrame(buildFrame):
 
     def OnAdd(self, widget):
 
-        iter = self.censorlist.append([""])
+        iter = self.censor_list_model.append([""])
 
         selection = self.CensorList.get_selection()
         selection.unselect_all()
@@ -2715,16 +2715,16 @@ class CensorFrame(buildFrame):
 
         col = self.CensorList.get_column(0)
 
-        self.CensorList.set_cursor(self.censorlist.get_path(iter), col, True)
+        self.CensorList.set_cursor(self.censor_list_model.get_path(iter), col, True)
 
     def OnRemove(self, widget):
         selection = self.CensorList.get_selection()
         iter = selection.get_selected()[1]
         if iter is not None:
-            self.censorlist.remove(iter)
+            self.censor_list_model.remove(iter)
 
     def OnClear(self, widget):
-        self.censorlist.clear()
+        self.censor_list_model.clear()
 
 
 class AutoReplaceFrame(buildFrame):
@@ -3180,7 +3180,7 @@ class PluginFrame(buildFrame):
             }
         }
 
-        self.pluginlist = gtk.ListStore(
+        self.plugins_model = gtk.ListStore(
             gobject.TYPE_STRING,
             gobject.TYPE_BOOLEAN,
             gobject.TYPE_STRING
@@ -3203,7 +3203,7 @@ class PluginFrame(buildFrame):
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
-        self.PluginTreeView.set_model(self.pluginlist)
+        self.PluginTreeView.set_model(self.plugins_model)
         self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
 
         self.dialog = buildDialog(self)
@@ -3238,10 +3238,10 @@ class PluginFrame(buildFrame):
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
-        iter = self.pluginlist.get_iter(index)
-        plugin = self.pluginlist.get_value(iter, 2)
-        value = self.pluginlist.get_value(iter, 1)
-        self.pluginlist.set(iter, pos, not value)
+        iter = self.plugins_model.get_iter(index)
+        plugin = self.plugins_model.get_value(iter, 2)
+        value = self.plugins_model.get_value(iter, 1)
+        self.plugins_model.set(iter, pos, not value)
 
         if not value:
             if not self.frame.np.pluginhandler.enable_plugin(plugin):
@@ -3267,7 +3267,7 @@ class PluginFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
         self.OnPluginsEnable(None)
         self.pluginsiters = {}
-        self.pluginlist.clear()
+        self.plugins_model.clear()
         plugins = self.frame.np.pluginhandler.list_installed_plugins()
         plugins.sort()
 
@@ -3277,7 +3277,7 @@ class PluginFrame(buildFrame):
             except IOError:
                 continue
             enabled = (plugin in self.frame.np.pluginhandler.enabled_plugins)
-            self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
+            self.pluginsiters[filter] = self.plugins_model.append([info['Name'], enabled, plugin])
 
         return {}
 
@@ -3290,8 +3290,8 @@ class PluginFrame(buildFrame):
                 self.frame.np.pluginhandler.disable_plugin(plugin)
 
             # Uncheck all checkboxes in GUI
-            for plugin in self.pluginlist:
-                self.pluginlist.set(plugin.iter, 1, False)
+            for plugin in self.plugins_model:
+                self.plugins_model.set(plugin.iter, 1, False)
 
     def GetSettings(self):
         return {
