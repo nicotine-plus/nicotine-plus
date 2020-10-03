@@ -240,7 +240,7 @@ class RoomsControl:
                 GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
-                self.frame.Notifications.Clear("rooms", None, name)
+                self.frame.notifications.Clear("rooms", None, name)
 
     def ClearNotifications(self):
 
@@ -252,7 +252,7 @@ class RoomsControl:
         for name, room in self.joinedrooms.items():
             if room.Main == page:
                 # Remove hilite
-                self.frame.Notifications.Clear("rooms", None, name)
+                self.frame.notifications.Clear("rooms", None, name)
 
     def Focused(self, page, focused):
 
@@ -261,7 +261,7 @@ class RoomsControl:
 
         for name, room in self.users.items():
             if room.Main == page:
-                self.frame.Notifications.Clear("rooms", name)
+                self.frame.notifications.Clear("rooms", name)
 
     def OnListClicked(self, widget, event):
 
@@ -1180,7 +1180,7 @@ class ChatRoom:
                 self.frame.ChatRequestIcon(1, self.Main)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                    self.frame.Notifications.NewNotificationPopup(
+                    self.frame.notifications.NewNotification(
                         text,
                         title=_("%s mentioned you in the %s room") % (user, self.room),
                         soundnamenotify="bell-window-system",
@@ -1198,10 +1198,10 @@ class ChatRoom:
                 if tag == self.tag_hilite:
 
                     if self.room not in self.frame.hilites["rooms"]:
-                        self.frame.Notifications.Add("rooms", user, self.room, tab=True)
+                        self.frame.notifications.Add("rooms", user, self.room, tab=True)
 
                 elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
-                    self.frame.Notifications.NewNotificationPopup(
+                    self.frame.notifications.NewNotification(
                         text,
                         title=_("Message by %s in the %s room") % (user, self.room)
                     )
@@ -1242,11 +1242,11 @@ class ChatRoom:
 
             if self.Speech.get_active():
 
-                self.frame.Notifications.new_tts(
+                self.frame.notifications.new_tts(
                     self.frame.np.config.sections["ui"]["speechrooms"] % {
                         "room": self.room,
-                        "user": self.frame.Notifications.tts_clean(user),
-                        "message": self.frame.Notifications.tts_clean(speech)
+                        "user": self.frame.notifications.tts_clean(user),
+                        "message": self.frame.notifications.tts_clean(speech)
                     }
                 )
         else:
@@ -1437,9 +1437,9 @@ class ChatRoom:
 
         elif cmd in ('/toggle',):
             if byteargs:
-                self.frame.pluginhandler.toggle_plugin(byteargs)
+                self.frame.np.pluginhandler.toggle_plugin(byteargs)
 
-        elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
+        elif cmd[:1] == "/" and self.frame.np.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
             pass
 
         elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
@@ -1451,11 +1451,11 @@ class ChatRoom:
             if text[:2] == "//":
                 text = text[1:]
 
-            tuple = self.frame.pluginhandler.OutgoingPublicChatEvent(self.room, text)
+            tuple = self.frame.np.pluginhandler.OutgoingPublicChatEvent(self.room, text)
             if tuple is not None:
                 (r, text) = tuple
                 self.Say(self.frame.AutoReplace(text))
-                self.frame.pluginhandler.OutgoingPublicChatNotification(self.room, text)
+                self.frame.np.pluginhandler.OutgoingPublicChatNotification(self.room, text)
 
         self.ChatEntry.set_text("")
 
@@ -1783,7 +1783,7 @@ class ChatRoom:
             else:
                 print("Unknown meta chatroom closed.")
 
-        self.frame.pluginhandler.LeaveChatroomNotification(self.room)
+        self.frame.np.pluginhandler.LeaveChatroomNotification(self.room)
 
     def saveColumns(self):
 

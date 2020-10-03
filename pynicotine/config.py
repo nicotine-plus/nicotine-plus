@@ -69,7 +69,6 @@ class Config:
 
     def __init__(self, filename, data_dir):
 
-        self.frame = None
         self.filename = filename
         self.data_dir = data_dir
         self.parser = configparser.RawConfigParser()
@@ -456,7 +455,7 @@ class Config:
                         if self.sections[i][j] is None and self.defaults[i][j] is not None:
 
                             self.sections[i][j] = self.defaults[i][j]
-                            self.frame.logMessage(
+                            log.add(
                                 _("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s") % {
                                     'section': i,
                                     'option': j,
@@ -469,22 +468,13 @@ class Config:
                         else:
 
                             if errorlevel < 2:
-                                self.frame.logMessage(
-                                    _("You need to configure your settings (Server, Username, Password, Download Directory) before connecting...")
-                                )
+                                log.add(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
                                 errorlevel = 2
 
-                            if self.frame.settingswindow is not None:
-                                self.frame.settingswindow.InvalidSettings(i, j)
-
         except Exception as error:
-            message = _("Config error: %s") % error
-            self.frame.logMessage(message)
+            log.add(_("Config error: %s") % error)
             if errorlevel < 3:
                 errorlevel = 3
-
-        if errorlevel > 1 and self.frame.settingswindow is not None:
-            self.frame.settingswindow.SetSettings(self.sections)
 
         return errorlevel
 

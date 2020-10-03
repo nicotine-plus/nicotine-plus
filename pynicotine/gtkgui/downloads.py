@@ -99,15 +99,28 @@ class Downloads(TransferList):
         self.OnExpandDownloads(None)
 
     def OnTryClearQueued(self, widget):
-
-        direction = "down"
         OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
             message=_('Are you sure you wish to clear all queued downloads?'),
-            callback=self.frame.on_clear_response,
-            callback_data=direction
+            callback=self.on_clear_response
         )
+
+    def download_large_folder(self, username, folder, numfiles, conn, file_list):
+        OptionDialog(
+            parent=self.MainWindow,
+            title=_("Download %(num)i files?") % {'num': numfiles},
+            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
+            callback=self.folder_download_response,
+            callback_data=(conn, file_list)
+        )
+
+    def folder_download_response(self, dialog, response, data):
+
+        if response == gtk.ResponseType.OK:
+            self.np.transfers.FolderContentsResponse(data[0], data[1])
+
+        dialog.destroy()
 
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():

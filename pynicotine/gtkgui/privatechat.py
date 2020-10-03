@@ -98,7 +98,7 @@ class PrivateChats(IconNotebook):
                 GLib.idle_add(tab.ChatLine.grab_focus)
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 if user in self.frame.hilites["private"]:
-                    self.frame.Notifications.Clear("private", tab.user)
+                    self.frame.notifications.Clear("private", tab.user)
 
     def ClearNotifications(self):
 
@@ -111,7 +111,7 @@ class PrivateChats(IconNotebook):
             if tab.Main == page:
                 # Remove hilite
                 if user in self.frame.hilites["private"]:
-                    self.frame.Notifications.Clear("private", tab.user)
+                    self.frame.notifications.Clear("private", tab.user)
 
     def Focused(self, page, focused):
 
@@ -121,7 +121,7 @@ class PrivateChats(IconNotebook):
         for user, tab in list(self.users.items()):
             if tab.Main == page:
                 if user in self.frame.hilites["private"]:
-                    self.frame.Notifications.Clear("private", tab.user)
+                    self.frame.notifications.Clear("private", tab.user)
 
     def GetUserStatus(self, msg):
 
@@ -225,7 +225,7 @@ class PrivateChats(IconNotebook):
             self.frame.np.PrivateMessageQueueAdd(msg, text)
             return
 
-        user_text = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, text)
+        user_text = self.frame.np.pluginhandler.IncomingPrivateChatEvent(msg.user, text)
         if user_text is None:
             return
 
@@ -243,10 +243,10 @@ class PrivateChats(IconNotebook):
         if self.get_current_page() != self.page_num(chat.Main) or \
            self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) or \
            not self.frame.MainWindow.get_property("visible"):
-            self.frame.Notifications.Add("private", msg.user)
+            self.frame.notifications.Add("private", msg.user)
 
             if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
-                self.frame.Notifications.NewNotificationPopup(
+                self.frame.notifications.NewNotification(
                     text,
                     title=_("Private message from %s") % msg.user
                 )
@@ -262,7 +262,7 @@ class PrivateChats(IconNotebook):
         if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
             self.SendMessage(msg.user, "Nicotine+ %s" % version)
 
-        self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
+        self.frame.np.pluginhandler.IncomingPrivateChatNotification(msg.user, text)
 
     def UpdateColours(self):
         for chat in list(self.users.values()):
@@ -271,7 +271,7 @@ class PrivateChats(IconNotebook):
     def RemoveTab(self, tab):
 
         if tab.user in self.frame.hilites["private"]:
-            self.frame.Notifications.Clear("private", tab.user)
+            self.frame.notifications.Clear("private", tab.user)
 
         del self.users[tab.user]
 
@@ -562,16 +562,16 @@ class PrivateChat:
             self.SendMessage("[Auto-Message] %s" % autoreply)
             self.autoreplied = 1
 
-        self.frame.Notifications.new_tts(
+        self.frame.notifications.new_tts(
             self.frame.np.config.sections["ui"]["speechprivate"] % {
-                "user": self.frame.Notifications.tts_clean(self.user),
-                "message": self.frame.Notifications.tts_clean(speech)
+                "user": self.frame.notifications.tts_clean(self.user),
+                "message": self.frame.notifications.tts_clean(speech)
             }
         )
 
     def SendMessage(self, text, bytestring=False):
 
-        user_text = self.frame.pluginhandler.OutgoingPrivateChatEvent(self.user, text)
+        user_text = self.frame.np.pluginhandler.OutgoingPrivateChatEvent(self.user, text)
         if user_text is None:
             return
 
@@ -765,7 +765,7 @@ class PrivateChat:
         elif cmd == "/rescan":
             self.frame.OnRescan()
 
-        elif cmd[:1] == "/" and self.frame.pluginhandler.TriggerPrivateCommandEvent(self.user, cmd[1:], args):
+        elif cmd[:1] == "/" and self.frame.np.pluginhandler.TriggerPrivateCommandEvent(self.user, cmd[1:], args):
             pass
 
         elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":

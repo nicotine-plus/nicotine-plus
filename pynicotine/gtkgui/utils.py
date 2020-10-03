@@ -866,7 +866,7 @@ class IconNotebook:
             self.Notebook.set_show_tabs(False)
 
     def OnFocused(self, item):
-        self.frame.Notifications.ClearPage(self, item)
+        self.frame.notifications.ClearPage(self, item)
 
     def on_tab_click(self, widget, event, child):
         pass

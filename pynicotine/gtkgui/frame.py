@@ -36,13 +36,9 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 import _thread
-from pynicotine import pluginsystem
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.gtkgui import imagedata
-from pynicotine.gtkgui import notifications
-from pynicotine.gtkgui import nowplaying
-from pynicotine.gtkgui import tray
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.checklatest import checklatest
@@ -51,10 +47,13 @@ from pynicotine.gtkgui.dirchooser import SaveFile
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.dialogs import OptionDialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
+from pynicotine.gtkgui.notifications import Notifications
+from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import SettingsWindow
+from pynicotine.gtkgui.tray import TrayApp
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
 from pynicotine.gtkgui.userinfo import UserInfo
@@ -83,7 +82,6 @@ class NicotineFrame:
         self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
-        self.manualdisconnect = 0
         self.away = 0
         self.current_tab = 0
         self.rescanning = False
@@ -118,13 +116,14 @@ class NicotineFrame:
 
         self.np = NetworkEventProcessor(
             self,
-            self.networkcallback,
+            self.network_callback,
             self.logMessage,
             self.SetStatusText,
             self.bindip,
             self.port,
             data_dir,
-            config
+            config,
+            plugins
         )
 
         self.LoadIcons()
@@ -393,8 +392,8 @@ class NicotineFrame:
 
         """ Tray/notifications """
 
-        self.TrayApp = tray.TrayApp(self)
-        self.Notifications = notifications.Notifications(self)
+        self.TrayApp = TrayApp(self)
+        self.notifications = Notifications(self)
 
         self.hilites = {
             "rooms": [],
@@ -419,7 +418,7 @@ class NicotineFrame:
             # Test if we are able to do a port mapping
             if self.upnppossible:
                 # Do the port mapping
-                _thread.start_new_thread(upnp.AddPortMapping, (self, self.np))
+                _thread.start_new_thread(upnp.AddPortMapping, (self.np,))
             else:
                 # Display errors
                 if errors is not None:
@@ -522,10 +521,6 @@ class NicotineFrame:
         self.page_removed_signal = self.MainNotebook.connect("page-removed", self.OnPageRemoved)
         self.MainNotebook.connect("page-reordered", self.OnPageReordered)
         self.MainNotebook.connect("page-added", self.OnPageAdded)
-
-        """ Plugins """
-
-        self.pluginhandler = pluginsystem.PluginHandler(self, plugins)
 
     """ Window """
 
@@ -661,7 +656,7 @@ class NicotineFrame:
             else:
                 self.logMessage("No handler for class %s %s" % (i.__class__, dir(i)))
 
-    def networkcallback(self, msgs):
+    def network_callback(self, msgs):
         if len(msgs) > 0:
             GLib.idle_add(self.OnNetworkEvent, msgs)
 
@@ -758,7 +753,7 @@ class NicotineFrame:
 
     def OnDisconnect(self, event):
         self.disconnect1.set_sensitive(0)
-        self.manualdisconnect = 1
+        self.np.manualdisconnect = True
         self.np.queue.put(slskmessages.ConnClose(self.np.serverconn))
 
     def OnAway(self, widget):
@@ -819,7 +814,7 @@ class NicotineFrame:
 
     def OnNowPlayingConfigure(self, widget):
         if self.now is None:
-            self.now = nowplaying.NowPlaying(self)
+            self.now = NowPlaying(self)
 
         self.now.NowPlaying.show()
         self.now.NowPlaying.deiconify()
@@ -1922,37 +1917,6 @@ class NicotineFrame:
     """ Dialogs
     TODO: move to dialogs.py what's possible """
 
-    def download_large_folder(self, username, folder, numfiles, conn, file_list):
-        OptionDialog(
-            parent=self.MainWindow,
-            title=_("Download %(num)i files?") % {'num': numfiles},
-            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
-            callback=self.folder_download_response,
-            callback_data=(conn, file_list)
-        )
-
-    def folder_download_response(self, dialog, response, data):
-
-        if response == gtk.ResponseType.OK:
-            self.np.transfers.FolderContentsResponse(data[0], data[1])
-
-        dialog.destroy()
-
-    def on_clear_response(self, dialog, response, direction):
-
-        if response == gtk.ResponseType.OK:
-            if direction == "down":
-                self.downloads.ClearTransfers(["Queued"])
-            elif direction == "up":
-                self.uploads.ClearTransfers(["Queued"])
-
-        dialog.destroy()
-
-    def onOpenRoomList(self, dialog, response):
-        dialog.destroy()
-        if response == gtk.ResponseType.OK:
-            self.show_room_list1.set_active(True)
-
     def PopupMessage(self, popup):
         dialog = gtk.MessageDialog(type=gtk.MessageType.WARNING, buttons=gtk.ButtonsType.OK, message_format=popup.title)
         dialog.format_secondary_text(popup.message)
@@ -2703,21 +2667,21 @@ class NicotineFrame:
 
     def ShowScanProgress(self, sharestype):
         if sharestype == "normal":
-            GLib.idle_add(self.np.frame.SharesProgress.show)
+            GLib.idle_add(self.SharesProgress.show)
         else:
-            GLib.idle_add(self.np.frame.BuddySharesProgress.show)
+            GLib.idle_add(self.BuddySharesProgress.show)
 
     def SetScanProgress(self, sharestype, value):
         if sharestype == "normal":
-            GLib.idle_add(self.np.frame.SharesProgress.set_fraction, value)
+            GLib.idle_add(self.SharesProgress.set_fraction, value)
         else:
-            GLib.idle_add(self.np.frame.BuddySharesProgress.set_fraction, value)
+            GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
     def HideScanProgress(self, sharestype):
         if sharestype == "normal":
-            GLib.idle_add(self.np.frame.SharesProgress.hide)
+            GLib.idle_add(self.SharesProgress.hide)
         else:
-            GLib.idle_add(self.np.frame.BuddySharesProgress.hide)
+            GLib.idle_add(self.BuddySharesProgress.hide)
 
     def UpdateBandwidth(self):
 
@@ -2968,7 +2932,7 @@ class NicotineFrame:
         self.np.protothread.abort()
         self.np.StopTimers()
 
-        if not self.manualdisconnect:
+        if not self.np.manualdisconnect:
             self.OnDisconnect(None)
 
         self.SaveColumns()

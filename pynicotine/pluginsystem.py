@@ -27,8 +27,8 @@ from ast import literal_eval
 from gettext import gettext as _
 from time import time
 
+from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.pynicotine import slskmessages
 
 
 returncode = {
@@ -40,12 +40,13 @@ returncode = {
 
 class PluginHandler(object):
 
-    def __init__(self, frame, plugindir):
+    def __init__(self, frame, plugindir, config):
         self.frame = frame
+        self.config = config
 
         log.add(_("Loading plugin handler"))
 
-        self.myUsername = self.frame.np.config.sections["server"]["login"]
+        self.myUsername = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
         self.loaded_plugins = {}
@@ -185,15 +186,15 @@ class PluginHandler(object):
         return infodict
 
     def save_enabled(self):
-        self.frame.np.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
+        self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
 
     def load_enabled(self):
-        enable = self.frame.np.config.sections["plugins"]["enable"]
+        enable = self.config.sections["plugins"]["enable"]
 
         if not enable:
             return
 
-        to_enable = self.frame.np.config.sections["plugins"]["enabled"]
+        to_enable = self.config.sections["plugins"]["enabled"]
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
@@ -203,14 +204,14 @@ class PluginHandler(object):
             if not hasattr(plugin, "settings"):
                 return
 
-            if plugin.__id__ not in self.frame.np.config.sections["plugins"]:
-                self.frame.np.config.sections["plugins"][plugin.__id__] = plugin.settings
+            if plugin.__id__ not in self.config.sections["plugins"]:
+                self.config.sections["plugins"][plugin.__id__] = plugin.settings
 
             for i in plugin.settings:
-                if i not in self.frame.np.config.sections["plugins"][plugin.__id__]:
-                    self.frame.np.config.sections["plugins"][plugin.__id__][i] = plugin.settings[i]
+                if i not in self.config.sections["plugins"][plugin.__id__]:
+                    self.config.sections["plugins"][plugin.__id__][i] = plugin.settings[i]
 
-            customsettings = self.frame.np.config.sections["plugins"][plugin.__id__]
+            customsettings = self.config.sections["plugins"][plugin.__id__]
 
             for key in customsettings:
                 if key in plugin.settings:
@@ -437,7 +438,7 @@ class ResponseThrottle(object):
         except Exception:
             port = True
 
-        if nick in self.frame.np.config.sections["server"]["ignorelist"]:
+        if nick in self.config.sections["server"]["ignorelist"]:
             willing_to_respond, reason = False, "The nick is ignored"
 
         elif self.frame.UserIpIsIgnored(nick):

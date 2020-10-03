@@ -141,19 +141,19 @@ class Searches(IconNotebook):
         feedback = None
 
         if mode == 0:
-            feedback = self.frame.pluginhandler.OutgoingGlobalSearchEvent(text)
+            feedback = self.frame.np.pluginhandler.OutgoingGlobalSearchEvent(text)
             if feedback is not None:
                 text = feedback[0]
         elif mode == 1:
-            feedback = self.frame.pluginhandler.OutgoingRoomSearchEvent(room, text)
+            feedback = self.frame.np.pluginhandler.OutgoingRoomSearchEvent(room, text)
             if feedback is not None:
                 (room, text) = feedback
         elif mode == 2:
-            feedback = self.frame.pluginhandler.OutgoingBuddySearchEvent(text)
+            feedback = self.frame.np.pluginhandler.OutgoingBuddySearchEvent(text)
             if feedback is not None:
                 text = feedback[0]
         elif mode == 3:
-            feedback = self.frame.pluginhandler.OutgoingUserSearchEvent(users)
+            feedback = self.frame.np.pluginhandler.OutgoingUserSearchEvent(users)
             if feedback is not None:
                 users = feedback[0]
         else:

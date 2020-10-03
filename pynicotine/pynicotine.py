@@ -45,8 +45,8 @@ from pynicotine import transfers
 from pynicotine.config import Config
 from pynicotine.geoip import IP2Location
 from pynicotine.logfacility import log
+from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
-from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import newId
 from pynicotine.utils import CleanFile
 from pynicotine.utils import unescape
@@ -97,15 +97,15 @@ class RespondToDistributedSearchesTimeout(Timeout):
 
 
 class NetworkEventProcessor:
-    """ This class contains handlers for various messages from the networking
-    thread"""
+    """ This class contains handlers for various messages from the networking thread """
 
-    def __init__(self, frame, callback, writelog, setstatus, bindip, port, data_dir, config):
+    def __init__(self, ui_callback, network_callback, writelog, setstatus, bindip, port, data_dir, config, plugins):
 
-        self.frame = frame
-        self.callback = callback
+        self.ui_callback = ui_callback
+        self.network_callback = network_callback
         self.logMessage = writelog
         self.setStatus = setstatus
+        self.manualdisconnect = False
 
         try:
             self.config = Config(config, data_dir)
@@ -115,7 +115,7 @@ class NetworkEventProcessor:
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
             self.config = Config(config, data_dir)
-            self.callback([PopupMessage(short, long)])
+            self.network_callback([slskmessages.PopupMessage(short, long)])
 
         # These strings are accessed frequently. We store them to prevent requesting the translation every time.
         self.conn_close_template = _("Connection closed by peer: %s")
@@ -123,7 +123,6 @@ class NetworkEventProcessor:
 
         self.bindip = bindip
         self.port = port
-        self.config.frame = frame
         self.config.readConfig()
         self.peerconns = []
         self.watchedusers = []
@@ -134,7 +133,8 @@ class NetworkEventProcessor:
         self.users = {}
         self.user_addr_requested = set()
         self.queue = queue.Queue(0)
-        self.shares = Shares(self, self.config, self.queue, self.logMessage, self.frame)
+        self.shares = Shares(self, self.config, self.queue, self.logMessage, self.ui_callback)
+        self.pluginhandler = PluginHandler(self.ui_callback, plugins, self.config)
 
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
@@ -143,7 +143,7 @@ class NetworkEventProcessor:
         # Give the logger information about log folder
         self.UpdateDebugLogOptions()
 
-        self.protothread = slskproto.SlskProtoThread(self.frame.networkcallback, self.queue, self.bindip, self.port, self.config, self)
+        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
 
         uselimit = self.config.sections["transfers"]["uselimit"]
         uploadlimit = self.config.sections["transfers"]["uploadlimit"]
@@ -183,7 +183,7 @@ class NetworkEventProcessor:
         self.speed = 0
 
         self.respondDistributed = True
-        responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
+        responddistributedtimeout = RespondToDistributedSearchesTimeout(self.network_callback)
         self.respondDistributedTimer = threading.Timer(60, responddistributedtimeout.timeout)
         self.respondDistributedTimer.setDaemon(True)
         self.respondDistributedTimer.start()
@@ -373,7 +373,7 @@ class NetworkEventProcessor:
 
             if token is not None:
                 timeout = 120.0
-                conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.callback)
+                conntimeout = ConnectToPeerTimeout(self.peerconns[-1], self.network_callback)
                 timer = threading.Timer(timeout, conntimeout.timeout)
                 timer.setDaemon(True)
                 self.peerconns[-1].conntimer = timer
@@ -403,7 +403,7 @@ class NetworkEventProcessor:
 
     def ServerTimeout(self):
         if self.config.needConfig() <= 1:
-            self.callback([slskmessages.ConnectToServer()])
+            self.network_callback([slskmessages.ConnectToServer()])
 
     def StopTimers(self):
 
@@ -421,7 +421,7 @@ class NetworkEventProcessor:
             self.transfers.AbortTransfers()
 
     def ConnectToServer(self, msg):
-        self.frame.OnConnect(None)
+        self.ui_callback.OnConnect(None)
 
     # Notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
@@ -431,7 +431,7 @@ class NetworkEventProcessor:
 
     def PopupMessage(self, msg):
         self.setStatus(_(msg.title))
-        self.frame.PopupMessage(msg)
+        self.ui_callback.PopupMessage(msg)
 
     def DummyMessage(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -440,7 +440,7 @@ class NetworkEventProcessor:
         self.logMessage(msg.msg, msg.debugLevel)
 
     def SetCurrentConnectionCount(self, msg):
-        self.frame.SetSocketStatus(msg.msg)
+        self.ui_callback.SetSocketStatus(msg.msg)
 
     def ConnectError(self, msg):
 
@@ -459,7 +459,7 @@ class NetworkEventProcessor:
             if self.serverconn is not None:
                 self.serverconn = None
 
-            self.frame.ConnectError(msg)
+            self.ui_callback.ConnectError(msg)
 
         elif msg.connobj.__class__ is slskmessages.OutConn:
 
@@ -479,7 +479,7 @@ class NetworkEventProcessor:
                             if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
                                 self.transfers.gotConnectError(j.req, j.direction)
 
-                        conntimeout = ConnectToPeerTimeout(i, self.callback)
+                        conntimeout = ConnectToPeerTimeout(i, self.network_callback)
                         timer = threading.Timer(120.0, conntimeout.timeout)
                         timer.setDaemon(True)
                         timer.start()
@@ -575,12 +575,12 @@ class NetworkEventProcessor:
                     'port': addr[1]
                 }
             )
-            userchoice = bool(self.frame.manualdisconnect)
+            userchoice = self.manualdisconnect
 
-            if not self.frame.manualdisconnect:
+            if not self.manualdisconnect:
                 self.setServerTimer()
             else:
-                self.frame.manualdisconnect = 0
+                self.manualdisconnect = False
 
             if self.respondDistributedTimer is not None:
                 self.respondDistributedTimer.cancel()
@@ -593,8 +593,8 @@ class NetworkEventProcessor:
                 self.transfers.SaveDownloads()
 
             self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
-            self.frame.ConnClose(conn, addr)
-            self.frame.pluginhandler.ServerDisconnectNotification(userchoice)
+            self.ui_callback.ConnClose(conn, addr)
+            self.pluginhandler.ServerDisconnectNotification(userchoice)
 
         else:
             for i in self.peerconns:
@@ -623,20 +623,19 @@ class NetworkEventProcessor:
 
     def Login(self, msg):
 
-        conf = self.config.sections
-
         if msg.success:
 
-            self.transfers = transfers.Transfers(conf["transfers"]["downloads"], self.peerconns, self.queue, self, self.users)
+            self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
+                                                 self.network_callback, self.ui_callback.notifications, self.pluginhandler)
 
             if msg.ip is not None:
                 self.ipaddress = msg.ip
 
-            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.frame.InitInterface(msg)
+            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.ui_callback.InitInterface(msg)
 
-            self.transfers.setTransferPanels(downloads, uploads)
+            self.transfers.setTransferViews(downloads, uploads)
             self.shares.send_num_shared_folders_files()
-            self.queue.put(slskmessages.SetStatus((not self.frame.away) + 1))
+            self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
                 self.queue.put(slskmessages.AddThingILike(thing))
@@ -655,18 +654,14 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.CheckPrivileges())
             self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
         else:
-            self.frame.manualdisconnect = 1
+            self.manualdisconnect = True
             self.setStatus(_("Can not log in, reason: %s") % (msg.reason))
-
-            if self.frame.settingswindow is not None:
-                self.frame.settingswindow.SetSettings(self.config.sections)
-                self.frame.settingswindow.SwitchToPage("Server")
 
     def ChangePassword(self, msg):
         password = msg.password
         self.config.sections["server"]["passw"] = password
         self.config.writeConfiguration()
-        self.callback([PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
+        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
 
     def NotifyPrivileges(self, msg):
 
@@ -719,13 +714,13 @@ class NetworkEventProcessor:
 
         if self.privatechat is not None:
 
-            tuple = self.frame.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
+            tuple = self.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
 
             if tuple is not None:
                 (u, msg.msg) = tuple
                 self.privatechat.ShowMessage(msg, msg.msg, msg.newmessage)
 
-                self.frame.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
+                self.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
 
             self.queue.put(slskmessages.MessageAcked(msg.msgid))
 
@@ -742,7 +737,7 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.PublicRoomMessage(msg, msg.msg)
-            self.frame.pluginhandler.PublicRoomMessageNotification(msg.room, msg.user, msg.msg)
+            self.pluginhandler.PublicRoomMessageNotification(msg.room, msg.user, msg.msg)
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -878,11 +873,11 @@ class NetworkEventProcessor:
     def SayChatRoom(self, msg):
 
         if self.chatrooms is not None:
-            event = self.frame.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
+            event = self.pluginhandler.IncomingPublicChatEvent(msg.room, msg.user, msg.msg)
             if event is not None:
                 (r, n, msg.msg) = event
                 self.chatrooms.roomsctrl.SayChatRoom(msg, msg.msg)
-                self.frame.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, msg.msg)
+                self.pluginhandler.IncomingPublicChatNotification(msg.room, msg.user, msg.msg)
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -915,7 +910,7 @@ class NetworkEventProcessor:
             self.logMessage(_("%i privileged users") % (len(msg.users)))
             self.queue.put(slskmessages.HaveNoParent(1))
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
-            self.frame.pluginhandler.ServerConnectNotification()
+            self.pluginhandler.ServerConnectNotification()
         else:
             self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
@@ -995,7 +990,7 @@ class NetworkEventProcessor:
                 else:
                     self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
-        self.frame.GetUserStatus(msg)
+        self.ui_callback.GetUserStatus(msg)
 
         if self.userlist is not None:
             self.userlist.GetUserStatus(msg)
@@ -1029,7 +1024,7 @@ class NetworkEventProcessor:
         if msg.user == self.config.sections["server"]["login"]:
             self.speed = msg.avgspeed
 
-        self.frame.GetUserStats(msg)
+        self.ui_callback.GetUserStats(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.GetUserStats(msg)
@@ -1049,7 +1044,7 @@ class NetworkEventProcessor:
             'dirs': msg.dirs,
         }
 
-        self.frame.pluginhandler.UserStatsNotification(msg.user, stats)
+        self.pluginhandler.UserStatsNotification(msg.user, stats)
 
     def UserLeftRoom(self, msg):
         if self.chatrooms is not None:
@@ -1114,9 +1109,9 @@ class NetworkEventProcessor:
             if msg.user in self.ipblock_requested:
 
                 if self.ipblock_requested[msg.user]:
-                    self.frame.OnUnBlockUser(msg.user)
+                    self.ui_callback.OnUnBlockUser(msg.user)
                 else:
-                    self.frame.OnBlockUser(msg.user)
+                    self.ui_callback.OnBlockUser(msg.user)
 
                 del self.ipblock_requested[msg.user]
                 return
@@ -1124,9 +1119,9 @@ class NetworkEventProcessor:
             if msg.user in self.ipignore_requested:
 
                 if self.ipignore_requested[msg.user]:
-                    self.frame.OnUnIgnoreUser(msg.user)
+                    self.ui_callback.OnUnIgnoreUser(msg.user)
                 else:
-                    self.frame.OnIgnoreUser(msg.user)
+                    self.ui_callback.OnIgnoreUser(msg.user)
 
                 del self.ipignore_requested[msg.user]
                 return
@@ -1136,14 +1131,14 @@ class NetworkEventProcessor:
             if cc == "-":
                 cc = ""
 
-            self.frame.HasUserFlag(msg.user, "flag_" + cc)
+            self.ui_callback.HasUserFlag(msg.user, "flag_" + cc)
 
             # From this point on all paths should call
-            # self.frame.pluginhandler.UserResolveNotification precisely once
+            # self.pluginhandler.UserResolveNotification precisely once
             if msg.user in self.PrivateMessageQueue:
                 self.PrivateMessageQueueProcess(msg.user)
             if msg.user not in self.ip_requested:
-                self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
+                self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
                 return
 
             self.ip_requested.remove(msg.user)
@@ -1159,12 +1154,12 @@ class NetworkEventProcessor:
             }
 
             self.logMessage(message)
-            self.frame.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
+            self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 
     def Relogged(self, msg):
         self.logMessage(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
-        self.frame.manualdisconnect = 1
-        self.frame.pluginhandler.ServerDisconnectNotification(False)
+        self.manualdisconnect = True
+        self.pluginhandler.ServerDisconnectNotification(False)
 
     def OutConn(self, msg):
 
@@ -1392,8 +1387,8 @@ class NetworkEventProcessor:
             queuesize = self.transfers.getUploadQueueSizes()[0]
             slotsavail = self.transfers.allowNewUploads()
 
-            if self.frame.np.config.sections["transfers"]["remotedownloads"]:
-                uploadallowed = self.frame.np.config.sections["transfers"]["uploadallowed"]
+            if self.config.sections["transfers"]["remotedownloads"]:
+                uploadallowed = self.config.sections["transfers"]["uploadallowed"]
             else:
                 uploadallowed = 0
 
@@ -1600,7 +1595,7 @@ class NetworkEventProcessor:
                         username = i.username
                         break
 
-                self.frame.download_large_folder(username, folder, numfiles, conn, file_list)
+                self.transfers.downloadsview.download_large_folder(username, folder, numfiles, conn, file_list)
             else:
                 self.transfers.FolderContentsResponse(conn, file_list)
         else:
@@ -1633,7 +1628,7 @@ class NetworkEventProcessor:
             peermsg.tunneleduser = msg.user
             peermsg.tunneledreq = msg.req
             peermsg.tunneledaddr = msg.addr
-            self.callback([peermsg])
+            self.network_callback([peermsg])
         else:
             self.logMessage(_("Unknown tunneled message: %s") % (vars(msg)), 4)
 
@@ -1648,7 +1643,7 @@ class NetworkEventProcessor:
     def SearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
         self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=0)
-        self.frame.pluginhandler.SearchRequestNotification(msg.searchterm, msg.user, msg.searchid)
+        self.pluginhandler.SearchRequestNotification(msg.searchterm, msg.user, msg.searchid)
 
     def RoomSearchRequest(self, msg):
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
@@ -1676,7 +1671,7 @@ class NetworkEventProcessor:
                 # Don't toggle when just changing the settings
                 self.respondDistributed = not self.respondDistributed
 
-            responddistributedtimeout = RespondToDistributedSearchesTimeout(self.callback)
+            responddistributedtimeout = RespondToDistributedSearchesTimeout(self.network_callback)
             self.respondDistributedTimer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], responddistributedtimeout.timeout)
             self.respondDistributedTimer.setDaemon(True)
             self.respondDistributedTimer.start()
@@ -1687,7 +1682,7 @@ class NetworkEventProcessor:
     def DistribSearch(self, msg):
         if self.respondDistributed:  # set in ToggleRespondDistributed
             self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
-        self.frame.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
+        self.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
     def PossibleParents(self, msg):
 
@@ -1748,19 +1743,19 @@ class NetworkEventProcessor:
         self.logMessage("%s %s" % (msg.__class__, vars(msg)), 4)
 
     def GlobalRecommendations(self, msg):
-        self.frame.GlobalRecommendations(msg)
+        self.ui_callback.GlobalRecommendations(msg)
 
     def Recommendations(self, msg):
-        self.frame.Recommendations(msg)
+        self.ui_callback.Recommendations(msg)
 
     def ItemRecommendations(self, msg):
-        self.frame.ItemRecommendations(msg)
+        self.ui_callback.ItemRecommendations(msg)
 
     def SimilarUsers(self, msg):
-        self.frame.SimilarUsers(msg)
+        self.ui_callback.SimilarUsers(msg)
 
     def ItemSimilarUsers(self, msg):
-        self.frame.ItemSimilarUsers(msg)
+        self.ui_callback.ItemSimilarUsers(msg)
 
     def RoomTickerState(self, msg):
 
