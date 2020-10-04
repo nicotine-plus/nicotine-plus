@@ -217,7 +217,6 @@ class PluginHandler(object):
 
         except KeyError:
             log.add("No custom settings found for %s", (plugin.__name__,))
-            pass
 
     def TriggerPublicCommandEvent(self, room, command, args):
         return self._TriggerCommand(command, room, args, public_command=True)

@@ -513,7 +513,6 @@ class MetaDialog(gtk.Dialog):
             label.set_property("xalign", xalign)
         except Exception as e:
             print(e)
-            pass
 
         return label
 

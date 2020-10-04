@@ -1331,8 +1331,6 @@ class NicotineFrame:
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, None, event.button, event.time)
 
-        pass
-
     def getTabPosition(self, string):
         if string in ("Top", "top", _("Top")):
             position = gtk.PositionType.TOP

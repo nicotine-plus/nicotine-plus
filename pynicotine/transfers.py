@@ -757,7 +757,6 @@ class Transfers:
                 slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
             )
             log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
-            return
 
     def CanUpload(self, user):
 

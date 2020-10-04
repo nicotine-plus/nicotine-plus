@@ -1425,5 +1425,5 @@ def _expand_alias(aliases, cmd):
         return ret
     except Exception as error:
         log.add_warning("%s", error)
-        pass
+
     return ""

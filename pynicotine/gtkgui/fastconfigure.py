@@ -440,7 +440,6 @@ class FastConfigureAssistant(object):
                         dlg.format_secondary_text(_("The chosen virtual name is empty"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
                         # We get the current defined shares from the treeview

@@ -58,7 +58,6 @@ class Logger(object):
                 callback(self.timestamp_format, level, msg)
             except Exception as e:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
-                pass
 
     def add_warning(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level=1)

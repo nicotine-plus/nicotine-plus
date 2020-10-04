@@ -47,9 +47,7 @@ from pynicotine.utils import unescape
 
 
 win32 = sys.platform.startswith("win")
-if win32:
-    pass
-else:
+if not win32:
     import pwd
 
 
@@ -809,7 +807,6 @@ class SharesFrame(buildFrame):
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
                     dlg.run()
                     dlg.destroy()
-                    pass
 
                 else:
 
@@ -832,7 +829,6 @@ class SharesFrame(buildFrame):
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
 
@@ -875,7 +871,6 @@ class SharesFrame(buildFrame):
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
                     dlg.run()
                     dlg.destroy()
-                    pass
 
                 else:
 
@@ -898,7 +893,6 @@ class SharesFrame(buildFrame):
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
 

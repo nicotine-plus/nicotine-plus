@@ -1260,7 +1260,6 @@ class ChatRoom:
 
         if user not in self.tag_users:
             self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
-            return
         else:
             self.changecolour(self.tag_users[user], color)
 
