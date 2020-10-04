@@ -26,7 +26,7 @@ class Plugin(BasePlugin):
     def init(self):
         self.probed = {}
 
-    def UploadQueuedNotification(self, user, virualfile, realfile):
+    def UploadQueuedNotification(self, user, virualfile, realfile):  # noqa
         try:
             self.probed[user]
         except KeyError:
@@ -34,7 +34,7 @@ class Plugin(BasePlugin):
             self.parent.frame.np.queue.put(slskmessages.GetUserStats(user))
             self.log('New user %s, requesting information...' % user)
 
-    def UserStatsNotification(self, user, stats):
+    def UserStatsNotification(self, user, stats):  # noqa
         try:
             status = self.probed[user]
         except KeyError:

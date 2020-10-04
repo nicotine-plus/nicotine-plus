@@ -75,7 +75,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnEnableSearchResults" swapped="no"/>
+                    <signal name="toggled" handler="on_enable_search_results" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -443,7 +443,7 @@
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnEnableFiltersToggled" swapped="no"/>
+                <signal name="toggled" handler="on_enable_filters_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

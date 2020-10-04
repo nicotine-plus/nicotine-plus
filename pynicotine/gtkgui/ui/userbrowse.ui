@@ -71,7 +71,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Search files and folders (exact match)</property>
-                        <signal name="activate" handler="OnSearch" swapped="no"/>
+                        <signal name="activate" handler="on_search" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -87,7 +87,7 @@
                         <property name="tooltip_text" translatable="yes">Refresh files</property>
                         <property name="image">refresh</property>
                         <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="OnRefresh" swapped="no"/>
+                        <signal name="clicked" handler="on_refresh" swapped="no"/>
                         <child>
                           <object class="GtkImage" id="refresh">
                             <property name="can_focus">False</property>
@@ -109,7 +109,7 @@
                         <property name="tooltip_text" translatable="yes">Save file list to disk</property>
                         <property name="image">save</property>
                         <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="OnSave" swapped="no"/>
+                        <signal name="clicked" handler="on_save" swapped="no"/>
                         <child>
                           <object class="GtkImage" id="save">
                             <property name="can_focus">False</property>
@@ -131,7 +131,7 @@
                         <property name="tooltip_text" translatable="yes">Expand / Collapse all</property>
                         <property name="image">expand</property>
                         <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="OnExpand" swapped="no"/>
+                        <signal name="clicked" handler="on_expand" swapped="no"/>
                         <child>
                           <object class="GtkImage" id="expand">
                             <property name="can_focus">False</property>

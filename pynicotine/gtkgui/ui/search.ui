@@ -58,7 +58,7 @@
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnToggleFilters" swapped="no"/>
+                <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -75,7 +75,7 @@
                 <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnToggleRemember" swapped="no"/>
+                <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -103,7 +103,7 @@
                 <property name="tooltip_text" translatable="yes">Clear all results</property>
                 <property name="image">clear</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="OnClear" swapped="no"/>
+                <signal name="clicked" handler="on_clear" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="clear">
                     <property name="can_focus">False</property>
@@ -123,7 +123,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="tooltip_text" translatable="yes">Stop new search results from being displayed</property>
-                <signal name="clicked" handler="OnIgnore" swapped="no"/>
+                <signal name="clicked" handler="on_ignore" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -386,7 +386,7 @@
                         <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnRefilter" swapped="no"/>
+                        <signal name="toggled" handler="on_refilter" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -402,7 +402,7 @@
                         <property name="tooltip_text" translatable="yes">Search filter help</property>
                         <property name="image">help</property>
                         <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="OnAboutFilters" swapped="no"/>
+                        <signal name="clicked" handler="on_about_filters" swapped="no"/>
                         <child>
                           <object class="GtkImage" id="help">
                             <property name="can_focus">False</property>
@@ -440,7 +440,7 @@
                 <property name="can_focus">True</property>
                 <property name="has_tooltip">True</property>
                 <property name="enable_search">False</property>
-                <signal name="query-tooltip" handler="OnTooltip" swapped="no"/>
+                <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
               </object>
             </child>
           </object>

@@ -17,7 +17,7 @@
             <property name="receives_default">False</property>
             <property name="use_underline">True</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="OnURLCatchingToggled" swapped="no"/>
+            <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -91,7 +91,7 @@ Protocols handlers: </property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRemove" swapped="no"/>
+                    <signal name="clicked" handler="on_remove" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -147,7 +147,7 @@ Protocols handlers: </property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="halign">start</property>
-                <signal name="clicked" handler="OnAdd" swapped="no"/>
+                <signal name="clicked" handler="on_add" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

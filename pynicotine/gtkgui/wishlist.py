@@ -26,11 +26,11 @@ import os
 from gettext import gettext as _
 
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.logfacility import log
 
 
@@ -45,38 +45,38 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
 
-        self.WishListDialog = builder.get_object("WishListDialog")
+        self.wish_list_dialog = builder.get_object("WishListDialog")
         builder.connect_signals(self)
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
-        self.WishListDialog.set_transient_for(frame.MainWindow)
+        self.wish_list_dialog.set_transient_for(frame.MainWindow)
 
-        self.WishListDialog.connect("destroy", self.quit)
-        self.WishListDialog.connect("destroy-event", self.quit)
-        self.WishListDialog.connect("delete-event", self.quit)
-        self.WishListDialog.connect("delete_event", self.quit)
+        self.wish_list_dialog.connect("destroy", self.quit)
+        self.wish_list_dialog.connect("destroy-event", self.quit)
+        self.wish_list_dialog.connect("delete-event", self.quit)
+        self.wish_list_dialog.connect("delete_event", self.quit)
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING)
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.WishlistView,
             [_("Wishes"), -1, "text"]
         )
 
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.WishlistView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         for wish in self.frame.np.config.sections["server"]["autosearch"]:
             self.wishes[wish] = self.store.append([wish])
@@ -97,25 +97,25 @@ class WishList:
             self.remove_wish(old_value)
             self.add_wish(value)
 
-    def OnAddWish(self, widget):
+    def on_add_wish(self, widget):
         wish = self.AddWishEntry.get_text()
         self.AddWishEntry.set_text("")
 
         if self.add_wish(wish):
             self.do_wishlist_search(self.searches.searchid, wish)
 
-    def OnRemoveWish(self, widget):
+    def on_remove_wish(self, widget):
         iters = []
-        self.WishlistView.get_selection().selected_foreach(self._RemoveWish, iters)
+        self.WishlistView.get_selection().selected_foreach(self.__remove_wish, iters)
 
         for iterator in iters:
             wish = self.store.get_value(iterator, 0)
             self.remove_wish(wish)
 
-    def _RemoveWish(self, model, path, iterator, line):
+    def __remove_wish(self, model, path, iterator, line):
         line.append(iterator)
 
-    def OnSelectAllWishes(self, widget):
+    def on_select_all_wishes(self, widget):
         self.WishlistView.get_selection().select_all()
 
     def add_wish(self, wish):
@@ -165,13 +165,13 @@ class WishList:
                 self.searches.searches[self.searches.searchid] = [self.searches.searchid, term, None, 0, True, False]
                 self.searches.searchid = (self.searches.searchid + 1) % (2**31)
 
-        self.OnAutoSearch()
-        self.timer = GLib.timeout_add(self.interval * 1000, self.OnAutoSearch)
+        self.on_auto_search()
+        self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
 
     def do_wishlist_search(self, id, text):
         self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
 
-    def OnAutoSearch(self, *args):
+    def on_auto_search(self, *args):
 
         # Wishlists supported by server?
         if self.interval == 0:
@@ -202,8 +202,8 @@ class WishList:
             self.timer = None
 
     def show(self, widget):
-        self.WishListDialog.show()
+        self.wish_list_dialog.show()
 
     def quit(self, widget, event):
-        self.WishListDialog.hide()
+        self.wish_list_dialog.hide()
         return True

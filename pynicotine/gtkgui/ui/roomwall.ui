@@ -69,7 +69,7 @@
               <object class="GtkEntry" id="RoomWallEntry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="activate" handler="OnSetRoomWallMessage" swapped="no"/>
+                <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -82,7 +82,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnSetRoomWallMessage" swapped="no"/>
+                <signal name="clicked" handler="on_set_room_wall_message" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

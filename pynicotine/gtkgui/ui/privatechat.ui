@@ -85,8 +85,8 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <signal name="activate" handler="OnEnter" swapped="no"/>
-                <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
+                <signal name="activate" handler="on_enter" swapped="no"/>
+                <signal name="key-press-event" handler="on_key_press" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -132,7 +132,7 @@
                 <property name="tooltip_text" translatable="yes">Private chat command help</property>
                 <property name="image">help</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="OnShowChatHelp" swapped="no"/>
+                <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="help">
                     <property name="can_focus">False</property>

@@ -46,7 +46,7 @@ for name in sorted(os.listdir(os.path.join("img", "flags"))):
     p = os.path.join("img", "flags", name)
 
     if isfile(p):
-        flagtable.append([p, "flag_%s" % name[:2].upper()])
+        flagtable.append([p, "flag_%s" % name[:2]])
 
 outf = open(os.path.join("pynicotine", "gtkgui", "imagedata.py"), "w")
 

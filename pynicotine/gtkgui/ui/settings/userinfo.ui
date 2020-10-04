@@ -104,7 +104,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnDefaultImage" swapped="no"/>
+                <signal name="clicked" handler="on_default_image" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

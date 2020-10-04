@@ -22,7 +22,7 @@ import os
 from gettext import gettext as _
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import ComboBoxDialog
+from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 
@@ -61,42 +61,42 @@ class TrayApp:
         try:
             self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
             popup0.setup(
-                ("#" + _("Connect"), self.frame.OnConnect),
-                ("#" + _("Disconnect"), self.frame.OnDisconnect)
+                ("#" + _("Connect"), self.frame.on_connect),
+                ("#" + _("Disconnect"), self.frame.on_disconnect)
             )
 
             self.tray_popup_menu = popup = PopupMenu(self, False)
             popup.setup(
-                ("#" + _("Hide / Show Nicotine+"), self.OnHideUnhideWindow),
-                (1, _("Server"), self.tray_popup_menu_server, self.OnPopupServer),
-                ("#" + _("Downloads"), self.OnDownloads),
-                ("#" + _("Uploads"), self.OnUploads),
-                ("#" + _("Send Message"), self.OnOpenPrivateChat),
-                ("#" + _("Lookup a User's IP"), self.OnGetAUsersIP),
-                ("#" + _("Lookup a User's Info"), self.OnGetAUsersInfo),
-                ("#" + _("Lookup a User's Shares"), self.OnGetAUsersShares),
-                ("$" + _("Toggle Away"), self.frame.OnAway),
-                ("#" + _("Settings"), self.frame.OnSettings),
-                ("#" + _("Quit"), self.frame.OnExit)
+                ("#" + _("Hide / Show Nicotine+"), self.on_hide_unhide_window),
+                (1, _("Server"), self.tray_popup_menu_server, self.on_popup_server),
+                ("#" + _("Downloads"), self.on_downloads),
+                ("#" + _("Uploads"), self.on_uploads),
+                ("#" + _("Send Message"), self.on_open_private_chat),
+                ("#" + _("Lookup a User's IP"), self.on_get_a_users_ip),
+                ("#" + _("Lookup a User's Info"), self.on_get_a_users_info),
+                ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
+                ("$" + _("Toggle Away"), self.frame.on_away),
+                ("#" + _("Settings"), self.frame.on_settings),
+                ("#" + _("Quit"), self.frame.on_exit)
             )
         except Exception as e:
             log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
 
-    def OnHideUnhideWindow(self, widget):
+    def on_hide_unhide_window(self, widget):
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
         else:
             self.show_window()
 
-    def OnDownloads(self, widget):
-        self.frame.OnDownloads(None)
+    def on_downloads(self, widget):
+        self.frame.on_downloads(None)
         self.show_window()
 
-    def OnUploads(self, widget):
-        self.frame.OnUploads(None)
+    def on_uploads(self, widget):
+        self.frame.on_uploads(None)
         self.show_window()
 
-    def OnOpenPrivateChat(self, widget, prefix=""):
+    def on_open_private_chat(self, widget, prefix=""):
 
         # popup
         users = []
@@ -104,7 +104,7 @@ class TrayApp:
             users.append(entry[0])
 
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Start Messaging"),
             message=_('Enter the User who you wish to send a private message:'),
@@ -112,11 +112,11 @@ class TrayApp:
         )
 
         if user is not None:
-            self.frame.privatechats.SendMessage(user, None, 1)
-            self.frame.ChangeMainPage(None, "private")
+            self.frame.privatechats.send_message(user, None, 1)
+            self.frame.change_main_page(None, "private")
             self.show_window()
 
-    def OnGetAUsersInfo(self, widget, prefix=""):
+    def on_get_a_users_info(self, widget, prefix=""):
 
         # popup
         users = []
@@ -124,7 +124,7 @@ class TrayApp:
             users.append(entry[0])
 
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get User Info"),
             message=_('Enter the User whose User Info you wish to receive:'),
@@ -134,14 +134,14 @@ class TrayApp:
         if user is None:
             pass
         else:
-            self.frame.LocalUserInfoRequest(user)
+            self.frame.local_user_info_request(user)
 
-    def OnGetAUsersIP(self, widget, prefix=""):
+    def on_get_a_users_ip(self, widget, prefix=""):
         users = []
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
@@ -150,14 +150,17 @@ class TrayApp:
         if user is None:
             pass
         else:
+            if user not in self.frame.np.ip_requested:
+                self.frame.np.ip_requested.append(user)
+
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
-    def OnGetAUsersShares(self, widget, prefix=""):
+    def on_get_a_users_shares(self, widget, prefix=""):
         users = []
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
@@ -166,9 +169,9 @@ class TrayApp:
         if user is None:
             pass
         else:
-            self.frame.BrowseUser(user)
+            self.frame.browse_user(user)
 
-    def OnPopupServer(self, widget):
+    def on_popup_server(self, widget):
         items = self.tray_popup_menu_server.get_children()
 
         if self.tray_status["status"] == "disconnect":
@@ -179,7 +182,7 @@ class TrayApp:
             items[1].set_sensitive(True)
 
     # GtkStatusIcon fallback
-    def OnStatusIconPopup(self, status_icon, button, activate_time):
+    def on_status_icon_popup(self, status_icon, button, activate_time):
         if button == 3:
             self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
 
@@ -256,16 +259,16 @@ class TrayApp:
             self.trayicon.set_secondary_activate_target(hide_unhide_item)
         else:
             # GtkStatusIcon fallback
-            self.trayicon.connect("activate", self.OnHideUnhideWindow)
-            self.trayicon.connect("popup-menu", self.OnStatusIconPopup)
+            self.trayicon.connect("activate", self.on_hide_unhide_window)
+            self.trayicon.connect("popup-menu", self.on_status_icon_popup)
 
         self.set_image(self.tray_status["status"])
 
     def show_window(self):
         self.frame.MainWindow.show()
 
-        self.frame.chatrooms.roomsctrl.ClearNotifications()
-        self.frame.privatechats.ClearNotifications()
+        self.frame.chatrooms.roomsctrl.clear_notifications()
+        self.frame.privatechats.clear_notifications()
 
     def is_tray_icon_visible(self):
         if self.trayicon is None:

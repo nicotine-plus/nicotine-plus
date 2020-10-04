@@ -32,10 +32,10 @@ class Plugin(BasePlugin):
             return text
         return text.capitalize()
 
-    def IncomingPrivateChatEvent(self, nick, line):
+    def IncomingPrivateChatEvent(self, nick, line):  # noqa
         return (nick, self.antishout(line))
 
-    def IncomingPublicChatEvent(self, room, nick, line):
+    def IncomingPublicChatEvent(self, room, nick, line):  # noqa
         return (room, nick, self.antishout(line))
 
     def antishout(self, line):

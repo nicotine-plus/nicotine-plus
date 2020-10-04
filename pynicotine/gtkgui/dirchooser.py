@@ -24,25 +24,25 @@ import os
 
 from gettext import gettext as _
 
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 
-def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
+def choose_dir(parent=None, initialdir="~", title=None, multichoice=True):
     try:
-        dialog = gtk.FileChooserNative.new(
+        dialog = Gtk.FileChooserNative.new(
             title,
             parent,
-            gtk.FileChooserAction.SELECT_FOLDER,
+            Gtk.FileChooserAction.SELECT_FOLDER,
             _("_Open"),
             _("_Cancel")
         )
     except AttributeError:
-        dialog = gtk.FileChooserDialog(
+        dialog = Gtk.FileChooserDialog(
             title,
             parent,
-            gtk.FileChooserAction.SELECT_FOLDER
+            Gtk.FileChooserAction.SELECT_FOLDER
         )
-        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
+        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
 
     if multichoice:
         dialog.set_select_multiple(True)
@@ -56,7 +56,7 @@ def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
 
     response = dialog.run()
 
-    if response == gtk.ResponseType.ACCEPT:
+    if response == Gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None
@@ -66,22 +66,22 @@ def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
     return res
 
 
-def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
+def choose_file(parent=None, initialdir="~", initialfile="", multiple=False):
     try:
-        dialog = gtk.FileChooserNative.new(
+        dialog = Gtk.FileChooserNative.new(
             None,
             parent,
-            gtk.FileChooserAction.OPEN,
+            Gtk.FileChooserAction.OPEN,
             _("_Open"),
             _("_Cancel")
         )
     except AttributeError:
-        dialog = gtk.FileChooserDialog(
+        dialog = Gtk.FileChooserDialog(
             None,
             parent,
-            gtk.FileChooserAction.OPEN
+            Gtk.FileChooserAction.OPEN
         )
-        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
+        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
 
     dialog.set_select_multiple(multiple)
     folder = os.path.expanduser(initialdir)
@@ -93,7 +93,7 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
 
     response = dialog.run()
 
-    if response == gtk.ResponseType.ACCEPT:
+    if response == Gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None
@@ -103,22 +103,22 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
     return res
 
 
-def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
+def save_file(parent=None, initialdir="~", initialfile="", title=None):
     try:
-        dialog = gtk.FileChooserNative.new(
+        dialog = Gtk.FileChooserNative.new(
             title,
             parent,
-            gtk.FileChooserAction.SAVE,
+            Gtk.FileChooserAction.SAVE,
             _("_Save"),
             _("_Cancel")
         )
     except AttributeError:
-        dialog = gtk.FileChooserDialog(
+        dialog = Gtk.FileChooserDialog(
             title,
             parent,
-            gtk.FileChooserAction.SAVE
+            Gtk.FileChooserAction.SAVE
         )
-        dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Save"), gtk.ResponseType.ACCEPT)
+        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Save"), Gtk.ResponseType.ACCEPT)
 
     dialog.set_select_multiple(False)
     dialog.set_show_hidden(True)
@@ -132,7 +132,7 @@ def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
 
     response = dialog.run()
 
-    if response == gtk.ResponseType.ACCEPT:
+    if response == Gtk.ResponseType.ACCEPT:
         res = dialog.get_filenames()
     else:
         res = None

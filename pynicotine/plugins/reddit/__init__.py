@@ -48,7 +48,7 @@ class Plugin(BasePlugin):
         self.plugin_command = "!reddit"
         self.responder = ResponseThrottle(self.frame, self.__name__)
 
-    def IncomingPublicChatEvent(self, room, nick, line):
+    def IncomingPublicChatEvent(self, room, nick, line):  # noqa
         line = line.lower().strip()
         if line.startswith(self.plugin_command) and (" " in line):
             subreddit = line.split(" ")[1].strip("/")

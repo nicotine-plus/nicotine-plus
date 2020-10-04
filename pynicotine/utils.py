@@ -48,7 +48,7 @@ illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 
 
-def CleanFile(filename):
+def clean_file(filename):
 
     if win32:
         for char in illegalfilechars:
@@ -57,7 +57,7 @@ def CleanFile(filename):
     return filename
 
 
-def CleanPath(path, absolute=False):
+def clean_path(path, absolute=False):
 
     if win32:
 
@@ -112,7 +112,7 @@ def make_version(version):
     return (major << 24) + (minor << 16) + (patch << 8) + stable
 
 
-def GetUserDirectories():
+def get_user_directories():
     """Returns a tuple:
     - the config directory
     - the data directory"""
@@ -123,20 +123,20 @@ def GetUserDirectories():
     if os.path.isdir(legacy_dir):
         return legacy_dir, legacy_dir
 
-    def xdgPath(xdg, default):
+    def xdg_path(xdg, default):
         path = os.environ.get(xdg)
 
         path = path.split(':')[0] if path else default
 
         return os.path.join(path, 'nicotine')
 
-    config_dir = xdgPath('XDG_CONFIG_HOME', os.path.join(home, '.config'))
-    data_dir = xdgPath('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
+    config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+    data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
 
     return config_dir, data_dir
 
 
-def GetResultBitrateLength(filesize, attributes):
+def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
@@ -228,7 +228,7 @@ def GetResultBitrateLength(filesize, attributes):
     return h_bitrate, bitrate, h_length
 
 
-def ApplyTranslation():
+def apply_translation():
     """Function dealing with translations and locales.
 
     We try to autodetect the language and fix the locale.
@@ -245,11 +245,11 @@ def ApplyTranslation():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
-    # Package name for gettext
-    PACKAGE = 'nicotine'
+    # package name for gettext
+    package = 'nicotine'
 
     # Local path where to find translation (mo) files
-    LOCAL_MO_PATH = 'mo'
+    local_mo_path = 'mo'
 
     # Python 2.7.X is build via Visual Studio 2008 on Windows:
     # https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject
@@ -291,12 +291,12 @@ def ApplyTranslation():
             print("Error while attempting to set locale: %s" % e)
 
     # Gettext handling
-    if gettext.find(PACKAGE, localedir=LOCAL_MO_PATH) is None:
+    if gettext.find(package, localedir=local_mo_path) is None:
 
         # Locales are not in the current dir
         # We let gettext handle the situation: if if found them in the system dir
         # the app will be trnaslated, if not it will be untranslated.
-        gettext.install(PACKAGE)
+        gettext.install(package)
 
     else:
 
@@ -308,17 +308,17 @@ def ApplyTranslation():
 
             libintl = ctypes.cdll.LoadLibrary("libintl-8.dll")
 
-            libintl.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
-            libintl.bind_textdomain_codeset(PACKAGE, "UTF-8")
+            libintl.bindtextdomain(package, local_mo_path)
+            libintl.bind_textdomain_codeset(package, "UTF-8")
 
         else:
-            locale.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
-            gettext.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+            locale.bindtextdomain(package, local_mo_path)
+            gettext.bindtextdomain(package, local_mo_path)
 
-        tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
+        tr = gettext.translation(package, localedir=local_mo_path)
         tr.install()
 
-    gettext.textdomain(PACKAGE)
+    gettext.textdomain(package)
 
 
 def unescape(string):
@@ -331,7 +331,7 @@ def unescape(string):
     return string
 
 
-def executeCommand(command, replacement=None, background=True, returnoutput=False, placeholder='$'):
+def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder='$'):
     """Executes a string with commands, with partial support for bash-style quoting and pipes.
 
     The different parts of the command should be separated by spaces, a double
@@ -440,7 +440,7 @@ def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
         os.makedirs(logsdir)
 
     try:
-        with open(os.path.join(logsdir, CleanFile(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
+        with open(os.path.join(logsdir, clean_file(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
             os.umask(oldumask)
 
             text = "%s %s\n" % (time.strftime(timestamp_format), msg)

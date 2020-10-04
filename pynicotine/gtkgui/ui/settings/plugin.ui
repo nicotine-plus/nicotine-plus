@@ -17,7 +17,7 @@
             <property name="receives_default">False</property>
             <property name="use_underline">True</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="OnPluginsEnable" swapped="no"/>
+            <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -229,7 +229,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <signal name="clicked" handler="OnPluginProperties" swapped="no"/>
+                            <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>

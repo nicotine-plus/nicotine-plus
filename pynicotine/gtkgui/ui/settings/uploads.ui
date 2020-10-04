@@ -151,7 +151,7 @@
                     <property name="tooltip_text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnQueueUseSlotsToggled" swapped="no"/>
+                    <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -178,7 +178,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnLimitToggled" swapped="no"/>
+                    <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>

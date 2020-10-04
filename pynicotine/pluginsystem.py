@@ -46,7 +46,7 @@ class PluginHandler(object):
 
         log.add(_("Loading plugin handler"))
 
-        self.myUsername = self.config.sections["server"]["login"]
+        self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
         self.loaded_plugins = {}
@@ -218,13 +218,13 @@ class PluginHandler(object):
         except KeyError:
             log.add("No custom settings found for %s", (plugin.__name__,))
 
-    def TriggerPublicCommandEvent(self, room, command, args):
-        return self._TriggerCommand(command, room, args, public_command=True)
+    def trigger_public_command_event(self, room, command, args):
+        return self._trigger_command(command, room, args, public_command=True)
 
-    def TriggerPrivateCommandEvent(self, user, command, args):
-        return self._TriggerCommand(command, user, args, public_command=False)
+    def trigger_private_command_event(self, user, command, args):
+        return self._trigger_command(command, user, args, public_command=False)
 
-    def _TriggerCommand(self, command, source, args, public_command):
+    def _trigger_command(self, command, source, args, public_command):
         for module, plugin in self.enabled_plugins.items():
             try:
                 if plugin.PLUGIN is None:
@@ -258,7 +258,7 @@ class PluginHandler(object):
 
         return False
 
-    def TriggerEvent(self, function, args):
+    def trigger_event(self, function, args):
         """Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function."""
@@ -297,82 +297,82 @@ class PluginHandler(object):
 
         return hotpotato
 
-    def SearchRequestNotification(self, searchterm, user, searchid):
-        self.TriggerEvent("SearchRequestNotification", (searchterm, user, searchid))
+    def search_request_notification(self, searchterm, user, searchid):
+        self.trigger_event("SearchRequestNotification", (searchterm, user, searchid))
 
-    def DistribSearchNotification(self, searchterm, user, searchid):
-        self.TriggerEvent("DistribSearchNotification", (searchterm, user, searchid))
+    def distrib_search_notification(self, searchterm, user, searchid):
+        self.trigger_event("DistribSearchNotification", (searchterm, user, searchid))
 
-    def PublicRoomMessageNotification(self, room, user, line):
-        self.TriggerEvent("PublicRoomMessageNotification", (room, user, line))
+    def public_room_message_notification(self, room, user, line):
+        self.trigger_event("PublicRoomMessageNotification", (room, user, line))
 
-    def IncomingPrivateChatEvent(self, user, line):
-        if user != self.myUsername:
+    def incoming_private_chat_event(self, user, line):
+        if user != self.my_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.TriggerEvent("IncomingPrivateChatEvent", (user, line))
+            return self.trigger_event("IncomingPrivateChatEvent", (user, line))
         else:
             return (user, line)
 
-    def IncomingPrivateChatNotification(self, user, line):
-        self.TriggerEvent("IncomingPrivateChatNotification", (user, line))
+    def incoming_private_chat_notification(self, user, line):
+        self.trigger_event("IncomingPrivateChatNotification", (user, line))
 
-    def IncomingPublicChatEvent(self, room, user, line):
-        return self.TriggerEvent("IncomingPublicChatEvent", (room, user, line))
+    def incoming_public_chat_event(self, room, user, line):
+        return self.trigger_event("IncomingPublicChatEvent", (room, user, line))
 
-    def IncomingPublicChatNotification(self, room, user, line):
-        self.TriggerEvent("IncomingPublicChatNotification", (room, user, line))
+    def incoming_public_chat_notification(self, room, user, line):
+        self.trigger_event("IncomingPublicChatNotification", (room, user, line))
 
-    def OutgoingPrivateChatEvent(self, user, line):
+    def outgoing_private_chat_event(self, user, line):
         if line is not None:
             # if line is None nobody actually said anything
-            return self.TriggerEvent("OutgoingPrivateChatEvent", (user, line))
+            return self.trigger_event("OutgoingPrivateChatEvent", (user, line))
         else:
             return (user, line)
 
-    def OutgoingPrivateChatNotification(self, user, line):
-        self.TriggerEvent("OutgoingPrivateChatNotification", (user, line))
+    def outgoing_private_chat_notification(self, user, line):
+        self.trigger_event("OutgoingPrivateChatNotification", (user, line))
 
-    def OutgoingPublicChatEvent(self, room, line):
-        return self.TriggerEvent("OutgoingPublicChatEvent", (room, line))
+    def outgoing_public_chat_event(self, room, line):
+        return self.trigger_event("OutgoingPublicChatEvent", (room, line))
 
-    def OutgoingPublicChatNotification(self, room, line):
-        self.TriggerEvent("OutgoingPublicChatNotification", (room, line))
+    def outgoing_public_chat_notification(self, room, line):
+        self.trigger_event("OutgoingPublicChatNotification", (room, line))
 
-    def OutgoingGlobalSearchEvent(self, text):
-        return self.TriggerEvent("OutgoingGlobalSearchEvent", (text,))
+    def outgoing_global_search_event(self, text):
+        return self.trigger_event("OutgoingGlobalSearchEvent", (text,))
 
-    def OutgoingRoomSearchEvent(self, rooms, text):
-        return self.TriggerEvent("OutgoingRoomSearchEvent", (rooms, text))
+    def outgoing_room_search_event(self, rooms, text):
+        return self.trigger_event("OutgoingRoomSearchEvent", (rooms, text))
 
-    def OutgoingBuddySearchEvent(self, text):
-        return self.TriggerEvent("OutgoingBuddySearchEvent", (text,))
+    def outgoing_buddy_search_event(self, text):
+        return self.trigger_event("OutgoingBuddySearchEvent", (text,))
 
-    def OutgoingUserSearchEvent(self, users):
-        return self.TriggerEvent("OutgoingUserSearchEvent", (users,))
+    def outgoing_user_search_event(self, users):
+        return self.trigger_event("OutgoingUserSearchEvent", (users,))
 
-    def UserResolveNotification(self, user, ip, port, country=None):
+    def user_resolve_notification(self, user, ip, port, country=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        self.TriggerEvent("UserResolveNotification", (user, ip, port, country))
+        self.trigger_event("UserResolveNotification", (user, ip, port, country))
 
-    def ServerConnectNotification(self):
-        self.TriggerEvent("ServerConnectNotification", (),)
+    def server_connect_notification(self):
+        self.trigger_event("ServerConnectNotification", (),)
 
-    def ServerDisconnectNotification(self, userchoice):
-        self.TriggerEvent("ServerDisconnectNotification", (userchoice, ))
+    def server_disconnect_notification(self, userchoice):
+        self.trigger_event("ServerDisconnectNotification", (userchoice, ))
 
-    def JoinChatroomNotification(self, room):
-        self.TriggerEvent("JoinChatroomNotification", (room,))
+    def join_chatroom_notification(self, room):
+        self.trigger_event("JoinChatroomNotification", (room,))
 
-    def LeaveChatroomNotification(self, room):
-        self.TriggerEvent("LeaveChatroomNotification", (room,))
+    def leave_chatroom_notification(self, room):
+        self.trigger_event("LeaveChatroomNotification", (room,))
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):
-        self.TriggerEvent("UploadQueuedNotification", (user, virtualfile, realfile))
+    def upload_queued_notification(self, user, virtualfile, realfile):
+        self.trigger_event("UploadQueuedNotification", (user, virtualfile, realfile))
 
-    def UserStatsNotification(self, user, stats):
-        self.TriggerEvent("UserStatsNotification", (user, stats))
+    def user_stats_notification(self, user, stats):
+        self.trigger_event("UserStatsNotification", (user, stats))
 
     """ Other Functions """
 
@@ -384,11 +384,11 @@ class PluginHandler(object):
 
     def sayprivate(self, user, text):
         '''Send user message in private (showing up in GUI)'''
-        self.frame.privatechats.users[user].SendMessage(text)
+        self.frame.privatechats.users[user].send_message(text)
 
     def sendprivate(self, user, text):
         '''Send user message in private (not showing up in GUI)'''
-        self.frame.privatechats.SendMessage(user, text)
+        self.frame.privatechats.send_message(user, text)
 
 
 class ResponseThrottle(object):
@@ -503,76 +503,76 @@ class BasePlugin(object):
     def init(self):
         pass
 
-    def LoadSettings(self, settings):
+    def LoadSettings(self, settings):  # noqa
         self.settings = settings
 
-    def LoadNotification(self):
+    def LoadNotification(self):  # noqa
         pass
 
-    def PublicRoomMessageNotification(self, room, user, line):
+    def PublicRoomMessageNotification(self, room, user, line):  # noqa
         pass
 
-    def SearchRequestNotification(self, searchterm, user, searchid):
+    def SearchRequestNotification(self, searchterm, user, searchid):  # noqa
         pass
 
-    def DistribSearchNotification(self, searchterm, user, searchid):
+    def DistribSearchNotification(self, searchterm, user, searchid):  # noqa
         pass
 
-    def IncomingPrivateChatEvent(self, user, line):
+    def IncomingPrivateChatEvent(self, user, line):  # noqa
         pass
 
-    def IncomingPrivateChatNotification(self, user, line):
+    def IncomingPrivateChatNotification(self, user, line):  # noqa
         pass
 
-    def IncomingPublicChatEvent(self, room, user, line):
+    def IncomingPublicChatEvent(self, room, user, line):  # noqa
         pass
 
-    def IncomingPublicChatNotification(self, room, user, line):
+    def IncomingPublicChatNotification(self, room, user, line):  # noqa
         pass
 
-    def OutgoingPrivateChatEvent(self, user, line):
+    def OutgoingPrivateChatEvent(self, user, line):  # noqa
         pass
 
-    def OutgoingPrivateChatNotification(self, user, line):
+    def OutgoingPrivateChatNotification(self, user, line):  # noqa
         pass
 
-    def OutgoingPublicChatEvent(self, room, line):
+    def OutgoingPublicChatEvent(self, room, line):  # noqa
         pass
 
-    def OutgoingPublicChatNotification(self, room, line):
+    def OutgoingPublicChatNotification(self, room, line):  # noqa
         pass
 
-    def OutgoingGlobalSearchEvent(self, text):
+    def OutgoingGlobalSearchEvent(self, text):  # noqa
         pass
 
-    def OutgoingRoomSearchEvent(self, rooms, text):
+    def OutgoingRoomSearchEvent(self, rooms, text):  # noqa
         pass
 
-    def OutgoingBuddySearchEvent(self, text):
+    def OutgoingBuddySearchEvent(self, text):  # noqa
         pass
 
-    def OutgoingUserSearchEvent(self, users):
+    def OutgoingUserSearchEvent(self, users):  # noqa
         pass
 
-    def UserResolveNotification(self, user, ip, port, country):
+    def UserResolveNotification(self, user, ip, port, country):  # noqa
         pass
 
-    def ServerConnectNotification(self):
+    def ServerConnectNotification(self):  # noqa
         pass
 
-    def ServerDisconnectNotification(self, userchoice):
+    def ServerDisconnectNotification(self, userchoice):  # noqa
         pass
 
-    def JoinChatroomNotification(self, room):
+    def JoinChatroomNotification(self, room):  # noqa
         pass
 
-    def LeaveChatroomNotification(self, room):
+    def LeaveChatroomNotification(self, room):  # noqa
         pass
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):
+    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
         pass
 
-    def UserStatsNotification(self, user, stats):
+    def UserStatsNotification(self, user, stats):  # noqa
         pass
 
     # The following are functions to make your life easier,
@@ -599,17 +599,17 @@ class BasePlugin(object):
 
         msg = slskmessages.SayChatroom(room, text)
         msg.user = user
-        room.SayChatRoom(msg, text)
+        room.say_chat_room(msg, text)
         return True
 
     # The following are functions used by the plugin system,
     # you are not allowed to override these.
-    def PublicCommandEvent(self, command, room, args):
+    def PublicCommandEvent(self, command, room, args):  # noqa
         for (trigger, func) in self.__publiccommands__:
             if trigger == command:
                 return func(self, room, args)
 
-    def PrivateCommandEvent(self, command, user, args):
+    def PrivateCommandEvent(self, command, user, args):  # noqa
         for (trigger, func) in self.__privatecommands__:
             if trigger == command:
                 return func(self, user, args)

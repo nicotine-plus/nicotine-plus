@@ -26,11 +26,11 @@ import re
 import sys
 from gettext import gettext as _
 
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.logfacility import log
-from pynicotine.utils import executeCommand
+from pynicotine.utils import execute_command
 
 
 class NowPlaying:
@@ -41,26 +41,26 @@ class NowPlaying:
         # Build the window
         self.frame = frame
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "nowplaying.ui"))
 
-        self.NowPlayingDialog = builder.get_object("NowPlayingDialog")
+        self.now_playing_dialog = builder.get_object("NowPlayingDialog")
 
         builder.connect_signals(self)
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
-        self.NowPlayingDialog.set_transient_for(self.frame.MainWindow)
+        self.now_playing_dialog.set_transient_for(self.frame.MainWindow)
 
-        self.NowPlayingDialog.connect("destroy", self.quit)
-        self.NowPlayingDialog.connect("destroy-event", self.quit)
-        self.NowPlayingDialog.connect("delete-event", self.quit)
+        self.now_playing_dialog.connect("destroy", self.quit)
+        self.now_playing_dialog.connect("destroy-event", self.quit)
+        self.now_playing_dialog.connect("delete-event", self.quit)
 
         self.title_clear()
 
@@ -69,11 +69,11 @@ class NowPlaying:
 
         self.player_replacers = []
 
-        self.OnNPPlayer(None)
-        self.SetPlayer(config["players"]["npplayer"])
+        self.on_np_player(None)
+        self.set_player(config["players"]["npplayer"])
 
         # Default format list
-        self.NPFormat_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.np_format_model = Gtk.ListStore(GObject.TYPE_STRING)
 
         self.defaultlist = [
             "$n",
@@ -85,23 +85,23 @@ class NowPlaying:
         ]
 
         for item in self.defaultlist:
-            self.NPFormat_List.append([str(item)])
+            self.np_format_model.append([str(item)])
 
         # Add custom formats
         if config["players"]["npformatlist"] != []:
             for item in config["players"]["npformatlist"]:
-                self.NPFormat_List.append([str(item)])
+                self.np_format_model.append([str(item)])
 
         # Set the NPFormat model
         self.NPFormat.set_entry_text_column(0)
-        self.NPFormat.set_model(self.NPFormat_List)
+        self.NPFormat.set_model(self.np_format_model)
 
         if config["players"]["npformat"] == "":
             # If there's no default format in the config: set the first of the list
             self.NPFormat.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
-            for (i, v) in enumerate(self.NPFormat_List):
+            for (i, v) in enumerate(self.np_format_model):
                 if v[0] == config["players"]["npformat"]:
                     self.NPFormat.set_active(i)
 
@@ -123,7 +123,7 @@ class NowPlaying:
             "filename": ""
         }
 
-    def SetPlayer(self, player):
+    def set_player(self, player):
 
         if player == "amarok":
             self.NP_amarok.set_active(1)
@@ -147,7 +147,7 @@ class NowPlaying:
         else:
             self.NP_other.set_active(1)
 
-    def OnNPPlayer(self, widget):
+    def on_np_player(self, widget):
 
         isset = False
 
@@ -215,7 +215,7 @@ class NowPlaying:
         if not isset:
             self.Legend.set_text("")
 
-    def OnNPCancel(self, widget):
+    def on_np_cancel(self, widget):
         self.quit(None)
 
     def quit(self, widget, s=None):
@@ -229,20 +229,20 @@ class NowPlaying:
             if text not in config["players"]["npformatlist"] and text not in self.defaultlist:
                 config["players"]["npformatlist"].append(text)
 
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
         # Hide the NowPlaying window
-        self.NowPlayingDialog.hide()
+        self.now_playing_dialog.hide()
         return True
 
-    def OnNPTest(self, widget):
-        self.DisplayNowPlaying(None, 1)
+    def on_np_test(self, widget):
+        self.display_now_playing(None, 1)
 
-    def DisplayNowPlaying(self, widget, test=0, callback=None):
+    def display_now_playing(self, widget, test=0, callback=None):
 
-        self.GetNP(None, test, callback)
+        self.get_np(None, test, callback)
 
-    def GetNP(self, widget, test=None, callback=None):
+    def get_np(self, widget, test=None, callback=None):
 
         self.title_clear()
 
@@ -315,7 +315,7 @@ class NowPlaying:
 
         return None
 
-    def OnNPSave(self, widget):
+    def on_np_save(self, widget):
 
         if self.NP_amarok.get_active():
             player = "amarok"
@@ -339,7 +339,7 @@ class NowPlaying:
         self.frame.np.config.sections["players"]["npplayer"] = player
         self.frame.np.config.sections["players"]["npothercommand"] = self.NPCommand.get_text()
         self.frame.np.config.sections["players"]["npformat"] = self.NPFormat.get_child().get_text()
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
         self.quit(None)
 
@@ -376,7 +376,7 @@ class NowPlaying:
 
     def mpd_command(self, command):
 
-        output = executeCommand("mpc --format $", command, returnoutput=True).decode().split('\n')[0]
+        output = execute_command("mpc --format $", command, returnoutput=True).decode().split('\n')[0]
 
         if output == '' or output.startswith("MPD_HOST") or output.startswith("volume: "):
             return None
@@ -424,7 +424,7 @@ class NowPlaying:
         self.audacious_running = True
 
         if "$n" in slist:
-            artist = self.audacious_command('current-song-tuple-data', 'artist')
+            artist = self.audacious_command('current-song-tuple-data', 'artist') or "?"
             title = self.audacious_command('current-song-tuple-data', 'title')
             if artist and title:
                 self.title["nowplaying"] = artist + ' - ' + title
@@ -482,9 +482,9 @@ class NowPlaying:
         """ Wrapper that calls audacious commandline audtool and parse the output """
 
         try:
-            output = executeCommand("audtool %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
+            output = execute_command("audtool %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
         except RuntimeError:
-            output = executeCommand("audtool2 %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
+            output = execute_command("audtool2 %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
 
         if output.startswith('audtool'):
             output = None
@@ -669,7 +669,7 @@ class NowPlaying:
             if othercommand == "":
                 return None
 
-            output = executeCommand(othercommand, returnoutput=True)
+            output = execute_command(othercommand, returnoutput=True)
             self.title["nowplaying"] = output
             return True
         except Exception as error:
@@ -765,4 +765,4 @@ class NowPlaying:
         return True
 
     def show(self):
-        self.NowPlayingDialog.show()
+        self.now_playing_dialog.show()

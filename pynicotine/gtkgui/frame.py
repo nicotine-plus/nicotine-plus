@@ -32,8 +32,8 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import _thread
 from pynicotine import slskmessages
@@ -42,10 +42,10 @@ from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.checklatest import checklatest
-from pynicotine.gtkgui.dirchooser import ChooseFile
-from pynicotine.gtkgui.dirchooser import SaveFile
+from pynicotine.gtkgui.dirchooser import choose_file
+from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.downloads import Downloads
-from pynicotine.gtkgui.dialogs import OptionDialog
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.nowplaying import NowPlaying
@@ -59,14 +59,14 @@ from pynicotine.gtkgui.userbrowse import UserBrowse
 from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
-from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import BuddiesComboBox
-from pynicotine.gtkgui.utils import Humanize
-from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import humanize
+from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
-from pynicotine.gtkgui.utils import OpenUri
+from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import ScrollBottom
+from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
@@ -79,7 +79,7 @@ class NicotineFrame:
 
     def __init__(self, data_dir, config, plugins, use_trayicon, bindip=None, port=None):
 
-        self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
         self.away = 0
@@ -117,7 +117,7 @@ class NicotineFrame:
         self.np = NetworkEventProcessor(
             self,
             self.network_callback,
-            self.SetStatusText,
+            self.set_status_text,
             self.bindip,
             self.port,
             data_dir,
@@ -125,33 +125,33 @@ class NicotineFrame:
             plugins
         )
 
-        self.LoadIcons()
+        self.load_icons()
 
         config = self.np.config.sections
 
         # Dark mode
         dark_mode_state = config["ui"]["dark_mode"]
-        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
         utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
         utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
-        utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
+        utils.PROTOCOL_HANDLERS["slsk"] = self.on_soul_seek
         utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         utils.NICOTINE = self
 
         log.add_listener(self.log_callback)
 
         # Import GtkBuilder widgets
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -167,9 +167,9 @@ class NicotineFrame:
         self.MainWindow.set_title("Nicotine+" + " " + version)
         self.MainWindow.set_default_icon(self.images["n"])
 
-        self.MainWindow.connect("focus_in_event", self.OnFocusIn)
-        self.MainWindow.connect("focus_out_event", self.OnFocusOut)
-        self.MainWindow.connect("configure_event", self.OnWindowChange)
+        self.MainWindow.connect("focus_in_event", self.on_focus_in)
+        self.MainWindow.connect("focus_out_event", self.on_focus_out)
+        self.MainWindow.connect("configure_event", self.on_window_change)
 
         width = self.np.config.sections["ui"]["width"]
         height = self.np.config.sections["ui"]["height"]
@@ -181,7 +181,7 @@ class NicotineFrame:
 
         # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
         if min(xpos, ypos) < 0:
-            self.MainWindow.set_position(gtk.WindowPosition.CENTER)
+            self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
         else:
             self.MainWindow.move(xpos, ypos)
 
@@ -191,25 +191,25 @@ class NicotineFrame:
             self.MainWindow.maximize()
 
         self.MainWindow.connect("delete-event", self.on_delete_event)
-        self.MainWindow.connect("destroy", self.OnDestroy)
-        self.MainWindow.connect("key_press_event", self.OnKeyPress)
-        self.MainWindow.connect("motion-notify-event", self.OnButtonPress)
+        self.MainWindow.connect("destroy", self.on_destroy)
+        self.MainWindow.connect("key_press_event", self.on_key_press)
+        self.MainWindow.connect("motion-notify-event", self.on_button_press)
 
         self.roomlist = RoomList(self)
 
         # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.SetWidgetOnlineStatus(False)
+        self.set_widget_online_status(False)
 
         """ Log """
 
         # Popup menu on the log windows
         self.logpopupmenu = PopupMenu(self).setup(
-            ("#" + _("Find"), self.OnFindLogWindow),
+            ("#" + _("Find"), self.on_find_log_window),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyLogWindow),
-            ("#" + _("Copy All"), self.OnCopyAllLogWindow),
+            ("#" + _("Copy"), self.on_copy_log_window),
+            ("#" + _("Copy All"), self.on_copy_all_log_window),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearLogWindow)
+            ("#" + _("Clear log"), self.on_clear_log_window)
         )
 
         # Debug
@@ -229,11 +229,11 @@ class NicotineFrame:
 
             # Rescan public shares if needed
             if not self.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
-                self.OnRescan()
+                self.on_rescan()
 
             # Rescan buddy shares if needed
             if self.np.config.sections["transfers"]["enablebuddyshares"]:
-                self.OnBuddyRescan()
+                self.on_buddy_rescan()
 
         # Deactivate public shares related menu entries if we don't use them
         if self.np.config.sections["transfers"]["friendsonly"] or not self.np.config.sections["transfers"]["shared"]:
@@ -248,7 +248,7 @@ class NicotineFrame:
         """ Interests """
 
         # for iterating buddy changes to the combos
-        self.CreateRecommendationsWidgets()
+        self.create_recommendations_widgets()
 
         for thing in config["interests"]["likes"]:
             self.likes[thing] = self.likes_model.append([thing])
@@ -258,16 +258,16 @@ class NicotineFrame:
 
         """ Notebooks """
 
-        self.HiddenTabs = {}
+        self.hidden_tabs = {}
 
         # Initialise the Notebooks
-        self.ChatNotebook = ChatRooms(self)
-        self.PrivatechatNotebook = PrivateChats(self)
-        self.UserInfoNotebook = UserTabs(self, UserInfo, self.UserInfoNotebookRaw)
-        self.UserBrowseNotebook = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw)
-        self.SearchNotebook = Searches(self)
+        self.chat_notebook = ChatRooms(self)
+        self.privatechat_notebook = PrivateChats(self)
+        self.user_info_notebook = UserTabs(self, UserInfo, self.UserInfoNotebookRaw)
+        self.user_browse_notebook = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw)
+        self.search_notebook = Searches(self)
 
-        for w in self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook:
+        for w in self.chat_notebook, self.privatechat_notebook, self.user_info_notebook, self.user_browse_notebook, self.search_notebook:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
             w.show_images(config["notifications"]["notification_tab_icons"])
@@ -325,7 +325,7 @@ class NicotineFrame:
             img_label.set_text_color(0)
 
             # Set the menu to hide the tab
-            eventbox_name = gtk.Buildable.get_name(label_tab)
+            eventbox_name = Gtk.Buildable.get_name(label_tab)
 
             label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
 
@@ -333,65 +333,65 @@ class NicotineFrame:
 
             popup.setup(
                 (
-                    "#" + hide_tab_template % {"tab": translated_tablabels[label_tab]}, self.HideTab, [label_tab, map_tablabels_to_box[label_tab]]
+                    "#" + hide_tab_template % {"tab": translated_tablabels[label_tab]}, self.hide_tab, [label_tab, map_tablabels_to_box[label_tab]]
                 )
             )
 
             popup.set_user(map_tablabels_to_box[label_tab])
 
-        self.chatrooms = self.ChatNotebook
+        self.chatrooms = self.chat_notebook
         self.chatrooms.show()
 
         # Create Search combo ListStores
-        self.SearchEntryCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.SearchEntryCombo.set_model(self.SearchEntryCombo_List)
+        self.search_entry_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.SearchEntryCombo.set_model(self.search_entry_combo_model)
         self.SearchEntryCombo.set_entry_text_column(0)
 
-        self.SearchEntry = self.SearchEntryCombo.get_child()
-        self.SearchEntry.connect("activate", self.OnSearch)
+        self.search_entry = self.SearchEntryCombo.get_child()
+        self.search_entry.connect("activate", self.on_search)
 
-        self.RoomSearchCombo_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.RoomSearchCombo.set_model(self.RoomSearchCombo_List)
+        self.room_search_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.RoomSearchCombo.set_model(self.room_search_combo_model)
         self.RoomSearchCombo.set_entry_text_column(0)
 
-        self.SearchMethod_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.SearchMethod.set_model(self.SearchMethod_List)
-        renderer_text = gtk.CellRendererText()
+        self.search_method_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.SearchMethod.set_model(self.search_method_model)
+        renderer_text = Gtk.CellRendererText()
         self.SearchMethod.pack_start(renderer_text, True)
         self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
-        self.Searches = self.SearchNotebook
-        self.Searches.show()
-        self.Searches.LoadConfig()
+        self.searches = self.search_notebook
+        self.searches.show()
+        self.searches.load_config()
 
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
         self.userlist = UserList(self)
 
-        self.privatechats = self.PrivatechatNotebook
-        self.sPrivateChatButton.connect("clicked", self.OnGetPrivateChat)
-        self.UserPrivateCombo.get_child().connect("activate", self.OnGetPrivateChat)
+        self.privatechats = self.privatechat_notebook
+        self.sPrivateChatButton.connect("clicked", self.on_get_private_chat)
+        self.UserPrivateCombo.get_child().connect("activate", self.on_get_private_chat)
         self.privatechats.show()
 
-        self.userinfo = self.UserInfoNotebook
-        self.sUserinfoButton.connect("clicked", self.OnGetUserInfo)
-        self.UserInfoCombo.get_child().connect("activate", self.OnGetUserInfo)
+        self.userinfo = self.user_info_notebook
+        self.sUserinfoButton.connect("clicked", self.on_get_user_info)
+        self.UserInfoCombo.get_child().connect("activate", self.on_get_user_info)
         self.userinfo.show()
 
-        self.userbrowse = self.UserBrowseNotebook
-        self.sSharesButton.connect("clicked", self.OnGetShares)
-        self.UserBrowseCombo.get_child().connect("activate", self.OnGetShares)
+        self.userbrowse = self.user_browse_notebook
+        self.sSharesButton.connect("clicked", self.on_get_shares)
+        self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
         self.userbrowse.show()
 
         # For tab notifications
-        self.userinfo.SetTabLabel(self.UserInfoTabLabel)
-        self.userbrowse.SetTabLabel(self.UserBrowseTabLabel)
+        self.userinfo.set_tab_label(self.UserInfoTabLabel)
+        self.userbrowse.set_tab_label(self.UserBrowseTabLabel)
 
-        self.UpdateColours(1)
+        self.update_colours(1)
 
         """ Tray/notifications """
 
-        self.TrayApp = TrayApp(self)
+        self.tray_app = TrayApp(self)
         self.notifications = Notifications(self)
 
         self.hilites = {
@@ -401,7 +401,7 @@ class NicotineFrame:
 
         # Create the trayicon if needed
         if use_trayicon and config["ui"]["trayicon"]:
-            self.TrayApp.create()
+            self.tray_app.create()
 
         """ Connect """
 
@@ -412,41 +412,41 @@ class NicotineFrame:
             upnp = UPnPPortMapping()
 
             # Check if we can do a port mapping
-            (self.upnppossible, errors) = upnp.IsPossible()
+            (self.upnppossible, errors) = upnp.is_possible()
 
             # Test if we are able to do a port mapping
             if self.upnppossible:
                 # Do the port mapping
-                _thread.start_new_thread(upnp.AddPortMapping, (self.np,))
+                _thread.start_new_thread(upnp.add_port_mapping, (self.np,))
             else:
                 # Display errors
                 if errors is not None:
                     for err in errors:
                         log.add_warning(err)
 
-        ConfigUnset = self.np.config.needConfig()
-        if ConfigUnset:
-            if ConfigUnset > 1:
+        config_unset = self.np.config.need_config()
+        if config_unset:
+            if config_unset > 1:
                 self.connect1.set_sensitive(False)
                 self.rescan_public.set_sensitive(True)
 
                 # Set up fast configure dialog
-                self.OnFastConfigure(None, show=False)
+                self.on_fast_configure(None, show=False)
             else:
                 # Connect anyway
-                self.OnConnect(-1)
+                self.on_connect(-1)
         else:
-            self.OnConnect(-1)
+            self.on_connect(-1)
 
-        self.UpdateBandwidth()
+        self.update_bandwidth()
 
         """ Element Visibility """
 
         self.show_log_window1.set_active(not config["logging"]["logcollapsed"])
         self.show_debug_info1.set_active(config["logging"]["debug"])
 
-        self.OnShowLog(self.show_log_window1)
-        self.OnShowDebug(self.show_debug_info1)
+        self.on_show_log(self.show_log_window1)
+        self.on_show_debug(self.show_debug_info1)
 
         if config["ui"]["roomlistcollapsed"]:
             self.show_room_list1.set_active(False)
@@ -457,7 +457,7 @@ class NicotineFrame:
         self.ShowFlags.set_active(not config["columns"]["hideflags"])
 
         self.ShowTransferButtons.set_active(self.np.config.sections["transfers"]["enabletransferbuttons"])
-        self.OnShowTransferButtons(self.ShowTransferButtons)
+        self.on_show_transfer_buttons(self.ShowTransferButtons)
 
         buddylist = config["ui"]["buddylistinchatrooms"]
 
@@ -478,7 +478,7 @@ class NicotineFrame:
 
         # Create a list of objects of the BuddiesComboBox class
         # This add a few methods to add/remove entries on all combobox at once
-        self.BuddiesComboEntries = [
+        self.buddies_combo_entries = [
             BuddiesComboBox(self, self.UserSearchCombo),
             BuddiesComboBox(self, self.UserPrivateCombo),
             BuddiesComboBox(self, self.UserInfoCombo),
@@ -486,53 +486,53 @@ class NicotineFrame:
         ]
 
         # Initial filling of the buddies combobox
-        _thread.start_new_thread(self.BuddiesCombosFill, ("",))
+        _thread.start_new_thread(self.buddies_combos_fill, ("",))
 
-        self.SearchMethod_List.clear()
+        self.search_method_model.clear()
 
         # Space after Joined Rooms is important, so it doesn't conflict
         # with any possible real room, but if it's not translated with the space
         # nothing awful will happen
         joined_rooms = _("Joined Rooms ")
-        self.searchroomslist[joined_rooms] = self.RoomSearchCombo_List.append([joined_rooms])
+        self.searchroomslist[joined_rooms] = self.room_search_combo_model.append([joined_rooms])
         self.RoomSearchCombo.set_active_iter(self.searchroomslist[joined_rooms])
 
         """ Search """
 
         for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
-            self.searchmethods[method] = self.SearchMethod_List.append([method])
+            self.searchmethods[method] = self.search_method_model.append([method])
 
         self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
-        self.SearchMethod.connect("changed", self.OnSearchMethod)
+        self.SearchMethod.connect("changed", self.on_search_method)
 
         self.UserSearchCombo.hide()
         self.RoomSearchCombo.hide()
 
-        self.UpdateDownloadFilters()
+        self.update_download_filters()
 
         """ Tab Reordering """
 
-        self.SetTabPositions()
-        self.SetMainTabsOrder()
-        self.SetMainTabsVisibility()
-        self.SetLastSessionTab()
+        self.set_tab_positions()
+        self.set_main_tabs_order()
+        self.set_main_tabs_visibility()
+        self.set_last_session_tab()
 
-        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.OnPageRemoved)
-        self.MainNotebook.connect("page-reordered", self.OnPageReordered)
-        self.MainNotebook.connect("page-added", self.OnPageAdded)
+        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
+        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
+        self.MainNotebook.connect("page-added", self.on_page_added)
 
     """ Window """
 
-    def OnFocusIn(self, widget, event):
+    def on_focus_in(self, widget, event):
         self.MainWindow.set_icon(self.images["n"])
         self.got_focus = True
         if self.MainWindow.get_urgency_hint():
             self.MainWindow.set_urgency_hint(False)
 
-    def OnFocusOut(self, widget, event):
+    def on_focus_out(self, widget, event):
         self.got_focus = False
 
-    def OnWindowChange(self, widget, blag):
+    def on_window_change(self, widget, blag):
         (width, height) = self.MainWindow.get_size()
 
         self.np.config.sections["ui"]["height"] = height
@@ -545,48 +545,48 @@ class NicotineFrame:
 
     """ Init UI """
 
-    def InitInterface(self, msg):
+    def init_interface(self, msg):
 
         if self.away == 0:
-            self.SetUserStatus(_("Online"))
+            self.set_user_status(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "connect"
-            self.TrayApp.set_image()
+            self.tray_app.tray_status["status"] = "connect"
+            self.tray_app.set_image()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
 
             if autoaway > 0:
-                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
             else:
                 self.awaytimerid = None
         else:
-            self.SetUserStatus(_("Away"))
+            self.set_user_status(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "away"
-            self.TrayApp.set_image()
+            self.tray_app.tray_status["status"] = "away"
+            self.tray_app.set_image()
 
-        self.SetWidgetOnlineStatus(True)
+        self.set_widget_online_status(True)
 
-        self.uploads.InitInterface(self.np.transfers.uploads)
-        self.downloads.InitInterface(self.np.transfers.downloads)
+        self.uploads.init_interface(self.np.transfers.uploads)
+        self.downloads.init_interface(self.np.transfers.downloads)
 
         for i in self.np.config.sections["server"]["userlist"]:
             user = i[0]
             self.np.queue.put(slskmessages.AddUser(user))
 
         if msg.banner != "":
-            AppendLine(self.LogWindow, msg.banner, self.tag_log)
+            append_line(self.LogWindow, msg.banner, self.tag_log)
 
-        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.Searches, self.downloads, self.uploads, self.userlist
+        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist
 
-    def LoadIcons(self):
+    def load_icons(self):
         self.images = {}
         self.icons = {}
         self.flag_images = {}
         self.flag_users = {}
         scale = None
 
-        def loadStatic(name):
+        def load_static(name):
             loader = GdkPixbuf.PixbufLoader()
             data = getattr(imagedata, "%s" % (name,))
             loader.write(data)
@@ -636,19 +636,19 @@ class NicotineFrame:
                                     pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
                             self.images[name] = pixbuf
                             loaded = True
-                        except gobject.GError:
+                        except GObject.GError:
                             pass
                         del loader
                         del s
                 if name not in self.images:
-                    self.images[name] = loadStatic(name)
+                    self.images[name] = load_static(name)
         else:
             for name in names:
-                self.images[name] = loadStatic(name)
+                self.images[name] = load_static(name)
 
     """ Connection """
 
-    def OnNetworkEvent(self, msgs):
+    def on_network_event(self, msgs):
         for i in msgs:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
@@ -657,35 +657,35 @@ class NicotineFrame:
 
     def network_callback(self, msgs):
         if len(msgs) > 0:
-            GLib.idle_add(self.OnNetworkEvent, msgs)
+            GLib.idle_add(self.on_network_event, msgs)
 
-    def ConnClose(self, conn, addr):
+    def conn_close(self, conn, addr):
 
         if self.awaytimerid is not None:
-            self.RemoveAwayTimer(self.awaytimerid)
+            self.remove_away_timer(self.awaytimerid)
             self.awaytimerid = None
 
         if self.autoaway:
             self.autoaway = self.away = False
 
-        self.SetWidgetOnlineStatus(False)
+        self.set_widget_online_status(False)
 
-        self.SetUserStatus(_("Offline"))
+        self.set_user_status(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "disconnect"
-        self.TrayApp.set_image()
+        self.tray_app.tray_status["status"] = "disconnect"
+        self.tray_app.set_image()
 
-        self.Searches.WishList.interval = 0
-        self.chatrooms.ConnClose()
-        self.privatechats.ConnClose()
-        self.Searches.WishList.conn_close()
-        self.uploads.ConnClose()
-        self.downloads.ConnClose()
-        self.userlist.ConnClose()
-        self.userinfo.ConnClose()
-        self.userbrowse.ConnClose()
+        self.searches.wish_list.interval = 0
+        self.chatrooms.conn_close()
+        self.privatechats.conn_close()
+        self.searches.wish_list.conn_close()
+        self.uploads.conn_close()
+        self.downloads.conn_close()
+        self.userlist.conn_close()
+        self.userinfo.conn_close()
+        self.userbrowse.conn_close()
 
-    def SetWidgetOnlineStatus(self, status):
+    def set_widget_online_status(self, status):
 
         self.connect1.set_sensitive(not status)
         self.disconnect1.set_sensitive(status)
@@ -714,25 +714,25 @@ class NicotineFrame:
         self.DownloadButtons.set_sensitive(status)
         self.UploadButtons.set_sensitive(status)
 
-    def ConnectError(self, conn):
+    def connect_error(self, conn):
 
-        self.SetWidgetOnlineStatus(False)
+        self.set_widget_online_status(False)
 
-        self.SetUserStatus(_("Offline"))
+        self.set_user_status(_("Offline"))
 
-        self.TrayApp.tray_status["status"] = "disconnect"
-        self.TrayApp.set_image()
+        self.tray_app.tray_status["status"] = "disconnect"
+        self.tray_app.set_image()
 
-        self.uploads.ConnClose()
-        self.downloads.ConnClose()
+        self.uploads.conn_close()
+        self.downloads.conn_close()
 
     """ Menu Bar """
     # File
 
-    def OnConnect(self, widget):
+    def on_connect(self, widget):
 
-        self.TrayApp.tray_status["status"] = "connect"
-        self.TrayApp.set_image()
+        self.tray_app.tray_status["status"] = "connect"
+        self.tray_app.set_image()
 
         if self.np.active_server_conn is not None:
             return
@@ -741,67 +741,67 @@ class NicotineFrame:
             while not self.np.queue.empty():
                 self.np.queue.get(0)
 
-        self.SetUserStatus("...")
+        self.set_user_status("...")
         server = self.np.config.sections["server"]["server"]
-        self.SetStatusText(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
+        self.set_status_text(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
         self.np.queue.put(slskmessages.ServerConn(None, server))
 
         if self.np.servertimer is not None:
             self.np.servertimer.cancel()
             self.np.servertimer = None
 
-    def OnDisconnect(self, event):
+    def on_disconnect(self, event):
         self.disconnect1.set_sensitive(0)
         self.np.manualdisconnect = True
         self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
 
-    def OnAway(self, widget):
+    def on_away(self, widget):
 
         self.away = (self.away + 1) % 2
 
         if self.away == 0:
-            self.SetUserStatus(_("Online"))
+            self.set_user_status(_("Online"))
 
-            self.TrayApp.tray_status["status"] = "connect"
-            self.TrayApp.set_image()
+            self.tray_app.tray_status["status"] = "connect"
+            self.tray_app.set_image()
         else:
-            self.SetUserStatus(_("Away"))
+            self.set_user_status(_("Away"))
 
-            self.TrayApp.tray_status["status"] = "away"
-            self.TrayApp.set_image()
+            self.tray_app.tray_status["status"] = "away"
+            self.tray_app.set_image()
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
-        self.privatechats.UpdateColours()
+        self.privatechats.update_colours()
 
-    def OnCheckPrivileges(self, widget):
+    def on_check_privileges(self, widget):
         self.np.queue.put(slskmessages.CheckPrivileges())
 
-    def OnGetPrivileges(self, widget):
+    def on_get_privileges(self, widget):
         url = "%(url)s" % {
             'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(self.np.config.sections["server"]["login"])
         }
-        OpenUri(url, self.MainWindow)
+        open_uri(url, self.MainWindow)
 
-    def OnExit(self, widget):
+    def on_exit(self, widget):
         self.MainWindow.destroy()
 
     # Edit
 
-    def OnSettings(self, widget, page=None):
+    def on_settings(self, widget, page=None):
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
-            self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
+            self.settingswindow.SettingsWindow.connect("settings-closed", self.on_settings_closed)
 
         if self.fastconfigure is not None and self.fastconfigure.window.get_property("visible"):
             return
 
-        self.settingswindow.SetSettings(self.np.config.sections)
+        self.settingswindow.set_settings(self.np.config.sections)
         if page:
-            self.settingswindow.SwitchToPage(page)
+            self.settingswindow.switch_to_page(page)
         self.settingswindow.SettingsWindow.show()
         self.settingswindow.SettingsWindow.deiconify()
 
-    def OnFastConfigure(self, widget, show=True):
+    def on_fast_configure(self, widget, show=True):
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
@@ -811,22 +811,22 @@ class NicotineFrame:
         if show:
             self.fastconfigure.show()
 
-    def OnNowPlayingConfigure(self, widget):
+    def on_now_playing_configure(self, widget):
         if self.now_playing is None:
             self.now_playing = NowPlaying(self)
 
         self.now_playing.show()
 
-    def OnBackupConfig(self, widget=None):
-        response = SaveFile(
+    def on_backup_config(self, widget=None):
+        response = save_file(
             self.MainWindow.get_toplevel(),
             os.path.dirname(self.np.config.filename),
             title="Pick a filename for config backup, or cancel to use a timestamp"
         )
         if response:
-            error, message = self.np.config.writeConfigBackup(response[0])
+            error, message = self.np.config.write_config_backup(response[0])
         else:
-            error, message = self.np.config.writeConfigBackup()
+            error, message = self.np.config.write_config_backup()
         if error:
             log.add("Error backing up config: %s", message)
         else:
@@ -834,7 +834,7 @@ class NicotineFrame:
 
     # View
 
-    def OnShowLog(self, widget):
+    def on_show_log(self, widget):
 
         show = widget.get_active()
         self.np.config.sections["logging"]["logcollapsed"] = (not show)
@@ -843,11 +843,11 @@ class NicotineFrame:
             self.debugLogBox.hide()
         else:
             self.debugLogBox.show()
-            ScrollBottom(self.LogScrolledWindow)
+            scroll_bottom(self.LogScrolledWindow)
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
-    def OnShowDebug(self, widget):
+    def on_show_debug(self, widget):
 
         show = widget.get_active()
         self.np.config.sections["logging"]["debug"] = show
@@ -857,9 +857,9 @@ class NicotineFrame:
         else:
             self.debugButtonsBox.hide()
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
-    def OnShowFlags(self, widget):
+    def on_show_flags(self, widget):
 
         show = widget.get_active()
         self.np.config.sections["columns"]["hideflags"] = (not show)
@@ -870,9 +870,9 @@ class NicotineFrame:
 
         self.userlist.cols[1].set_visible(show)
         self.np.config.sections["columns"]["userlist"][1] = int(show)
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
-    def OnShowTransferButtons(self, widget):
+    def on_show_transfer_buttons(self, widget):
 
         show = widget.get_active()
         self.np.config.sections["transfers"]["enabletransferbuttons"] = show
@@ -884,9 +884,9 @@ class NicotineFrame:
             self.UploadButtons.hide()
             self.DownloadButtons.hide()
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
-    def OnShowRoomList(self, widget):
+    def on_show_room_list(self, widget):
 
         show = widget.get_active()
         self.np.config.sections["ui"]["roomlistcollapsed"] = (not show)
@@ -902,9 +902,9 @@ class NicotineFrame:
                 self.vpaned3.pack2(self.roomlist.vbox2, True, True)
                 self.vpaned3.show()
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
-    def OnToggleBuddyList(self, widget):
+    def on_toggle_buddy_list(self, widget):
         """ Function used to switch around the UI the BuddyList position """
 
         tab = always = chatrooms = hidden = False
@@ -938,11 +938,11 @@ class NicotineFrame:
                 self.vpaned3.hide()
 
         if tab:
-            self.BuddiesTabLabel = ImageLabel(_("Buddy list"), self.images["empty"])
-            self.BuddiesTabLabel.show()
+            self.buddies_tab_label = ImageLabel(_("Buddy list"), self.images["empty"])
+            self.buddies_tab_label.show()
 
             if self.userlist.userlistvbox not in self.MainNotebook.get_children():
-                self.MainNotebook.append_page(self.userlist.userlistvbox, self.BuddiesTabLabel)
+                self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
 
             if self.userlist.userlistvbox in self.MainNotebook.get_children():
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
@@ -973,14 +973,14 @@ class NicotineFrame:
             # Work already done by the else statement above, just save the choice to config
             self.np.config.sections["ui"]["buddylistinchatrooms"] = 3
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
     # Shares
 
-    def OnSettingsShares(self, widget):
-        self.OnSettings(widget, 'Shares')
+    def on_settings_shares(self, widget):
+        self.on_settings(widget, 'Shares')
 
-    def OnRescan(self, widget=None, rebuild=False):
+    def on_rescan(self, widget=None, rebuild=False):
 
         if self.rescanning:
             return
@@ -992,9 +992,9 @@ class NicotineFrame:
 
         log.add(_("Rescanning started"))
 
-        _thread.start_new_thread(self.np.shares.RescanShares, (rebuild,))
+        _thread.start_new_thread(self.np.shares.rescan_shares, (rebuild,))
 
-    def OnBuddyRescan(self, widget=None, rebuild=False):
+    def on_buddy_rescan(self, widget=None, rebuild=False):
 
         if self.brescanning:
             return
@@ -1006,9 +1006,9 @@ class NicotineFrame:
 
         log.add(_("Rescanning Buddy Shares started"))
 
-        _thread.start_new_thread(self.np.shares.RescanBuddyShares, (rebuild,))
+        _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
 
-    def OnBrowsePublicShares(self, widget):
+    def on_browse_public_shares(self, widget):
         """ Browse your own public shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1019,10 +1019,10 @@ class NicotineFrame:
         else:
             m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
 
-        m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
-        self.userbrowse.ShowInfo(login, m)
+        m.parse_network_message(m.make_network_message(nozlib=1), nozlib=1)
+        self.userbrowse.show_info(login, m)
 
-    def OnBrowseBuddyShares(self, widget):
+    def on_browse_buddy_shares(self, widget):
         """ Browse your own buddy shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1033,103 +1033,103 @@ class NicotineFrame:
         else:
             m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
 
-        m.parseNetworkMessage(m.makeNetworkMessage(nozlib=1), nozlib=1)
-        self.userbrowse.ShowInfo(login, m)
+        m.parse_network_message(m.make_network_message(nozlib=1), nozlib=1)
+        self.userbrowse.show_info(login, m)
 
     # Modes
 
-    def OnChatRooms(self, widget):
-        self.ChangeMainPage(widget, "chatrooms")
+    def on_chat_rooms(self, widget):
+        self.change_main_page(widget, "chatrooms")
 
-    def OnPrivateChat(self, widget):
-        self.ChangeMainPage(widget, "private")
+    def on_private_chat(self, widget):
+        self.change_main_page(widget, "private")
 
-    def OnDownloads(self, widget):
-        self.ChangeMainPage(widget, "downloads")
+    def on_downloads(self, widget):
+        self.change_main_page(widget, "downloads")
 
-    def OnUploads(self, widget):
-        self.ChangeMainPage(widget, "uploads")
+    def on_uploads(self, widget):
+        self.change_main_page(widget, "uploads")
 
-    def OnSearchFiles(self, widget):
-        self.ChangeMainPage(widget, "search")
+    def on_search_files(self, widget):
+        self.change_main_page(widget, "search")
 
-    def OnUserInfo(self, widget):
-        self.ChangeMainPage(widget, "userinfo")
+    def on_user_info(self, widget):
+        self.change_main_page(widget, "userinfo")
 
-    def OnUserBrowse(self, widget):
-        self.ChangeMainPage(widget, "userbrowse")
+    def on_user_browse(self, widget):
+        self.change_main_page(widget, "userbrowse")
 
-    def OnInterests(self, widget):
-        self.ChangeMainPage(widget, "interests")
+    def on_interests(self, widget):
+        self.change_main_page(widget, "interests")
 
-    def OnUserList(self, widget):
+    def on_user_list(self, widget):
         self.buddylist_in_tab.set_active(True)
 
-        self.OnToggleBuddyList(widget)
-        self.ChangeMainPage(widget, "userlist")
+        self.on_toggle_buddy_list(widget)
+        self.change_main_page(widget, "userlist")
 
     # Help
 
-    def OnAboutChatroomCommands(self, widget):
-        builder = gtk.Builder()
+    def on_about_chatroom_commands(self, widget):
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
 
-        self.AboutChatroomCommands = builder.get_object("AboutChatRoomCommands")
-        self.AboutChatroomCommands.set_transient_for(self.MainWindow)
-        self.AboutChatroomCommands.show()
+        self.about_chatroom_commands = builder.get_object("AboutChatRoomCommands")
+        self.about_chatroom_commands.set_transient_for(self.MainWindow)
+        self.about_chatroom_commands.show()
 
-    def OnAboutPrivateChatCommands(self, widget):
-        builder = gtk.Builder()
+    def on_about_private_chat_commands(self, widget):
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
 
-        self.AboutPrivateChatCommands = builder.get_object("AboutPrivateChatCommands")
-        self.AboutPrivateChatCommands.set_transient_for(self.MainWindow)
-        self.AboutPrivateChatCommands.show()
+        self.about_private_chat_commands = builder.get_object("AboutPrivateChatCommands")
+        self.about_private_chat_commands.set_transient_for(self.MainWindow)
+        self.about_private_chat_commands.show()
 
-    def OnAboutFilters(self, widget):
-        builder = gtk.Builder()
+    def on_about_filters(self, widget):
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
 
-        self.AboutSearchFilters = builder.get_object("AboutSearchFilters")
-        self.AboutSearchFilters.set_transient_for(self.MainWindow)
-        self.AboutSearchFilters.show()
+        self.about_search_filters = builder.get_object("AboutSearchFilters")
+        self.about_search_filters.set_transient_for(self.MainWindow)
+        self.about_search_filters.show()
 
-    def OnCheckLatest(self, widget):
+    def on_check_latest(self, widget):
         checklatest(self.MainWindow)
 
-    def OnReportBug(self, widget):
+    def on_report_bug(self, widget):
         url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
-        OpenUri(url, self.MainWindow)
+        open_uri(url, self.MainWindow)
 
-    def OnAbout(self, widget):
-        builder = gtk.Builder()
+    def on_about(self, widget):
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
 
-        self.About = builder.get_object("About")
+        self.about = builder.get_object("About")
 
         # Remove non-functional close button added by GTK
-        buttons = self.About.get_action_area().get_children()
+        buttons = self.about.get_action_area().get_children()
         if buttons:
             buttons[-1].destroy()
 
         # Override link handler with our own
-        self.About.connect("activate-link", self.OnAboutUri)
+        self.about.connect("activate-link", self.on_about_uri)
 
-        self.About.set_transient_for(self.MainWindow)
-        self.About.set_version(version)
-        self.About.show()
+        self.about.set_transient_for(self.MainWindow)
+        self.about.set_version(version)
+        self.about.show()
 
-    def OnAboutUri(self, widget, uri):
-        OpenUri(uri, self.MainWindow)
+    def on_about_uri(self, widget, uri):
+        open_uri(uri, self.MainWindow)
         return True
 
     """ Main Notebook """
 
-    def ChatRequestIcon(self, status=0, widget=None):
+    def chat_request_icon(self, status=0, widget=None):
 
         if status == 1 and not self.got_focus:
             self.MainWindow.set_icon(self.images["hilite"])
@@ -1137,7 +1137,7 @@ class NicotineFrame:
         if self.MainNotebook.get_current_page() == self.MainNotebook.page_num(self.chathbox):
             return
 
-        tablabel = self.GetTabLabel(self.ChatTabLabel)
+        tablabel = self.get_tab_label(self.ChatTabLabel)
         if not tablabel:
             return
 
@@ -1148,110 +1148,118 @@ class NicotineFrame:
         tablabel.set_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
         tablabel.set_text_color(status + 1)
 
-    def GetTabLabel(self, TabLabel):
+    def get_tab_label(self, tab_label):
 
         tablabel = None
 
-        if isinstance(TabLabel, ImageLabel):
-            tablabel = TabLabel
-        elif isinstance(TabLabel, gtk.EventBox):
-            tablabel = TabLabel.get_child()
+        if isinstance(tab_label, ImageLabel):
+            tablabel = tab_label
+        elif isinstance(tab_label, Gtk.EventBox):
+            tablabel = tab_label.get_child()
 
         return tablabel
 
-    def RequestIcon(self, TabLabel, widget=None):
-        if TabLabel == self.PrivateChatTabLabel and not self.got_focus:
+    def request_icon(self, tab_label, widget=None):
+
+        if tab_label == self.PrivateChatTabLabel and not self.got_focus:
             self.MainWindow.set_icon(self.images["hilite"])
-        tablabel = self.GetTabLabel(TabLabel)
+
+        tablabel = self.get_tab_label(tab_label)
+
         if not tablabel:
             return
 
-        if self.current_tab != TabLabel:
+        if self.current_tab != tab_label:
             tablabel.set_image(self.images["hilite"])
             tablabel.set_text_color(2)
 
-    def OnSwitchPage(self, notebook, page, page_nr):
+    def on_switch_page(self, notebook, page, page_nr):
 
-        tabLabels = []
+        tab_labels = []
         tabs = self.MainNotebook.get_children()
 
         for i in tabs:
-            tabLabels.append(self.MainNotebook.get_tab_label(i))
+            tab_labels.append(self.MainNotebook.get_tab_label(i))
 
-        l = tabLabels[page_nr]  # noqa: E741
+        label = tab_labels[page_nr]
 
         compare = {
-            self.ChatTabLabel: self.ChatNotebook,
-            self.PrivateChatTabLabel: self.PrivatechatNotebook,
+            self.ChatTabLabel: self.chat_notebook,
+            self.PrivateChatTabLabel: self.privatechat_notebook,
             self.DownloadsTabLabel: None,
             self.UploadsTabLabel: None,
-            self.SearchTabLabel: self.SearchNotebook,
-            self.UserInfoTabLabel: self.UserInfoNotebook,
-            self.UserBrowseTabLabel: self.UserBrowseNotebook,
+            self.SearchTabLabel: self.search_notebook,
+            self.UserInfoTabLabel: self.user_info_notebook,
+            self.UserBrowseTabLabel: self.user_browse_notebook,
             self.InterestsTabLabel: None
         }
 
-        if "BuddiesTabLabel" in self.__dict__:
-            compare[self.BuddiesTabLabel] = None
+        if "buddies_tab_label" in self.__dict__:
+            compare[self.buddies_tab_label] = None
 
-        n = compare[l]
-        self.current_tab = l
+        n = compare[label]
+        self.current_tab = label
 
-        if l is not None:
-            if isinstance(l, ImageLabel):
-                l.set_image(self.images["empty"])
-                l.set_text_color(0)
-            elif isinstance(l, gtk.EventBox):
-                l.get_child().set_image(self.images["empty"])
-                l.get_child().set_text_color(0)
+        if label is not None:
+            if isinstance(label, ImageLabel):
+                label.set_image(self.images["empty"])
+                label.set_text_color(0)
+            elif isinstance(label, Gtk.EventBox):
+                label.get_child().set_image(self.images["empty"])
+                label.get_child().set_text_color(0)
 
         if n is not None:
             n.popup_disable()
             n.popup_enable()
+
             if n.get_current_page() != -1:
                 n.dismiss_icon(n, None, n.get_current_page())
 
         if page_nr == self.MainNotebook.page_num(self.chathbox):
             p = n.get_current_page()
-            self.chatrooms.roomsctrl.OnSwitchPage(n.Notebook, None, p, 1)
+            self.chatrooms.roomsctrl.on_switch_page(n.notebook, None, p, 1)
+
         elif page_nr == self.MainNotebook.page_num(self.privatevbox):
             p = n.get_current_page()
+
             if "privatechats" in self.__dict__:
-                self.privatechats.OnSwitchPage(n.Notebook, None, p, 1)
+                self.privatechats.on_switch_page(n.notebook, None, p, 1)
+
         elif page_nr == self.MainNotebook.page_num(self.uploadsvbox):
             self.uploads.update(forceupdate=True)
+
         elif page_nr == self.MainNotebook.page_num(self.downloadsvbox):
             self.downloads.update(forceupdate=True)
 
-    def OnPageRemoved(self, MainNotebook, child, page_num):
-        name = self.MatchMainNotebox(child)
+    def on_page_removed(self, main_notebook, child, page_num):
+        name = self.match_main_notebox(child)
         self.np.config.sections["ui"]["modes_visible"][name] = 0
-        self.OnPageReordered(MainNotebook, child, page_num)
+        self.on_page_reordered(main_notebook, child, page_num)
 
-    def OnPageAdded(self, MainNotebook, child, page_num):
-        name = self.MatchMainNotebox(child)
+    def on_page_added(self, main_notebook, child, page_num):
+        name = self.match_main_notebox(child)
         self.np.config.sections["ui"]["modes_visible"][name] = 1
-        self.OnPageReordered(MainNotebook, child, page_num)
+        self.on_page_reordered(main_notebook, child, page_num)
 
-    def OnPageReordered(self, MainNotebook, child, page_num):
+    def on_page_reordered(self, main_notebook, child, page_num):
 
         tabs = []
         for children in self.MainNotebook.get_children():
-            tabs.append(self.MatchMainNotebox(children))
+            tabs.append(self.match_main_notebox(children))
 
         self.np.config.sections["ui"]["modes_order"] = tabs
 
-        if MainNotebook.get_n_pages() == 0:
-            MainNotebook.set_show_tabs(False)
+        if main_notebook.get_n_pages() == 0:
+            main_notebook.set_show_tabs(False)
         else:
-            MainNotebook.set_show_tabs(True)
+            main_notebook.set_show_tabs(True)
 
-    def SetMainTabsOrder(self):
+    def set_main_tabs_order(self):
         tabs = self.np.config.sections["ui"]["modes_order"]
         order = 0
 
         for name in tabs:
-            tab = self.MatchMainNamePage(name)
+            tab = self.match_main_name_page(name)
 
             # Ensure that the tab exists (Buddy List tab may be hidden)
             if tab is None or self.MainNotebook.page_num(tab) == -1:
@@ -1260,11 +1268,11 @@ class NicotineFrame:
             self.MainNotebook.reorder_child(tab, order)
             order += 1
 
-    def SetMainTabsVisibility(self):
+    def set_main_tabs_visibility(self):
         visible = self.np.config.sections["ui"]["modes_visible"]
 
         for name in visible:
-            tab = self.MatchMainNamePage(name)
+            tab = self.match_main_name_page(name)
             if tab is None:
                 continue
 
@@ -1272,17 +1280,17 @@ class NicotineFrame:
                 if tab not in self.MainNotebook.get_children():
                     continue
 
-                if tab in self.HiddenTabs:
+                if tab in self.hidden_tabs:
                     continue
 
-                self.HiddenTabs[tab] = self.MainNotebook.get_tab_label(tab)
+                self.hidden_tabs[tab] = self.MainNotebook.get_tab_label(tab)
                 num = self.MainNotebook.page_num(tab)
                 self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() == 0:
             self.MainNotebook.set_show_tabs(False)
 
-    def SetLastSessionTab(self):
+    def set_last_session_tab(self):
         try:
             if self.np.config.sections["ui"]["tab_select_previous"]:
                 lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
@@ -1295,62 +1303,62 @@ class NicotineFrame:
 
         self.MainNotebook.set_current_page(0)
 
-    def HideTab(self, widget, lista):
+    def hide_tab(self, widget, lista):
         eventbox, child = lista
         tab = self.__dict__[child]
 
         if tab not in self.MainNotebook.get_children():
             return
 
-        if tab in self.HiddenTabs:
+        if tab in self.hidden_tabs:
             return
 
-        self.HiddenTabs[tab] = eventbox
+        self.hidden_tabs[tab] = eventbox
 
         num = self.MainNotebook.page_num(tab)
         self.MainNotebook.remove_page(num)
 
-    def ShowTab(self, widget, lista):
+    def show_tab(self, widget, lista):
         name, child = lista
 
         if child in self.MainNotebook.get_children():
             return
 
-        if child not in self.HiddenTabs:
+        if child not in self.hidden_tabs:
             return
 
-        eventbox = self.HiddenTabs[child]
+        eventbox = self.hidden_tabs[child]
 
         self.MainNotebook.append_page(child, eventbox)
         self.MainNotebook.set_tab_reorderable(child, self.np.config.sections["ui"]["tab_reorderable"])
 
-        del self.HiddenTabs[child]
+        del self.hidden_tabs[child]
 
     def on_tab_click(self, widget, event, id, child):
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, None, event.button, event.time)
 
-    def getTabPosition(self, string):
+    def get_tab_position(self, string):
         if string in ("Top", "top", _("Top")):
-            position = gtk.PositionType.TOP
+            position = Gtk.PositionType.TOP
         elif string in ("Bottom", "bottom", _("Bottom")):
-            position = gtk.PositionType.BOTTOM
+            position = Gtk.PositionType.BOTTOM
         elif string in ("Left", "left", _("Left")):
-            position = gtk.PositionType.LEFT
+            position = Gtk.PositionType.LEFT
         elif string in ("Right", "right", _("Right")):
-            position = gtk.PositionType.RIGHT
+            position = Gtk.PositionType.RIGHT
         else:
-            position = gtk.PositionType.TOP
+            position = Gtk.PositionType.TOP
         return position
 
-    def SetTabPositions(self):
+    def set_tab_positions(self):
 
         ui = self.np.config.sections["ui"]
 
-        self.ChatNotebook.set_tab_pos(self.getTabPosition(ui["tabrooms"]))
-        self.ChatNotebook.set_tab_angle(ui["labelrooms"])
+        self.chat_notebook.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
+        self.chat_notebook.set_tab_angle(ui["labelrooms"])
 
-        self.MainNotebook.set_tab_pos(self.getTabPosition(ui["tabmain"]))
+        self.MainNotebook.set_tab_pos(self.get_tab_position(ui["tabmain"]))
 
         for label_tab in [
             self.ChatTabLabel,
@@ -1364,19 +1372,19 @@ class NicotineFrame:
         ]:
             label_tab.get_child().set_angle(ui["labelmain"])
 
-        if "BuddiesTabLabel" in self.__dict__:
-            self.BuddiesTabLabel.set_angle(ui["labelmain"])
+        if "buddies_tab_label" in self.__dict__:
+            self.buddies_tab_label.set_angle(ui["labelmain"])
 
-        self.PrivatechatNotebook.set_tab_pos(self.getTabPosition(ui["tabprivate"]))
-        self.PrivatechatNotebook.set_tab_angle(ui["labelprivate"])
-        self.UserInfoNotebook.set_tab_pos(self.getTabPosition(ui["tabinfo"]))
-        self.UserInfoNotebook.set_tab_angle(ui["labelinfo"])
-        self.UserBrowseNotebook.set_tab_pos(self.getTabPosition(ui["tabbrowse"]))
-        self.UserBrowseNotebook.set_tab_angle(ui["labelbrowse"])
-        self.SearchNotebook.set_tab_pos(self.getTabPosition(ui["tabsearch"]))
-        self.SearchNotebook.set_tab_angle(ui["labelsearch"])
+        self.privatechat_notebook.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
+        self.privatechat_notebook.set_tab_angle(ui["labelprivate"])
+        self.user_info_notebook.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
+        self.user_info_notebook.set_tab_angle(ui["labelinfo"])
+        self.user_browse_notebook.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
+        self.user_browse_notebook.set_tab_angle(ui["labelbrowse"])
+        self.search_notebook.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
+        self.search_notebook.set_tab_angle(ui["labelsearch"])
 
-    def MatchMainNotebox(self, tab):
+    def match_main_notebox(self, tab):
 
         if tab == self.chathbox:
             name = "chatrooms"  # Chatrooms
@@ -1402,7 +1410,7 @@ class NicotineFrame:
 
         return name
 
-    def MatchMainNamePage(self, tab):
+    def match_main_name_page(self, tab):
 
         if tab == "chatrooms":
             child = self.chathbox  # Chatrooms
@@ -1427,27 +1435,27 @@ class NicotineFrame:
             return
         return child
 
-    def ChangeMainPage(self, widget, tab):
+    def change_main_page(self, widget, tab):
 
         page_num = self.MainNotebook.page_num
-        child = self.MatchMainNamePage(tab)
+        child = self.match_main_name_page(tab)
 
         if child in self.MainNotebook.get_children():
             self.MainNotebook.set_current_page(page_num(child))
         else:
-            self.ShowTab(widget, [tab, child])
+            self.show_tab(widget, [tab, child])
 
     """ Interests """
 
-    def CreateRecommendationsWidgets(self):
+    def create_recommendations_widgets(self):
 
         self.likes = {}
-        self.likes_model = gtk.ListStore(gobject.TYPE_STRING)
-        self.likes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.likes_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        cols = utils.InitialiseColumns(
+        cols = utils.initialise_columns(
             self.LikesList,
-            [_("I like") + ":", 0, "text", self.CellDataFunc]
+            [_("I like") + ":", 0, "text", self.cell_data_func]
         )
 
         cols[0].set_sort_column_id(0)
@@ -1456,21 +1464,21 @@ class NicotineFrame:
         self.til_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.OnRemoveThingILike),
-            ("#" + _("Re_commendations for this item"), self.OnRecommendItem),
+            ("#" + _("_Remove this item"), self.on_remove_thing_i_like),
+            ("#" + _("Re_commendations for this item"), self.on_recommend_item),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.on_recommend_search)
         )
 
-        self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
+        self.LikesList.connect("button_press_event", self.on_popup_til_menu)
 
         self.dislikes = {}
-        self.dislikes_model = gtk.ListStore(gobject.TYPE_STRING)
-        self.dislikes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.dislikes_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        cols = utils.InitialiseColumns(
+        cols = utils.initialise_columns(
             self.DislikesList,
-            [_("I dislike") + ":", 0, "text", self.CellDataFunc]
+            [_("I dislike") + ":", 0, "text", self.cell_data_func]
         )
 
         cols[0].set_sort_column_id(0)
@@ -1479,77 +1487,77 @@ class NicotineFrame:
         self.tidl_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.OnRemoveThingIDislike),
+            ("#" + _("_Remove this item"), self.on_remove_thing_i_dislike),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.on_recommend_search)
         )
 
-        self.DislikesList.connect("button_press_event", self.OnPopupTIDLMenu)
+        self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
 
-        cols = utils.InitialiseColumns(
+        cols = utils.initialise_columns(
             self.RecommendationsList,
-            [_("Item"), 0, "text", self.CellDataFunc],
-            [_("Rating"), 75, "text", self.CellDataFunc]
+            [_("Item"), 0, "text", self.cell_data_func],
+            [_("Rating"), 75, "text", self.cell_data_func]
         )
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.recommendations_model = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT
+        self.recommendations_model = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT
         )
         self.RecommendationsList.set_model(self.recommendations_model)
 
         self.r_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("$" + _("I _like this"), self.OnLikeRecommendation),
-            ("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation),
+            ("$" + _("I _like this"), self.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
+            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.on_recommend_search)
         )
 
-        self.RecommendationsList.connect("button_press_event", self.OnPopupRMenu)
+        self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
 
-        cols = utils.InitialiseColumns(
+        cols = utils.initialise_columns(
             self.UnrecommendationsList,
-            [_("Item"), 0, "text", self.CellDataFunc],
-            [_("Rating"), 75, "text", self.CellDataFunc]
+            [_("Item"), 0, "text", self.cell_data_func],
+            [_("Rating"), 75, "text", self.cell_data_func]
         )
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.unrecommendations_model = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT
+        self.unrecommendations_model = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT
         )
         self.UnrecommendationsList.set_model(self.unrecommendations_model)
 
         self.ur_popup_menu = popup = utils.PopupMenu(self)
 
         popup.setup(
-            ("$" + _("I _like this"), self.OnLikeRecommendation),
-            ("$" + _("I _don't like this"), self.OnDislikeRecommendation),
-            ("#" + _("_Recommendations for this item"), self.OnRecommendRecommendation),
+            ("$" + _("I _like this"), self.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
+            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.on_recommend_search)
         )
 
-        self.UnrecommendationsList.connect("button_press_event", self.OnPopupUnRecMenu)
+        self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
         statusiconwidth = self.images["offline"].get_width() + 4
 
-        cols = utils.InitialiseColumns(
+        cols = utils.initialise_columns(
             self.RecommendationUsersList,
             ["", statusiconwidth, "pixbuf"],
-            [_("User"), 100, "text", self.CellDataFunc],
-            [_("Speed"), 0, "text", self.CellDataFunc],
-            [_("Files"), 0, "text", self.CellDataFunc],
+            [_("User"), 100, "text", self.cell_data_func],
+            [_("Speed"), 0, "text", self.cell_data_func],
+            [_("Files"), 0, "text", self.cell_data_func],
         )
 
         cols[0].set_sort_column_id(4)
@@ -1558,35 +1566,35 @@ class NicotineFrame:
         cols[3].set_sort_column_id(6)
 
         self.recommendation_users = {}
-        self.recommendation_users_model = gtk.ListStore(
-            gobject.TYPE_OBJECT,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT
+        self.recommendation_users_model = Gtk.ListStore(
+            GObject.TYPE_OBJECT,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT
         )
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
-        self.recommendation_users_model.set_sort_column_id(1, gtk.SortType.ASCENDING)
+        self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         self.ru_popup_menu = popup = utils.PopupMenu(self)
         popup.setup(
-            ("#" + _("Send _message"), popup.OnSendMessage),
+            ("#" + _("Send _message"), popup.on_send_message),
             ("", None),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+            ("#" + _("Brow_se files"), popup.on_browse_user),
+            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
             ("", None),
-            ("$" + _("_Add user to list"), popup.OnAddToList),
-            ("$" + _("_Ban this user"), popup.OnBanUser),
-            ("$" + _("_Ignore this user"), popup.OnIgnoreUser)
+            ("$" + _("_Add user to list"), popup.on_add_to_list),
+            ("$" + _("_Ban this user"), popup.on_ban_user),
+            ("$" + _("_Ignore this user"), popup.on_ignore_user)
         )
 
-        self.RecommendationUsersList.connect("button_press_event", self.OnPopupRUMenu)
+        self.RecommendationUsersList.connect("button_press_event", self.on_popup_ru_menu)
 
-    def OnAddThingILike(self, widget):
+    def on_add_thing_i_like(self, widget):
         thing = self.AddLikeEntry.get_text()
         self.AddLikeEntry.set_text("")
 
@@ -1594,10 +1602,10 @@ class NicotineFrame:
             thing = thing.lower()
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
-    def OnAddThingIDislike(self, widget):
+    def on_add_thing_i_dislike(self, widget):
         thing = self.AddDislikeEntry.get_text()
         self.AddDislikeEntry.set_text("")
 
@@ -1605,217 +1613,257 @@ class NicotineFrame:
             thing = thing.lower()
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingIHate(thing))
 
-    def SetRecommendations(self, title, recom):
+    def set_recommendations(self, title, recom):
         self.recommendations_model.clear()
-        for (thing, rating) in recom.items():
-            self.recommendations_model.append([thing, Humanize(rating), rating])
-        self.recommendations_model.set_sort_column_id(2, gtk.SortType.DESCENDING)
 
-    def SetUnrecommendations(self, title, recom):
+        for (thing, rating) in recom.items():
+            self.recommendations_model.append([thing, humanize(rating), rating])
+
+        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
+
+    def set_unrecommendations(self, title, recom):
         self.unrecommendations_model.clear()
+
         for (thing, rating) in recom.items():
-            self.unrecommendations_model.append([thing, Humanize(rating), rating])
-        self.unrecommendations_model.set_sort_column_id(2, gtk.SortType.ASCENDING)
+            self.unrecommendations_model.append([thing, humanize(rating), rating])
 
-    def GlobalRecommendations(self, msg):
-        self.SetRecommendations("Global recommendations", msg.recommendations)
-        self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
+        self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-    def Recommendations(self, msg):
-        self.SetRecommendations("Recommendations", msg.recommendations)
-        self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
+    def global_recommendations(self, msg):
+        self.set_recommendations("Global recommendations", msg.recommendations)
+        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
 
-    def ItemRecommendations(self, msg):
-        self.SetRecommendations(_("Recommendations for %s") % msg.thing, msg.recommendations)
-        self.SetUnrecommendations("Unrecommendations", msg.unrecommendations)
+    def recommendations(self, msg):
+        self.set_recommendations("Recommendations", msg.recommendations)
+        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
 
-    def OnGlobalRecommendationsClicked(self, widget):
+    def item_recommendations(self, msg):
+        self.set_recommendations(_("Recommendations for %s") % msg.thing, msg.recommendations)
+        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
+
+    def on_global_recommendations_clicked(self, widget):
         self.np.queue.put(slskmessages.GlobalRecommendations())
 
-    def OnRecommendationsClicked(self, widget):
+    def on_recommendations_clicked(self, widget):
         self.np.queue.put(slskmessages.Recommendations())
 
-    def OnSimilarUsersClicked(self, widget):
+    def on_similar_users_clicked(self, widget):
         self.np.queue.put(slskmessages.SimilarUsers())
 
-    def SimilarUsers(self, msg):
+    def similar_users(self, msg):
         self.recommendation_users_model.clear()
         self.recommendation_users = {}
+
         for user in msg.users:
             iterator = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
             self.recommendation_users[user] = iterator
             self.np.queue.put(slskmessages.AddUser(user))
 
-    def GetUserStatus(self, msg):
+    def get_user_status(self, msg):
         if msg.user not in self.recommendation_users:
             return
-        img = self.GetStatusImage(msg.status)
+
+        img = self.get_status_image(msg.status)
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, img, 4, msg.status)
 
-    def GetUserStats(self, msg):
+    def get_user_stats(self, msg):
         if msg.user not in self.recommendation_users:
             return
-        self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, HumanSpeed(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
-    def OnPopupRUMenu(self, widget, event):
+        self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
+
+    def on_popup_ru_menu(self, widget, event):
         items = self.ru_popup_menu.get_children()
         d = self.RecommendationUsersList.get_path_at_pos(int(event.x), int(event.y))
+
         if not d:
             return
+
         path, column, x, y = d
         user = self.recommendation_users_model.get_value(self.recommendation_users_model.get_iter(path), 1)
+
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.privatechats.SendMessage(user)
-                self.ChangeMainPage(None, "private")
+                self.privatechats.send_message(user)
+                self.change_main_page(None, "private")
             return
+
         self.ru_popup_menu.set_user(user)
         items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
         items[8].set_active(user in self.np.config.sections["server"]["banlist"])
         items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
+
         self.ru_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnRemoveThingILike(self, widget):
+    def on_remove_thing_i_like(self, widget):
         thing = self.til_popup_menu.get_user()
+
         if thing not in self.np.config.sections["interests"]["likes"]:
             return
+
         self.likes_model.remove(self.likes[thing])
         del self.likes[thing]
         self.np.config.sections["interests"]["likes"].remove(thing)
-        self.np.config.writeConfiguration()
+
+        self.np.config.write_configuration()
         self.np.queue.put(slskmessages.RemoveThingILike(thing))
 
-    def OnRecommendItem(self, widget):
+    def on_recommend_item(self, widget):
         thing = self.til_popup_menu.get_user()
         self.np.queue.put(slskmessages.ItemRecommendations(thing))
         self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
 
-    def OnPopupTILMenu(self, widget, event):
+    def on_popup_til_menu(self, widget, event):
         if event.button != 3:
             return
+
         d = self.LikesList.get_path_at_pos(int(event.x), int(event.y))
+
         if not d:
             return
+
         path, column, x, y = d
         iterator = self.likes_model.get_iter(path)
         thing = self.likes_model.get_value(iterator, 0)
+
         self.til_popup_menu.set_user(thing)
         self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnRemoveThingIDislike(self, widget):
+    def on_remove_thing_i_dislike(self, widget):
         thing = self.tidl_popup_menu.get_user()
+
         if thing not in self.np.config.sections["interests"]["dislikes"]:
             return
+
         self.dislikes_model.remove(self.dislikes[thing])
         del self.dislikes[thing]
         self.np.config.sections["interests"]["dislikes"].remove(thing)
-        self.np.config.writeConfiguration()
+
+        self.np.config.write_configuration()
         self.np.queue.put(slskmessages.RemoveThingIHate(thing))
 
-    def OnPopupTIDLMenu(self, widget, event):
+    def on_popup_tidl_menu(self, widget, event):
         if event.button != 3:
             return
+
         d = self.DislikesList.get_path_at_pos(int(event.x), int(event.y))
+
         if not d:
             return
+
         path, column, x, y = d
         iterator = self.dislikes_model.get_iter(path)
         thing = self.dislikes_model.get_value(iterator, 0)
+
         self.tidl_popup_menu.set_user(thing)
         self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnLikeRecommendation(self, widget):
+    def on_like_recommendation(self, widget):
         thing = widget.get_parent().get_user()
+
         if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
-            self.np.config.writeConfiguration()
+
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
+
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
             self.np.config.sections["interests"]["likes"].remove(thing)
-            self.np.config.writeConfiguration()
+
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.RemoveThingILike(thing))
 
-    def OnDislikeRecommendation(self, widget):
+    def on_dislike_recommendation(self, widget):
         thing = widget.get_parent().get_user()
+
         if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
-            self.np.config.writeConfiguration()
+
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingIHate(thing))
+
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
             self.np.config.sections["interests"]["dislikes"].remove(thing)
-            self.np.config.writeConfiguration()
+
+            self.np.config.write_configuration()
             self.np.queue.put(slskmessages.RemoveThingIHate(thing))
 
-    def OnRecommendRecommendation(self, widget):
+    def on_recommend_recommendation(self, widget):
         thing = self.r_popup_menu.get_user()
         self.np.queue.put(slskmessages.ItemRecommendations(thing))
         self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
 
-    def OnRecommendSearch(self, widget):
+    def on_recommend_search(self, widget):
         thing = widget.get_parent().get_user()
-        self.SearchEntry.set_text(thing)
-        self.ChangeMainPage(None, "search")
+        self.search_entry.set_text(thing)
+        self.change_main_page(None, "search")
 
-    def OnPopupRMenu(self, widget, event):
+    def on_popup_r_menu(self, widget, event):
         if event.button != 3:
             return
+
         d = self.RecommendationsList.get_path_at_pos(int(event.x), int(event.y))
+
         if not d:
             return
+
         path, column, x, y = d
         iterator = self.recommendations_model.get_iter(path)
         thing = self.recommendations_model.get_value(iterator, 0)
         items = self.r_popup_menu.get_children()
+
         self.r_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+
         self.r_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnPopupUnRecMenu(self, widget, event):
+    def on_popup_un_rec_menu(self, widget, event):
         if event.button != 3:
             return
+
         d = self.UnrecommendationsList.get_path_at_pos(int(event.x), int(event.y))
+
         if not d:
             return
+
         path, column, x, y = d
         iterator = self.unrecommendations_model.get_iter(path)
         thing = self.unrecommendations_model.get_value(iterator, 0)
         items = self.ur_popup_menu.get_children()
+
         self.ur_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
-        self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def RecommendationsExpanderStatus(self, widget):
-        if widget.get_property("expanded"):
-            self.RecommendationsVbox.set_child_packing(widget, False, True, 0, 0)
-        else:
-            self.RecommendationsVbox.set_child_packing(widget, True, True, 0, 0)
+        self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     """ Fonts and Colors """
 
-    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
         colour = self.np.config.sections["ui"]["search"]
+
         if colour == "":
             colour = None
+
         cellrenderer.set_property("foreground", colour)
 
-    def ChangeListFont(self, listview, font):
+    def change_list_font(self, listview, font):
         for c in listview.get_columns():
             for r in c.get_cells():
-                if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
+                if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
                     r.set_property("font", font)
 
-    def UpdateColours(self, first=0):
+    def update_colours(self, first=0):
         if first:
             self.tag_log = self.LogWindow.get_buffer().create_tag()
 
@@ -1829,7 +1877,6 @@ class NicotineFrame:
         font = self.np.config.sections["ui"]["chatfont"]
         self.tag_log.set_property("font", font)
 
-        # self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
         for listview in [
             self.userlist.UserListTree,
             self.RecommendationsList,
@@ -1839,16 +1886,16 @@ class NicotineFrame:
             self.DislikesList,
             self.roomlist.RoomsList
         ]:
-            self.ChangeListFont(listview, self.np.config.sections["ui"]["listfont"])
+            self.change_list_font(listview, self.np.config.sections["ui"]["listfont"])
 
-        self.SetTextBG(self.UserPrivateCombo.get_child())
-        self.SetTextBG(self.UserInfoCombo.get_child())
-        self.SetTextBG(self.UserBrowseCombo.get_child())
-        self.SetTextBG(self.SearchEntry)
-        self.SetTextBG(self.AddLikeEntry)
-        self.SetTextBG(self.AddDislikeEntry)
+        self.set_text_bg(self.UserPrivateCombo.get_child())
+        self.set_text_bg(self.UserInfoCombo.get_child())
+        self.set_text_bg(self.UserBrowseCombo.get_child())
+        self.set_text_bg(self.search_entry)
+        self.set_text_bg(self.AddLikeEntry)
+        self.set_text_bg(self.AddDislikeEntry)
 
-    def SetTextBG(self, widget, bgcolor="", fgcolor=""):
+    def set_text_bg(self, widget, bgcolor="", fgcolor=""):
         if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
             rgba = None
         else:
@@ -1857,9 +1904,9 @@ class NicotineFrame:
             rgba = Gdk.RGBA()
             rgba.parse(bgcolor)
 
-        widget.override_background_color(gtk.StateFlags.NORMAL, rgba)
+        widget.override_background_color(Gtk.StateFlags.NORMAL, rgba)
 
-        if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
+        if isinstance(widget, (Gtk.Entry, Gtk.SpinButton)):
             if fgcolor != "":
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
@@ -1870,35 +1917,35 @@ class NicotineFrame:
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
 
-            widget.override_color(gtk.StateFlags.NORMAL, rgba)
+            widget.override_color(Gtk.StateFlags.NORMAL, rgba)
 
-        if isinstance(widget, gtk.TreeView):
+        if isinstance(widget, Gtk.TreeView):
             colour = self.np.config.sections["ui"]["search"]
             if colour == "":
                 colour = None
             for c in widget.get_columns():
                 for r in c.get_cells():
-                    if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
+                    if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
                         r.set_property("foreground", colour)
 
     """ Dialogs
     TODO: move to dialogs.py what's possible """
 
-    def PopupMessage(self, popup):
-        dialog = gtk.MessageDialog(type=gtk.MessageType.WARNING, buttons=gtk.ButtonsType.OK, message_format=popup.title)
+    def popup_message(self, popup):
+        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=popup.title)
         dialog.format_secondary_text(popup.message)
         dialog.connect('response', lambda dialog, response: dialog.destroy())
         dialog.show()
 
     """ Scanning """
 
-    def RescanFinished(self, type):
+    def rescan_finished(self, type):
         if type == "buddy":
-            GLib.idle_add(self._BuddyRescanFinished)
+            GLib.idle_add(self._buddy_rescan_finished)
         elif type == "normal":
-            GLib.idle_add(self._RescanFinished)
+            GLib.idle_add(self._rescan_finished)
 
-    def _BuddyRescanFinished(self):
+    def _buddy_rescan_finished(self):
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(True)
@@ -1909,7 +1956,7 @@ class NicotineFrame:
 
         self.BuddySharesProgress.hide()
 
-    def _RescanFinished(self):
+    def _rescan_finished(self):
 
         if self.np.config.sections["transfers"]["shared"]:
             self.rescan_public.set_sensitive(True)
@@ -1922,10 +1969,10 @@ class NicotineFrame:
 
     """ Search """
 
-    def OnSettingsSearches(self, widget):
-        self.OnSettings(widget, 'Searches')
+    def on_settings_searches(self, widget):
+        self.on_settings(widget, 'Searches')
 
-    def OnSearchMethod(self, widget):
+    def on_search_method(self, widget):
 
         act = False
         search_mode = self.SearchMethod.get_model().get(self.SearchMethod.get_active_iter(), 0)[0]
@@ -1947,7 +1994,7 @@ class NicotineFrame:
 
         self.RoomSearchCombo.set_sensitive(act)
 
-    def UpdateDownloadFilters(self):
+    def update_download_filters(self):
         proccessedfilters = []
         outfilter = "(\\\\("
         failed = {}
@@ -1985,54 +2032,57 @@ class NicotineFrame:
             # Send error messages for each failed filter to log window
             if len(failed) >= 1:
                 errors = ""
+
                 for filter, error in failed.items():
                     errors += "Filter: %s Error: %s " % (filter, error)
+
                 error = _("Error: %(num)d Download filters failed! %(error)s ", {'num': len(failed), 'error': errors})
                 log.add(error)
+
         except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s", e))
             self.np.config.sections["transfers"]["downloadregexp"] = ""
 
-    def OnSearch(self, widget):
-        self.Searches.OnSearch()
+    def on_search(self, widget):
+        self.searches.on_search()
 
-    def OnClearSearchHistory(self, widget):
-        self.Searches.OnClearSearchHistory()
+    def on_clear_search_history(self, widget):
+        self.searches.on_clear_search_history()
 
     """ User Info """
 
-    def OnSettingsUserinfo(self, widget):
-        self.OnSettings(widget, 'User Info')
+    def on_settings_userinfo(self, widget):
+        self.on_settings(widget, 'User Info')
 
-    def OnGetUserInfo(self, widget):
+    def on_get_user_info(self, widget):
         text = self.UserInfoCombo.get_child().get_text()
         if not text:
             return
-        self.LocalUserInfoRequest(text)
+        self.local_user_info_request(text)
         self.UserInfoCombo.get_child().set_text("")
 
     """ User Browse """
 
-    def BrowseUser(self, user):
+    def browse_user(self, user):
         """ Browse a user shares """
 
         login = self.np.config.sections["server"]["login"]
 
         if user is not None:
             if user == login:
-                self.OnBrowsePublicShares(None)
+                self.on_browse_public_shares(None)
             else:
-                self.np.ProcessRequestToPeer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
+                self.np.process_request_to_peer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
 
-    def OnGetShares(self, widget):
+    def on_get_shares(self, widget):
         text = self.UserBrowseCombo.get_child().get_text()
         if not text:
             return
-        self.BrowseUser(text)
+        self.browse_user(text)
         self.UserBrowseCombo.get_child().set_text("")
 
-    def OnLoadFromDisk(self, widget):
+    def on_load_from_disk(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
         try:
             if not os.path.exists(sharesdir):
@@ -2040,40 +2090,45 @@ class NicotineFrame:
         except Exception as msg:
             log.add_warning(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
-        shares = ChooseFile(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
+        shares = choose_file(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
         if shares is None:
             return
         for share in shares:
             try:
                 import pickle as mypickle
                 import bz2
+
                 sharefile = bz2.BZ2File(share)
                 mylist = mypickle.load(sharefile)
                 sharefile.close()
+
                 if not isinstance(mylist, (list, dict)):
                     raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': share})
+
                 username = share.split(os.sep)[-1]
-                self.userbrowse.InitWindow(username, None)
+                self.userbrowse.init_window(username, None)
+
                 if username in self.userbrowse.users:
-                    self.userbrowse.users[username].LoadShares(mylist)
+                    self.userbrowse.users[username].load_shares(mylist)
+
             except Exception as msg:
                 log.add_warning(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
 
     """ Private Chat """
 
-    def OnSettingsLogging(self, widget):
-        self.OnSettings(widget, 'Logging')
+    def on_settings_logging(self, widget):
+        self.on_settings(widget, 'Logging')
 
-    def OnGetPrivateChat(self, widget):
+    def on_get_private_chat(self, widget):
         text = self.UserPrivateCombo.get_child().get_text()
         if not text:
             return
-        self.privatechats.SendMessage(text, None, 1)
+        self.privatechats.send_message(text, None, 1)
         self.UserPrivateCombo.get_child().set_text("")
 
     """ Chat """
 
-    def AutoReplace(self, message):
+    def auto_replace(self, message):
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
             for word, replacement in autoreplaced.items():
@@ -2081,7 +2136,7 @@ class NicotineFrame:
 
         return message
 
-    def CensorChat(self, message):
+    def censor_chat(self, message):
         if self.np.config.sections["words"]["censorwords"]:
             filler = self.np.config.sections["words"]["censorfill"]
             censored = self.np.config.sections["words"]["censored"]
@@ -2090,7 +2145,7 @@ class NicotineFrame:
 
         return message
 
-    def EntryCompletionFindMatch(self, completion, entry_text, iterator, widget):
+    def entry_completion_find_match(self, completion, entry_text, iterator, widget):
         model = completion.get_model()
         item_text = model.get_value(iterator, 0)
         ix = widget.get_position()
@@ -2098,19 +2153,23 @@ class NicotineFrame:
 
         if entry_text is None or entry_text == "" or entry_text.isspace() or item_text is None:
             return False
+
         # Get word to the left of current position
         if " " in entry_text:
             split_key = entry_text[:ix].split(" ")[-1]
         else:
             split_key = entry_text
+
         if split_key.isspace() or split_key == "" or len(split_key) < config["characters"]:
             return False
+
         # case-insensitive matching
         if item_text.lower().startswith(split_key) and item_text.lower() != split_key:
             return True
+
         return False
 
-    def EntryCompletionFoundMatch(self, completion, model, iterator, widget):
+    def entry_completion_found_match(self, completion, model, iterator, widget):
         current_text = widget.get_text()
         ix = widget.get_position()
         # if more than a word has been typed, we throw away the
@@ -2134,114 +2193,122 @@ class NicotineFrame:
         # stop the event propagation
         return True
 
-    def OnShowChatButtons(self, widget=None):
+    def on_show_chat_buttons(self, widget=None):
 
         if widget is not None:
             show = widget.get_active()
             self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
 
         for room in self.chatrooms.roomsctrl.joinedrooms.values():
-            room.OnShowChatButtons(not self.np.config.sections["ui"]["chat_hidebuttons"])
+            room.on_show_chat_buttons(not self.np.config.sections["ui"]["chat_hidebuttons"])
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
     """ Away Timer """
 
-    def RemoveAwayTimer(self, timerid):
+    def remove_away_timer(self, timerid):
         # Check that the away timer hasn't been destroyed already
         # Happens if the timer expires
         context = GLib.MainContext.default()
         if context.find_source_by_id(timerid) is not None:
             GLib.source_remove(timerid)
 
-    def OnAutoAway(self):
+    def on_auto_away(self):
         if not self.away:
             self.autoaway = True
-            self.OnAway(None)
+            self.on_away(None)
+
         return False
 
-    def OnButtonPress(self, widget, event):
+    def on_button_press(self, widget, event):
         if self.autoaway:
-            self.OnAway(None)
+            self.on_away(None)
             self.autoaway = False
         if self.awaytimerid is not None:
-            self.RemoveAwayTimer(self.awaytimerid)
+            self.remove_away_timer(self.awaytimerid)
 
             autoaway = self.np.config.sections["server"]["autoaway"]
             if autoaway > 0:
-                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.OnAutoAway)
+                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
             else:
                 self.awaytimerid = None
 
     """ User Actions """
 
-    def OnSettingsBanIgnore(self, widget):
-        self.OnSettings(widget, 'Ban List')
+    def on_settings_ban_ignore(self, widget):
+        self.on_settings(widget, 'Ban List')
 
-    def BanUser(self, user):
+    def ban_user(self, user):
         if self.np.transfers is not None:
-            self.np.transfers.BanUser(user)
+            self.np.transfers.ban_user(user)
 
-    def UserIpIsBlocked(self, user):
+    def user_ip_is_blocked(self, user):
         for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
             if user == username:
                 return True
         return False
 
-    def BlockedUserIp(self, user):
+    def blocked_user_ip(self, user):
         for ip, username in self.np.config.sections["server"]["ipblocklist"].items():
             if user == username:
                 return ip
         return None
 
-    def UserIpIsIgnored(self, user):
+    def user_ip_is_ignored(self, user):
         for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
             if user == username:
                 return True
         return False
 
-    def IgnoredUserIp(self, user):
+    def ignored_user_ip(self, user):
         for ip, username in self.np.config.sections["server"]["ipignorelist"].items():
             if user == username:
                 return ip
         return None
 
-    def IgnoreIP(self, ip):
+    def ignore_ip(self, ip):
         if ip is None or ip == "" or ip.count(".") != 3:
             return
+
         ipignorelist = self.np.config.sections["server"]["ipignorelist"]
+
         if ip not in ipignorelist:
             ipignorelist[ip] = ""
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
 
-    def OnIgnoreIP(self, user):
+    def on_ignore_ip(self, user):
         if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
             if user not in self.np.ipignore_requested:
                 self.np.ipignore_requested[user] = 0
+
             self.np.queue.put(slskmessages.GetPeerAddress(user))
             return
+
         ipignorelist = self.np.config.sections["server"]["ipignorelist"]
         ip, port = self.np.users[user].addr
+
         if ip not in ipignorelist or self.np.config.sections["server"]["ipignorelist"][ip] != user:
             self.np.config.sections["server"]["ipignorelist"][ip] = user
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
 
-    def OnUnIgnoreIP(self, user):
+    def on_un_ignore_ip(self, user):
         ipignorelist = self.np.config.sections["server"]["ipignorelist"]
-        if self.UserIpIsIgnored(user):
-            ip = self.IgnoredUserIp(user)
+
+        if self.user_ip_is_ignored(user):
+            ip = self.ignored_user_ip(user)
+
             if ip is not None:
                 del ipignorelist[ip]
-                self.np.config.writeConfiguration()
+                self.np.config.write_configuration()
 
                 if self.settingswindow is not None:
-                    self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+                    self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
@@ -2256,40 +2323,43 @@ class NicotineFrame:
         ip, port = self.np.users[user].addr
         if ip in ipignorelist:
             del ipignorelist[ip]
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
+                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
 
-    def OnBlockUser(self, user):
+    def on_block_user(self, user):
         if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
             if user not in self.np.ipblock_requested:
                 self.np.ipblock_requested[user] = 0
+
             self.np.queue.put(slskmessages.GetPeerAddress(user))
             return
 
         ip, port = self.np.users[user].addr
         if ip not in self.np.config.sections["server"]["ipblocklist"] or self.np.config.sections["server"]["ipblocklist"][ip] != user:
             self.np.config.sections["server"]["ipblocklist"][ip] = user
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+                self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
 
-    def OnUnBlockUser(self, user):
-        if self.UserIpIsBlocked(user):
-            ip = self.BlockedUserIp(user)
+    def on_un_block_user(self, user):
+        if self.user_ip_is_blocked(user):
+            ip = self.blocked_user_ip(user)
+
             if ip is not None:
                 del self.np.config.sections["server"]["ipblocklist"][ip]
-                self.np.config.writeConfiguration()
+                self.np.config.write_configuration()
 
                 if self.settingswindow is not None:
-                    self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+                    self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
             if user not in self.np.ipblock_requested:
                 self.np.ipblock_requested[user] = 1
+
             self.np.queue.put(slskmessages.GetPeerAddress(user))
             return
 
@@ -2299,25 +2369,25 @@ class NicotineFrame:
         ip, port = self.np.users[user].addr
         if ip in self.np.config.sections["server"]["ipblocklist"]:
             del self.np.config.sections["server"]["ipblocklist"][ip]
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ban List"].SetSettings(self.np.config.sections)
+                self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
 
-    def UnbanUser(self, user):
+    def unban_user(self, user):
         if user in self.np.config.sections["server"]["banlist"]:
             self.np.config.sections["server"]["banlist"].remove(user)
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
-    def IgnoreUser(self, user):
+    def ignore_user(self, user):
         if user not in self.np.config.sections["server"]["ignorelist"]:
             self.np.config.sections["server"]["ignorelist"].append(user)
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
-    def UnignoreUser(self, user):
+    def unignore_user(self, user):
         if user in self.np.config.sections["server"]["ignorelist"]:
             self.np.config.sections["server"]["ignorelist"].remove(user)
-            self.np.config.writeConfiguration()
+            self.np.config.write_configuration()
 
     """ Various """
 
@@ -2332,26 +2402,29 @@ class NicotineFrame:
                 return True
                 # Tell calling code that we have not handled this event pass it on.
             return False
+
         except Exception as e:
             log.add_warning(_("button_press error, %(error)s"), {'error': e})
 
-    def BuddiesCombosFill(self, nothing):
-        for widget in self.BuddiesComboEntries:
-            GLib.idle_add(widget.Fill)
+    def buddies_combos_fill(self, nothing):
+        for widget in self.buddies_combo_entries:
+            GLib.idle_add(widget.fill)
 
-    def OnKeyPress(self, widget, event):
-        self.OnButtonPress(None, None)
+    def on_key_press(self, widget, event):
+        self.on_button_press(None, None)
 
         if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
+
         for i in range(1, 10):
             if event.keyval == Gdk.keyval_from_name(str(i)):
                 self.MainNotebook.set_current_page(i - 1)
                 widget.stop_emission_by_name("key_press_event")
                 return True
+
         return False
 
-    def GetStatusImage(self, status):
+    def get_status_image(self, status):
         if status == 1:
             return self.images["away"]
         elif status == 2:
@@ -2359,18 +2432,18 @@ class NicotineFrame:
         else:
             return self.images["offline"]
 
-    def HasUserFlag(self, user, flag):
-        if flag not in self.flag_images:
-            self.GetFlagImage(flag)
+    def has_user_flag(self, user, flag):
+        if flag.lower() not in self.flag_images:
+            self.get_flag_image(flag)
 
-        if flag not in self.flag_images:
+        if flag.lower() not in self.flag_images:
             return
 
         self.flag_users[user] = flag
-        self.chatrooms.roomsctrl.SetUserFlag(user, flag)
-        self.userlist.SetUserFlag(user, flag)
+        self.chatrooms.roomsctrl.set_user_flag(user, flag)
+        self.userlist.set_user_flag(user, flag)
 
-    def GetUserFlag(self, user):
+    def get_user_flag(self, user):
         if user not in self.flag_users:
             for i in self.np.config.sections["server"]["userlist"]:
                 if user == i[0] and i[6] is not None:
@@ -2379,10 +2452,12 @@ class NicotineFrame:
         else:
             return self.flag_users[user]
 
-    def GetFlagImage(self, flag):
+    def get_flag_image(self, flag):
 
         if flag is None:
             return
+
+        flag = flag.lower()
 
         if flag not in self.flag_images:
             if hasattr(imagedata, flag):
@@ -2402,27 +2477,27 @@ class NicotineFrame:
         else:
             return self.flag_images[flag]
 
-    def OnSettingsDownloads(self, widget):
-        self.OnSettings(widget, 'Downloads')
+    def on_settings_downloads(self, widget):
+        self.on_settings(widget, 'Downloads')
 
-    def OnSettingsUploads(self, widget):
-        self.OnSettings(widget, 'Uploads')
+    def on_settings_uploads(self, widget):
+        self.on_settings(widget, 'Uploads')
 
-    def CreateIconButton(self, icon, icontype, callback, label=None):
+    def create_icon_button(self, icon, icontype, callback, label=None):
         # Deprecated, to be removed
 
-        button = gtk.Button()
+        button = Gtk.Button()
         button.connect_object("clicked", callback, "")
         button.show()
 
-        Alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-        Alignment.show()
+        alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
+        alignment.show()
 
-        Hbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 2)
-        Hbox.show()
-        Hbox.set_spacing(2)
+        hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
+        hbox.show()
+        hbox.set_spacing(2)
 
-        image = gtk.Image()
+        image = Gtk.Image()
 
         if icontype == "stock":
             image.set_from_stock(icon, 4)
@@ -2430,34 +2505,36 @@ class NicotineFrame:
             image.set_from_pixbuf(icon)
 
         image.show()
-        Hbox.pack_start(image, False, False, 0)
-        Alignment.add(Hbox)
+        hbox.pack_start(image, False, False, 0)
+        alignment.add(hbox)
         if label:
-            Label = gtk.Label.new(label)
-            Label.show()
-            Hbox.pack_start(Label, False, False, 0)
-        button.add(Alignment)
+            label = Gtk.Label.new(label)
+            label.show()
+            hbox.pack_start(label, False, False, 0)
+        button.add(alignment)
 
         return button
 
-    def OnSoulSeek(self, url):
+    def on_soul_seek(self, url):
         try:
             user, file = urllib.parse.unquote(url[7:]).split("/", 1)
+
             if file[-1] == "/":
-                self.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
+                self.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
             else:
-                self.np.transfers.getFile(user, file.replace("/", "\\"), "")
+                self.np.transfers.get_file(user, file.replace("/", "\\"), "")
+
         except Exception:
             log.add(_("Invalid SoulSeek meta-url: %s"), url)
 
-    def SetClipboardURL(self, user, path):
+    def set_clipboard_url(self, user, path):
         self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
         self.clip_data = "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
 
-    def OnSelectionGet(self, widget, data, info, timestamp):
+    def on_selection_get(self, widget, data, info, timestamp):
         data.set_text(self.clip_data, -1)
 
-    def LocalUserInfoRequest(self, user):
+    def local_user_info_request(self, user):
         # Hack for local userinfo requests, for extra security
         if user == self.np.config.sections["server"]["login"]:
             try:
@@ -2480,25 +2557,25 @@ class NicotineFrame:
 
             if self.np.transfers is not None:
 
-                totalupl = self.np.transfers.getTotalUploadsAllowed()
-                queuesize = self.np.transfers.getUploadQueueSizes()[0]
-                slotsavail = self.np.transfers.allowNewUploads()
+                totalupl = self.np.transfers.get_total_uploads_allowed()
+                queuesize = self.np.transfers.get_upload_queue_sizes()[0]
+                slotsavail = self.np.transfers.allow_new_uploads()
                 ua = self.np.config.sections["transfers"]["remotedownloads"]
                 if ua:
                     uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
                 else:
                     uploadallowed = ua
-                self.userinfo.ShowLocalInfo(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
+                self.userinfo.show_local_info(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
 
         else:
-            self.np.ProcessRequestToPeer(user, slskmessages.UserInfoRequest(None), self.userinfo)
+            self.np.process_request_to_peer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
     """ Log Window """
 
-    def log_callback(self, timestamp_format, debugLevel, msg):
-        GLib.idle_add(self.update_log, msg, debugLevel, priority=GLib.PRIORITY_DEFAULT)
+    def log_callback(self, timestamp_format, debug_level, msg):
+        GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
 
-    def update_log(self, msg, debugLevel=None):
+    def update_log(self, msg, debug_level=None):
         '''For information about debug levels see
         pydoc pynicotine.logfacility.logger.add
         '''
@@ -2508,15 +2585,15 @@ class NicotineFrame:
             # if it's hidden, to prevent those nasty GTK warnings :)
 
             should_scroll = False
-            self.SetStatusText(msg, should_log=False)
+            self.set_status_text(msg, should_log=False)
         else:
             should_scroll = True
 
-        AppendLine(self.LogWindow, msg, self.tag_log, scroll=should_scroll)
+        append_line(self.LogWindow, msg, self.tag_log, scroll=should_scroll)
 
         return False
 
-    def OnPopupLogMenu(self, widget, event):
+    def on_popup_log_menu(self, widget, event):
         if event.button != 3:
             return False
 
@@ -2524,79 +2601,84 @@ class NicotineFrame:
         self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
         return True
 
-    def OnFindLogWindow(self, widget):
+    def on_find_log_window(self, widget):
         self.LogSearchBar.set_search_mode(True)
 
-    def OnCopyLogWindow(self, widget):
+    def on_copy_log_window(self, widget):
+
         bound = self.LogWindow.get_buffer().get_selection_bounds()
+
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.LogWindow.get_buffer().get_text(start, end, True)
             self.clip.set_text(log, -1)
 
-    def OnCopyAllLogWindow(self, widget):
+    def on_copy_all_log_window(self, widget):
+
         start, end = self.LogWindow.get_buffer().get_bounds()
         log = self.LogWindow.get_buffer().get_text(start, end, True)
         self.clip.set_text(log, -1)
 
-    def OnClearLogWindow(self, widget):
+    def on_clear_log_window(self, widget):
         self.LogWindow.get_buffer().set_text("")
 
-    def AddDebugLevel(self, debugLevel):
-        if debugLevel not in self.np.config.sections["logging"]["debugmodes"]:
-            self.np.config.sections["logging"]["debugmodes"].append(debugLevel)
+    def add_debug_level(self, debug_level):
+
+        if debug_level not in self.np.config.sections["logging"]["debugmodes"]:
+            self.np.config.sections["logging"]["debugmodes"].append(debug_level)
             log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
 
-    def RemoveDebugLevel(self, debugLevel):
-        if debugLevel in self.np.config.sections["logging"]["debugmodes"]:
-            self.np.config.sections["logging"]["debugmodes"].remove(debugLevel)
+    def remove_debug_level(self, debug_level):
+
+        if debug_level in self.np.config.sections["logging"]["debugmodes"]:
+            self.np.config.sections["logging"]["debugmodes"].remove(debug_level)
             log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
 
-    def OnDebugWarnings(self, widget):
+    def on_debug_warnings(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(1)
+            self.add_debug_level(1)
         else:
-            self.RemoveDebugLevel(1)
+            self.remove_debug_level(1)
 
-    def OnDebugSearches(self, widget):
+    def on_debug_searches(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(2)
+            self.add_debug_level(2)
         else:
-            self.RemoveDebugLevel(2)
+            self.remove_debug_level(2)
 
-    def OnDebugConnections(self, widget):
+    def on_debug_connections(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(3)
+            self.add_debug_level(3)
         else:
-            self.RemoveDebugLevel(3)
+            self.remove_debug_level(3)
 
-    def OnDebugMessages(self, widget):
+    def on_debug_messages(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(4)
+            self.add_debug_level(4)
         else:
-            self.RemoveDebugLevel(4)
+            self.remove_debug_level(4)
 
-    def OnDebugTransfers(self, widget):
+    def on_debug_transfers(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(5)
+            self.add_debug_level(5)
         else:
-            self.RemoveDebugLevel(5)
+            self.remove_debug_level(5)
 
-    def OnDebugStatistics(self, widget):
+    def on_debug_statistics(self, widget):
 
         if widget.get_active():
-            self.AddDebugLevel(6)
+            self.add_debug_level(6)
         else:
-            self.RemoveDebugLevel(6)
+            self.remove_debug_level(6)
 
     """ Status Bar """
 
-    def SetStatusText(self, msg, msg_args=None, should_log=True):
+    def set_status_text(self, msg, msg_args=None, should_log=True):
         orig_msg = msg
 
         if msg_args:
@@ -2609,33 +2691,33 @@ class NicotineFrame:
         if orig_msg and should_log:
             log.add(orig_msg, msg_args)
 
-    def SetUserStatus(self, status):
+    def set_user_status(self, status):
         self.UserStatus.pop(self.user_context_id)
         self.UserStatus.push(self.user_context_id, status)
 
-    def SetSocketStatus(self, status):
+    def set_socket_status(self, status):
         self.SocketStatus.pop(self.socket_context_id)
         self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXFILELIMIT})
 
-    def ShowScanProgress(self, sharestype):
+    def show_scan_progress(self, sharestype):
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.show)
         else:
             GLib.idle_add(self.BuddySharesProgress.show)
 
-    def SetScanProgress(self, sharestype, value):
+    def set_scan_progress(self, sharestype, value):
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.set_fraction, value)
         else:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
-    def HideScanProgress(self, sharestype):
+    def hide_scan_progress(self, sharestype):
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.hide)
         else:
             GLib.idle_add(self.BuddySharesProgress.hide)
 
-    def UpdateBandwidth(self):
+    def update_bandwidth(self):
 
         def _bandwidth(line):
             bandwidth = 0.0
@@ -2645,7 +2727,7 @@ class NicotineFrame:
                 if speed is not None:
                     bandwidth = bandwidth + speed
 
-            return HumanSpeed(bandwidth)
+            return human_speed(bandwidth)
 
         def _users(transfers, users):
             return len(users), len(transfers)
@@ -2656,7 +2738,7 @@ class NicotineFrame:
             total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
             total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
         else:
-            down = up = HumanSpeed(0.0)
+            down = up = human_speed(0.0)
             filesup = filesdown = total_usersdown = total_usersup = 0
 
         self.DownloadUsers.set_text(self.users_template % total_usersdown)
@@ -2669,17 +2751,17 @@ class NicotineFrame:
         self.DownStatus.push(self.down_context_id, self.down_template % {'num': total_usersdown, 'speed': down})
         self.UpStatus.push(self.up_context_id, self.up_template % {'num': total_usersup, 'speed': up})
 
-        self.TrayApp.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
+        self.tray_app.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
     """ Exit """
 
-    def OnSettingsClosed(self, widget, msg):
+    def on_settings_closed(self, widget, msg):
 
         if msg == "cancel":
             self.settingswindow.SettingsWindow.hide()
             return
 
-        output = self.settingswindow.GetSettings()
+        output = self.settingswindow.get_settings()
 
         if not isinstance(output, tuple):
             return
@@ -2694,14 +2776,14 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
-        self.np.UpdateDebugLogOptions()
+        self.np.update_debug_log_options()
 
         # Write utils.py options
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
         utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
         utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
-        utils.PROTOCOL_HANDLERS["slsk"] = self.OnSoulSeek
+        utils.PROTOCOL_HANDLERS["slsk"] = self.on_soul_seek
         utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         uselimit = config["transfers"]["uselimit"]
         uploadlimit = config["transfers"]["uploadlimit"]
@@ -2716,43 +2798,43 @@ class NicotineFrame:
 
         self.np.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.np.queue.put(slskmessages.SetDownloadLimit(config["transfers"]["downloadlimit"]))
-        self.np.ToggleRespondDistributed(None, settings=True)
+        self.np.toggle_respond_distributed(None, settings=True)
 
-        if self.SearchNotebook:
-            self.SearchNotebook.maxdisplayedresults = config["searches"]["max_displayed_results"]
-            self.SearchNotebook.maxstoredresults = config["searches"]["max_stored_results"]
+        if self.search_notebook:
+            self.search_notebook.maxdisplayedresults = config["searches"]["max_displayed_results"]
+            self.search_notebook.maxstoredresults = config["searches"]["max_stored_results"]
 
         # Modify GUI
-        self.UpdateDownloadFilters()
-        self.np.config.writeConfiguration()
+        self.update_download_filters()
+        self.np.config.write_configuration()
 
-        if not config["ui"]["trayicon"] and self.TrayApp.is_tray_icon_visible():
-            self.TrayApp.destroy_trayicon()
-        elif config["ui"]["trayicon"] and not self.TrayApp.is_tray_icon_visible():
-            self.TrayApp.create()
+        if not config["ui"]["trayicon"] and self.tray_app.is_tray_icon_visible():
+            self.tray_app.destroy_trayicon()
+        elif config["ui"]["trayicon"] and not self.tray_app.is_tray_icon_visible():
+            self.tray_app.create()
 
         if needcompletion:
-            self.chatrooms.roomsctrl.UpdateCompletions()
-            self.privatechats.UpdateCompletions()
+            self.chatrooms.roomsctrl.update_completions()
+            self.privatechats.update_completions()
 
         dark_mode_state = config["ui"]["dark_mode"]
-        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
-            self.chatrooms.roomsctrl.UpdateColours()
-            self.privatechats.UpdateColours()
-            self.Searches.UpdateColours()
-            self.downloads.UpdateColours()
-            self.uploads.UpdateColours()
-            self.userinfo.UpdateColours()
-            self.userbrowse.UpdateColours()
-            self.settingswindow.UpdateColours()
-            self.userlist.UpdateColours()
-            self.UpdateColours()
+            self.chatrooms.roomsctrl.update_colours()
+            self.privatechats.update_colours()
+            self.searches.update_colours()
+            self.downloads.update_colours()
+            self.uploads.update_colours()
+            self.userinfo.update_colours()
+            self.userbrowse.update_colours()
+            self.settingswindow.update_colours()
+            self.userlist.update_colours()
+            self.update_colours()
 
-        self.OnShowChatButtons()
+        self.on_show_chat_buttons()
 
-        for w in [self.ChatNotebook, self.PrivatechatNotebook, self.UserInfoNotebook, self.UserBrowseNotebook, self.SearchNotebook]:
+        for w in [self.chat_notebook, self.privatechat_notebook, self.user_info_notebook, self.user_browse_notebook, self.search_notebook]:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
             w.show_images(config["notifications"]["notification_tab_icons"])
@@ -2765,7 +2847,7 @@ class NicotineFrame:
             # Old gtk
             pass
 
-        tabLabels = [
+        tab_labels = [
             self.ChatTabLabel,
             self.PrivateChatTabLabel,
             self.DownloadsTabLabel,
@@ -2776,21 +2858,21 @@ class NicotineFrame:
             self.InterestsTabLabel
         ]
 
-        if "BuddiesTabLabel" in self.__dict__:
-            tabLabels.append(self.BuddiesTabLabel)
+        if "buddies_tab_label" in self.__dict__:
+            tab_labels.append(self.buddies_tab_label)
 
-        for label_tab in tabLabels:
+        for label_tab in tab_labels:
             if isinstance(label_tab, ImageLabel):
                 label_tab.show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.set_text_color(None)
-            elif isinstance(label_tab, gtk.EventBox):
+            elif isinstance(label_tab, Gtk.EventBox):
                 label_tab.get_child().show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.get_child().set_text_color(None)
 
-        self.SetTabPositions()
+        self.set_tab_positions()
 
         if self.np.transfers is not None:
-            self.np.transfers.checkUploadQueue()
+            self.np.transfers.check_upload_queue()
 
         if needrescan:
             self.needrescan = True
@@ -2801,18 +2883,18 @@ class NicotineFrame:
 
             # Rescan public shares if needed
             if not self.np.config.sections["transfers"]["friendsonly"]:
-                self.OnRescan()
+                self.on_rescan()
 
             # Rescan buddy shares if needed
             if self.np.config.sections["transfers"]["enablebuddyshares"]:
-                self.OnBuddyRescan()
+                self.on_buddy_rescan()
 
-        ConfigUnset = self.np.config.needConfig()
+        config_unset = self.np.config.need_config()
 
-        if ConfigUnset > 1:
+        if config_unset > 1:
             if self.np.transfers is not None:
                 self.connect1.set_sensitive(0)
-            self.OnFastConfigure(None)
+            self.on_fast_configure(None)
         else:
             if self.np.transfers is None:
                 self.connect1.set_sensitive(1)
@@ -2822,13 +2904,13 @@ class NicotineFrame:
         if not self.np.config.sections["ui"]["exitdialog"]:
             return False
 
-        if self.TrayApp.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.tray_app.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
             return True
 
-        if self.TrayApp.is_tray_icon_visible():
-            OptionDialog(
+        if self.tray_app.is_tray_icon_visible():
+            option_dialog(
                 parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
                 message=_('Are you sure you wish to exit Nicotine+ at this time?'),
@@ -2837,7 +2919,7 @@ class NicotineFrame:
                 callback=self.on_quit_response
             )
         else:
-            OptionDialog(
+            option_dialog(
                 parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
                 message=_('Are you sure you wish to exit Nicotine+ at this time?'),
@@ -2850,20 +2932,20 @@ class NicotineFrame:
     def on_quit_response(self, dialog, response, data):
         checkbox = dialog.checkbox.get_active()
 
-        if response == gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.OK:
 
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
 
-            if self.TrayApp.trayicon:
-                self.TrayApp.destroy_trayicon()
+            if self.tray_app.trayicon:
+                self.tray_app.destroy_trayicon()
 
             self.MainWindow.destroy()
 
-        elif response == gtk.ResponseType.CANCEL:
+        elif response == Gtk.ResponseType.CANCEL:
             pass
 
-        elif response == gtk.ResponseType.REJECT:
+        elif response == Gtk.ResponseType.REJECT:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 2
             if self.MainWindow.get_property("visible"):
@@ -2871,7 +2953,7 @@ class NicotineFrame:
 
         dialog.destroy()
 
-    def OnDestroy(self, widget):
+    def on_destroy(self, widget):
 
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)
@@ -2882,38 +2964,38 @@ class NicotineFrame:
 
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
         self.np.protothread.abort()
-        self.np.StopTimers()
+        self.np.stop_timers()
 
         if not self.np.manualdisconnect:
-            self.OnDisconnect(None)
+            self.on_disconnect(None)
 
-        self.SaveColumns()
+        self.save_columns()
 
         if self.np.transfers is not None:
-            self.np.transfers.SaveDownloads()
+            self.np.transfers.save_downloads()
 
         # Cleaning up the trayicon
-        if self.TrayApp.trayicon:
-            self.TrayApp.destroy_trayicon()
+        if self.tray_app.trayicon:
+            self.tray_app.destroy_trayicon()
 
         # Closing up all shelves db
         self.np.shares.close_shares()
 
-    def SaveColumns(self):
-        for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.Searches]:
-            i.saveColumns()
+    def save_columns(self):
+        for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches]:
+            i.save_columns()
 
-        self.np.config.writeConfiguration()
+        self.np.config.write_configuration()
 
 
-class MainApp(gtk.Application):
+class MainApp(Gtk.Application):
     def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
-        gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
+        Gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
 
         self.connect(
             "activate",
-            self.OnActivate,
+            self.on_activate,
             data_dir,
             config,
             plugins,
@@ -2923,7 +3005,7 @@ class MainApp(gtk.Application):
             port
         )
 
-    def OnActivate(self, data, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
+    def on_activate(self, data, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
         if not self.get_windows():
             # Only allow one instance of the main window
 

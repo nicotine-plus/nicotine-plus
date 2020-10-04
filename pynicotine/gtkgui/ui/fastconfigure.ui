@@ -19,10 +19,10 @@
     <property name="default_height">450</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
-    <signal name="apply" handler="OnApply" swapped="no"/>
-    <signal name="cancel" handler="OnCancel" swapped="no"/>
-    <signal name="close" handler="OnClose" swapped="no"/>
-    <signal name="prepare" handler="OnPrepare" swapped="no"/>
+    <signal name="apply" handler="on_apply" swapped="no"/>
+    <signal name="cancel" handler="on_cancel" swapped="no"/>
+    <signal name="close" handler="on_close" swapped="no"/>
+    <signal name="prepare" handler="on_prepare" swapped="no"/>
     <child>
       <object class="GtkBox" id="welcomepage">
         <property name="visible">True</property>
@@ -138,13 +138,13 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="changed" handler="OnEntryPaste" swapped="no"/>
-                    <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="on_entry_changed" swapped="no"/>
+                    <signal name="changed" handler="on_entry_paste" swapped="no"/>
+                    <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>
+                    <signal name="delete-from-cursor" handler="on_entry_changed" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="on_entry_changed" swapped="no"/>
+                    <signal name="key-press-event" handler="on_entry_changed" swapped="no"/>
+                    <signal name="paste-clipboard" handler="on_entry_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -186,13 +186,13 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
-                    <signal name="backspace" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="changed" handler="OnEntryPaste" swapped="no"/>
-                    <signal name="cut-clipboard" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="delete-from-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="key-press-event" handler="OnEntryChanged" swapped="no"/>
-                    <signal name="paste-clipboard" handler="OnEntryChanged" swapped="no"/>
+                    <signal name="backspace" handler="on_entry_changed" swapped="no"/>
+                    <signal name="changed" handler="on_entry_paste" swapped="no"/>
+                    <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>
+                    <signal name="delete-from-cursor" handler="on_entry_changed" swapped="no"/>
+                    <signal name="insert-at-cursor" handler="on_entry_changed" swapped="no"/>
+                    <signal name="key-press-event" handler="on_entry_changed" swapped="no"/>
+                    <signal name="paste-clipboard" handler="on_entry_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -261,7 +261,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
-                <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
+                <signal name="clicked" handler="on_button_pressed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -282,7 +282,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnButtonPressed" swapped="no"/>
+                    <signal name="toggled" handler="on_button_pressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -298,7 +298,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">portopen</property>
-                    <signal name="toggled" handler="OnButtonPressed" swapped="no"/>
+                    <signal name="toggled" handler="on_button_pressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -378,8 +378,8 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                 <property name="secondary_icon_activatable">False</property>
                 <property name="adjustment">lowerportadjuster</property>
                 <property name="numeric">True</property>
-                <signal name="change-value" handler="OnSpinbuttonChangeValue" swapped="no"/>
-                <signal name="value-changed" handler="OnSpinbuttonValueChanged" swapped="no"/>
+                <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                <signal name="value-changed" handler="on_spinbutton_value_changed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -410,8 +410,8 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                 <property name="secondary_icon_activatable">False</property>
                 <property name="adjustment">upperportadjuster</property>
                 <property name="numeric">True</property>
-                <signal name="change-value" handler="OnSpinbuttonChangeValue" swapped="no"/>
-                <signal name="value-changed" handler="OnSpinbuttonValueChanged" swapped="no"/>
+                <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                <signal name="value-changed" handler="on_spinbutton_value_changed" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -524,7 +524,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
+                    <signal name="clicked" handler="on_button_pressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -538,7 +538,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="OnButtonPressed" swapped="no"/>
+                    <signal name="clicked" handler="on_button_pressed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

@@ -172,8 +172,8 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
-                            <signal name="activate" handler="OnEnter" swapped="no"/>
-                            <signal name="key-press-event" handler="OnKeyPress" swapped="no"/>
+                            <signal name="activate" handler="on_enter" swapped="no"/>
+                            <signal name="key-press-event" handler="on_key_press" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -189,7 +189,7 @@
                             <property name="receives_default">False</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="OnLogToggled" swapped="no"/>
+                            <signal name="toggled" handler="on_log_toggled" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -227,7 +227,7 @@
                             <property name="tooltip_text" translatable="yes">Room wall</property>
                             <property name="image">list</property>
                             <property name="always_show_image">True</property>
-                            <signal name="clicked" handler="OnShowRoomWall" swapped="no"/>
+                            <signal name="clicked" handler="on_show_room_wall" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="list">
                                 <property name="can_focus">False</property>
@@ -249,7 +249,7 @@
                             <property name="tooltip_text" translatable="yes">Chat room command help</property>
                             <property name="image">help</property>
                             <property name="always_show_image">True</property>
-                            <signal name="clicked" handler="OnShowChatHelp" swapped="no"/>
+                            <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="help">
                                 <property name="can_focus">False</property>
@@ -315,7 +315,7 @@
                         <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnAutojoin" swapped="no"/>
+                        <signal name="toggled" handler="on_autojoin" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -343,7 +343,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="has_tooltip">True</property>
-                        <signal name="query-tooltip" handler="OnTooltip" swapped="no"/>
+                        <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
                       </object>
                     </child>
                   </object>

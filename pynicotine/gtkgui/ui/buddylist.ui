@@ -35,7 +35,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_tooltip">True</property>
-                <signal name="query-tooltip" handler="OnTooltip" swapped="no"/>
+                <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
               </object>
             </child>
           </object>
@@ -72,7 +72,7 @@
                 <property name="secondary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">True</property>
                 <property name="secondary_icon_sensitive">True</property>
-                <signal name="activate" handler="OnAddUser" swapped="no"/>
+                <signal name="activate" handler="on_add_user" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -88,7 +88,7 @@
                 <property name="tooltip_text" translatable="yes">Add</property>
                 <property name="image">add</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="OnAddUser" swapped="no"/>
+                <signal name="clicked" handler="on_add_user" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="add">
                     <property name="can_focus">False</property>
@@ -110,7 +110,7 @@
                 <property name="tooltip_text" translatable="yes">Configure banned users</property>
                 <property name="image">configure</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="OnSettingsBanIgnore" swapped="no"/>
+                <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="configure">
                     <property name="can_focus">False</property>

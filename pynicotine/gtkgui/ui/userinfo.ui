@@ -375,7 +375,7 @@
                       <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <signal name="scroll-event" handler="OnScrollEvent" swapped="no"/>
+                        <signal name="scroll-event" handler="on_scroll_event" swapped="no"/>
                         <child>
                           <object class="GtkViewport">
                             <property name="visible">True</property>
@@ -385,7 +385,7 @@
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <signal name="button-press-event" handler="OnImageClick" swapped="no"/>
+                                <signal name="button-press-event" handler="on_image_click" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="image">
                                     <property name="visible">True</property>
@@ -435,7 +435,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnSendMessage" swapped="no"/>
+                <signal name="clicked" handler="on_send_message" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -470,7 +470,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnBrowseUser" swapped="no"/>
+                <signal name="clicked" handler="on_browse_user" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -505,7 +505,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnShowIPaddress" swapped="no"/>
+                <signal name="clicked" handler="on_show_ip_address" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -540,7 +540,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnAddToList" swapped="no"/>
+                <signal name="clicked" handler="on_add_to_list" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -575,7 +575,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnBanUser" swapped="no"/>
+                <signal name="clicked" handler="on_ban_user" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -610,7 +610,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnIgnoreUser" swapped="no"/>
+                <signal name="clicked" handler="on_ignore_user" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -646,7 +646,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="sensitive">False</property>
-                <signal name="clicked" handler="OnSavePicture" swapped="no"/>
+                <signal name="clicked" handler="on_save_picture" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -692,7 +692,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnRefresh" swapped="no"/>
+                <signal name="clicked" handler="on_refresh" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

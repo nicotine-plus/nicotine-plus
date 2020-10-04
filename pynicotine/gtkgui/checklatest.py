@@ -21,7 +21,7 @@
 
 from gettext import gettext as _
 
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import make_version
@@ -34,36 +34,36 @@ def checklatest(frame):
         hlatest, latest, date = get_latest_version()
         myversion = int(make_version(version))
     except Exception as m:
-        dlg = gtk.MessageDialog(
+        dlg = Gtk.MessageDialog(
             transient_for=frame,
             flags=0,
-            type=gtk.MessageType.ERROR,
-            buttons=gtk.ButtonsType.OK,
+            type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.OK,
             text=_("Could not retrieve version information!\nError: %s") % m
         )
     else:
         if latest > myversion:
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=frame,
                 flags=0,
-                type=gtk.MessageType.INFO,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.INFO,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("A newer version %s is available, released on %s.") % (hlatest, date)
             )
         elif myversion > latest:
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=frame,
                 flags=0,
-                type=gtk.MessageType.INFO,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.INFO,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("You appear to be using a development version of Nicotine+.")
             )
         else:
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=frame,
                 flags=0,
-                type=gtk.MessageType.INFO,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.INFO,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("You are using the latest version of Nicotine+.")
             )
 

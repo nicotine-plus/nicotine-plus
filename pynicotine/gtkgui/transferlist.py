@@ -26,15 +26,15 @@ from gettext import gettext as _
 from sys import maxsize
 from time import time
 
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from pynicotine.gtkgui.utils import HideColumns
-from pynicotine.gtkgui.utils import HumanSize
-from pynicotine.gtkgui.utils import HumanSpeed
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import hide_columns
+from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import human_speed
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SelectUserRowIter
+from pynicotine.gtkgui.utils import select_user_row_iter
 
 
 class TransferList:
@@ -77,35 +77,35 @@ class TransferList:
         self.extension_list_template = _("All %(ext)s")
         self.files_template = _("%(number)2s files ")
 
-        widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         widget.set_enable_tree_lines(True)
         widget.set_rubber_banding(True)
 
-        self.transfersmodel = gtk.TreeStore(
+        self.transfersmodel = Gtk.TreeStore(
             str,                   # (0)  user
             str,                   # (1)  path
             str,                   # (2)  file name
             str,                   # (3)  status
             str,                   # (4)  hqueue position
-            gobject.TYPE_UINT64,   # (5)  percent
+            GObject.TYPE_UINT64,   # (5)  percent
             str,                   # (6)  hsize
             str,                   # (7)  hspeed
             str,                   # (8)  htime elapsed
             str,                   # (9)  time left
             str,                   # (10) path
             str,                   # (11) status (non-translated)
-            gobject.TYPE_UINT64,   # (12) size
-            gobject.TYPE_UINT64,   # (13) current bytes
-            gobject.TYPE_UINT64,   # (14) speed
-            gobject.TYPE_UINT64,   # (15) time elapsed
-            gobject.TYPE_UINT64,   # (16) file count
-            gobject.TYPE_UINT64,   # (17) queue position
+            GObject.TYPE_UINT64,   # (12) size
+            GObject.TYPE_UINT64,   # (13) current bytes
+            GObject.TYPE_UINT64,   # (14) speed
+            GObject.TYPE_UINT64,   # (15) time elapsed
+            GObject.TYPE_UINT64,   # (16) file count
+            GObject.TYPE_UINT64,   # (17) queue position
         )
 
         text_color = self.frame.np.config.sections["ui"]["search"]
 
         widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
-        self.cols = cols = InitialiseColumns(
+        self.cols = cols = initialise_columns(
             widget,
             [_("User"), widths[0], "text", None, (text_color, None)],
             [_("Path"), widths[1], "text", None, (text_color, None)],
@@ -121,7 +121,7 @@ class TransferList:
 
         self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
 
-        HideColumns(cols, self.frame.np.config.sections["columns"][self.type + "_columns"])
+        hide_columns(cols, self.frame.np.config.sections["columns"][self.type + "_columns"])
 
         self.col_user.set_sort_column_id(0)
         self.col_path.set_sort_column_id(1)
@@ -136,12 +136,12 @@ class TransferList:
 
         widget.set_model(self.transfersmodel)
 
-        widget.connect("button_press_event", self.OnPopupMenu, "mouse")
+        widget.connect("button_press_event", self.on_popup_menu, "mouse")
         widget.connect("key-press-event", self.on_key_press_event)
 
-        self.UpdateColours()
+        self.update_colours()
 
-    def saveColumns(self):
+    def save_columns(self):
         columns = []
         widths = []
 
@@ -152,24 +152,24 @@ class TransferList:
         self.frame.np.config.sections["columns"][self.type + "_columns"] = columns
         self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
 
-    def UpdateColours(self):
-        self.frame.ChangeListFont(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
+    def update_colours(self):
+        self.frame.change_list_font(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 
-    def InitInterface(self, list):
+    def init_interface(self, list):
         self.list = list
         self.update()
         self.widget.set_sensitive(True)
 
-    def ConnClose(self):
+    def conn_close(self):
         self.widget.set_sensitive(False)
         self.list = None
-        self.Clear()
+        self.clear()
 
     def select_transfers(self):
         self.selected_transfers = set()
         self.selected_users = set()
 
-        self.widget.get_selection().selected_foreach(self.SelectedTransfersCallback)
+        self.widget.get_selection().selected_foreach(self.selected_transfers_callback)
 
     def new_transfer_notification(self):
         current_page = self.frame.MainNotebook.get_current_page()
@@ -178,48 +178,48 @@ class TransferList:
         if (current_page == my_page):
             return
 
-        tablabel = self.frame.GetTabLabel(self.frame.MainNotebook.get_tab_label(self.myvbox))
+        tablabel = self.frame.get_tab_label(self.frame.MainNotebook.get_tab_label(self.myvbox))
         if not tablabel:
             return
 
         tablabel.set_image(self.frame.images["online"])
 
-    def OnBan(self, widget):
+    def on_ban(self, widget):
         self.select_transfers()
 
         for user in self.selected_users:
-            self.frame.BanUser(user)
+            self.frame.ban_user(user)
 
-    def OnFileSearch(self, widget):
+    def on_file_search(self, widget):
 
         for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.ChangeMainPage(None, "search")
+            self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
+            self.frame.change_main_page(None, "search")
             break
 
-    def RebuildTransfers(self):
+    def rebuild_transfers(self):
         if self.frame.np.transfers is None:
             return
 
-        self.Clear()
+        self.clear()
         self.update()
 
-    def SelectedTransfersCallback(self, model, path, iterator):
+    def selected_transfers_callback(self, model, path, iterator):
 
-        self.SelectTransfer(model, iterator, selectuser=True)
+        self.select_transfer(model, iterator, selectuser=True)
 
         # If we're in grouping mode, select any transfers under the selected
         # user or folder
-        self.SelectChildTransfers(model, model.iter_children(iterator))
+        self.select_child_transfers(model, model.iter_children(iterator))
 
-    def SelectChildTransfers(self, model, iterator):
+    def select_child_transfers(self, model, iterator):
 
         while iterator is not None:
-            self.SelectTransfer(model, iterator)
-            self.SelectChildTransfers(model, model.iter_children(iterator))
+            self.select_transfer(model, iterator)
+            self.select_child_transfers(model, model.iter_children(iterator))
             iterator = model.iter_next(iterator)
 
-    def SelectTransfer(self, model, iterator, selectuser=False):
+    def select_transfer(self, model, iterator, selectuser=False):
         user = model.get_value(iterator, 0)
         file = model.get_value(iterator, 10)
 
@@ -231,7 +231,7 @@ class TransferList:
         if selectuser:
             self.selected_users.add(user)
 
-    def TranslateStatus(self, status):
+    def translate_status(self, status):
 
         try:
             newstatus = self.statuses[status]
@@ -249,7 +249,7 @@ class TransferList:
             """ Save downloads list to file every 15 seconds """
 
             if self.frame.np.transfers is not None:
-                self.frame.np.transfers.SaveDownloads()
+                self.frame.np.transfers.save_downloads()
 
             self.last_save = curtime
 
@@ -307,7 +307,7 @@ class TransferList:
                 else:
                     del self.users[username]
 
-        self.frame.UpdateBandwidth()
+        self.frame.update_bandwidth()
         self.last_ui_update = time()
 
     def update_parent_row(self, initer):
@@ -362,11 +362,11 @@ class TransferList:
             percent = ((100 * position) / totalsize)
 
         if speed > 0:
-            hspeed = HumanSpeed(speed)
-            left = self.frame.np.transfers.getTime((totalsize - position) / speed)
+            hspeed = human_speed(speed)
+            left = self.frame.np.transfers.get_time((totalsize - position) / speed)
 
         if elapsed > 0:
-            helapsed = self.frame.np.transfers.getTime(elapsed)
+            helapsed = self.frame.np.transfers.get_time(elapsed)
 
         if len(extensions) == 0:
             extensions = ""
@@ -380,9 +380,9 @@ class TransferList:
         self.transfersmodel.set(
             initer,
             2, self.files_template % {'number': filecount} + extensions,
-            3, self.TranslateStatus(salientstatus),
+            3, self.translate_status(salientstatus),
             5, percent,
-            6, "%s / %s" % (HumanSize(position), HumanSize(totalsize)),
+            6, "%s / %s" % (human_size(position), human_size(totalsize)),
             7, hspeed,
             8, helapsed,
             9, left,
@@ -405,7 +405,7 @@ class TransferList:
             currentbytes = 0
 
         status = transfer.status
-        hstatus = self.TranslateStatus(status)
+        hstatus = self.translate_status(status)
 
         try:
             size = int(transfer.size)
@@ -414,7 +414,7 @@ class TransferList:
         except TypeError:
             size = 0
 
-        hsize = "%s / %s" % (HumanSize(currentbytes), HumanSize(size))
+        hsize = "%s / %s" % (human_size(currentbytes), human_size(size))
 
         if transfer.modifier:
             hsize += " (%s)" % transfer.modifier
@@ -425,10 +425,10 @@ class TransferList:
 
         if speed > 0:
             speed = float(speed)
-            hspeed = HumanSpeed(speed)
+            hspeed = human_speed(speed)
 
         if elapsed > 0:
-            helapsed = self.frame.np.transfers.getTime(elapsed)
+            helapsed = self.frame.np.transfers.get_time(elapsed)
 
         try:
             icurrentbytes = int(currentbytes)
@@ -464,7 +464,7 @@ class TransferList:
             shortfn = fn.split("\\")[-1]
             filecount = 1
 
-            if self.TreeUsers > 0:
+            if self.tree_users > 0:
                 # Group by folder or user
 
                 if user not in self.users:
@@ -477,7 +477,7 @@ class TransferList:
 
                 parent = self.users[user]
 
-                if self.TreeUsers == 1:
+                if self.tree_users == 1:
                     # Group by folder
 
                     """ Paths can be empty if files are downloaded individually, make sure we
@@ -503,7 +503,7 @@ class TransferList:
                 parent = None
 
             # Add a new transfer
-            if self.TreeUsers == 1:
+            if self.tree_users == 1:
                 # Group by folder, path not visible
                 path = None
             else:
@@ -529,7 +529,7 @@ class TransferList:
 
         self.update_parent_rows(only_remove=True)
 
-    def Clear(self):
+    def clear(self):
         self.users.clear()
         self.paths.clear()
         self.selected_transfers = set()
@@ -540,7 +540,7 @@ class TransferList:
             for i in self.list:
                 i.iter = None
 
-    def OnPopupMenuUsers(self, widget):
+    def on_popup_menu_users(self, widget):
 
         self.popup_menu_users.clear()
 
@@ -561,17 +561,17 @@ class TransferList:
                     ("$" + _("_Add user to list"), popup.OnAddToList),
                     ("$" + _("_Ban this user"), popup.OnBanUser),
                     ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-                    ("#" + _("Select User's Transfers"), self.OnSelectUserTransfers)
+                    ("#" + _("Select User's Transfers"), self.on_select_user_transfers)
                 )
                 popup.set_user(user)
 
-                items.append((1, user, popup, self.OnPopupMenuUser, popup))
+                items.append((1, user, popup, self.on_popup_menu_user, popup))
 
             self.popup_menu_users.setup(*items)
 
         return True
 
-    def OnPopupMenuUser(self, widget, popup=None):
+    def on_popup_menu_user(self, widget, popup=None):
 
         if popup is None:
             return
@@ -598,7 +598,7 @@ class TransferList:
 
         return True
 
-    def OnSelectUserTransfers(self, widget):
+    def on_select_user_transfers(self, widget):
 
         if len(self.selected_users) == 0:
             return
@@ -611,15 +611,15 @@ class TransferList:
 
         iterator = fmodel.get_iter_first()
 
-        SelectUserRowIter(fmodel, sel, 0, selected_user, iterator)
+        select_user_row_iter(fmodel, sel, 0, selected_user, iterator)
 
         self.select_transfers()
 
-    def OnCopyURL(self, widget):
+    def on_copy_url(self, widget):
         i = next(iter(self.selected_transfers))
-        self.frame.SetClipboardURL(i.user, i.filename)
+        self.frame.set_clipboard_url(i.user, i.filename)
 
-    def OnCopyDirURL(self, widget):
+    def on_copy_dir_url(self, widget):
 
         i = next(iter(self.selected_transfers))
         path = "\\".join(i.filename.split("\\")[:-1])
@@ -627,14 +627,14 @@ class TransferList:
         if path[:-1] != "/":
             path += "/"
 
-        self.frame.SetClipboardURL(i.user, path)
+        self.frame.set_clipboard_url(i.user, path)
 
-    def OnAbortTransfer(self, widget, remove=False, clear=False):
+    def on_abort_transfer(self, widget, remove=False, clear=False):
 
         for i in self.selected_transfers:
 
             if i.status != "Finished":
-                self.frame.np.transfers.AbortTransfer(i, remove)
+                self.frame.np.transfers.abort_transfer(i, remove)
 
                 if not clear:
                     i.status = "Aborted"
@@ -643,16 +643,16 @@ class TransferList:
             if clear:
                 self.remove_specific(i)
 
-    def OnClearTransfer(self, widget):
-        self.OnAbortTransfer(widget, False, True)
+    def on_clear_transfer(self, widget):
+        self.on_abort_transfer(widget, False, True)
 
     def on_clear_response(self, dialog, response, data=None):
-        if response == gtk.ResponseType.OK:
-            self.ClearTransfers(["Queued"])
+        if response == Gtk.ResponseType.OK:
+            self.clear_transfers(["Queued"])
 
         dialog.destroy()
 
-    def ClearTransfers(self, status):
+    def clear_transfers(self, status):
 
         for i in self.list[:]:
             if i.status in status:
@@ -660,32 +660,32 @@ class TransferList:
                     i.transfertimer.cancel()
                 self.remove_specific(i)
 
-    def OnClearFinished(self, widget):
-        self.ClearTransfers(["Finished"])
+    def on_clear_finished(self, widget):
+        self.clear_transfers(["Finished"])
 
-    def OnClearAborted(self, widget):
+    def on_clear_aborted(self, widget):
         statuslist = ["Aborted", "Cancelled"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearFiltered(self, widget):
+    def on_clear_filtered(self, widget):
         statuslist = ["Filtered"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearFailed(self, widget):
+    def on_clear_failed(self, widget):
         statuslist = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearPaused(self, widget):
+    def on_clear_paused(self, widget):
         statuslist = ["Paused"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearFinishedAborted(self, widget):
+    def on_clear_finished_aborted(self, widget):
         statuslist = ["Aborted", "Cancelled", "Finished", "Filtered"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearFinishedErred(self, widget):
+    def on_clear_finished_erred(self, widget):
         statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
-        self.ClearTransfers(statuslist)
+        self.clear_transfers(statuslist)
 
-    def OnClearQueued(self, widget):
-        self.ClearTransfers(["Queued"])
+    def on_clear_queued(self, widget):
+        self.clear_transfers(["Queued"])

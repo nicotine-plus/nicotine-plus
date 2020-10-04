@@ -61,7 +61,7 @@ class UPnPPortMapping:
 
         return out.decode('utf-8').rstrip()
 
-    def IsPossible(self):
+    def is_possible(self):
         """Function to check the requirements for doing a port mapping.
 
         It tries to import the MiniUPnPc python binding: miniupnpc.
@@ -87,7 +87,7 @@ class UPnPPortMapping:
                 return (False, errors)
             else:
                 # If the binary is available we define the resulting mode
-                self.mode = 'Binary'
+                self.mode = '_binary'
                 return (True, None)
         else:
             # If the python binding import is successful we define the
@@ -95,7 +95,7 @@ class UPnPPortMapping:
             self.mode = 'Module'
             return (True, None)
 
-    def AddPortMapping(self, np):
+    def add_port_mapping(self, np):
         """Wrapper to redirect the Port Mapping creation to either:
 
         - The MiniUPnPc binary: upnpc.
@@ -146,7 +146,7 @@ class UPnPPortMapping:
 
         # The function depends on what method of configuring port mapping is
         # available
-        functiontocall = getattr(self, 'AddPortMapping' + self.mode)
+        functiontocall = getattr(self, 'add_port_mapping' + self.mode)
 
         try:
             functiontocall()
@@ -170,7 +170,7 @@ class UPnPPortMapping:
             }
         )
 
-    def AddPortMappingBinary(self):
+    def add_port_mapping_binary(self):
         """Function to create a Port Mapping via MiniUPnPc binary: upnpc.
 
         It tries to reconstruct a datastructure identical to what the python
@@ -270,7 +270,7 @@ class UPnPPortMapping:
 
         # Find a suitable external WAN port to map to based
         # on the existing mappings
-        self.FindSuitableExternalWANPort()
+        self.find_suitable_external_wan_port()
 
         # Do the port mapping
         log.add_debug('Trying to redirect %s port %s TCP => %s port %s TCP', (
@@ -312,7 +312,7 @@ class UPnPPortMapping:
             _('UPnPc binary failed, could not parse output: %(output)s') %
             {'output': str(output)})
 
-    def AddPortMappingModule(self):
+    def add_port_mapping_module(self):
         """Function to create a Port Mapping via the python binding: miniupnpc.
 
         IGDv1: If a Port Mapping already exist:
@@ -361,7 +361,7 @@ class UPnPPortMapping:
 
         # Find a suitable external WAN port to map to based on the existing
         # mappings
-        self.FindSuitableExternalWANPort()
+        self.find_suitable_external_wan_port()
 
         # Do the port mapping
         log.add_debug('Trying to redirect %s port %s TCP => %s port %s TCP', (
@@ -384,13 +384,13 @@ class UPnPPortMapping:
 
         log.add_debug('Success')
 
-    def FindSuitableExternalWANPort(self):
+    def find_suitable_external_wan_port(self):
         """Function to find a suitable external WAN port to map to the client.
 
         It will detect if a port mapping to the client already exist.
         """
 
-        # Output format: (ePort, protocol, (intClient, iPort), desc, enabled,
+        # Output format: (e_port, protocol, (int_client, iport), desc, enabled,
         # rHost, duration)
         log.add_debug('Existing Port Mappings: %s', (
             sorted(self.existingportsmappings, key=lambda tup: tup[0])))
@@ -398,16 +398,16 @@ class UPnPPortMapping:
         # Analyze ports mappings
         for m in sorted(self.existingportsmappings, key=lambda tup: tup[0]):
 
-            (ePort, protocol, (intClient, iPort),
+            (e_port, protocol, (int_client, iport),
              desc, enabled, rhost, duration) = m
 
             # A Port Mapping is already in place with the client: we will
             # rewrite it to avoid a timeout on the duration of the mapping
             if protocol == "TCP" and \
-               str(intClient) == str(self.internalipaddress) and \
-               iPort == self.internallanport:
+               str(int_client) == str(self.internalipaddress) and \
+               iport == self.internallanport:
                 log.add_debug('Port Mapping already in place: %s', str(m))
-                self.externalwanport = ePort
+                self.externalwanport = e_port
                 self.foundexistingmapping = True
                 break
 

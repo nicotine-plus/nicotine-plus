@@ -64,7 +64,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnAddBanned" swapped="no"/>
+                        <signal name="clicked" handler="on_add_banned" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -99,7 +99,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnRemoveBanned" swapped="no"/>
+                        <signal name="clicked" handler="on_remove_banned" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -134,7 +134,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnClearBanned" swapped="no"/>
+                        <signal name="clicked" handler="on_clear_banned" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -227,7 +227,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnAddBlocked" swapped="no"/>
+                        <signal name="clicked" handler="on_add_blocked" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -262,7 +262,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnRemoveBlocked" swapped="no"/>
+                        <signal name="clicked" handler="on_remove_blocked" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -297,7 +297,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnClearBlocked" swapped="no"/>
+                        <signal name="clicked" handler="on_clear_blocked" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -360,7 +360,7 @@
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnUseCustomBanToggled" swapped="no"/>
+                <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

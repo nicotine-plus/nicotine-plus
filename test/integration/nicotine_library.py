@@ -21,7 +21,7 @@ import subprocess
 
 
 # noinspection PyInterpreter
-class nicotine_library:
+class nicotine_library:  # noqa
     def __init__(self):
         self._result = None
 

@@ -26,7 +26,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnOkay" swapped="no"/>
+                <signal name="clicked" handler="on_okay" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -40,7 +40,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnCancel" swapped="no"/>
+                <signal name="clicked" handler="on_cancel" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
