@@ -174,7 +174,7 @@ class PluginHandler(object):
             for line in f:
                 try:
                     key, val = line.split("=", 1)
-                    infodict[key] = literal_eval(val)
+                    infodict[key.strip()] = literal_eval(val.strip())
                 except ValueError:
                     pass  # this happens on blank lines
 
@@ -269,7 +269,7 @@ class PluginHandler(object):
             try:
                 ret = getattr(plugin.PLUGIN, function)(*hotpotato)
 
-                if ret is not None and type(ret) is not tuple:
+                if ret is not None and not isinstance(ret, tuple):
                     if ret == returncode['zap']:
                         return None
                     elif ret == returncode['break']:

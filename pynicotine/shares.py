@@ -117,7 +117,6 @@ class Shares:
         return mapping
 
     def convert_shares(self):
-
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 
         def _convert_to_virtual(x):
@@ -729,7 +728,6 @@ class Shares:
             return
 
     def process_search_request(self, searchterm, user, searchid, direct=0):
-
         """ Note: since this section is accessed every time a search request arrives,
         several times a second, please keep it as optimized and memory
         sparse as possible! """

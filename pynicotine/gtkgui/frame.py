@@ -1152,9 +1152,9 @@ class NicotineFrame:
 
         tablabel = None
 
-        if type(TabLabel) is ImageLabel:
+        if isinstance(TabLabel, ImageLabel):
             tablabel = TabLabel
-        elif type(TabLabel) is gtk.EventBox:
+        elif isinstance(TabLabel, gtk.EventBox):
             tablabel = TabLabel.get_child()
 
         return tablabel
@@ -1198,10 +1198,10 @@ class NicotineFrame:
         self.current_tab = l
 
         if l is not None:
-            if type(l) is ImageLabel:
+            if isinstance(l, ImageLabel):
                 l.set_image(self.images["empty"])
                 l.set_text_color(0)
-            elif type(l) is gtk.EventBox:
+            elif isinstance(l, gtk.EventBox):
                 l.get_child().set_image(self.images["empty"])
                 l.get_child().set_text_color(0)
 
@@ -1812,7 +1812,7 @@ class NicotineFrame:
     def ChangeListFont(self, listview, font):
         for c in listview.get_columns():
             for r in c.get_cells():
-                if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
+                if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
                     r.set_property("font", font)
 
     def UpdateColours(self, first=0):
@@ -1858,8 +1858,8 @@ class NicotineFrame:
             rgba.parse(bgcolor)
 
         widget.override_background_color(gtk.StateFlags.NORMAL, rgba)
-        widgetlist = [gtk.Entry, gtk.SpinButton]
-        if type(widget) in widgetlist:
+
+        if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
             if fgcolor != "":
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
@@ -1872,13 +1872,13 @@ class NicotineFrame:
 
             widget.override_color(gtk.StateFlags.NORMAL, rgba)
 
-        if type(widget) is gtk.TreeView:
+        if isinstance(widget, gtk.TreeView):
             colour = self.np.config.sections["ui"]["search"]
             if colour == "":
                 colour = None
             for c in widget.get_columns():
                 for r in c.get_cells():
-                    if type(r) in (gtk.CellRendererText, gtk.CellRendererCombo):
+                    if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
                         r.set_property("foreground", colour)
 
     """ Dialogs
@@ -1951,8 +1951,7 @@ class NicotineFrame:
         proccessedfilters = []
         outfilter = "(\\\\("
         failed = {}
-        df = self.np.config.sections["transfers"]["downloadfilters"]
-        df.sort()
+        df = sorted(self.np.config.sections["transfers"]["downloadfilters"])
         # Get Filters from config file and check their escaped status
         # Test if they are valid regular expressions and save error messages
 
@@ -2219,7 +2218,7 @@ class NicotineFrame:
                 self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
     def OnIgnoreIP(self, user):
-        if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
+        if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
             if user not in self.np.ipignore_requested:
                 self.np.ipignore_requested[user] = 0
             self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -2251,7 +2250,7 @@ class NicotineFrame:
             self.np.queue.put(slskmessages.GetPeerAddress(user))
             return
 
-        if not type(self.np.users[user].addr) is tuple:
+        if not isinstance(self.np.users[user].addr, tuple):
             return
 
         ip, port = self.np.users[user].addr
@@ -2263,7 +2262,7 @@ class NicotineFrame:
                 self.settingswindow.pages["Ignore List"].SetSettings(self.np.config.sections)
 
     def OnBlockUser(self, user):
-        if user not in self.np.users or type(self.np.users[user].addr) is not tuple:
+        if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
             if user not in self.np.ipblock_requested:
                 self.np.ipblock_requested[user] = 0
             self.np.queue.put(slskmessages.GetPeerAddress(user))
@@ -2294,7 +2293,7 @@ class NicotineFrame:
             self.np.queue.put(slskmessages.GetPeerAddress(user))
             return
 
-        if not type(self.np.users[user].addr) is tuple:
+        if not isinstance(self.np.users[user].addr, tuple):
             return
 
         ip, port = self.np.users[user].addr
@@ -2682,7 +2681,7 @@ class NicotineFrame:
 
         output = self.settingswindow.GetSettings()
 
-        if type(output) is not tuple:
+        if not isinstance(output, tuple):
             return
 
         if msg == "ok":
@@ -2781,10 +2780,10 @@ class NicotineFrame:
             tabLabels.append(self.BuddiesTabLabel)
 
         for label_tab in tabLabels:
-            if type(label_tab) is ImageLabel:
+            if isinstance(label_tab, ImageLabel):
                 label_tab.show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.set_text_color(None)
-            elif type(label_tab) is gtk.EventBox:
+            elif isinstance(label_tab, gtk.EventBox):
                 label_tab.get_child().show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.get_child().set_text_color(None)
 

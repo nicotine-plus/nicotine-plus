@@ -214,7 +214,7 @@ class PrivateChats(IconNotebook):
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
 
-        if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ipIgnored(ip):
                 return

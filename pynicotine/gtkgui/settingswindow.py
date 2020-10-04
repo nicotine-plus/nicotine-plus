@@ -423,7 +423,7 @@ class DownloadsFrame(buildFrame):
             droplist=list(self.filtersiters.keys())
         )
 
-        if type(response) is list:
+        if isinstance(response, list):
 
             filter = response[0]
             escaped = response[1]
@@ -439,8 +439,7 @@ class DownloadsFrame(buildFrame):
 
         self.downloadfilters = []
 
-        df = list(self.filtersiters.keys())
-        df.sort()
+        df = sorted(self.filtersiters.keys())
 
         for filter in df:
             iterator = self.filtersiters[filter]
@@ -470,7 +469,7 @@ class DownloadsFrame(buildFrame):
                 droplist=list(self.filtersiters.keys())
             )
 
-            if type(response) is list:
+            if isinstance(response, list):
 
                 filter, escaped = response
 
@@ -534,8 +533,7 @@ class DownloadsFrame(buildFrame):
 
         outfilter = "(\\\\("
 
-        df = list(self.filtersiters.keys())
-        df.sort()
+        df = sorted(self.filtersiters.keys())
 
         proccessedfilters = []
         failed = {}
@@ -1830,13 +1828,13 @@ class ColoursFrame(buildFrame):
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
-                if type(widget) is gtk.Entry:
+                if isinstance(widget, gtk.Entry):
                     widget.set_text(defaults[key][option])
-                elif type(widget) is gtk.SpinButton:
+                elif isinstance(widget, gtk.SpinButton):
                     widget.set_value_as_int(defaults[key][option])
-                elif type(widget) is gtk.CheckButton:
+                elif isinstance(widget, gtk.CheckButton):
                     widget.set_active(defaults[key][option])
-                elif type(widget) is gtk.ComboBox:
+                elif isinstance(widget, gtk.ComboBox):
                     widget.get_child().set_text(defaults[key][option])
 
         for key, value in self.colorsd.items():
@@ -1861,13 +1859,13 @@ class ColoursFrame(buildFrame):
                 if option in value:
 
                     widget = self.options[section][option]
-                    if type(widget) is gtk.Entry:
+                    if isinstance(widget, gtk.Entry):
                         widget.set_text("")
-                    elif type(widget) is gtk.SpinButton:
+                    elif isinstance(widget, gtk.SpinButton):
                         widget.set_value_as_int(0)
-                    elif type(widget) is gtk.CheckButton:
+                    elif isinstance(widget, gtk.CheckButton):
                         widget.set_active(0)
-                    elif type(widget) is gtk.ComboBox:
+                    elif isinstance(widget, gtk.ComboBox):
                         widget.get_child().set_text("")
 
             for section, value in self.colorsd.items():
@@ -1894,7 +1892,7 @@ class ColoursFrame(buildFrame):
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
-    def PickColour(self, widget, entry):
+    def PickColour(self, widget, entry, area):
 
         dlg = gtk.ColorChooserDialog(_("Pick a color, any color"))
         colourtext = entry.get_text()
@@ -3262,8 +3260,7 @@ class PluginFrame(buildFrame):
         self.OnPluginsEnable(None)
         self.pluginsiters = {}
         self.plugins_model.clear()
-        plugins = self.frame.np.pluginhandler.list_installed_plugins()
-        plugins.sort()
+        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
 
         for plugin in plugins:
             try:
@@ -3420,9 +3417,9 @@ class Settings:
 
     def ColourWidgets(self, widget):
 
-        if type(widget) in (gtk.Entry, gtk.SpinButton):
+        if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
             self.SetTextBG(widget)
-        if type(widget) is gtk.TreeView:
+        if isinstance(widget, gtk.TreeView):
             self.frame.ChangeListFont(widget, self.frame.np.config.sections["ui"]["listfont"])
 
     def UpdateColours(self):
@@ -3507,23 +3504,23 @@ class Settings:
 
     def GetWidgetData(self, widget):
 
-        if type(widget) is gtk.Entry:
+        if isinstance(widget, gtk.Entry):
             return widget.get_text()
-        elif type(widget) is gtk.TextView:
+        elif isinstance(widget, gtk.TextView):
             buffer = widget.get_buffer()
             start, end = buffer.get_bounds()
             return widget.get_buffer().get_text(start, end, True)
-        elif type(widget) is gtk.SpinButton:
+        elif isinstance(widget, gtk.SpinButton):
             return int(widget.get_value())
-        elif type(widget) is gtk.CheckButton:
+        elif isinstance(widget, gtk.CheckButton):
             return widget.get_active()
-        elif type(widget) is gtk.RadioButton:
+        elif isinstance(widget, gtk.RadioButton):
             return widget.get_active()
-        elif type(widget) is gtk.ComboBox:
+        elif isinstance(widget, gtk.ComboBox):
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
-        elif type(widget) is gtk.FontButton:
+        elif isinstance(widget, gtk.FontButton):
             widget.get_font()
-        elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:
+        elif isinstance(widget, gtk.TreeView) and widget.get_model().get_n_columns() == 1:
             wlist = []
             iterator = widget.get_model().get_iter_first()
             while iterator:
@@ -3534,43 +3531,47 @@ class Settings:
             return wlist
 
     def ClearWidget(self, widget):
-        if type(widget) is gtk.Entry:
+        if isinstance(widget, gtk.Entry):
             widget.set_text("")
-        elif type(widget) is gtk.TextView:
+        elif isinstance(widget, gtk.TextView):
             widget.get_buffer().set_text("")
-        elif type(widget) is gtk.SpinButton:
+        elif isinstance(widget, gtk.SpinButton):
             widget.set_value(0)
-        elif type(widget) is gtk.CheckButton:
+        elif isinstance(widget, gtk.CheckButton):
             widget.set_active(0)
-        elif type(widget) is gtk.RadioButton:
+        elif isinstance(widget, gtk.RadioButton):
             widget.set_active(0)
-        elif type(widget) is gtk.ComboBox:
+        elif isinstance(widget, gtk.ComboBox):
             self.GetPosition(widget, "")
-        elif type(widget) is gtk.FontButton:
+        elif isinstance(widget, gtk.FontButton):
             widget.set_font("")
 
     def SetWidget(self, widget, value):
 
-        if type(widget) is gtk.Entry:
-            if type(value) in (int, str):
+        if isinstance(widget, gtk.Entry):
+            if isinstance(value, str):
                 widget.set_text(value)
-        elif type(widget) is gtk.TextView:
-            if type(value) in (int, str):
+            elif isinstance(value, int):
+                widget.set_text(str(value))
+        elif isinstance(widget, gtk.TextView):
+            if isinstance(value, str):
                 widget.get_buffer().set_text(value)
-        elif type(widget) is gtk.SpinButton:
+            elif isinstance(value, int):
+                widget.get_buffer().set_text(str(value))
+        elif isinstance(widget, gtk.SpinButton):
             widget.set_value(int(value))
-        elif type(widget) is gtk.CheckButton:
+        elif isinstance(widget, gtk.CheckButton):
             widget.set_active(value)
-        elif type(widget) is gtk.RadioButton:
+        elif isinstance(widget, gtk.RadioButton):
             widget.set_active(value)
-        elif type(widget) is gtk.ComboBox:
-            if type(value) is str:
+        elif isinstance(widget, gtk.ComboBox):
+            if isinstance(value, str):
                 self.GetPosition(widget, value)
-            elif type(value) is int:
+            elif isinstance(value, int):
                 widget.set_active(value)
-        elif type(widget) is gtk.FontButton:
+        elif isinstance(widget, gtk.FontButton):
             widget.set_font(value)
-        elif type(widget) is gtk.TreeView and type(value) is list and widget.get_model().get_n_columns() == 1:
+        elif isinstance(widget, gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
             for item in value:
                 widget.get_model().append([item])
 

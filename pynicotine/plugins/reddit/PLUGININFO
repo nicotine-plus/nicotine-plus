@@ -1,4 +1,4 @@
-Version="2015-08-02r05"
-Authors=['Mutnick']
-Name="Reddit"
-Description="Displays topics and links for a requested subreddit."
+Version = "2015-08-02r05"
+Authors = ['Mutnick']
+Name = "Reddit"
+Description = "Displays topics and links for a requested subreddit."

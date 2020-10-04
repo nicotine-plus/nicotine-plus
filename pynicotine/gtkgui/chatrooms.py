@@ -219,8 +219,7 @@ class RoomsControl:
                 pos += 1
 
         # Sort by "position"
-        rto = list(room_tab_order.keys())
-        rto.sort()
+        rto = sorted(room_tab_order.keys())
         new_autojoin = []
         for roomplace in rto:
             new_autojoin.append(room_tab_order[roomplace])
@@ -653,7 +652,7 @@ class RoomsControl:
 
         # Ignore chat messages from users who've been ignore-by-ip, no matter whether their username has changed
         # must have the user's IP for this to work.
-        if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ipIgnored(ip):
                 return
@@ -1465,7 +1464,7 @@ class ChatRoom:
 
     def DisplayNowPlaying(self):
         if self.frame.now_playing is None:
-            self.frame.now_playing = nowplaying.NowPlaying(self.frame)
+            self.frame.now_playing = NowPlaying(self.frame)
 
         self.frame.now_playing.DisplayNowPlaying(None, test=0, callback=self.Say)
 
@@ -1644,7 +1643,6 @@ class ChatRoom:
         return tag
 
     def UserNameEvent(self, tag, widget, event, iterator, user):
-
         """
         Mouse buttons:
         1 = left button

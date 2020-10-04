@@ -1271,7 +1271,7 @@ class NetworkEventProcessor:
         if not self.protothread.socketStillActive(conn):
             self.queue.put(slskmessages.ConnClose(conn))
 
-            if type(peerconn) is socket:
+            if isinstance(peerconn, socket):
 
                 for i in self.peerconns:
                     if i.conn == peerconn:

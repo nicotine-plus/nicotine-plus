@@ -1,4 +1,4 @@
-Version="2008-10-29r00"
-Authors=['quinox']
-Name="Test Replier"
-Description="Replies to messages 'test' in chatrooms with the message 'Test failed.'"
+Version = "2008-10-29r00"
+Authors = ['quinox']
+Name = "Test Replier"
+Description = "Replies to messages 'test' in chatrooms with the message 'Test failed.'"

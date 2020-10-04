@@ -87,6 +87,7 @@ class ServerConn(OutConn):
 class ConnectError(InternalMessage):
     """ Sent when a socket exception occurs. It's up to UI thread to
     handle this."""
+
     def __init__(self, connobj=None, err=None):
         self.connobj = connobj
         self.err = err
@@ -95,12 +96,14 @@ class ConnectError(InternalMessage):
 class IncPort(InternalMessage):
     """ Send by networking thread to tell UI thread the port number client
     listens on."""
+
     def __init__(self, port=None):
         self.port = port
 
 
 class PeerTransfer(InternalMessage):
     """ Used to indicate progress of long transfers. """
+
     def __init__(self, conn=None, total=None, bytes=None, msg=None):
         self.conn = conn
         self.bytes = bytes
@@ -112,6 +115,7 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write and offset to resume download
     from. """
+
     def __init__(self, conn=None, offset=None, file=None, filesize=None):
         self.conn = conn
         self.offset = offset
@@ -131,6 +135,7 @@ class UploadFile(InternalMessage):
 class FileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
+
     def __init__(self, conn=None, file=None, strerror=None):
         self.conn = conn
         self.file = file
@@ -139,6 +144,7 @@ class FileError(InternalMessage):
 
 class SetUploadLimit(InternalMessage):
     """ Sent by the GUI thread to indicate changes in bandwidth shaping rules"""
+
     def __init__(self, uselimit, limit, limitby):
         self.uselimit = uselimit
         self.limit = limit
@@ -147,12 +153,14 @@ class SetUploadLimit(InternalMessage):
 
 class SetDownloadLimit(InternalMessage):
     """ Sent by the GUI thread to indicate changes in bandwidth shaping rules"""
+
     def __init__(self, limit):
         self.limit = limit
 
 
 class SetGeoBlock(InternalMessage):
     """ Sent by the GUI thread to indicate changes in GeoIP blocking"""
+
     def __init__(self, config):
         self.config = config
 
@@ -170,6 +178,7 @@ class Notify(InternalMessage):
 class SetCurrentConnectionCount(InternalMessage):
     """ Sent by networking thread to update the number of current
     connections shown in the GUI. """
+
     def __init__(self, msg):
         self.msg = msg
 
@@ -191,6 +200,7 @@ class DebugMessage(InternalMessage):
 
 class SlskMessage:
     """ This is a parent class for all protocol messages. """
+
     def getObject(self, message, type, start=0, getintasshort=False, getsignedint=False, getunsignedlonglong=False, printerror=True, rawbytes=False):
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
@@ -243,16 +253,16 @@ class SlskMessage:
     def packObject(self, object, unsignedint=False, unsignedlonglong=False):
         """ Returns object (integer, long or string packed into a
         binary array."""
-        if type(object) is int:
+        if isinstance(object, int):
             if unsignedint:
                 return struct.pack("<I", object)
             elif unsignedlonglong:
                 return struct.pack("<Q", object)
             else:
                 return struct.pack("<i", object)
-        elif type(object) is bytes:
+        elif isinstance(object, bytes):
             return struct.pack("<i", len(object)) + object
-        elif type(object) is str:
+        elif isinstance(object, str):
             encoded = object.encode("utf-8", 'replace')
             return struct.pack("<i", len(encoded)) + encoded
 
@@ -286,6 +296,7 @@ class SlskMessage:
 class PopupMessage:
     """For messages that should be shown to the user prominently, for example
     through a popup. Should be used sparsely. """
+
     def __init__(self, title, message):
         self.title = title
         self.message = message
@@ -355,6 +366,7 @@ class SetWaitPort(ServerMessage):
     """ Server code: 2 """
     """ We send this to the server to indicate the port number that we
     listen on (2234 by default). """
+
     def __init__(self, port=None):
         self.port = port
 
@@ -369,6 +381,7 @@ class GetPeerAddress(ServerMessage):
     """ Server code: 3 """
     """ We send this to the server to ask for a peer's address
     (IP address and port), given the peer's username. """
+
     def __init__(self, user=None):
         self.user = user
 
@@ -386,6 +399,7 @@ class AddUser(ServerMessage):
     """ Used to be kept updated about a user's stats. When a user's
     stats have changed, the server sends a GetUserStats response message
     with the new user stats. """
+
     def __init__(self, user=None):
         self.user = user
         self.status = None
@@ -418,6 +432,7 @@ class RemoveUser(ServerMessage):
     """ Server code: 6 """
     """ Used when we no longer want to be kept updated about a
     user's stats. """
+
     def __init__(self, user=None):
         self.user = user
 
@@ -428,6 +443,7 @@ class RemoveUser(ServerMessage):
 class GetUserStatus(ServerMessage):
     """ Server code: 7 """
     """ The server tells us if a user has gone away or has returned. """
+
     def __init__(self, user=None):
         self.user = user
         self.privileged = None
@@ -448,6 +464,7 @@ class GetUserStatus(ServerMessage):
 class SayChatroom(ServerMessage):
     """ Server code: 13 """
     """ Either we want to say something in the chatroom, or someone else did. """
+
     def __init__(self, room=None, msg=None):
         self.room = room
         self.msg = msg
@@ -465,6 +482,7 @@ class JoinRoom(ServerMessage):
     """ Server code: 14 """
     """ Server sends us this message when we join a room. Contains users list
     with data on everyone. """
+
     def __init__(self, room=None, private=None):
         self.room = room
         self.private = private
@@ -525,6 +543,7 @@ class JoinRoom(ServerMessage):
 class LeaveRoom(ServerMessage):
     """ Server code: 15 """
     """ We send this to the server when we want to leave a room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -538,6 +557,7 @@ class LeaveRoom(ServerMessage):
 class UserJoinedRoom(ServerMessage):
     """ Server code: 16 """
     """ The server tells us someone has just joined a room we're in. """
+
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
         pos, self.username = self.getObject(message, bytes, pos)
@@ -554,6 +574,7 @@ class UserJoinedRoom(ServerMessage):
 class UserLeftRoom(ServerMessage):
     """ Server code: 17 """
     """ The server tells us someone has just left a room we're in. """
+
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
         pos, self.username = self.getObject(message, bytes, pos)
@@ -566,6 +587,7 @@ class ConnectToPeer(ServerMessage):
     Used when the side that wants a connection can't establish it, and tries
     to go the other way around (direct connection has failed).
     """
+
     def __init__(self, token=None, user=None, type=None):
         self.token = token
         self.user = user
@@ -593,6 +615,7 @@ class ConnectToPeer(ServerMessage):
 class MessageUser(ServerMessage):
     """ Server code: 22 """
     """ Chat phrase sent to someone or received by us in private. """
+
     def __init__(self, user=None, msg=None):
         self.user = user
         self.msg = msg
@@ -621,6 +644,7 @@ class MessageAcked(ServerMessage):
     """ We send this to the server to confirm that we received a private message.
     If we don't send it, the server will keep sending the chat phrase to us.
     """
+
     def __init__(self, msgid=None):
         self.msgid = msgid
 
@@ -636,6 +660,7 @@ class FileSearch(ServerMessage):
     The search id is a random number generated by the client and is used to track the
     search results.
     """
+
     def __init__(self, requestid=None, text=None):
         self.searchid = requestid
         self.searchterm = text
@@ -665,6 +690,7 @@ class SetStatus(ServerMessage):
     1 = Away
     2 = Online
     """
+
     def __init__(self, status=None):
         self.status = status
 
@@ -675,6 +701,7 @@ class SetStatus(ServerMessage):
 class ServerPing(ServerMessage):
     """ Server code: 32 """
     """ We test if the server responds. DEPRECATED """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -686,6 +713,7 @@ class SendSpeed(ServerMessage):
     """ Server code: 34 """
     """ We used to send this after a finished download to let the server update
     the speed statistics for a user. DEPRECATED """
+
     def __init__(self, user=None, speed=None):
         self.user = user
         self.speed = speed
@@ -702,6 +730,7 @@ class SharedFoldersFiles(ServerMessage):
     """ Server code: 35 """
     """ We send this to server to indicate the number of folder and files
     that we share. """
+
     def __init__(self, folders=None, files=None):
         self.folders = folders
         self.files = files
@@ -720,6 +749,7 @@ class GetUserStats(ServerMessage):
     if we've requested to watch the user in AddUser previously. A user's
     stats can also be requested by sending a GetUserStats message to the
     server, but AddUser should be used instead. """
+
     def __init__(self, user=None):
         self.user = user
         self.country = None
@@ -739,6 +769,7 @@ class QueuedDownloads(ServerMessage):
     """ Server code: 40 """
     """ The server sends this to indicate if someone has download slots available
     or not. DEPRECATED """
+
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.slotsfull = self.getObject(message, int, pos)
@@ -748,6 +779,7 @@ class Relogged(ServerMessage):
     """ Server code: 41 """
     """ The server sends this if someone else logged in under our nickname,
     and then disconnects us. """
+
     def parseNetworkMessage(self, message):
         pass
 
@@ -757,6 +789,7 @@ class UserSearch(ServerMessage):
     """ We send this to the server when we search a specific user's shares.
     The ticket/search id is a random number generated by the client and is
     used to track the search results. """
+
     def __init__(self, user=None, requestid=None, text=None):
         self.suser = user
         self.searchid = requestid
@@ -779,6 +812,7 @@ class UserSearch(ServerMessage):
 class AddThingILike(ServerMessage):
     """ Server code: 51 """
     """ We send this to the server when we add an item to our likes list. """
+
     def __init__(self, thing=None):
         self.thing = thing
 
@@ -789,6 +823,7 @@ class AddThingILike(ServerMessage):
 class RemoveThingILike(ServerMessage):
     """ Server code: 52 """
     """ We send this to the server when we remove an item from our likes list. """
+
     def __init__(self, thing=None):
         self.thing = thing
 
@@ -800,6 +835,7 @@ class Recommendations(ServerMessage):
     """ Server code: 54 """
     """ The server sends us a list of personal recommendations and a number
     for each. """
+
     def __init__(self):
         self.recommendations = None
         self.unrecommendations = None
@@ -840,6 +876,7 @@ class UserInterests(ServerMessage):
     """ Server code: 57 """
     """ We ask the server for a user's liked and hated interests. The server
     responds with a list of interests. """
+
     def __init__(self, user=None):
         self.user = user
         self.likes = None
@@ -869,6 +906,7 @@ class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ Server sends this to indicate change in place in queue while we're
     waiting for files from other peer. DEPRECATED """
+
     def __init__(self, user=None, req=None, place=None):
         self.req = req
         self.user = user
@@ -891,6 +929,7 @@ class PlaceInLineResponse(ServerMessage):
 class RoomAdded(ServerMessage):
     """ Server code: 62 """
     """ The server tells us a new room has been added. """
+
     def parseNetworkMessage(self, message):
         self.room = self.getObject(message, bytes)[1]
 
@@ -898,6 +937,7 @@ class RoomAdded(ServerMessage):
 class RoomRemoved(ServerMessage):
     """ Server code: 63 """
     """ The server tells us a room has been removed. """
+
     def parseNetworkMessage(self, message):
         self.room = self.getObject(message, bytes)[1]
 
@@ -907,6 +947,7 @@ class RoomList(ServerMessage):
     """ The server tells us a list of rooms and the number of users in
     them. Soulseek has a room size requirement of about 50 users when
     first connecting. Refreshing the list will download all rooms. """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -948,6 +989,7 @@ class ExactFileSearch(ServerMessage):
     """ Server code: 65 """
     """ Someone is searching for a file with an exact name. DEPRECATED
     (no results even with official client) """
+
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
         pos, self.req = self.getObject(message, int, pos)
@@ -960,6 +1002,7 @@ class ExactFileSearch(ServerMessage):
 class AdminMessage(ServerMessage):
     """ Server code: 66 """
     """ A global message from the server admin has arrived. """
+
     def parseNetworkMessage(self, message):
         self.msg = self.getObject(message, bytes)[1]
 
@@ -967,6 +1010,7 @@ class AdminMessage(ServerMessage):
 class GlobalUserList(JoinRoom):
     """ Server code: 67 """
     """ We send this to get a global list of all users online. DEPRECATED """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -977,6 +1021,7 @@ class GlobalUserList(JoinRoom):
 class TunneledMessage(ServerMessage):
     """ Server code: 68 """
     """ DEPRECATED """
+
     def __init__(self, user=None, req=None, code=None, msg=None):
         self.user = user
         self.req = req
@@ -1006,6 +1051,7 @@ class PrivilegedUsers(ServerMessage):
     """ Server code: 69 """
     """ The server sends us a list of privileged users, a.k.a. users who
     have donated. """
+
     def parseNetworkMessage(self, message):
         try:
             x = zlib.decompress(message)
@@ -1024,6 +1070,7 @@ class HaveNoParent(ServerMessage):
     """ We inform the server if we have a distributed parent or not.
     If not, the server eventually sends us a PossibleParents message with a
     list of 10 possible parents to connect to. """
+
     def __init__(self, noparent=None):
         self.noparent = noparent
 
@@ -1034,6 +1081,7 @@ class HaveNoParent(ServerMessage):
 class SearchParent(ServerMessage):
     """ Server code: 73 """
     """ We send the IP address of our parent to the server. """
+
     def __init__(self, parentip=None):
         self.parentip = parentip
 
@@ -1044,6 +1092,7 @@ class SearchParent(ServerMessage):
 class ParentMinSpeed(ServerMessage):
     """ Server code: 83 """
     """ UNUSED """
+
     def parseNetworkMessage(self, message):
         pos, self.num = self.getObject(message, int)
 
@@ -1051,6 +1100,7 @@ class ParentMinSpeed(ServerMessage):
 class ParentSpeedRatio(ParentMinSpeed):
     """ Server code: 84 """
     """ UNUSED """
+
     def parseNetworkMessage(self, message):
         pos, self.num = self.getObject(message, int)
 
@@ -1058,6 +1108,7 @@ class ParentSpeedRatio(ParentMinSpeed):
 class ParentInactivityTimeout(ServerMessage):
     """ Server code: 86 """
     """ DEPRECATED """
+
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
@@ -1065,6 +1116,7 @@ class ParentInactivityTimeout(ServerMessage):
 class SearchInactivityTimeout(ServerMessage):
     """ Server code: 87 """
     """ DEPRECATED """
+
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
@@ -1072,6 +1124,7 @@ class SearchInactivityTimeout(ServerMessage):
 class MinParentsInCache(ServerMessage):
     """ Server code: 88 """
     """ DEPRECATED """
+
     def parseNetworkMessage(self, message):
         pos, self.num = self.getObject(message, int)
 
@@ -1079,6 +1132,7 @@ class MinParentsInCache(ServerMessage):
 class DistribAliveInterval(ServerMessage):
     """ Server code: 90 """
     """ DEPRECATED """
+
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
@@ -1087,6 +1141,7 @@ class AddToPrivileged(ServerMessage):
     """ Server code: 91 """
     """ The server sends us the username of a new privileged user, which we
     add to our list of global privileged users. """
+
     def parseNetworkMessage(self, message):
         l2, self.user = self.getObject(message, bytes)
 
@@ -1095,6 +1150,7 @@ class CheckPrivileges(ServerMessage):
     """ Server code: 92 """
     """ We ask the server how much time we have left of our privileges.
     The server responds with the remaining time, in seconds. """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -1105,6 +1161,7 @@ class CheckPrivileges(ServerMessage):
 class SearchRequest(ServerMessage):
     """ Server code: 93 """
     """ The server sends us search requests from other users. """
+
     def parseNetworkMessage(self, message):
         pos, self.code = 1, message[0]
         pos, self.something = self.getObject(message, int, pos)
@@ -1117,6 +1174,7 @@ class AcceptChildren(ServerMessage):
     """ Server code: 100 """
     """ We tell the server if we want to accept child nodes.
     TODO: actually use this somewhere """
+
     def __init__(self, enabled=None):
         self.enabled = enabled
 
@@ -1129,6 +1187,7 @@ class PossibleParents(ServerMessage):
     """ The server send us a list of 10 possible distributed parents to connect to.
     This message is sent to us at regular intervals until we tell the server we don't
     need more possible parents, through a HaveNoParent message. """
+
     def parseNetworkMessage(self, message: bytes):
         self.list = {}
         pos, num = self.getObject(message, int)
@@ -1146,6 +1205,7 @@ class WishlistSearch(FileSearch):
 
 class WishlistInterval(ServerMessage):
     """ Server code: 104 """
+
     def parseNetworkMessage(self, message):
         pos, self.seconds = self.getObject(message, int)
 
@@ -1153,6 +1213,7 @@ class WishlistInterval(ServerMessage):
 class SimilarUsers(ServerMessage):
     """ Server code: 110 """
     """ The server sends us a list of similar users related to our interests. """
+
     def __init__(self):
         self.users = None
 
@@ -1173,6 +1234,7 @@ class ItemRecommendations(GlobalRecommendations):
     """ The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an existing
     recommendation list. """
+
     def __init__(self, thing=None):
         GlobalRecommendations.__init__(self)
         self.thing = thing
@@ -1189,6 +1251,7 @@ class ItemSimilarUsers(ServerMessage):
     """ Server code: 112 """
     """ The server sends us a list of similar users related to a specific item,
     which is usually present in the like/dislike list or recommendation list. """
+
     def __init__(self, thing=None):
         self.thing = thing
         self.users = None
@@ -1211,6 +1274,7 @@ class RoomTickerState(ServerMessage):
 
     Tickers are customizable, user-specific messages that appear in a
     banner at the top of a chat room. """
+
     def __init__(self):
         self.room = None
         self.user = None
@@ -1231,6 +1295,7 @@ class RoomTickerAdd(ServerMessage):
 
     Tickers are customizable, user-specific messages that appear in a
     banner at the top of a chat room. """
+
     def __init__(self):
         self.room = None
         self.user = None
@@ -1248,6 +1313,7 @@ class RoomTickerRemove(ServerMessage):
 
     Tickers are customizable, user-specific messages that appear in a
     banner at the top of a chat room. """
+
     def __init__(self, room=None):
         self.user = None
         self.room = room
@@ -1264,6 +1330,7 @@ class RoomTickerSet(ServerMessage):
 
     Tickers are customizable, user-specific messages that appear in a
     banner at the top of a chat room. """
+
     def __init__(self, room=None, msg=""):
         self.room = room
         self.msg = msg
@@ -1290,6 +1357,7 @@ class RemoveThingIHate(RemoveThingILike):
 
 class RoomSearch(ServerMessage):
     """ Server code: 120 """
+
     def __init__(self, room=None, requestid=None, text=""):
         self.room = room
         self.searchid = requestid
@@ -1316,6 +1384,7 @@ class SendUploadSpeed(ServerMessage):
     """ Server code: 121 """
     """ We send this after a finished upload to let the server update the speed
     statistics for ourselves. """
+
     def __init__(self, speed=None):
         self.speed = speed
 
@@ -1326,6 +1395,7 @@ class SendUploadSpeed(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Server code: 122 """
     """ We ask the server whether a user is privileged or not. """
+
     def __init__(self, user=None):
         self.user = user
         self.privileged = None
@@ -1342,6 +1412,7 @@ class GivePrivileges(ServerMessage):
     """ Server code: 123 """
     """ We give (part of) our privileges, specified in days, to another
     user on the network. """
+
     def __init__(self, user=None, days=None):
         self.user = user
         self.days = days
@@ -1357,6 +1428,7 @@ class GivePrivileges(ServerMessage):
 class NotifyPrivileges(ServerMessage):
     """ Server code: 124 """
     """ Server tells us something about privileges. """
+
     def __init__(self, token=None, user=None):
         self.token = token
         self.user = user
@@ -1375,6 +1447,7 @@ class NotifyPrivileges(ServerMessage):
 
 class AckNotifyPrivileges(ServerMessage):
     """ Server code: 125 """
+
     def __init__(self, token=None):
         self.token = token
 
@@ -1388,6 +1461,7 @@ class AckNotifyPrivileges(ServerMessage):
 class BranchLevel(ServerMessage):
     """ Server code: 126 """
     """ TODO: implement fully """
+
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
 
@@ -1395,6 +1469,7 @@ class BranchLevel(ServerMessage):
 class BranchRoot(ServerMessage):
     """ Server code: 127 """
     """ TODO: implement fully """
+
     def parseNetworkMessage(self, message):
         pos, self.user = self.getObject(message, bytes)
 
@@ -1402,6 +1477,7 @@ class BranchRoot(ServerMessage):
 class ChildDepth(ServerMessage):
     """ Server code: 129 """
     """ TODO: implement fully """
+
     def parseNetworkMessage(self, message):
         pos, self.value = self.getObject(message, int)
 
@@ -1410,6 +1486,7 @@ class PrivateRoomUsers(ServerMessage):
     """ Server code: 133 """
     """ The server sends us a list of room users that we can alter
     (add operator abilities / dismember). """
+
     def __init__(self, room=None, numusers=None, users=None):
         self.room = room
         self.numusers = numusers
@@ -1427,6 +1504,7 @@ class PrivateRoomUsers(ServerMessage):
 class UserData:
     """ When we join a room the server send us a bunch of these,
     for each user."""
+
     def __init__(self, list):
         self.status = list[0]
         self.avgspeed = list[1]
@@ -1441,6 +1519,7 @@ class UserData:
 class PrivateRoomAddUser(ServerMessage):
     """ Server code: 134 """
     """ We send this to inform the server that we've added a user to a private room. """
+
     def __init__(self, room=None, user=None):
         self.room = room
         self.user = user
@@ -1466,6 +1545,7 @@ class PrivateRoomRemoveUser(PrivateRoomAddUser):
 class PrivateRoomDismember(ServerMessage):
     """ Server code: 136 """
     """ We send this to the server to remove our own membership of a private room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1476,6 +1556,7 @@ class PrivateRoomDismember(ServerMessage):
 class PrivateRoomDisown(ServerMessage):
     """ Server code: 137 """
     """ We send this to the server to stop owning a private room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1486,6 +1567,7 @@ class PrivateRoomDisown(ServerMessage):
 class PrivateRoomSomething(ServerMessage):
     """ Server code: 138 """
     """ UNKNOWN """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1499,6 +1581,7 @@ class PrivateRoomSomething(ServerMessage):
 class PrivateRoomAdded(ServerMessage):
     """ Server code: 139 """
     """ The server sends us this message when we are added to a private room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1515,6 +1598,7 @@ class PrivateRoomRemoved(PrivateRoomAdded):
 class PrivateRoomToggle(ServerMessage):
     """ Server code: 141 """
     """ We send this when we want to enable or disable invitations to private rooms. """
+
     def __init__(self, enabled=None):
         self.enabled = None if enabled is None else int(enabled)
 
@@ -1557,6 +1641,7 @@ class PrivateRoomOperatorAdded(ServerMessage):
     """ Server code: 145 """
     """ The server send us this message when we're given operator abilities
     in a private room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1568,6 +1653,7 @@ class PrivateRoomOperatorRemoved(ServerMessage):
     """ Server code: 146 """
     """ The server send us this message when our operator abilities are removed
     in a private room. """
+
     def __init__(self, room=None):
         self.room = room
 
@@ -1582,6 +1668,7 @@ class PrivateRoomOwned(ServerMessage):
     """ Server code: 148 """
     """ The server sends us a list of operators in a specific room, that we can
     remove operator abilities from. """
+
     def __init__(self, room=None, number=None):
         self.room = room
         self.number = number
@@ -1599,6 +1686,7 @@ class JoinPublicRoom(ServerMessage):
     """ Server code: 150 """
     """ We ask the server to send us messages from all public rooms, also
     known as public chat. """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -1607,6 +1695,7 @@ class LeavePublicRoom(ServerMessage):
     """ Server code: 151 """
     """ We ask the server to stop sending us messages from all public rooms,
     also known as public chat. """
+
     def makeNetworkMessage(self):
         return b""
 
@@ -1615,6 +1704,7 @@ class PublicRoomMessage(ServerMessage):
     """ Server code: 152 """
     """ The server sends this when a new message has been written in a public
     room (every single line written in every public room). """
+
     def parseNetworkMessage(self, message):
         pos, self.room = self.getObject(message, bytes)
         pos, self.user = self.getObject(message, bytes, pos)
@@ -1627,6 +1717,7 @@ class CantConnectToPeer(ServerMessage):
     to connect. We receive this if we asked peer to connect and it can't do
     this. This message means a connection can't be established either way.
     """
+
     def __init__(self, token=None, user=None):
         self.token = token
         self.user = user
@@ -1663,6 +1754,7 @@ class PierceFireWall(PeerMessage):
     """ This is the very first message sent by the peer that established a
     connection, if it has been asked by the other peer to do so. The token
     is taken from the ConnectToPeer server message. """
+
     def __init__(self, conn, token=None):
         self.conn = conn
         self.token = token
@@ -1679,6 +1771,7 @@ class PeerInit(PeerMessage):
     not necessarily a peer that actually established it. Token apparently
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
+
     def __init__(self, conn, user=None, type=None, token=None):
         self.conn = conn
         self.user = user
@@ -1702,6 +1795,7 @@ class PeerInit(PeerMessage):
 class GetSharedFileList(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -1716,6 +1810,7 @@ class SharedFileList(PeerMessage):
     """ Peer code: 5 """
     """ A peer responds with a list of shared files when we've sent
     a GetSharedFileList. """
+
     def __init__(self, conn, shares=None):
         self.conn = conn
         self.list = shares
@@ -1804,6 +1899,7 @@ class FileSearchRequest(PeerMessage):
     """ We send this to the peer when we search for a file.
     Alternatively, the peer sends this to tell us it is
     searching for a file. """
+
     def __init__(self, conn, requestid=None, text=None):
         self.conn = conn
         self.requestid = requestid
@@ -1825,6 +1921,7 @@ class FileSearchResult(PeerMessage):
     """ Peer code: 9 """
     """ The peer sends this when it has a file search match. The
     token/ticket is taken from original FileSearchRequest message. """
+
     def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
@@ -1916,6 +2013,7 @@ class UserInfoRequest(PeerMessage):
     """ Peer code: 15 """
     """ We ask the other peer to send us their user information, picture
     and all."""
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -1929,6 +2027,7 @@ class UserInfoRequest(PeerMessage):
 class UserInfoReply(PeerMessage):
     """ Peer code: 16 """
     """ A peer responds with this when we've sent a UserInfoRequest. """
+
     def __init__(self, conn, descr=None, pic=None, totalupl=None, queuesize=None, slotsavail=None, uploadallowed=None):
         self.conn = conn
         self.descr = descr
@@ -1972,6 +2071,7 @@ class PMessageUser(PeerMessage):
     """ Peer code: 22 """
     """ Chat phrase sent to someone or received by us in private.
     This is a Nicotine+ extension to the Soulseek protocol. """
+
     def __init__(self, conn=None, user=None, msg=None):
         self.conn = conn
         self.user = user
@@ -1993,6 +2093,7 @@ class PMessageUser(PeerMessage):
 class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
+
     def __init__(self, conn, directory=None):
         self.conn = conn
         self.dir = directory
@@ -2013,6 +2114,7 @@ class FolderContentsResponse(PeerMessage):
     """ Peer code: 37 """
     """ A peer responds with the contents of a particular folder
     (with all subfolders) when we've sent a FolderContentsRequest. """
+
     def __init__(self, conn, directory=None, shares=None):
         self.conn = conn
         self.dir = directory
@@ -2096,6 +2198,7 @@ class TransferRequest(PeerMessage):
     """ Peer code: 40 """
     """ We request a file from a peer, or tell a peer that we want to send
     a file to them. """
+
     def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None):
         self.conn = conn
         self.direction = direction
@@ -2126,6 +2229,7 @@ class TransferResponse(PeerMessage):
     """ Peer code: 41 """
     """ Response to TransferRequest - either we (or the other peer) agrees,
     or tells the reason for rejecting the file transfer. """
+
     def __init__(self, conn, allowed=None, reason=None, req=None, filesize=None):
         self.conn = conn
         self.allowed = allowed
@@ -2159,6 +2263,7 @@ class TransferResponse(PeerMessage):
 class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
     """ DEPRECATED """
+
     def __init__(self, conn, file=None):
         self.conn = conn
         self.file = file
@@ -2177,6 +2282,7 @@ class QueueUpload(PlaceholdUpload):
 
 class PlaceInQueue(PeerMessage):
     """ Peer code: 44 """
+
     def __init__(self, conn, filename=None, place=None):
         self.conn = conn
         self.filename = filename
@@ -2201,6 +2307,7 @@ class UploadFailed(PlaceholdUpload):
 
 class QueueFailed(PeerMessage):
     """ Peer code: 50 """
+
     def __init__(self, conn, file=None, reason=None):
         self.conn = conn
         self.file = file
@@ -2225,6 +2332,7 @@ class PlaceInQueueRequest(PlaceholdUpload):
 
 class UploadQueueNotification(PeerMessage):
     """ Peer code: 52 """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2238,6 +2346,7 @@ class UploadQueueNotification(PeerMessage):
 class UnknownPeerMessage(PeerMessage):
     """ Peer code: 12547 """
     """ UNKNOWN """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2248,6 +2357,7 @@ class UnknownPeerMessage(PeerMessage):
 class FileRequest(PeerMessage):
     """ Request a file from peer, or tell a peer that we want to send a file to
     them. """
+
     def __init__(self, conn, req=None):
         self.conn = conn
         self.req = req
@@ -2268,6 +2378,7 @@ class DistribMessage(SlskMessage):
 
 class DistribAlive(DistribMessage):
     """ Distrib code: 0 """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2285,6 +2396,7 @@ class DistribSearch(DistribMessage):
     if we're a branch root, or by our parent using DistribSearch.
     (TODO: check that this works / is implemented)
     """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2305,6 +2417,7 @@ class DistribSearch(DistribMessage):
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
     """ TODO: implement fully """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2315,6 +2428,7 @@ class DistribBranchLevel(DistribMessage):
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
     """ TODO: implement fully """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2325,6 +2439,7 @@ class DistribBranchRoot(DistribMessage):
 class DistribChildDepth(DistribMessage):
     """ Distrib code: 7 """
     """ TODO: implement fully """
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2342,6 +2457,7 @@ class DistribServerSearch(DistribMessage):
     if we're a branch root, or by our parent using DistribSearch.
     (TODO: check that this works / is implemented)
     """
+
     def __init__(self, conn):
         self.conn = conn
 
