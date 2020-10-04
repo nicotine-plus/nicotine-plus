@@ -1085,61 +1085,60 @@ class NetworkEventProcessor:
                         i.tryaddr += 1
 
                     self.queue.put(slskmessages.GetPeerAddress(user))
-                break
+                    return
+
+        if msg.user in self.users:
+            self.users[msg.user].addr = (msg.ip, msg.port)
         else:
+            self.users[msg.user] = UserAddr(addr=(msg.ip, msg.port))
 
-            if msg.user in self.users:
-                self.users[msg.user].addr = (msg.ip, msg.port)
+        if msg.user in self.ipblock_requested:
+
+            if self.ipblock_requested[msg.user]:
+                self.ui_callback.OnUnBlockUser(msg.user)
             else:
-                self.users[msg.user] = UserAddr(addr=(msg.ip, msg.port))
+                self.ui_callback.OnBlockUser(msg.user)
 
-            if msg.user in self.ipblock_requested:
+            del self.ipblock_requested[msg.user]
+            return
 
-                if self.ipblock_requested[msg.user]:
-                    self.ui_callback.OnUnBlockUser(msg.user)
-                else:
-                    self.ui_callback.OnBlockUser(msg.user)
+        if msg.user in self.ipignore_requested:
 
-                del self.ipblock_requested[msg.user]
-                return
+            if self.ipignore_requested[msg.user]:
+                self.ui_callback.OnUnIgnoreUser(msg.user)
+            else:
+                self.ui_callback.OnIgnoreUser(msg.user)
 
-            if msg.user in self.ipignore_requested:
+            del self.ipignore_requested[msg.user]
+            return
 
-                if self.ipignore_requested[msg.user]:
-                    self.ui_callback.OnUnIgnoreUser(msg.user)
-                else:
-                    self.ui_callback.OnIgnoreUser(msg.user)
+        cc = self.geoip.get_all(msg.ip).country_short
 
-                del self.ipignore_requested[msg.user]
-                return
+        if cc == "-":
+            cc = ""
 
-            cc = self.geoip.get_all(msg.ip).country_short
+        self.ui_callback.HasUserFlag(msg.user, "flag_" + cc)
 
-            if cc == "-":
-                cc = ""
+        # From this point on all paths should call
+        # self.pluginhandler.UserResolveNotification precisely once
+        if msg.user in self.PrivateMessageQueue:
+            self.PrivateMessageQueueProcess(msg.user)
+        if msg.user not in self.ip_requested:
+            self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
+            return
 
-            self.ui_callback.HasUserFlag(msg.user, "flag_" + cc)
+        self.ip_requested.remove(msg.user)
 
-            # From this point on all paths should call
-            # self.pluginhandler.UserResolveNotification precisely once
-            if msg.user in self.PrivateMessageQueue:
-                self.PrivateMessageQueueProcess(msg.user)
-            if msg.user not in self.ip_requested:
-                self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
-                return
+        if cc != "":
+            cc = " (%s)" % cc
 
-            self.ip_requested.remove(msg.user)
-
-            if cc != "":
-                cc = " (%s)" % cc
-
-            log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
-                'user': msg.user,
-                'ip': msg.ip,
-                'port': msg.port,
-                'country': cc
-            })
-            self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
+        log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
+            'user': msg.user,
+            'ip': msg.ip,
+            'port': msg.port,
+            'country': cc
+        })
+        self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 
     def Relogged(self, msg):
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
