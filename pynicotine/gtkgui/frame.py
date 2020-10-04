@@ -95,7 +95,7 @@ class NicotineFrame:
 
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
-        self.now = None
+        self.now_playing = None
         self.settingswindow = None
 
         # Commonly accessed strings
@@ -812,11 +812,10 @@ class NicotineFrame:
             self.fastconfigure.show()
 
     def OnNowPlayingConfigure(self, widget):
-        if self.now is None:
-            self.now = NowPlaying(self)
+        if self.now_playing is None:
+            self.now_playing = NowPlaying(self)
 
-        self.now.NowPlaying.show()
-        self.now.NowPlaying.deiconify()
+        self.now_playing.show()
 
     def OnBackupConfig(self, widget=None):
         response = SaveFile(

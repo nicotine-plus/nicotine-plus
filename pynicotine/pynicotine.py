@@ -1503,52 +1503,69 @@ class NetworkEventProcessor:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def TransferRequest(self, msg):
+        """ Peer code: 40 """
+
         if self.transfers is not None:
             self.transfers.TransferRequest(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def TransferResponse(self, msg):
+        """ Peer code: 41 """
+
         if self.transfers is not None:
             self.transfers.TransferResponse(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def QueueUpload(self, msg):
+        """ Peer code: 43 """
+
         if self.transfers is not None:
             self.transfers.QueueUpload(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def QueueFailed(self, msg):
+        """ Peer code: 50 """
+
         if self.transfers is not None:
             self.transfers.QueueFailed(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def PlaceInQueueRequest(self, msg):
+        """ Peer code: 51 """
+
         if self.transfers is not None:
             self.transfers.PlaceInQueueRequest(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def UploadQueueNotification(self, msg):
+        """ Peer code: 52 """
+
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         self.transfers.UploadQueueNotification(msg)
 
     def UploadFailed(self, msg):
+        """ Peer code: 46 """
+
         if self.transfers is not None:
             self.transfers.UploadFailed(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def PlaceInQueue(self, msg):
+        """ Peer code: 44 """
+
         if self.transfers is not None:
             self.transfers.PlaceInQueue(msg)
         else:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def GetSharedFileList(self, msg):
+        """ Peer code: 4 """
 
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         user = ip = port = None
@@ -1619,6 +1636,7 @@ class NetworkEventProcessor:
         self.queue.put(m)
 
     def FolderContentsRequest(self, msg):
+        """ Peer code: 36 """
 
         username = None
         checkuser = None
@@ -1660,6 +1678,8 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def FolderContentsResponse(self, msg):
+        """ Peer code: 37 """
+
         if self.transfers is not None:
             conn = msg.conn.conn
             file_list = msg.list
@@ -1689,6 +1709,8 @@ class NetworkEventProcessor:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def RoomList(self, msg):
+        """ Server code: 64 """
+
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.SetRoomList(msg)
             self.setStatus("")
@@ -1696,6 +1718,8 @@ class NetworkEventProcessor:
             log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def GlobalUserList(self, msg):
+        """ Server code: 67 """
+
         if self.globallist is not None:
             self.globallist.setGlobalUsersList(msg)
         else:
@@ -1708,6 +1732,8 @@ class NetworkEventProcessor:
             self.userbrowse.UpdateGauge(msg)
 
     def TunneledMessage(self, msg):
+        """ Server code: 68 """
+        """ DEPRECATED """
 
         if msg.code in self.protothread.peerclasses:
             peermsg = self.protothread.peerclasses[msg.code](None)
@@ -1720,6 +1746,8 @@ class NetworkEventProcessor:
             log.add_msg_contents(_("Unknown tunneled message: %s"), (vars(msg)))
 
     def FileSearchRequest(self, msg):
+        """ Peer code: 8 """
+
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         for i in self.peerconns:
             if i.conn == msg.conn.conn:
@@ -1728,6 +1756,8 @@ class NetworkEventProcessor:
                 break
 
     def SearchRequest(self, msg):
+        """ Server code: 93 """
+
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=0)
         self.pluginhandler.SearchRequestNotification(msg.searchterm, msg.user, msg.searchid)
@@ -1767,11 +1797,14 @@ class NetworkEventProcessor:
             self.respondDistributed = True
 
     def DistribSearch(self, msg):
+        """ Distrib code: 3 """
+
         if self.respondDistributed:  # set in ToggleRespondDistributed
             self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
         self.pluginhandler.DistribSearchNotification(msg.searchterm, msg.user, msg.searchid)
 
     def PossibleParents(self, msg):
+        """ Server code: 102 """
 
         """ Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
         We attempt to connect to them all at once, since connection errors are fairly common. """
@@ -1802,6 +1835,8 @@ class NetworkEventProcessor:
         self.queue.put(slskmessages.HaveNoParent(1))
 
     def DistribBranchLevel(self, msg):
+        """ Distrib code: 4 """
+
         """ This message is received when we have a successful connection with a potential
         parent. Tell the server who our parent is, and stop requesting new potential parents. """
 
@@ -1830,18 +1865,27 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def GlobalRecommendations(self, msg):
+        """ Server code: 56 """
+
         self.ui_callback.GlobalRecommendations(msg)
 
     def Recommendations(self, msg):
+        """ Server code: 54 """
+
         self.ui_callback.Recommendations(msg)
 
     def ItemRecommendations(self, msg):
+        """ Server code: 111 """
+
         self.ui_callback.ItemRecommendations(msg)
 
     def SimilarUsers(self, msg):
+        """ Server code: 110 """
+
         self.ui_callback.SimilarUsers(msg)
 
     def RoomTickerState(self, msg):
+        """ Server code: 113 """
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.TickerSet(msg)
@@ -1849,6 +1893,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def RoomTickerAdd(self, msg):
+        """ Server code: 114 """
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.TickerAdd(msg)
@@ -1856,8 +1901,11 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def RoomTickerRemove(self, msg):
+        """ Server code: 115 """
+
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.TickerRemove(msg)
+
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
 
     def UpdateDebugLogOptions(self):

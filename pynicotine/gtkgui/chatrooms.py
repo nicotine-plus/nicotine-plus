@@ -35,8 +35,8 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import AppendLine
@@ -1412,7 +1412,7 @@ class ChatRoom:
             return  # Avoid gsignal warning
 
         elif cmd == "/now":
-            self.NowPlayingThread()
+            self.DisplayNowPlaying()
 
         elif cmd == "/rescan":
 
@@ -1463,11 +1463,11 @@ class ChatRoom:
         text = re.sub("\\s\\s+", "  ", text)
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
-    def NowPlayingThread(self):
-        if self.frame.now is None:
-            self.frame.now = nowplaying.NowPlaying(self.frame)
+    def DisplayNowPlaying(self):
+        if self.frame.now_playing is None:
+            self.frame.now_playing = nowplaying.NowPlaying(self.frame)
 
-        self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
+        self.frame.now_playing.DisplayNowPlaying(None, test=0, callback=self.Say)
 
     def UserJoinedRoom(self, username, userdata):
 

@@ -763,3 +763,6 @@ class NowPlaying:
             pass
 
         return True
+
+    def show(self):
+        self.NowPlayingDialog.show()
