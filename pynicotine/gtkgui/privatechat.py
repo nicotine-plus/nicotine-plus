@@ -33,8 +33,8 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.chatrooms import GetCompletion
+from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.utils import AppendLine
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import PopupMenu
@@ -214,7 +214,7 @@ class PrivateChats(IconNotebook):
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
 
-        if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ipIgnored(ip):
                 return
@@ -758,7 +758,7 @@ class PrivateChat:
             self.OnClose(None)
 
         elif cmd == "/now":
-            self.NowPlayingThread()
+            self.DisplayNowPlaying()
 
         elif cmd == "/rescan":
             self.frame.OnRescan()
@@ -783,11 +783,11 @@ class PrivateChat:
 
         widget.set_text("")
 
-    def NowPlayingThread(self):
-        if self.frame.now is None:
-            self.frame.now = nowplaying.NowPlaying(self.frame)
+    def DisplayNowPlaying(self):
+        if self.frame.now_playing is None:
+            self.frame.now_playing = NowPlaying(self.frame)
 
-        self.frame.now.DisplayNowPlaying(None, 0, self.SendMessage)
+        self.frame.now_playing.DisplayNowPlaying(None, 0, self.SendMessage)
 
     def makecolour(self, buffer, colour):
 

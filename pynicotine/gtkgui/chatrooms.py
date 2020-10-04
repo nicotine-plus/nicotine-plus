@@ -35,8 +35,8 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui import nowplaying
 from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import AppendLine
@@ -219,8 +219,7 @@ class RoomsControl:
                 pos += 1
 
         # Sort by "position"
-        rto = list(room_tab_order.keys())
-        rto.sort()
+        rto = sorted(room_tab_order.keys())
         new_autojoin = []
         for roomplace in rto:
             new_autojoin.append(room_tab_order[roomplace])
@@ -653,7 +652,7 @@ class RoomsControl:
 
         # Ignore chat messages from users who've been ignore-by-ip, no matter whether their username has changed
         # must have the user's IP for this to work.
-        if msg.user in self.frame.np.users and type(self.frame.np.users[msg.user].addr) is tuple:
+        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ipIgnored(ip):
                 return
@@ -1412,7 +1411,7 @@ class ChatRoom:
             return  # Avoid gsignal warning
 
         elif cmd == "/now":
-            self.NowPlayingThread()
+            self.DisplayNowPlaying()
 
         elif cmd == "/rescan":
 
@@ -1463,11 +1462,11 @@ class ChatRoom:
         text = re.sub("\\s\\s+", "  ", text)
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
-    def NowPlayingThread(self):
-        if self.frame.now is None:
-            self.frame.now = nowplaying.NowPlaying(self.frame)
+    def DisplayNowPlaying(self):
+        if self.frame.now_playing is None:
+            self.frame.now_playing = NowPlaying(self.frame)
 
-        self.frame.now.DisplayNowPlaying(None, test=0, callback=self.Say)
+        self.frame.now_playing.DisplayNowPlaying(None, test=0, callback=self.Say)
 
     def UserJoinedRoom(self, username, userdata):
 
@@ -1644,7 +1643,6 @@ class ChatRoom:
         return tag
 
     def UserNameEvent(self, tag, widget, event, iterator, user):
-
         """
         Mouse buttons:
         1 = left button

@@ -45,6 +45,7 @@ class RestrictedUnpickler(pickle.Unpickler):
     """
     Don't allow code execution from pickles
     """
+
     def find_class(self, module, name):
         # Forbid all globals
         raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
@@ -397,7 +398,7 @@ class Config:
 
         self.defaults = {}
         for key, value in self.sections.items():
-            if type(value) is dict:
+            if isinstance(value, dict):
                 if key not in self.defaults:
                     self.defaults[key] = {}
 
@@ -444,7 +445,7 @@ class Config:
             for i in self.sections:
                 for j in self.sections[i]:
 
-                    if type(self.sections[i][j]) not in [type(None), type("")]:
+                    if not isinstance(self.sections[i][j], (type(None), type(""))):
                         continue
 
                     if self.sections[i][j] is None or self.sections[i][j] == '' \

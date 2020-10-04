@@ -199,6 +199,7 @@ class Connection:
     addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
     init is a PeerInit object (see slskmessages docstrings).
     """
+
     def __init__(self, conn=None, addr=None):
         self.conn = conn
         self.addr = addr
@@ -231,6 +232,7 @@ class PeerConnectionInProgress:
     hold data about a connection that is not yet established. msgObj is
     a message to be sent after the connection has been established.
     """
+
     def __init__(self, conn=None, msgObj=None):
         self.conn = conn
         self.msgObj = msgObj

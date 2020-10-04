@@ -27,11 +27,11 @@ def test_version():
 
     # Validate local version
     local_version = make_version(version)
-    assert type(local_version) is int
+    assert isinstance(local_version, int)
 
     # Validate version of latest release
     hlatest_version, latest_version, date = get_latest_version()
-    assert type(latest_version) is int
+    assert isinstance(latest_version, int)
 
     # Validate date of latest release
     date_format = "%Y-%m-%dT%H:%M:%SZ"

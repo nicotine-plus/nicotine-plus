@@ -215,7 +215,7 @@ def InitialiseColumns(treeview, *args):
                 column.set_fixed_width(c[1])
             column.set_min_width(0)
 
-        if len(c) > 3 and type(c[3]) is not list:
+        if len(c) > 3 and not isinstance(c[3], list):
             column.set_cell_data_func(renderer, c[3])
 
         if len(c) > 4:

@@ -224,7 +224,7 @@ class UserBrowse:
         self.ChangeColours()
 
         for name, object in list(self.__dict__.items()):
-            if type(object) is PopupMenu:
+            if isinstance(object, PopupMenu):
                 object.set_user(self.user)
 
     def OnPopupMenuDummy(self, widget):
@@ -278,8 +278,7 @@ class UserBrowse:
             self.FolderTreeView.collapse_all()
             self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
-            dirs = list(self.directories.keys())
-            dirs.sort()
+            dirs = sorted(self.directories.keys())
 
             if dirs != []:
                 self.SetDirectory(dirs[0])
@@ -485,8 +484,7 @@ class UserBrowse:
         buildgtktree(dictdir, None, None)
 
         # Select the first directory
-        sortlist = list(self.directories.keys())
-        sortlist.sort()
+        sortlist = sorted(self.directories.keys())
 
         directory = sortlist[0]
 

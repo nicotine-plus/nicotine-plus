@@ -1741,7 +1741,7 @@ class Transfers:
             self._ConnClose(conn, addr, i, "download")
 
         for i in self.uploads:
-            if type(error) is not ConnectionRefusedError and i.conn != conn:
+            if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
                 continue
             if i.user != user:
                 # Connection refused, cancel all of user's transfers
