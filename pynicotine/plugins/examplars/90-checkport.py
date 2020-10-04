@@ -25,7 +25,7 @@ class Plugin(BasePlugin):
         self.checked = {}  # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan and 3 means the user was scanned
         self.checkroom = 'nicotine'
 
-    def IncomingPublicChatNotification(self, room, user, line):
+    def IncomingPublicChatNotification(self, room, user, line):  # noqa
         if room != self.checkroom:
             return
         words = line.lower().split()
@@ -42,7 +42,7 @@ class Plugin(BasePlugin):
             else:
                 self.log("%s seems to have trouble, but we already performed a port scan" % (user,))
 
-    def UserResolveNotification(self, user, ip, port, country):
+    def UserResolveNotification(self, user, ip, port, country):  # noqa
         if user in self.checked:
             status = self.checkport(ip, port)
             if status in ('open',):
@@ -59,7 +59,7 @@ class Plugin(BasePlugin):
                     self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
             self.checked[user] = 3
 
-    def MyPublicCommand(self, room, args):
+    def my_public_command(self, room, args):
         if args:
             self.checked[args] = 1
             self.resolve(args)
@@ -85,4 +85,4 @@ class Plugin(BasePlugin):
             return 'closed'
         s.close()
 
-    __publiccommands__ = [('port', MyPublicCommand)]
+    __publiccommands__ = [('port', my_public_command)]

@@ -26,7 +26,7 @@ import os
 from gettext import gettext as _
 
 from gi.repository import Gdk
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 from _thread import start_new_thread
 from pynicotine.gtkgui.dialogs import MetaDialog
@@ -117,7 +117,7 @@ class Downloads(TransferList):
 
     def folder_download_response(self, dialog, response, data):
 
-        if response == gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.OK:
             self.np.transfers.folder_contents_response(data[0], data[1])
 
         dialog.destroy()
@@ -134,10 +134,10 @@ class Downloads(TransferList):
 
         if expanded:
             self.frame.DownloadList.expand_all()
-            self.frame.ExpandDownloadsImage.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
+            self.frame.ExpandDownloadsImage.set_from_icon_name("list-remove-symbolic", Gtk.IconSize.BUTTON)
         else:
             collapse_treeview(self.frame.DownloadList, self.tree_users)
-            self.frame.ExpandDownloadsImage.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
+            self.frame.ExpandDownloadsImage.set_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["transfers"]["downloadsexpanded"] = expanded
         self.frame.np.config.write_configuration()
@@ -161,7 +161,7 @@ class Downloads(TransferList):
         win = MetaDialog(self.frame, message, data, modal, search=search)
         win.set_title(title)
         win.show()
-        gtk.main()
+        Gtk.main()
 
         return win.ret
 

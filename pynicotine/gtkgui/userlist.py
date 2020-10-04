@@ -27,8 +27,8 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
@@ -49,7 +49,7 @@ class UserList:
         self.frame = frame
         config = self.frame.np.config.sections
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "buddylist.ui"))
@@ -58,7 +58,7 @@ class UserList:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -69,9 +69,9 @@ class UserList:
 
         """ Columns """
 
-        self.usersmodel = gtk.ListStore(
-            gobject.TYPE_OBJECT,  # (0)  status icon
-            gobject.TYPE_OBJECT,  # (1)  flag
+        self.usersmodel = Gtk.ListStore(
+            GObject.TYPE_OBJECT,  # (0)  status icon
+            GObject.TYPE_OBJECT,  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
             str,                  # (4)  hfile count
@@ -80,9 +80,9 @@ class UserList:
             bool,                 # (7)  privileged
             str,                  # (8)  hlast seen
             str,                  # (9)  comments
-            gobject.TYPE_INT64,   # (10) status
-            gobject.TYPE_UINT64,  # (11) speed
-            gobject.TYPE_UINT64,  # (12) file count
+            GObject.TYPE_INT64,   # (10) status
+            GObject.TYPE_UINT64,  # (11) speed
+            GObject.TYPE_UINT64,  # (12) file count
             int,                  # (13) last seen
             str                   # (14) country
         )
@@ -169,7 +169,7 @@ class UserList:
 
             self.usersmodel.insert(0, row)
 
-        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
+        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
         """ Popup """
 

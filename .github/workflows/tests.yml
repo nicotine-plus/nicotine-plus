@@ -60,6 +60,10 @@ jobs:
           export ARCH=x86_64
           files/windows/dependencies.sh
 
+      - name: Lint with flake8
+        run: |
+          flake8
+
       - name: Unit tests
         run: |
           pytest
@@ -75,6 +79,10 @@ jobs:
       - name: Install dependencies
         run: |
           files/macos/dependencies.sh
+
+      - name: Lint with flake8
+        run: |
+          flake8
 
       - name: Unit tests
         run: |

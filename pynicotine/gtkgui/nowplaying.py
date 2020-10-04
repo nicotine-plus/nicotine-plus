@@ -26,8 +26,8 @@ import re
 import sys
 from gettext import gettext as _
 
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
@@ -41,7 +41,7 @@ class NowPlaying:
         # Build the window
         self.frame = frame
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "nowplaying.ui"))
@@ -52,7 +52,7 @@ class NowPlaying:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -73,7 +73,7 @@ class NowPlaying:
         self.set_player(config["players"]["npplayer"])
 
         # Default format list
-        self.np_format_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.np_format_model = Gtk.ListStore(GObject.TYPE_STRING)
 
         self.defaultlist = [
             "$n",
@@ -424,7 +424,7 @@ class NowPlaying:
         self.audacious_running = True
 
         if "$n" in slist:
-            artist = self.audacious_command('current-song-tuple-data', 'artist')
+            artist = self.audacious_command('current-song-tuple-data', 'artist') or "?"
             title = self.audacious_command('current-song-tuple-data', 'title')
             if artist and title:
                 self.title["nowplaying"] = artist + ' - ' + title

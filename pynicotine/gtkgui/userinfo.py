@@ -27,8 +27,8 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import append_line
@@ -210,7 +210,7 @@ class UserInfo:
     def __init__(self, userinfos, user, conn):
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
@@ -219,7 +219,7 @@ class UserInfo:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -240,17 +240,17 @@ class UserInfo:
         self.actual_zoom = 0
         self.status = 0
 
-        self.hates_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.hates_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.Hates.set_model(self.hates_store)
         cols = initialise_columns(self.Hates, [_("Hates"), 0, "text", self.cell_data_func])
         cols[0].set_sort_column_id(0)
-        self.hates_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.likes_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.likes_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.Likes.set_model(self.likes_store)
         cols = initialise_columns(self.Likes, [_("Likes"), 0, "text", self.cell_data_func])
         cols[0].set_sort_column_id(0)
-        self.likes_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.tag_local = self.makecolour("chatremote")
         self.change_colours()
@@ -518,7 +518,7 @@ class UserInfo:
 
         self.image_menu.popup(None, None, None, None, event.button, event.time)
 
-        return True  # Don't scroll the gtk.ScrolledWindow
+        return True  # Don't scroll the Gtk.ScrolledWindow
 
     def on_scroll_event(self, widget, event):
 
@@ -527,7 +527,7 @@ class UserInfo:
         else:
             self.make_zoom_out()
 
-        return True  # Don't scroll the gtk.ScrolledWindow
+        return True  # Don't scroll the Gtk.ScrolledWindow
 
     def make_zoom_normal(self, widget):
         self.make_zoom_in(zoom=True)

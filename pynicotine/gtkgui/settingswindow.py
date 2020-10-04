@@ -30,8 +30,8 @@ from gettext import gettext as _
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GdkPixbuf
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import _thread
 from pynicotine import slskmessages
@@ -59,7 +59,7 @@ class BuildFrame:
         self.frame = self.p.frame
 
         # Build the frame
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
@@ -68,7 +68,7 @@ class BuildFrame:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -172,11 +172,11 @@ class ServerFrame(BuildFrame):
             server = None
 
         if str(self.Login.get_text()) == "None":
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=self.p.settings_window,
                 flags=0,
-                type=gtk.MessageType.WARNING,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("Warning: Bad Username")
             )
             dlg.format_secondary_text(_("Username 'None' is not a good one, please pick another."))
@@ -190,11 +190,11 @@ class ServerFrame(BuildFrame):
             portrange = (firstport, lastport)
         except Exception:
             portrange = None
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=self.p.settings_window,
                 flags=0,
-                type=gtk.MessageType.WARNING,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("Warning: Invalid ports")
             )
             dlg.format_secondary_text(_("Client ports are invalid."))
@@ -250,7 +250,7 @@ class DownloadsFrame(BuildFrame):
             }
         }
 
-        self.uploads_allowed__list = gtk.ListStore(gobject.TYPE_STRING)
+        self.uploads_allowed__list = Gtk.ListStore(GObject.TYPE_STRING)
         self.UploadsAllowed.set_model(self.uploads_allowed__list)
 
         self.uploads_allowed__list.clear()
@@ -264,9 +264,9 @@ class DownloadsFrame(BuildFrame):
         for item in self.alloweduserslist:
             self.uploads_allowed__list.append([item])
 
-        self.filterlist = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_BOOLEAN
+        self.filterlist = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_BOOLEAN
         )
         self.downloadfilters = []
 
@@ -284,7 +284,7 @@ class DownloadsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 
         self.FilterView.set_model(self.filterlist)
-        self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.FilterView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
 
@@ -329,11 +329,11 @@ class DownloadsFrame(BuildFrame):
 
         if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
-            dlg = gtk.MessageDialog(
+            dlg = Gtk.MessageDialog(
                 transient_for=self.p.settings_window,
                 flags=0,
-                type=gtk.MessageType.WARNING,
-                buttons=gtk.ButtonsType.OK,
+                type=Gtk.MessageType.WARNING,
+                buttons=Gtk.ButtonsType.OK,
                 text=_("Warning")
             )
             dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
@@ -375,7 +375,7 @@ class DownloadsFrame(BuildFrame):
         Function called when the download directory is modified.
         """
 
-        # Get a gio.File object from gtk.FileChooser
+        # Get a gio.File object from Gtk.FileChooser
         # Convert the gio.File to a string
         dir_disp = self.DownloadDir.get_file().get_path()
 
@@ -605,17 +605,17 @@ class SharesFrame(BuildFrame):
         self.needrescan = False
 
         # last column is the raw byte/unicode object for the folder (not shown)
-        self.shareslist = gtk.ListStore(
-            gobject.TYPE_STRING, gobject.TYPE_STRING,
-            gobject.TYPE_STRING, gobject.TYPE_STRING
+        self.shareslist = Gtk.ListStore(
+            GObject.TYPE_STRING, GObject.TYPE_STRING,
+            GObject.TYPE_STRING, GObject.TYPE_STRING
         )
 
         self.shareddirs = []
 
         # last column is the raw byte/unicode object for the folder (not shown)
-        self.bshareslist = gtk.ListStore(
-            gobject.TYPE_STRING, gobject.TYPE_STRING,
-            gobject.TYPE_STRING, gobject.TYPE_STRING
+        self.bshareslist = Gtk.ListStore(
+            GObject.TYPE_STRING, GObject.TYPE_STRING,
+            GObject.TYPE_STRING, GObject.TYPE_STRING
         )
 
         self.bshareddirs = []
@@ -628,7 +628,7 @@ class SharesFrame(BuildFrame):
         )
 
         self.Shares.set_model(self.shareslist)
-        self.Shares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.Shares.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         initialise_columns(
             self.BuddyShares,
@@ -638,7 +638,7 @@ class SharesFrame(BuildFrame):
         )
 
         self.BuddyShares.set_model(self.bshareslist)
-        self.BuddyShares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BuddyShares.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.options = {
             "transfers": {
@@ -707,11 +707,11 @@ class SharesFrame(BuildFrame):
 
         for share in self.shareddirs + self.bshareddirs:
             if homedir == share:
-                dlg = gtk.MessageDialog(
+                dlg = Gtk.MessageDialog(
                     transient_for=self.p.settings_window,
                     flags=0,
-                    type=gtk.MessageType.WARNING,
-                    buttons=gtk.ButtonsType.OK,
+                    type=Gtk.MessageType.WARNING,
+                    buttons=Gtk.ButtonsType.OK,
                     text=_("Warning")
                 )
                 dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
@@ -795,11 +795,11 @@ class SharesFrame(BuildFrame):
                 # If the directory is already shared
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
-                    dlg = gtk.MessageDialog(
+                    dlg = Gtk.MessageDialog(
                         transient_for=self.p.settings_window,
                         flags=0,
-                        type=gtk.MessageType.WARNING,
-                        buttons=gtk.ButtonsType.OK,
+                        type=Gtk.MessageType.WARNING,
+                        buttons=Gtk.ButtonsType.OK,
                         text=_("Warning")
                     )
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
@@ -817,11 +817,11 @@ class SharesFrame(BuildFrame):
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
-                        dlg = gtk.MessageDialog(
+                        dlg = Gtk.MessageDialog(
                             transient_for=self.p.settings_window,
                             flags=0,
-                            type=gtk.MessageType.WARNING,
-                            buttons=gtk.ButtonsType.OK,
+                            type=Gtk.MessageType.WARNING,
+                            buttons=Gtk.ButtonsType.OK,
                             text=_("Warning")
                         )
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
@@ -859,11 +859,11 @@ class SharesFrame(BuildFrame):
                 # If the directory is already shared
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
-                    dlg = gtk.MessageDialog(
+                    dlg = Gtk.MessageDialog(
                         transient_for=self.p.settings_window,
                         flags=0,
-                        type=gtk.MessageType.WARNING,
-                        buttons=gtk.ButtonsType.OK,
+                        type=Gtk.MessageType.WARNING,
+                        buttons=Gtk.ButtonsType.OK,
                         text=_("Warning")
                     )
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
@@ -881,11 +881,11 @@ class SharesFrame(BuildFrame):
                     # If the virtual share name is not already used
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
-                        dlg = gtk.MessageDialog(
+                        dlg = Gtk.MessageDialog(
                             transient_for=self.p.settings_window,
                             flags=0,
-                            type=gtk.MessageType.WARNING,
-                            buttons=gtk.ButtonsType.OK,
+                            type=Gtk.MessageType.WARNING,
+                            buttons=Gtk.ButtonsType.OK,
                             text=_("Warning")
                         )
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
@@ -1164,7 +1164,7 @@ class UserinfoFrame(BuildFrame):
             except Exception:
                 chooser.set_preview_widget_active(False)
 
-        preview = gtk.Image()
+        preview = Gtk.Image()
         self.ImageChooser.set_preview_widget(preview)
         self.ImageChooser.connect('update-preview', update_image_preview)
 
@@ -1221,14 +1221,14 @@ class IgnoreFrame(BuildFrame):
         }
 
         self.ignored_users = []
-        self.ignorelist = gtk.ListStore(gobject.TYPE_STRING)
-        column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
+        self.ignorelist = Gtk.ListStore(GObject.TYPE_STRING)
+        column = Gtk.TreeViewColumn(_("Users"), Gtk.CellRendererText(), text=0)
         self.IgnoredUsers.append_column(column)
         self.IgnoredUsers.set_model(self.ignorelist)
-        self.IgnoredUsers.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.IgnoredUsers.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.ignored_ips = {}
-        self.ignored_ips_list = gtk.ListStore(str, str)
+        self.ignored_ips_list = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.IgnoredIPs,
             [_("Addresses"), -1, "text", self.frame.cell_data_func],
@@ -1238,7 +1238,7 @@ class IgnoreFrame(BuildFrame):
         cols[1].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
-        self.IgnoredIPs.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.IgnoredIPs.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
         server = config["server"]
@@ -1351,14 +1351,14 @@ class BanFrame(BuildFrame):
         }
 
         self.banlist = []
-        self.banlist_model = gtk.ListStore(gobject.TYPE_STRING)
-        column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
+        self.banlist_model = Gtk.ListStore(GObject.TYPE_STRING)
+        column = Gtk.TreeViewColumn(_("Users"), Gtk.CellRendererText(), text=0)
         self.BannedList.append_column(column)
         self.BannedList.set_model(self.banlist_model)
-        self.BannedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BannedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.blocked_list = {}
-        self.blocked_list_model = gtk.ListStore(str, str)
+        self.blocked_list_model = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.BlockedList,
             [_("Addresses"), -1, "text", self.frame.cell_data_func],
@@ -1368,7 +1368,7 @@ class BanFrame(BuildFrame):
         cols[1].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
-        self.BlockedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BlockedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
         server = config["server"]
@@ -1484,7 +1484,7 @@ class TTSFrame(BuildFrame):
         BuildFrame.__init__(self, "tts")
 
         # Combobox for text-to-speech readers
-        self.tts_command_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.tts_command_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in ["echo $ | festival --tts", "flite -t $"]:
             self.tts_command_store.append([executable])
 
@@ -1628,13 +1628,13 @@ class ColoursFrame(BuildFrame):
         BuildFrame.__init__(self, "colours")
 
         # Combobox for user names style
-        self.username_style_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.username_style_store = Gtk.ListStore(GObject.TYPE_STRING)
         for item in ["bold", "italic", "underline", "normal"]:
             self.username_style_store.append([item])
 
         self.UsernameStyle.set_model(self.username_style_store)
 
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         self.UsernameStyle.pack_start(cell, True)
         self.UsernameStyle.add_attribute(cell, 'text', 0)
 
@@ -1776,7 +1776,7 @@ class ColoursFrame(BuildFrame):
                     except Exception:
                         colour = None
 
-                    drawingarea.modify_bg(gtk.StateType.NORMAL, colour)
+                    drawingarea.modify_bg(Gtk.StateType.NORMAL, colour)
                     break
 
         self.toggled_away_colours(self.DisplayAwayColours)
@@ -1828,13 +1828,13 @@ class ColoursFrame(BuildFrame):
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
-                if isinstance(widget, gtk.Entry):
+                if isinstance(widget, Gtk.Entry):
                     widget.set_text(defaults[key][option])
-                elif isinstance(widget, gtk.SpinButton):
+                elif isinstance(widget, Gtk.SpinButton):
                     widget.set_value_as_int(defaults[key][option])
-                elif isinstance(widget, gtk.CheckButton):
+                elif isinstance(widget, Gtk.CheckButton):
                     widget.set_active(defaults[key][option])
-                elif isinstance(widget, gtk.ComboBox):
+                elif isinstance(widget, Gtk.ComboBox):
                     widget.get_child().set_text(defaults[key][option])
 
         for key, value in self.colorsd.items():
@@ -1848,7 +1848,7 @@ class ColoursFrame(BuildFrame):
                 except Exception:
                     colour = None
 
-                drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
+                drawingarea.modify_bg(Gtk.StateFlags.NORMAL, colour)
                 break
 
     def on_clear_all_colours(self, button):
@@ -1859,19 +1859,19 @@ class ColoursFrame(BuildFrame):
                 if option in value:
 
                     widget = self.options[section][option]
-                    if isinstance(widget, gtk.Entry):
+                    if isinstance(widget, Gtk.Entry):
                         widget.set_text("")
-                    elif isinstance(widget, gtk.SpinButton):
+                    elif isinstance(widget, Gtk.SpinButton):
                         widget.set_value_as_int(0)
-                    elif isinstance(widget, gtk.CheckButton):
+                    elif isinstance(widget, Gtk.CheckButton):
                         widget.set_active(0)
-                    elif isinstance(widget, gtk.ComboBox):
+                    elif isinstance(widget, Gtk.ComboBox):
                         widget.get_child().set_text("")
 
             for section, value in self.colorsd.items():
                 if option in value:
                     drawingarea = self.colorsd[section][option]
-                    drawingarea.modify_bg(gtk.StateFlags.NORMAL, None)
+                    drawingarea.modify_bg(Gtk.StateFlags.NORMAL, None)
 
     def fonts_colors_changed(self, widget):
         self.needcolors = 1
@@ -1894,7 +1894,7 @@ class ColoursFrame(BuildFrame):
 
     def pick_colour(self, widget, entry, area):
 
-        dlg = gtk.ColorChooserDialog(_("Pick a color, any color"))
+        dlg = Gtk.ColorChooserDialog(_("Pick a color, any color"))
         colourtext = entry.get_text()
 
         if colourtext is not None and colourtext != '':
@@ -1907,7 +1907,7 @@ class ColoursFrame(BuildFrame):
             else:
                 dlg.set_rgba(rgba)
 
-        if dlg.run() == gtk.ResponseType.OK:
+        if dlg.run() == Gtk.ResponseType.OK:
 
             rgba = dlg.get_rgba()
             colourtext = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
@@ -1925,7 +1925,7 @@ class ColoursFrame(BuildFrame):
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(gtk.StateFlags.NORMAL, rgba.to_color())
+                        drawingarea.modify_bg(Gtk.StateFlags.NORMAL, rgba.to_color())
                         break
 
         dlg.destroy()
@@ -1952,13 +1952,13 @@ class NotebookFrame(BuildFrame):
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
         # the second is a GtkPositionType
-        self.pos_list = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.pos_list = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.pos_list.append([_("Top"), "Top"])
         self.pos_list.append([_("Bottom"), "Bottom"])
         self.pos_list.append([_("Left"), "Left"])
         self.pos_list.append([_("Right"), "Right"])
 
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
 
         self.MainPosition.set_model(self.pos_list)
         self.MainPosition.pack_start(cell, True)
@@ -2069,10 +2069,10 @@ class FontsFrame(BuildFrame):
         BuildFrame.__init__(self, "fonts")
 
         # Combobox for the decimal separator
-        self.decimal_sep_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.decimal_sep_store = Gtk.ListStore(GObject.TYPE_STRING)
         self.DecimalSep.set_model(self.decimal_sep_store)
 
-        cell2 = gtk.CellRendererText()
+        cell2 = Gtk.CellRendererText()
         self.DecimalSep.pack_start(cell2, True)
         self.DecimalSep.add_attribute(cell2, 'text', 0)
 
@@ -2367,7 +2367,7 @@ class EventsFrame(BuildFrame):
         BuildFrame.__init__(self, "events")
 
         # Combobox for file manager
-        self.file_manager_combo_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.file_manager_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in [
             "xdg-open $",
             "explorer $",
@@ -2386,7 +2386,7 @@ class EventsFrame(BuildFrame):
         self.FileManagerCombo.set_entry_text_column(0)
 
         # Combobox for audio players
-        self.audio_player_combo_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.audio_player_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in [
             "amarok -a $",
             "audacious -e $",
@@ -2452,9 +2452,9 @@ class UrlCatchFrame(BuildFrame):
             }
         }
 
-        self.protocolmodel = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING
+        self.protocolmodel = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING
         )
 
         self.protocols = {}
@@ -2475,7 +2475,7 @@ class UrlCatchFrame(BuildFrame):
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
-        self.handlermodel = gtk.ListStore(gobject.TYPE_STRING)
+        self.handlermodel = Gtk.ListStore(GObject.TYPE_STRING)
 
         for item in [
             "xdg-open $",
@@ -2496,7 +2496,7 @@ class UrlCatchFrame(BuildFrame):
         for render in renderers:
             render.set_property("model", self.handlermodel)
 
-        self.protomodel = gtk.ListStore(gobject.TYPE_STRING)
+        self.protomodel = Gtk.ListStore(GObject.TYPE_STRING)
         for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
             self.protomodel.append([item])
 
@@ -2622,7 +2622,7 @@ class CensorFrame(BuildFrame):
             }
         }
 
-        self.censor_list_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.censor_list_model = Gtk.ListStore(GObject.TYPE_STRING)
 
         cols = initialise_columns(
             self.CensorList,
@@ -2634,13 +2634,13 @@ class CensorFrame(BuildFrame):
         self.CensorList.set_model(self.censor_list_model)
 
         # Combobox for the replacement letter
-        self.censor_replace_combo_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.censor_replace_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for letter in ["#", "$", "!", " ", "x", "*"]:
             self.censor_replace_combo_store.append([letter])
 
         self.CensorReplaceCombo.set_model(self.censor_replace_combo_store)
 
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         self.CensorReplaceCombo.pack_start(cell, True)
         self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
 
@@ -2733,9 +2733,9 @@ class AutoReplaceFrame(BuildFrame):
             }
         }
 
-        self.replacelist = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING
+        self.replacelist = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING
         )
 
         cols = initialise_columns(
@@ -2916,7 +2916,7 @@ class CompletionFrame(BuildFrame):
         }
 
 
-class BuildDialog(gtk.Dialog):
+class BuildDialog(Gtk.Dialog):
     """ Class used to build a custom dialog for the plugins """
 
     def __init__(self, parent):
@@ -2926,7 +2926,7 @@ class BuildDialog(gtk.Dialog):
         self.settings = parent.p
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
@@ -2935,7 +2935,7 @@ class BuildDialog(gtk.Dialog):
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -2947,21 +2947,21 @@ class BuildDialog(gtk.Dialog):
         self.plugin = None
 
     def generate_label(self, text):
-        label = gtk.Label(text)
+        label = Gtk.Label(text)
         label.set_line_wrap(True)
         return label
 
     def generate_tree_view(self, name, description, value, c=0):
 
-        self.tw["box%d" % c] = gtk.Box(False, 5)
-        self.tw["box%d" % c].set_orientation(gtk.Orientation.VERTICAL)
+        self.tw["box%d" % c] = Gtk.Box(False, 5)
+        self.tw["box%d" % c].set_orientation(Gtk.Orientation.VERTICAL)
 
-        self.tw[name + "SW"] = gtk.ScrolledWindow()
-        self.tw[name + "SW"].set_shadow_type(gtk.ShadowType.IN)
-        self.tw[name + "SW"].set_policy(gtk.PolicyType.AUTOMATIC, gtk.PolicyType.AUTOMATIC)
+        self.tw[name + "SW"] = Gtk.ScrolledWindow()
+        self.tw[name + "SW"].set_shadow_type(Gtk.ShadowType.IN)
+        self.tw[name + "SW"].set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
-        self.tw[name] = gtk.TreeView()
-        self.tw[name].set_model(gtk.ListStore(gobject.TYPE_STRING))
+        self.tw[name] = Gtk.TreeView()
+        self.tw[name].set_model(Gtk.ListStore(GObject.TYPE_STRING))
         self.tw[name + "SW"].add(self.tw[name])
 
         self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
@@ -2973,10 +2973,10 @@ class BuildDialog(gtk.Dialog):
         except Exception:
             pass
 
-        self.add_button = gtk.Button(_("Add"), gtk.STOCK_ADD)
-        self.remove_button = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
+        self.add_button = Gtk.Button(_("Add"), Gtk.STOCK_ADD)
+        self.remove_button = Gtk.Button(_("Remove"), Gtk.STOCK_REMOVE)
 
-        self.tw["vbox%d" % c] = gtk.Box(False, 5)
+        self.tw["vbox%d" % c] = Gtk.Box(False, 5)
         self.tw["vbox%d" % c].pack_start(self.add_button, False, False, 0)
         self.tw["vbox%d" % c].pack_start(self.remove_button, False, False, 0)
 
@@ -3030,49 +3030,49 @@ class BuildDialog(gtk.Dialog):
             # There's no reason more widgets cannot be added,
             # and we can use self.settings.set_widget and self.settings.get_widget_data to set and get values
             #
-            # Todo: gtk.ComboBox, and gtk.RadioButton
+            # Todo: Gtk.ComboBox, and Gtk.RadioButton
 
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 
             if data["type"] in ("integer", "int", "float"):
-                self.tw["box%d" % c] = gtk.Box(False, 5)
+                self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
-                self.tw[name] = gtk.SpinButton.new(gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
+                self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("bool",):
-                self.tw["box%d" % c] = gtk.Box(False, 5)
+                self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
-                self.tw[name] = gtk.CheckButton()
+                self.tw[name] = Gtk.CheckButton()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('str', 'string', 'file'):
-                self.tw["box%d" % c] = gtk.Box(False, 5)
+                self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
-                self.tw[name] = gtk.Entry()
+                self.tw[name] = Gtk.Entry()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('textview'):
-                self.tw["box%d" % c] = gtk.Box(False, 5)
+                self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
-                self.tw[name] = gtk.TextView()
+                self.tw[name] = Gtk.TextView()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 
-                self.tw["scrolledwindow%d" % c] = gtk.ScrolledWindow()
+                self.tw["scrolledwindow%d" % c] = Gtk.ScrolledWindow()
                 self.tw["scrolledwindow%d" % c].set_min_content_height(100)
                 self.tw["scrolledwindow%d" % c].set_min_content_width(400)
-                self.tw["scrolledwindow%d" % c].set_shadow_type(gtk.ShadowType.IN)
+                self.tw["scrolledwindow%d" % c].set_shadow_type(Gtk.ShadowType.IN)
                 self.tw["scrolledwindow%d" % c].add(self.tw[name])
 
                 self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], False, False, 0)
@@ -3172,10 +3172,10 @@ class PluginFrame(BuildFrame):
             }
         }
 
-        self.plugins_model = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_BOOLEAN,
-            gobject.TYPE_STRING
+        self.plugins_model = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_BOOLEAN,
+            GObject.TYPE_STRING
         )
 
         self.plugins = []
@@ -3300,7 +3300,7 @@ class Settings:
         self.frame = frame
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
@@ -3309,21 +3309,21 @@ class Settings:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
         builder.connect_signals(self)
 
         # Signal sent and catch by frame.py on close
-        gobject.signal_new("settings-closed", gtk.Window, gobject.SignalFlags.RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+        GObject.signal_new("settings-closed", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
 
         # Connect the custom handlers
         self.settings_window.set_transient_for(frame.MainWindow)
         self.settings_window.connect("delete-event", self.on_delete)
 
         # This is ?
-        self.empty_label = gtk.Label.new("")
+        self.empty_label = Gtk.Label.new("")
         self.empty_label.show()
         self.viewport1.add(self.empty_label)
 
@@ -3335,7 +3335,7 @@ class Settings:
         self.handler_ids = {}
 
         # Model of the treeview
-        model = gtk.TreeStore(str, str)
+        model = Gtk.TreeStore(str, str)
 
         # Fill up the model
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
@@ -3398,7 +3398,7 @@ class Settings:
         p["Completion"] = CompletionFrame(self)
 
         # Title of the treeview
-        column = gtk.TreeViewColumn(_("Categories"), gtk.CellRendererText(), text=0)
+        column = Gtk.TreeViewColumn(_("Categories"), Gtk.CellRendererText(), text=0)
 
         # set the model on the treeview
         self.SettingsTreeview.set_model(model)
@@ -3417,9 +3417,9 @@ class Settings:
 
     def colour_widgets(self, widget):
 
-        if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
+        if isinstance(widget, (Gtk.Entry, Gtk.SpinButton)):
             self.set_text_bg(widget)
-        if isinstance(widget, gtk.TreeView):
+        if isinstance(widget, Gtk.TreeView):
             self.frame.change_list_font(widget, self.frame.np.config.sections["ui"]["listfont"])
 
     def update_colours(self):
@@ -3504,23 +3504,23 @@ class Settings:
 
     def get_widget_data(self, widget):
 
-        if isinstance(widget, gtk.Entry):
+        if isinstance(widget, Gtk.Entry):
             return widget.get_text()
-        elif isinstance(widget, gtk.TextView):
+        elif isinstance(widget, Gtk.TextView):
             buffer = widget.get_buffer()
             start, end = buffer.get_bounds()
             return widget.get_buffer().get_text(start, end, True)
-        elif isinstance(widget, gtk.SpinButton):
+        elif isinstance(widget, Gtk.SpinButton):
             return int(widget.get_value())
-        elif isinstance(widget, gtk.CheckButton):
+        elif isinstance(widget, Gtk.CheckButton):
             return widget.get_active()
-        elif isinstance(widget, gtk.RadioButton):
+        elif isinstance(widget, Gtk.RadioButton):
             return widget.get_active()
-        elif isinstance(widget, gtk.ComboBox):
+        elif isinstance(widget, Gtk.ComboBox):
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
-        elif isinstance(widget, gtk.FontButton):
+        elif isinstance(widget, Gtk.FontButton):
             widget.get_font()
-        elif isinstance(widget, gtk.TreeView) and widget.get_model().get_n_columns() == 1:
+        elif isinstance(widget, Gtk.TreeView) and widget.get_model().get_n_columns() == 1:
             wlist = []
             iterator = widget.get_model().get_iter_first()
             while iterator:
@@ -3531,47 +3531,47 @@ class Settings:
             return wlist
 
     def clear_widget(self, widget):
-        if isinstance(widget, gtk.Entry):
+        if isinstance(widget, Gtk.Entry):
             widget.set_text("")
-        elif isinstance(widget, gtk.TextView):
+        elif isinstance(widget, Gtk.TextView):
             widget.get_buffer().set_text("")
-        elif isinstance(widget, gtk.SpinButton):
+        elif isinstance(widget, Gtk.SpinButton):
             widget.set_value(0)
-        elif isinstance(widget, gtk.CheckButton):
+        elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
-        elif isinstance(widget, gtk.RadioButton):
+        elif isinstance(widget, Gtk.RadioButton):
             widget.set_active(0)
-        elif isinstance(widget, gtk.ComboBox):
+        elif isinstance(widget, Gtk.ComboBox):
             self.get_position(widget, "")
-        elif isinstance(widget, gtk.FontButton):
+        elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
 
     def set_widget(self, widget, value):
 
-        if isinstance(widget, gtk.Entry):
+        if isinstance(widget, Gtk.Entry):
             if isinstance(value, str):
                 widget.set_text(value)
             elif isinstance(value, int):
                 widget.set_text(str(value))
-        elif isinstance(widget, gtk.TextView):
+        elif isinstance(widget, Gtk.TextView):
             if isinstance(value, str):
                 widget.get_buffer().set_text(value)
             elif isinstance(value, int):
                 widget.get_buffer().set_text(str(value))
-        elif isinstance(widget, gtk.SpinButton):
+        elif isinstance(widget, Gtk.SpinButton):
             widget.set_value(int(value))
-        elif isinstance(widget, gtk.CheckButton):
+        elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(value)
-        elif isinstance(widget, gtk.RadioButton):
+        elif isinstance(widget, Gtk.RadioButton):
             widget.set_active(value)
-        elif isinstance(widget, gtk.ComboBox):
+        elif isinstance(widget, Gtk.ComboBox):
             if isinstance(value, str):
                 self.get_position(widget, value)
             elif isinstance(value, int):
                 widget.set_active(value)
-        elif isinstance(widget, gtk.FontButton):
+        elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)
-        elif isinstance(widget, gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
+        elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
             for item in value:
                 widget.get_model().append([item])
 

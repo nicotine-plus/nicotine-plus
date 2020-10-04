@@ -21,19 +21,19 @@
 
 from gettext import gettext as _
 
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 
 def combo_box_dialog(parent, title, message, default_text="",
                      option=False, optionmessage="",
                      optionvalue=False, droplist=[]):
 
-    self = gtk.MessageDialog(
+    self = Gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        message_type=gtk.MessageType.QUESTION,
-        buttons=gtk.ButtonsType.OK_CANCEL,
+        message_type=Gtk.MessageType.QUESTION,
+        buttons=Gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.set_default_size(500, -1)
@@ -42,8 +42,8 @@ def combo_box_dialog(parent, title, message, default_text="",
 
     self.gotoption = option
 
-    self.combo_list = gtk.ListStore(gobject.TYPE_STRING)
-    self.combo = gtk.ComboBox.new_with_model_and_entry(model=self.combo_list)
+    self.combo_list = Gtk.ListStore(GObject.TYPE_STRING)
+    self.combo = Gtk.ComboBox.new_with_model_and_entry(model=self.combo_list)
     self.combo.set_entry_text_column(0)
 
     for i in droplist:
@@ -58,7 +58,7 @@ def combo_box_dialog(parent, title, message, default_text="",
 
     if self.gotoption:
 
-        self.option = gtk.CheckButton()
+        self.option = Gtk.CheckButton()
         self.option.set_active(optionvalue)
         self.option.set_label(optionmessage)
         self.option.show()
@@ -66,7 +66,7 @@ def combo_box_dialog(parent, title, message, default_text="",
         self.get_message_area().pack_start(self.option, False, False, 0)
 
     result = None
-    if self.run() == gtk.ResponseType.OK:
+    if self.run() == Gtk.ResponseType.OK:
         if self.gotoption:
             result = [self.combo.get_child().get_text(), self.option.get_active()]
         else:
@@ -79,25 +79,25 @@ def combo_box_dialog(parent, title, message, default_text="",
 
 def entry_dialog(parent, title, message, default=""):
 
-    self = gtk.MessageDialog(
+    self = Gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        message_type=gtk.MessageType.QUESTION,
-        buttons=gtk.ButtonsType.OK_CANCEL,
+        message_type=Gtk.MessageType.QUESTION,
+        buttons=Gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.set_default_size(500, -1)
     self.set_modal(True)
     self.format_secondary_text(message)
 
-    entry = gtk.Entry()
+    entry = Gtk.Entry()
     entry.set_activates_default(True)
     entry.set_text(default)
     self.get_message_area().pack_start(entry, True, True, 0)
     entry.show()
 
     result = None
-    if self.run() == gtk.ResponseType.OK:
+    if self.run() == Gtk.ResponseType.OK:
         result = entry.get_text()
 
     self.destroy()
@@ -107,11 +107,11 @@ def entry_dialog(parent, title, message, default=""):
 
 def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", third=""):
 
-    self = gtk.MessageDialog(
+    self = Gtk.MessageDialog(
         transient_for=parent,
         flags=0,
-        message_type=gtk.MessageType.QUESTION,
-        buttons=gtk.ButtonsType.OK_CANCEL,
+        message_type=Gtk.MessageType.QUESTION,
+        buttons=Gtk.ButtonsType.OK_CANCEL,
         text=title
     )
     self.connect("response", callback, callback_data)
@@ -119,22 +119,22 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
     self.format_secondary_text(message)
 
     if checkbox_label:
-        self.checkbox = gtk.CheckButton()
+        self.checkbox = Gtk.CheckButton()
         self.checkbox.set_label(checkbox_label)
         self.get_message_area().pack_start(self.checkbox, False, False, 0)
         self.checkbox.show()
 
     if third:
-        self.add_button(third, gtk.ResponseType.REJECT)
+        self.add_button(third, Gtk.ResponseType.REJECT)
 
     self.show()
 
 
-class MetaDialog(gtk.Dialog):
+class MetaDialog(Gtk.Dialog):
 
     def __init__(self, frame, message="", data=None, modal=True, search=True):
 
-        gtk.Dialog.__init__(self)
+        Gtk.Dialog.__init__(self)
         self.connect("destroy", self.quit)
         self.connect("delete-event", self.quit)
         self.nicotine = frame
@@ -146,13 +146,13 @@ class MetaDialog(gtk.Dialog):
 
         self.search = search
 
-        self.box = gtk.VBox(spacing=10)
+        self.box = Gtk.VBox(spacing=10)
         self.box.set_border_width(10)
         self.box.show()
         self.vbox.pack_start(self.box, False, False, 0)
 
         if message:
-            label = gtk.Label()
+            label = Gtk.Label()
             label.set_markup(message)
             label.set_line_wrap(False)
             self.box.pack_start(label, False, False, 0)
@@ -162,15 +162,15 @@ class MetaDialog(gtk.Dialog):
         self.current = 0
         self.data = data
 
-        hbox2 = gtk.HBox(spacing=5)
+        hbox2 = Gtk.HBox(spacing=5)
         hbox2.show()
 
-        self.UF = gtk.Frame()
+        self.UF = Gtk.Frame()
         self.UF.show()
-        self.UF.set_shadow_type(gtk.ShadowType.ETCHED_IN)
+        self.UF.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         self.box.pack_start(self.UF, False, False, 0)
 
-        vbox3 = gtk.VBox(spacing=5)
+        vbox3 = Gtk.VBox(spacing=5)
         vbox3.set_border_width(5)
         vbox3.show()
 
@@ -184,7 +184,7 @@ class MetaDialog(gtk.Dialog):
         )
 
         self.browse_user = self.nicotine.create_icon_button(
-            gtk.STOCK_HARDDISK,
+            Gtk.STOCK_HARDDISK,
             "stock",
             self.on_browse_user, _("Browse")
         )
@@ -202,7 +202,7 @@ class MetaDialog(gtk.Dialog):
 
         vbox3.pack_start(hbox2, False, False, 0)
 
-        hbox3 = gtk.HBox(spacing=5)
+        hbox3 = Gtk.HBox(spacing=5)
         hbox3.show()
         vbox3.pack_start(hbox3, False, False, 0)
 
@@ -213,7 +213,7 @@ class MetaDialog(gtk.Dialog):
             fill=True
         )
 
-        hbox5 = gtk.HBox(spacing=5)
+        hbox5 = Gtk.HBox(spacing=5)
         hbox5.show()
         vbox3.pack_start(hbox5, False, False, 0)
 
@@ -224,10 +224,10 @@ class MetaDialog(gtk.Dialog):
             fill=True
         )
 
-        self.media = gtk.Frame()
+        self.media = Gtk.Frame()
         self.media.show()
-        self.media.set_shadow_type(gtk.ShadowType.ETCHED_IN)
-        hbox6 = gtk.HBox(spacing=5, homogeneous=False)
+        self.media.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        hbox6 = Gtk.HBox(spacing=5, homogeneous=False)
         hbox6.set_border_width(5)
         hbox6.show()
 
@@ -261,7 +261,7 @@ class MetaDialog(gtk.Dialog):
         self.media.add(hbox6)
         self.box.pack_start(self.media, False, False, 0)
 
-        hbox7 = gtk.HBox(spacing=5, homogeneous=False)
+        hbox7 = Gtk.HBox(spacing=5, homogeneous=False)
         hbox7.show()
         self.box.pack_start(hbox7, False, False, 0)
 
@@ -283,7 +283,7 @@ class MetaDialog(gtk.Dialog):
             xalign=1
         )
 
-        hbox4 = gtk.HBox(spacing=5, homogeneous=False)
+        hbox4 = Gtk.HBox(spacing=5, homogeneous=False)
         hbox4.show()
         self.box.pack_start(hbox4, False, False, 0)
 
@@ -296,12 +296,12 @@ class MetaDialog(gtk.Dialog):
             xalign=1
         )
 
-        self.country = gtk.Label()
+        self.country = Gtk.Label()
         self.country.hide()
 
         hbox4.pack_start(self.country, False, False, 0)
 
-        self.buttonbox = gtk.HBox(False, 2)
+        self.buttonbox = Gtk.HBox(False, 2)
         self.buttonbox.show()
         self.buttonbox.set_spacing(2)
 
@@ -309,7 +309,7 @@ class MetaDialog(gtk.Dialog):
 
         # Download Button
         self.download_item = self.nicotine.create_icon_button(
-            gtk.STOCK_GO_DOWN,
+            Gtk.STOCK_GO_DOWN,
             "stock",
             self.on_download_item,
             _("Download")
@@ -319,7 +319,7 @@ class MetaDialog(gtk.Dialog):
 
         # Download All Button
         self.download_all = self.nicotine.create_icon_button(
-            gtk.STOCK_GO_DOWN,
+            Gtk.STOCK_GO_DOWN,
             "stock",
             self.on_download_all,
             _("Download All")
@@ -335,14 +335,14 @@ class MetaDialog(gtk.Dialog):
         )
 
         self.previous = self.nicotine.create_icon_button(
-            gtk.STOCK_GO_BACK,
+            Gtk.STOCK_GO_BACK,
             "stock",
             self.on_previous,
             _("Previous")
         )
 
         self.next = self.nicotine.create_icon_button(
-            gtk.STOCK_GO_FORWARD,
+            Gtk.STOCK_GO_FORWARD,
             "stock",
             self.on_next,
             _("Next")
@@ -352,7 +352,7 @@ class MetaDialog(gtk.Dialog):
         self.buttonbox.pack_end(self.previous, False, False, 0)
 
         button = self.nicotine.create_icon_button(
-            gtk.STOCK_CLOSE,
+            Gtk.STOCK_CLOSE,
             "stock",
             self.click,
             _("Close")
@@ -497,14 +497,14 @@ class MetaDialog(gtk.Dialog):
     def quit(self, w=None, event=None):
         self.hide()
         self.destroy()
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def click(self, button):
         self.quit()
 
     def make_label(self, parent, labeltitle, expand=True, fill=False, xalign=0):
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_markup(labeltitle)
         label.show()
         parent.pack_start(label, expand, fill, 0)
@@ -520,13 +520,13 @@ class MetaDialog(gtk.Dialog):
                                 editable=False, expand=True, fill=False,
                                 width=-1, xalign=0):
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_markup(labeltitle)
         label.show()
 
         parent.pack_start(label, False, False, 0)
 
-        entry = gtk.Entry()
+        entry = Gtk.Entry()
         entry.set_property("editable", editable)
         entry.set_property("width-chars", width)
 

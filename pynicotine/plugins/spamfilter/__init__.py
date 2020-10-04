@@ -27,10 +27,10 @@ class Plugin(BasePlugin):
         'badprivatephrases': {"description": 'Things people send you in private that is spam.', 'type': 'list string'},
     }
 
-    def LoadNotification(self):
+    def LoadNotification(self):  # noqa
         self.log('A line should be at least %s long with a maximum of %s different characters before it\'s considered ASCII spam.' % (self.settings['minlength'], self.settings['maxdiffcharacters']))
 
-    def IncomingPublicChatEvent(self, room, user, line):
+    def IncomingPublicChatEvent(self, room, user, line):  # noqa
         if len(line) >= self.settings['minlength'] and len(set(line)) < self.settings['maxdiffcharacters']:
             self.log('Filtered ASCII spam from "%s" in room "%s"' % (user, room))
             return returncode['zap']
@@ -38,7 +38,7 @@ class Plugin(BasePlugin):
             self.log('Filtered really long line (%s characters) from "%s" in room "%s"' % (len(line), user, room))
             return returncode['zap']
 
-    def IncomingPrivateChatEvent(self, user, line):
+    def IncomingPrivateChatEvent(self, user, line):  # noqa
         for phrase in self.settings['badprivatephrases']:
             if line.lower().find(phrase) > -1:
                 self.log("Blocked spam from %s: %s" % (user, line))

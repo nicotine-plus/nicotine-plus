@@ -30,9 +30,9 @@ from os.path import commonprefix
 
 from gi.repository import Gdk
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
-from gi.repository import Pango as pango
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
@@ -102,7 +102,7 @@ class RoomsControl:
                 del self.private_rooms[room]["operator"]
 
         self.clist = []
-        self.roomsmodel = gtk.ListStore(str, int, int)
+        self.roomsmodel = Gtk.ListStore(str, int, int)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 
         self.cols = initialise_columns(
@@ -116,7 +116,7 @@ class RoomsControl:
         self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
 
         for i in range(2):
-            parent = self.cols[i].get_widget().get_ancestor(gtk.Button)
+            parent = self.cols[i].get_widget().get_ancestor(Gtk.Button)
             if parent:
                 parent.connect('button_press_event', press_header)
 
@@ -188,16 +188,16 @@ class RoomsControl:
     def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
 
         if self.roomsmodel.get_value(iterator, 2) >= 2:
-            cellrenderer.set_property("underline", pango.Underline.SINGLE)
-            cellrenderer.set_property("weight", pango.Weight.BOLD)
+            cellrenderer.set_property("underline", Pango.Underline.SINGLE)
+            cellrenderer.set_property("weight", Pango.Weight.BOLD)
 
         elif self.roomsmodel.get_value(iterator, 2) >= 1:
-            cellrenderer.set_property("weight", pango.Weight.BOLD)
-            cellrenderer.set_property("underline", pango.Underline.NONE)
+            cellrenderer.set_property("weight", Pango.Weight.BOLD)
+            cellrenderer.set_property("underline", Pango.Underline.NONE)
 
         else:
-            cellrenderer.set_property("weight", pango.Weight.NORMAL)
-            cellrenderer.set_property("underline", pango.Underline.NONE)
+            cellrenderer.set_property("weight", Pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", Pango.Underline.NONE)
 
         self.frame.cell_data_func(column, cellrenderer, model, iterator)
 
@@ -422,7 +422,7 @@ class RoomsControl:
         self.frame.roomlist.RoomsList.set_model(None)
         self.roomsmodel.set_default_sort_func(lambda *args: -1)
         self.roomsmodel.set_sort_func(1, lambda *args: -1)
-        self.roomsmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
+        self.roomsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.rooms = []
         for room, users in msg.rooms:
@@ -432,7 +432,7 @@ class RoomsControl:
         self.set_private_rooms(msg.ownedprivaterooms, msg.otherprivaterooms)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
         self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
-        self.roomsmodel.set_sort_column_id(1, gtk.SortType.DESCENDING)
+        self.roomsmodel.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.roomsmodel.set_default_sort_func(self.private_rooms_sort)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
@@ -749,7 +749,7 @@ class ChatRoom:
         self.frame = roomsctrl.frame
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
@@ -758,7 +758,7 @@ class ChatRoom:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -795,9 +795,9 @@ class ChatRoom:
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin
-        completion = gtk.EntryCompletion()
+        completion = Gtk.EntryCompletion()
         self.ChatEntry.set_completion(completion)
-        liststore = gtk.ListStore(gobject.TYPE_STRING)
+        liststore = Gtk.ListStore(GObject.TYPE_STRING)
         completion.set_model(liststore)
         completion.set_text_column(0)
 
@@ -846,16 +846,16 @@ class ChatRoom:
 
         self.users = {}
 
-        self.usersmodel = gtk.ListStore(
-            gobject.TYPE_OBJECT,
-            gobject.TYPE_OBJECT,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT,
-            gobject.TYPE_STRING
+        self.usersmodel = Gtk.ListStore(
+            GObject.TYPE_OBJECT,
+            GObject.TYPE_OBJECT,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT,
+            GObject.TYPE_STRING
         )
 
         for username, user in users.items():
@@ -877,7 +877,7 @@ class ChatRoom:
             self.users[username] = iterator
             self.roomsctrl.get_user_address(username)
 
-        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
+        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
         self.update_colours()
 
@@ -1081,20 +1081,20 @@ class ChatRoom:
         act = widget.get_active()
         if act:
             self.RoomLogWindow.hide()
-            self.HideStatusLogImage.set_from_icon_name("go-down-symbolic", gtk.IconSize.BUTTON)
+            self.HideStatusLogImage.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
         else:
             self.RoomLogWindow.show()
-            self.HideStatusLogImage.set_from_icon_name("go-up-symbolic", gtk.IconSize.BUTTON)
+            self.HideStatusLogImage.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
 
     def on_hide_user_list(self, widget):
 
         act = widget.get_active()
         if act:
             self.vbox5.hide()
-            self.HideUserListImage.set_from_icon_name("go-previous-symbolic", gtk.IconSize.BUTTON)
+            self.HideUserListImage.set_from_icon_name("go-previous-symbolic", Gtk.IconSize.BUTTON)
         else:
             self.vbox5.show()
-            self.HideUserListImage.set_from_icon_name("go-next-symbolic", gtk.IconSize.BUTTON)
+            self.HideUserListImage.set_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON)
 
     def ticker_set(self, msg):
 
@@ -1524,16 +1524,16 @@ class ChatRoom:
             user = self.usersmodel.get_value(iterator, 2)
 
             if user == self.roomsctrl.private_rooms[self.room]["owner"]:
-                cellrenderer.set_property("underline", pango.Underline.SINGLE)
-                cellrenderer.set_property("weight", pango.Weight.BOLD)
+                cellrenderer.set_property("underline", Pango.Underline.SINGLE)
+                cellrenderer.set_property("weight", Pango.Weight.BOLD)
 
             elif user in (self.roomsctrl.private_rooms[self.room]["operators"]):
-                cellrenderer.set_property("weight", pango.Weight.BOLD)
-                cellrenderer.set_property("underline", pango.Underline.NONE)
+                cellrenderer.set_property("weight", Pango.Weight.BOLD)
+                cellrenderer.set_property("underline", Pango.Underline.NONE)
 
             else:
-                cellrenderer.set_property("weight", pango.Weight.NORMAL)
-                cellrenderer.set_property("underline", pango.Underline.NONE)
+                cellrenderer.set_property("weight", Pango.Weight.NORMAL)
+                cellrenderer.set_property("underline", Pango.Underline.NONE)
 
         self.frame.cell_data_func(column, cellrenderer, model, iterator)
 
@@ -1589,19 +1589,19 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.Weight.BOLD)
+                tag.set_property("weight", Pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.Weight.NORMAL)
+                tag.set_property("weight", Pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.Style.ITALIC)
+                tag.set_property("style", Pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.Style.NORMAL)
+                tag.set_property("style", Pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.Underline.SINGLE)
+                tag.set_property("underline", Pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.Underline.NONE)
+                tag.set_property("underline", Pango.Underline.NONE)
 
             tag.connect("event", self.user_name_event, username)
 
@@ -1688,19 +1688,19 @@ class ChatRoom:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.Weight.BOLD)
+                tag.set_property("weight", Pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.Weight.NORMAL)
+                tag.set_property("weight", Pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.Style.ITALIC)
+                tag.set_property("style", Pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.Style.NORMAL)
+                tag.set_property("style", Pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.Underline.SINGLE)
+                tag.set_property("underline", Pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.Underline.NONE)
+                tag.set_property("underline", Pango.Underline.NONE)
 
     def change_colours(self):
 
@@ -1778,7 +1778,7 @@ class ChatRoom:
 
         # Update user list with an inexpensive sorting function
         self.usersmodel.set_default_sort_func(lambda *args: -1)
-        self.usersmodel.set_sort_column_id(-1, gtk.SortType.ASCENDING)
+        self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for (username, user) in users.items():
 
@@ -1805,7 +1805,7 @@ class ChatRoom:
         self.UserList.set_sensitive(True)
 
         # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
+        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
         self.usersmodel.set_default_sort_func(lambda *args: -1)
 
         # Spit this line into chat log

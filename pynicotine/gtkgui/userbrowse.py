@@ -26,8 +26,8 @@ from gettext import gettext as _
 from sys import maxsize
 
 from gi.repository import Gdk
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
@@ -51,7 +51,7 @@ class UserBrowse:
         _config_dir, self.data_dir = get_user_directories()
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
@@ -60,7 +60,7 @@ class UserBrowse:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -91,7 +91,7 @@ class UserBrowse:
         self.files = {}
         self.totalsize = 0
 
-        self.dir_store = gtk.TreeStore(str, str)
+        self.dir_store = Gtk.TreeStore(str, str)
 
         self.FolderTreeView.set_headers_visible(True)
         self.FolderTreeView.set_enable_tree_lines(True)
@@ -174,7 +174,7 @@ class UserBrowse:
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
 
         # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
-        self.file_store = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
+        self.file_store = Gtk.ListStore(str, str, str, str, GObject.TYPE_INT64, int, str)
 
         self.FileTreeView.set_model(self.file_store)
         widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
@@ -189,11 +189,11 @@ class UserBrowse:
         cols[1].set_sort_column_id(4)
         cols[2].set_sort_column_id(2)
         cols[3].set_sort_column_id(5)
-        self.file_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         hide_columns(cols, self.frame.np.config.sections["columns"]["userbrowse"])
 
-        self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.FileTreeView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
         self.FileTreeView.set_rubber_banding(True)
 
@@ -273,10 +273,10 @@ class UserBrowse:
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
-            self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("list-remove-symbolic", Gtk.IconSize.BUTTON)
         else:
             self.FolderTreeView.collapse_all()
-            self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON)
 
             dirs = sorted(self.directories.keys())
 
@@ -423,7 +423,7 @@ class UserBrowse:
             self.FolderTreeView.set_model(self.dir_store)
 
             # Sort the DirStore
-            self.dir_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+            self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
             return directory
 
@@ -489,7 +489,7 @@ class UserBrowse:
         directory = sortlist[0]
 
         # Sort the DirStore
-        self.dir_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         # Set the model of the treeviex
         self.FolderTreeView.set_model(self.dir_store)
@@ -607,10 +607,10 @@ class UserBrowse:
         if model.sort_col == column_id:
             order = model.sort_order
 
-            if order == gtk.SortType.ASCENDING:
-                order = gtk.SortType.DESCENDING
+            if order == Gtk.SortType.ASCENDING:
+                order = Gtk.SortType.DESCENDING
             else:
-                order = gtk.SortType.ASCENDING
+                order = Gtk.SortType.ASCENDING
 
             column.set_sort_order(order)
             model.sort_order = order
@@ -915,7 +915,7 @@ class UserBrowse:
 
             sel = self.FileTreeView.get_selection()
             sel.unselect_all()
-            l = 1  # noqa: E741
+            not_selected = 1
             resultfiles.sort()
 
             for fn in resultfiles:
@@ -924,10 +924,10 @@ class UserBrowse:
                 # Select each matching file in directory
                 sel.select_path(path)
 
-                if l:
+                if not_selected:
                     # Position cursor at first match
                     self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
-                    l = 0  # noqa: E741
+                    not_selected = 0
         else:
             self.search_position = 0
 

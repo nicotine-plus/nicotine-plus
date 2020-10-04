@@ -26,8 +26,8 @@ import os
 from gettext import gettext as _
 
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import initialise_columns
@@ -45,7 +45,7 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
@@ -55,7 +55,7 @@ class WishList:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -66,7 +66,7 @@ class WishList:
         self.wish_list_dialog.connect("delete-event", self.quit)
         self.wish_list_dialog.connect("delete_event", self.quit)
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING)
 
         cols = initialise_columns(
             self.WishlistView,
@@ -74,9 +74,9 @@ class WishList:
         )
 
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.WishlistView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         for wish in self.frame.np.config.sections["server"]["autosearch"]:
             self.wishes[wish] = self.store.append([wish])

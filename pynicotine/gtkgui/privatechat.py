@@ -28,9 +28,9 @@ from time import daylight
 
 from gi.repository import Gdk
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
-from gi.repository import Pango as pango
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.chatrooms import get_completion
@@ -335,7 +335,7 @@ class PrivateChat:
         # We should reference the user as soon as possible
         self.chats.users[self.user] = self
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
@@ -344,7 +344,7 @@ class PrivateChat:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -369,9 +369,9 @@ class PrivateChat:
             spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatLine)
             spell_view.set_inline_spell_checking(True)
 
-        completion = gtk.EntryCompletion()
+        completion = Gtk.EntryCompletion()
         self.ChatLine.set_completion(completion)
-        liststore = gtk.ListStore(gobject.TYPE_STRING)
+        liststore = Gtk.ListStore(GObject.TYPE_STRING)
         completion.set_model(liststore)
 
         completion.set_text_column(0)
@@ -829,25 +829,25 @@ class PrivateChat:
         usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
         if usernamestyle == "bold":
-            self.tag_username.set_property("weight", pango.Weight.BOLD)
-            self.tag_my_username.set_property("weight", pango.Weight.BOLD)
+            self.tag_username.set_property("weight", Pango.Weight.BOLD)
+            self.tag_my_username.set_property("weight", Pango.Weight.BOLD)
         else:
-            self.tag_username.set_property("weight", pango.Weight.NORMAL)
-            self.tag_my_username.set_property("weight", pango.Weight.NORMAL)
+            self.tag_username.set_property("weight", Pango.Weight.NORMAL)
+            self.tag_my_username.set_property("weight", Pango.Weight.NORMAL)
 
         if usernamestyle == "italic":
-            self.tag_username.set_property("style", pango.Style.ITALIC)
-            self.tag_my_username.set_property("style", pango.Style.ITALIC)
+            self.tag_username.set_property("style", Pango.Style.ITALIC)
+            self.tag_my_username.set_property("style", Pango.Style.ITALIC)
         else:
-            self.tag_username.set_property("style", pango.Style.NORMAL)
-            self.tag_my_username.set_property("style", pango.Style.NORMAL)
+            self.tag_username.set_property("style", Pango.Style.NORMAL)
+            self.tag_my_username.set_property("style", Pango.Style.NORMAL)
 
         if usernamestyle == "underline":
-            self.tag_username.set_property("underline", pango.Underline.SINGLE)
-            self.tag_my_username.set_property("underline", pango.Underline.SINGLE)
+            self.tag_username.set_property("underline", Pango.Underline.SINGLE)
+            self.tag_my_username.set_property("underline", Pango.Underline.SINGLE)
         else:
-            self.tag_username.set_property("underline", pango.Underline.NONE)
-            self.tag_my_username.set_property("underline", pango.Underline.NONE)
+            self.tag_username.set_property("underline", Pango.Underline.NONE)
+            self.tag_my_username.set_property("underline", Pango.Underline.NONE)
 
         self.frame.set_text_bg(self.ChatLine)
         self.frame.set_text_bg(self.PeerPrivateMessages)
@@ -869,19 +869,19 @@ class PrivateChat:
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
             if usernamestyle == "bold":
-                tag.set_property("weight", pango.Weight.BOLD)
+                tag.set_property("weight", Pango.Weight.BOLD)
             else:
-                tag.set_property("weight", pango.Weight.NORMAL)
+                tag.set_property("weight", Pango.Weight.NORMAL)
 
             if usernamestyle == "italic":
-                tag.set_property("style", pango.Style.ITALIC)
+                tag.set_property("style", Pango.Style.ITALIC)
             else:
-                tag.set_property("style", pango.Style.NORMAL)
+                tag.set_property("style", Pango.Style.NORMAL)
 
             if usernamestyle == "underline":
-                tag.set_property("underline", pango.Underline.SINGLE)
+                tag.set_property("underline", Pango.Underline.SINGLE)
             else:
-                tag.set_property("underline", pango.Underline.NONE)
+                tag.set_property("underline", Pango.Underline.NONE)
 
     def change_colours(self):
 

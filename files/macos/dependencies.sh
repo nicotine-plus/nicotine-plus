@@ -2,6 +2,7 @@
 
 brew install \
   create-dmg \
+  flake8 \
   gdk-pixbuf \
   gobject-introspection \
   gspell \
@@ -14,5 +15,5 @@ brew install \
 
 # pip should not pick up our setup.cfg
 cd pynicotine
-pip3 install flake8 pyinstaller==3.6 pytaglib pytest
+pip3 install pep8-naming pyinstaller==3.6 pytaglib pytest
 cd ..

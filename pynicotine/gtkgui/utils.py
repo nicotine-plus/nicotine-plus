@@ -33,9 +33,9 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
-from gi.repository import Pango as pango
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
@@ -114,7 +114,7 @@ def show_country_tooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_
 
 
 def fill_file_grouping_combobox(combobox):
-    grouplist = gtk.ListStore(str)
+    grouplist = Gtk.ListStore(str)
     groups = [
         "No grouping",
         "Group by folder",
@@ -125,7 +125,7 @@ def fill_file_grouping_combobox(combobox):
         grouplist.append([group])
 
     combobox.set_model(grouplist)
-    renderer_text = gtk.CellRendererText()
+    renderer_text = Gtk.CellRendererText()
     combobox.pack_start(renderer_text, True)
     combobox.add_attribute(renderer_text, "text", 0)
 
@@ -167,52 +167,52 @@ def initialise_columns(treeview, *args):
     for c in args:
 
         if c[2] == "text":
-            renderer = gtk.CellRendererText()
+            renderer = Gtk.CellRendererText()
             renderer.set_padding(10, 3)
 
-            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "center":
-            renderer = gtk.CellRendererText()
+            renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.5)
 
-            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "number":
-            renderer = gtk.CellRendererText()
+            renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.9)
 
-            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
             column.set_alignment(0.9)
         elif c[2] == "edit":
-            renderer = gtk.CellRendererText()
+            renderer = Gtk.CellRendererText()
             renderer.set_padding(10, 3)
             renderer.set_property('editable', True)
-            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "combo":
-            renderer = gtk.CellRendererCombo()
+            renderer = Gtk.CellRendererCombo()
             renderer.set_padding(10, 3)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
-            column = gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
         elif c[2] == "progress":
-            renderer = gtk.CellRendererProgress()
-            column = gtk.TreeViewColumn(c[0], renderer, value=i)
+            renderer = Gtk.CellRendererProgress()
+            column = Gtk.TreeViewColumn(c[0], renderer, value=i)
         elif c[2] == "toggle":
-            renderer = gtk.CellRendererToggle()
-            column = gtk.TreeViewColumn(c[0], renderer, active=i)
+            renderer = Gtk.CellRendererToggle()
+            column = Gtk.TreeViewColumn(c[0], renderer, active=i)
             renderer.set_property("xalign", 0.5)
         else:
-            renderer = gtk.CellRendererPixbuf()
-            column = gtk.TreeViewColumn(c[0], renderer, pixbuf=i)
+            renderer = Gtk.CellRendererPixbuf()
+            column = Gtk.TreeViewColumn(c[0], renderer, pixbuf=i)
 
         if c[1] == -1:
             column.set_resizable(False)
-            column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
+            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
         else:
             column.set_resizable(True)
             if c[1] == 0:
-                column.set_sizing(gtk.TreeViewColumnSizing.GROW_ONLY)
+                column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
             else:
-                column.set_sizing(gtk.TreeViewColumnSizing.FIXED)
+                column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
                 column.set_fixed_width(c[1])
             column.set_min_width(0)
 
@@ -233,7 +233,7 @@ def initialise_columns(treeview, *args):
             renderer.set_property("background", background)
 
         column.set_reorderable(False)
-        column.set_widget(gtk.Label.new(c[0]))
+        column.set_widget(Gtk.Label.new(c[0]))
         column.get_widget().set_margin_start(6)
         column.get_widget().show()
 
@@ -250,7 +250,7 @@ def hide_columns(cols, visibility_list):
     try:
         for i in range(len(cols)):
 
-            parent = cols[i].get_widget().get_ancestor(gtk.Button)
+            parent = cols[i].get_widget().get_ancestor(Gtk.Button)
             if parent:
                 parent.connect('button_press_event', press_header)
 
@@ -262,7 +262,7 @@ def hide_columns(cols, visibility_list):
 
             if cols[i].get_visible():
                 column = cols[i]
-                column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
+                column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
                 column.set_resizable(False)
                 column.set_fixed_width(-1)
                 break
@@ -279,7 +279,7 @@ def press_header(widget, event):
     columns = widget.get_parent().get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     one_visible_column = len(visible_columns) == 1
-    menu = gtk.Menu()
+    menu = Gtk.Menu()
     pos = 1
 
     for column in columns:
@@ -288,7 +288,7 @@ def press_header(widget, event):
         if title == "":
             title = _("Column #%i") % pos
 
-        item = gtk.CheckMenuItem(title)
+        item = Gtk.CheckMenuItem(title)
 
         if column in visible_columns:
             item.set_active(True)
@@ -317,7 +317,7 @@ def header_toggle(menuitem, columns, index):
 
         if columns[i].get_visible():
             column = columns[i]
-            column.set_sizing(gtk.TreeViewColumnSizing.AUTOSIZE)
+            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
             column.set_resizable(False)
             column.set_fixed_width(-1)
             break
@@ -328,7 +328,7 @@ def header_toggle(menuitem, columns, index):
     and make it resizable again. """
 
     prev_column = columns[index - 1]
-    prev_column.set_sizing(gtk.TreeViewColumnSizing.FIXED)
+    prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
     prev_column.set_resizable(True)
 
     NICOTINE.SaveColumns()
@@ -394,10 +394,10 @@ def open_uri(uri, window):
         return
 
     try:
-        gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
+        Gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
     except AttributeError:
         screen = window.get_screen()
-        gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
+        Gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
 
 
 def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
@@ -413,7 +413,7 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
         if color != "":
             props["foreground"] = color
 
-        props["underline"] = pango.Underline.SINGLE
+        props["underline"] = Pango.Underline.SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1
         tag.connect("event", url_event, url)
@@ -458,16 +458,16 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     text_iter_start, text_iter_end = buffer.get_bounds()
     linenr = buffer.get_line_count()
 
-    TIMESTAMP = None
-    TS = 0
+    timestamp = None
+    ts = 0
 
     if showstamp and NICOTINE.np.config.sections["logging"]["timestamps"]:
         if timestamp_format and not timestamp:
-            TIMESTAMP = time.strftime(timestamp_format)
-            line = "%s %s" % (TIMESTAMP, line)
+            timestamp = time.strftime(timestamp_format)
+            line = "%s %s" % (timestamp, line)
         elif timestamp_format and timestamp:
-            TIMESTAMP = time.strftime(timestamp_format, time.localtime(timestamp))
-            line = "%s %s" % (TIMESTAMP, line)
+            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+            line = "%s %s" % (timestamp, line)
 
     # Ensure newlines are in the correct place
     # We want them before the content, to prevent adding an empty line at the end of the TextView
@@ -475,12 +475,12 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     if text_iter_end.get_offset() > 0:
         line = "\n" + line
 
-    if TIMESTAMP is not None:
-        TS = len("\n") + len(TIMESTAMP)
+    if timestamp is not None:
+        ts = len("\n") + len(timestamp)
 
     # Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
-    _append(buffer, line[:TS], tag)
-    line = line[TS:]
+    _append(buffer, line[:ts], tag)
+    line = line[ts:]
     # Match first url
     match = URL_RE.search(line)
     # Highlight urls, if found and tag them
@@ -517,12 +517,12 @@ class BuddiesComboBox:
 
         self.combobox = combo_box
 
-        self.store = gtk.ListStore(gobject.TYPE_STRING)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING)
         self.combobox.set_model(self.store)
         self.combobox.set_entry_text_column(0)
 
         self.store.set_default_sort_func(lambda *args: -1)
-        self.store.set_sort_column_id(-1, gtk.SortType.ASCENDING)
+        self.store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.combobox.show()
 
@@ -536,7 +536,7 @@ class BuddiesComboBox:
         for user in self.frame.np.config.sections["server"]["userlist"]:
             self.items[user[0]] = self.store.append([user[0]])
 
-        self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
     def append(self, item):
 
@@ -552,11 +552,11 @@ class BuddiesComboBox:
             del self.items[item]
 
 
-class ImageLabel(gtk.Box):
+class ImageLabel(Gtk.Box):
 
     def __init__(self, label="", image=None, onclose=None, closebutton=False, angle=0, show_image=True, statusimage=None, show_status_image=False):
 
-        gtk.Box.__init__(self)
+        Gtk.Box.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -569,8 +569,8 @@ class ImageLabel(gtk.Box):
 
         self.onclose = onclose
         self.status_img = None
-        self.statusimage = gtk.Image()
-        self.label = gtk.Label()
+        self.statusimage = Gtk.Image()
+        self.label = Gtk.Label()
         self.text = label
 
         self.set_text(self.text)
@@ -582,7 +582,7 @@ class ImageLabel(gtk.Box):
             self.set_status_image(statusimage)
             self.statusimage.show()
 
-        self.image = gtk.Image()
+        self.image = Gtk.Image()
         self.set_image(image)
 
         if self._show_image:
@@ -602,10 +602,10 @@ class ImageLabel(gtk.Box):
             self.box.destroy()
             del self.box
 
-        self.box = gtk.Box()
+        self.box = Gtk.Box()
 
         if self.angle in (90, -90):
-            self.box.set_orientation(gtk.Orientation.VERTICAL)
+            self.box.set_orientation(Gtk.Orientation.VERTICAL)
         else:
             self.angle = 0
 
@@ -670,15 +670,15 @@ class ImageLabel(gtk.Box):
         if "button" in self.__dict__:
             return
 
-        self.button = gtk.Button()
-        img = gtk.Image()
-        img.set_from_icon_name("window-close-symbolic", gtk.IconSize.MENU)
+        self.button = Gtk.Button()
+        img = Gtk.Image()
+        img.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
         self.button.add(img)
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
 
-        self.button.set_relief(gtk.ReliefStyle.NONE)
+        self.button.set_relief(Gtk.ReliefStyle.NONE)
 
         self.button.show_all()
         self.box.pack_start(self.button, False, False, 0)
@@ -750,15 +750,15 @@ class ImageLabel(gtk.Box):
 
 
 class IconNotebook:
-    """ This class implements a pseudo gtk.Notebook
-    On top of what a gtk.Notebook provides:
+    """ This class implements a pseudo Gtk.Notebook
+    On top of what a Gtk.Notebook provides:
     - You can have icons on the notebook tab.
     - You can choose the label orientation (angle).
     """
 
     def __init__(self, images, angle=0, tabclosers=False, show_image=True, reorderable=True, show_status_image=False, notebookraw=None):
 
-        # We store the real gtk.Notebook object
+        # We store the real Gtk.Notebook object
         self.notebook = notebookraw
         self.notebook.set_show_border(True)
 
@@ -854,7 +854,7 @@ class IconNotebook:
 
         self.pages.append([page, label_tab, 0, label_tab_menu])
 
-        eventbox = gtk.EventBox()
+        eventbox = Gtk.EventBox()
         eventbox.set_visible_window(False)
 
         label_tab.show()
@@ -864,7 +864,7 @@ class IconNotebook:
         eventbox.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
-        gtk.Notebook.append_page_menu(self.notebook, page, eventbox, label_tab_menu)
+        Gtk.Notebook.append_page_menu(self.notebook, page, eventbox, label_tab_menu)
 
         self.notebook.set_tab_reorderable(page, self.reorderable)
         self.notebook.set_show_tabs(True)
@@ -873,7 +873,7 @@ class IconNotebook:
 
         for i in self.pages[:]:
             if i[0] == page:
-                gtk.Notebook.remove_page(self.notebook, self.page_num(page))
+                Gtk.Notebook.remove_page(self.notebook, self.page_num(page))
                 i[1].destroy()
                 i[3].destroy()
                 self.pages.remove(i)
@@ -981,11 +981,11 @@ class IconNotebook:
         self.notebook.show()
 
 
-class PopupMenu(gtk.Menu):
+class PopupMenu(Gtk.Menu):
 
     def __init__(self, frame=None, shouldattach=True):
 
-        gtk.Menu.__init__(self)
+        Gtk.Menu.__init__(self)
 
         self.frame = frame
         self.user = None
@@ -1003,11 +1003,11 @@ class PopupMenu(gtk.Menu):
         for item in items:
 
             if item[0] == "":
-                menuitem = gtk.SeparatorMenuItem()
+                menuitem = Gtk.SeparatorMenuItem()
 
             elif item[0] == "USER":
 
-                menuitem = gtk.MenuItem.new_with_label(item[1])
+                menuitem = Gtk.MenuItem.new_with_label(item[1])
                 self.useritem = menuitem
 
                 if len(item) >= 3:
@@ -1017,7 +1017,7 @@ class PopupMenu(gtk.Menu):
 
             elif item[0] == 1:
 
-                menuitem = gtk.MenuItem.new_with_label(item[1])
+                menuitem = Gtk.MenuItem.new_with_label(item[1])
                 menuitem.set_submenu(item[2])
 
                 if len(item) == 5 and item[4] is not None and item[3] is not None:
@@ -1027,7 +1027,7 @@ class PopupMenu(gtk.Menu):
 
             elif item[0] == "USERMENU":
 
-                menuitem = gtk.MenuItem.new_with_label(item[1])
+                menuitem = Gtk.MenuItem.new_with_label(item[1])
                 menuitem.set_submenu(item[2])
 
                 if item[3] is not None:
@@ -1038,11 +1038,11 @@ class PopupMenu(gtk.Menu):
             else:
 
                 if item[0][0] == "$":
-                    menuitem = gtk.CheckMenuItem.new_with_label(item[0][1:])
+                    menuitem = Gtk.CheckMenuItem.new_with_label(item[0][1:])
                 elif item[0][0] == "#":
-                    menuitem = gtk.MenuItem.new_with_label(item[0][1:])
+                    menuitem = Gtk.MenuItem.new_with_label(item[0][1:])
                 else:
-                    menuitem = gtk.MenuItem.new_with_label(item[0])
+                    menuitem = Gtk.MenuItem.new_with_label(item[0])
 
                 if len(item) >= 3 and item[2] is not None and item[1] is not None:
                     self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])
@@ -1251,7 +1251,7 @@ class TextSearchBar:
         self.textview.emit("select-all", False)
 
         iterator = start
-        match = iterator.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match
@@ -1268,7 +1268,7 @@ class TextSearchBar:
 
         current = buffer.get_mark("insert")
         iterator = buffer.get_iter_at_mark(current)
-        match = iterator.backward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        match = iterator.backward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match
@@ -1289,7 +1289,7 @@ class TextSearchBar:
 
         current = buffer.get_mark("insert")
         iterator = buffer.get_iter_at_mark(current)
-        match = iterator.forward_search(query, gtk.TextSearchFlags.TEXT_ONLY | gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match

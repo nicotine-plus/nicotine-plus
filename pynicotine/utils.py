@@ -245,11 +245,11 @@ def apply_translation():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
-    # Package name for gettext
-    PACKAGE = 'nicotine'
+    # package name for gettext
+    package = 'nicotine'
 
     # Local path where to find translation (mo) files
-    LOCAL_MO_PATH = 'mo'
+    local_mo_path = 'mo'
 
     # Python 2.7.X is build via Visual Studio 2008 on Windows:
     # https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject
@@ -291,12 +291,12 @@ def apply_translation():
             print("Error while attempting to set locale: %s" % e)
 
     # Gettext handling
-    if gettext.find(PACKAGE, localedir=LOCAL_MO_PATH) is None:
+    if gettext.find(package, localedir=local_mo_path) is None:
 
         # Locales are not in the current dir
         # We let gettext handle the situation: if if found them in the system dir
         # the app will be trnaslated, if not it will be untranslated.
-        gettext.install(PACKAGE)
+        gettext.install(package)
 
     else:
 
@@ -308,17 +308,17 @@ def apply_translation():
 
             libintl = ctypes.cdll.LoadLibrary("libintl-8.dll")
 
-            libintl.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
-            libintl.bind_textdomain_codeset(PACKAGE, "UTF-8")
+            libintl.bindtextdomain(package, local_mo_path)
+            libintl.bind_textdomain_codeset(package, "UTF-8")
 
         else:
-            locale.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
-            gettext.bindtextdomain(PACKAGE, LOCAL_MO_PATH)
+            locale.bindtextdomain(package, local_mo_path)
+            gettext.bindtextdomain(package, local_mo_path)
 
-        tr = gettext.translation(PACKAGE, localedir=LOCAL_MO_PATH)
+        tr = gettext.translation(package, localedir=local_mo_path)
         tr.install()
 
-    gettext.textdomain(PACKAGE)
+    gettext.textdomain(package)
 
 
 def unescape(string):

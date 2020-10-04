@@ -26,8 +26,8 @@ from gettext import gettext as _
 from sys import maxsize
 from time import time
 
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
@@ -77,29 +77,29 @@ class TransferList:
         self.extension_list_template = _("All %(ext)s")
         self.files_template = _("%(number)2s files ")
 
-        widget.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         widget.set_enable_tree_lines(True)
         widget.set_rubber_banding(True)
 
-        self.transfersmodel = gtk.TreeStore(
+        self.transfersmodel = Gtk.TreeStore(
             str,                   # (0)  user
             str,                   # (1)  path
             str,                   # (2)  file name
             str,                   # (3)  status
             str,                   # (4)  hqueue position
-            gobject.TYPE_UINT64,   # (5)  percent
+            GObject.TYPE_UINT64,   # (5)  percent
             str,                   # (6)  hsize
             str,                   # (7)  hspeed
             str,                   # (8)  htime elapsed
             str,                   # (9)  time left
             str,                   # (10) path
             str,                   # (11) status (non-translated)
-            gobject.TYPE_UINT64,   # (12) size
-            gobject.TYPE_UINT64,   # (13) current bytes
-            gobject.TYPE_UINT64,   # (14) speed
-            gobject.TYPE_UINT64,   # (15) time elapsed
-            gobject.TYPE_UINT64,   # (16) file count
-            gobject.TYPE_UINT64,   # (17) queue position
+            GObject.TYPE_UINT64,   # (12) size
+            GObject.TYPE_UINT64,   # (13) current bytes
+            GObject.TYPE_UINT64,   # (14) speed
+            GObject.TYPE_UINT64,   # (15) time elapsed
+            GObject.TYPE_UINT64,   # (16) file count
+            GObject.TYPE_UINT64,   # (17) queue position
         )
 
         text_color = self.frame.np.config.sections["ui"]["search"]
@@ -647,7 +647,7 @@ class TransferList:
         self.on_abort_transfer(widget, False, True)
 
     def on_clear_response(self, dialog, response, data=None):
-        if response == gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.OK:
             self.clear_transfers(["Queued"])
 
         dialog.destroy()

@@ -80,7 +80,7 @@ class Config:
             self.convert_config()
             self.parser.read([self.filename], encoding="utf-8")
 
-        LOGDIR = os.path.join(data_dir, "logs")
+        log_dir = os.path.join(data_dir, "logs")
 
         self.sections = {
             "server": {
@@ -203,9 +203,9 @@ class Config:
             "logging": {
                 "debug": False,
                 "debugmodes": [0, 1],
-                "debuglogsdir": os.path.join(LOGDIR, "debug"),
+                "debuglogsdir": os.path.join(log_dir, "debug"),
                 "logcollapsed": False,
-                "transferslogsdir": os.path.join(LOGDIR, "transfers"),
+                "transferslogsdir": os.path.join(log_dir, "transfers"),
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
                 "log_timestamp": "%Y-%m-%d %H:%M:%S",
@@ -214,8 +214,8 @@ class Config:
                 "chatrooms": False,
                 "transfers": False,
                 "debug_file_output": False,
-                "roomlogsdir": os.path.join(LOGDIR, "rooms"),
-                "privatelogsdir": os.path.join(LOGDIR, "private"),
+                "roomlogsdir": os.path.join(log_dir, "rooms"),
+                "privatelogsdir": os.path.join(log_dir, "private"),
                 "readroomlogs": True,
                 "readroomlines": 15,
                 "readprivatelines": 15,

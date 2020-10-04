@@ -29,8 +29,8 @@ import sre_constants
 from gettext import gettext as _
 
 from gi.repository import Gdk
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import choose_dir
@@ -396,7 +396,7 @@ class Search:
         self.frame = searches.frame
 
         # Build the window
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "search.ui"))
@@ -405,7 +405,7 @@ class Search:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -453,7 +453,7 @@ class Search:
 
         """ Columns """
 
-        self.ResultsList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.ResultsList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
         self.ResultsList.set_rubber_banding(True)
@@ -465,10 +465,10 @@ class Search:
         else:
             self.ResultsList.set_show_expanders(False)
 
-        self.resultsmodel = gtk.TreeStore(
-            gobject.TYPE_UINT64,  # (0)  num
+        self.resultsmodel = Gtk.TreeStore(
+            GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
-            gobject.TYPE_OBJECT,  # (2)  flag
+            GObject.TYPE_OBJECT,  # (2)  flag
             str,                  # (3)  immediatedl
             str,                  # (4)  h_speed
             str,                  # (5)  h_queue
@@ -477,12 +477,12 @@ class Search:
             str,                  # (8)  h_size
             str,                  # (9)  h_bitrate
             str,                  # (10) length
-            gobject.TYPE_UINT64,  # (11) bitrate
+            GObject.TYPE_UINT64,  # (11) bitrate
             str,                  # (12) fullpath
             str,                  # (13) country
-            gobject.TYPE_UINT64,  # (14) size
-            gobject.TYPE_UINT64,  # (15) speed
-            gobject.TYPE_UINT64   # (16) queue
+            GObject.TYPE_UINT64,  # (14) size
+            GObject.TYPE_UINT64,  # (15) speed
+            GObject.TYPE_UINT64   # (16) queue
         )
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
@@ -533,36 +533,36 @@ class Search:
 
         """ Filters """
 
-        self.filter_bitrate_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.filter_bitrate_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.FilterBitrate.set_model(self.filter_bitrate_model)
         self.FilterBitrate.set_entry_text_column(0)
 
-        self.filter_size_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.filter_size_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.FilterSize.set_model(self.filter_size_model)
         self.FilterSize.set_entry_text_column(0)
 
-        self.filter_country_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.filter_country_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.FilterCountry.set_model(self.filter_country_model)
         self.FilterCountry.set_entry_text_column(0)
 
-        self.filter_in_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.filter_in_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.FilterIn.set_model(self.filter_in_model)
         self.FilterIn.set_entry_text_column(0)
 
-        self.filter_out_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.filter_out_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.FilterOut.set_model(self.filter_out_model)
         self.FilterOut.set_entry_text_column(0)
 
         self.populate_filters()
 
         self.FilterSize.clear()
-        sizecell = gtk.CellRendererText()
+        sizecell = Gtk.CellRendererText()
         sizecell.set_property("xalign", 1)
         self.FilterSize.pack_start(sizecell, True)
         self.FilterSize.add_attribute(sizecell, "text", 0)
 
         self.FilterBitrate.clear()
-        bit_cell = gtk.CellRendererText()
+        bit_cell = Gtk.CellRendererText()
         bit_cell.set_property("xalign", 1)
         self.FilterBitrate.pack_start(bit_cell, True)
         self.FilterBitrate.add_attribute(bit_cell, "text", 0)
@@ -1134,7 +1134,7 @@ class Search:
         win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
         win.show()
-        gtk.main()
+        Gtk.main()
 
         return win.ret
 
@@ -1281,10 +1281,10 @@ class Search:
 
         if active:
             self.ResultsList.expand_all()
-            self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("list-remove-symbolic", Gtk.IconSize.BUTTON)
         else:
             collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
-            self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["searches"]["expand_searches"] = active
 

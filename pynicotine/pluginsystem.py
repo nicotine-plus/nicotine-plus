@@ -503,76 +503,76 @@ class BasePlugin(object):
     def init(self):
         pass
 
-    def LoadSettings(self, settings):
+    def LoadSettings(self, settings):  # noqa
         self.settings = settings
 
-    def LoadNotification(self):
+    def LoadNotification(self):  # noqa
         pass
 
-    def PublicRoomMessageNotification(self, room, user, line):
+    def PublicRoomMessageNotification(self, room, user, line):  # noqa
         pass
 
-    def SearchRequestNotification(self, searchterm, user, searchid):
+    def SearchRequestNotification(self, searchterm, user, searchid):  # noqa
         pass
 
-    def DistribSearchNotification(self, searchterm, user, searchid):
+    def DistribSearchNotification(self, searchterm, user, searchid):  # noqa
         pass
 
-    def IncomingPrivateChatEvent(self, user, line):
+    def IncomingPrivateChatEvent(self, user, line):  # noqa
         pass
 
-    def IncomingPrivateChatNotification(self, user, line):
+    def IncomingPrivateChatNotification(self, user, line):  # noqa
         pass
 
-    def IncomingPublicChatEvent(self, room, user, line):
+    def IncomingPublicChatEvent(self, room, user, line):  # noqa
         pass
 
-    def IncomingPublicChatNotification(self, room, user, line):
+    def IncomingPublicChatNotification(self, room, user, line):  # noqa
         pass
 
-    def OutgoingPrivateChatEvent(self, user, line):
+    def OutgoingPrivateChatEvent(self, user, line):  # noqa
         pass
 
-    def OutgoingPrivateChatNotification(self, user, line):
+    def OutgoingPrivateChatNotification(self, user, line):  # noqa
         pass
 
-    def OutgoingPublicChatEvent(self, room, line):
+    def OutgoingPublicChatEvent(self, room, line):  # noqa
         pass
 
-    def OutgoingPublicChatNotification(self, room, line):
+    def OutgoingPublicChatNotification(self, room, line):  # noqa
         pass
 
-    def OutgoingGlobalSearchEvent(self, text):
+    def OutgoingGlobalSearchEvent(self, text):  # noqa
         pass
 
-    def OutgoingRoomSearchEvent(self, rooms, text):
+    def OutgoingRoomSearchEvent(self, rooms, text):  # noqa
         pass
 
-    def OutgoingBuddySearchEvent(self, text):
+    def OutgoingBuddySearchEvent(self, text):  # noqa
         pass
 
-    def OutgoingUserSearchEvent(self, users):
+    def OutgoingUserSearchEvent(self, users):  # noqa
         pass
 
-    def UserResolveNotification(self, user, ip, port, country):
+    def UserResolveNotification(self, user, ip, port, country):  # noqa
         pass
 
-    def ServerConnectNotification(self):
+    def ServerConnectNotification(self):  # noqa
         pass
 
-    def ServerDisconnectNotification(self, userchoice):
+    def ServerDisconnectNotification(self, userchoice):  # noqa
         pass
 
-    def JoinChatroomNotification(self, room):
+    def JoinChatroomNotification(self, room):  # noqa
         pass
 
-    def LeaveChatroomNotification(self, room):
+    def LeaveChatroomNotification(self, room):  # noqa
         pass
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):
+    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
         pass
 
-    def UserStatsNotification(self, user, stats):
+    def UserStatsNotification(self, user, stats):  # noqa
         pass
 
     # The following are functions to make your life easier,
@@ -604,12 +604,12 @@ class BasePlugin(object):
 
     # The following are functions used by the plugin system,
     # you are not allowed to override these.
-    def PublicCommandEvent(self, command, room, args):
+    def PublicCommandEvent(self, command, room, args):  # noqa
         for (trigger, func) in self.__publiccommands__:
             if trigger == command:
                 return func(self, room, args)
 
-    def PrivateCommandEvent(self, command, user, args):
+    def PrivateCommandEvent(self, command, user, args):  # noqa
         for (trigger, func) in self.__privatecommands__:
             if trigger == command:
                 return func(self, user, args)

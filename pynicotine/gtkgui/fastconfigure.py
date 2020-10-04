@@ -25,8 +25,8 @@ from os.path import getsize
 from os.path import join
 
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import _thread
 from pynicotine.gtkgui.dirchooser import choose_dir
@@ -75,7 +75,7 @@ class FastConfigureAssistant(object):
         self.initphase = True  # don't respond to signals unless False
         self.config = frame.np.config
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
@@ -88,21 +88,21 @@ class FastConfigureAssistant(object):
 
         for i in builder.get_objects():
             try:
-                self.kids[gtk.Buildable.get_name(i)] = i
+                self.kids[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
         # Page specific, sharepage
         # The last column is the raw byte/unicode object
         # for the folder (not shown)
-        self.sharelist = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING
+        self.sharelist = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING
         )
 
         initialise_columns(
@@ -117,7 +117,7 @@ class FastConfigureAssistant(object):
 
         self.kids['shareddirectoriestree'].set_model(self.sharelist)
         self.kids['shareddirectoriestree'].get_selection().set_mode(
-            gtk.SelectionMode.MULTIPLE
+            Gtk.SelectionMode.MULTIPLE
         )
 
         self.initphase = False
@@ -241,7 +241,7 @@ class FastConfigureAssistant(object):
             if not page:
                 return
 
-        name = gtk.Buildable.get_name(page)
+        name = Gtk.Buildable.get_name(page)
 
         if name == 'welcomepage':
             complete = True
@@ -299,7 +299,7 @@ class FastConfigureAssistant(object):
         """
 
         # Get the name of the GtkEditable object
-        name = gtk.Buildable.get_name(user_data)
+        name = Gtk.Buildable.get_name(user_data)
 
         # Set the text of the corresponding entry
         self.kids[name].set_text(user_data.get_text())
@@ -399,7 +399,7 @@ class FastConfigureAssistant(object):
         if self.initphase:
             return
 
-        name = gtk.Buildable.get_name(widget)
+        name = Gtk.Buildable.get_name(widget)
 
         if name == "checkmyport":
             open_uri(
@@ -430,11 +430,11 @@ class FastConfigureAssistant(object):
                     # If the virtual name is empty
                     if virtual == '' or virtual is None:
 
-                        dlg = gtk.MessageDialog(
+                        dlg = Gtk.MessageDialog(
                             transient_for=self.window,
                             flags=0,
-                            type=gtk.MessageType.WARNING,
-                            buttons=gtk.ButtonsType.OK,
+                            type=Gtk.MessageType.WARNING,
+                            buttons=Gtk.ButtonsType.OK,
                             text=_("Warning")
                         )
                         dlg.format_secondary_text(_("The chosen virtual name is empty"))
@@ -452,11 +452,11 @@ class FastConfigureAssistant(object):
                             # We reject the share if the virtual share name is already used
                             if virtual == model.get_value(iterator, 0):
 
-                                dlg = gtk.MessageDialog(
+                                dlg = Gtk.MessageDialog(
                                     transient_for=self.window,
                                     flags=0,
-                                    type=gtk.MessageType.WARNING,
-                                    buttons=gtk.ButtonsType.OK,
+                                    type=Gtk.MessageType.WARNING,
+                                    buttons=Gtk.ButtonsType.OK,
                                     text=_("Warning")
                                 )
                                 dlg.format_secondary_text(_("The chosen virtual name already exists"))
@@ -467,11 +467,11 @@ class FastConfigureAssistant(object):
                             # We also reject the share if the directory is already used
                             elif directory == model.get_value(iterator, 6):
 
-                                dlg = gtk.MessageDialog(
+                                dlg = Gtk.MessageDialog(
                                     transient_for=self.window,
                                     flags=0,
-                                    type=gtk.MessageType.WARNING,
-                                    buttons=gtk.ButtonsType.OK,
+                                    type=Gtk.MessageType.WARNING,
+                                    buttons=Gtk.ButtonsType.OK,
                                     text=_("Warning")
                                 )
                                 dlg.format_secondary_text(_("The chosen directory is already shared"))
@@ -488,7 +488,7 @@ class FastConfigureAssistant(object):
         if name == "removeshares":
 
             model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
-            refs = [gtk.TreeRowReference(model, x) for x in paths]
+            refs = [Gtk.TreeRowReference(model, x) for x in paths]
 
             for i in refs:
                 self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
@@ -514,7 +514,7 @@ class FastConfigureAssistant(object):
         if self.initphase:
             return
 
-        name = gtk.Buildable.get_name(widget)
+        name = Gtk.Buildable.get_name(widget)
 
         if name == "lowerport":
             if widget.get_value() > self.kids['upperport'].get_value():

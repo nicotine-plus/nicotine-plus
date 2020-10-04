@@ -32,8 +32,8 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject as gobject
-from gi.repository import Gtk as gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 import _thread
 from pynicotine import slskmessages
@@ -79,7 +79,7 @@ class NicotineFrame:
 
     def __init__(self, data_dir, config, plugins, use_trayicon, bindip=None, port=None):
 
-        self.clip = gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
         self.away = 0
@@ -131,7 +131,7 @@ class NicotineFrame:
 
         # Dark mode
         dark_mode_state = config["ui"]["dark_mode"]
-        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         utils.DECIMALSEP = config["ui"]["decimalsep"]
         utils.CATCH_URLS = config["urls"]["urlcatching"]
@@ -144,14 +144,14 @@ class NicotineFrame:
         log.add_listener(self.log_callback)
 
         # Import GtkBuilder widgets
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
 
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 
@@ -181,7 +181,7 @@ class NicotineFrame:
 
         # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
         if min(xpos, ypos) < 0:
-            self.MainWindow.set_position(gtk.WindowPosition.CENTER)
+            self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
         else:
             self.MainWindow.move(xpos, ypos)
 
@@ -325,7 +325,7 @@ class NicotineFrame:
             img_label.set_text_color(0)
 
             # Set the menu to hide the tab
-            eventbox_name = gtk.Buildable.get_name(label_tab)
+            eventbox_name = Gtk.Buildable.get_name(label_tab)
 
             label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
 
@@ -343,20 +343,20 @@ class NicotineFrame:
         self.chatrooms.show()
 
         # Create Search combo ListStores
-        self.search_entry_combo_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.search_entry_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.SearchEntryCombo.set_model(self.search_entry_combo_model)
         self.SearchEntryCombo.set_entry_text_column(0)
 
         self.search_entry = self.SearchEntryCombo.get_child()
         self.search_entry.connect("activate", self.on_search)
 
-        self.room_search_combo_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.room_search_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.RoomSearchCombo.set_model(self.room_search_combo_model)
         self.RoomSearchCombo.set_entry_text_column(0)
 
-        self.search_method_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.search_method_model = Gtk.ListStore(GObject.TYPE_STRING)
         self.SearchMethod.set_model(self.search_method_model)
-        renderer_text = gtk.CellRendererText()
+        renderer_text = Gtk.CellRendererText()
         self.SearchMethod.pack_start(renderer_text, True)
         self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
@@ -636,7 +636,7 @@ class NicotineFrame:
                                     pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
                             self.images[name] = pixbuf
                             loaded = True
-                        except gobject.GError:
+                        except GObject.GError:
                             pass
                         del loader
                         del s
@@ -1071,7 +1071,7 @@ class NicotineFrame:
     # Help
 
     def on_about_chatroom_commands(self, widget):
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
 
@@ -1080,7 +1080,7 @@ class NicotineFrame:
         self.about_chatroom_commands.show()
 
     def on_about_private_chat_commands(self, widget):
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
 
@@ -1089,7 +1089,7 @@ class NicotineFrame:
         self.about_private_chat_commands.show()
 
     def on_about_filters(self, widget):
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
 
@@ -1105,7 +1105,7 @@ class NicotineFrame:
         open_uri(url, self.MainWindow)
 
     def on_about(self, widget):
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
 
@@ -1154,7 +1154,7 @@ class NicotineFrame:
 
         if isinstance(tab_label, ImageLabel):
             tablabel = tab_label
-        elif isinstance(tab_label, gtk.EventBox):
+        elif isinstance(tab_label, Gtk.EventBox):
             tablabel = tab_label.get_child()
 
         return tablabel
@@ -1181,7 +1181,7 @@ class NicotineFrame:
         for i in tabs:
             tab_labels.append(self.MainNotebook.get_tab_label(i))
 
-        l = tab_labels[page_nr]  # noqa: E741
+        label = tab_labels[page_nr]
 
         compare = {
             self.ChatTabLabel: self.chat_notebook,
@@ -1197,16 +1197,16 @@ class NicotineFrame:
         if "buddies_tab_label" in self.__dict__:
             compare[self.buddies_tab_label] = None
 
-        n = compare[l]
-        self.current_tab = l
+        n = compare[label]
+        self.current_tab = label
 
-        if l is not None:
-            if isinstance(l, ImageLabel):
-                l.set_image(self.images["empty"])
-                l.set_text_color(0)
-            elif isinstance(l, gtk.EventBox):
-                l.get_child().set_image(self.images["empty"])
-                l.get_child().set_text_color(0)
+        if label is not None:
+            if isinstance(label, ImageLabel):
+                label.set_image(self.images["empty"])
+                label.set_text_color(0)
+            elif isinstance(label, Gtk.EventBox):
+                label.get_child().set_image(self.images["empty"])
+                label.get_child().set_text_color(0)
 
         if n is not None:
             n.popup_disable()
@@ -1340,15 +1340,15 @@ class NicotineFrame:
 
     def get_tab_position(self, string):
         if string in ("Top", "top", _("Top")):
-            position = gtk.PositionType.TOP
+            position = Gtk.PositionType.TOP
         elif string in ("Bottom", "bottom", _("Bottom")):
-            position = gtk.PositionType.BOTTOM
+            position = Gtk.PositionType.BOTTOM
         elif string in ("Left", "left", _("Left")):
-            position = gtk.PositionType.LEFT
+            position = Gtk.PositionType.LEFT
         elif string in ("Right", "right", _("Right")):
-            position = gtk.PositionType.RIGHT
+            position = Gtk.PositionType.RIGHT
         else:
-            position = gtk.PositionType.TOP
+            position = Gtk.PositionType.TOP
         return position
 
     def set_tab_positions(self):
@@ -1450,8 +1450,8 @@ class NicotineFrame:
     def create_recommendations_widgets(self):
 
         self.likes = {}
-        self.likes_model = gtk.ListStore(gobject.TYPE_STRING)
-        self.likes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.likes_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         cols = utils.initialise_columns(
             self.LikesList,
@@ -1473,8 +1473,8 @@ class NicotineFrame:
         self.LikesList.connect("button_press_event", self.on_popup_til_menu)
 
         self.dislikes = {}
-        self.dislikes_model = gtk.ListStore(gobject.TYPE_STRING)
-        self.dislikes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.dislikes_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         cols = utils.initialise_columns(
             self.DislikesList,
@@ -1503,10 +1503,10 @@ class NicotineFrame:
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.recommendations_model = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT
+        self.recommendations_model = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT
         )
         self.RecommendationsList.set_model(self.recommendations_model)
 
@@ -1531,10 +1531,10 @@ class NicotineFrame:
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.unrecommendations_model = gtk.ListStore(
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT
+        self.unrecommendations_model = Gtk.ListStore(
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT
         )
         self.UnrecommendationsList.set_model(self.unrecommendations_model)
 
@@ -1566,17 +1566,17 @@ class NicotineFrame:
         cols[3].set_sort_column_id(6)
 
         self.recommendation_users = {}
-        self.recommendation_users_model = gtk.ListStore(
-            gobject.TYPE_OBJECT,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_STRING,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT,
-            gobject.TYPE_INT
+        self.recommendation_users_model = Gtk.ListStore(
+            GObject.TYPE_OBJECT,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_STRING,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT,
+            GObject.TYPE_INT
         )
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
-        self.recommendation_users_model.set_sort_column_id(1, gtk.SortType.ASCENDING)
+        self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         self.ru_popup_menu = popup = utils.PopupMenu(self)
         popup.setup(
@@ -1622,7 +1622,7 @@ class NicotineFrame:
         for (thing, rating) in recom.items():
             self.recommendations_model.append([thing, humanize(rating), rating])
 
-        self.recommendations_model.set_sort_column_id(2, gtk.SortType.DESCENDING)
+        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
     def set_unrecommendations(self, title, recom):
         self.unrecommendations_model.clear()
@@ -1630,7 +1630,7 @@ class NicotineFrame:
         for (thing, rating) in recom.items():
             self.unrecommendations_model.append([thing, humanize(rating), rating])
 
-        self.unrecommendations_model.set_sort_column_id(2, gtk.SortType.ASCENDING)
+        self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
     def global_recommendations(self, msg):
         self.set_recommendations("Global recommendations", msg.recommendations)
@@ -1860,7 +1860,7 @@ class NicotineFrame:
     def change_list_font(self, listview, font):
         for c in listview.get_columns():
             for r in c.get_cells():
-                if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
+                if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
                     r.set_property("font", font)
 
     def update_colours(self, first=0):
@@ -1904,9 +1904,9 @@ class NicotineFrame:
             rgba = Gdk.RGBA()
             rgba.parse(bgcolor)
 
-        widget.override_background_color(gtk.StateFlags.NORMAL, rgba)
+        widget.override_background_color(Gtk.StateFlags.NORMAL, rgba)
 
-        if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
+        if isinstance(widget, (Gtk.Entry, Gtk.SpinButton)):
             if fgcolor != "":
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
@@ -1917,22 +1917,22 @@ class NicotineFrame:
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
 
-            widget.override_color(gtk.StateFlags.NORMAL, rgba)
+            widget.override_color(Gtk.StateFlags.NORMAL, rgba)
 
-        if isinstance(widget, gtk.TreeView):
+        if isinstance(widget, Gtk.TreeView):
             colour = self.np.config.sections["ui"]["search"]
             if colour == "":
                 colour = None
             for c in widget.get_columns():
                 for r in c.get_cells():
-                    if isinstance(r, (gtk.CellRendererText, gtk.CellRendererCombo)):
+                    if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
                         r.set_property("foreground", colour)
 
     """ Dialogs
     TODO: move to dialogs.py what's possible """
 
     def popup_message(self, popup):
-        dialog = gtk.MessageDialog(type=gtk.MessageType.WARNING, buttons=gtk.ButtonsType.OK, message_format=popup.title)
+        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=popup.title)
         dialog.format_secondary_text(popup.message)
         dialog.connect('response', lambda dialog, response: dialog.destroy())
         dialog.show()
@@ -2486,18 +2486,18 @@ class NicotineFrame:
     def create_icon_button(self, icon, icontype, callback, label=None):
         # Deprecated, to be removed
 
-        button = gtk.Button()
+        button = Gtk.Button()
         button.connect_object("clicked", callback, "")
         button.show()
 
-        alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
+        alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
         alignment.show()
 
-        hbox = gtk.Box.new(gtk.Orientation.HORIZONTAL, 2)
+        hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
         hbox.show()
         hbox.set_spacing(2)
 
-        image = gtk.Image()
+        image = Gtk.Image()
 
         if icontype == "stock":
             image.set_from_stock(icon, 4)
@@ -2508,7 +2508,7 @@ class NicotineFrame:
         hbox.pack_start(image, False, False, 0)
         alignment.add(hbox)
         if label:
-            label = gtk.Label.new(label)
+            label = Gtk.Label.new(label)
             label.show()
             hbox.pack_start(label, False, False, 0)
         button.add(alignment)
@@ -2818,7 +2818,7 @@ class NicotineFrame:
             self.privatechats.update_completions()
 
         dark_mode_state = config["ui"]["dark_mode"]
-        gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
             self.chatrooms.roomsctrl.update_colours()
@@ -2865,7 +2865,7 @@ class NicotineFrame:
             if isinstance(label_tab, ImageLabel):
                 label_tab.show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.set_text_color(None)
-            elif isinstance(label_tab, gtk.EventBox):
+            elif isinstance(label_tab, Gtk.EventBox):
                 label_tab.get_child().show_image(config["notifications"]["notification_tab_icons"])
                 label_tab.get_child().set_text_color(None)
 
@@ -2932,7 +2932,7 @@ class NicotineFrame:
     def on_quit_response(self, dialog, response, data):
         checkbox = dialog.checkbox.get_active()
 
-        if response == gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.OK:
 
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
@@ -2942,10 +2942,10 @@ class NicotineFrame:
 
             self.MainWindow.destroy()
 
-        elif response == gtk.ResponseType.CANCEL:
+        elif response == Gtk.ResponseType.CANCEL:
             pass
 
-        elif response == gtk.ResponseType.REJECT:
+        elif response == Gtk.ResponseType.REJECT:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 2
             if self.MainWindow.get_property("visible"):
@@ -2988,9 +2988,9 @@ class NicotineFrame:
         self.np.config.write_configuration()
 
 
-class MainApp(gtk.Application):
+class MainApp(Gtk.Application):
     def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
-        gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
+        Gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
 
         self.connect(

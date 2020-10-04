@@ -18,7 +18,7 @@
 
 import os
 
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import append_line
@@ -31,7 +31,7 @@ class RoomWall:
         self.frame = frame
         self.room = room
 
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomwall.ui"))
 
@@ -40,7 +40,7 @@ class RoomWall:
 
         for i in builder.get_objects():
             try:
-                self.__dict__[gtk.Buildable.get_name(i)] = i
+                self.__dict__[Gtk.Buildable.get_name(i)] = i
             except TypeError:
                 pass
 

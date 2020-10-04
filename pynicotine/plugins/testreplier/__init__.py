@@ -14,6 +14,6 @@ def disable(plugins):
 class Plugin(BasePlugin):
     __name__ = "Test Replier"
 
-    def IncomingPublicChatEvent(self, room, nick, line):
+    def IncomingPublicChatEvent(self, room, nick, line):  # noqa
         if line.lower() == 'test':
             self.saypublic(room, 'Test failed.')

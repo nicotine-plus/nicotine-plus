@@ -18,7 +18,7 @@ pacman --noconfirm -S --needed \
 
 # pip should not pick up our setup.cfg
 cd ..
-pip install plyer semidbm
+pip install pep8-naming plyer semidbm
 
 # pyinstaller
 wget https://github.com/pyinstaller/pyinstaller/releases/download/v3.6/PyInstaller-3.6.tar.gz

@@ -11,6 +11,7 @@ Build-Depends:
     lintian,
     python3 (>= 3.5),
     python3-taglib,
+    python3-pep8-naming,
     python3-pytest,
     python3-setuptools
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git

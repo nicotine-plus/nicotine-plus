@@ -390,7 +390,7 @@ class UPnPPortMapping:
         It will detect if a port mapping to the client already exist.
         """
 
-        # Output format: (e_port, protocol, (int_client, iPort), desc, enabled,
+        # Output format: (e_port, protocol, (int_client, iport), desc, enabled,
         # rHost, duration)
         log.add_debug('Existing Port Mappings: %s', (
             sorted(self.existingportsmappings, key=lambda tup: tup[0])))
@@ -398,14 +398,14 @@ class UPnPPortMapping:
         # Analyze ports mappings
         for m in sorted(self.existingportsmappings, key=lambda tup: tup[0]):
 
-            (e_port, protocol, (int_client, iPort),
+            (e_port, protocol, (int_client, iport),
              desc, enabled, rhost, duration) = m
 
             # A Port Mapping is already in place with the client: we will
             # rewrite it to avoid a timeout on the duration of the mapping
             if protocol == "TCP" and \
                str(int_client) == str(self.internalipaddress) and \
-               iPort == self.internallanport:
+               iport == self.internallanport:
                 log.add_debug('Port Mapping already in place: %s', str(m))
                 self.externalwanport = e_port
                 self.foundexistingmapping = True

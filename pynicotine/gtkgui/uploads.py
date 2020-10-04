@@ -26,7 +26,7 @@ import os
 from gettext import gettext as _
 
 from gi.repository import Gdk
-from gi.repository import Gtk as gtk
+from gi.repository import Gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
@@ -129,10 +129,10 @@ class Uploads(TransferList):
 
         if expanded:
             self.frame.UploadList.expand_all()
-            self.frame.ExpandUploadsImage.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
+            self.frame.ExpandUploadsImage.set_from_icon_name("list-remove-symbolic", Gtk.IconSize.BUTTON)
         else:
             collapse_treeview(self.frame.UploadList, self.tree_users)
-            self.frame.ExpandUploadsImage.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
+            self.frame.ExpandUploadsImage.set_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
         self.frame.np.config.write_configuration()
