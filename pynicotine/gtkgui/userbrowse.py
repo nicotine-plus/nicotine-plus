@@ -263,7 +263,7 @@ class UserBrowse:
         self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
         self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
@@ -313,8 +313,8 @@ class UserBrowse:
 
         self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def SelectedFilesCallback(self, model, path, iter):
-        rawfilename = self.FileStore.get_value(iter, 6)
+    def SelectedFilesCallback(self, model, path, iterator):
+        rawfilename = self.FileStore.get_value(iterator, 6)
         self.selected_files.append(rawfilename)
 
     def OnFileClicked(self, widget, event):
@@ -588,14 +588,14 @@ class UserBrowse:
 
     def OnSelectDir(self, selection):
 
-        model, iter = selection.get_selected()
+        model, iterator = selection.get_selected()
 
-        if iter is None:
+        if iterator is None:
             self.selected_folder = None
             return
 
-        path = model.get_path(iter)
-        directory = model.get_value(iter, 1)
+        path = model.get_path(iterator)
+        directory = model.get_value(iterator, 1)
 
         self.FolderTreeView.expand_to_path(path)
         self.SetDirectory(directory)
@@ -637,34 +637,34 @@ class UserBrowse:
 
     def OnDownloadDirectoryTo(self, widget):
 
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
-        if dir is None:
+        if folder is None:
             return
 
         try:
-            self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""))
+            self.DownloadDirectory(self.selected_folder, os.path.join(folder[0], ""))
         except IOError:  # failed to open
-            log.add('Failed to open %r for reading', dir[0])  # notify user
+            log.add('Failed to open %r for reading', folder[0])  # notify user
 
     def OnDownloadDirectoryRecursiveTo(self, widget):
 
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
-        if dir is None:
+        if folder is None:
             return
 
         try:
-            self.DownloadDirectory(self.selected_folder, os.path.join(dir[0], ""), 1)
+            self.DownloadDirectory(self.selected_folder, os.path.join(folder[0], ""), 1)
         except IOError:  # failed to open
-            log.add('Failed to open %r for reading', dir[0])  # notify user
+            log.add('Failed to open %r for reading', folder[0])  # notify user
 
-    def DownloadDirectory(self, dir, prefix="", recurse=0):
+    def DownloadDirectory(self, folder, prefix="", recurse=0):
 
-        if dir is None:
+        if folder is None:
             return
 
-        ldir = prefix + dir.split("\\")[-1]
+        ldir = prefix + folder.split("\\")[-1]
 
         # Check if folder already exists on system
         ldir = self.frame.np.transfers.FolderDestination(self.user, ldir)
@@ -672,7 +672,7 @@ class UserBrowse:
         for d, f in self.shares:
 
             # Find the wanted directory
-            if d != dir:
+            if d != folder:
                 continue
 
             priorityfiles = []
@@ -698,7 +698,7 @@ class UserBrowse:
 
             for file in priorityfiles + normalfiles:
 
-                path = "\\".join([dir, file[1]])
+                path = "\\".join([folder, file[1]])
                 size = file[2]
                 h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
@@ -721,12 +721,12 @@ class UserBrowse:
 
     def OnDownloadFiles(self, widget, prefix=""):
 
-        dir = self.selected_folder
+        folder = self.selected_folder
 
         for d, f in self.shares:
 
             # Find the wanted directory
-            if d != dir:
+            if d != folder:
                 continue
 
             for file in f:
@@ -735,7 +735,7 @@ class UserBrowse:
                 if file[1] not in self.selected_files:
                     continue
 
-                path = "\\".join([dir, file[1]])
+                path = "\\".join([folder, file[1]])
                 size = file[2]
                 h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
 
@@ -748,11 +748,11 @@ class UserBrowse:
     def OnDownloadFilesTo(self, widget):
 
         try:
-            _, dir = self.selected_folder.rsplit("\\", 1)
+            _, folder = self.selected_folder.rsplit("\\", 1)
         except ValueError:
-            dir = self.selected_folder
+            folder = self.selected_folder
 
-        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], dir)
+        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], folder)
 
         if os.path.exists(path) and os.path.isdir(path):
             ldir = ChooseDir(self.frame.MainWindow, path, multichoice=False)
@@ -769,9 +769,9 @@ class UserBrowse:
 
     def OnUploadDirectoryTo(self, widget, recurse=0):
 
-        dir = self.selected_folder
+        folder = self.selected_folder
 
-        if dir is None:
+        if folder is None:
             return
 
         users = []
@@ -791,27 +791,27 @@ class UserBrowse:
 
         self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
 
-        self.UploadDirectoryTo(user, dir, recurse)
+        self.UploadDirectoryTo(user, folder, recurse)
 
     def OnUploadDirectoryRecursiveTo(self, widget):
         self.OnUploadDirectoryTo(widget, recurse=1)
 
-    def UploadDirectoryTo(self, user, dir, recurse=0):
+    def UploadDirectoryTo(self, user, folder, recurse=0):
 
-        if dir == "" or dir is None or user is None or user == "":
+        if folder == "" or folder is None or user is None or user == "":
             return
 
-        realpath = self.frame.np.shares.virtual2real(dir)
-        ldir = dir.split("\\")[-1]
+        realpath = self.frame.np.shares.virtual2real(folder)
+        ldir = folder.split("\\")[-1]
 
         for d, f in self.shares:
 
             # Find the wanted directory
-            if d != dir:
+            if d != folder:
                 continue
 
             for file in f:
-                filename = "\\".join([dir, file[1]])
+                filename = "\\".join([folder, file[1]])
                 realfilename = "\\".join([realpath, file[1]])
                 size = file[2]
                 self.frame.np.transfers.pushFile(user, filename, realfilename, ldir, size=size)
@@ -821,13 +821,13 @@ class UserBrowse:
             return
 
         for subdir, subf in self.shares:
-            if dir in subdir and dir != subdir:
+            if folder in subdir and folder != subdir:
                 self.UploadDirectoryTo(user, subdir, recurse)
 
     def OnUploadFiles(self, widget, prefix=""):
 
-        dir = self.selected_folder
-        realpath = self.frame.np.shares.virtual2real(dir)
+        folder = self.selected_folder
+        realpath = self.frame.np.shares.virtual2real(folder)
 
         users = []
 
@@ -848,7 +848,7 @@ class UserBrowse:
         self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
 
         for fn in self.selected_files:
-            self.frame.np.transfers.pushFile(user, "\\".join([dir, fn]), "\\".join([realpath, fn]), prefix)
+            self.frame.np.transfers.pushFile(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
             self.frame.np.transfers.checkUploadQueue()
 
     def OnPlayFiles(self, widget, prefix=""):

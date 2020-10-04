@@ -161,7 +161,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFlowBox" id="Filters">
+          <object class="GtkFlowBox" id="FiltersContainer">
             <property name="can_focus">False</property>
             <property name="column_spacing">10</property>
             <property name="margin_start">5</property>

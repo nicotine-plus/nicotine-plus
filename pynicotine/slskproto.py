@@ -949,9 +949,7 @@ class SlskProtoThread(threading.Thread):
                         if msgObj.__class__ is FileSearchResult and msgObj.geoip and self.geoip and self._geoip:
                             cc = self.geoip.get_all(conns[msgObj.conn].addr[0]).country_short
 
-                            if cc == "-" and self._geoip[0]:
-                                checkuser = 0
-                            elif cc != "-" and self._geoip[1][0].find(cc) >= 0:
+                            if (cc == "-" and self._geoip[0]) or (cc != "-" and self._geoip[1][0].find(cc) >= 0):
                                 checkuser = 0
 
                         if checkuser:
@@ -1203,8 +1201,8 @@ class SlskProtoThread(threading.Thread):
                 selector.register(p, selectors.EVENT_READ)
 
                 key_events = selector.select(timeout)
-                input = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
-                output = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
+                input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
+                output_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
 
             except OSError as error:
                 if len(error.args) == 2 and error.args[0] == EINTR:
@@ -1235,7 +1233,7 @@ class SlskProtoThread(threading.Thread):
                 self.last_conncount_ui_update = curtime
 
             # Listen / Peer Port
-            if p in input:
+            if p in input_list:
                 try:
                     incconn, incaddr = p.accept()
                 except Exception:
@@ -1265,7 +1263,7 @@ class SlskProtoThread(threading.Thread):
                     continue
 
                 try:
-                    if connection_in_progress in input:
+                    if connection_in_progress in input_list:
                         connection_in_progress.recv(0)
 
                 except socket.error as err:
@@ -1274,7 +1272,7 @@ class SlskProtoThread(threading.Thread):
                     self.close_connection(connsinprogress, connection_in_progress)
 
                 else:
-                    if connection_in_progress in output:
+                    if connection_in_progress in output_list:
                         addr = msgObj.addr
 
                         if connection_in_progress is server_socket:
@@ -1298,7 +1296,7 @@ class SlskProtoThread(threading.Thread):
             for connection in conns.copy():
                 conn_obj = conns[connection]
 
-                if connection in output:
+                if connection in output_list:
                     # Write Output
 
                     try:
@@ -1325,7 +1323,7 @@ class SlskProtoThread(threading.Thread):
                         self.close_connection(conns, connection)
                         continue
 
-                if connection in input:
+                if connection in input_list:
                     if self._isDownload(conn_obj):
                         limit = self._downloadlimit[0](conns, connection)
 

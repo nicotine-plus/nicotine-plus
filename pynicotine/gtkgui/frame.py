@@ -52,7 +52,7 @@ from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
-from pynicotine.gtkgui.settingswindow import SettingsWindow
+from pynicotine.gtkgui.settingswindow import Settings
 from pynicotine.gtkgui.tray import TrayApp
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
@@ -251,10 +251,10 @@ class NicotineFrame:
         self.CreateRecommendationsWidgets()
 
         for thing in config["interests"]["likes"]:
-            self.likes[thing] = self.likeslist.append([thing])
+            self.likes[thing] = self.likes_model.append([thing])
 
         for thing in config["interests"]["dislikes"]:
-            self.dislikes[thing] = self.dislikeslist.append([thing])
+            self.dislikes[thing] = self.dislikes_model.append([thing])
 
         """ Notebooks """
 
@@ -734,7 +734,7 @@ class NicotineFrame:
         self.TrayApp.tray_status["status"] = "connect"
         self.TrayApp.set_image()
 
-        if self.np.serverconn is not None:
+        if self.np.active_server_conn is not None:
             return
 
         if widget != -1:
@@ -753,7 +753,7 @@ class NicotineFrame:
     def OnDisconnect(self, event):
         self.disconnect1.set_sensitive(0)
         self.np.manualdisconnect = True
-        self.np.queue.put(slskmessages.ConnClose(self.np.serverconn))
+        self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
 
     def OnAway(self, widget):
 
@@ -789,7 +789,7 @@ class NicotineFrame:
 
     def OnSettings(self, widget, page=None):
         if self.settingswindow is None:
-            self.settingswindow = SettingsWindow(self)
+            self.settingswindow = Settings(self)
             self.settingswindow.SettingsWindow.connect("settings-closed", self.OnSettingsClosed)
 
         if self.fastconfigure is not None and self.fastconfigure.window.get_property("visible"):
@@ -1331,8 +1331,6 @@ class NicotineFrame:
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[id].popup(None, None, None, None, event.button, event.time)
 
-        pass
-
     def getTabPosition(self, string):
         if string in ("Top", "top", _("Top")):
             position = gtk.PositionType.TOP
@@ -1445,8 +1443,8 @@ class NicotineFrame:
     def CreateRecommendationsWidgets(self):
 
         self.likes = {}
-        self.likeslist = gtk.ListStore(gobject.TYPE_STRING)
-        self.likeslist.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.likes_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.likes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         cols = utils.InitialiseColumns(
             self.LikesList,
@@ -1454,7 +1452,7 @@ class NicotineFrame:
         )
 
         cols[0].set_sort_column_id(0)
-        self.LikesList.set_model(self.likeslist)
+        self.LikesList.set_model(self.likes_model)
 
         self.til_popup_menu = popup = utils.PopupMenu(self)
 
@@ -1468,8 +1466,8 @@ class NicotineFrame:
         self.LikesList.connect("button_press_event", self.OnPopupTILMenu)
 
         self.dislikes = {}
-        self.dislikeslist = gtk.ListStore(gobject.TYPE_STRING)
-        self.dislikeslist.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.dislikes_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.dislikes_model.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         cols = utils.InitialiseColumns(
             self.DislikesList,
@@ -1477,7 +1475,7 @@ class NicotineFrame:
         )
 
         cols[0].set_sort_column_id(0)
-        self.DislikesList.set_model(self.dislikeslist)
+        self.DislikesList.set_model(self.dislikes_model)
 
         self.tidl_popup_menu = popup = utils.PopupMenu(self)
 
@@ -1498,12 +1496,12 @@ class NicotineFrame:
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.recommendationslist = gtk.ListStore(
+        self.recommendations_model = gtk.ListStore(
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_INT
         )
-        self.RecommendationsList.set_model(self.recommendationslist)
+        self.RecommendationsList.set_model(self.recommendations_model)
 
         self.r_popup_menu = popup = utils.PopupMenu(self)
 
@@ -1526,12 +1524,12 @@ class NicotineFrame:
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(2)
 
-        self.unrecommendationslist = gtk.ListStore(
+        self.unrecommendations_model = gtk.ListStore(
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
             gobject.TYPE_INT
         )
-        self.UnrecommendationsList.set_model(self.unrecommendationslist)
+        self.UnrecommendationsList.set_model(self.unrecommendations_model)
 
         self.ur_popup_menu = popup = utils.PopupMenu(self)
 
@@ -1560,8 +1558,8 @@ class NicotineFrame:
         cols[2].set_sort_column_id(5)
         cols[3].set_sort_column_id(6)
 
-        self.recommendationusers = {}
-        self.recommendationuserslist = gtk.ListStore(
+        self.recommendation_users = {}
+        self.recommendation_users_model = gtk.ListStore(
             gobject.TYPE_OBJECT,
             gobject.TYPE_STRING,
             gobject.TYPE_STRING,
@@ -1570,8 +1568,8 @@ class NicotineFrame:
             gobject.TYPE_INT,
             gobject.TYPE_INT
         )
-        self.RecommendationUsersList.set_model(self.recommendationuserslist)
-        self.recommendationuserslist.set_sort_column_id(1, gtk.SortType.ASCENDING)
+        self.RecommendationUsersList.set_model(self.recommendation_users_model)
+        self.recommendation_users_model.set_sort_column_id(1, gtk.SortType.ASCENDING)
 
         self.ru_popup_menu = popup = utils.PopupMenu(self)
         popup.setup(
@@ -1596,7 +1594,7 @@ class NicotineFrame:
         if thing and thing.lower() not in self.np.config.sections["interests"]["likes"]:
             thing = thing.lower()
             self.np.config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likeslist.append([thing])
+            self.likes[thing] = self.likes_model.append([thing])
             self.np.config.writeConfiguration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
@@ -1607,21 +1605,21 @@ class NicotineFrame:
         if thing and thing.lower() not in self.np.config.sections["interests"]["dislikes"]:
             thing = thing.lower()
             self.np.config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikeslist.append([thing])
+            self.dislikes[thing] = self.dislikes_model.append([thing])
             self.np.config.writeConfiguration()
             self.np.queue.put(slskmessages.AddThingIHate(thing))
 
     def SetRecommendations(self, title, recom):
-        self.recommendationslist.clear()
+        self.recommendations_model.clear()
         for (thing, rating) in recom.items():
-            self.recommendationslist.append([thing, Humanize(rating), rating])
-        self.recommendationslist.set_sort_column_id(2, gtk.SortType.DESCENDING)
+            self.recommendations_model.append([thing, Humanize(rating), rating])
+        self.recommendations_model.set_sort_column_id(2, gtk.SortType.DESCENDING)
 
     def SetUnrecommendations(self, title, recom):
-        self.unrecommendationslist.clear()
+        self.unrecommendations_model.clear()
         for (thing, rating) in recom.items():
-            self.unrecommendationslist.append([thing, Humanize(rating), rating])
-        self.unrecommendationslist.set_sort_column_id(2, gtk.SortType.ASCENDING)
+            self.unrecommendations_model.append([thing, Humanize(rating), rating])
+        self.unrecommendations_model.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
     def GlobalRecommendations(self, msg):
         self.SetRecommendations("Global recommendations", msg.recommendations)
@@ -1645,31 +1643,23 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.SimilarUsers())
 
     def SimilarUsers(self, msg):
-        self.recommendationuserslist.clear()
-        self.recommendationusers = {}
+        self.recommendation_users_model.clear()
+        self.recommendation_users = {}
         for user in msg.users:
-            iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
-            self.recommendationusers[user] = iter
-            self.np.queue.put(slskmessages.AddUser(user))
-
-    def ItemSimilarUsers(self, msg):
-        self.recommendationuserslist.clear()
-        self.recommendationusers = {}
-        for user in msg.users:
-            iter = self.recommendationuserslist.append([self.images["offline"], user, "0", "0", 0, 0, 0])
-            self.recommendationusers[user] = iter
+            iterator = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
+            self.recommendation_users[user] = iterator
             self.np.queue.put(slskmessages.AddUser(user))
 
     def GetUserStatus(self, msg):
-        if msg.user not in self.recommendationusers:
+        if msg.user not in self.recommendation_users:
             return
         img = self.GetStatusImage(msg.status)
-        self.recommendationuserslist.set(self.recommendationusers[msg.user], 0, img, 4, msg.status)
+        self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, img, 4, msg.status)
 
     def GetUserStats(self, msg):
-        if msg.user not in self.recommendationusers:
+        if msg.user not in self.recommendation_users:
             return
-        self.recommendationuserslist.set(self.recommendationusers[msg.user], 2, HumanSpeed(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
+        self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, HumanSpeed(msg.avgspeed), 3, Humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
     def OnPopupRUMenu(self, widget, event):
         items = self.ru_popup_menu.get_children()
@@ -1677,7 +1667,7 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        user = self.recommendationuserslist.get_value(self.recommendationuserslist.get_iter(path), 1)
+        user = self.recommendation_users_model.get_value(self.recommendation_users_model.get_iter(path), 1)
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.privatechats.SendMessage(user)
@@ -1693,7 +1683,7 @@ class NicotineFrame:
         thing = self.til_popup_menu.get_user()
         if thing not in self.np.config.sections["interests"]["likes"]:
             return
-        self.likeslist.remove(self.likes[thing])
+        self.likes_model.remove(self.likes[thing])
         del self.likes[thing]
         self.np.config.sections["interests"]["likes"].remove(thing)
         self.np.config.writeConfiguration()
@@ -1711,8 +1701,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.likeslist.get_iter(path)
-        thing = self.likeslist.get_value(iter, 0)
+        iterator = self.likes_model.get_iter(path)
+        thing = self.likes_model.get_value(iterator, 0)
         self.til_popup_menu.set_user(thing)
         self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1720,7 +1710,7 @@ class NicotineFrame:
         thing = self.tidl_popup_menu.get_user()
         if thing not in self.np.config.sections["interests"]["dislikes"]:
             return
-        self.dislikeslist.remove(self.dislikes[thing])
+        self.dislikes_model.remove(self.dislikes[thing])
         del self.dislikes[thing]
         self.np.config.sections["interests"]["dislikes"].remove(thing)
         self.np.config.writeConfiguration()
@@ -1733,8 +1723,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.dislikeslist.get_iter(path)
-        thing = self.dislikeslist.get_value(iter, 0)
+        iterator = self.dislikes_model.get_iter(path)
+        thing = self.dislikes_model.get_value(iterator, 0)
         self.tidl_popup_menu.set_user(thing)
         self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1742,11 +1732,11 @@ class NicotineFrame:
         thing = widget.get_parent().get_user()
         if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likeslist.append([thing])
+            self.likes[thing] = self.likes_model.append([thing])
             self.np.config.writeConfiguration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
-            self.likeslist.remove(self.likes[thing])
+            self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
             self.np.config.sections["interests"]["likes"].remove(thing)
             self.np.config.writeConfiguration()
@@ -1756,11 +1746,11 @@ class NicotineFrame:
         thing = widget.get_parent().get_user()
         if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikeslist.append([thing])
+            self.dislikes[thing] = self.dislikes_model.append([thing])
             self.np.config.writeConfiguration()
             self.np.queue.put(slskmessages.AddThingIHate(thing))
         elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
-            self.dislikeslist.remove(self.dislikes[thing])
+            self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
             self.np.config.sections["interests"]["dislikes"].remove(thing)
             self.np.config.writeConfiguration()
@@ -1783,8 +1773,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.recommendationslist.get_iter(path)
-        thing = self.recommendationslist.get_value(iter, 0)
+        iterator = self.recommendations_model.get_iter(path)
+        thing = self.recommendations_model.get_value(iterator, 0)
         items = self.r_popup_menu.get_children()
         self.r_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
@@ -1798,8 +1788,8 @@ class NicotineFrame:
         if not d:
             return
         path, column, x, y = d
-        iter = self.unrecommendationslist.get_iter(path)
-        thing = self.unrecommendationslist.get_value(iter, 0)
+        iterator = self.unrecommendations_model.get_iter(path)
+        thing = self.unrecommendations_model.get_value(iterator, 0)
         items = self.ur_popup_menu.get_children()
         self.ur_popup_menu.set_user(thing)
         items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
@@ -1814,7 +1804,7 @@ class NicotineFrame:
 
     """ Fonts and Colors """
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
         colour = self.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
@@ -1842,7 +1832,7 @@ class NicotineFrame:
 
         # self.ChangeListFont( self.UserList, self.frame.np.config.sections["ui"]["listfont"])
         for listview in [
-            self.userlist.UserList,
+            self.userlist.UserListTree,
             self.RecommendationsList,
             self.UnrecommendationsList,
             self.RecommendationUsersList,
@@ -2102,9 +2092,9 @@ class NicotineFrame:
 
         return message
 
-    def EntryCompletionFindMatch(self, completion, entry_text, iter, widget):
+    def EntryCompletionFindMatch(self, completion, entry_text, iterator, widget):
         model = completion.get_model()
-        item_text = model.get_value(iter, 0)
+        item_text = model.get_value(iterator, 0)
         ix = widget.get_position()
         config = self.np.config.sections["words"]
 
@@ -2122,7 +2112,7 @@ class NicotineFrame:
             return True
         return False
 
-    def EntryCompletionFoundMatch(self, completion, model, iter, widget):
+    def EntryCompletionFoundMatch(self, completion, model, iterator, widget):
         current_text = widget.get_text()
         ix = widget.get_position()
         # if more than a word has been typed, we throw away the
@@ -2134,13 +2124,13 @@ class NicotineFrame:
             suffix = " ".join(current_text[ix:].split(" "))
 
             # add the matching word
-            new_text = "%s %s%s" % (prefix, model[iter][0], suffix)
+            new_text = "%s %s%s" % (prefix, model[iterator][0], suffix)
             # set back the whole text
             widget.set_text(new_text)
             # move the cursor at the end
-            widget.set_position(len(prefix) + len(model[iter][0]) + 1)
+            widget.set_position(len(prefix) + len(model[iterator][0]) + 1)
         else:
-            new_text = "%s" % (model[iter][0])
+            new_text = "%s" % (model[iterator][0])
             widget.set_text(new_text)
             widget.set_position(-1)
         # stop the event propagation

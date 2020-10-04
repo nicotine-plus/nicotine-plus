@@ -456,7 +456,6 @@ class IP2Location(object):
 
     def _get_record(self, ip):
 
-        # global original_ip
         self.original_ip = ip
         low = 0
         ipv = self._parse_addr(ip)[0]

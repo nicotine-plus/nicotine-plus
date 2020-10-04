@@ -40,7 +40,7 @@ class RoomList:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
 
-        self.RoomList = builder.get_object("RoomList")
+        self.TempWindow = builder.get_object("TempWindow")
 
         for i in builder.get_objects():
             try:
@@ -48,8 +48,8 @@ class RoomList:
             except TypeError:
                 pass
 
-        self.RoomList.remove(self.vbox2)
-        self.RoomList.destroy()
+        self.TempWindow.remove(self.vbox2)
+        self.TempWindow.destroy()
 
         # self.RoomsList is the TreeView
         builder.connect_signals(self)

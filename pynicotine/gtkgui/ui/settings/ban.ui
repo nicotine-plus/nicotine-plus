@@ -41,7 +41,7 @@
                     <property name="vscrollbar_policy">automatic</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTreeView" id="Banned">
+                      <object class="GtkTreeView" id="BannedList">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="headers_visible">False</property>
@@ -205,7 +205,7 @@
                     <property name="vscrollbar_policy">automatic</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTreeView" id="Blocked">
+                      <object class="GtkTreeView" id="BlockedList">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>

@@ -46,7 +46,7 @@ class NowPlaying:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "nowplaying.ui"))
 
-        self.NowPlaying = builder.get_object("NowPlaying")
+        self.NowPlayingDialog = builder.get_object("NowPlayingDialog")
 
         builder.connect_signals(self)
 
@@ -56,11 +56,11 @@ class NowPlaying:
             except TypeError:
                 pass
 
-        self.NowPlaying.set_transient_for(self.frame.MainWindow)
+        self.NowPlayingDialog.set_transient_for(self.frame.MainWindow)
 
-        self.NowPlaying.connect("destroy", self.quit)
-        self.NowPlaying.connect("destroy-event", self.quit)
-        self.NowPlaying.connect("delete-event", self.quit)
+        self.NowPlayingDialog.connect("destroy", self.quit)
+        self.NowPlayingDialog.connect("destroy-event", self.quit)
+        self.NowPlayingDialog.connect("delete-event", self.quit)
 
         self.title_clear()
 
@@ -154,10 +154,7 @@ class NowPlaying:
         if self.NP_mpd.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b", "$f", "$k"]
             isset = True
-        elif self.NP_amarok.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
-            isset = True
-        elif self.NP_audacious.get_active():
+        elif self.NP_amarok.get_active() or self.NP_audacious.get_active() or self.NP_xmms2.get_active():
             self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_exaile.get_active():
@@ -173,9 +170,6 @@ class NowPlaying:
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$c", "$r", "$k", "$l"]
             self.player_input.set_text(_("Client name (empty = auto) :"))
-            isset = True
-        elif self.NP_xmms2.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
             isset = True
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
@@ -238,7 +232,7 @@ class NowPlaying:
         self.frame.np.config.writeConfiguration()
 
         # Hide the NowPlaying window
-        self.NowPlaying.hide()
+        self.NowPlayingDialog.hide()
         return True
 
     def OnNPTest(self, widget):

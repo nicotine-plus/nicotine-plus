@@ -47,10 +47,10 @@ def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
     if multichoice:
         dialog.set_select_multiple(True)
 
-    dir = os.path.expanduser(initialdir)
+    folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(dir):
-        dialog.set_current_folder(dir)
+    if os.path.exists(folder):
+        dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
 
@@ -84,10 +84,10 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
         dialog.add_buttons(_("_Cancel"), gtk.ResponseType.CANCEL, _("_Open"), gtk.ResponseType.ACCEPT)
 
     dialog.set_select_multiple(multiple)
-    dir = os.path.expanduser(initialdir)
+    folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(dir):
-        dialog.set_current_folder(dir)
+    if os.path.exists(folder):
+        dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
 
@@ -123,10 +123,10 @@ def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
     dialog.set_select_multiple(False)
     dialog.set_show_hidden(True)
 
-    dir = os.path.expanduser(initialdir)
+    folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(dir):
-        dialog.set_current_folder(dir)
+    if os.path.exists(folder):
+        dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
 

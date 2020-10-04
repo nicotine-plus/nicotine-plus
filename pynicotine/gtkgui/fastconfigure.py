@@ -309,30 +309,30 @@ class FastConfigureAssistant(object):
 
     def getshareddirs(self):
 
-        iter = self.sharelist.get_iter_first()
+        iterator = self.sharelist.get_iter_first()
         dirs = []
 
-        while iter is not None:
+        while iterator is not None:
             dirs.append(
                 (
-                    self.sharelist.get_value(iter, 0),
-                    self.sharelist.get_value(iter, 6)
+                    self.sharelist.get_value(iterator, 0),
+                    self.sharelist.get_value(iterator, 6)
                 )
             )
-            iter = self.sharelist.iter_next(iter)
+            iterator = self.sharelist.iter_next(iterator)
 
         return dirs
 
     def addshareddir(self, directory):
 
-        iter = self.sharelist.get_iter_first()
+        iterator = self.sharelist.get_iter_first()
 
-        while iter is not None:
+        while iterator is not None:
 
-            if directory[1] == self.sharelist.get_value(iter, 6):
+            if directory[1] == self.sharelist.get_value(iterator, 6):
                 return
 
-            iter = self.sharelist.iter_next(iter)
+            iterator = self.sharelist.iter_next(iterator)
 
         self.sharelist.append([
             directory[0],
@@ -373,11 +373,11 @@ class FastConfigureAssistant(object):
 
     def _updatedirstats(self, directory, size, files, subdirs, extensions):
 
-        iter = self.sharelist.get_iter_first()
+        iterator = self.sharelist.get_iter_first()
 
-        while iter is not None:
+        while iterator is not None:
 
-            if directory[1] == self.sharelist.get_value(iter, 6):
+            if directory[1] == self.sharelist.get_value(iterator, 6):
 
                 self.sharelist.insert(0, [
                     directory[0],
@@ -389,10 +389,10 @@ class FastConfigureAssistant(object):
                     directory[1]
                 ])
 
-                self.sharelist.remove(iter)
+                self.sharelist.remove(iterator)
                 return
 
-            iter = self.sharelist.iter_next(iter)
+            iterator = self.sharelist.iter_next(iterator)
 
     def OnButtonPressed(self, widget):
 
@@ -440,18 +440,17 @@ class FastConfigureAssistant(object):
                         dlg.format_secondary_text(_("The chosen virtual name is empty"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
                         # We get the current defined shares from the treeview
                         model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
 
-                        iter = model.get_iter_first()
+                        iterator = model.get_iter_first()
 
-                        while iter is not None:
+                        while iterator is not None:
 
                             # We reject the share if the virtual share name is already used
-                            if virtual == model.get_value(iter, 0):
+                            if virtual == model.get_value(iterator, 0):
 
                                 dlg = gtk.MessageDialog(
                                     transient_for=self.window,
@@ -466,7 +465,7 @@ class FastConfigureAssistant(object):
                                 return
 
                             # We also reject the share if the directory is already used
-                            elif directory == model.get_value(iter, 6):
+                            elif directory == model.get_value(iterator, 6):
 
                                 dlg = gtk.MessageDialog(
                                     transient_for=self.window,
@@ -481,7 +480,7 @@ class FastConfigureAssistant(object):
                                 return
 
                             else:
-                                iter = model.iter_next(iter)
+                                iterator = model.iter_next(iterator)
 
                         # The share is unique: we can add it
                         self.addshareddir((virtual, directory))

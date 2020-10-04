@@ -239,7 +239,6 @@ class SlskMessage:
             if printerror:
                 log.add_warning("%s %s trying to unpack %s at '%s' at %s/%s", (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
-            # return start, None
 
     def packObject(self, object, unsignedint=False, unsignedlonglong=False):
         """ Returns object (integer, long or string packed into a
@@ -984,7 +983,7 @@ class TunneledMessage(ServerMessage):
         self.code = code
         self.msg = msg
 
-    def makeNetworkMessage(self, message):
+    def makeNetworkMessage(self):
         msg = bytearray()
         msg.extend(self.packObject(self.user))
         msg.extend(self.packObject(self.req, unsignedint=True))

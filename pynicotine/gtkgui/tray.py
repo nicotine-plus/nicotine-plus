@@ -177,7 +177,6 @@ class TrayApp:
         else:
             items[0].set_sensitive(False)
             items[1].set_sensitive(True)
-        return
 
     # GtkStatusIcon fallback
     def OnStatusIconPopup(self, status_icon, button, activate_time):

@@ -295,8 +295,8 @@ class UserInfo:
 
         path, column, x, y = d
 
-        iter = self.likesStore.get_iter(path)
-        thing = self.likesStore.get_value(iter, 0)
+        iterator = self.likesStore.get_iter(path)
+        thing = self.likesStore.get_value(iterator, 0)
         items = self.likes_popup_menu.get_children()
 
         self.likes_popup_menu.set_user(thing)
@@ -317,8 +317,8 @@ class UserInfo:
 
         path, column, x, y = d
 
-        iter = self.hatesStore.get_iter(path)
-        thing = self.hatesStore.get_value(iter, 0)
+        iterator = self.hatesStore.get_iter(path)
+        thing = self.hatesStore.get_value(iterator, 0)
         items = self.hates_popup_menu.get_children()
 
         self.hates_popup_menu.set_user(thing)
@@ -331,7 +331,7 @@ class UserInfo:
     def ConnClose(self):
         pass
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":

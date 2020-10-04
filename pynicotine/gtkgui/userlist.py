@@ -89,7 +89,7 @@ class UserList:
 
         widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = InitialiseColumns(
-            self.UserList,
+            self.UserListTree,
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.CellDataFunc],
@@ -125,18 +125,18 @@ class UserList:
             config["columns"]["userlist"][1] = 0
 
         for render in self.col_trusted.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 5)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
 
         for render in self.col_notify.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 6)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 6)
 
         for render in self.col_privileged.get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserList, 7)
+            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 7)
 
         for render in self.col_comments.get_cells():
-            render.connect('edited', self.cell_edited_callback, self.UserList, 9)
+            render.connect('edited', self.cell_edited_callback, self.UserListTree, 9)
 
-        self.UserList.set_model(self.usersmodel)
+        self.UserListTree.set_model(self.usersmodel)
 
         """ Buddy list """
 
@@ -210,7 +210,7 @@ class UserList:
         self.Menu_RemoveUser = items[14]
         self.Menu_PrivateRooms = items[15]
 
-        self.UserList.connect("button_press_event", self.OnPopupMenu)
+        self.UserListTree.connect("button_press_event", self.OnPopupMenu)
 
     def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
         return showCountryTooltip(widget, x, y, tooltip, 14, 'flag_')
@@ -230,7 +230,7 @@ class UserList:
     def OnSettingsBanIgnore(self, widget):
         self.frame.OnSettingsBanIgnore(widget)
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
 
@@ -241,20 +241,20 @@ class UserList:
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
-        iter = self.usersmodel.get_iter(index)
-        value = self.usersmodel.get_value(iter, pos)
+        iterator = self.usersmodel.get_iter(index)
+        value = self.usersmodel.get_value(iterator, pos)
 
-        self.usersmodel.set(iter, pos, not value)
+        self.usersmodel.set(iterator, pos, not value)
 
         self.SaveUserList()
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
         store = treeview.get_model()
-        iter = store.get_iter(index)
+        iterator = store.get_iter(index)
 
         if pos == 9:
-            self.SetComment(iter, store, value)
+            self.SetComment(iterator, store, value)
 
     def SetLastSeen(self, user, online=False):
 
@@ -274,15 +274,15 @@ class UserList:
         if not online:
             self.SaveUserList()
 
-    def SetComment(self, iter, store, comments=None):
+    def SetComment(self, iterator, store, comments=None):
 
-        user = store.get_value(iter, 2)
+        user = store.get_value(iterator, 2)
 
         if comments is not None:
 
             for i in self.usersmodel:
                 if i[2] == user:
-                    self.usersmodel.set(iter, 9, comments)
+                    self.usersmodel.set(iterator, 9, comments)
                     break
 
             self.SaveUserList()
@@ -306,14 +306,14 @@ class UserList:
 
     def OnPopupMenu(self, widget, event):
 
-        d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
+        d = self.UserListTree.get_path_at_pos(int(event.x), int(event.y))
 
         if d:
             path, column, x, y = d
-            model = self.UserList.get_model()
-            iter = model.get_iter(path)
-            user = model.get_value(iter, 2)
-            status = model.get_value(iter, 10)
+            model = self.UserListTree.get_model()
+            iterator = model.get_iter(path)
+            user = model.get_value(iterator, 2)
+            status = model.get_value(iterator, 10)
 
             if event.button != 3:
                 if event.type == Gdk.EventType._2BUTTON_PRESS:
@@ -335,9 +335,9 @@ class UserList:
 
             self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
             self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-            self.Menu_OnNotify.set_active(model.get_value(iter, 6))
-            self.Menu_OnPrivileged.set_active(model.get_value(iter, 7))
-            self.Menu_OnTrusted.set_active(model.get_value(iter, 5))
+            self.Menu_OnNotify.set_active(model.get_value(iterator, 6))
+            self.Menu_OnPrivileged.set_active(model.get_value(iterator, 7))
+            self.Menu_OnTrusted.set_active(model.get_value(iterator, 5))
 
             self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -353,15 +353,15 @@ class UserList:
 
         user = msg.user
         status = msg.status
-        iter = self.GetIter(user)
+        iterator = self.GetIter(user)
 
-        if iter is None:
+        if iterator is None:
             return
 
-        if status == int(self.usersmodel.get_value(iter, 10)):
+        if status == int(self.usersmodel.get_value(iterator, 10)):
             return
 
-        notify = self.usersmodel.get_value(iter, 6)
+        notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
             status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
@@ -370,22 +370,22 @@ class UserList:
 
         img = self.frame.GetStatusImage(status)
         self.usersmodel.set(
-            iter,
+            iterator,
             0, img,
             10, status
         )
 
         if status:  # online
             self.SetLastSeen(user, online=True)
-        elif self.usersmodel.get(iter, 8)[0] == "":  # disconnected
+        elif self.usersmodel.get(iterator, 8)[0] == "":  # disconnected
             self.SetLastSeen(user)
 
     def GetUserStats(self, msg):
 
         user = msg.user
-        iter = self.GetIter(user)
+        iterator = self.GetIter(user)
 
-        if iter is None:
+        if iterator is None:
             return
 
         country = msg.country
@@ -393,7 +393,7 @@ class UserList:
         hfiles = Humanize(msg.files)
 
         self.usersmodel.set(
-            iter,
+            iterator,
             3, hspeed,
             4, hfiles,
             11, msg.avgspeed,
@@ -407,15 +407,15 @@ class UserList:
 
     def SetUserFlag(self, user, country):
 
-        iter = self.GetIter(user)
-        if iter is None:
+        iterator = self.GetIter(user)
+        if iterator is None:
             return
 
         if user not in [i[2] for i in self.usersmodel]:
             return
 
         self.usersmodel.set(
-            iter,
+            iterator,
             1, self.frame.GetFlagImage(country),
             14, country
         )
@@ -463,20 +463,20 @@ class UserList:
 
     def SaveUserList(self):
 
-        list = []
+        user_list = []
 
         for i in self.usersmodel:
             status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, hlast_seen, comments, status, speed, file_count, last_seen, country = i
-            list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
+            user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
 
-        self.frame.np.config.sections["server"]["userlist"] = list
+        self.frame.np.config.sections["server"]["userlist"] = user_list
         self.frame.np.config.writeConfiguration()
 
     def saveColumns(self):
 
         columns = []
         widths = []
-        for column in self.UserList.get_columns():
+        for column in self.UserListTree.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
         self.frame.np.config.sections["columns"]["userlist"] = columns

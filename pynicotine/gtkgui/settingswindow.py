@@ -47,9 +47,7 @@ from pynicotine.utils import unescape
 
 
 win32 = sys.platform.startswith("win")
-if win32:
-    pass
-else:
+if not win32:
     import pwd
 
 
@@ -445,9 +443,9 @@ class DownloadsFrame(buildFrame):
         df.sort()
 
         for filter in df:
-            iter = self.filtersiters[filter]
-            dfilter = self.filterlist.get_value(iter, 0)
-            escaped = self.filterlist.get_value(iter, 1)
+            iterator = self.filtersiters[filter]
+            dfilter = self.filterlist.get_value(iterator, 0)
+            escaped = self.filterlist.get_value(iterator, 1)
             self.downloadfilters.append([dfilter, int(escaped)])
 
         return self.downloadfilters
@@ -458,8 +456,8 @@ class DownloadsFrame(buildFrame):
 
         if dfilter:
 
-            iter = self.filtersiters[dfilter]
-            escapedvalue = self.filterlist.get_value(iter, 1)
+            iterator = self.filtersiters[dfilter]
+            escapedvalue = self.filterlist.get_value(iterator, 1)
 
             response = ComboBoxDialog(
                 parent=self.p.SettingsWindow,
@@ -481,12 +479,12 @@ class DownloadsFrame(buildFrame):
                 else:
                     self.filtersiters[filter] = self.filterlist.append([filter, escaped])
                     del self.filtersiters[dfilter]
-                    self.filterlist.remove(iter)
+                    self.filterlist.remove(iterator)
 
                 self.OnVerifyFilter(self.VerifyFilters)
 
-    def _SelectedFilter(self, model, path, iter, list):
-        list.append(iter)
+    def _SelectedFilter(self, model, path, iterator, list):
+        list.append(iterator)
 
     def GetSelectedFilter(self):
 
@@ -506,8 +504,8 @@ class DownloadsFrame(buildFrame):
 
         if dfilter:
 
-            iter = self.filtersiters[dfilter]
-            self.filterlist.remove(iter)
+            iterator = self.filtersiters[dfilter]
+            self.filterlist.remove(iterator)
 
             del self.filtersiters[dfilter]
 
@@ -544,9 +542,9 @@ class DownloadsFrame(buildFrame):
 
         for filter in df:
 
-            iter = self.filtersiters[filter]
-            dfilter = self.filterlist.get_value(iter, 0)
-            escaped = self.filterlist.get_value(iter, 1)
+            iterator = self.filtersiters[filter]
+            dfilter = self.filterlist.get_value(iterator, 0)
+            escaped = self.filterlist.get_value(iterator, 1)
 
             if escaped:
                 dfilter = re.escape(dfilter)
@@ -590,10 +588,10 @@ class DownloadsFrame(buildFrame):
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
-        iter = self.filterlist.get_iter(index)
-        value = self.filterlist.get_value(iter, pos)
+        iterator = self.filterlist.get_iter(index)
+        value = self.filterlist.get_value(iterator, pos)
 
-        self.filterlist.set(iter, pos, not value)
+        self.filterlist.set(iterator, pos, not value)
 
         self.OnVerifyFilter(self.VerifyFilters)
 
@@ -809,7 +807,6 @@ class SharesFrame(buildFrame):
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
                     dlg.run()
                     dlg.destroy()
-                    pass
 
                 else:
 
@@ -832,7 +829,6 @@ class SharesFrame(buildFrame):
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
 
@@ -875,7 +871,6 @@ class SharesFrame(buildFrame):
                     dlg.format_secondary_text(_("The chosen directory is already shared"))
                     dlg.run()
                     dlg.destroy()
-                    pass
 
                 else:
 
@@ -898,7 +893,6 @@ class SharesFrame(buildFrame):
                         dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
                         dlg.run()
                         dlg.destroy()
-                        pass
 
                     else:
 
@@ -917,17 +911,17 @@ class SharesFrame(buildFrame):
                         # Compute the directory size in the background
                         _thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
 
-    def _RemoveSharedDir(self, model, path, iter, list):
-        list.append(iter)
+    def _RemoveSharedDir(self, model, path, iterator, list):
+        list.append(iterator)
 
     def OnRenameVirtuals(self, widget):
 
         iters = []
         self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 
-        for iter in iters:
-            oldvirtual = self.shareslist.get_value(iter, 0)
-            directory = self.shareslist.get_value(iter, 3)
+        for iterator in iters:
+            oldvirtual = self.shareslist.get_value(iterator, 0)
+            directory = self.shareslist.get_value(iterator, 3)
             oldmapping = (oldvirtual, directory)
 
             virtual = ComboBoxDialog(
@@ -940,7 +934,7 @@ class SharesFrame(buildFrame):
                 pass
             else:
                 newmapping = (virtual, directory)
-                self.shareslist.set_value(iter, 0, virtual)
+                self.shareslist.set_value(iterator, 0, virtual)
                 self.shareddirs.remove(oldmapping)
                 self.shareddirs.append(newmapping)
                 self.needrescan = True
@@ -950,9 +944,9 @@ class SharesFrame(buildFrame):
         iters = []
         self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 
-        for iter in iters:
-            oldvirtual = self.bshareslist.get_value(iter, 0)
-            directory = self.bshareslist.get_value(iter, 3)
+        for iterator in iters:
+            oldvirtual = self.bshareslist.get_value(iterator, 0)
+            directory = self.bshareslist.get_value(iterator, 3)
             oldmapping = (oldvirtual, directory)
 
             virtual = ComboBoxDialog(
@@ -965,7 +959,7 @@ class SharesFrame(buildFrame):
                 pass
             else:
                 newmapping = (virtual, directory)
-                self.bshareslist.set_value(iter, 0, virtual)
+                self.bshareslist.set_value(iterator, 0, virtual)
                 self.bshareslist.remove(oldmapping)
                 self.bshareslist.append(newmapping)
                 self.needrescan = True
@@ -974,12 +968,12 @@ class SharesFrame(buildFrame):
         iters = []
         self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 
-        for iter in iters:
-            virtual = self.shareslist.get_value(iter, 0)
-            actual = self.shareslist.get_value(iter, 3)
+        for iterator in iters:
+            virtual = self.shareslist.get_value(iterator, 0)
+            actual = self.shareslist.get_value(iterator, 3)
             mapping = (virtual, actual)
             self.shareddirs.remove(mapping)
-            self.shareslist.remove(iter)
+            self.shareslist.remove(iterator)
 
         if iters:
             self.needrescan = True
@@ -988,12 +982,12 @@ class SharesFrame(buildFrame):
         iters = []
         self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
 
-        for iter in iters:
-            virtual = self.bshareslist.get_value(iter, 0)
-            actual = self.bshareslist.get_value(iter, 3)
+        for iterator in iters:
+            virtual = self.bshareslist.get_value(iterator, 0)
+            actual = self.bshareslist.get_value(iterator, 3)
             mapping = (virtual, actual)
             self.bshareddirs.remove(mapping)
-            self.bshareslist.remove(iter)
+            self.bshareslist.remove(iterator)
 
         if iters:
             self.needrescan = True
@@ -1019,17 +1013,17 @@ class SharesFrame(buildFrame):
 
     def _updatedirstats(self, directory, humansize, liststore):
 
-        iter = liststore.get_iter_first()
+        iterator = liststore.get_iter_first()
 
-        while iter is not None:
+        while iterator is not None:
 
-            if directory == liststore.get_value(iter, 3):
+            if directory == liststore.get_value(iterator, 3):
 
-                liststore.set(iter, 2, humansize)
+                liststore.set(iterator, 2, humansize)
 
                 return
 
-            iter = liststore.iter_next(iter)
+            iterator = liststore.iter_next(iterator)
 
 
 class UploadsFrame(buildFrame):
@@ -1273,8 +1267,8 @@ class IgnoreFrame(buildFrame):
             }
         }
 
-    def _AppendItem(self, model, path, iter, line):
-        line.append(iter)
+    def _AppendItem(self, model, path, iterator, line):
+        line.append(iterator)
 
     def OnAddIgnored(self, widget):
 
@@ -1291,10 +1285,10 @@ class IgnoreFrame(buildFrame):
     def OnRemoveIgnored(self, widget):
         iters = []
         self.IgnoredUsers.get_selection().selected_foreach(self._AppendItem, iters)
-        for iter in iters:
-            user = self.ignorelist.get_value(iter, 0)
+        for iterator in iters:
+            user = self.ignorelist.get_value(iterator, 0)
             self.ignored_users.remove(user)
-            self.ignorelist.remove(iter)
+            self.ignorelist.remove(iterator)
 
     def OnClearIgnored(self, widget):
         self.ignored_users = []
@@ -1331,10 +1325,10 @@ class IgnoreFrame(buildFrame):
     def OnRemoveIgnoredIP(self, widget):
         iters = []
         self.IgnoredIPs.get_selection().selected_foreach(self._AppendItem, iters)
-        for iter in iters:
-            ip = self.ignored_ips_list.get_value(iter, 0)
+        for iterator in iters:
+            ip = self.ignored_ips_list.get_value(iterator, 0)
             del self.ignored_ips[ip]
-            self.ignored_ips_list.remove(iter)
+            self.ignored_ips_list.remove(iterator)
 
     def OnClearIgnoredIP(self, widget):
         self.ignored_ips = {}
@@ -1349,8 +1343,8 @@ class BanFrame(buildFrame):
 
         self.options = {
             "server": {
-                "banlist": self.Banned,
-                "ipblocklist": self.Blocked
+                "banlist": self.BannedList,
+                "ipblocklist": self.BlockedList
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan,
@@ -1358,39 +1352,39 @@ class BanFrame(buildFrame):
             }
         }
 
-        self.banned = []
-        self.banlist = gtk.ListStore(gobject.TYPE_STRING)
+        self.banlist = []
+        self.banlist_model = gtk.ListStore(gobject.TYPE_STRING)
         column = gtk.TreeViewColumn(_("Users"), gtk.CellRendererText(), text=0)
-        self.Banned.append_column(column)
-        self.Banned.set_model(self.banlist)
-        self.Banned.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BannedList.append_column(column)
+        self.BannedList.set_model(self.banlist_model)
+        self.BannedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        self.blocked = {}
-        self.blockedlist = gtk.ListStore(str, str)
+        self.blocked_list = {}
+        self.blocked_list_model = gtk.ListStore(str, str)
         cols = InitialiseColumns(
-            self.Blocked,
+            self.BlockedList,
             [_("Addresses"), -1, "text", self.frame.CellDataFunc],
             [_("Users"), -1, "text", self.frame.CellDataFunc]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
 
-        self.Blocked.set_model(self.blockedlist)
-        self.Blocked.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
+        self.BlockedList.set_model(self.blocked_list_model)
+        self.BlockedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
     def SetSettings(self, config):
         server = config["server"]
         transfers = config["transfers"]
-        self.banlist.clear()
-        self.blockedlist.clear()
+        self.banlist_model.clear()
+        self.blocked_list_model.clear()
 
-        self.banned = server["banlist"][:]
+        self.banlist = server["banlist"][:]
         self.p.SetWidgetsData(config, self.options)
 
         if server["ipblocklist"] is not None:
-            self.blocked = server["ipblocklist"].copy()
+            self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
-                self.blockedlist.append([blocked, user])
+                self.blocked_list_model.append([blocked, user])
 
         if transfers["usecustomban"] is not None:
             self.UseCustomBan.set_active(transfers["usecustomban"])
@@ -1403,8 +1397,8 @@ class BanFrame(buildFrame):
     def GetSettings(self):
         return {
             "server": {
-                "banlist": self.banned[:],
-                "ipblocklist": self.blocked.copy()
+                "banlist": self.banlist[:],
+                "ipblocklist": self.blocked_list.copy()
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan.get_active(),
@@ -1420,24 +1414,24 @@ class BanFrame(buildFrame):
             _("User:")
         )
 
-        if user and user not in self.banned:
-            self.banned.append(user)
-            self.banlist.append([user])
+        if user and user not in self.banlist:
+            self.banlist.append(user)
+            self.banlist_model.append([user])
 
-    def _AppendItem(self, model, path, iter, line):
-        line.append(iter)
+    def _AppendItem(self, model, path, iterator, line):
+        line.append(iterator)
 
     def OnRemoveBanned(self, widget):
         iters = []
-        self.Banned.get_selection().selected_foreach(self._AppendItem, iters)
-        for iter in iters:
-            user = self.banlist.get_value(iter, 0)
-            self.banned.remove(user)
-            self.banlist.remove(iter)
+        self.BannedList.get_selection().selected_foreach(self._AppendItem, iters)
+        for iterator in iters:
+            user = self.banlist_model.get_value(iterator, 0)
+            self.banlist.remove(user)
+            self.banlist_model.remove(iterator)
 
     def OnClearBanned(self, widget):
-        self.banned = []
-        self.banlist.clear()
+        self.banlist = []
+        self.banlist_model.clear()
 
     def OnUseCustomBanToggled(self, widget):
         self.CustomBan.set_sensitive(widget.get_active())
@@ -1466,21 +1460,21 @@ class BanFrame(buildFrame):
             except Exception:
                 return
 
-        if ip not in self.blocked:
-            self.blocked[ip] = ""
-            self.blockedlist.append([ip, ""])
+        if ip not in self.blocked_list:
+            self.blocked_list[ip] = ""
+            self.blocked_list_model.append([ip, ""])
 
     def OnRemoveBlocked(self, widget):
         iters = []
-        self.Blocked.get_selection().selected_foreach(self._AppendItem, iters)
-        for iter in iters:
-            ip = self.blockedlist.get_value(iter, 0)
-            del self.blocked[ip]
-            self.blockedlist.remove(iter)
+        self.BlockedList.get_selection().selected_foreach(self._AppendItem, iters)
+        for iterator in iters:
+            ip = self.blocked_list_model.get_value(iterator, 0)
+            del self.blocked_list[ip]
+            self.blocked_list_model.remove(iterator)
 
     def OnClearBlocked(self, widget):
-        self.blocked = {}
-        self.blockedlist.clear()
+        self.blocked_list = {}
+        self.blocked_list_model.clear()
 
 
 class TTSFrame(buildFrame):
@@ -2018,9 +2012,9 @@ class NotebookFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
 
         # Function to set the default iter from the value found in the config file
-        def set_active_conf(model, path, iter, data):
-            if model.get_value(iter, 1).lower() == data["cfg"].lower():
-                data["combobox"].set_active_iter(iter)
+        def set_active_conf(model, path, iterator, data):
+            if model.get_value(iterator, 1).lower() == data["cfg"].lower():
+                data["combobox"].set_active_iter(iterator)
 
         # Override settings for the GtkComboBox defining ui positionning
         for opt in [
@@ -2513,8 +2507,8 @@ class UrlCatchFrame(buildFrame):
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
         store = treeview.get_model()
-        iter = store.get_iter(index)
-        store.set(iter, pos, value)
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
 
     def SetSettings(self, config):
 
@@ -2532,16 +2526,16 @@ class UrlCatchFrame(buildFrame):
                 else:
                     command = urls["protocols"][key]
 
-                iter = self.protocolmodel.append([key, command])
-                self.protocols[key] = iter
+                iterator = self.protocolmodel.append([key, command])
+                self.protocols[key] = iterator
 
         self.OnURLCatchingToggled(self.URLCatching)
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
-        for key, iter in self.protocols.items():
-            if iter is not None:
-                selection.select_iter(iter)
+        for key, iterator in self.protocols.items():
+            if iterator is not None:
+                selection.select_iter(iterator)
                 break
 
     def GetSettings(self):
@@ -2549,12 +2543,12 @@ class UrlCatchFrame(buildFrame):
         protocols = {}
 
         try:
-            iter = self.protocolmodel.get_iter_first()
-            while iter is not None:
-                protocol = self.protocolmodel.get_value(iter, 0)
-                handler = self.protocolmodel.get_value(iter, 1)
+            iterator = self.protocolmodel.get_iter_first()
+            while iterator is not None:
+                protocol = self.protocolmodel.get_value(iterator, 0)
+                handler = self.protocolmodel.get_value(iterator, 1)
                 protocols[protocol] = handler
-                iter = self.protocolmodel.iter_next(iter)
+                iterator = self.protocolmodel.iter_next(iterator)
         except Exception:
             pass
 
@@ -2580,13 +2574,13 @@ class UrlCatchFrame(buildFrame):
 
     def OnSelect(self, selection):
 
-        model, iter = selection.get_selected()
+        model, iterator = selection.get_selected()
 
-        if iter is None:
+        if iterator is None:
             self.ProtocolCombo.get_child().set_text("")
         else:
-            protocol = model.get_value(iter, 0)
-            handler = model.get_value(iter, 1)
+            protocol = model.get_value(iterator, 0)
+            handler = model.get_value(iterator, 1)
             self.ProtocolCombo.get_child().set_text(protocol)
             self.Handler.get_child().set_text(handler)
 
@@ -2596,21 +2590,21 @@ class UrlCatchFrame(buildFrame):
         command = self.Handler.get_child().get_text()
 
         if protocol in self.protocols:
-            iter = self.protocols[protocol]
-            if iter is not None:
-                self.protocolmodel.set(iter, 1, command)
+            iterator = self.protocols[protocol]
+            if iterator is not None:
+                self.protocolmodel.set(iterator, 1, command)
         else:
-            iter = self.protocolmodel.append([protocol, command])
-            self.protocols[protocol] = iter
+            iterator = self.protocolmodel.append([protocol, command])
+            self.protocols[protocol] = iterator
 
     def OnRemove(self, widget):
 
         selection = self.ProtocolHandlers.get_selection()
-        model, iter = selection.get_selected()
+        model, iterator = selection.get_selected()
 
-        if iter is not None:
-            protocol = self.protocolmodel.get_value(iter, 0)
-            self.protocolmodel.remove(iter)
+        if iterator is not None:
+            protocol = self.protocolmodel.get_value(iterator, 0)
+            self.protocolmodel.remove(iterator)
             del self.protocols[protocol]
 
 
@@ -2630,7 +2624,7 @@ class CensorFrame(buildFrame):
             }
         }
 
-        self.censorlist = gtk.ListStore(gobject.TYPE_STRING)
+        self.censor_list_model = gtk.ListStore(gobject.TYPE_STRING)
 
         cols = InitialiseColumns(
             self.CensorList,
@@ -2639,7 +2633,7 @@ class CensorFrame(buildFrame):
 
         cols[0].set_sort_column_id(0)
 
-        self.CensorList.set_model(self.censorlist)
+        self.CensorList.set_model(self.censor_list_model)
 
         # Combobox for the replacement letter
         self.CensorReplaceCombo_List = gtk.ListStore(gobject.TYPE_STRING)
@@ -2659,16 +2653,16 @@ class CensorFrame(buildFrame):
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
         store = treeview.get_model()
-        iter = store.get_iter(index)
+        iterator = store.get_iterator(index)
 
         if value != "" and not value.isspace() and len(value) > 2:
-            store.set(iter, pos, value)
+            store.set(iterator, pos, value)
         else:
-            store.remove(iter)
+            store.remove(iterator)
 
     def SetSettings(self, config):
 
-        self.censorlist.clear()
+        self.censor_list_model.clear()
 
         self.p.SetWidgetsData(config, self.options)
 
@@ -2689,11 +2683,11 @@ class CensorFrame(buildFrame):
         censored = []
 
         try:
-            iter = self.censorlist.get_iter_first()
-            while iter is not None:
-                word = self.censorlist.get_value(iter, 0)
+            iterator = self.censor_list_model.get_iter_first()
+            while iterator is not None:
+                word = self.censor_list_model.get_value(iterator, 0)
                 censored.append(word)
-                iter = self.censorlist.iter_next(iter)
+                iterator = self.censor_list_model.iter_next(iterator)
         except Exception:
             pass
 
@@ -2707,24 +2701,24 @@ class CensorFrame(buildFrame):
 
     def OnAdd(self, widget):
 
-        iter = self.censorlist.append([""])
+        iterator = self.censor_list_model.append([""])
 
         selection = self.CensorList.get_selection()
         selection.unselect_all()
-        selection.select_iter(iter)
+        selection.select_iter(iterator)
 
         col = self.CensorList.get_column(0)
 
-        self.CensorList.set_cursor(self.censorlist.get_path(iter), col, True)
+        self.CensorList.set_cursor(self.censor_list_model.get_path(iterator), col, True)
 
     def OnRemove(self, widget):
         selection = self.CensorList.get_selection()
-        iter = selection.get_selected()[1]
-        if iter is not None:
-            self.censorlist.remove(iter)
+        iterator = selection.get_selected()[1]
+        if iterator is not None:
+            self.censor_list_model.remove(iterator)
 
     def OnClear(self, widget):
-        self.censorlist.clear()
+        self.censor_list_model.clear()
 
 
 class AutoReplaceFrame(buildFrame):
@@ -2764,8 +2758,8 @@ class AutoReplaceFrame(buildFrame):
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
         store = treeview.get_model()
-        iter = store.get_iter(index)
-        store.set(iter, pos, value)
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
 
     def SetSettings(self, config):
         self.replacelist.clear()
@@ -2788,12 +2782,12 @@ class AutoReplaceFrame(buildFrame):
     def GetSettings(self):
         autoreplaced = {}
         try:
-            iter = self.replacelist.get_iter_first()
-            while iter is not None:
-                word = self.replacelist.get_value(iter, 0)
-                replacement = self.replacelist.get_value(iter, 1)
+            iterator = self.replacelist.get_iter_first()
+            while iterator is not None:
+                word = self.replacelist.get_value(iterator, 0)
+                replacement = self.replacelist.get_value(iterator, 1)
                 autoreplaced[word] = replacement
-                iter = self.replacelist.iter_next(iter)
+                iterator = self.replacelist.iter_next(iterator)
         except Exception:
             autoreplaced.clear()
 
@@ -2805,19 +2799,19 @@ class AutoReplaceFrame(buildFrame):
         }
 
     def OnAdd(self, widget):
-        iter = self.replacelist.append(["", ""])
+        iterator = self.replacelist.append(["", ""])
         selection = self.ReplacementList.get_selection()
         selection.unselect_all()
-        selection.select_iter(iter)
+        selection.select_iter(iterator)
         col = self.ReplacementList.get_column(0)
 
-        self.ReplacementList.set_cursor(self.replacelist.get_path(iter), col, True)
+        self.ReplacementList.set_cursor(self.replacelist.get_path(iterator), col, True)
 
     def OnRemove(self, widget):
         selection = self.ReplacementList.get_selection()
-        iter = selection.get_selected()[1]
-        if iter is not None:
-            self.replacelist.remove(iter)
+        iterator = selection.get_selected()[1]
+        if iterator is not None:
+            self.replacelist.remove(iterator)
 
     def OnClear(self, widget):
         self.replacelist.clear()
@@ -3000,21 +2994,21 @@ class buildDialog(gtk.Dialog):
 
     def cell_edited_callback(self, widget, index, value, treeview):
         store = treeview.get_model()
-        iter = store.get_iter(index)
-        store.set(iter, 0, value)
+        iterator = store.get_iter(index)
+        store.set(iterator, 0, value)
 
     def OnAdd(self, widget, treeview):
 
-        iter = treeview.get_model().append([""])
+        iterator = treeview.get_model().append([""])
         col = treeview.get_column(0)
 
-        treeview.set_cursor(treeview.get_model().get_path(iter), col, True)
+        treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
 
     def OnRemove(self, widget, treeview):
         selection = treeview.get_selection()
-        iter = selection.get_selected()[1]
-        if iter is not None:
-            treeview.get_model().remove(iter)
+        iterator = selection.get_selected()[1]
+        if iterator is not None:
+            treeview.get_model().remove(iterator)
 
     def addOptions(self, plugin, options={}):
 
@@ -3180,7 +3174,7 @@ class PluginFrame(buildFrame):
             }
         }
 
-        self.pluginlist = gtk.ListStore(
+        self.plugins_model = gtk.ListStore(
             gobject.TYPE_STRING,
             gobject.TYPE_BOOLEAN,
             gobject.TYPE_STRING
@@ -3203,7 +3197,7 @@ class PluginFrame(buildFrame):
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
-        self.PluginTreeView.set_model(self.pluginlist)
+        self.PluginTreeView.set_model(self.plugins_model)
         self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
 
         self.dialog = buildDialog(self)
@@ -3221,12 +3215,12 @@ class PluginFrame(buildFrame):
 
     def OnSelectPlugin(self, selection):
 
-        model, iter = selection.get_selected()
-        if iter is None:
+        model, iterator = selection.get_selected()
+        if iterator is None:
             self.selected_plugin = None
             return
 
-        self.selected_plugin = model.get_value(iter, 2)
+        self.selected_plugin = model.get_value(iterator, 2)
         info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
 
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info['Version']})
@@ -3238,10 +3232,10 @@ class PluginFrame(buildFrame):
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
-        iter = self.pluginlist.get_iter(index)
-        plugin = self.pluginlist.get_value(iter, 2)
-        value = self.pluginlist.get_value(iter, 1)
-        self.pluginlist.set(iter, pos, not value)
+        iterator = self.plugins_model.get_iter(index)
+        plugin = self.plugins_model.get_value(iterator, 2)
+        value = self.plugins_model.get_value(iterator, 1)
+        self.plugins_model.set(iterator, pos, not value)
 
         if not value:
             if not self.frame.np.pluginhandler.enable_plugin(plugin):
@@ -3267,7 +3261,7 @@ class PluginFrame(buildFrame):
         self.p.SetWidgetsData(config, self.options)
         self.OnPluginsEnable(None)
         self.pluginsiters = {}
-        self.pluginlist.clear()
+        self.plugins_model.clear()
         plugins = self.frame.np.pluginhandler.list_installed_plugins()
         plugins.sort()
 
@@ -3277,7 +3271,7 @@ class PluginFrame(buildFrame):
             except IOError:
                 continue
             enabled = (plugin in self.frame.np.pluginhandler.enabled_plugins)
-            self.pluginsiters[filter] = self.pluginlist.append([info['Name'], enabled, plugin])
+            self.pluginsiters[filter] = self.plugins_model.append([info['Name'], enabled, plugin])
 
         return {}
 
@@ -3290,8 +3284,8 @@ class PluginFrame(buildFrame):
                 self.frame.np.pluginhandler.disable_plugin(plugin)
 
             # Uncheck all checkboxes in GUI
-            for plugin in self.pluginlist:
-                self.pluginlist.set(plugin.iter, 1, False)
+            for plugin in self.plugins_model:
+                self.plugins_model.set(plugin.iter, 1, False)
 
     def GetSettings(self):
         return {
@@ -3302,7 +3296,7 @@ class PluginFrame(buildFrame):
         }
 
 
-class SettingsWindow:
+class Settings:
 
     def __init__(self, frame):
 
@@ -3447,11 +3441,11 @@ class SettingsWindow:
         child = self.viewport1.get_child()
         if child:
             self.viewport1.remove(child)
-        model, iter = widget.get_selected()
-        if iter is None:
+        model, iterator = widget.get_selected()
+        if iterator is None:
             self.viewport1.add(self.empty_label)
             return
-        page = model.get_value(iter, 1)
+        page = model.get_value(iterator, 1)
         if page in self.pages:
             self.viewport1.add(self.pages[page].Main)
         else:
@@ -3490,13 +3484,13 @@ class SettingsWindow:
         return True
 
     def GetPosition(self, combobox, option):
-        iter = combobox.get_model().get_iter_first()
-        while iter is not None:
-            word = combobox.get_model().get_value(iter, 0)
+        iterator = combobox.get_model().get_iter_first()
+        while iterator is not None:
+            word = combobox.get_model().get_value(iterator, 0)
             if word.lower() == option or word == option:
-                combobox.set_active_iter(iter)
+                combobox.set_active_iter(iterator)
                 break
-            iter = combobox.get_model().iter_next(iter)
+            iterator = combobox.get_model().iter_next(iterator)
 
     def SetWidgetsData(self, config, options):
         for section, keys in options.items():
@@ -3531,12 +3525,12 @@ class SettingsWindow:
             widget.get_font()
         elif type(widget) is gtk.TreeView and widget.get_model().get_n_columns() == 1:
             wlist = []
-            iter = widget.get_model().get_iter_first()
-            while iter:
-                word = widget.get_model().get_value(iter, 0)
+            iterator = widget.get_model().get_iter_first()
+            while iterator:
+                word = widget.get_model().get_value(iterator, 0)
                 if word is not None:
                     wlist.append(word)
-                iter = widget.get_model().iter_next(iter)
+                iterator = widget.get_model().iter_next(iterator)
             return wlist
 
     def ClearWidget(self, widget):

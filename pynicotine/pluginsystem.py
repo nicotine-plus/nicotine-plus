@@ -64,7 +64,6 @@ class PluginHandler(object):
         self.plugindirs.append(plugindir)
 
         if os.path.isdir(plugindir):
-            # self.load_directory(self.plugindir)
             self.load_enabled()
         else:
             log.add(_("It appears '%s' is not a directory, not loading plugins."), plugindir)
@@ -102,8 +101,6 @@ class PluginHandler(object):
         self.plugin_settings(instance)
         instance.LoadNotification()
 
-        # log.add("Loaded plugin %s (version %s) from %s", (instance.__name__, instance.__version__, modulename))
-        # self.plugins.append((module, instance))
         sys.path = sys.path[1:]
 
         self.loaded_plugins[pluginname] = plugin
@@ -220,7 +217,6 @@ class PluginHandler(object):
 
         except KeyError:
             log.add("No custom settings found for %s", (plugin.__name__,))
-            pass
 
     def TriggerPublicCommandEvent(self, room, command, args):
         return self._TriggerCommand(command, room, args, public_command=True)
@@ -484,7 +480,6 @@ class BasePlugin(object):
 
     __name__ = "BasePlugin"
     __desc__ = "No description provided"
-    # __id__ = "baseplugin_original" # you normally don't have to set this manually
     __version__ = "2016-08-30"
     __publiccommands__ = []
     __privatecommands__ = []

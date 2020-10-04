@@ -601,9 +601,9 @@ class Search:
 
     def OnFilterChanged(self, widget):
 
-        iter = widget.get_active_iter()
+        iterator = widget.get_active_iter()
 
-        if iter:
+        if iterator:
             self.OnRefilter(None)
 
     def PopulateFilters(self):
@@ -653,17 +653,17 @@ class Search:
             return False
 
         model = Combobox.get_model()
-        iter = model.get_iter_first()
+        iterator = model.get_iter_first()
         match = False
 
-        while iter is not None:
+        while iterator is not None:
 
-            value = model.get_value(iter, 0)
+            value = model.get_value(iterator, 0)
 
             if value.strip() == text:
                 match = True
 
-            iter = model.iter_next(iter)
+            iterator = model.iter_next(iterator)
 
         if not match:
             if list:
@@ -759,7 +759,7 @@ class Search:
         if not self.check_filter(row):
             return
 
-        iter = self.AddRowToModel(row)
+        iterator = self.AddRowToModel(row)
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -767,8 +767,8 @@ class Search:
             if self.ExpandButton.get_active():
                 path = None
 
-                if iter is not None:
-                    path = self.resultsmodel.get_path(iter)
+                if iterator is not None:
+                    path = self.resultsmodel.get_path(iterator)
 
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
@@ -806,7 +806,7 @@ class Search:
             parent = None
 
         try:
-            iter = self.resultsmodel.append(parent, row)
+            iterator = self.resultsmodel.append(parent, row)
 
             self.numvisibleresults += 1
         except Exception as e:
@@ -814,9 +814,9 @@ class Search:
             for i in row:
                 types.append(type(i))
             log.add_warning(_("Search row error: %(exception)s %(row)s"), {'exception': e, 'row': row})
-            iter = None
+            iterator = None
 
-        return iter
+        return iterator
 
     def checkDigit(self, filter, value, factorize=True):
 
@@ -1009,9 +1009,9 @@ class Search:
         fmodel = self.ResultsList.get_model()
         sel.unselect_all()
 
-        iter = fmodel.get_iter_first()
+        iterator = fmodel.get_iter_first()
 
-        SelectUserRowIter(fmodel, sel, 1, selected_user, iter)
+        SelectUserRowIter(fmodel, sel, 1, selected_user, iterator)
 
         self.select_results()
 
@@ -1045,24 +1045,24 @@ class Search:
         self.frame.np.config.sections["columns"]["filesearch_columns"] = columns
         self.frame.np.config.sections["columns"]["filesearch_widths"] = widths
 
-    def SelectedResultsCallback(self, model, path, iter):
+    def SelectedResultsCallback(self, model, path, iterator):
 
-        user = model.get_value(iter, 1)
+        user = model.get_value(iterator, 1)
 
         if user is None:
             return
 
         self.selected_users.add(user)
 
-        filepath = model.get_value(iter, 12)
+        filepath = model.get_value(iterator, 12)
 
         if filepath == "":
             # Result is not a file or directory, don't add it
             return
 
-        bitrate = model.get_value(iter, 9)
-        length = model.get_value(iter, 10)
-        size = model.get_value(iter, 14)
+        bitrate = model.get_value(iterator, 9)
+        length = model.get_value(iterator, 10)
+        size = model.get_value(iterator, 14)
 
         self.selected_results.add((user, filepath, size, bitrate, length))
 
@@ -1121,8 +1121,8 @@ class Search:
 
         return True
 
-    def CellDataFunc(self, column, cellrenderer, model, iter, dummy="dummy"):
-        imdl = model.get_value(iter, 3)
+    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
+        imdl = model.get_value(iterator, 3)
         color = imdl == "Y" and "search" or "searchq"
 
         colour = self.frame.np.config.sections["ui"][color] or None
@@ -1137,23 +1137,23 @@ class Search:
 
         return win.ret
 
-    def SelectedResultsAllData(self, model, path, iter, data):
+    def SelectedResultsAllData(self, model, path, iterator, data):
 
-        filename = model.get_value(iter, 7)
+        filename = model.get_value(iterator, 7)
 
         # We only want to see the metadata of files, not directories
         if filename != "":
-            num = model.get_value(iter, 0)
-            user = model.get_value(iter, 1)
-            immediate = model.get_value(iter, 3)
-            speed = model.get_value(iter, 4)
-            queue = model.get_value(iter, 5)
-            directory = model.get_value(iter, 6)
-            size = model.get_value(iter, 8)
-            bitratestr = model.get_value(iter, 9)
-            length = model.get_value(iter, 10)
-            fn = model.get_value(iter, 12)
-            country = model.get_value(iter, 13)
+            num = model.get_value(iterator, 0)
+            user = model.get_value(iterator, 1)
+            immediate = model.get_value(iterator, 3)
+            speed = model.get_value(iterator, 4)
+            queue = model.get_value(iterator, 5)
+            directory = model.get_value(iterator, 6)
+            size = model.get_value(iterator, 8)
+            bitratestr = model.get_value(iterator, 9)
+            length = model.get_value(iterator, 10)
+            fn = model.get_value(iterator, 12)
+            country = model.get_value(iterator, 13)
 
             data[len(data)] = {
                 "user": user,
@@ -1193,13 +1193,13 @@ class Search:
 
     def OnDownloadFilesTo(self, widget):
 
-        dir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
-        if dir is None:
+        if folder is None:
             return
 
-        for dirs in dir:
-            self.OnDownloadFiles(widget, dirs)
+        for folders in folder:
+            self.OnDownloadFiles(widget, folders)
             break
 
     def OnDownloadFolders(self, widget):
@@ -1290,10 +1290,10 @@ class Search:
     def OnToggleFilters(self, widget):
 
         if widget.get_active():
-            self.Filters.show()
+            self.FiltersContainer.show()
             self.OnRefilter(None)
         else:
-            self.Filters.hide()
+            self.FiltersContainer.hide()
             self.ResultsList.set_model(None)
             self.set_filters(0, None, None, None, None, None, "")
             self.ResultsList.set_model(self.resultsmodel)

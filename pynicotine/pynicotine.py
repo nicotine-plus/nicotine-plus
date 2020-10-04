@@ -157,7 +157,7 @@ class NetworkEventProcessor:
         else:
             self.queue.put(slskmessages.SetGeoBlock(None))
 
-        self.serverconn = None
+        self.active_server_conn = None
         self.waitport = None
         self.chatrooms = None
         self.privatechat = None
@@ -170,11 +170,9 @@ class NetworkEventProcessor:
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
-        self.servertimeout = -1
+        self.server_timeout_value = -1
 
         self.has_parent = False
-        self.branchlevel = 0
-        self.branchroot = None
 
         self.requestedInfo = {}
         self.requestedFolders = {}
@@ -277,7 +275,7 @@ class NetworkEventProcessor:
             slskmessages.Recommendations: self.Recommendations,
             slskmessages.ItemRecommendations: self.ItemRecommendations,
             slskmessages.SimilarUsers: self.SimilarUsers,
-            slskmessages.ItemSimilarUsers: self.ItemSimilarUsers,
+            slskmessages.ItemSimilarUsers: self.SimilarUsers,
             slskmessages.UserInterests: self.UserInterests,
             slskmessages.RoomTickerState: self.RoomTickerState,
             slskmessages.RoomTickerAdd: self.RoomTickerAdd,
@@ -333,13 +331,13 @@ class NetworkEventProcessor:
         else:
 
             if message.__class__ is slskmessages.FileRequest:
-                type = 'F'
+                message_type = 'F'
             elif message.__class__ is slskmessages.DistribConn:
-                type = 'D'
+                message_type = 'D'
             else:
-                type = 'P'
+                message_type = 'P'
 
-            init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], type, 0)
+            init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], message_type, 0)
             firewalled = self.config.sections["server"]["firewalled"]
             addr = None
             behindfw = None
@@ -364,7 +362,7 @@ class NetworkEventProcessor:
 
             if not firewalled:
                 token = newId()
-                self.queue.put(slskmessages.ConnectToPeer(token, user, type))
+                self.queue.put(slskmessages.ConnectToPeer(token, user, message_type))
 
             conn = PeerConnection(addr=addr, username=user, msgs=[message], token=token, init=init)
             self.peerconns.append(conn)
@@ -388,16 +386,16 @@ class NetworkEventProcessor:
 
     def setServerTimer(self):
 
-        if self.servertimeout == -1:
-            self.servertimeout = 15
-        elif 0 < self.servertimeout < 600:
-            self.servertimeout = self.servertimeout * 2
+        if self.server_timeout_value == -1:
+            self.server_timeout_value = 15
+        elif 0 < self.server_timeout_value < 600:
+            self.server_timeout_value = self.server_timeout_value * 2
 
-        self.servertimer = threading.Timer(self.servertimeout, self.ServerTimeout)
+        self.servertimer = threading.Timer(self.server_timeout_value, self.ServerTimeout)
         self.servertimer.setDaemon(True)
         self.servertimer.start()
 
-        self.setStatus(_("The server seems to be down or not responding, retrying in %i seconds"), (self.servertimeout))
+        self.setStatus(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))
 
     def ServerTimeout(self):
         if self.config.needConfig() <= 1:
@@ -454,8 +452,8 @@ class NetworkEventProcessor:
 
             self.setServerTimer()
 
-            if self.serverconn is not None:
-                self.serverconn = None
+            if self.active_server_conn is not None:
+                self.active_server_conn = None
 
             self.ui_callback.ConnectError(msg)
 
@@ -522,8 +520,8 @@ class NetworkEventProcessor:
             }
         )
 
-        self.serverconn = msg.conn
-        self.servertimeout = -1
+        self.active_server_conn = msg.conn
+        self.server_timeout_value = -1
         self.users = {}
         self.queue.put(
             slskmessages.Login(
@@ -562,7 +560,7 @@ class NetworkEventProcessor:
 
     def ClosedConnection(self, conn, addr, error=None):
 
-        if conn == self.serverconn:
+        if conn == self.active_server_conn:
 
             self.setStatus(
                 _("Disconnected from server %(host)s:%(port)s"), {
@@ -580,7 +578,7 @@ class NetworkEventProcessor:
             if self.respondDistributedTimer is not None:
                 self.respondDistributedTimer.cancel()
 
-            self.serverconn = None
+            self.active_server_conn = None
             self.watchedusers = []
 
             if self.transfers is not None:
@@ -708,10 +706,10 @@ class NetworkEventProcessor:
 
         if self.privatechat is not None:
 
-            tuple = self.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
+            event = self.pluginhandler.IncomingPrivateChatEvent(msg.user, msg.msg)
 
-            if tuple is not None:
-                (u, msg.msg) = tuple
+            if event is not None:
+                (u, msg.msg) = event
                 self.privatechat.ShowMessage(msg, msg.msg, msg.newmessage)
 
                 self.pluginhandler.IncomingPrivateChatNotification(msg.user, msg.msg)
@@ -1087,60 +1085,60 @@ class NetworkEventProcessor:
                         i.tryaddr += 1
 
                     self.queue.put(slskmessages.GetPeerAddress(user))
+                    return
+
+        if msg.user in self.users:
+            self.users[msg.user].addr = (msg.ip, msg.port)
         else:
+            self.users[msg.user] = UserAddr(addr=(msg.ip, msg.port))
 
-            if msg.user in self.users:
-                self.users[msg.user].addr = (msg.ip, msg.port)
+        if msg.user in self.ipblock_requested:
+
+            if self.ipblock_requested[msg.user]:
+                self.ui_callback.OnUnBlockUser(msg.user)
             else:
-                self.users[msg.user] = UserAddr(addr=(msg.ip, msg.port))
+                self.ui_callback.OnBlockUser(msg.user)
 
-            if msg.user in self.ipblock_requested:
+            del self.ipblock_requested[msg.user]
+            return
 
-                if self.ipblock_requested[msg.user]:
-                    self.ui_callback.OnUnBlockUser(msg.user)
-                else:
-                    self.ui_callback.OnBlockUser(msg.user)
+        if msg.user in self.ipignore_requested:
 
-                del self.ipblock_requested[msg.user]
-                return
+            if self.ipignore_requested[msg.user]:
+                self.ui_callback.OnUnIgnoreUser(msg.user)
+            else:
+                self.ui_callback.OnIgnoreUser(msg.user)
 
-            if msg.user in self.ipignore_requested:
+            del self.ipignore_requested[msg.user]
+            return
 
-                if self.ipignore_requested[msg.user]:
-                    self.ui_callback.OnUnIgnoreUser(msg.user)
-                else:
-                    self.ui_callback.OnIgnoreUser(msg.user)
+        cc = self.geoip.get_all(msg.ip).country_short
 
-                del self.ipignore_requested[msg.user]
-                return
+        if cc == "-":
+            cc = ""
 
-            cc = self.geoip.get_all(msg.ip).country_short
+        self.ui_callback.HasUserFlag(msg.user, "flag_" + cc)
 
-            if cc == "-":
-                cc = ""
+        # From this point on all paths should call
+        # self.pluginhandler.UserResolveNotification precisely once
+        if msg.user in self.PrivateMessageQueue:
+            self.PrivateMessageQueueProcess(msg.user)
+        if msg.user not in self.ip_requested:
+            self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
+            return
 
-            self.ui_callback.HasUserFlag(msg.user, "flag_" + cc)
+        self.ip_requested.remove(msg.user)
 
-            # From this point on all paths should call
-            # self.pluginhandler.UserResolveNotification precisely once
-            if msg.user in self.PrivateMessageQueue:
-                self.PrivateMessageQueueProcess(msg.user)
-            if msg.user not in self.ip_requested:
-                self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port)
-                return
+        if cc != "":
+            cc = " (%s)" % cc
 
-            self.ip_requested.remove(msg.user)
-
-            if cc != "":
-                cc = " (%s)" % cc
-
-            log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
-                'user': msg.user,
-                'ip': msg.ip,
-                'port': msg.port,
-                'country': cc
-            })
-            self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
+        log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
+            'user': msg.user,
+            'ip': msg.ip,
+            'port': msg.port,
+            'country': cc
+        })
+        self.pluginhandler.UserResolveNotification(msg.user, msg.ip, msg.port, cc)
 
     def Relogged(self, msg):
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
@@ -1842,9 +1840,6 @@ class NetworkEventProcessor:
 
     def SimilarUsers(self, msg):
         self.ui_callback.SimilarUsers(msg)
-
-    def ItemSimilarUsers(self, msg):
-        self.ui_callback.ItemSimilarUsers(msg)
 
     def RoomTickerState(self, msg):
 

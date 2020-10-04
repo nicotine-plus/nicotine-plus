@@ -978,11 +978,11 @@ class PrivateChat:
 
             scrolled = self.ChatScroll.get_parent()
             adj = scrolled.get_vadjustment()
-            max = adj.upper - adj.page_size
+            maximum = adj.upper - adj.page_size
             new = adj.value + adj.page_increment
 
-            if new > max:
-                new = max
+            if new > maximum:
+                new = maximum
 
             adj.set_value(new)
 
