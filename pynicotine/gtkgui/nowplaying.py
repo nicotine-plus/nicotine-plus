@@ -345,29 +345,29 @@ class NowPlaying:
 
     def mpd(self):
 
-        format = self.NPFormat.get_child().get_text()
+        np_format = self.NPFormat.get_child().get_text()
 
-        if "$a" in format:
+        if "$a" in np_format:
             output = self.mpd_command("%artist%")
             if output:
                 self.title["artist"] = output
 
-        if "$t" in format:
+        if "$t" in np_format:
             output = self.mpd_command("%title%")
             if output:
                 self.title["title"] = output
 
-        if "$n" in format:
+        if "$n" in np_format:
             output = self.mpd_command("%artist% - %title%")
             if output:
                 self.title["nowplaying"] = output
 
-        if "$f" in format:
+        if "$f" in np_format:
             output = self.mpd_command("%file%")
             if output:
                 self.title["filename"] = output
 
-        if "$b" in format:
+        if "$b" in np_format:
             output = self.mpd_command("%album%")
             if output:
                 self.title["album"] = output
@@ -702,10 +702,10 @@ class NowPlaying:
             log.add_warning(_("ERROR: xmms2: playback current id error: %(error)s"), {"error": result.get_error()})
             return None
 
-        id = result.value()
+        entry_id = result.value()
 
         # Entry 0 is non valid
-        if id == 0:
+        if entry_id == 0:
             log.add_warning(_("ERROR: xmms2: nothing is playing"))
             return None
 

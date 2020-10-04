@@ -270,7 +270,6 @@ class NetworkEventProcessor:
             str: self.notify,
             slskmessages.PopupMessage: self.popup_message,
             slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
-            slskmessages.DebugMessage: self.debug_message,
             slskmessages.GlobalRecommendations: self.global_recommendations,
             slskmessages.Recommendations: self.recommendations,
             slskmessages.ItemRecommendations: self.item_recommendations,
@@ -291,7 +290,7 @@ class NetworkEventProcessor:
             slskmessages.PrivateRoomRemoved: self.private_room_removed,
             slskmessages.PrivateRoomDisown: self.private_room_disown,
             slskmessages.PrivateRoomToggle: self.private_room_toggle,
-            slskmessages.PrivateRoomSomething: self.private_room_something,
+            slskmessages.PrivateRoomSomething: self.dummy_message,
             slskmessages.PrivateRoomOperatorAdded: self.private_room_operator_added,
             slskmessages.PrivateRoomOperatorRemoved: self.private_room_operator_removed,
             slskmessages.PrivateRoomAddOperator: self.private_room_add_operator,
@@ -431,9 +430,6 @@ class NetworkEventProcessor:
 
     def dummy_message(self, msg):
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
-
-    def debug_message(self, msg):
-        log.add(msg.msg, level=msg.debugLevel)
 
     def set_current_connection_count(self, msg):
         self.ui_callback.set_socket_status(msg.msg)
@@ -677,14 +673,12 @@ class NetworkEventProcessor:
 
     def p_message_user(self, msg):
 
-        user = ip = port = None
+        user = None
 
-        # Get peer's username, ip and port
+        # Get peer's username
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
-                if i.addr is not None:
-                    ip, port = i.addr
                 break
 
         if user is None:
@@ -800,9 +794,6 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.toggle_private_rooms(msg.enabled)
         log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
-
-    def private_room_something(self, msg):
-        pass
 
     def leave_room(self, msg):
         if self.chatrooms is not None:

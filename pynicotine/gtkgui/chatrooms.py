@@ -1834,7 +1834,7 @@ class ChatRoom:
 
         self.frame.np.config.write_configuration()
 
-    def get_completion_list(self, ix=0, text="", clist=[]):
+    def get_completion_list(self, ix=0, text="", clist=None):
 
         config = self.frame.np.config.sections["words"]
 
@@ -1845,7 +1845,8 @@ class ChatRoom:
         liststore = completion.get_model()
         liststore.clear()
 
-        self.clist = []
+        if clist is None:
+            clist = []
 
         if not config["tab"]:
             return

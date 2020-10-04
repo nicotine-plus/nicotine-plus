@@ -203,8 +203,8 @@ class UserBrowse:
             self.file_popup_menu.setup(
                 ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_files, self.on_popup_menu_dummy),
-                (1, _("Upload"), self.popup_menu_uploads_files, self.on_popup_menu_dummy),
+                (1, _("Download"), self.popup_menu_downloads_files, None),
+                (1, _("Upload"), self.popup_menu_uploads_files, None),
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("#" + _("Send to _player"), self.on_play_files),
@@ -214,7 +214,7 @@ class UserBrowse:
             self.file_popup_menu.setup(
                 ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_files, self.on_popup_menu_dummy),
+                (1, _("Download"), self.popup_menu_downloads_files, None),
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_url)
             )
@@ -226,12 +226,6 @@ class UserBrowse:
         for name, object in list(self.__dict__.items()):
             if isinstance(object, PopupMenu):
                 object.set_user(self.user)
-
-    def on_popup_menu_dummy(self, widget):
-        pass
-
-    def conn_close(self):
-        pass
 
     def on_popup_menu_file_user(self, widget):
         self.on_popup_menu_users(self.popup_menu_users2)
@@ -385,8 +379,6 @@ class UserBrowse:
             for filedata in files:
                 if filedata[2] < maxsize:
                     self.totalsize += filedata[2]
-                else:
-                    pass
 
         self.AmountShared.set_text(_("Shared: %s") % human_size(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))

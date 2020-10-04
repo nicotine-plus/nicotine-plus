@@ -887,6 +887,7 @@ class IconNotebook:
         self.frame.notifications.clear_page(self, item)
 
     def on_tab_click(self, widget, event, child):
+        # Dummy implementation
         pass
 
     def set_status_image(self, page, status):
