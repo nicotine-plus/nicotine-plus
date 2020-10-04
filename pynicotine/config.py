@@ -96,7 +96,7 @@ class Config:
                 "banlist": [],
                 "ignorelist": [],
                 "ipignorelist": {},
-                "ipblocklist": {"72.172.88.*": "MediaDefender Bots"},
+                "ipblocklist": {},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
                 "private_chatrooms": False
