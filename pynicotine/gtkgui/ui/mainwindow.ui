@@ -29,7 +29,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Connect</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnConnect" swapped="no"/>
+                        <signal name="activate" handler="on_connect" swapped="no"/>
                         <accelerator key="C" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -39,7 +39,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Disconnect</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnDisconnect" swapped="no"/>
+                        <signal name="activate" handler="on_disconnect" swapped="no"/>
                         <accelerator key="D" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -55,7 +55,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Away/Return</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAway" swapped="no"/>
+                        <signal name="activate" handler="on_away" swapped="no"/>
                         <accelerator key="A" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -65,7 +65,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Check _Privileges</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnCheckPrivileges" swapped="no"/>
+                        <signal name="activate" handler="on_check_privileges" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -74,7 +74,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Get _Privileges</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnGetPrivileges" swapped="no"/>
+                        <signal name="activate" handler="on_get_privileges" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -89,7 +89,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Quit</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnExit" swapped="no"/>
+                        <signal name="activate" handler="on_exit" swapped="no"/>
                         <accelerator key="Q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -112,7 +112,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Settings</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnSettings" swapped="no"/>
+                        <signal name="activate" handler="on_settings" swapped="no"/>
                         <accelerator key="s" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -122,7 +122,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Fast Configure</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnFastConfigure" swapped="no"/>
+                        <signal name="activate" handler="on_fast_configure" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -131,7 +131,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Configure _Now Playing</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnNowPlayingConfigure" swapped="no"/>
+                        <signal name="activate" handler="on_now_playing_configure" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -146,7 +146,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Backup Config</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnBackupConfig" swapped="no"/>
+                        <signal name="activate" handler="on_backup_config" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -169,7 +169,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _log window</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnShowLog" swapped="no"/>
+                        <signal name="activate" handler="on_show_log" swapped="no"/>
                         <accelerator key="l" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -179,7 +179,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _debug output controls</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnShowDebug" swapped="no"/>
+                        <signal name="activate" handler="on_show_debug" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -194,7 +194,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _room list</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnShowRoomList" swapped="no"/>
+                        <signal name="activate" handler="on_show_room_list" swapped="no"/>
                         <accelerator key="R" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -204,7 +204,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _flag columns in user lists</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="OnShowFlags" swapped="no"/>
+                        <signal name="toggled" handler="on_show_flags" swapped="no"/>
                         <accelerator key="g" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -214,7 +214,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show _buttons in transfer tabs</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="OnShowTransferButtons" swapped="no"/>
+                        <signal name="toggled" handler="on_show_transfer_buttons" swapped="no"/>
                         <accelerator key="b" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -231,7 +231,7 @@
                         <property name="label" translatable="yes">Buddylist in separate tab</property>
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
-                        <signal name="toggled" handler="OnToggleBuddyList" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_buddy_list" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -242,7 +242,7 @@
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
                         <property name="group">buddylist_in_tab</property>
-                        <signal name="toggled" handler="OnToggleBuddyList" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_buddy_list" swapped="no"/>
                         <accelerator key="U" signal="activate" modifiers="GDK_MOD1_MASK"/>
                       </object>
                     </child>
@@ -254,7 +254,7 @@
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
                         <property name="group">buddylist_in_tab</property>
-                        <signal name="toggled" handler="OnToggleBuddyList" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_buddy_list" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -265,7 +265,7 @@
                         <property name="use_underline">True</property>
                         <property name="draw_as_radio">True</property>
                         <property name="group">buddylist_in_tab</property>
-                        <signal name="toggled" handler="OnToggleBuddyList" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_buddy_list" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -288,7 +288,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Configure shares</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnSettingsShares" swapped="no"/>
+                        <signal name="activate" handler="on_settings_shares" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -303,7 +303,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Rescan Public shares</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnRescan" swapped="no"/>
+                        <signal name="activate" handler="on_rescan" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -312,7 +312,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Rescan B_uddy shares</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnBuddyRescan" swapped="no"/>
+                        <signal name="activate" handler="on_buddy_rescan" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -327,7 +327,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Browse Public shares</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnBrowsePublicShares" swapped="no"/>
+                        <signal name="activate" handler="on_browse_public_shares" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -336,7 +336,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Bro_wse Buddy shares</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnBrowseBuddyShares" swapped="no"/>
+                        <signal name="activate" handler="on_browse_buddy_shares" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -358,7 +358,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Chat Rooms</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnChatRooms" swapped="no"/>
+                        <signal name="activate" handler="on_chat_rooms" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -367,7 +367,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Private Chat</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnPrivateChat" swapped="no"/>
+                        <signal name="activate" handler="on_private_chat" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -376,7 +376,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Downloads</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnDownloads" swapped="no"/>
+                        <signal name="activate" handler="on_downloads" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -385,7 +385,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Uploads</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnUploads" swapped="no"/>
+                        <signal name="activate" handler="on_uploads" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -394,7 +394,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Search Files</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnSearchFiles" swapped="no"/>
+                        <signal name="activate" handler="on_search_files" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -403,7 +403,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">User I_nfo</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnUserInfo" swapped="no"/>
+                        <signal name="activate" handler="on_user_info" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -412,7 +412,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">User _Browse</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnUserBrowse" swapped="no"/>
+                        <signal name="activate" handler="on_user_browse" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -421,7 +421,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">_Interests</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnInterests" swapped="no"/>
+                        <signal name="activate" handler="on_interests" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -430,7 +430,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Buddy _List</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnUserList" swapped="no"/>
+                        <signal name="activate" handler="on_user_list" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -458,7 +458,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _chat room commands</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAboutChatroomCommands" swapped="no"/>
+                        <signal name="activate" handler="on_about_chatroom_commands" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -467,7 +467,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _private chat commands</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAboutPrivateChatCommands" swapped="no"/>
+                        <signal name="activate" handler="on_about_private_chat_commands" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -482,7 +482,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _search filters</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAboutFilters" swapped="no"/>
+                        <signal name="activate" handler="on_about_filters" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -497,7 +497,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Check _latest version</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnCheckLatest" swapped="no"/>
+                        <signal name="activate" handler="on_check_latest" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -506,7 +506,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Report a _bug</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnReportBug" swapped="no"/>
+                        <signal name="activate" handler="on_report_bug" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -521,7 +521,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About _Nicotine+</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="OnAbout" swapped="no"/>
+                        <signal name="activate" handler="on_about" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -550,7 +550,7 @@
                     <property name="can_focus">True</property>
                     <property name="show_border">False</property>
                     <property name="scrollable">True</property>
-                    <signal name="switch-page" handler="OnSwitchPage" swapped="no"/>
+                    <signal name="switch-page" handler="on_switch_page" swapped="no"/>
 
                     <!-- Chat Rooms -->
 
@@ -682,7 +682,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure logging</property>
                                 <property name="image">ConfigureLogImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsLogging" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_logging" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureLogImage">
                                     <property name="can_focus">False</property>
@@ -843,7 +843,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure downloads</property>
                                 <property name="image">ConfigureTransfersImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsDownloads" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureTransfersImage">
                                     <property name="can_focus">False</property>
@@ -1231,7 +1231,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure uploads</property>
                                 <property name="image">ConfigureTransfers2Image</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsUploads" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureTransfers2Image">
                                     <property name="can_focus">False</property>
@@ -1548,7 +1548,7 @@
                                 <property name="tooltip_text" translatable="yes">Clear all searches attempts</property>
                                 <property name="image">ClearSearchHistoryImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnClearSearchHistory" swapped="no"/>
+                                <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ClearSearchHistoryImage">
                                     <property name="can_focus">False</property>
@@ -1567,7 +1567,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnSearch" swapped="no"/>
+                                <signal name="clicked" handler="on_search" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1639,7 +1639,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure searches</property>
                                 <property name="image">ConfigureSearchesImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsSearches" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_searches" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureSearchesImage">
                                     <property name="can_focus">False</property>
@@ -1775,7 +1775,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure user info</property>
                                 <property name="image">ConfigureUserinfoImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsUserinfo" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureUserinfoImage">
                                     <property name="can_focus">False</property>
@@ -1908,7 +1908,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <signal name="clicked" handler="OnLoadFromDisk" swapped="no"/>
+                                <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1946,7 +1946,7 @@
                                 <property name="tooltip_text" translatable="yes">Configure shares</property>
                                 <property name="image">ConfigureSharesImage</property>
                                 <property name="always_show_image">True</property>
-                                <signal name="clicked" handler="OnSettingsShares" swapped="no"/>
+                                <signal name="clicked" handler="on_settings_shares" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureSharesImage">
                                     <property name="can_focus">False</property>
@@ -2077,7 +2077,7 @@
                                               <object class="GtkEntry" id="AddLikeEntry">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <signal name="activate" handler="OnAddThingILike" swapped="no"/>
+                                                <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
                                               </object>
                                               <packing>
                                                 <property name="expand">True</property>
@@ -2092,7 +2092,7 @@
                                                 <property name="receives_default">False</property>
                                                 <property name="image">add1</property>
                                                 <property name="always_show_image">True</property>
-                                                <signal name="clicked" handler="OnAddThingILike" swapped="no"/>
+                                                <signal name="clicked" handler="on_add_thing_i_like" swapped="no"/>
                                                 <child>
                                                   <object class="GtkImage" id="add1">
                                                     <property name="can_focus">False</property>
@@ -2157,7 +2157,7 @@
                                               <object class="GtkEntry" id="AddDislikeEntry">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <signal name="activate" handler="OnAddThingIDislike" swapped="no"/>
+                                                <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
                                               </object>
                                               <packing>
                                                 <property name="expand">True</property>
@@ -2172,7 +2172,7 @@
                                                 <property name="receives_default">False</property>
                                                 <property name="image">add2</property>
                                                 <property name="always_show_image">True</property>
-                                                <signal name="clicked" handler="OnAddThingIDislike" swapped="no"/>
+                                                <signal name="clicked" handler="on_add_thing_i_dislike" swapped="no"/>
                                                 <child>
                                                   <object class="GtkImage" id="add2">
                                                     <property name="can_focus">False</property>
@@ -2247,7 +2247,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">False</property>
-                                                    <signal name="clicked" handler="OnRecommendationsClicked" swapped="no"/>
+                                                    <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
@@ -2283,7 +2283,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">False</property>
-                                                    <signal name="clicked" handler="OnGlobalRecommendationsClicked" swapped="no"/>
+                                                    <signal name="clicked" handler="on_global_recommendations_clicked" swapped="no"/>
                                                     <child>
                                                       <object class="GtkBox">
                                                         <property name="visible">True</property>
@@ -2435,7 +2435,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">False</property>
-                                                <signal name="clicked" handler="OnSimilarUsersClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_similar_users_clicked" swapped="no"/>
                                                 <child>
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
@@ -2605,7 +2605,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugWarnings" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_warnings" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2620,7 +2620,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugSearches" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_searches" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2635,7 +2635,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugConnections" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_connections" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2650,7 +2650,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugMessages" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_messages" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2665,7 +2665,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugTransfers" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_transfers" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2680,7 +2680,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="OnDebugStatistics" swapped="no"/>
+                        <signal name="toggled" handler="on_debug_statistics" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -2748,7 +2748,7 @@
                         <property name="right_margin">10</property>
                         <property name="top_margin">5</property>
                         <property name="bottom_margin">5</property>
-                        <signal name="button-press-event" handler="OnPopupLogMenu" swapped="no"/>
+                        <signal name="button-press-event" handler="on_popup_log_menu" swapped="no"/>
                       </object>
                     </child>
                   </object>

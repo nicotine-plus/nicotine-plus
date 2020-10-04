@@ -35,7 +35,7 @@
               <object class="GtkSearchEntry" id="SearchRooms">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="activate" handler="OnSearchRoom" swapped="no"/>
+                <signal name="activate" handler="on_search_room" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -51,7 +51,7 @@
                 <property name="tooltip_text" translatable="yes">Refresh room list</property>
                 <property name="image">refresh</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="OnRefresh" swapped="no"/>
+                <signal name="clicked" handler="on_refresh" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="refresh">
                     <property name="can_focus">False</property>

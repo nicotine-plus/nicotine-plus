@@ -21,7 +21,7 @@ import os
 from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.utils import AppendLine
+from pynicotine.gtkgui.utils import append_line
 
 
 class RoomWall:
@@ -35,7 +35,7 @@ class RoomWall:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomwall.ui"))
 
-        self.RoomWallDialog = builder.get_object("RoomWallDialog")
+        self.room_wall_dialog = builder.get_object("RoomWallDialog")
         builder.connect_signals(self)
 
         for i in builder.get_objects():
@@ -44,14 +44,14 @@ class RoomWall:
             except TypeError:
                 pass
 
-        self.RoomWallDialog.set_transient_for(frame.MainWindow)
+        self.room_wall_dialog.set_transient_for(frame.MainWindow)
 
-        self.RoomWallDialog.connect("destroy", self.hide)
-        self.RoomWallDialog.connect("destroy-event", self.hide)
-        self.RoomWallDialog.connect("delete-event", self.hide)
-        self.RoomWallDialog.connect("delete_event", self.hide)
+        self.room_wall_dialog.connect("destroy", self.hide)
+        self.room_wall_dialog.connect("destroy-event", self.hide)
+        self.room_wall_dialog.connect("delete-event", self.hide)
+        self.room_wall_dialog.connect("delete_event", self.hide)
 
-    def OnSetRoomWallMessage(self, widget):
+    def on_set_room_wall_message(self, widget):
         result = self.RoomWallEntry.get_text()
         self.RoomWallEntry.set_text("")
 
@@ -65,20 +65,20 @@ class RoomWall:
         login = config["server"]["login"]
 
         if result:
-            AppendLine(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False, scroll=False)
+            append_line(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False, scroll=False)
 
-        tickers = self.room.Tickers.get_tickers()
-        AppendLine(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False, scroll=False)
+        tickers = self.room.tickers.get_tickers()
+        append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False, scroll=False)
 
     def hide(self, w=None, event=None):
         self.RoomWallList.get_buffer().set_text("")
-        self.RoomWallDialog.hide()
+        self.room_wall_dialog.hide()
         return True
 
     def show(self):
-        tickers = self.room.Tickers.get_tickers()
-        AppendLine(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
-        self.RoomWallDialog.show()
+        tickers = self.room.tickers.get_tickers()
+        append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
+        self.room_wall_dialog.show()
 
 
 class Tickers:

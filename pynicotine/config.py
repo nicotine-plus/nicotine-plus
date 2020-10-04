@@ -57,11 +57,11 @@ class Config:
     This class holds configuration information and provides the
     following methods:
 
-    needConfig() - returns true if configuration information is incomplete
-    readConfig() - reads configuration information from file
+    need_config() - returns true if configuration information is incomplete
+    read_config() - reads configuration information from file
     setConfig(config_info_dict) - sets configuration information
-    writeConfiguration - writes configuration information to file
-    writeDownloadQueue - writes download queue to file
+    write_configuration - writes configuration information to file
+    write_download_queue - writes download queue to file
 
     The actual configuration information is stored as a two-level dictionary.
     First-level keys are config sections, second-level keys are config
@@ -77,7 +77,7 @@ class Config:
         try:
             self.parser.read([self.filename], encoding="utf-8")
         except UnicodeDecodeError:
-            self.convertConfig()
+            self.convert_config()
             self.parser.read([self.filename], encoding="utf-8")
 
         LOGDIR = os.path.join(data_dir, "logs")
@@ -97,7 +97,7 @@ class Config:
                 "banlist": [],
                 "ignorelist": [],
                 "ipignorelist": {},
-                "ipblocklist": {"72.172.88.*": "MediaDefender Bots"},
+                "ipblocklist": {},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
                 "private_chatrooms": False
@@ -414,7 +414,7 @@ class Config:
         except Exception:
             self.aliases = {}
 
-    def convertConfig(self):
+    def convert_config(self):
         """ Converts the config to utf-8.
         Mainly for upgrading Windows build. (22 July, 2020) """
 
@@ -437,7 +437,7 @@ class Config:
 
         os.remove(self.filename + ".conv")
 
-    def needConfig(self):
+    def need_config(self):
 
         errorlevel = 0
 
@@ -479,7 +479,7 @@ class Config:
 
         return errorlevel
 
-    def readConfig(self):
+    def read_config(self):
 
         self.sections['transfers']['downloads'] = []
 
@@ -515,64 +515,64 @@ class Config:
         # Transition from 1.2.16 -> 1.4.0
         # Do the cleanup early so we don't get the annoying
         # 'Unknown config option ...' message
-        self.removeOldOption("transfers", "pmqueueddir")
-        self.removeOldOption("server", "lastportstatuscheck")
-        self.removeOldOption("server", "serverlist")
-        self.removeOldOption("userinfo", "descrutf8")
-        self.removeOldOption("ui", "enabletrans")
-        self.removeOldOption("ui", "mozembed")
-        self.removeOldOption("ui", "open_in_mozembed")
-        self.removeOldOption("ui", "tooltips")
-        self.removeOldOption("ui", "transalpha")
-        self.removeOldOption("ui", "transfilter")
-        self.removeOldOption("ui", "transtint")
-        self.removeOldOption("language", "language")
-        self.removeOldOption("language", "setlanguage")
-        self.removeOldSection("language")
+        self.remove_old_option("transfers", "pmqueueddir")
+        self.remove_old_option("server", "lastportstatuscheck")
+        self.remove_old_option("server", "serverlist")
+        self.remove_old_option("userinfo", "descrutf8")
+        self.remove_old_option("ui", "enabletrans")
+        self.remove_old_option("ui", "mozembed")
+        self.remove_old_option("ui", "open_in_mozembed")
+        self.remove_old_option("ui", "tooltips")
+        self.remove_old_option("ui", "transalpha")
+        self.remove_old_option("ui", "transfilter")
+        self.remove_old_option("ui", "transtint")
+        self.remove_old_option("language", "language")
+        self.remove_old_option("language", "setlanguage")
+        self.remove_old_section("language")
 
         # Transition from 1.4.1 -> 1.4.2
-        self.removeOldOption("columns", "downloads")
-        self.removeOldOption("columns", "uploads")
+        self.remove_old_option("columns", "downloads")
+        self.remove_old_option("columns", "uploads")
 
         # Remove old encoding settings (1.4.3)
-        self.removeOldOption("server", "enc")
-        self.removeOldOption("server", "fallbackencodings")
-        self.removeOldOption("server", "roomencoding")
-        self.removeOldOption("server", "userencoding")
+        self.remove_old_option("server", "enc")
+        self.remove_old_option("server", "fallbackencodings")
+        self.remove_old_option("server", "roomencoding")
+        self.remove_old_option("server", "userencoding")
 
         # Remove soundcommand config, replaced by GSound (1.4.3)
-        self.removeOldOption("ui", "soundcommand")
+        self.remove_old_option("ui", "soundcommand")
 
         # Remove old column widths in preparation for "group by folder"-feature
-        self.removeOldOption("columns", "search")
-        self.removeOldOption("columns", "search_widths")
-        self.removeOldOption("columns", "downloads_columns")
-        self.removeOldOption("columns", "downloads_widths")
-        self.removeOldOption("columns", "uploads_columns")
-        self.removeOldOption("columns", "uploads_widths")
+        self.remove_old_option("columns", "search")
+        self.remove_old_option("columns", "search_widths")
+        self.remove_old_option("columns", "downloads_columns")
+        self.remove_old_option("columns", "downloads_widths")
+        self.remove_old_option("columns", "uploads_columns")
+        self.remove_old_option("columns", "uploads_widths")
 
         # Remove auto-retry failed downloads-option, this is now default behavior
-        self.removeOldOption("transfers", "autoretry_downloads")
+        self.remove_old_option("transfers", "autoretry_downloads")
 
         # Remove old notification/sound settings
-        self.removeOldOption("transfers", "shownotification")
-        self.removeOldOption("transfers", "shownotificationperfolder")
-        self.removeOldOption("ui", "soundenabled")
-        self.removeOldOption("ui", "soundtheme")
-        self.removeOldOption("ui", "tab_colors")
-        self.removeOldOption("ui", "tab_icons")
+        self.remove_old_option("transfers", "shownotification")
+        self.remove_old_option("transfers", "shownotificationperfolder")
+        self.remove_old_option("ui", "soundenabled")
+        self.remove_old_option("ui", "soundtheme")
+        self.remove_old_option("ui", "tab_colors")
+        self.remove_old_option("ui", "tab_icons")
 
         # Remove dropped offline user text color in search results
-        self.removeOldOption("ui", "searchoffline")
+        self.remove_old_option("ui", "searchoffline")
 
         # Seems to be superseded by ("server", "private_chatrooms")
-        self.removeOldOption("private_rooms", "enabled")
+        self.remove_old_option("private_rooms", "enabled")
 
         # Remove everything ticker-related, no longer necessary after the introduction of room walls
-        self.removeOldSection("ticker")
+        self.remove_old_section("ticker")
 
         # Remove old log folder option, superseded by individual log folders for transfers and debug messages
-        self.removeOldOption("logging", "logsdir")
+        self.remove_old_option("logging", "logsdir")
 
         # Checking for unknown section/options
         unknown1 = [
@@ -626,15 +626,15 @@ class Config:
         # Setting the port range in numerical order
         self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
 
-    def removeOldOption(self, section, option):
+    def remove_old_option(self, section, option):
         if section in self.parser.sections() and option in self.parser.options(section):
             self.parser.remove_option(section, option)
 
-    def removeOldSection(self, section):
+    def remove_old_section(self, section):
         if section in self.parser.sections():
             self.parser.remove_section(section)
 
-    def writeDownloadQueue(self):
+    def write_download_queue(self):
 
         realfile = os.path.join(self.data_dir, 'transfers.pickle')
         tmpfile = realfile + '.tmp'
@@ -666,7 +666,7 @@ class Config:
             except Exception:
                 pass
 
-    def writeConfiguration(self):
+    def write_configuration(self):
 
         external_sections = [
             "sharedfiles", "sharedfilesstreams", "wordindex", "fileindex",
@@ -734,7 +734,7 @@ class Config:
         except OSError as error:
             log.add_warning(_("Can't rename config file, error: %s"), error)
 
-    def writeConfigBackup(self, filename=None):
+    def write_config_backup(self, filename=None):
 
         if filename is None:
             filename = "%s backup %s.tar.bz2", (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
@@ -759,7 +759,7 @@ class Config:
 
         return (0, filename)
 
-    def writeAliases(self):
+    def write_aliases(self):
 
         try:
             f = open(self.filename + ".alias", "wb")
@@ -777,14 +777,14 @@ class Config:
             except Exception:
                 pass
 
-    def AddAlias(self, rest):
+    def add_alias(self, rest):
         if rest:
             args = rest.split(" ", 1)
             if len(args) == 2:
                 if args[0] in ("alias", "unalias"):
                     return "I will not alias that!\n"
                 self.aliases[args[0]] = args[1]
-                self.writeAliases()
+                self.write_aliases()
             if args[0] in self.aliases:
                 return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
             else:
@@ -795,11 +795,11 @@ class Config:
                 m = m + "%s: %s\n" % (key, value)
             return m + "\n"
 
-    def Unalias(self, rest):
+    def unalias(self, rest):
         if rest and rest in self.aliases:
             x = self.aliases[rest]
             del self.aliases[rest]
-            self.writeAliases()
+            self.write_aliases()
             return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
         else:
             return _("No such alias (%(alias)s)\n") % {'alias': rest}

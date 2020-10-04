@@ -34,7 +34,7 @@ from gettext import gettext as _
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.utils import GetUserDirectories
+from pynicotine.utils import get_user_directories
 
 if sys.platform == "win32":
     # Use semidbm for faster shelves on Windows
@@ -71,7 +71,7 @@ class Shares:
             ]
         )
 
-        self.CompressedSharesBuddy = self.CompressedSharesNormal = None
+        self.compressed_shares_buddy = self.compressed_shares_normal = None
         self.compress_shares("normal")
         self.compress_shares("buddy")
         self.newbuddyshares = self.newnormalshares = False
@@ -193,12 +193,12 @@ class Shares:
             return
 
         m = slskmessages.SharedFileList(None, streams)
-        _thread.start_new_thread(m.makeNetworkMessage, (0, True))
+        _thread.start_new_thread(m.make_network_message, (0, True))
 
         if sharestype == "normal":
-            self.CompressedSharesNormal = m
+            self.compressed_shares_normal = m
         elif sharestype == "buddy":
-            self.CompressedSharesBuddy = m
+            self.compressed_shares_buddy = m
 
     def close_shares(self):
         for db in [
@@ -236,19 +236,19 @@ class Shares:
 
     """ Scanning """
 
-    def RebuildShares(self):
-        self._RescanShares("normal", rebuild=True)
+    def rebuild_shares(self):
+        self._rescan_shares("normal", rebuild=True)
 
-    def RescanShares(self, rebuild=False):
-        self._RescanShares("normal", rebuild)
+    def rescan_shares(self, rebuild=False):
+        self._rescan_shares("normal", rebuild)
 
-    def RebuildBuddyShares(self):
-        self._RescanShares("buddy", rebuild=True)
+    def rebuild_buddy_shares(self):
+        self._rescan_shares("buddy", rebuild=True)
 
-    def RescanBuddyShares(self, rebuild=False):
-        self._RescanShares("buddy", rebuild)
+    def rescan_buddy_shares(self, rebuild=False):
+        self._rescan_shares("buddy", rebuild)
 
-    def _RescanShares(self, sharestype, rebuild=False):
+    def _rescan_shares(self, sharestype, rebuild=False):
 
         if sharestype == "normal":
             log.add(_("Rescanning normal shares..."))
@@ -276,8 +276,8 @@ class Shares:
 
         try:
             if self.ui_callback:
-                self.ui_callback.SetScanProgress(sharestype, 0.0)
-                self.ui_callback.ShowScanProgress(sharestype)
+                self.ui_callback.set_scan_progress(sharestype, 0.0)
+                self.ui_callback.show_scan_progress(sharestype)
 
             self.rescan_dirs(
                 sharestype,
@@ -289,18 +289,18 @@ class Shares:
             )
 
             if self.ui_callback:
-                self.ui_callback.RescanFinished(sharestype)
+                self.ui_callback.rescan_finished(sharestype)
 
             self.compress_shares(sharestype)
             self.send_num_shared_folders_files()
 
         except Exception as ex:
-            config_dir, data_dir = GetUserDirectories()
+            config_dir, data_dir = get_user_directories()
             log.add(
                 _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s"), (data_dir, ex)
             )
             if self.ui_callback:
-                self.ui_callback.HideScanProgress(sharestype)
+                self.ui_callback.hide_scan_progress(sharestype)
 
             raise
 
@@ -515,7 +515,7 @@ class Shares:
                     percent = float("%.2f" % (float(count) / len(mtimes) * 0.75))
 
                     if percent > lastpercent and percent <= 1.0:
-                        self.ui_callback.SetScanProgress(sharestype, percent)
+                        self.ui_callback.set_scan_progress(sharestype, percent)
                         lastpercent = percent
 
                 if not rebuild and folder in oldmtimes:
@@ -610,29 +610,29 @@ class Shares:
 
         return streams
 
-    def get_dir_stream(self, dir):
+    def get_dir_stream(self, folder):
         """ Pack all files and metadata in directory """
 
         message = slskmessages.SlskMessage()
         stream = bytearray()
-        stream.extend(message.packObject(len(dir)))
+        stream.extend(message.pack_object(len(folder)))
 
-        for fileinfo in dir:
+        for fileinfo in folder:
             stream.extend(bytes([1]))
-            stream.extend(message.packObject(fileinfo[0]))
-            stream.extend(message.packObject(fileinfo[1], unsignedlonglong=True))
+            stream.extend(message.pack_object(fileinfo[0]))
+            stream.extend(message.pack_object(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is not None:
                 try:
-                    stream.extend(message.packObject('mp3'))
-                    stream.extend(message.packObject(3))
+                    stream.extend(message.pack_object('mp3'))
+                    stream.extend(message.pack_object(3))
 
-                    stream.extend(message.packObject(0))
-                    stream.extend(message.packObject(fileinfo[2][0]))
-                    stream.extend(message.packObject(1))
-                    stream.extend(message.packObject(fileinfo[3]))
-                    stream.extend(message.packObject(2))
-                    stream.extend(message.packObject(fileinfo[2][1]))
+                    stream.extend(message.pack_object(0))
+                    stream.extend(message.pack_object(fileinfo[2][0]))
+                    stream.extend(message.pack_object(1))
+                    stream.extend(message.pack_object(fileinfo[3]))
+                    stream.extend(message.pack_object(2))
+                    stream.extend(message.pack_object(fileinfo[2][1]))
                 except Exception:
                     log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s"), {
                         'file': fileinfo[0],
@@ -640,11 +640,11 @@ class Shares:
                         'length': fileinfo[3],
                         'vbr': fileinfo[2][1]
                     })
-                    stream.extend(message.packObject(''))
-                    stream.extend(message.packObject(0))
+                    stream.extend(message.pack_object(''))
+                    stream.extend(message.pack_object(0))
             else:
-                stream.extend(message.packObject(''))
-                stream.extend(message.packObject(0))
+                stream.extend(message.pack_object(''))
+                stream.extend(message.pack_object(0))
 
         return stream
 
@@ -679,7 +679,7 @@ class Shares:
                 percent = float("%.2f" % (float(count) / len(sharedfiles) * 0.75))
 
                 if percent > lastpercent and percent <= 1.0:
-                    self.ui_callback.SetScanProgress(sharestype, percent)
+                    self.ui_callback.set_scan_progress(sharestype, percent)
                     lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
@@ -756,7 +756,7 @@ class Shares:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, reason = self.np.CheckUser(user, None)
+        checkuser, reason = self.np.check_user(user, None)
 
         if not checkuser:
             return
@@ -775,8 +775,8 @@ class Shares:
         if self.np.transfers is not None:
 
             numresults = min(len(resultlist), maxresults)
-            queuesizes = self.np.transfers.getUploadQueueSizes()
-            slotsavail = self.np.transfers.allowNewUploads()
+            queuesizes = self.np.transfers.get_upload_queue_sizes()
+            slotsavail = self.np.transfers.allow_new_uploads()
 
             if reason == "geoip":
                 geoip = 1
@@ -797,7 +797,7 @@ class Shares:
                 self.np.speed, queuesizes, fifoqueue, numresults
             )
 
-            self.np.ProcessRequestToPeer(user, message)
+            self.np.process_request_to_peer(user, message)
 
             if direct:
                 log.add_search(

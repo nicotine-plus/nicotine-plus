@@ -53,7 +53,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="halign">start</property>
-                    <signal name="clicked" handler="OnDefaultFont" swapped="no"/>
+                    <signal name="clicked" handler="on_default_font" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

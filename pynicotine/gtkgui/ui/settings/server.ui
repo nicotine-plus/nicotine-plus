@@ -138,7 +138,7 @@
                     <property name="receives_default">True</property>
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_text" translatable="yes">Change password</property>
-                    <signal name="clicked" handler="OnChangePassword" swapped="no"/>
+                    <signal name="clicked" handler="on_change_password" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -263,7 +263,7 @@
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnCheckPort" swapped="no"/>
+                <signal name="clicked" handler="on_check_port" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -30,11 +30,11 @@ import platform
 import sys
 from gettext import gettext as _
 
-from pynicotine.utils import ApplyTranslation
-from pynicotine.utils import GetUserDirectories
+from pynicotine.utils import apply_translation
+from pynicotine.utils import get_user_directories
 
 # Setting gettext and locale
-ApplyTranslation()
+apply_translation()
 
 # Detect if we're running on Windows
 win32 = platform.system().startswith("Win")
@@ -154,7 +154,7 @@ def rescanshares(config, data_dir):
     from pynicotine.shares import Shares
 
     config = Config(config, data_dir)
-    config.readConfig()
+    config.read_config()
 
     # Show normal log messages in console
     console.set_log_levels((0,1))
@@ -165,10 +165,10 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
     queue = queue.Queue(0)
     shares = Shares(None, config, queue)
 
-    shares.RescanShares()
+    shares.rescan_shares()
 
     if config.sections["transfers"]["enablebuddyshares"]:
-        shares.RescanBuddyShares()
+        shares.rescan_buddy_shares()
 
 
 def run():
@@ -207,7 +207,7 @@ def run():
 
         config = os.path.join(data_dir, "config", "config")
     else:
-        config_dir, data_dir = GetUserDirectories()
+        config_dir, data_dir = get_user_directories()
         config = os.path.join(config_dir, 'config')
 
     plugins = os.path.join(data_dir, 'plugins')

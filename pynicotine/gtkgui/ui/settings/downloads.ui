@@ -118,7 +118,7 @@
                     <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="OnRemoteDownloads" swapped="no"/>
+                    <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -269,7 +269,7 @@
                     <property name="action">select-folder</property>
                     <property name="show_hidden">True</property>
                     <property name="title" translatable="yes">Select a folder</property>
-                    <signal name="selection-changed" handler="OnChooseDownloadDir" swapped="no"/>
+                    <signal name="selection-changed" handler="on_choose_download_dir" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -321,7 +321,7 @@
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnEnableFiltersToggle" swapped="no"/>
+                <signal name="toggled" handler="on_enable_filters_toggle" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -362,7 +362,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnVerifyFilter" swapped="no"/>
+                        <signal name="clicked" handler="on_verify_filter" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -468,7 +468,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnAddFilter" swapped="no"/>
+                        <signal name="clicked" handler="on_add_filter" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -513,7 +513,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnEditFilter" swapped="no"/>
+                        <signal name="clicked" handler="on_edit_filter" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -558,7 +558,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnRemoveFilter" swapped="no"/>
+                        <signal name="clicked" handler="on_remove_filter" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -603,7 +603,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal name="clicked" handler="OnDefaultFilters" swapped="no"/>
+                        <signal name="clicked" handler="on_default_filters" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

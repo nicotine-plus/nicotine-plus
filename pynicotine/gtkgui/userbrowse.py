@@ -31,24 +31,24 @@ from gi.repository import Gtk as gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.dialogs import ComboBoxDialog
-from pynicotine.gtkgui.utils import HideColumns
-from pynicotine.gtkgui.utils import HumanSize
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.utils import hide_columns
+from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
+from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.logfacility import log
-from pynicotine.utils import CleanFile
-from pynicotine.utils import executeCommand
-from pynicotine.utils import GetUserDirectories
-from pynicotine.utils import GetResultBitrateLength
+from pynicotine.utils import clean_file
+from pynicotine.utils import execute_command
+from pynicotine.utils import get_user_directories
+from pynicotine.utils import get_result_bitrate_length
 
 
 class UserBrowse:
 
     def __init__(self, userbrowses, user, conn):
-        _config_dir, self.data_dir = GetUserDirectories()
+        _config_dir, self.data_dir = get_user_directories()
 
         # Build the window
         builder = gtk.Builder()
@@ -56,7 +56,7 @@ class UserBrowse:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
 
-        self.UserBrowseTab = builder.get_object("UserBrowseTab")
+        self.user_browse_tab = builder.get_object("UserBrowseTab")
 
         for i in builder.get_objects():
             try:
@@ -64,8 +64,8 @@ class UserBrowse:
             except TypeError:
                 pass
 
-        self.UserBrowseTab.remove(self.Main)
-        self.UserBrowseTab.destroy()
+        self.user_browse_tab.remove(self.Main)
+        self.user_browse_tab.destroy()
 
         builder.connect_signals(self)
 
@@ -91,14 +91,14 @@ class UserBrowse:
         self.files = {}
         self.totalsize = 0
 
-        self.DirStore = gtk.TreeStore(str, str)
+        self.dir_store = gtk.TreeStore(str, str)
 
         self.FolderTreeView.set_headers_visible(True)
         self.FolderTreeView.set_enable_tree_lines(True)
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.FolderTreeView,
-            [_("Directories"), -1, "text", self.CellDataFunc]  # 0
+            [_("Directories"), -1, "text", self.cell_data_func]  # 0
         )
         cols[0].set_sort_column_id(0)
 
@@ -106,46 +106,46 @@ class UserBrowse:
         self.popup_menu_users2 = PopupMenu(self.frame, False)
         for menu in [self.popup_menu_users, self.popup_menu_users2]:
             menu.setup(
-                ("#" + _("Send _message"), menu.OnSendMessage),
-                ("#" + _("Show IP a_ddress"), menu.OnShowIPaddress),
-                ("#" + _("Get user i_nfo"), menu.OnGetUserInfo),
-                ("#" + _("Gi_ve privileges"), menu.OnGivePrivileges),
+                ("#" + _("Send _message"), menu.on_send_message),
+                ("#" + _("Show IP a_ddress"), menu.on_show_ip_address),
+                ("#" + _("Get user i_nfo"), menu.on_get_user_info),
+                ("#" + _("Gi_ve privileges"), menu.on_give_privileges),
                 ("", None),
-                ("$" + _("_Add user to list"), menu.OnAddToList),
-                ("$" + _("_Ban this user"), menu.OnBanUser),
-                ("$" + _("_Ignore this user"), menu.OnIgnoreUser)
+                ("$" + _("_Add user to list"), menu.on_add_to_list),
+                ("$" + _("_Ban this user"), menu.on_ban_user),
+                ("$" + _("_Ignore this user"), menu.on_ignore_user)
             )
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
         self.popup_menu_downloads_folders.setup(
-            ("#" + _("_Download directory"), self.OnDownloadDirectory),
-            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo),
-            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive),
-            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
+            ("#" + _("_Download directory"), self.on_download_directory),
+            ("#" + _("Download directory _to..."), self.on_download_directory_to),
+            ("#" + _("Download _recursive"), self.on_download_directory_recursive),
+            ("#" + _("Download r_ecursive to..."), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_downloads_files = PopupMenu(self.frame, False)
         self.popup_menu_downloads_files.setup(
-            ("#" + _("_Download file(s)"), self.OnDownloadFiles),
-            ("#" + _("Download _to..."), self.OnDownloadFilesTo),
+            ("#" + _("_Download file(s)"), self.on_download_files),
+            ("#" + _("Download _to..."), self.on_download_files_to),
             ("", None),
-            ("#" + _("_Download directory"), self.OnDownloadDirectory),
-            ("#" + _("Download directory _to..."), self.OnDownloadDirectoryTo),
-            ("#" + _("Download _recursive"), self.OnDownloadDirectoryRecursive),
-            ("#" + _("Download r_ecursive to..."), self.OnDownloadDirectoryRecursiveTo)
+            ("#" + _("_Download directory"), self.on_download_directory),
+            ("#" + _("Download directory _to..."), self.on_download_directory_to),
+            ("#" + _("Download _recursive"), self.on_download_directory_recursive),
+            ("#" + _("Download r_ecursive to..."), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_uploads_folders = PopupMenu(self.frame, False)
         self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
-            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo)
+            ("#" + _("Upload Directory to..."), self.on_upload_directory_to),
+            ("#" + _("Upload Directory recursive to..."), self.on_upload_directory_recursive_to)
         )
 
         self.popup_menu_uploads_files = PopupMenu(self.frame, False)
         self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Directory to..."), self.OnUploadDirectoryTo),
-            ("#" + _("Upload Directory recursive to..."), self.OnUploadDirectoryRecursiveTo),
-            ("#" + _("Up_load file(s)"), self.OnUploadFiles)
+            ("#" + _("Upload Directory to..."), self.on_upload_directory_to),
+            ("#" + _("Upload Directory recursive to..."), self.on_upload_directory_recursive_to),
+            ("#" + _("Up_load file(s)"), self.on_upload_files)
         )
 
         self.folder_popup_menu = PopupMenu(self.frame)
@@ -153,45 +153,45 @@ class UserBrowse:
 
         if user == self.frame.np.config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
-                ("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+                ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy),
-                (1, _("Upload"), self.popup_menu_uploads_folders, self.OnPopupMenuDummy),
+                (1, _("Download"), self.popup_menu_downloads_folders, self.on_popup_menu_dummy),
+                (1, _("Upload"), self.popup_menu_uploads_folders, self.on_popup_menu_dummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyDirURL),
-                ("#" + _("Open in File Manager"), self.OnFileManager)
+                ("#" + _("Copy _URL"), self.on_copy_dir_url),
+                ("#" + _("Open in File Manager"), self.on_file_manager)
             )
         else:
             self.folder_popup_menu.setup(
-                ("USERMENU", _("User"), self.popup_menu_users, self.OnPopupMenuFolderUser),
+                ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, self.OnPopupMenuDummy),
+                (1, _("Download"), self.popup_menu_downloads_folders, self.on_popup_menu_dummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyDirURL)
+                ("#" + _("Copy _URL"), self.on_copy_dir_url)
             )
 
-        self.FolderTreeView.connect("button_press_event", self.OnFolderClicked)
-        self.FolderTreeView.get_selection().connect("changed", self.OnSelectDir)
+        self.FolderTreeView.connect("button_press_event", self.on_folder_clicked)
+        self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
 
         # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
-        self.FileStore = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
+        self.file_store = gtk.ListStore(str, str, str, str, gobject.TYPE_INT64, int, str)
 
-        self.FileTreeView.set_model(self.FileStore)
+        self.FileTreeView.set_model(self.file_store)
         widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.FileTreeView,
-            [_("Filename"), widths[0], "text", self.CellDataFunc],
-            [_("Size"), widths[1], "number", self.CellDataFunc],
-            [_("Bitrate"), widths[2], "number", self.CellDataFunc],
-            [_("Length"), widths[3], "number", self.CellDataFunc]
+            [_("Filename"), widths[0], "text", self.cell_data_func],
+            [_("Size"), widths[1], "number", self.cell_data_func],
+            [_("Bitrate"), widths[2], "number", self.cell_data_func],
+            [_("Length"), widths[3], "number", self.cell_data_func]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
         cols[2].set_sort_column_id(2)
         cols[3].set_sort_column_id(5)
-        self.FileStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.file_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        HideColumns(cols, self.frame.np.config.sections["columns"]["userbrowse"])
+        hide_columns(cols, self.frame.np.config.sections["columns"]["userbrowse"])
 
         self.FileTreeView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
@@ -201,45 +201,45 @@ class UserBrowse:
 
         if user == self.frame.np.config.sections["server"]["login"]:
             self.file_popup_menu.setup(
-                ("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+                ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy),
-                (1, _("Upload"), self.popup_menu_uploads_files, self.OnPopupMenuDummy),
+                (1, _("Download"), self.popup_menu_downloads_files, self.on_popup_menu_dummy),
+                (1, _("Upload"), self.popup_menu_uploads_files, self.on_popup_menu_dummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyURL),
-                ("#" + _("Send to _player"), self.OnPlayFiles),
-                ("#" + _("Open in File Manager"), self.OnFileManager)
+                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("Send to _player"), self.on_play_files),
+                ("#" + _("Open in File Manager"), self.on_file_manager)
             )
         else:
             self.file_popup_menu.setup(
-                ("USERMENU", "User", self.popup_menu_users2, self.OnPopupMenuFileUser),
+                ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_files, self.OnPopupMenuDummy),
+                (1, _("Download"), self.popup_menu_downloads_files, self.on_popup_menu_dummy),
                 ("", None),
-                ("#" + _("Copy _URL"), self.OnCopyURL)
+                ("#" + _("Copy _URL"), self.on_copy_url)
             )
 
-        self.FileTreeView.connect("button_press_event", self.OnFileClicked)
+        self.FileTreeView.connect("button_press_event", self.on_file_clicked)
 
-        self.ChangeColours()
+        self.change_colours()
 
         for name, object in list(self.__dict__.items()):
             if isinstance(object, PopupMenu):
                 object.set_user(self.user)
 
-    def OnPopupMenuDummy(self, widget):
+    def on_popup_menu_dummy(self, widget):
         pass
 
-    def ConnClose(self):
+    def conn_close(self):
         pass
 
-    def OnPopupMenuFileUser(self, widget):
-        self.OnPopupMenuUsers(self.popup_menu_users2)
+    def on_popup_menu_file_user(self, widget):
+        self.on_popup_menu_users(self.popup_menu_users2)
 
-    def OnPopupMenuFolderUser(self, widget):
-        self.OnPopupMenuUsers(self.popup_menu_users)
+    def on_popup_menu_folder_user(self, widget):
+        self.on_popup_menu_users(self.popup_menu_users)
 
-    def OnPopupMenuUsers(self, menu):
+    def on_popup_menu_users(self, menu):
 
         items = menu.get_children()
 
@@ -257,19 +257,19 @@ class UserBrowse:
 
         return True
 
-    def ChangeColours(self):
-        self.frame.SetTextBG(self.SearchEntry)
+    def change_colours(self):
+        self.frame.set_text_bg(self.SearchEntry)
 
-        self.frame.ChangeListFont(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
-        self.frame.ChangeListFont(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+        self.frame.change_list_font(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+        self.frame.change_list_font(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
 
-    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
             colour = None
         cellrenderer.set_property("foreground", colour)
 
-    def OnExpand(self, widget):
+    def on_expand(self, widget):
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
@@ -281,26 +281,26 @@ class UserBrowse:
             dirs = sorted(self.directories.keys())
 
             if dirs != []:
-                self.SetDirectory(dirs[0])
+                self.set_directory(dirs[0])
             else:
-                self.SetDirectory(None)
+                self.set_directory(None)
 
-    def OnFolderClicked(self, widget, event):
+    def on_folder_clicked(self, widget, event):
 
         pathinfo = widget.get_path_at_pos(event.x, event.y)
 
         if pathinfo is not None:
 
             if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.OnDownloadDirectory(widget)
+                self.on_download_directory(widget)
                 return True
 
             elif event.button == 3:
-                return self.OnFolderPopupMenu(widget, event)
+                return self.on_folder_popup_menu(widget, event)
 
         return False
 
-    def OnFolderPopupMenu(self, widget, event):
+    def on_folder_popup_menu(self, widget, event):
 
         act = True
         if self.selected_folder is None:
@@ -312,14 +312,14 @@ class UserBrowse:
 
         self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def SelectedFilesCallback(self, model, path, iterator):
-        rawfilename = self.FileStore.get_value(iterator, 6)
+    def selected_files_callback(self, model, path, iterator):
+        rawfilename = self.file_store.get_value(iterator, 6)
         self.selected_files.append(rawfilename)
 
-    def OnFileClicked(self, widget, event):
+    def on_file_clicked(self, widget, event):
 
         if event.button == 3:
-            return self.OnFilePopupMenu(widget, event)
+            return self.on_file_popup_menu(widget, event)
 
         else:
             pathinfo = widget.get_path_at_pos(event.x, event.y)
@@ -329,19 +329,19 @@ class UserBrowse:
 
             elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.selected_files = []
-                self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
-                self.OnDownloadFiles(widget)
+                self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
+                self.on_download_files(widget)
                 self.FileTreeView.get_selection().unselect_all()
                 return True
 
         return False
 
-    def OnFilePopupMenu(self, widget, event):
+    def on_file_popup_menu(self, widget, event):
 
-        SetTreeviewSelectedRow(widget, event)
+        set_treeview_selected_row(widget, event)
 
         self.selected_files = []
-        self.FileTreeView.get_selection().selected_foreach(self.SelectedFilesCallback)
+        self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
 
         files = True
         multiple = False
@@ -370,14 +370,14 @@ class UserBrowse:
 
         return True
 
-    def MakeNewModel(self, list):
+    def make_new_model(self, list):
 
         self.shares = list
         self.selected_folder = None
         self.selected_files = []
         self.directories.clear()
         self.files.clear()
-        self.DirStore.clear()
+        self.dir_store.clear()
 
         # Compute the number of shared dirs and total size
         self.totalsize = 0
@@ -388,16 +388,16 @@ class UserBrowse:
                 else:
                     pass
 
-        self.AmountShared.set_text(_("Shared: %s") % HumanSize(self.totalsize))
+        self.AmountShared.set_text(_("Shared: %s") % human_size(self.totalsize))
         self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
 
         # Generate the directory tree and select first directory
-        currentdir = self.BrowseGetDirs()
+        currentdir = self.browse_get_dirs()
 
         sel = self.FolderTreeView.get_selection()
         sel.unselect_all()
         if currentdir in self.directories:
-            path = self.DirStore.get_path(self.directories[currentdir])
+            path = self.dir_store.get_path(self.directories[currentdir])
             if path is not None:
                 sel.select_path(path)
 
@@ -410,7 +410,7 @@ class UserBrowse:
         else:
             self.FolderTreeView.collapse_all()
 
-    def BrowseGetDirs(self):
+    def browse_get_dirs(self):
 
         directory = ""
         dirseparator = '\\'
@@ -420,10 +420,10 @@ class UserBrowse:
         if self.shares == []:
 
             # Set the model of the treeviex
-            self.FolderTreeView.set_model(self.DirStore)
+            self.FolderTreeView.set_model(self.dir_store)
 
             # Sort the DirStore
-            self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
+            self.dir_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
             return directory
 
@@ -462,7 +462,7 @@ class UserBrowse:
                     # Other sudirs futher down the path are attached to their parent
                     current_path = dirseparator.join([path, subdir])
 
-                self.directories[current_path] = self.DirStore.append(parent, [subdir, current_path])
+                self.directories[current_path] = self.dir_store.append(parent, [subdir, current_path])
 
                 # If there are subdirs futher down the path: recurse
                 if len(dictdir[subdir]):
@@ -489,17 +489,17 @@ class UserBrowse:
         directory = sortlist[0]
 
         # Sort the DirStore
-        self.DirStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.dir_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         # Set the model of the treeviex
-        self.FolderTreeView.set_model(self.DirStore)
+        self.FolderTreeView.set_model(self.dir_store)
 
         return directory
 
-    def SetDirectory(self, directory):
+    def set_directory(self, directory):
 
         self.selected_folder = directory
-        self.FileStore.clear()
+        self.file_store.clear()
         self.files.clear()
 
         found_dir = False
@@ -526,19 +526,19 @@ class UserBrowse:
             except ValueError:
                 size = 0
 
-            f = [file[1], HumanSize(size)]
+            f = [file[1], human_size(size)]
 
-            h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
+            h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
             f += [h_bitrate, h_length]
 
             f += [int(size), rl, file[1]]
 
             try:
-                self.files[f[0]] = self.FileStore.append(f)
+                self.files[f[0]] = self.file_store.append(f)
             except Exception as msg:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"), {'folder': directory, 'error': msg})
 
-    def OnSave(self, widget):
+    def on_save(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
 
         try:
@@ -550,30 +550,32 @@ class UserBrowse:
         try:
             import pickle as mypickle
             import bz2
-            sharesfile = bz2.BZ2File(os.path.join(sharesdir, CleanFile(self.user)), 'w')
+            sharesfile = bz2.BZ2File(os.path.join(sharesdir, clean_file(self.user)), 'w')
             mypickle.dump(self.shares, sharesfile, protocol=mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
 
-    def saveColumns(self):
+    def save_columns(self):
 
         columns = []
         widths = []
+
         for column in self.FileTreeView.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
+
         self.frame.np.config.sections["columns"]["userbrowse"] = columns
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
-    def ShowInfo(self, msg):
+    def show_info(self, msg):
         self.conn = None
-        self.MakeNewModel(msg.list)
+        self.make_new_model(msg.list)
 
-    def LoadShares(self, list):
-        self.MakeNewModel(list)
+    def load_shares(self, list):
+        self.make_new_model(list)
 
-    def UpdateGauge(self, msg):
+    def update_gauge(self, msg):
 
         if msg.total == 0 or msg.bytes == 0:
             fraction = 0.0
@@ -584,7 +586,7 @@ class UserBrowse:
 
         self.progressbar1.set_fraction(fraction)
 
-    def OnSelectDir(self, selection):
+    def on_select_dir(self, selection):
 
         model, iterator = selection.get_selected()
 
@@ -596,9 +598,9 @@ class UserBrowse:
         directory = model.get_value(iterator, 1)
 
         self.FolderTreeView.expand_to_path(path)
-        self.SetDirectory(directory)
+        self.set_directory(directory)
 
-    def OnResort(self, column, column_id):
+    def on_resort(self, column, column_id):
 
         model = self.FileTreeView.get_model()
 
@@ -622,42 +624,42 @@ class UserBrowse:
         cols[column_id].set_sort_indicator(True)
         model.sort_col = column_id
 
-        self.OnResort(column, column_id)
+        self.on_resort(column, column_id)
 
-    def OnDownloadDirectory(self, widget):
+    def on_download_directory(self, widget):
 
         if self.selected_folder is not None:
-            self.DownloadDirectory(self.selected_folder)
+            self.download_directory(self.selected_folder)
 
-    def OnDownloadDirectoryRecursive(self, widget):
+    def on_download_directory_recursive(self, widget):
 
-        self.DownloadDirectory(self.selected_folder, "", 1)
+        self.download_directory(self.selected_folder, "", 1)
 
-    def OnDownloadDirectoryTo(self, widget):
+    def on_download_directory_to(self, widget):
 
-        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
-
-        if folder is None:
-            return
-
-        try:
-            self.DownloadDirectory(self.selected_folder, os.path.join(folder[0], ""))
-        except IOError:  # failed to open
-            log.add('Failed to open %r for reading', folder[0])  # notify user
-
-    def OnDownloadDirectoryRecursiveTo(self, widget):
-
-        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if folder is None:
             return
 
         try:
-            self.DownloadDirectory(self.selected_folder, os.path.join(folder[0], ""), 1)
+            self.download_directory(self.selected_folder, os.path.join(folder[0], ""))
         except IOError:  # failed to open
             log.add('Failed to open %r for reading', folder[0])  # notify user
 
-    def DownloadDirectory(self, folder, prefix="", recurse=0):
+    def on_download_directory_recursive_to(self, widget):
+
+        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+
+        if folder is None:
+            return
+
+        try:
+            self.download_directory(self.selected_folder, os.path.join(folder[0], ""), 1)
+        except IOError:  # failed to open
+            log.add('Failed to open %r for reading', folder[0])  # notify user
+
+    def download_directory(self, folder, prefix="", recurse=0):
 
         if folder is None:
             return
@@ -665,7 +667,7 @@ class UserBrowse:
         ldir = prefix + folder.split("\\")[-1]
 
         # Check if folder already exists on system
-        ldir = self.frame.np.transfers.FolderDestination(self.user, ldir)
+        ldir = self.frame.np.transfers.folder_destination(self.user, ldir)
 
         for d, f in self.shares:
 
@@ -698,9 +700,9 @@ class UserBrowse:
 
                 path = "\\".join([folder, file[1]])
                 size = file[2]
-                h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
+                h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
 
-                self.frame.np.transfers.getFile(
+                self.frame.np.transfers.get_file(
                     self.user,
                     path,
                     ldir,
@@ -715,9 +717,9 @@ class UserBrowse:
 
         for subdir, subf in self.shares:
             if dir in subdir and dir != subdir:
-                self.DownloadDirectory(subdir, os.path.join(ldir, ""))
+                self.download_directory(subdir, os.path.join(ldir, ""))
 
-    def OnDownloadFiles(self, widget, prefix=""):
+    def on_download_files(self, widget, prefix=""):
 
         folder = self.selected_folder
 
@@ -735,15 +737,15 @@ class UserBrowse:
 
                 path = "\\".join([folder, file[1]])
                 size = file[2]
-                h_bitrate, bitrate, h_length = GetResultBitrateLength(size, file[4])
+                h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
 
                 # Get the file
-                self.frame.np.transfers.getFile(self.user, path, prefix, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
+                self.frame.np.transfers.get_file(self.user, path, prefix, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
 
             # We have found the wanted directory: we can break out of the loop
             break
 
-    def OnDownloadFilesTo(self, widget):
+    def on_download_files_to(self, widget):
 
         try:
             _, folder = self.selected_folder.rsplit("\\", 1)
@@ -753,19 +755,19 @@ class UserBrowse:
         path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], folder)
 
         if os.path.exists(path) and os.path.isdir(path):
-            ldir = ChooseDir(self.frame.MainWindow, path, multichoice=False)
+            ldir = choose_dir(self.frame.MainWindow, path, multichoice=False)
         else:
-            ldir = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+            ldir = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if ldir is None:
             return
 
         try:
-            self.OnDownloadFiles(widget, ldir[0])
+            self.on_download_files(widget, ldir[0])
         except IOError:  # failed to open
             log.add('failed to open %r for reading', ldir[0])  # notify user
 
-    def OnUploadDirectoryTo(self, widget, recurse=0):
+    def on_upload_directory_to(self, widget, recurse=0):
 
         folder = self.selected_folder
 
@@ -777,7 +779,7 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_("Upload Directory's Contents"),
             message=_('Enter the User you wish to upload to:'),
@@ -787,14 +789,14 @@ class UserBrowse:
         if user is None or user == "":
             return
 
-        self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
 
-        self.UploadDirectoryTo(user, folder, recurse)
+        self.upload_directory_to(user, folder, recurse)
 
-    def OnUploadDirectoryRecursiveTo(self, widget):
-        self.OnUploadDirectoryTo(widget, recurse=1)
+    def on_upload_directory_recursive_to(self, widget):
+        self.on_upload_directory_to(widget, recurse=1)
 
-    def UploadDirectoryTo(self, user, folder, recurse=0):
+    def upload_directory_to(self, user, folder, recurse=0):
 
         if folder == "" or folder is None or user is None or user == "":
             return
@@ -812,17 +814,17 @@ class UserBrowse:
                 filename = "\\".join([folder, file[1]])
                 realfilename = "\\".join([realpath, file[1]])
                 size = file[2]
-                self.frame.np.transfers.pushFile(user, filename, realfilename, ldir, size=size)
-                self.frame.np.transfers.checkUploadQueue()
+                self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size)
+                self.frame.np.transfers.check_upload_queue()
 
         if not recurse:
             return
 
         for subdir, subf in self.shares:
             if folder in subdir and folder != subdir:
-                self.UploadDirectoryTo(user, subdir, recurse)
+                self.upload_directory_to(user, subdir, recurse)
 
-    def OnUploadFiles(self, widget, prefix=""):
+    def on_upload_files(self, widget, prefix=""):
 
         folder = self.selected_folder
         realpath = self.frame.np.shares.virtual2real(folder)
@@ -833,7 +835,7 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = ComboBoxDialog(
+        user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s)'),
             message=_('Enter the User you wish to upload to:'),
@@ -843,16 +845,16 @@ class UserBrowse:
         if user is None or user == "":
             return
 
-        self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
 
         for fn in self.selected_files:
-            self.frame.np.transfers.pushFile(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
-            self.frame.np.transfers.checkUploadQueue()
+            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
+            self.frame.np.transfers.check_upload_queue()
 
-    def OnPlayFiles(self, widget, prefix=""):
-        start_new_thread(self._OnPlayFiles, (widget, prefix))
+    def on_play_files(self, widget, prefix=""):
+        start_new_thread(self._on_play_files, (widget, prefix))
 
-    def _OnPlayFiles(self, widget, prefix=""):
+    def _on_play_files(self, widget, prefix=""):
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
         executable = self.frame.np.config.sections["players"]["default"]
@@ -863,9 +865,9 @@ class UserBrowse:
         for fn in self.selected_files:
             file = os.sep.join([path, fn])
             if os.path.exists(file):
-                executeCommand(executable, file, background=False)
+                execute_command(executable, file, background=False)
 
-    def FindMatches(self):
+    def find_matches(self):
 
         self.search_list = []
 
@@ -880,7 +882,7 @@ class UserBrowse:
                     if directory not in self.search_list:
                         self.search_list.append(directory)
 
-    def OnSearch(self, widget):
+    def on_search(self, widget):
 
         query = self.SearchEntry.get_text().lower()
 
@@ -891,7 +893,7 @@ class UserBrowse:
             self.query = query
             if self.query == "":
                 return
-            self.FindMatches()
+            self.find_matches()
 
         if self.search_list != []:
 
@@ -901,7 +903,7 @@ class UserBrowse:
             self.search_list.sort()
             directory = self.search_list[self.search_position]
 
-            path = self.DirStore.get_path(self.directories[directory])
+            path = self.dir_store.get_path(self.directories[directory])
             self.FolderTreeView.expand_to_path(path)
             self.FolderTreeView.set_cursor(path)
 
@@ -917,7 +919,7 @@ class UserBrowse:
             resultfiles.sort()
 
             for fn in resultfiles:
-                path = self.FileStore.get_path(self.files[fn])
+                path = self.file_store.get_path(self.files[fn])
 
                 # Select each matching file in directory
                 sel.select_path(path)
@@ -929,27 +931,27 @@ class UserBrowse:
         else:
             self.search_position = 0
 
-    def OnClose(self, widget):
+    def on_close(self, widget):
 
         del self.userbrowses.users[self.user]
-        self.frame.np.ClosePeerConnection(self.conn)
+        self.frame.np.close_peer_connection(self.conn)
 
         self.userbrowses.remove_page(self.Main)
         self.Main.destroy()
 
-    def OnRefresh(self, widget):
+    def on_refresh(self, widget):
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
         self.SaveButton.set_sensitive(False)
-        self.frame.BrowseUser(self.user)
+        self.frame.browse_user(self.user)
 
-    def OnCopyURL(self, widget):
+    def on_copy_url(self, widget):
 
         if self.selected_files != [] and self.selected_files is not None:
             path = "\\".join([self.selected_folder, self.selected_files[0]])
-            self.frame.SetClipboardURL(self.user, path)
+            self.frame.set_clipboard_url(self.user, path)
 
-    def OnCopyDirURL(self, widget):
+    def on_copy_dir_url(self, widget):
 
         if self.selected_folder is None:
             return
@@ -958,9 +960,9 @@ class UserBrowse:
         if path[:-1] != "/":
             path += "/"
 
-        self.frame.SetClipboardURL(self.user, path)
+        self.frame.set_clipboard_url(self.user, path)
 
-    def OnFileManager(self, widget):
+    def on_file_manager(self, widget):
 
         if self.selected_folder is None:
             return
@@ -969,4 +971,4 @@ class UserBrowse:
         executable = self.frame.np.config.sections["ui"]["filemanager"]
 
         if "$" in executable:
-            executeCommand(executable, path)
+            execute_command(executable, path)

@@ -35,31 +35,31 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
-from pynicotine.gtkgui.utils import AppendLine
-from pynicotine.gtkgui.utils import HideColumns
-from pynicotine.gtkgui.utils import Humanize
-from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import hide_columns
+from pynicotine.gtkgui.utils import humanize
+from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import PressHeader
-from pynicotine.gtkgui.utils import ScrollBottom
+from pynicotine.gtkgui.utils import press_header
+from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
-from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.logfacility import log
-from pynicotine.utils import CleanFile
+from pynicotine.utils import clean_file
 from pynicotine.utils import cmp
 from pynicotine.utils import write_log
 
 
-def GetCompletion(part, list):
-    matches = GetCompletions(part, list)
+def get_completion(part, list):
+    matches = get_completions(part, list)
     if len(matches) == 0:
         return None, 0
     if len(matches) == 1:
@@ -68,7 +68,7 @@ def GetCompletion(part, list):
         return commonprefix([x.lower() for x in matches]), 0
 
 
-def GetCompletions(part, list):
+def get_completions(part, list):
     lowerpart = part.lower()
     matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
     return matches
@@ -83,93 +83,93 @@ class RoomsControl:
         "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/toggle", "/tickers"
     }
 
-    def __init__(self, ChatNotebook):
+    def __init__(self, chat_notebook):
 
-        self.frame = ChatNotebook.frame
-        self.ChatNotebook = ChatNotebook
+        self.frame = chat_notebook.frame
+        self.chat_notebook = chat_notebook
 
         self.joinedrooms = {}
         self.autojoin = 1
         self.rooms = []
         config = self.frame.np.config.sections
-        self.PrivateRooms = config["private_rooms"]["rooms"]
+        self.private_rooms = config["private_rooms"]["rooms"]
 
         # Config cleanup
-        for room, data in self.PrivateRooms.items():
+        for room, data in self.private_rooms.items():
             if "owner" not in data:
-                self.PrivateRooms[room]["owner"] = None
+                self.private_rooms[room]["owner"] = None
             if "operator" in data:
-                del self.PrivateRooms[room]["operator"]
+                del self.private_rooms[room]["operator"]
 
         self.clist = []
         self.roomsmodel = gtk.ListStore(str, int, int)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 
-        self.cols = InitialiseColumns(
+        self.cols = initialise_columns(
             self.frame.roomlist.RoomsList,
-            [_("Room"), 180, "text", self.RoomStatus],
-            [_("Users"), 0, "number", self.RoomStatus]
+            [_("Room"), 180, "text", self.room_status],
+            [_("Users"), 0, "number", self.room_status]
         )
         self.cols[0].set_sort_column_id(0)
         self.cols[1].set_sort_column_id(1)
 
-        self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
+        self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
 
         for i in range(2):
             parent = self.cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent.connect('button_press_event', press_header)
 
         self.popup_room = None
         self.popup_menu = PopupMenu(self.frame).setup(
-            ("#" + _("Join Room"), self.OnPopupJoin),
-            ("#" + _("Leave Room"), self.OnPopupLeave),
-            ("#" + _("Create Room"), self.OnPopupCreatePublicRoom),
+            ("#" + _("Join Room"), self.on_popup_join),
+            ("#" + _("Leave Room"), self.on_popup_leave),
+            ("#" + _("Create Room"), self.on_popup_create_public_room),
             ("", None),
-            ("#" + _("Create Private Room"), self.OnPopupCreatePrivateRoom),
-            ("#" + _("Disown Private Room"), self.OnPopupPrivateRoomDisown),
-            ("#" + _("Cancel Room Membership"), self.OnPopupPrivateRoomDismember),
+            ("#" + _("Create Private Room"), self.on_popup_create_private_room),
+            ("#" + _("Disown Private Room"), self.on_popup_private_room_disown),
+            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember),
             ("", None),
-            ("#" + _("Join Public Room"), self.OnJoinPublicRoom),
+            ("#" + _("Join Public Room"), self.on_join_public_room),
             ("", None),
-            ("#" + _("Refresh"), self.OnPopupRefresh)
+            ("#" + _("Refresh"), self.on_popup_refresh)
         )
 
         items = self.popup_menu.get_children()
-        self.Menu_Join, self.Menu_Leave, self.Menu_Create_Room, self.Menu_Empty1, self.Menu_PrivateRoom_Create, self.Menu_PrivateRoom_Disown, self.Menu_PrivateRoom_Dismember, self.Menu_Empty2, self.Menu_JoinPublicRoom, self.Menu_Empty3, self.Menu_Refresh = items
+        self.menu_join, self.menu_leave, self.menu_create_room, self.menu_empty1, self.menu_private_room_create, self.menu_private_room_disown, self.menu_private_room_dismember, self.menu_empty2, self.menu_join_public_room, self.menu_empty3, self.menu_refresh = items
 
-        self.frame.roomlist.RoomsList.connect("button_press_event", self.OnListClicked)
+        self.frame.roomlist.RoomsList.connect("button_press_event", self.on_list_clicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
-        self.ChatNotebook.Notebook.connect("switch-page", self.OnSwitchPage)
-        self.ChatNotebook.Notebook.connect("page-reordered", self.OnReorderedPage)
+        self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
+        self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
 
-        self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
+        self.frame.set_text_bg(self.frame.roomlist.SearchRooms)
 
-    def IsPrivateRoomOwned(self, room):
+    def is_private_room_owned(self, room):
 
-        if room in self.PrivateRooms:
-            if self.PrivateRooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+        if room in self.private_rooms:
+            if self.private_rooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
                 return True
 
         return False
 
-    def IsPrivateRoomMember(self, room):
+    def is_private_room_member(self, room):
 
-        if room in self.PrivateRooms:
+        if room in self.private_rooms:
             return True
 
         return False
 
-    def IsPrivateRoomOperator(self, room):
+    def is_private_room_operator(self, room):
 
-        if room in self.PrivateRooms:
-            if self.frame.np.config.sections["server"]["login"] in self.PrivateRooms[room]["operators"]:
+        if room in self.private_rooms:
+            if self.frame.np.config.sections["server"]["login"] in self.private_rooms[room]["operators"]:
                 return True
 
         return False
 
-    def PrivateRoomsSort(self, model, iter1, iter2, column):
+    def private_rooms_sort(self, model, iter1, iter2, column):
 
         try:
             private1 = model.get_value(iter1, 2) * 10000
@@ -185,20 +185,23 @@ class RoomsControl:
 
         return cmp(private1, private2)
 
-    def RoomStatus(self, column, cellrenderer, model, iterator, dummy='dummy'):
+    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
+
         if self.roomsmodel.get_value(iterator, 2) >= 2:
             cellrenderer.set_property("underline", pango.Underline.SINGLE)
             cellrenderer.set_property("weight", pango.Weight.BOLD)
+
         elif self.roomsmodel.get_value(iterator, 2) >= 1:
             cellrenderer.set_property("weight", pango.Weight.BOLD)
             cellrenderer.set_property("underline", pango.Underline.NONE)
+
         else:
             cellrenderer.set_property("weight", pango.Weight.NORMAL)
             cellrenderer.set_property("underline", pango.Underline.NONE)
 
-        self.frame.CellDataFunc(column, cellrenderer, model, iterator)
+        self.frame.cell_data_func(column, cellrenderer, model, iterator)
 
-    def OnReorderedPage(self, notebook, page, page_num, force=0):
+    def on_reordered_page(self, notebook, page, page_num, force=0):
 
         room_tab_order = {}
 
@@ -227,7 +230,7 @@ class RoomsControl:
         # Save
         self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
 
-    def OnSwitchPage(self, notebook, page, page_num, force=0):
+    def on_switch_page(self, notebook, page, page_num, force=0):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not force:
             return
@@ -237,30 +240,30 @@ class RoomsControl:
                 GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
-                self.frame.notifications.Clear("rooms", None, name)
+                self.frame.notifications.clear("rooms", None, name)
 
-    def ClearNotifications(self):
+    def clear_notifications(self):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox):
             return
 
-        page = self.ChatNotebook.get_nth_page(self.ChatNotebook.get_current_page())
+        page = self.chat_notebook.get_nth_page(self.chat_notebook.get_current_page())
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
                 # Remove hilite
-                self.frame.notifications.Clear("rooms", None, name)
+                self.frame.notifications.clear("rooms", None, name)
 
-    def Focused(self, page, focused):
+    def focused(self, page, focused):
 
         if not focused:
             return
 
         for name, room in self.users.items():
             if room.Main == page:
-                self.frame.notifications.Clear("rooms", name)
+                self.frame.notifications.clear("rooms", name)
 
-    def OnListClicked(self, widget, event):
+    def on_list_clicked(self, widget, event):
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
 
@@ -273,11 +276,11 @@ class RoomsControl:
 
             return True
         elif event.button == 3:
-            return self.OnPopupMenu(widget, event)
+            return self.on_popup_menu(widget, event)
 
         return False
 
-    def OnPopupMenu(self, widget, event):
+    def on_popup_menu(self, widget, event):
 
         if event.button != 3 or self.roomsmodel is None:
             return
@@ -299,20 +302,20 @@ class RoomsControl:
         self.popup_room = room
         prooms_enabled = True
 
-        self.Menu_Join.set_sensitive(act[0])
-        self.Menu_Leave.set_sensitive(act[1])
+        self.menu_join.set_sensitive(act[0])
+        self.menu_leave.set_sensitive(act[1])
 
-        self.Menu_PrivateRoom_Disown.set_sensitive(self.IsPrivateRoomOwned(self.popup_room))  # Disown
-        self.Menu_PrivateRoom_Dismember.set_sensitive((prooms_enabled and self.IsPrivateRoomMember(self.popup_room)))  # Dismember
+        self.menu_private_room_disown.set_sensitive(self.is_private_room_owned(self.popup_room))  # Disown
+        self.menu_private_room_dismember.set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))  # Dismember
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnPopupJoin(self, widget):
+    def on_popup_join(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
 
-    def OnPopupCreatePublicRoom(self, widget):
+    def on_popup_create_public_room(self, widget):
 
-        room = EntryDialog(
+        room = entry_dialog(
             self.frame.MainWindow,
             title=_("Create Public Room"),
             message=_('Enter the name of the public room you wish to create')
@@ -321,7 +324,7 @@ class RoomsControl:
         if room:
             self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
-    def OnJoinPublicRoom(self, widget):
+    def on_join_public_room(self, widget):
 
         # Everything but queue.put shouldn't be here, but the server doesn't send a confirmation when joining
         # public room. It would be clearer if we faked such a message ourself somewhere in the core
@@ -337,15 +340,15 @@ class RoomsControl:
         except Exception as e:
             print(e)
 
-        self.ChatNotebook.append_page(room.Main, 'Public ', room.OnLeave, angle)
+        self.chat_notebook.append_page(room.Main, 'Public ', room.on_leave, angle)
 
-        room.CountUsers()
+        room.count_users()
 
         self.frame.np.queue.put(slskmessages.JoinPublicRoom())
 
-    def OnPopupCreatePrivateRoom(self, widget):
+    def on_popup_create_private_room(self, widget):
 
-        room = EntryDialog(
+        room = entry_dialog(
             self.frame.MainWindow,
             title=_("Create Private Room"),
             message=_('Enter the name of the private room you wish to create')
@@ -354,30 +357,30 @@ class RoomsControl:
         if room:
             self.frame.np.queue.put(slskmessages.JoinRoom(room, 1))
 
-    def OnPopupPrivateRoomDisown(self, widget):
+    def on_popup_private_room_disown(self, widget):
 
-        if self.IsPrivateRoomOwned(self.popup_room):
+        if self.is_private_room_owned(self.popup_room):
             self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
-            del self.PrivateRooms[self.popup_room]
-            self.SetPrivateRooms()
+            del self.private_rooms[self.popup_room]
+            self.set_private_rooms()
 
-    def OnPopupPrivateRoomDismember(self, widget):
+    def on_popup_private_room_dismember(self, widget):
 
-        if self.IsPrivateRoomMember(self.popup_room):
+        if self.is_private_room_member(self.popup_room):
             self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
-            del self.PrivateRooms[self.popup_room]
-            self.SetPrivateRooms()
+            del self.private_rooms[self.popup_room]
+            self.set_private_rooms()
 
-    def OnPopupLeave(self, widget):
+    def on_popup_leave(self, widget):
         self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
 
-    def OnPopupRefresh(self, widget):
+    def on_popup_refresh(self, widget):
         self.frame.np.queue.put(slskmessages.RoomList())
 
-    def JoinRoom(self, msg):
+    def join_room(self, msg):
 
         if msg.room in self.joinedrooms:
-            self.joinedrooms[msg.room].Rejoined(msg.users)
+            self.joinedrooms[msg.room].rejoined(msg.users)
             return
 
         tab = ChatRoom(self, msg.room, msg.users)
@@ -385,7 +388,7 @@ class RoomsControl:
         self.joinedrooms[msg.room] = tab
 
         if msg.private is not None:
-            self.CreatePrivateRoom(msg.room, msg.owner, msg.operators)
+            self.create_private_room(msg.room, msg.owner, msg.operators)
 
         angle = 0
         try:
@@ -393,13 +396,13 @@ class RoomsControl:
         except Exception as e:
             print(e)
 
-        self.ChatNotebook.append_page(tab.Main, msg.room, tab.OnLeave, angle)
+        self.chat_notebook.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
-        self.frame.searchroomslist[msg.room] = self.frame.RoomSearchCombo_List.append([(msg.room)])
+        self.frame.searchroomslist[msg.room] = self.frame.room_search_combo_model.append([(msg.room)])
 
-        tab.CountUsers()
+        tab.count_users()
 
-    def SetRoomList(self, msg):
+    def set_room_list(self, msg):
 
         if self.autojoin:
 
@@ -411,7 +414,7 @@ class RoomsControl:
 
             for room in room_list:
                 if room == 'Public ':
-                    self.OnJoinPublicRoom(None)
+                    self.on_join_public_room(None)
                 else:
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
@@ -426,227 +429,228 @@ class RoomsControl:
             self.roomsmodel.append([room, users, 0])
             self.rooms.append(room)
 
-        self.SetPrivateRooms(msg.ownedprivaterooms, msg.otherprivaterooms)
+        self.set_private_rooms(msg.ownedprivaterooms, msg.otherprivaterooms)
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
-        self.roomsmodel.set_sort_func(1, self.PrivateRoomsSort, 1)
+        self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
         self.roomsmodel.set_sort_column_id(1, gtk.SortType.DESCENDING)
-        self.roomsmodel.set_default_sort_func(self.PrivateRoomsSort)
+        self.roomsmodel.set_default_sort_func(self.private_rooms_sort)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
-            self.frame.chatrooms.roomsctrl.UpdateCompletions()
-            self.frame.privatechats.UpdateCompletions()
+            self.frame.chatrooms.roomsctrl.update_completions()
+            self.frame.privatechats.update_completions()
 
-    def SetPrivateRooms(self, ownedrooms=[], otherrooms=[]):
+    def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
 
         myusername = self.frame.np.config.sections["server"]["login"]
 
         for room in ownedrooms:
             try:
-                self.PrivateRooms[room[0]]['joined'] = room[1]
-                if self.PrivateRooms[room[0]]['owner'] != myusername:
+                self.private_rooms[room[0]]['joined'] = room[1]
+                if self.private_rooms[room[0]]['owner'] != myusername:
                     log.add_warning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s."), {
                         'room': room[0],
-                        'previous': self.PrivateRooms[room[0]]['owner'],
+                        'previous': self.private_rooms[room[0]]['owner'],
                         'new': myusername
                     })
-                self.PrivateRooms[room[0]]['owner'] = myusername
+                self.private_rooms[room[0]]['owner'] = myusername
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
+                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
 
         for room in otherrooms:
             try:
-                self.PrivateRooms[room[0]]['joined'] = room[1]
-                if self.PrivateRooms[room[0]]['owner'] == myusername:
+                self.private_rooms[room[0]]['joined'] = room[1]
+                if self.private_rooms[room[0]]['owner'] == myusername:
                     log.add_warning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true."), {
                         'room': room[0],
-                        'old': self.PrivateRooms[room[0]]['owner'],
+                        'old': self.private_rooms[room[0]]['owner'],
                     })
-                    self.PrivateRooms[room[0]]['owner'] = None
+                    self.private_rooms[room[0]]['owner'] = None
             except KeyError:
-                self.PrivateRooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
+                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
         iterator = self.roomsmodel.get_iter_first()
         while iterator is not None:
             room = self.roomsmodel.get_value(iterator, 0)
             lastiter = iterator
             iterator = self.roomsmodel.iter_next(iterator)
-            if self.IsPrivateRoomOwned(room) or self.IsPrivateRoomMember(room):
+
+            if self.is_private_room_owned(room) or self.is_private_room_member(room):
                 self.roomsmodel.remove(lastiter)
 
-        for room in self.PrivateRooms:
+        for room in self.private_rooms:
 
-            num = self.PrivateRooms[room]["joined"]
+            num = self.private_rooms[room]["joined"]
 
-            if self.IsPrivateRoomOwned(room):
+            if self.is_private_room_owned(room):
                 self.roomsmodel.prepend([room, num, 2])
-            elif self.IsPrivateRoomMember(room):
+
+            elif self.is_private_room_member(room):
                 self.roomsmodel.prepend([room, num, 1])
 
-    def CreatePrivateRoom(self, room, owner=None, operators=[]):
+    def create_private_room(self, room, owner=None, operators=[]):
 
-        if room in self.PrivateRooms:
+        if room in self.private_rooms:
             if operators is not None:
                 for operator in operators:
-                    if operator not in self.PrivateRooms[room]["operators"]:
-                        self.PrivateRooms[room]["operators"].append(operator)
+                    if operator not in self.private_rooms[room]["operators"]:
+                        self.private_rooms[room]["operators"].append(operator)
 
-            self.PrivateRooms[room]["owner"] = owner
-
+            self.private_rooms[room]["owner"] = owner
             return
 
-        self.PrivateRooms[room] = {"users": [], "joined": 0, "operators": operators, "owned": False, "owner": owner}
+        self.private_rooms[room] = {"users": [], "joined": 0, "operators": operators, "owned": False, "owner": owner}
 
-    def PrivateRoomUsers(self, msg):
+    def private_room_users(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room not in rooms:
-            self.CreatePrivateRoom(msg.room)
+            self.create_private_room(msg.room)
             rooms[msg.room]["users"] = msg.users
             rooms[msg.room]["joined"] = msg.numusers
         else:
             rooms[msg.room]["users"] = msg.users
             rooms[msg.room]["joined"] = msg.numusers
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomOwned(self, msg):
+    def private_room_owned(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room not in rooms:
-            self.CreatePrivateRoom(msg.room)
+            self.create_private_room(msg.room)
             rooms[msg.room]["operators"] = msg.operators
         else:
             rooms[msg.room]["operators"] = msg.operators
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomAddUser(self, msg):
+    def private_room_add_user(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if msg.user not in rooms[msg.room]["users"]:
                 rooms[msg.room]["users"].append(msg.user)
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomRemoveUser(self, msg):
+    def private_room_remove_user(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if msg.user in rooms[msg.room]["users"]:
                 rooms[msg.room]["users"].remove(msg.user)
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomOperatorAdded(self, msg):
+    def private_room_operator_added(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomOperatorRemoved(self, msg):
+    def private_room_operator_removed(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomAddOperator(self, msg):
+    def private_room_add_operator(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if msg.user not in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].append(msg.user)
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomRemoveOperator(self, msg):
+    def private_room_remove_operator(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             if msg.user in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].remove(msg.user)
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomAdded(self, msg):
+    def private_room_added(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
         room = msg.room
 
         if room not in rooms:
-            self.CreatePrivateRoom(room)
+            self.create_private_room(room)
             log.add(_("You have been added to a private room: %(room)s"), {"room": room})
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def PrivateRoomRemoved(self, msg):
+    def private_room_removed(self, msg):
 
-        rooms = self.PrivateRooms
+        rooms = self.private_rooms
 
         if msg.room in rooms:
             del rooms[msg.room]
 
-        self.SetPrivateRooms()
+        self.set_private_rooms()
 
-    def TogglePrivateRooms(self, enabled):
+    def toggle_private_rooms(self, enabled):
 
         self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
 
-    def PrivateRoomDisown(self, msg):
-        if msg.room in self.PrivateRooms:
-            if self.PrivateRooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
-                self.PrivateRooms[msg.room]["owner"] = None
+    def private_room_disown(self, msg):
+        if msg.room in self.private_rooms:
+            if self.private_rooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+                self.private_rooms[msg.room]["owner"] = None
 
-    def GetUserStats(self, msg):
+    def get_user_stats(self, msg):
         for room in self.joinedrooms.values():
-            room.GetUserStats(msg.user, msg.avgspeed, msg.files)
+            room.get_user_stats(msg.user, msg.avgspeed, msg.files)
 
-    def GetUserStatus(self, msg):
+    def get_user_status(self, msg):
         for room in self.joinedrooms.values():
-            room.GetUserStatus(msg.user, msg.status)
+            room.get_user_status(msg.user, msg.status)
 
-    def SetUserFlag(self, user, flag):
+    def set_user_flag(self, user, flag):
         for room in self.joinedrooms.values():
-            room.SetUserFlag(user, flag)
+            room.set_user_flag(user, flag)
 
-    def GetUserAddress(self, user):
+    def get_user_address(self, user):
 
         if user not in self.frame.np.users or self.frame.np.users[user].addr is None:
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
-    def UserJoinedRoom(self, msg):
+    def user_joined_room(self, msg):
 
         if msg.room in self.joinedrooms:
-            self.joinedrooms[msg.room].UserJoinedRoom(msg.username, msg.userdata)
-            self.GetUserAddress(msg.username)
+            self.joinedrooms[msg.room].user_joined_room(msg.username, msg.userdata)
+            self.get_user_address(msg.username)
 
-    def UserLeftRoom(self, msg):
-        self.joinedrooms[msg.room].UserLeftRoom(msg.username)
+    def user_left_room(self, msg):
+        self.joinedrooms[msg.room].user_left_room(msg.username)
 
-    def TickerSet(self, msg):
-        self.joinedrooms[msg.room].TickerSet(msg)
+    def ticker_set(self, msg):
+        self.joinedrooms[msg.room].ticker_set(msg)
 
-    def TickerAdd(self, msg):
-        self.joinedrooms[msg.room].TickerAdd(msg)
+    def ticker_add(self, msg):
+        self.joinedrooms[msg.room].ticker_add(msg)
 
-    def TickerRemove(self, msg):
-        self.joinedrooms[msg.room].TickerRemove(msg)
+    def ticker_remove(self, msg):
+        self.joinedrooms[msg.room].ticker_remove(msg)
 
-    def SayChatRoom(self, msg, text):
+    def say_chat_room(self, msg, text):
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
             return
 
@@ -654,28 +658,28 @@ class RoomsControl:
         # must have the user's IP for this to work.
         if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
-            if self.frame.np.ipIgnored(ip):
+            if self.frame.np.ip_ignored(ip):
                 return
 
-        self.joinedrooms[msg.room].SayChatRoom(msg, text)
+        self.joinedrooms[msg.room].say_chat_room(msg, text)
 
-    def PublicRoomMessage(self, msg, text):
+    def public_room_message(self, msg, text):
 
         try:
             room = self.joinedrooms['Public ']
         except KeyError:
             return
 
-        room.SayChatRoom(msg, text, public=True)
+        room.say_chat_room(msg, text, public=True)
 
-    def UpdateColours(self):
+    def update_colours(self):
 
-        self.frame.SetTextBG(self.frame.roomlist.SearchRooms)
+        self.frame.set_text_bg(self.frame.roomlist.SearchRooms)
 
         for room in self.joinedrooms.values():
-            room.ChangeColours()
+            room.change_colours()
 
-    def saveColumns(self):
+    def save_columns(self):
 
         for room in list(self.frame.np.config.sections["columns"]["chatrooms"].keys())[:]:
             if room not in self.joinedrooms:
@@ -686,31 +690,29 @@ class RoomsControl:
                 del self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
 
         for room in self.joinedrooms.values():
-            room.saveColumns()
+            room.save_columns()
 
-    def LeaveRoom(self, msg):
+    def leave_room(self, msg):
 
         room = self.joinedrooms[msg.room]
 
-        self.ChatNotebook.remove_page(room.Main)
-
+        self.chat_notebook.remove_page(room.Main)
         room.destroy()
-
         del self.joinedrooms[msg.room]
 
         if msg.room[-1:] != ' ':  # meta rooms
-            self.frame.RoomSearchCombo_List.remove(self.frame.searchroomslist[msg.room])
+            self.frame.room_search_combo_model.remove(self.frame.searchroomslist[msg.room])
 
-    def ConnClose(self):
+    def conn_close(self):
 
         self.roomsmodel.clear()
 
         for room in self.joinedrooms.values():
-            room.ConnClose()
+            room.conn_close()
 
         self.autojoin = 1
 
-    def UpdateCompletions(self):
+    def update_completions(self):
 
         self.clist = []
         config = self.frame.np.config.sections["words"]
@@ -735,7 +737,7 @@ class RoomsControl:
             self.clist = clist
 
         for room in self.joinedrooms.values():
-            room.GetCompletionList(clist=list(self.clist))
+            room.get_completion_list(clist=list(self.clist))
 
 
 class ChatRoom:
@@ -752,7 +754,7 @@ class ChatRoom:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
 
-        self.ChatRoomTab = builder.get_object("ChatRoomTab")
+        self.chat_room_tab = builder.get_object("ChatRoomTab")
 
         for i in builder.get_objects():
             try:
@@ -760,20 +762,20 @@ class ChatRoom:
             except TypeError:
                 pass
 
-        self.ChatRoomTab.remove(self.Main)
-        self.ChatRoomTab.destroy()
+        self.chat_room_tab.remove(self.Main)
+        self.chat_room_tab.destroy()
 
         builder.connect_signals(self)
 
-        self.Tickers = Tickers()
-        self.RoomWall = RoomWall(self.frame, self)
+        self.tickers = Tickers()
+        self.room_wall = RoomWall(self.frame, self)
 
         self.room = room
         self.leaving = 0
         self.meta = meta  # not a real room if set to True
         config = self.frame.np.config.sections
 
-        self.OnShowChatButtons()
+        self.on_show_chat_buttons()
 
         self.clist = []
 
@@ -799,8 +801,8 @@ class ChatRoom:
         completion.set_model(liststore)
         completion.set_text_column(0)
 
-        completion.set_match_func(self.frame.EntryCompletionFindMatch, self.ChatEntry)
-        completion.connect("match-selected", self.frame.EntryCompletionFoundMatch, self.ChatEntry)
+        completion.set_match_func(self.frame.entry_completion_find_match, self.ChatEntry)
+        completion.connect("match-selected", self.frame.entry_completion_found_match, self.ChatEntry)
 
         self.Log.set_active(config["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -813,13 +815,13 @@ class ChatRoom:
             config["columns"]["chatrooms_widths"][room] = [0, 25, 100, 0, 0]
 
         widths = self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
-        self.cols = cols = InitialiseColumns(
+        self.cols = cols = initialise_columns(
             self.UserList,
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
-            [_("User"), widths[2], "text", self.UserColumnDraw],
-            [_("Speed"), widths[3], "number", self.frame.CellDataFunc],
-            [_("Files"), widths[4], "number", self.frame.CellDataFunc]
+            [_("User"), widths[2], "text", self.user_column_draw],
+            [_("Speed"), widths[3], "number", self.frame.cell_data_func],
+            [_("Files"), widths[4], "number", self.frame.cell_data_func]
         )
 
         cols[0].set_sort_column_id(5)
@@ -836,7 +838,7 @@ class ChatRoom:
         if len(config["columns"]["chatrooms"][room]) != 5:  # Insert new column to old settings.
             config["columns"]["chatrooms"][room].insert(1, 1)
 
-        HideColumns(cols, config["columns"]["chatrooms"][room])
+        hide_columns(cols, config["columns"]["chatrooms"][room])
 
         if config["columns"]["hideflags"]:
             cols[1].set_visible(0)
@@ -858,112 +860,112 @@ class ChatRoom:
 
         for username, user in users.items():
 
-            img = self.frame.GetStatusImage(user.status)
+            img = self.frame.get_status_image(user.status)
             flag = user.country
 
             if flag:
                 flag = "flag_" + flag
                 self.frame.flag_users[username] = flag
             else:
-                flag = self.frame.GetUserFlag(username)
+                flag = self.frame.get_user_flag(username)
 
-            hspeed = HumanSpeed(user.avgspeed)
-            hfiles = Humanize(user.files)
+            hspeed = human_speed(user.avgspeed)
+            hfiles = humanize(user.files)
             iterator = self.usersmodel.append(
-                [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
+                [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
             )
             self.users[username] = iterator
-            self.roomsctrl.GetUserAddress(username)
+            self.roomsctrl.get_user_address(username)
 
         self.usersmodel.set_sort_column_id(2, gtk.SortType.ASCENDING)
 
-        self.UpdateColours()
+        self.update_colours()
 
         self.UserList.set_model(self.usersmodel)
 
-        self.popup_menu_privaterooms = PopupMenu(self.frame, False)
+        self.popup_menu_private_rooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
-            ("USER", "", popup.OnCopyUser),
+            ("USER", "", popup.on_copy_user),
             ("", None),
-            ("#" + _("Send _message"), popup.OnSendMessage),
+            ("#" + _("Send _message"), popup.on_send_message),
             ("", None),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+            ("#" + _("Brow_se files"), popup.on_browse_user),
+            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
             ("", None),
-            ("$" + _("_Add user to list"), popup.OnAddToList),
-            ("$" + _("_Ban this user"), popup.OnBanUser),
-            ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-            ("$" + _("B_lock this user's IP Address"), popup.OnBlockUser),
-            ("$" + _("Ignore this user's IP Address"), popup.OnIgnoreIP),
+            ("$" + _("_Add user to list"), popup.on_add_to_list),
+            ("$" + _("_Ban this user"), popup.on_ban_user),
+            ("$" + _("_Ignore this user"), popup.on_ignore_user),
+            ("$" + _("B_lock this user's IP Address"), popup.on_block_user),
+            ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip),
             ("", None),
-            ("#" + _("Sear_ch this user's files"), popup.OnSearchUser),
-            (1, _("Private rooms"), self.popup_menu_privaterooms, self.OnPrivateRooms)
+            ("#" + _("Sear_ch this user's files"), popup.on_search_user),
+            (1, _("Private rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms)
         )
 
         items = self.popup_menu.get_children()
 
-        self.Menu_SendMessage = items[2]
-        self.Menu_ShowIPaddress = items[4]
-        self.Menu_GetUserInfo = items[5]
-        self.Menu_BrowseUser = items[6]
-        self.Menu_GivePrivileges = items[7]
-        self.Menu_AddToList = items[9]
-        self.Menu_BanUser = items[10]
-        self.Menu_IgnoreUser = items[11]
-        self.Menu_BlockUser = items[12]
-        self.Menu_IgnoreIP = items[13]
-        self.Menu_SearchUser = items[15]
-        self.Menu_PrivateRooms = items[16]
+        self.menu_send_message = items[2]
+        self.menu_show_ip_address = items[4]
+        self.menu_get_user_info = items[5]
+        self.menu_browse_user = items[6]
+        self.menu_give_privileges = items[7]
+        self.menu_add_to_list = items[9]
+        self.menu_ban_user = items[10]
+        self.menu_ignore_user = items[11]
+        self.menu_block_user = items[12]
+        self.menu_ignore_ip = items[13]
+        self.menu_search_user = items[15]
+        self.menu_private_rooms = items[16]
 
-        self.UserList.connect("button_press_event", self.OnPopupMenu)
+        self.UserList.connect("button_press_event", self.on_popup_menu)
 
         self.ChatEntry.grab_focus()
 
         self.logpopupmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.OnFindLogWindow),
+            ("#" + _("Find"), self.on_find_log_window),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyRoomLog),
-            ("#" + _("Copy All"), self.OnCopyAllRoomLog),
+            ("#" + _("Copy"), self.on_copy_room_log),
+            ("#" + _("Copy All"), self.on_copy_all_room_log),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearRoomLog)
+            ("#" + _("Clear log"), self.on_clear_room_log)
         )
 
-        self.RoomLog.connect("button-press-event", self.OnPopupRoomLogMenu)
+        self.RoomLog.connect("button-press-event", self.on_popup_room_log_menu)
 
         self.chatpopmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.OnFindChatLog),
+            ("#" + _("Find"), self.on_find_chat_log),
             ("", None),
-            ("#" + _("Copy"), self.OnCopyChatLog),
-            ("#" + _("Copy All"), self.OnCopyAllChatLog),
+            ("#" + _("Copy"), self.on_copy_chat_log),
+            ("#" + _("Copy All"), self.on_copy_all_chat_log),
             ("", None),
-            ("#" + _("Clear log"), self.OnClearChatLog)
+            ("#" + _("Clear log"), self.on_clear_chat_log)
         )
 
-        self.ChatScroll.connect("button-press-event", self.OnPopupChatRoomMenu)
+        self.ChatScroll.connect("button-press-event", self.on_popup_chat_room_menu)
 
         self.buildingcompletion = False
 
-        self.GetCompletionList(clist=list(self.roomsctrl.clist))
+        self.get_completion_list(clist=list(self.roomsctrl.clist))
 
         if config["logging"]["readroomlogs"]:
-            self.ReadRoomLogs()
+            self.read_room_logs()
 
-        self.CountUsers()
+        self.count_users()
 
-    def RoomStatus(self, column, cellrenderer, model, iterator, dummy='dummy'):
+    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
         # cellrenderer.set_property("weight", colour)
         pass
 
-    def ReadRoomLogs(self):
+    def read_room_logs(self):
 
         config = self.frame.np.config.sections
         log = os.path.join(
             config["logging"]["roomlogsdir"],
-            CleanFile(self.room.replace(os.sep, "-")) + ".log"
+            clean_file(self.room.replace(os.sep, "-")) + ".log"
         )
 
         try:
@@ -984,7 +986,7 @@ class ChatRoom:
                         if line[20] == "[" and line[20:].find("] ") != -1:
                             namepos = line[20:].find("] ")
                             user = line[21:20 + namepos].strip()
-                            self.getUserTag(user)
+                            self.get_user_tag(user)
                             usertag = self.tag_users[user]
                         else:
                             user = None
@@ -1006,67 +1008,28 @@ class ChatRoom:
                     line = re.sub(r"\\s\\s+", "  ", line)
 
                     if user != config["server"]["login"]:
-                        AppendLine(self.ChatScroll, self.frame.CensorChat(line), tag, username=user, usertag=usertag, timestamp_format="")
+                        append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="")
                     else:
-                        AppendLine(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
+                        append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
 
                 if len(lines) > 0:
-                    AppendLine(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
+                    append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
         except IOError:
             pass
 
-        GLib.idle_add(ScrollBottom, self.ChatScroll.get_parent())
+        GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
 
-    def OnFindLogWindow(self, widget):
+    def on_find_log_window(self, widget):
         self.LogSearchBar.set_search_mode(True)
 
-    def OnFindChatLog(self, widget):
+    def on_find_chat_log(self, widget):
         self.ChatSearchBar.set_search_mode(True)
 
     def destroy(self):
         self.Main.destroy()
 
-    def OnPrivateRooms(self, widget):
-
-        if self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"]:
-            return False
-
-        user = self.popup_menu.user
-        items = []
-
-        popup = self.popup_menu_privaterooms
-        popup.clear()
-        popup.set_user(self.popup_menu.user)
-
-        for room in self.roomsctrl.PrivateRooms:
-
-            if not (self.roomsctrl.IsPrivateRoomOwned(room) or self.roomsctrl.IsPrivateRoomOperator(room)):
-                continue
-
-            if user in self.roomsctrl.PrivateRooms[room]["users"]:
-                items.append(("#" + _("Remove from private room %s") % room, popup.OnPrivateRoomRemoveUser, room))
-            else:
-                items.append(("#" + _("Add to private room %s") % room, popup.OnPrivateRoomAddUser, room))
-
-            if self.roomsctrl.IsPrivateRoomOwned(room):
-                if self.popup_menu.user in self.roomsctrl.PrivateRooms[room]["operators"]:
-                    items.append(("#" + _("Remove as operator of %s") % room, popup.OnPrivateRoomRemoveOperator, room))
-                else:
-                    items.append(("#" + _("Add as operator of %s") % room, popup.OnPrivateRoomAddOperator, room))
-
-        popup.setup(*items)
-
-        return True
-
-    def OnPrivateRoomsUser(self, widget, popup=None):
-
-        if popup is None:
-            return
-
-        return True
-
-    def OnPopupMenu(self, widget, event):
+    def on_popup_menu(self, widget, event):
 
         d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
 
@@ -1079,8 +1042,8 @@ class ChatRoom:
         # Double click starts a private message
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.frame.privatechats.SendMessage(user, None, 1)
-                self.frame.ChangeMainPage(None, "private")
+                self.frame.privatechats.send_message(user, None, 1)
+                self.frame.change_main_page(None, "private")
             return
 
         self.popup_menu.editing = True
@@ -1088,32 +1051,32 @@ class ChatRoom:
 
         me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
-        self.Menu_AddToList.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-        self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-        self.Menu_BlockUser.set_active(self.frame.UserIpIsBlocked(user))
-        self.Menu_BlockUser.set_sensitive(not me)
-        self.Menu_IgnoreIP.set_active(self.frame.UserIpIsIgnored(user))
-        self.Menu_IgnoreIP.set_sensitive(not me)
-        self.Menu_PrivateRooms.set_sensitive(not me)
+        self.menu_add_to_list.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+        self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+        self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
+        self.menu_block_user.set_sensitive(not me)
+        self.menu_ignore_ip.set_active(self.frame.user_ip_is_ignored(user))
+        self.menu_ignore_ip.set_sensitive(not me)
+        self.menu_private_rooms.set_sensitive(not me)
 
         self.popup_menu.editing = False
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnShowRoomWall(self, widget):
-        self.RoomWall.show()
+    def on_show_room_wall(self, widget):
+        self.room_wall.show()
 
-    def OnShowChatHelp(self, widget):
-        self.frame.OnAboutChatroomCommands(widget)
+    def on_show_chat_help(self, widget):
+        self.frame.on_about_chatroom_commands(widget)
 
-    def OnShowChatButtons(self, show=True):
+    def on_show_chat_buttons(self, show=True):
 
         if self.frame.np.config.sections["ui"]["speechenabled"]:
             self.Speech.show()
         else:
             self.Speech.hide()
 
-    def OnHideStatusLog(self, widget):
+    def on_hide_status_log(self, widget):
 
         act = widget.get_active()
         if act:
@@ -1123,7 +1086,7 @@ class ChatRoom:
             self.RoomLogWindow.show()
             self.HideStatusLogImage.set_from_icon_name("go-up-symbolic", gtk.IconSize.BUTTON)
 
-    def OnHideUserList(self, widget):
+    def on_hide_user_list(self, widget):
 
         act = widget.get_active()
         if act:
@@ -1133,29 +1096,29 @@ class ChatRoom:
             self.vbox5.show()
             self.HideUserListImage.set_from_icon_name("go-next-symbolic", gtk.IconSize.BUTTON)
 
-    def TickerSet(self, msg):
+    def ticker_set(self, msg):
 
-        self.Tickers.set_ticker([])
+        self.tickers.set_ticker([])
         for user in msg.msgs:
-            if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
+            if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.user_ip_is_ignored(user):
                 # User ignored, ignore Ticker messages
                 return
 
-            self.Tickers.add_ticker(user, msg.msgs[user])
+            self.tickers.add_ticker(user, msg.msgs[user])
 
-    def TickerAdd(self, msg):
+    def ticker_add(self, msg):
 
         user = msg.user
-        if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.UserIpIsIgnored(user):
+        if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.user_ip_is_ignored(user):
             # User ignored, ignore Ticker messages
             return
 
-        self.Tickers.add_ticker(msg.user, msg.msg)
+        self.tickers.add_ticker(msg.user, msg.msg)
 
-    def TickerRemove(self, msg):
-        self.Tickers.remove_ticker(msg.user)
+    def ticker_remove(self, msg):
+        self.tickers.remove_ticker(msg.user)
 
-    def SayChatRoom(self, msg, text, public=False):
+    def say_chat_room(self, msg, text, public=False):
         text = re.sub("\\s\\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
         user = msg.user
@@ -1171,11 +1134,11 @@ class ChatRoom:
 
             if tag == self.tag_hilite:
 
-                self.roomsctrl.ChatNotebook.request_hilite(self.Main)
-                self.frame.ChatRequestIcon(1, self.Main)
+                self.roomsctrl.chat_notebook.request_hilite(self.Main)
+                self.frame.chat_request_icon(1, self.Main)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                    self.frame.notifications.NewNotification(
+                    self.frame.notifications.new_notification(
                         text,
                         title=_("%s mentioned you in the %s room") % (user, self.room),
                         soundnamenotify="bell-window-system",
@@ -1183,20 +1146,20 @@ class ChatRoom:
                     )
 
             else:
-                self.roomsctrl.ChatNotebook.request_changed(self.Main)
-                self.frame.ChatRequestIcon(0)
+                self.roomsctrl.chat_notebook.request_changed(self.Main)
+                self.frame.chat_request_icon(0)
 
-            if self.roomsctrl.ChatNotebook.get_current_page() != self.roomsctrl.ChatNotebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
+            if self.roomsctrl.chat_notebook.get_current_page() != self.roomsctrl.chat_notebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
                 self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
                     not self.frame.MainWindow.get_property("visible"):
 
                 if tag == self.tag_hilite:
 
                     if self.room not in self.frame.hilites["rooms"]:
-                        self.frame.notifications.Add("rooms", user, self.room, tab=True)
+                        self.frame.notifications.add("rooms", user, self.room, tab=True)
 
                 elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
-                    self.frame.notifications.NewNotification(
+                    self.frame.notifications.new_notification(
                         text,
                         title=_("Message by %s in the %s room") % (user, self.room)
                     )
@@ -1224,14 +1187,14 @@ class ChatRoom:
             timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
             write_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
 
-        self.getUserTag(user)
+        self.get_user_tag(user)
 
         timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]
 
         if user != login:
 
-            AppendLine(
-                self.ChatScroll, self.frame.CensorChat(line), tag,
+            append_line(
+                self.ChatScroll, self.frame.censor_chat(line), tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
@@ -1245,24 +1208,24 @@ class ChatRoom:
                     }
                 )
         else:
-            AppendLine(
+            append_line(
                 self.ChatScroll, line, tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
-    def getUserTag(self, user):
+    def get_user_tag(self, user):
 
         if user not in self.users:
             color = "useroffline"
         else:
-            color = self.getUserStatusColor(self.usersmodel.get_value(self.users[user], 5))
+            color = self.get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
 
         if user not in self.tag_users:
             self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
         else:
             self.changecolour(self.tag_users[user], color)
 
-    def threadAlias(self, alias):
+    def thread_alias(self, alias):
 
         text = expand_alias(self.frame.np.config.aliases, alias)
         if not text:
@@ -1272,9 +1235,9 @@ class ChatRoom:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.AutoReplace(text)))
+        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.auto_replace(text)))
 
-    def OnEnter(self, widget):
+    def on_enter(self, widget):
 
         text = widget.get_text()
 
@@ -1284,7 +1247,7 @@ class ChatRoom:
 
         if is_alias(self.frame.np.config.aliases, text):
             import _thread
-            _thread.start_new_thread(self.threadAlias, (text,))
+            _thread.start_new_thread(self.thread_alias, (text,))
             widget.set_text("")
             return
 
@@ -1299,26 +1262,26 @@ class ChatRoom:
         byteargs = args.encode('utf-8')  # bytes
 
         if cmd in ("/alias", "/al"):
-            AppendLine(self.ChatScroll, self.frame.np.config.AddAlias(args), self.tag_remote, "")
+            append_line(self.ChatScroll, self.frame.np.config.add_alias(args), self.tag_remote, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.UpdateCompletions()
-                self.frame.privatechats.UpdateCompletions()
+                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
-            AppendLine(self.ChatScroll, self.frame.np.config.Unalias(args), self.tag_remote, "")
+            append_line(self.ChatScroll, self.frame.np.config.unalias(args), self.tag_remote, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.UpdateCompletions()
-                self.frame.privatechats.UpdateCompletions()
+                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.privatechats.update_completions()
 
         elif cmd in ["/w", "/whois", "/info"]:
             if byteargs:
-                self.frame.LocalUserInfoRequest(byteargs)
-                self.frame.OnUserInfo(None)
+                self.frame.local_user_info_request(byteargs)
+                self.frame.on_user_info(None)
 
         elif cmd in ["/b", "/browse"]:
             if byteargs:
-                self.frame.BrowseUser(byteargs)
-                self.frame.OnUserBrowse(None)
+                self.frame.browse_user(byteargs)
+                self.frame.on_user_browse(None)
 
         elif cmd == "/ip":
             if byteargs:
@@ -1329,8 +1292,8 @@ class ChatRoom:
 
         elif cmd == "/pm":
             if byteargs:
-                self.frame.privatechats.SendMessage(byteargs, None, 1)
-                self.frame.OnPrivateChat(None)
+                self.frame.privatechats.send_message(byteargs, None, 1)
+                self.frame.on_private_chat(None)
 
         elif cmd in ["/m", "/msg"]:
             if byteargs:
@@ -1339,28 +1302,28 @@ class ChatRoom:
                     msg = args.split(" ", 1)[1]
                 except IndexError:
                     msg = None
-                self.frame.privatechats.SendMessage(user, msg)
+                self.frame.privatechats.send_message(user, msg)
 
         elif cmd in ["/s", "/search"]:
             if args:
-                self.frame.Searches.DoSearch(args, 0)
-                self.frame.OnSearch(None)
+                self.frame.searches.do_search(args, 0)
+                self.frame.on_search(None)
 
         elif cmd in ["/us", "/usearch"]:
             s = byteargs.split(" ", 1)
             if len(s) == 2:
-                self.frame.Searches.DoSearch(s[1], 3, [s[0]])
-                self.frame.OnSearch(None)
+                self.frame.searches.do_search(s[1], 3, [s[0]])
+                self.frame.on_search(None)
 
         elif cmd in ["/rs", "/rsearch"]:
             if args:
-                self.frame.Searches.DoSearch(args, 1)
-                self.frame.OnSearch(None)
+                self.frame.searches.do_search(args, 1)
+                self.frame.on_search(None)
 
         elif cmd in ["/bs", "/bsearch"]:
             if args:
-                self.frame.Searches.DoSearch(args, 2)
-                self.frame.OnSearch(None)
+                self.frame.searches.do_search(args, 2)
+                self.frame.on_search(None)
 
         elif cmd in ["/j", "/join"]:
             if byteargs:
@@ -1374,66 +1337,66 @@ class ChatRoom:
 
         elif cmd in ["/ad", "/add", "/buddy"]:
             if byteargs:
-                self.frame.userlist.AddToList(byteargs)
+                self.frame.userlist.add_to_list(byteargs)
 
         elif cmd in ["/rem", "/unbuddy"]:
             if byteargs:
-                self.frame.userlist.RemoveFromList(byteargs)
+                self.frame.userlist.remove_from_list(byteargs)
 
         elif cmd == "/ban":
             if byteargs:
-                self.frame.BanUser(byteargs)
+                self.frame.ban_user(byteargs)
 
         elif cmd == "/ignore":
             if byteargs:
-                self.frame.IgnoreUser(byteargs)
+                self.frame.ignore_user(byteargs)
 
         elif cmd == "/ignoreip":
             if byteargs:
-                self.frame.IgnoreIP(byteargs)
+                self.frame.ignore_ip(byteargs)
 
         elif cmd == "/unban":
             if byteargs:
-                self.frame.UnbanUser(byteargs)
+                self.frame.unban_user(byteargs)
 
         elif cmd == "/unignore":
             if byteargs:
-                self.frame.UnignoreUser(byteargs)
+                self.frame.unignore_user(byteargs)
 
         elif cmd in ["/clear", "/cl"]:
             self.ChatScroll.get_buffer().set_text("")
 
         elif cmd in ["/a", "/away"]:
-            self.frame.OnAway(None)
+            self.frame.on_away(None)
 
         elif cmd in ["/q", "/quit", "/exit"]:
-            self.frame.OnExit(None)
+            self.frame.on_exit(None)
             return  # Avoid gsignal warning
 
         elif cmd == "/now":
-            self.DisplayNowPlaying()
+            self.display_now_playing()
 
         elif cmd == "/rescan":
 
             # Rescan public shares if needed
             if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
-                self.frame.OnRescan()
+                self.frame.on_rescan()
 
             # Rescan buddy shares if needed
             if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
-                self.frame.OnBuddyRescan()
+                self.frame.on_buddy_rescan()
 
         elif cmd in ["/tick", "/t"]:
             self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, args))
 
         elif cmd in ("/tickers",):
-            self.showTickers()
+            self.show_tickers()
 
         elif cmd in ('/toggle',):
             if byteargs:
                 self.frame.np.pluginhandler.toggle_plugin(byteargs)
 
-        elif cmd[:1] == "/" and self.frame.np.pluginhandler.TriggerPublicCommandEvent(self.room, cmd[1:], args):
+        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
             pass
 
         elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
@@ -1445,30 +1408,30 @@ class ChatRoom:
             if text[:2] == "//":
                 text = text[1:]
 
-            event = self.frame.np.pluginhandler.OutgoingPublicChatEvent(self.room, text)
+            event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
             if event is not None:
                 (r, text) = event
-                self.Say(self.frame.AutoReplace(text))
-                self.frame.np.pluginhandler.OutgoingPublicChatNotification(self.room, text)
+                self.say(self.frame.auto_replace(text))
+                self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
 
         self.ChatEntry.set_text("")
 
-    def showTickers(self):
-        tickers = self.Tickers.get_tickers()
+    def show_tickers(self):
+        tickers = self.tickers.get_tickers()
         header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
         log.add("%s\n%s" % (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
 
-    def Say(self, text):
+    def say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
-    def DisplayNowPlaying(self):
+    def display_now_playing(self):
         if self.frame.now_playing is None:
             self.frame.now_playing = NowPlaying(self.frame)
 
-        self.frame.now_playing.DisplayNowPlaying(None, test=0, callback=self.Say)
+        self.frame.now_playing.display_now_playing(None, test=0, callback=self.say)
 
-    def UserJoinedRoom(self, username, userdata):
+    def user_joined_room(self, username, userdata):
 
         if username in self.users:
             return
@@ -1480,30 +1443,30 @@ class ChatRoom:
                 if self.frame.np.config.sections["words"]["dropdown"]:
                     self.ChatEntry.get_completion().get_model().append([username])
 
-        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
-            AppendLine(self.RoomLog, _("%s joined the room") % username, self.tag_log)
+        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
+            append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
-        img = self.frame.GetStatusImage(userdata.status)
+        img = self.frame.get_status_image(userdata.status)
         flag = userdata.country
 
         if flag is not None:
             flag = "flag_" + flag
             self.frame.flag_users[username] = flag
         else:
-            flag = self.frame.GetUserFlag(username)
+            flag = self.frame.get_user_flag(username)
 
-        hspeed = HumanSpeed(userdata.avgspeed)
-        hfiles = Humanize(userdata.files)
+        hspeed = human_speed(userdata.avgspeed)
+        hfiles = humanize(userdata.files)
 
         self.users[username] = self.usersmodel.append(
-            [img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag]
+            [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag]
         )
 
-        self.getUserTag(username)
+        self.get_user_tag(username)
 
-        self.CountUsers()
+        self.count_users()
 
-    def UserLeftRoom(self, username):
+    def user_left_room(self, username):
 
         if username not in self.users:
             return
@@ -1526,16 +1489,16 @@ class ChatRoom:
                             break
                         iterator = liststore.iter_next(iterator)
 
-        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(username):
-            AppendLine(self.RoomLog, _("%s left the room") % username, self.tag_log)
+        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
+            append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]
 
-        self.getUserTag(username)
-        self.CountUsers()
+        self.get_user_tag(username)
+        self.count_users()
 
-    def CountUsers(self):
+    def count_users(self):
 
         numusers = len(self.users)
         if numusers > 0:
@@ -1555,36 +1518,38 @@ class ChatRoom:
             self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
             self.roomsctrl.rooms.append(self.room)
 
-    def UserColumnDraw(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
-        if self.room in self.roomsctrl.PrivateRooms:
+        if self.room in self.roomsctrl.private_rooms:
             user = self.usersmodel.get_value(iterator, 2)
 
-            if user == self.roomsctrl.PrivateRooms[self.room]["owner"]:
+            if user == self.roomsctrl.private_rooms[self.room]["owner"]:
                 cellrenderer.set_property("underline", pango.Underline.SINGLE)
                 cellrenderer.set_property("weight", pango.Weight.BOLD)
-            elif user in (self.roomsctrl.PrivateRooms[self.room]["operators"]):
+
+            elif user in (self.roomsctrl.private_rooms[self.room]["operators"]):
                 cellrenderer.set_property("weight", pango.Weight.BOLD)
                 cellrenderer.set_property("underline", pango.Underline.NONE)
+
             else:
                 cellrenderer.set_property("weight", pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", pango.Underline.NONE)
 
-        self.frame.CellDataFunc(column, cellrenderer, model, iterator)
+        self.frame.cell_data_func(column, cellrenderer, model, iterator)
 
-    def GetUserStats(self, user, avgspeed, files):
-
-        if user not in self.users:
-            return
-
-        self.usersmodel.set(self.users[user], 3, HumanSpeed(avgspeed), 4, Humanize(files), 6, avgspeed, 7, files)
-
-    def GetUserStatus(self, user, status):
+    def get_user_stats(self, user, avgspeed, files):
 
         if user not in self.users:
             return
 
-        img = self.frame.GetStatusImage(status)
+        self.usersmodel.set(self.users[user], 3, human_speed(avgspeed), 4, humanize(files), 6, avgspeed, 7, files)
+
+    def get_user_status(self, user, status):
+
+        if user not in self.users:
+            return
+
+        img = self.frame.get_status_image(status)
         if img == self.usersmodel.get_value(self.users[user], 0):
             return
 
@@ -1593,21 +1558,21 @@ class ChatRoom:
         else:
             action = _("%s has returned")
 
-        if user not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.UserIpIsIgnored(user):
-            AppendLine(self.RoomLog, action % user, self.tag_log)
+        if user not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(user):
+            append_line(self.RoomLog, action % user, self.tag_log)
 
         if user in self.tag_users:
-            color = self.getUserStatusColor(status)
+            color = self.get_user_status_color(status)
             self.changecolour(self.tag_users[user], color)
 
         self.usersmodel.set(self.users[user], 0, img, 5, status)
 
-    def SetUserFlag(self, user, flag):
+    def set_user_flag(self, user, flag):
 
         if user not in self.users:
             return
 
-        self.usersmodel.set(self.users[user], 1, self.frame.GetFlagImage(flag), 8, flag)
+        self.usersmodel.set(self.users[user], 1, self.frame.get_flag_image(flag), 8, flag)
 
     def makecolour(self, buffer, colour, username=None):
 
@@ -1638,11 +1603,11 @@ class ChatRoom:
             else:
                 tag.set_property("underline", pango.Underline.NONE)
 
-            tag.connect("event", self.UserNameEvent, username)
+            tag.connect("event", self.user_name_event, username)
 
         return tag
 
-    def UserNameEvent(self, tag, widget, event, iterator, user):
+    def user_name_event(self, tag, widget, event, iterator, user):
         """
         Mouse buttons:
         1 = left button
@@ -1656,23 +1621,23 @@ class ChatRoom:
             self.popup_menu.set_user(user)
             me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
-            self.Menu_AddToList.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-            self.Menu_BanUser.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-            self.Menu_IgnoreUser.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-            self.Menu_BlockUser.set_active(self.frame.UserIpIsBlocked(user))
-            self.Menu_BlockUser.set_sensitive(not me)
-            self.Menu_IgnoreIP.set_active(self.frame.UserIpIsIgnored(user))
-            self.Menu_IgnoreIP.set_sensitive(not me)
-            self.Menu_PrivateRooms.set_sensitive(not me)
+            self.menu_add_to_list.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+            self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
+            self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+            self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
+            self.menu_block_user.set_sensitive(not me)
+            self.menu_ignore_ip.set_active(self.frame.user_ip_is_ignored(user))
+            self.menu_ignore_ip.set_sensitive(not me)
+            self.menu_private_rooms.set_sensitive(not me)
 
             self.popup_menu.editing = False
             self.popup_menu.popup(None, None, None, None, event.button.button, event.button.time)
 
         return True
 
-    def UpdateColours(self):
+    def update_colours(self):
 
-        self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+        self.frame.change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
         buffer = self.ChatScroll.get_buffer()
 
@@ -1683,15 +1648,15 @@ class ChatRoom:
 
         self.tag_users = {}
         for user in self.tag_users:
-            self.getUserTag(user)
+            self.get_user_tag(user)
 
         logbuffer = self.RoomLog.get_buffer()
         self.tag_log = self.makecolour(logbuffer, "chatremote")
 
-        self.frame.SetTextBG(self.ChatEntry)
-        self.frame.SetTextBG(self.RoomWall.RoomWallEntry)
+        self.frame.set_text_bg(self.ChatEntry)
+        self.frame.set_text_bg(self.room_wall.RoomWallEntry)
 
-    def getUserStatusColor(self, status):
+    def get_user_status_color(self, status):
 
         if status == 1:
             color = "useraway"
@@ -1737,7 +1702,7 @@ class ChatRoom:
             else:
                 tag.set_property("underline", pango.Underline.NONE)
 
-    def ChangeColours(self):
+    def change_colours(self):
 
         self.changecolour(self.tag_remote, "chatremote")
         self.changecolour(self.tag_local, "chatlocal")
@@ -1746,13 +1711,13 @@ class ChatRoom:
         self.changecolour(self.tag_log, "chatremote")
 
         for user in self.tag_users:
-            self.getUserTag(user)
+            self.get_user_tag(user)
 
-        self.frame.SetTextBG(self.ChatEntry)
-        self.frame.SetTextBG(self.RoomWall.RoomWallEntry)
-        self.frame.ChangeListFont(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+        self.frame.set_text_bg(self.ChatEntry)
+        self.frame.set_text_bg(self.room_wall.RoomWallEntry)
+        self.frame.change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
-    def OnLeave(self, widget=None):
+    def on_leave(self, widget=None):
 
         if self.leaving:
             return
@@ -1772,13 +1737,13 @@ class ChatRoom:
         else:
             if self.room == 'Public ':
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
-                self.roomsctrl.LeaveRoom(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
+                self.roomsctrl.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
                 log.add_warning(_("Unknown meta chatroom closed"))
 
-        self.frame.np.pluginhandler.LeaveChatroomNotification(self.room)
+        self.frame.np.pluginhandler.leave_chatroom_notification(self.room)
 
-    def saveColumns(self):
+    def save_columns(self):
 
         columns = []
         widths = []
@@ -1789,13 +1754,13 @@ class ChatRoom:
         self.frame.np.config.sections["columns"]["chatrooms"][self.room] = columns
         self.frame.np.config.sections["columns"]["chatrooms_widths"][self.room] = widths
 
-    def ConnClose(self):
+    def conn_close(self):
 
-        AppendLine(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
+        append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
         self.usersmodel.clear()
         self.UserList.set_sensitive(False)
         self.users.clear()
-        self.CountUsers()
+        self.count_users()
 
         config = self.frame.np.config.sections
         if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
@@ -1807,9 +1772,9 @@ class ChatRoom:
         for tag in self.tag_users.values():
             self.changecolour(tag, "useroffline")
 
-        self.Tickers.set_ticker([])
+        self.tickers.set_ticker([])
 
-    def Rejoined(self, users):
+    def rejoined(self, users):
 
         # Update user list with an inexpensive sorting function
         self.usersmodel.set_default_sort_func(lambda *args: -1)
@@ -1820,22 +1785,22 @@ class ChatRoom:
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
 
-            img = self.frame.GetStatusImage(user.status)
+            img = self.frame.get_status_image(user.status)
             flag = user.country
 
             if flag is not None:
                 flag = "flag_" + flag
                 self.frame.flag_users[username] = flag
             else:
-                flag = self.frame.GetUserFlag(username)
+                flag = self.frame.get_user_flag(username)
 
-            hspeed = HumanSpeed(user.avgspeed)
-            hfiles = Humanize(user.files)
+            hspeed = human_speed(user.avgspeed)
+            hfiles = humanize(user.files)
 
-            myiter = self.usersmodel.append([img, self.frame.GetFlagImage(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
+            myiter = self.usersmodel.append([img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
 
             self.users[username] = myiter
-            self.roomsctrl.GetUserAddress(username)
+            self.roomsctrl.get_user_address(username)
 
         self.UserList.set_sensitive(True)
 
@@ -1844,19 +1809,19 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
 
         # Spit this line into chat log
-        AppendLine(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
+        append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
 
         # Update user count
-        self.CountUsers()
+        self.count_users()
 
         # Build completion list
-        self.GetCompletionList(clist=self.roomsctrl.clist)
+        self.get_completion_list(clist=self.roomsctrl.clist)
 
         # Update all username tags in chat log
         for user in self.tag_users:
-            self.getUserTag(user)
+            self.get_user_tag(user)
 
-    def OnAutojoin(self, widget):
+    def on_autojoin(self, widget):
 
         autojoin = self.frame.np.config.sections["server"]["autojoin"]
 
@@ -1867,9 +1832,9 @@ class ChatRoom:
             if self.room not in autojoin:
                 autojoin.append(self.room)
 
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
-    def GetCompletionList(self, ix=0, text="", clist=[]):
+    def get_completion_list(self, ix=0, text="", clist=[]):
 
         config = self.frame.np.config.sections["words"]
 
@@ -1908,7 +1873,7 @@ class ChatRoom:
 
         self.clist = clist
 
-    def OnKeyPress(self, widget, event):
+    def on_key_press(self, widget, event):
 
         if event.keyval == Gdk.keyval_from_name("Prior"):
 
@@ -1951,7 +1916,7 @@ class ChatRoom:
         preix = ix - len(text)
 
         if not config["cycle"]:
-            completion, single = GetCompletion(text, self.clist)
+            completion, single = get_completion(text, self.clist)
             if completion:
                 if single:
                     if ix == len(text) and text[:1] != "/":
@@ -1962,7 +1927,7 @@ class ChatRoom:
         else:
 
             if not self.midwaycompletion:
-                self.completions['completions'] = GetCompletions(text, self.clist)
+                self.completions['completions'] = get_completions(text, self.clist)
                 if self.completions['completions']:
                     self.midwaycompletion = True
                     self.completions['currentindex'] = -1
@@ -1988,19 +1953,20 @@ class ChatRoom:
 
         return True
 
-    def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return showCountryTooltip(widget, x, y, tooltip, 8)
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return show_country_tooltip(widget, x, y, tooltip, 8)
 
-    def OnLogToggled(self, widget):
+    def on_log_toggled(self, widget):
 
         if not widget.get_active():
             if self.room in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].remove(self.room)
+
         elif widget.get_active():
             if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].append(self.room)
 
-    def OnPopupChatRoomMenu(self, widget, event):
+    def on_popup_chat_room_menu(self, widget, event):
 
         if event.button != 3:
             return False
@@ -2010,7 +1976,7 @@ class ChatRoom:
 
         return True
 
-    def OnPopupRoomLogMenu(self, widget, event):
+    def on_popup_room_log_menu(self, widget, event):
 
         if event.button != 3:
             return False
@@ -2020,12 +1986,13 @@ class ChatRoom:
 
         return True
 
-    def OnCopyAllRoomLog(self, widget):
+    def on_copy_all_room_log(self, widget):
+
         start, end = self.RoomLog.get_buffer().get_bounds()
         log = self.RoomLog.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def OnCopyRoomLog(self, widget):
+    def on_copy_room_log(self, widget):
 
         bound = self.RoomLog.get_buffer().get_selection_bounds()
 
@@ -2034,7 +2001,7 @@ class ChatRoom:
             log = self.RoomLog.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def OnCopyChatLog(self, widget):
+    def on_copy_chat_log(self, widget):
 
         bound = self.ChatScroll.get_buffer().get_selection_bounds()
 
@@ -2043,15 +2010,16 @@ class ChatRoom:
             log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def OnCopyAllChatLog(self, widget):
+    def on_copy_all_chat_log(self, widget):
+
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def OnClearChatLog(self, widget):
+    def on_clear_chat_log(self, widget):
         self.ChatScroll.get_buffer().set_text("")
 
-    def OnClearRoomLog(self, widget):
+    def on_clear_room_log(self, widget):
         self.RoomLog.get_buffer().set_text("")
 
 
@@ -2077,16 +2045,16 @@ class ChatRooms(IconNotebook):
 
         self.popup_enable()
 
-        self.set_tab_pos(self.frame.getTabPosition(config["ui"]["tabrooms"]))
+        self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
 
-    def TabPopup(self, room):
+    def tab_popup(self, room):
 
         if room not in self.roomsctrl.joinedrooms:
             return
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].OnLeave)
+            ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].on_leave)
         )
         popup.set_user(room)
 
@@ -2101,11 +2069,11 @@ class ChatRooms(IconNotebook):
             room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
 
             if event.button == 2:
-                self.roomsctrl.joinedrooms[room].OnLeave(widget)
+                self.roomsctrl.joinedrooms[room].on_leave(widget)
                 return True
 
             if event.button == 3:
-                menu = self.TabPopup(room)
+                menu = self.tab_popup(room)
                 menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
@@ -2113,5 +2081,5 @@ class ChatRooms(IconNotebook):
 
         return False
 
-    def ConnClose(self):
-        self.roomsctrl.ConnClose()
+    def conn_close(self):
+        self.roomsctrl.conn_close()

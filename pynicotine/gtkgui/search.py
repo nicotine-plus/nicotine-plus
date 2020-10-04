@@ -33,23 +33,23 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dirchooser import ChooseDir
+from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.dialogs import MetaDialog
-from pynicotine.gtkgui.utils import CollapseTreeview
-from pynicotine.gtkgui.utils import FillFileGroupingCombobox
-from pynicotine.gtkgui.utils import HideColumns
-from pynicotine.gtkgui.utils import Humanize
-from pynicotine.gtkgui.utils import HumanSize
-from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import collapse_treeview
+from pynicotine.gtkgui.utils import fill_file_grouping_combobox
+from pynicotine.gtkgui.utils import hide_columns
+from pynicotine.gtkgui.utils import humanize
+from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SelectUserRowIter
-from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
-from pynicotine.gtkgui.utils import showCountryTooltip
+from pynicotine.gtkgui.utils import select_user_row_iter
+from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
-from pynicotine.utils import GetResultBitrateLength
+from pynicotine.utils import get_result_bitrate_length
 
 
 class Searches(IconNotebook):
@@ -79,11 +79,11 @@ class Searches(IconNotebook):
 
         self.popup_enable()
 
-        self.WishList = WishList(frame, self)
+        self.wish_list = WishList(frame, self)
 
-        self.UpdateColours()
+        self.update_colours()
 
-    def LoadConfig(self):
+    def load_config(self):
         """
         Add search history to SearchEntryCombo later and connect Wishlist,
         after widgets have been created.
@@ -96,19 +96,19 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.SearchEntryCombo_List.append([i])
+            self.frame.search_entry_combo_model.append([i])
 
-    def OnClearSearchHistory(self):
+    def on_clear_search_history(self):
 
-        self.frame.SearchEntry.set_text("")
+        self.frame.search_entry.set_text("")
         self.frame.np.config.sections["searches"]["history"] = []
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
         self.frame.SearchEntryCombo.get_model().clear()
-        self.frame.SearchEntryCombo_List.append([""])
+        self.frame.search_entry_combo_model.append([""])
 
-    def OnSearch(self):
-        self.saveColumns()
-        text = self.frame.SearchEntry.get_text().strip()
+    def on_search(self):
+        self.save_columns()
+        text = self.frame.search_entry.get_text().strip()
 
         if not text:
             return
@@ -141,19 +141,19 @@ class Searches(IconNotebook):
         feedback = None
 
         if mode == 0:
-            feedback = self.frame.np.pluginhandler.OutgoingGlobalSearchEvent(text)
+            feedback = self.frame.np.pluginhandler.outgoing_global_search_event(text)
             if feedback is not None:
                 text = feedback[0]
         elif mode == 1:
-            feedback = self.frame.np.pluginhandler.OutgoingRoomSearchEvent(room, text)
+            feedback = self.frame.np.pluginhandler.outgoing_room_search_event(room, text)
             if feedback is not None:
                 (room, text) = feedback
         elif mode == 2:
-            feedback = self.frame.np.pluginhandler.OutgoingBuddySearchEvent(text)
+            feedback = self.frame.np.pluginhandler.outgoing_buddy_search_event(text)
             if feedback is not None:
                 text = feedback[0]
         elif mode == 3:
-            feedback = self.frame.np.pluginhandler.OutgoingUserSearchEvent(users)
+            feedback = self.frame.np.pluginhandler.outgoing_user_search_event(users)
             if feedback is not None:
                 users = feedback[0]
         else:
@@ -161,10 +161,10 @@ class Searches(IconNotebook):
             feedback = True
 
         if feedback is not None:
-            self.DoSearch(text, mode, users, room)
-            self.frame.SearchEntry.set_text("")
+            self.do_search(text, mode, users, room)
+            self.frame.search_entry.set_text("")
 
-    def DoSearch(self, text, mode, users=[], room=None):
+    def do_search(self, text, mode, users=[], room=None):
 
         # Get excluded words (starting with "-")
         searchterm_words = text.split()
@@ -197,7 +197,7 @@ class Searches(IconNotebook):
 
         # Clear old items
         del items[15:]
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
         # Repopulate the combo list
         self.frame.SearchEntryCombo.get_model().clear()
@@ -208,46 +208,46 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.SearchEntryCombo_List.append([i])
+            self.frame.search_entry_combo_model.append([i])
 
         if mode == 3 and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
 
-        search = self.CreateTab(self.searchid, searchterm_with_excluded, mode, showtab=True)
+        search = self.create_tab(self.searchid, searchterm_with_excluded, mode, showtab=True)
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
         if mode == 0:
-            self.DoGlobalSearch(self.searchid, searchterm_without_excluded)
+            self.do_global_search(self.searchid, searchterm_without_excluded)
         elif mode == 1:
-            self.DoRoomsSearch(self.searchid, searchterm_without_excluded, room)
+            self.do_rooms_search(self.searchid, searchterm_without_excluded, room)
         elif mode == 2:
-            self.DoBuddiesSearch(self.searchid, searchterm_without_excluded)
+            self.do_buddies_search(self.searchid, searchterm_without_excluded)
         elif mode == 3 and users != [] and users[0] != '':
-            self.DoPeerSearch(self.searchid, searchterm_without_excluded, users)
+            self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
         self.searchid += 1
 
-    def DoGlobalSearch(self, id, text):
+    def do_global_search(self, id, text):
         self.frame.np.queue.put(slskmessages.FileSearch(id, text))
 
-    def DoRoomsSearch(self, id, text, room=None):
+    def do_rooms_search(self, id, text, room=None):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
             for room in self.frame.chatrooms.roomsctrl.joinedrooms:
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
-    def DoBuddiesSearch(self, id, text):
+    def do_buddies_search(self, id, text):
         for i in self.frame.np.config.sections["server"]["userlist"]:
             user = i[0]
             self.frame.np.queue.put(slskmessages.UserSearch(user, id, text))
 
-    def DoPeerSearch(self, id, text, users):
+    def do_peer_search(self, id, text, users):
         for user in users:
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.FileSearchRequest(None, id, text))
+            self.frame.np.process_request_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
 
-    def GetUserSearchName(self, id):
+    def get_user_search_name(self, id):
 
         if id in self.usersearches:
 
@@ -260,29 +260,29 @@ class Searches(IconNotebook):
 
         return _("User")
 
-    def CreateTab(self, id, text, mode, remember=False, showtab=True, ignored=False):
+    def create_tab(self, id, text, mode, remember=False, showtab=True, ignored=False):
 
         tab = Search(self, text, id, mode, remember, showtab)
 
         if showtab:
-            self.ShowTab(tab, id, text, mode)
+            self.show_tab(tab, id, text, mode)
 
         search = [id, text, tab, mode, remember, ignored]
         self.searches[id] = search
 
         return search
 
-    def ShowTab(self, tab, id, text, mode):
+    def show_tab(self, tab, id, text, mode):
         if mode:
-            fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.GetUserSearchName(id))[mode] + ") " + text
+            fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.get_user_search_name(id))[mode] + ") " + text
             label = fulltext[:15]
         else:
             fulltext = text
             label = fulltext[:20]
 
-        self.append_page(tab.Main, label, tab.OnClose, fulltext=fulltext)
+        self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
 
-    def ShowResult(self, msg, username, country):
+    def show_result(self, msg, username, country):
 
         try:
             search = self.searches[msg.token]
@@ -294,7 +294,7 @@ class Searches(IconNotebook):
             return
 
         if search[2] is None:
-            search = self.CreateTab(search[0], search[1], search[3], search[4], showtab=False)
+            search = self.create_tab(search[0], search[1], search[3], search[4], showtab=False)
 
         counter = len(search[2].all_data) + 1
 
@@ -304,9 +304,9 @@ class Searches(IconNotebook):
             search[5] = True
             return
 
-        search[2].AddUserResults(msg, username, country)
+        search[2].add_user_results(msg, username, country)
 
-    def RemoveTab(self, tab):
+    def remove_tab(self, tab):
 
         if tab.id in self.searches:
             search = self.searches[tab.id]
@@ -320,16 +320,16 @@ class Searches(IconNotebook):
         self.remove_page(tab.Main)
         tab.Main.destroy()
 
-    def UpdateColours(self):
+    def update_colours(self):
 
         for id in self.searches.values():
             if id[2] is None:
                 continue
-            id[2].ChangeColours()
+            id[2].change_colours()
 
-        self.frame.SetTextBG(self.WishList.AddWishEntry)
+        self.frame.set_text_bg(self.wish_list.AddWishEntry)
 
-    def saveColumns(self):
+    def save_columns(self):
 
         page_num = self.get_current_page()
 
@@ -342,16 +342,16 @@ class Searches(IconNotebook):
                 if search[2] is None:
                     continue
                 if search[2].Main == page:
-                    search[2].saveColumns()
+                    search[2].save_columns()
                     break
 
-    def TabPopup(self, id):
+    def tab_popup(self, id):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Copy search term"), self.searches[id][2].OnCopySearchTerm),
+            ("#" + _("Copy search term"), self.searches[id][2].on_copy_search_term),
             ("", None),
-            ("#" + _("Close this tab"), self.searches[id][2].OnClose)
+            ("#" + _("Close this tab"), self.searches[id][2].on_close)
         )
 
         return popup
@@ -377,11 +377,11 @@ class Searches(IconNotebook):
                 return
 
             if event.button == 2:
-                self.searches[id][2].OnClose(widget)
+                self.searches[id][2].on_close(widget)
                 return True
 
             if event.button == 3:
-                menu = self.TabPopup(id)
+                menu = self.tab_popup(id)
                 menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
@@ -390,10 +390,10 @@ class Searches(IconNotebook):
 
 class Search:
 
-    def __init__(self, Searches, text, id, mode, remember, showtab):
+    def __init__(self, searches, text, id, mode, remember, showtab):
 
-        self.Searches = Searches
-        self.frame = Searches.frame
+        self.searches = searches
+        self.frame = searches.frame
 
         # Build the window
         builder = gtk.Builder()
@@ -401,7 +401,7 @@ class Search:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "search.ui"))
 
-        self.SearchTab = builder.get_object("SearchTab")
+        self.search_tab = builder.get_object("SearchTab")
 
         for i in builder.get_objects():
             try:
@@ -409,8 +409,8 @@ class Search:
             except TypeError:
                 pass
 
-        self.SearchTab.remove(self.Main)
-        self.SearchTab.destroy()
+        self.search_tab.remove(self.Main)
+        self.search_tab.destroy()
 
         builder.connect_signals(self)
 
@@ -439,12 +439,12 @@ class Search:
             '>': operator.gt
         }
 
-        FillFileGroupingCombobox(self.ResultGrouping)
+        fill_file_grouping_combobox(self.ResultGrouping)
         self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
-        self.ResultGrouping.connect("changed", self.OnGroup)
+        self.ResultGrouping.connect("changed", self.on_group)
 
         self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
-        self.ExpandButton.connect("toggled", self.OnToggleExpandAll)
+        self.ExpandButton.connect("toggled", self.on_toggle_expand_all)
 
         if mode > 0:
             self.RememberCheckButton.set_sensitive(False)
@@ -486,19 +486,19 @@ class Search:
         )
 
         widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.ResultsList,
-            [_("ID"), widths[0], "text", self.CellDataFunc],
-            [_("User"), widths[1], "text", self.CellDataFunc],
+            [_("ID"), widths[0], "text", self.cell_data_func],
+            [_("User"), widths[1], "text", self.cell_data_func],
             [_("Country"), widths[2], "pixbuf"],
-            [_("Immediate Download"), widths[3], "center", self.CellDataFunc],
-            [_("Speed"), widths[4], "number", self.CellDataFunc],
-            [_("In queue"), widths[5], "center", self.CellDataFunc],
-            [_("Directory"), widths[6], "text", self.CellDataFunc],
-            [_("Filename"), widths[7], "text", self.CellDataFunc],
-            [_("Size"), widths[8], "number", self.CellDataFunc],
-            [_("Bitrate"), widths[9], "number", self.CellDataFunc],
-            [_("Length"), widths[10], "number", self.CellDataFunc]
+            [_("Immediate Download"), widths[3], "center", self.cell_data_func],
+            [_("Speed"), widths[4], "number", self.cell_data_func],
+            [_("In queue"), widths[5], "center", self.cell_data_func],
+            [_("Directory"), widths[6], "text", self.cell_data_func],
+            [_("Filename"), widths[7], "text", self.cell_data_func],
+            [_("Size"), widths[8], "number", self.cell_data_func],
+            [_("Bitrate"), widths[9], "number", self.cell_data_func],
+            [_("Length"), widths[10], "number", self.cell_data_func]
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
@@ -509,7 +509,7 @@ class Search:
             self.ResultsList.get_columns()[0].set_visible(False)
             self.ExpandButton.show()
 
-        HideColumns(cols, self.frame.np.config.sections["columns"]["filesearch_columns"])
+        hide_columns(cols, self.frame.np.config.sections["columns"]["filesearch_columns"])
 
         self.col_num.set_sort_column_id(0)
         self.col_user.set_sort_column_id(1)
@@ -527,33 +527,33 @@ class Search:
 
         self.ResultsList.set_model(self.resultsmodel)
 
-        self.ResultsList.connect("button_press_event", self.OnListClicked)
+        self.ResultsList.connect("button_press_event", self.on_list_clicked)
 
-        self.ChangeColours()
+        self.change_colours()
 
         """ Filters """
 
-        self.FilterBitrate_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterBitrate.set_model(self.FilterBitrate_List)
+        self.filter_bitrate_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterBitrate.set_model(self.filter_bitrate_model)
         self.FilterBitrate.set_entry_text_column(0)
 
-        self.FilterSize_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterSize.set_model(self.FilterSize_List)
+        self.filter_size_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterSize.set_model(self.filter_size_model)
         self.FilterSize.set_entry_text_column(0)
 
-        self.FilterCountry_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterCountry.set_model(self.FilterCountry_List)
+        self.filter_country_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterCountry.set_model(self.filter_country_model)
         self.FilterCountry.set_entry_text_column(0)
 
-        self.FilterIn_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterIn.set_model(self.FilterIn_List)
+        self.filter_in_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterIn.set_model(self.filter_in_model)
         self.FilterIn.set_entry_text_column(0)
 
-        self.FilterOut_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.FilterOut.set_model(self.FilterOut_List)
+        self.filter_out_model = gtk.ListStore(gobject.TYPE_STRING)
+        self.FilterOut.set_model(self.filter_out_model)
         self.FilterOut.set_entry_text_column(0)
 
-        self.PopulateFilters()
+        self.populate_filters()
 
         self.FilterSize.clear()
         sizecell = gtk.CellRendererText()
@@ -567,46 +567,46 @@ class Search:
         self.FilterBitrate.pack_start(bit_cell, True)
         self.FilterBitrate.add_attribute(bit_cell, "text", 0)
 
-        self.FilterIn.connect("changed", self.OnFilterChanged)
-        self.FilterOut.connect("changed", self.OnFilterChanged)
-        self.FilterSize.connect("changed", self.OnFilterChanged)
-        self.FilterBitrate.connect("changed", self.OnFilterChanged)
-        self.FilterCountry.connect("changed", self.OnFilterChanged)
+        self.FilterIn.connect("changed", self.on_filter_changed)
+        self.FilterOut.connect("changed", self.on_filter_changed)
+        self.FilterSize.connect("changed", self.on_filter_changed)
+        self.FilterBitrate.connect("changed", self.on_filter_changed)
+        self.FilterCountry.connect("changed", self.on_filter_changed)
 
-        self.FilterIn.get_child().connect("activate", self.OnRefilter)
-        self.FilterOut.get_child().connect("activate", self.OnRefilter)
-        self.FilterSize.get_child().connect("activate", self.OnRefilter)
-        self.FilterBitrate.get_child().connect("activate", self.OnRefilter)
-        self.FilterCountry.get_child().connect("activate", self.OnRefilter)
+        self.FilterIn.get_child().connect("activate", self.on_refilter)
+        self.FilterOut.get_child().connect("activate", self.on_refilter)
+        self.FilterSize.get_child().connect("activate", self.on_refilter)
+        self.FilterBitrate.get_child().connect("activate", self.on_refilter)
+        self.FilterCountry.get_child().connect("activate", self.on_refilter)
 
         """ Popup """
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("_Download file(s)"), self.OnDownloadFiles),
-            ("#" + _("Download file(s) _to..."), self.OnDownloadFilesTo),
-            ("#" + _("Download _folder(s)"), self.OnDownloadFolders),
-            ("#" + _("Download f_older(s) to..."), self.OnDownloadFoldersTo),
-            ("#" + _("View Metadata of file(s)"), self.OnSearchMeta),
+            ("#" + _("_Download file(s)"), self.on_download_files),
+            ("#" + _("Download file(s) _to..."), self.on_download_files_to),
+            ("#" + _("Download _folder(s)"), self.on_download_folders),
+            ("#" + _("Download f_older(s) to..."), self.on_download_folders_to),
+            ("#" + _("View Metadata of file(s)"), self.on_search_meta),
             ("", None),
-            ("#" + _("Copy _URL"), self.OnCopyURL),
-            ("#" + _("Copy folder U_RL"), self.OnCopyDirURL),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy folder U_RL"), self.on_copy_dir_url),
             ("", None),
-            (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers)
+            (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users)
         )
 
-    def OnTooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return showCountryTooltip(widget, x, y, tooltip, 13, stripprefix='')
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
 
-    def OnFilterChanged(self, widget):
+    def on_filter_changed(self, widget):
 
         iterator = widget.get_active_iter()
 
         if iterator:
-            self.OnRefilter(None)
+            self.on_refilter(None)
 
-    def PopulateFilters(self):
+    def populate_filters(self):
 
         if self.frame.np.config.sections["searches"]["enablefilters"]:
 
@@ -632,27 +632,27 @@ class Search:
         s_config = self.frame.np.config.sections["searches"]
 
         for i in s_config["filterin"]:
-            self.AddCombo(self.FilterIn, i, True)
+            self.add_combo(self.FilterIn, i, True)
 
         for i in s_config["filterout"]:
-            self.AddCombo(self.FilterOut, i, True)
+            self.add_combo(self.FilterOut, i, True)
 
         for i in s_config["filtersize"]:
-            self.AddCombo(self.FilterSize, i, True)
+            self.add_combo(self.FilterSize, i, True)
 
         for i in s_config["filterbr"]:
-            self.AddCombo(self.FilterBitrate, i, True)
+            self.add_combo(self.FilterBitrate, i, True)
 
         for i in s_config["filtercc"]:
-            self.AddCombo(self.FilterCountry, i, True)
+            self.add_combo(self.FilterCountry, i, True)
 
-    def AddCombo(self, Combobox, text, list=False):
+    def add_combo(self, combobox, text, list=False):
 
         text = text.strip()
         if not text:
             return False
 
-        model = Combobox.get_model()
+        model = combobox.get_model()
         iterator = model.get_iter_first()
         match = False
 
@@ -671,7 +671,7 @@ class Search:
             else:
                 model.prepend([text])
 
-    def AddUserResults(self, msg, user, country):
+    def add_user_results(self, msg, user, country):
 
         if user in self.users:
             return
@@ -682,7 +682,7 @@ class Search:
 
         inqueue = msg.inqueue
         ulspeed = msg.ulspeed
-        h_speed = HumanSpeed(ulspeed)
+        h_speed = human_speed(ulspeed)
 
         if msg.freeulslots:
             imdl = "Y"
@@ -690,10 +690,10 @@ class Search:
         else:
             imdl = "N"
 
-        h_queue = Humanize(inqueue)
+        h_queue = humanize(inqueue)
 
         append = False
-        maxstoredresults = self.Searches.maxstoredresults
+        maxstoredresults = self.searches.maxstoredresults
 
         for result in msg.list:
 
@@ -718,8 +718,8 @@ class Search:
             directory = '\\'.join(fullpath_split)
 
             size = result[2]
-            h_size = HumanSize(size)
-            h_bitrate, bitrate, h_length = GetResultBitrateLength(size, result[4])
+            h_size = human_size(size)
+            h_bitrate, bitrate, h_length = get_result_bitrate_length(size, result[4])
 
             self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue])
             append = True
@@ -728,38 +728,38 @@ class Search:
         if append:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
             if not self.showtab:
-                self.Searches.ShowTab(self, self.id, self.text, self.mode)
+                self.searches.show_tab(self, self.id, self.text, self.mode)
                 self.showtab = True
 
             # Update counter
             self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
             # Update tab notification
-            self.frame.Searches.request_changed(self.Main)
+            self.frame.searches.request_changed(self.Main)
             if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
                 self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
 
     def get_flag(self, user, flag=None):
 
         if flag is not None:
-            flag = "flag_" + flag
+            flag = "flag_" + flag.lower()
             self.frame.flag_users[user] = flag
         else:
-            flag = self.frame.GetUserFlag(user)
+            flag = self.frame.get_user_flag(user)
 
-        return self.frame.GetFlagImage(flag)
+        return self.frame.get_flag_image(flag)
 
     def append(self, row):
 
         self.all_data.append(row)
 
-        if self.numvisibleresults >= self.Searches.maxdisplayedresults:
+        if self.numvisibleresults >= self.searches.maxdisplayedresults:
             return
 
         if not self.check_filter(row):
             return
 
-        iterator = self.AddRowToModel(row)
+        iterator = self.add_row_to_model(row)
 
         if self.ResultGrouping.get_active() > 0:
             # Group by folder or user
@@ -773,9 +773,9 @@ class Search:
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
             else:
-                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
 
-    def AddRowToModel(self, row):
+    def add_row_to_model(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue = row
 
         if self.ResultGrouping.get_active() > 0:
@@ -818,7 +818,7 @@ class Search:
 
         return iterator
 
-    def checkDigit(self, filter, value, factorize=True):
+    def check_digit(self, filter, value, factorize=True):
 
         op = ">="
         if filter[:1] in (">", "<", "="):
@@ -870,10 +870,10 @@ class Search:
         if filters[1] and filters[1].search(row[12].lower()):
             return False
 
-        if filters[2] and not self.checkDigit(filters[2], row[14]):
+        if filters[2] and not self.check_digit(filters[2], row[14]):
             return False
 
-        if filters[3] and not self.checkDigit(filters[3], row[11], False):
+        if filters[3] and not self.check_digit(filters[3], row[11], False):
             return False
 
         if filters[4] and row[3] != "Y":
@@ -903,18 +903,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterIn.get_child(), "red", "white")
+                self.frame.set_text_bg(self.FilterIn.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterIn.get_child())
+                self.frame.set_text_bg(self.FilterIn.get_child())
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                self.frame.SetTextBG(self.FilterOut.get_child(), "red", "white")
+                self.frame.set_text_bg(self.FilterOut.get_child(), "red", "white")
             else:
-                self.frame.SetTextBG(self.FilterOut.get_child())
+                self.frame.set_text_bg(self.FilterOut.get_child())
 
         if size:
             self.filters[2] = size
@@ -931,15 +931,15 @@ class Search:
         self.numvisibleresults = 0
 
         for row in self.all_data:
-            if self.numvisibleresults >= self.Searches.maxdisplayedresults:
+            if self.numvisibleresults >= self.searches.maxdisplayedresults:
                 break
 
             if self.check_filter(row):
-                self.AddRowToModel(row)
+                self.add_row_to_model(row)
 
         self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
 
-    def OnPopupMenuUsers(self, widget):
+    def on_popup_menu_users(self, widget):
 
         self.select_results()
 
@@ -952,26 +952,26 @@ class Search:
             for user in self.selected_users:
                 popup = PopupMenu(self.frame, False)
                 popup.setup(
-                    ("#" + _("Send _message"), popup.OnSendMessage),
-                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
-                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+                    ("#" + _("Send _message"), popup.on_send_message),
+                    ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+                    ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+                    ("#" + _("Brow_se files"), popup.on_browse_user),
+                    ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
                     ("", None),
-                    ("$" + _("_Add user to list"), popup.OnAddToList),
-                    ("$" + _("_Ban this user"), popup.OnBanUser),
-                    ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
-                    ("#" + _("Select User's Results"), self.OnSelectUserResults)
+                    ("$" + _("_Add user to list"), popup.on_add_to_list),
+                    ("$" + _("_Ban this user"), popup.on_ban_user),
+                    ("$" + _("_Ignore this user"), popup.on_ignore_user),
+                    ("#" + _("Select User's Results"), self.on_select_user_results)
                 )
                 popup.set_user(user)
 
-                items.append((1, user, popup, self.OnPopupMenuUser, popup))
+                items.append((1, user, popup, self.on_popup_menu_user, popup))
 
             self.popup_menu_users.setup(*items)
 
         return True
 
-    def OnPopupMenuUser(self, widget, popup=None):
+    def on_popup_menu_user(self, widget, popup=None):
 
         if popup is None:
             return
@@ -998,7 +998,7 @@ class Search:
 
         return True
 
-    def OnSelectUserResults(self, widget):
+    def on_select_user_results(self, widget):
 
         if len(self.selected_users) == 0:
             return
@@ -1011,7 +1011,7 @@ class Search:
 
         iterator = fmodel.get_iter_first()
 
-        SelectUserRowIter(fmodel, sel, 1, selected_user, iterator)
+        select_user_row_iter(fmodel, sel, 1, selected_user, iterator)
 
         self.select_results()
 
@@ -1020,24 +1020,25 @@ class Search:
         self.selected_results = set()
         self.selected_users = set()
 
-        self.ResultsList.get_selection().selected_foreach(self.SelectedResultsCallback)
+        self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
 
-    def ChangeColours(self):
+    def change_colours(self):
 
-        self.frame.SetTextBG(self.FilterIn.get_child())
-        self.frame.SetTextBG(self.FilterOut.get_child())
-        self.frame.SetTextBG(self.FilterSize.get_child())
-        self.frame.SetTextBG(self.FilterBitrate.get_child())
-        self.frame.SetTextBG(self.FilterCountry.get_child())
+        self.frame.set_text_bg(self.FilterIn.get_child())
+        self.frame.set_text_bg(self.FilterOut.get_child())
+        self.frame.set_text_bg(self.FilterSize.get_child())
+        self.frame.set_text_bg(self.FilterBitrate.get_child())
+        self.frame.set_text_bg(self.FilterCountry.get_child())
 
         font = self.frame.np.config.sections["ui"]["searchfont"]
 
-        self.frame.ChangeListFont(self.ResultsList, font)
+        self.frame.change_list_font(self.ResultsList, font)
 
-    def saveColumns(self):
+    def save_columns(self):
 
         columns = []
         widths = []
+
         for column in self.ResultsList.get_columns():
             columns.append(column.get_visible())
             widths.append(column.get_width())
@@ -1045,7 +1046,7 @@ class Search:
         self.frame.np.config.sections["columns"]["filesearch_columns"] = columns
         self.frame.np.config.sections["columns"]["filesearch_widths"] = widths
 
-    def SelectedResultsCallback(self, model, path, iterator):
+    def selected_results_callback(self, model, path, iterator):
 
         user = model.get_value(iterator, 1)
 
@@ -1066,10 +1067,10 @@ class Search:
 
         self.selected_results.add((user, filepath, size, bitrate, length))
 
-    def OnListClicked(self, widget, event):
+    def on_list_clicked(self, widget, event):
 
         if event.button == 3:
-            return self.OnPopupMenu(widget, event)
+            return self.on_popup_menu(widget, event)
 
         else:
             pathinfo = widget.get_path_at_pos(event.x, event.y)
@@ -1079,18 +1080,18 @@ class Search:
 
             elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.select_results()
-                self.OnDownloadFiles(widget)
+                self.on_download_files(widget)
                 self.ResultsList.get_selection().unselect_all()
                 return True
 
         return False
 
-    def OnPopupMenu(self, widget, event):
+    def on_popup_menu(self, widget, event):
 
         if event.button != 3:
             return False
 
-        SetTreeviewSelectedRow(widget, event)
+        set_treeview_selected_row(widget, event)
         self.select_results()
 
         items = self.popup_menu.get_children()
@@ -1121,14 +1122,14 @@ class Search:
 
         return True
 
-    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
         imdl = model.get_value(iterator, 3)
         color = imdl == "Y" and "search" or "searchq"
 
         colour = self.frame.np.config.sections["ui"][color] or None
         cellrenderer.set_property("foreground", colour)
 
-    def MetaBox(self, title="Meta Data", message="", data=None, modal=True):
+    def meta_box(self, title="Meta Data", message="", data=None, modal=True):
 
         win = MetaDialog(self.frame, message, data, modal)
         win.set_title(title)
@@ -1137,7 +1138,7 @@ class Search:
 
         return win.ret
 
-    def SelectedResultsAllData(self, model, path, iterator, data):
+    def selected_results_all_data(self, model, path, iterator, data):
 
         filename = model.get_value(iterator, 7)
 
@@ -1170,18 +1171,18 @@ class Search:
                 "country": country
             }
 
-    def OnSearchMeta(self, widget):
+    def on_search_meta(self, widget):
 
         if not self.frame.np.transfers:
             return
 
         data = {}
-        self.ResultsList.get_selection().selected_foreach(self.SelectedResultsAllData, data)
+        self.ResultsList.get_selection().selected_foreach(self.selected_results_all_data, data)
 
         if data != {}:
-            self.MetaBox(title=_("Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
+            self.meta_box(title=_("Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
 
-    def OnDownloadFiles(self, widget, prefix=""):
+    def on_download_files(self, widget, prefix=""):
 
         if not self.frame.np.transfers:
             return
@@ -1189,20 +1190,20 @@ class Search:
         for file in self.selected_results:
             # Make sure the selected result is not a directory
             if not file[1].endswith('\\'):
-                self.frame.np.transfers.getFile(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
+                self.frame.np.transfers.get_file(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
-    def OnDownloadFilesTo(self, widget):
+    def on_download_files_to(self, widget):
 
-        folder = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if folder is None:
             return
 
         for folders in folder:
-            self.OnDownloadFiles(widget, folders)
+            self.on_download_files(widget, folders)
             break
 
-    def OnDownloadFolders(self, widget):
+    def on_download_folders(self, widget):
 
         requested_folders = {}
 
@@ -1218,12 +1219,12 @@ class Search:
                 """ Ensure we don't send folder content requests for a folder more than once,
                 e.g. when several selected resuls belong to the same folder. """
 
-                self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
+                self.frame.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
                 requested_folders[user].append(folder)
 
-    def OnDownloadFoldersTo(self, widget):
+    def on_download_folders_to(self, widget):
 
-        directories = ChooseDir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        directories = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if directories is None or directories == []:
             return
@@ -1235,21 +1236,21 @@ class Search:
             user = i[0]
             folder = i[1].rsplit('\\', 1)[0]
 
-            if user not in self.frame.np.requestedFolders:
-                self.frame.np.requestedFolders[user] = {}
+            if user not in self.frame.np.requested_folders:
+                self.frame.np.requested_folders[user] = {}
 
-            if folder not in self.frame.np.requestedFolders[user]:
+            if folder not in self.frame.np.requested_folders[user]:
                 """ Ensure we don't send folder content requests for a folder more than once,
                 e.g. when several selected resuls belong to the same folder. """
 
-                self.frame.np.requestedFolders[user][folder] = destination
-                self.frame.np.ProcessRequestToPeer(user, slskmessages.FolderContentsRequest(None, folder))
+                self.frame.np.requested_folders[user][folder] = destination
+                self.frame.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
-    def OnCopyURL(self, widget):
+    def on_copy_url(self, widget):
         user, path = next(iter(self.selected_results))[:2]
-        self.frame.SetClipboardURL(user, path)
+        self.frame.set_clipboard_url(user, path)
 
-    def OnCopyDirURL(self, widget):
+    def on_copy_dir_url(self, widget):
 
         user, path = next(iter(self.selected_results))[:2]
         path = "\\".join(path.split("\\")[:-1])
@@ -1257,11 +1258,11 @@ class Search:
         if path[:-1] != "/":
             path += "/"
 
-        self.frame.SetClipboardURL(user, path)
+        self.frame.set_clipboard_url(user, path)
 
-    def OnGroup(self, widget):
+    def on_group(self, widget):
 
-        self.OnRefilter(widget)
+        self.on_refilter(widget)
 
         self.ResultsList.set_show_expanders(widget.get_active())
 
@@ -1274,7 +1275,7 @@ class Search:
             self.ResultsList.get_columns()[0].set_visible(True)
             self.ExpandButton.hide()
 
-    def OnToggleExpandAll(self, widget):
+    def on_toggle_expand_all(self, widget):
 
         active = self.ExpandButton.get_active()
 
@@ -1282,16 +1283,16 @@ class Search:
             self.ResultsList.expand_all()
             self.expand.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
-            CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
+            collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
             self.expand.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["searches"]["expand_searches"] = active
 
-    def OnToggleFilters(self, widget):
+    def on_toggle_filters(self, widget):
 
         if widget.get_active():
             self.FiltersContainer.show()
-            self.OnRefilter(None)
+            self.on_refilter(None)
         else:
             self.FiltersContainer.hide()
             self.ResultsList.set_model(None)
@@ -1304,43 +1305,43 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
 
-    def OnIgnore(self, widget):
+    def on_ignore(self, widget):
 
-        self.Searches.searches[self.id][5] = True  # ignored
+        self.searches.searches[self.id][5] = True  # ignored
 
-        self.Searches.WishList.remove_wish(self.text)
+        self.searches.wish_list.remove_wish(self.text)
         widget.set_sensitive(False)
 
-    def OnClear(self, widget):
+    def on_clear(self, widget):
         self.all_data = []
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
 
-    def OnClose(self, widget):
+    def on_close(self, widget):
 
         if not self.frame.np.config.sections["searches"]["reopen_tabs"]:
             if self.text not in self.frame.np.config.sections["server"]["autosearch"]:
-                self.OnIgnore(widget)
+                self.on_ignore(widget)
 
-        self.Searches.RemoveTab(self)
+        self.searches.remove_tab(self)
 
-    def OnCopySearchTerm(self, widget):
+    def on_copy_search_term(self, widget):
         self.frame.clip.set_text(self.text, -1)
 
-    def OnToggleRemember(self, widget):
+    def on_toggle_remember(self, widget):
 
         self.remember = widget.get_active()
-        search = self.Searches.searches[self.id]
+        search = self.searches.searches[self.id]
 
         if not self.remember:
-            self.Searches.WishList.remove_wish(search[1])
+            self.searches.wish_list.remove_wish(search[1])
         else:
-            self.Searches.WishList.add_wish(search[1])
+            self.searches.wish_list.add_wish(search[1])
 
-    def PushHistory(self, widget, title):
+    def push_history(self, widget, title):
 
         text = widget.get_child().get_text()
         if not text.strip():
@@ -1355,21 +1356,21 @@ class Search:
             del history[-1]
 
         history.insert(0, text)
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
-        self.AddCombo(widget, text)
+        self.add_combo(widget, text)
         widget.get_child().set_text(text)
 
         return text
 
-    def OnRefilter(self, widget):
+    def on_refilter(self, widget):
 
-        f_in = self.PushHistory(self.FilterIn, "filterin")
-        f_out = self.PushHistory(self.FilterOut, "filterout")
-        f_size = self.PushHistory(self.FilterSize, "filtersize")
-        f_br = self.PushHistory(self.FilterBitrate, "filterbr")
+        f_in = self.push_history(self.FilterIn, "filterin")
+        f_out = self.push_history(self.FilterOut, "filterout")
+        f_size = self.push_history(self.FilterSize, "filtersize")
+        f_br = self.push_history(self.FilterBitrate, "filterbr")
         f_free = self.FilterFreeSlot.get_active()
-        f_country = self.PushHistory(self.FilterCountry, "filtercc")
+        f_country = self.push_history(self.FilterCountry, "filtercc")
 
         self.ResultsList.set_model(None)
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
@@ -1381,7 +1382,7 @@ class Search:
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                CollapseTreeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
 
-    def OnAboutFilters(self, widget):
-        self.frame.OnAboutFilters(widget)
+    def on_about_filters(self, widget):
+        self.frame.on_about_filters(widget)

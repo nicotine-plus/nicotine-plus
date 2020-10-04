@@ -51,7 +51,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -67,7 +67,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -83,7 +83,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -99,7 +99,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -115,7 +115,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -131,7 +131,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -146,7 +146,7 @@
                     <property name="receives_default">False</property>
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -162,7 +162,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -178,7 +178,7 @@
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="OnNPPlayer" swapped="no"/>
+                    <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -343,7 +343,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnNPCancel" swapped="no"/>
+                <signal name="clicked" handler="on_np_cancel" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -358,7 +358,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="tooltip_text" translatable="yes">Test the configuration</property>
-                <signal name="clicked" handler="OnNPTest" swapped="no"/>
+                <signal name="clicked" handler="on_np_test" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -372,7 +372,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="OnNPSave" swapped="no"/>
+                <signal name="clicked" handler="on_np_save" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

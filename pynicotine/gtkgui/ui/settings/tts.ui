@@ -16,7 +16,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="OnTextToSpeechToggled" swapped="no"/>
+            <signal name="toggled" handler="on_text_to_speech_toggled" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -70,7 +70,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="DefaultTTS" swapped="no"/>
+                    <signal name="clicked" handler="on_default_tts" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -149,7 +149,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="DefaultRooms" swapped="no"/>
+                    <signal name="clicked" handler="on_default_rooms" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -228,7 +228,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="DefaultPrivate" swapped="no"/>
+                    <signal name="clicked" handler="on_default_private" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

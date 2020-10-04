@@ -35,12 +35,12 @@ from gi.repository import Gtk as gtk
 
 import _thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.dialogs import ComboBoxDialog
-from pynicotine.gtkgui.dialogs import EntryDialog
-from pynicotine.gtkgui.utils import HumanSize
-from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import OpenUri
+from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.dialogs import entry_dialog
+from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import open_uri
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
@@ -51,7 +51,7 @@ if not win32:
     import pwd
 
 
-class buildFrame:
+class BuildFrame:
     """ This class build the individual frames from the settings window """
 
     def __init__(self, window):
@@ -78,13 +78,13 @@ class buildFrame:
         builder.connect_signals(self)
 
 
-class ServerFrame(buildFrame):
+class ServerFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "server")
+        BuildFrame.__init__(self, "server")
 
         self.options = {
             "server": {
@@ -98,9 +98,9 @@ class ServerFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         server = config["server"]
 
@@ -162,7 +162,7 @@ class ServerFrame(buildFrame):
             self.UseUPnP.set_sensitive(False)
             self.labelRequirementsUPnP.show()
 
-    def GetSettings(self):
+    def get_settings(self):
 
         try:
             server = self.Server.get_text().split(":")
@@ -173,7 +173,7 @@ class ServerFrame(buildFrame):
 
         if str(self.Login.get_text()) == "None":
             dlg = gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
+                transient_for=self.p.settings_window,
                 flags=0,
                 type=gtk.MessageType.WARNING,
                 buttons=gtk.ButtonsType.OK,
@@ -191,7 +191,7 @@ class ServerFrame(buildFrame):
         except Exception:
             portrange = None
             dlg = gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
+                transient_for=self.p.settings_window,
                 flags=0,
                 type=gtk.MessageType.WARNING,
                 buttons=gtk.ButtonsType.OK,
@@ -216,20 +216,20 @@ class ServerFrame(buildFrame):
             }
         }
 
-    def OnChangePassword(self, widget):
+    def on_change_password(self, widget):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
-    def OnCheckPort(self, widget):
-        OpenUri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
+    def on_check_port(self, widget):
+        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.settings_window)
 
 
-class DownloadsFrame(buildFrame):
+class DownloadsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "downloads")
+        BuildFrame.__init__(self, "downloads")
 
         self.needrescan = False
 
@@ -250,10 +250,10 @@ class DownloadsFrame(buildFrame):
             }
         }
 
-        self.UploadsAllowed_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.UploadsAllowed.set_model(self.UploadsAllowed_List)
+        self.uploads_allowed__list = gtk.ListStore(gobject.TYPE_STRING)
+        self.UploadsAllowed.set_model(self.uploads_allowed__list)
 
-        self.UploadsAllowed_List.clear()
+        self.uploads_allowed__list.clear()
         self.alloweduserslist = [
             _("No one"),
             _("Everyone"),
@@ -262,7 +262,7 @@ class DownloadsFrame(buildFrame):
         ]
 
         for item in self.alloweduserslist:
-            self.UploadsAllowed_List.append([item])
+            self.uploads_allowed__list.append([item])
 
         self.filterlist = gtk.ListStore(
             gobject.TYPE_STRING,
@@ -270,7 +270,7 @@ class DownloadsFrame(buildFrame):
         )
         self.downloadfilters = []
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.FilterView,
             [_("Filter"), 250, "text"],
             [_("Escaped"), 40, "toggle"]
@@ -286,11 +286,11 @@ class DownloadsFrame(buildFrame):
         self.FilterView.set_model(self.filterlist)
         self.FilterView.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         transfers = config["transfers"]
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if transfers["uploadallowed"] is not None:
             self.UploadsAllowed.set_active(transfers["uploadallowed"])
@@ -314,11 +314,11 @@ class DownloadsFrame(buildFrame):
                 filter, escaped = dfilter
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 
-        self.OnEnableFiltersToggle(self.DownloadFilter)
+        self.on_enable_filters_toggle(self.DownloadFilter)
 
         self.needrescan = False
 
-    def GetSettings(self):
+    def get_settings(self):
 
         if win32:
             place = "Windows"
@@ -330,7 +330,7 @@ class DownloadsFrame(buildFrame):
         if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
             dlg = gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
+                transient_for=self.p.settings_window,
                 flags=0,
                 type=gtk.MessageType.WARNING,
                 buttons=gtk.ButtonsType.OK,
@@ -361,16 +361,16 @@ class DownloadsFrame(buildFrame):
                 "downloaddir": self.DownloadDir.get_file().get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "uploaddir": self.UploadDir.get_file().get_path(),
-                "downloadfilters": self.GetFilterList(),
+                "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int()
             }
         }
 
-    def GetNeedRescan(self):
+    def get_need_rescan(self):
         return self.needrescan
 
-    def OnChooseDownloadDir(self, widget):
+    def on_choose_download_dir(self, widget):
         """
         Function called when the download directory is modified.
         """
@@ -390,16 +390,16 @@ class DownloadsFrame(buildFrame):
                 if dir_disp != transfers["downloaddir"]:
                     self.needrescan = True
 
-    def OnRemoteDownloads(self, widget):
+    def on_remote_downloads(self, widget):
 
         sensitive = widget.get_active()
 
         self.UploadsAllowed.set_sensitive(sensitive)
 
-    def OnShareDownloadDirToggled(self, widget):
+    def on_share_download_dir_toggled(self, widget):
         self.needrescan = True
 
-    def OnEnableFiltersToggle(self, widget):
+    def on_enable_filters_toggle(self, widget):
 
         sensitive = widget.get_active()
 
@@ -411,10 +411,10 @@ class DownloadsFrame(buildFrame):
         self.AddFilter.set_sensitive(sensitive)
         self.FilterView.set_sensitive(sensitive)
 
-    def OnAddFilter(self, widget):
+    def on_add_filter(self, widget):
 
-        response = ComboBoxDialog(
-            parent=self.p.SettingsWindow,
+        response = combo_box_dialog(
+            parent=self.p.settings_window,
             title=_('Add a download filter'),
             message=_('Enter a new download filter:'),
             option=True,
@@ -433,9 +433,9 @@ class DownloadsFrame(buildFrame):
             else:
                 self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 
-            self.OnVerifyFilter(self.VerifyFilters)
+            self.on_verify_filter(self.VerifyFilters)
 
-    def GetFilterList(self):
+    def get_filter_list(self):
 
         self.downloadfilters = []
 
@@ -449,17 +449,17 @@ class DownloadsFrame(buildFrame):
 
         return self.downloadfilters
 
-    def OnEditFilter(self, widget):
+    def on_edit_filter(self, widget):
 
-        dfilter = self.GetSelectedFilter()
+        dfilter = self.get_selected_filter()
 
         if dfilter:
 
             iterator = self.filtersiters[dfilter]
             escapedvalue = self.filterlist.get_value(iterator, 1)
 
-            response = ComboBoxDialog(
-                parent=self.p.SettingsWindow,
+            response = combo_box_dialog(
+                parent=self.p.settings_window,
                 title=_('Edit a download filter'),
                 message=_('Modify this download filter:'),
                 default_text=dfilter,
@@ -480,15 +480,15 @@ class DownloadsFrame(buildFrame):
                     del self.filtersiters[dfilter]
                     self.filterlist.remove(iterator)
 
-                self.OnVerifyFilter(self.VerifyFilters)
+                self.on_verify_filter(self.VerifyFilters)
 
-    def _SelectedFilter(self, model, path, iterator, list):
+    def _selected_filter(self, model, path, iterator, list):
         list.append(iterator)
 
-    def GetSelectedFilter(self):
+    def get_selected_filter(self):
 
         iters = []
-        self.FilterView.get_selection().selected_foreach(self._SelectedFilter, iters)
+        self.FilterView.get_selection().selected_foreach(self._selected_filter, iters)
 
         if iters == []:
             return None
@@ -497,9 +497,9 @@ class DownloadsFrame(buildFrame):
 
         return dfilter
 
-    def OnRemoveFilter(self, widget):
+    def on_remove_filter(self, widget):
 
-        dfilter = self.GetSelectedFilter()
+        dfilter = self.get_selected_filter()
 
         if dfilter:
 
@@ -508,9 +508,9 @@ class DownloadsFrame(buildFrame):
 
             del self.filtersiters[dfilter]
 
-            self.OnVerifyFilter(self.VerifyFilters)
+            self.on_verify_filter(self.VerifyFilters)
 
-    def OnDefaultFilters(self, widget):
+    def on_default_filters(self, widget):
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -527,9 +527,9 @@ class DownloadsFrame(buildFrame):
             filter, escaped = dfilter
             self.filtersiters[filter] = self.filterlist.append([filter, escaped])
 
-        self.OnVerifyFilter(self.VerifyFilters)
+        self.on_verify_filter(self.VerifyFilters)
 
-    def OnVerifyFilter(self, widget):
+    def on_verify_filter(self, widget):
 
         outfilter = "(\\\\("
 
@@ -591,16 +591,16 @@ class DownloadsFrame(buildFrame):
 
         self.filterlist.set(iterator, pos, not value)
 
-        self.OnVerifyFilter(self.VerifyFilters)
+        self.on_verify_filter(self.VerifyFilters)
 
 
-class SharesFrame(buildFrame):
+class SharesFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "shares")
+        BuildFrame.__init__(self, "shares")
 
         self.needrescan = False
 
@@ -620,7 +620,7 @@ class SharesFrame(buildFrame):
 
         self.bshareddirs = []
 
-        InitialiseColumns(
+        initialise_columns(
             self.Shares,
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -630,7 +630,7 @@ class SharesFrame(buildFrame):
         self.Shares.set_model(self.shareslist)
         self.Shares.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-        InitialiseColumns(
+        initialise_columns(
             self.BuddyShares,
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -650,14 +650,14 @@ class SharesFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         transfers = config["transfers"]
         self.shareslist.clear()
         self.bshareslist.clear()
 
-        self.p.SetWidgetsData(config, self.options)
-        self.OnEnabledBuddySharesToggled(self.enableBuddyShares)
+        self.p.set_widgets_data(config, self.options)
+        self.on_enabled_buddy_shares_toggled(self.enableBuddyShares)
 
         if transfers["shared"] is not None:
 
@@ -673,7 +673,7 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.get_directory_size, (actual, self.shareslist))
 
             self.shareddirs = transfers["shared"][:]
 
@@ -690,13 +690,13 @@ class SharesFrame(buildFrame):
                 )
 
                 # Compute the directory size in the background
-                _thread.start_new_thread(self.GetDirectorySize, (actual, self.shareslist))
+                _thread.start_new_thread(self.get_directory_size, (actual, self.shareslist))
 
             self.bshareddirs = transfers["buddyshared"][:]
 
         self.needrescan = False
 
-    def GetSettings(self):
+    def get_settings(self):
 
         if win32:
             place = "Windows"
@@ -708,7 +708,7 @@ class SharesFrame(buildFrame):
         for share in self.shareddirs + self.bshareddirs:
             if homedir == share:
                 dlg = gtk.MessageDialog(
-                    transient_for=self.p.SettingsWindow,
+                    transient_for=self.p.settings_window,
                     flags=0,
                     type=gtk.MessageType.WARNING,
                     buttons=gtk.ButtonsType.OK,
@@ -741,10 +741,10 @@ class SharesFrame(buildFrame):
             }
         }
 
-    def OnEnabledBuddySharesToggled(self, widget):
-        self.OnFriendsOnlyToggled(widget)
+    def on_enabled_buddy_shares_toggled(self, widget):
+        self.on_friends_only_toggled(widget)
 
-    def OnFriendsOnlyToggled(self, widget):
+    def on_friends_only_toggled(self, widget):
 
         friendsonly = self.FriendsOnly.get_active()
 
@@ -778,12 +778,12 @@ class SharesFrame(buildFrame):
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
 
-    def GetNeedRescan(self):
+    def get_need_rescan(self):
         return self.needrescan
 
-    def OnAddSharedDir(self, widget):
+    def on_add_shared_dir(self, widget):
 
-        dir1 = ChooseDir(
+        dir1 = choose_dir(
             self.Main.get_toplevel(),
             title=_("Add a shared directory")
         )
@@ -796,7 +796,7 @@ class SharesFrame(buildFrame):
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     dlg = gtk.MessageDialog(
-                        transient_for=self.p.SettingsWindow,
+                        transient_for=self.p.settings_window,
                         flags=0,
                         type=gtk.MessageType.WARNING,
                         buttons=gtk.ButtonsType.OK,
@@ -808,8 +808,8 @@ class SharesFrame(buildFrame):
 
                 else:
 
-                    virtual = ComboBoxDialog(
-                        parent=self.p.SettingsWindow,
+                    virtual = combo_box_dialog(
+                        parent=self.p.settings_window,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -818,7 +818,7 @@ class SharesFrame(buildFrame):
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         dlg = gtk.MessageDialog(
-                            transient_for=self.p.SettingsWindow,
+                            transient_for=self.p.settings_window,
                             flags=0,
                             type=gtk.MessageType.WARNING,
                             buttons=gtk.ButtonsType.OK,
@@ -843,11 +843,11 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.shareslist))
+                        _thread.start_new_thread(self.get_directory_size, (directory, self.shareslist))
 
-    def OnAddSharedBuddyDir(self, widget):
+    def on_add_shared_buddy_dir(self, widget):
 
-        dir1 = ChooseDir(
+        dir1 = choose_dir(
             self.Main.get_toplevel(),
             title=_("Add a shared buddy directory")
         )
@@ -860,7 +860,7 @@ class SharesFrame(buildFrame):
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     dlg = gtk.MessageDialog(
-                        transient_for=self.p.SettingsWindow,
+                        transient_for=self.p.settings_window,
                         flags=0,
                         type=gtk.MessageType.WARNING,
                         buttons=gtk.ButtonsType.OK,
@@ -872,8 +872,8 @@ class SharesFrame(buildFrame):
 
                 else:
 
-                    virtual = ComboBoxDialog(
-                        parent=self.p.SettingsWindow,
+                    virtual = combo_box_dialog(
+                        parent=self.p.settings_window,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -882,7 +882,7 @@ class SharesFrame(buildFrame):
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         dlg = gtk.MessageDialog(
-                            transient_for=self.p.SettingsWindow,
+                            transient_for=self.p.settings_window,
                             flags=0,
                             type=gtk.MessageType.WARNING,
                             buttons=gtk.ButtonsType.OK,
@@ -907,23 +907,23 @@ class SharesFrame(buildFrame):
                         self.needrescan = True
 
                         # Compute the directory size in the background
-                        _thread.start_new_thread(self.GetDirectorySize, (directory, self.bshareslist))
+                        _thread.start_new_thread(self.get_directory_size, (directory, self.bshareslist))
 
-    def _RemoveSharedDir(self, model, path, iterator, list):
+    def _remove_shared_dir(self, model, path, iterator, list):
         list.append(iterator)
 
-    def OnRenameVirtuals(self, widget):
+    def on_rename_virtuals(self, widget):
 
         iters = []
-        self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+        self.Shares.get_selection().selected_foreach(self._remove_shared_dir, iters)
 
         for iterator in iters:
             oldvirtual = self.shareslist.get_value(iterator, 0)
             directory = self.shareslist.get_value(iterator, 3)
             oldmapping = (oldvirtual, directory)
 
-            virtual = ComboBoxDialog(
-                parent=self.p.SettingsWindow,
+            virtual = combo_box_dialog(
+                parent=self.p.settings_window,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -937,18 +937,18 @@ class SharesFrame(buildFrame):
                 self.shareddirs.append(newmapping)
                 self.needrescan = True
 
-    def OnRenameBuddyVirtuals(self, widget):
+    def on_rename_buddy_virtuals(self, widget):
 
         iters = []
-        self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+        self.BuddyShares.get_selection().selected_foreach(self._remove_shared_dir, iters)
 
         for iterator in iters:
             oldvirtual = self.bshareslist.get_value(iterator, 0)
             directory = self.bshareslist.get_value(iterator, 3)
             oldmapping = (oldvirtual, directory)
 
-            virtual = ComboBoxDialog(
-                parent=self.p.SettingsWindow,
+            virtual = combo_box_dialog(
+                parent=self.p.settings_window,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -962,9 +962,9 @@ class SharesFrame(buildFrame):
                 self.bshareslist.append(newmapping)
                 self.needrescan = True
 
-    def OnRemoveSharedDir(self, widget):
+    def on_remove_shared_dir(self, widget):
         iters = []
-        self.Shares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+        self.Shares.get_selection().selected_foreach(self._remove_shared_dir, iters)
 
         for iterator in iters:
             virtual = self.shareslist.get_value(iterator, 0)
@@ -976,9 +976,9 @@ class SharesFrame(buildFrame):
         if iters:
             self.needrescan = True
 
-    def OnRemoveSharedBuddyDir(self, widget):
+    def on_remove_shared_buddy_dir(self, widget):
         iters = []
-        self.BuddyShares.get_selection().selected_foreach(self._RemoveSharedDir, iters)
+        self.BuddyShares.get_selection().selected_foreach(self._remove_shared_dir, iters)
 
         for iterator in iters:
             virtual = self.bshareslist.get_value(iterator, 0)
@@ -990,7 +990,7 @@ class SharesFrame(buildFrame):
         if iters:
             self.needrescan = True
 
-    def GetDirectorySize(self, directory, liststore):
+    def get_directory_size(self, directory, liststore):
 
         total_size = 0
 
@@ -1005,11 +1005,11 @@ class SharesFrame(buildFrame):
         GLib.idle_add(
             self._updatedirstats,
             directory,
-            HumanSize(total_size),
+            human_size(total_size),
             liststore
         )
 
-    def _updatedirstats(self, directory, humansize, liststore):
+    def _updatedirstats(self, directory, human_size, liststore):
 
         iterator = liststore.get_iter_first()
 
@@ -1017,20 +1017,20 @@ class SharesFrame(buildFrame):
 
             if directory == liststore.get_value(iterator, 3):
 
-                liststore.set(iterator, 2, humansize)
+                liststore.set(iterator, 2, human_size)
 
                 return
 
             iterator = liststore.iter_next(iterator)
 
 
-class UploadsFrame(buildFrame):
+class UploadsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "uploads")
+        BuildFrame.__init__(self, "uploads")
 
         self.options = {
             "transfers": {
@@ -1048,15 +1048,15 @@ class UploadsFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
-        self.OnQueueUseSlotsToggled(self.QueueUseSlots)
+        self.on_queue_use_slots_toggled(self.QueueUseSlots)
 
-        self.OnLimitToggled(self.Limit)
+        self.on_limit_toggled(self.Limit)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "transfers": {
@@ -1074,7 +1074,7 @@ class UploadsFrame(buildFrame):
             }
         }
 
-    def OnQueueUseSlotsToggled(self, widget):
+    def on_queue_use_slots_toggled(self, widget):
 
         sensitive = widget.get_active()
 
@@ -1084,7 +1084,7 @@ class UploadsFrame(buildFrame):
         self.QueueBandwidthText1.set_sensitive(not sensitive)
         self.QueueBandwidthText2.set_sensitive(not sensitive)
 
-    def OnLimitToggled(self, widget):
+    def on_limit_toggled(self, widget):
 
         sensitive = widget.get_active()
 
@@ -1092,11 +1092,11 @@ class UploadsFrame(buildFrame):
             w.set_sensitive(sensitive)
 
 
-class GeoBlockFrame(buildFrame):
+class GeoBlockFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "geoblock")
+        BuildFrame.__init__(self, "geoblock")
 
         self.options = {
             "transfers": {
@@ -1106,16 +1106,16 @@ class GeoBlockFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         transfers = config["transfers"]
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if transfers["geoblockcc"] is not None:
             self.GeoBlockCC.set_text(transfers["geoblockcc"][0])
 
-        self.OnGeoBlockToggled(self.GeoBlock)
+        self.on_geo_block_toggled(self.GeoBlock)
 
-    def GetSettings(self):
+    def get_settings(self):
         return {
             "transfers": {
                 "geoblock": self.GeoBlock.get_active(),
@@ -1124,19 +1124,19 @@ class GeoBlockFrame(buildFrame):
             }
         }
 
-    def OnGeoBlockToggled(self, widget):
+    def on_geo_block_toggled(self, widget):
         sensitive = widget.get_active()
         self.GeoPanic.set_sensitive(sensitive)
         self.GeoBlockCC.set_sensitive(sensitive)
 
 
-class UserinfoFrame(buildFrame):
+class UserinfoFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "userinfo")
+        BuildFrame.__init__(self, "userinfo")
 
         self.options = {
             "userinfo": {
@@ -1145,7 +1145,7 @@ class UserinfoFrame(buildFrame):
             }
         }
 
-        def UpdateImagePreview(chooser):
+        def update_image_preview(chooser):
             path = chooser.get_preview_filename()
 
             try:
@@ -1166,11 +1166,11 @@ class UserinfoFrame(buildFrame):
 
         preview = gtk.Image()
         self.ImageChooser.set_preview_widget(preview)
-        self.ImageChooser.connect('update-preview', UpdateImagePreview)
+        self.ImageChooser.connect('update-preview', update_image_preview)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         userinfo = config["userinfo"]
 
@@ -1181,7 +1181,7 @@ class UserinfoFrame(buildFrame):
         if userinfo["pic"]:
             self.ImageChooser.set_filename(userinfo["pic"])
 
-    def GetSettings(self):
+    def get_settings(self):
 
         buffer = self.Description.get_buffer()
 
@@ -1202,16 +1202,16 @@ class UserinfoFrame(buildFrame):
             }
         }
 
-    def OnDefaultImage(self, widget):
+    def on_default_image(self, widget):
         self.ImageChooser.unselect_all()
 
 
-class IgnoreFrame(buildFrame):
+class IgnoreFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "ignore")
+        BuildFrame.__init__(self, "ignore")
 
         self.options = {
             "server": {
@@ -1229,10 +1229,10 @@ class IgnoreFrame(buildFrame):
 
         self.ignored_ips = {}
         self.ignored_ips_list = gtk.ListStore(str, str)
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.IgnoredIPs,
-            [_("Addresses"), -1, "text", self.frame.CellDataFunc],
-            [_("Users"), -1, "text", self.frame.CellDataFunc]
+            [_("Addresses"), -1, "text", self.frame.cell_data_func],
+            [_("Users"), -1, "text", self.frame.cell_data_func]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1240,14 +1240,14 @@ class IgnoreFrame(buildFrame):
         self.IgnoredIPs.set_model(self.ignored_ips_list)
         self.IgnoredIPs.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         server = config["server"]
 
         self.ignorelist.clear()
         self.ignored_ips_list.clear()
         self.ignored_users = []
         self.ignored_ips = {}
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if server["ignorelist"] is not None:
             self.ignored_users = server["ignorelist"][:]
@@ -1257,7 +1257,7 @@ class IgnoreFrame(buildFrame):
             for ip, user in self.ignored_ips.items():
                 self.ignored_ips_list.append([ip, user])
 
-    def GetSettings(self):
+    def get_settings(self):
         return {
             "server": {
                 "ignorelist": self.ignored_users[:],
@@ -1265,12 +1265,12 @@ class IgnoreFrame(buildFrame):
             }
         }
 
-    def _AppendItem(self, model, path, iterator, line):
+    def _append_item(self, model, path, iterator, line):
         line.append(iterator)
 
-    def OnAddIgnored(self, widget):
+    def on_add_ignored(self, widget):
 
-        user = EntryDialog(
+        user = entry_dialog(
             self.Main.get_toplevel(),
             _("Ignore user..."),
             _("User:")
@@ -1280,21 +1280,21 @@ class IgnoreFrame(buildFrame):
             self.ignored_users.append(user)
             self.ignorelist.append([user])
 
-    def OnRemoveIgnored(self, widget):
+    def on_remove_ignored(self, widget):
         iters = []
-        self.IgnoredUsers.get_selection().selected_foreach(self._AppendItem, iters)
+        self.IgnoredUsers.get_selection().selected_foreach(self._append_item, iters)
         for iterator in iters:
             user = self.ignorelist.get_value(iterator, 0)
             self.ignored_users.remove(user)
             self.ignorelist.remove(iterator)
 
-    def OnClearIgnored(self, widget):
+    def on_clear_ignored(self, widget):
         self.ignored_users = []
         self.ignorelist.clear()
 
-    def OnAddIgnoredIP(self, widget):
+    def on_add_ignored_ip(self, widget):
 
-        ip = EntryDialog(
+        ip = entry_dialog(
             self.Main.get_toplevel(),
             _("Ignore IP Address..."),
             _("IP:") + " " + _("* is a wildcard")
@@ -1320,24 +1320,24 @@ class IgnoreFrame(buildFrame):
             self.ignored_ips[ip] = ""
             self.ignored_ips_list.append([ip, ""])
 
-    def OnRemoveIgnoredIP(self, widget):
+    def on_remove_ignored_ip(self, widget):
         iters = []
-        self.IgnoredIPs.get_selection().selected_foreach(self._AppendItem, iters)
+        self.IgnoredIPs.get_selection().selected_foreach(self._append_item, iters)
         for iterator in iters:
             ip = self.ignored_ips_list.get_value(iterator, 0)
             del self.ignored_ips[ip]
             self.ignored_ips_list.remove(iterator)
 
-    def OnClearIgnoredIP(self, widget):
+    def on_clear_ignored_ip(self, widget):
         self.ignored_ips = {}
         self.ignored_ips_list.clear()
 
 
-class BanFrame(buildFrame):
+class BanFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "ban")
+        BuildFrame.__init__(self, "ban")
 
         self.options = {
             "server": {
@@ -1359,10 +1359,10 @@ class BanFrame(buildFrame):
 
         self.blocked_list = {}
         self.blocked_list_model = gtk.ListStore(str, str)
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.BlockedList,
-            [_("Addresses"), -1, "text", self.frame.CellDataFunc],
-            [_("Users"), -1, "text", self.frame.CellDataFunc]
+            [_("Addresses"), -1, "text", self.frame.cell_data_func],
+            [_("Users"), -1, "text", self.frame.cell_data_func]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1370,14 +1370,14 @@ class BanFrame(buildFrame):
         self.BlockedList.set_model(self.blocked_list_model)
         self.BlockedList.get_selection().set_mode(gtk.SelectionMode.MULTIPLE)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         server = config["server"]
         transfers = config["transfers"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
 
         self.banlist = server["banlist"][:]
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if server["ipblocklist"] is not None:
             self.blocked_list = server["ipblocklist"].copy()
@@ -1390,9 +1390,9 @@ class BanFrame(buildFrame):
         if transfers["customban"] is not None:
             self.CustomBan.set_text(transfers["customban"])
 
-        self.OnUseCustomBanToggled(self.UseCustomBan)
+        self.on_use_custom_ban_toggled(self.UseCustomBan)
 
-    def GetSettings(self):
+    def get_settings(self):
         return {
             "server": {
                 "banlist": self.banlist[:],
@@ -1404,9 +1404,9 @@ class BanFrame(buildFrame):
             }
         }
 
-    def OnAddBanned(self, widget):
+    def on_add_banned(self, widget):
 
-        user = EntryDialog(
+        user = entry_dialog(
             self.Main.get_toplevel(),
             _("Ban user..."),
             _("User:")
@@ -1416,27 +1416,27 @@ class BanFrame(buildFrame):
             self.banlist.append(user)
             self.banlist_model.append([user])
 
-    def _AppendItem(self, model, path, iterator, line):
+    def _append_item(self, model, path, iterator, line):
         line.append(iterator)
 
-    def OnRemoveBanned(self, widget):
+    def on_remove_banned(self, widget):
         iters = []
-        self.BannedList.get_selection().selected_foreach(self._AppendItem, iters)
+        self.BannedList.get_selection().selected_foreach(self._append_item, iters)
         for iterator in iters:
             user = self.banlist_model.get_value(iterator, 0)
             self.banlist.remove(user)
             self.banlist_model.remove(iterator)
 
-    def OnClearBanned(self, widget):
+    def on_clear_banned(self, widget):
         self.banlist = []
         self.banlist_model.clear()
 
-    def OnUseCustomBanToggled(self, widget):
+    def on_use_custom_ban_toggled(self, widget):
         self.CustomBan.set_sensitive(widget.get_active())
 
-    def OnAddBlocked(self, widget):
+    def on_add_blocked(self, widget):
 
-        ip = EntryDialog(
+        ip = entry_dialog(
             self.Main.get_toplevel(),
             _("Block IP Address..."),
             _("IP:") + " " + _("* is a wildcard")
@@ -1462,33 +1462,33 @@ class BanFrame(buildFrame):
             self.blocked_list[ip] = ""
             self.blocked_list_model.append([ip, ""])
 
-    def OnRemoveBlocked(self, widget):
+    def on_remove_blocked(self, widget):
         iters = []
-        self.BlockedList.get_selection().selected_foreach(self._AppendItem, iters)
+        self.BlockedList.get_selection().selected_foreach(self._append_item, iters)
         for iterator in iters:
             ip = self.blocked_list_model.get_value(iterator, 0)
             del self.blocked_list[ip]
             self.blocked_list_model.remove(iterator)
 
-    def OnClearBlocked(self, widget):
+    def on_clear_blocked(self, widget):
         self.blocked_list = {}
         self.blocked_list_model.clear()
 
 
-class TTSFrame(buildFrame):
+class TTSFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "tts")
+        BuildFrame.__init__(self, "tts")
 
         # Combobox for text-to-speech readers
-        self.TTSCommand_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.tts_command_store = gtk.ListStore(gobject.TYPE_STRING)
         for executable in ["echo $ | festival --tts", "flite -t $"]:
-            self.TTSCommand_List.append([executable])
+            self.tts_command_store.append([executable])
 
-        self.TTSCommand.set_model(self.TTSCommand_List)
+        self.TTSCommand.set_model(self.tts_command_store)
         self.TTSCommand.set_entry_text_column(0)
 
         self.options = {
@@ -1500,38 +1500,38 @@ class TTSFrame(buildFrame):
             }
         }
 
-    def DefaultPrivate(self, widget):
+    def on_default_private(self, widget):
         self.PrivateMessage.set_text("%(user)s told you.. %(message)s")
 
-    def DefaultRooms(self, widget):
+    def on_default_rooms(self, widget):
         self.RoomMessage.set_text("In %(room)s, %(user)s said %(message)s")
 
-    def DefaultTTS(self, widget):
+    def on_default_tts(self, widget):
         self.TTSCommand.get_child().set_text("flite -t \"%s\"")
 
-    def OnTextToSpeechToggled(self, widget):
+    def on_text_to_speech_toggled(self, widget):
 
         sensitive = self.TextToSpeech.get_active()
 
         self.TTSGrid.set_sensitive(sensitive)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         ui = config["ui"]
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         for i in ["%(user)s", "%(message)s"]:
 
             if i not in ui["speechprivate"]:
-                self.DefaultPrivate(None)
+                self.default_private(None)
 
             if i not in ui["speechrooms"]:
-                self.DefaultRooms(None)
+                self.default_rooms(None)
 
-        self.OnTextToSpeechToggled(self.TextToSpeech)
+        self.on_text_to_speech_toggled(self.TextToSpeech)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "ui": {
@@ -1543,13 +1543,13 @@ class TTSFrame(buildFrame):
         }
 
 
-class IconsFrame(buildFrame):
+class IconsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "icons")
+        BuildFrame.__init__(self, "icons")
 
         self.options = {
             "ui": {
@@ -1571,11 +1571,11 @@ class IconsFrame(buildFrame):
         self.Trayicon_Msg.set_from_pixbuf(self.frame.images["trayicon_msg"])
         self.Notify.set_from_pixbuf(self.frame.images["notify"])
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         ui = config["ui"]
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if ui["icontheme"]:
             self.ThemeDir.set_current_folder(ui["icontheme"])
@@ -1591,10 +1591,10 @@ class IconsFrame(buildFrame):
             elif exitdialog == 0:
                 self.QuitOnClose.set_active(True)
 
-    def OnDefaultTheme(self, widget):
+    def on_default_theme(self, widget):
         self.ThemeDir.unselect_all()
 
-    def GetSettings(self):
+    def get_settings(self):
 
         mainwindow_close = 0
 
@@ -1619,20 +1619,20 @@ class IconsFrame(buildFrame):
         }
 
 
-class ColoursFrame(buildFrame):
+class ColoursFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "colours")
+        BuildFrame.__init__(self, "colours")
 
         # Combobox for user names style
-        self.UsernameStyle_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.username_style_store = gtk.ListStore(gobject.TYPE_STRING)
         for item in ["bold", "italic", "underline", "normal"]:
-            self.UsernameStyle_List.append([item])
+            self.username_style_store.append([item])
 
-        self.UsernameStyle.set_model(self.UsernameStyle_List)
+        self.UsernameStyle.set_model(self.username_style_store)
 
         cell = gtk.CellRendererText()
         self.UsernameStyle.pack_start(cell, True)
@@ -1702,67 +1702,67 @@ class ColoursFrame(buildFrame):
             "tab_hilite"
         ]
 
-        self.PickRemote.connect("clicked", self.PickColour, self.Remote, self.Drawing_Remote)
-        self.PickLocal.connect("clicked", self.PickColour, self.Local, self.Drawing_Local)
-        self.PickMe.connect("clicked", self.PickColour, self.Me, self.Drawing_Me)
-        self.PickHighlight.connect("clicked", self.PickColour, self.Highlight, self.Drawing_Highlight)
-        self.PickImmediate.connect("clicked", self.PickColour, self.Immediate, self.Drawing_Immediate)
-        self.PickQueue.connect("clicked", self.PickColour, self.Queue, self.Drawing_Queue)
+        self.PickRemote.connect("clicked", self.pick_colour, self.Remote, self.Drawing_Remote)
+        self.PickLocal.connect("clicked", self.pick_colour, self.Local, self.Drawing_Local)
+        self.PickMe.connect("clicked", self.pick_colour, self.Me, self.Drawing_Me)
+        self.PickHighlight.connect("clicked", self.pick_colour, self.Highlight, self.Drawing_Highlight)
+        self.PickImmediate.connect("clicked", self.pick_colour, self.Immediate, self.Drawing_Immediate)
+        self.PickQueue.connect("clicked", self.pick_colour, self.Queue, self.Drawing_Queue)
 
-        self.PickAway.connect("clicked", self.PickColour, self.AwayColor, self.Drawing_AwayColor)
-        self.PickOnline.connect("clicked", self.PickColour, self.OnlineColor, self.Drawing_OnlineColor)
-        self.PickOffline.connect("clicked", self.PickColour, self.OfflineColor, self.Drawing_OfflineColor)
-        self.PickURL.connect("clicked", self.PickColour, self.URL, self.Drawing_URL)
-        self.DefaultURL.connect("clicked", self.DefaultColour, self.URL)
+        self.PickAway.connect("clicked", self.pick_colour, self.AwayColor, self.Drawing_AwayColor)
+        self.PickOnline.connect("clicked", self.pick_colour, self.OnlineColor, self.Drawing_OnlineColor)
+        self.PickOffline.connect("clicked", self.pick_colour, self.OfflineColor, self.Drawing_OfflineColor)
+        self.PickURL.connect("clicked", self.pick_colour, self.URL, self.Drawing_URL)
+        self.DefaultURL.connect("clicked", self.default_colour, self.URL)
 
-        self.DefaultAway.connect("clicked", self.DefaultColour, self.AwayColor)
-        self.DefaultOnline.connect("clicked", self.DefaultColour, self.OnlineColor)
-        self.DefaultOffline.connect("clicked", self.DefaultColour, self.OfflineColor)
+        self.DefaultAway.connect("clicked", self.default_colour, self.AwayColor)
+        self.DefaultOnline.connect("clicked", self.default_colour, self.OnlineColor)
+        self.DefaultOffline.connect("clicked", self.default_colour, self.OfflineColor)
 
-        self.PickBackground.connect("clicked", self.PickColour, self.BackgroundColor, self.Drawing_BackgroundColor)
-        self.DefaultBackground.connect("clicked", self.DefaultColour, self.BackgroundColor)
+        self.PickBackground.connect("clicked", self.pick_colour, self.BackgroundColor, self.Drawing_BackgroundColor)
+        self.DefaultBackground.connect("clicked", self.default_colour, self.BackgroundColor)
 
-        self.PickInput.connect("clicked", self.PickColour, self.InputColor, self.Drawing_InputColor)
-        self.DefaultInput.connect("clicked", self.DefaultColour, self.InputColor)
+        self.PickInput.connect("clicked", self.pick_colour, self.InputColor, self.Drawing_InputColor)
+        self.DefaultInput.connect("clicked", self.default_colour, self.InputColor)
 
-        self.DefaultRemote.connect("clicked", self.DefaultColour, self.Remote)
-        self.DefaultLocal.connect("clicked", self.DefaultColour, self.Local)
-        self.DefaultMe.connect("clicked", self.DefaultColour, self.Me)
-        self.DefaultHighlight.connect("clicked", self.DefaultColour, self.Highlight)
-        self.DefaultImmediate.connect("clicked", self.DefaultColour, self.Immediate)
-        self.DefaultQueue.connect("clicked", self.DefaultColour, self.Queue)
+        self.DefaultRemote.connect("clicked", self.default_colour, self.Remote)
+        self.DefaultLocal.connect("clicked", self.default_colour, self.Local)
+        self.DefaultMe.connect("clicked", self.default_colour, self.Me)
+        self.DefaultHighlight.connect("clicked", self.default_colour, self.Highlight)
+        self.DefaultImmediate.connect("clicked", self.default_colour, self.Immediate)
+        self.DefaultQueue.connect("clicked", self.default_colour, self.Queue)
 
-        self.DefaultColours.connect("clicked", self.OnDefaultColours)
-        self.ClearAllColours.connect("clicked", self.OnClearAllColours)
-        self.DisplayAwayColours.connect("toggled", self.ToggledAwayColours)
+        self.DefaultColours.connect("clicked", self.on_default_colours)
+        self.ClearAllColours.connect("clicked", self.on_clear_all_colours)
+        self.DisplayAwayColours.connect("toggled", self.toggled_away_colours)
 
-        self.PickHighlightTab.connect("clicked", self.PickColour, self.HighlightTab, self.Drawing_HighlightTab)
-        self.PickDefaultTab.connect("clicked", self.PickColour, self.DefaultTab, self.Drawing_DefaultTab)
-        self.PickChangedTab.connect("clicked", self.PickColour, self.ChangedTab, self.Drawing_ChangedTab)
+        self.PickHighlightTab.connect("clicked", self.pick_colour, self.HighlightTab, self.Drawing_HighlightTab)
+        self.PickDefaultTab.connect("clicked", self.pick_colour, self.DefaultTab, self.Drawing_DefaultTab)
+        self.PickChangedTab.connect("clicked", self.pick_colour, self.ChangedTab, self.Drawing_ChangedTab)
 
-        self.DefaultHighlightTab.connect("clicked", self.DefaultColour, self.HighlightTab)
-        self.DefaultChangedTab.connect("clicked", self.DefaultColour, self.ChangedTab)
-        self.ClearDefaultTab.connect("clicked", self.DefaultColour, self.DefaultTab)
+        self.DefaultHighlightTab.connect("clicked", self.default_colour, self.HighlightTab)
+        self.DefaultChangedTab.connect("clicked", self.default_colour, self.ChangedTab)
+        self.ClearDefaultTab.connect("clicked", self.default_colour, self.DefaultTab)
 
         # To set needcolors flag
-        self.Local.connect("changed", self.FontsColorsChanged)
-        self.Remote.connect("changed", self.FontsColorsChanged)
-        self.Me.connect("changed", self.FontsColorsChanged)
-        self.Highlight.connect("changed", self.FontsColorsChanged)
-        self.BackgroundColor.connect("changed", self.FontsColorsChanged)
-        self.Immediate.connect("changed", self.FontsColorsChanged)
-        self.Queue.connect("changed", self.FontsColorsChanged)
-        self.AwayColor.connect("changed", self.FontsColorsChanged)
-        self.OnlineColor.connect("changed", self.FontsColorsChanged)
-        self.OfflineColor.connect("changed", self.FontsColorsChanged)
-        self.UsernameStyle.connect("changed", self.FontsColorsChanged)
-        self.InputColor.connect("changed", self.FontsColorsChanged)
+        self.Local.connect("changed", self.fonts_colors_changed)
+        self.Remote.connect("changed", self.fonts_colors_changed)
+        self.Me.connect("changed", self.fonts_colors_changed)
+        self.Highlight.connect("changed", self.fonts_colors_changed)
+        self.BackgroundColor.connect("changed", self.fonts_colors_changed)
+        self.Immediate.connect("changed", self.fonts_colors_changed)
+        self.Queue.connect("changed", self.fonts_colors_changed)
+        self.AwayColor.connect("changed", self.fonts_colors_changed)
+        self.OnlineColor.connect("changed", self.fonts_colors_changed)
+        self.OfflineColor.connect("changed", self.fonts_colors_changed)
+        self.UsernameStyle.connect("changed", self.fonts_colors_changed)
+        self.InputColor.connect("changed", self.fonts_colors_changed)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         self.settingup = 1
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         for option in self.colors:
             for key, value in self.colorsd.items():
@@ -1779,11 +1779,11 @@ class ColoursFrame(buildFrame):
                     drawingarea.modify_bg(gtk.StateType.NORMAL, colour)
                     break
 
-        self.ToggledAwayColours(self.DisplayAwayColours)
+        self.toggled_away_colours(self.DisplayAwayColours)
         self.settingup = 0
         self.needcolors = 0
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "ui": {
@@ -1809,7 +1809,7 @@ class ColoursFrame(buildFrame):
             }
         }
 
-    def ToggledAwayColours(self, widget):
+    def toggled_away_colours(self, widget):
 
         sensitive = widget.get_active()
 
@@ -1817,11 +1817,11 @@ class ColoursFrame(buildFrame):
         self.PickAway.set_sensitive(sensitive)
         self.DefaultAway.set_sensitive(sensitive)
 
-    def OnDefaultColours(self, widget):
+    def on_default_colours(self, widget):
         for option in self.colors:
-            self.SetDefaultColor(option)
+            self.set_default_color(option)
 
-    def SetDefaultColor(self, option):
+    def set_default_color(self, option):
 
         defaults = self.frame.np.config.defaults
 
@@ -1851,7 +1851,7 @@ class ColoursFrame(buildFrame):
                 drawingarea.modify_bg(gtk.StateFlags.NORMAL, colour)
                 break
 
-    def OnClearAllColours(self, button):
+    def on_clear_all_colours(self, button):
 
         for option in self.colors:
             for section, value in self.options.items():
@@ -1873,10 +1873,10 @@ class ColoursFrame(buildFrame):
                     drawingarea = self.colorsd[section][option]
                     drawingarea.modify_bg(gtk.StateFlags.NORMAL, None)
 
-    def FontsColorsChanged(self, widget):
+    def fonts_colors_changed(self, widget):
         self.needcolors = 1
 
-    def OnUsernameHotspotsToggled(self, widget):
+    def on_username_hotspots_toggled(self, widget):
 
         sensitive = widget.get_active()
 
@@ -1892,7 +1892,7 @@ class ColoursFrame(buildFrame):
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
-    def PickColour(self, widget, entry, area):
+    def pick_colour(self, widget, entry, area):
 
         dlg = gtk.ColorChooserDialog(_("Pick a color, any color"))
         colourtext = entry.get_text()
@@ -1930,57 +1930,57 @@ class ColoursFrame(buildFrame):
 
         dlg.destroy()
 
-    def DefaultColour(self, widget, entry):
+    def default_colour(self, widget, entry):
 
         for section in self.options:
             for key, value in self.options[section].items():
                 if value is entry:
-                    self.SetDefaultColor(key)
+                    self.set_default_color(key)
                     return
 
         entry.set_text("")
 
 
-class NotebookFrame(buildFrame):
+class NotebookFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "notebook")
+        BuildFrame.__init__(self, "notebook")
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
         # the second is a GtkPositionType
-        self.PosList = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.PosList.append([_("Top"), "Top"])
-        self.PosList.append([_("Bottom"), "Bottom"])
-        self.PosList.append([_("Left"), "Left"])
-        self.PosList.append([_("Right"), "Right"])
+        self.pos_list = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.pos_list.append([_("Top"), "Top"])
+        self.pos_list.append([_("Bottom"), "Bottom"])
+        self.pos_list.append([_("Left"), "Left"])
+        self.pos_list.append([_("Right"), "Right"])
 
         cell = gtk.CellRendererText()
 
-        self.MainPosition.set_model(self.PosList)
+        self.MainPosition.set_model(self.pos_list)
         self.MainPosition.pack_start(cell, True)
         self.MainPosition.add_attribute(cell, 'text', 0)
 
-        self.ChatRoomsPosition.set_model(self.PosList)
+        self.ChatRoomsPosition.set_model(self.pos_list)
         self.ChatRoomsPosition.pack_start(cell, True)
         self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
 
-        self.PrivateChatPosition.set_model(self.PosList)
+        self.PrivateChatPosition.set_model(self.pos_list)
         self.PrivateChatPosition.pack_start(cell, True)
         self.PrivateChatPosition.add_attribute(cell, 'text', 0)
 
-        self.SearchPosition.set_model(self.PosList)
+        self.SearchPosition.set_model(self.pos_list)
         self.SearchPosition.pack_start(cell, True)
         self.SearchPosition.add_attribute(cell, 'text', 0)
 
-        self.UserInfoPosition.set_model(self.PosList)
+        self.UserInfoPosition.set_model(self.pos_list)
         self.UserInfoPosition.pack_start(cell, True)
         self.UserInfoPosition.add_attribute(cell, 'text', 0)
 
-        self.UserBrowsePosition.set_model(self.PosList)
+        self.UserBrowsePosition.set_model(self.pos_list)
         self.UserBrowsePosition.pack_start(cell, True)
         self.UserBrowsePosition.add_attribute(cell, 'text', 0)
 
@@ -2005,9 +2005,9 @@ class NotebookFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         # Function to set the default iter from the value found in the config file
         def set_active_conf(model, path, iterator, data):
@@ -2028,24 +2028,24 @@ class NotebookFrame(buildFrame):
                 "combobox": self.options["ui"][opt]
             })
 
-    def GetSettings(self):
+    def get_settings(self):
 
         # Get iters from GtkComboBox fields
-        iter_Main = self.PosList.get_iter(self.MainPosition.get_active())
-        iter_Rooms = self.PosList.get_iter(self.ChatRoomsPosition.get_active())
-        iter_Private = self.PosList.get_iter(self.PrivateChatPosition.get_active())
-        iter_Search = self.PosList.get_iter(self.SearchPosition.get_active())
-        iter_Info = self.PosList.get_iter(self.UserInfoPosition.get_active())
-        iter_Browse = self.PosList.get_iter(self.UserBrowsePosition.get_active())
+        iter_main = self.pos_list.get_iter(self.MainPosition.get_active())
+        iter_rooms = self.pos_list.get_iter(self.ChatRoomsPosition.get_active())
+        iter_private = self.pos_list.get_iter(self.PrivateChatPosition.get_active())
+        iter_search = self.pos_list.get_iter(self.SearchPosition.get_active())
+        iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
+        iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
 
         return {
             "ui": {
-                "tabmain": self.PosList.get_value(iter_Main, 1),
-                "tabrooms": self.PosList.get_value(iter_Rooms, 1),
-                "tabprivate": self.PosList.get_value(iter_Private, 1),
-                "tabsearch": self.PosList.get_value(iter_Search, 1),
-                "tabinfo": self.PosList.get_value(iter_Info, 1),
-                "tabbrowse": self.PosList.get_value(iter_Browse, 1),
+                "tabmain": self.pos_list.get_value(iter_main, 1),
+                "tabrooms": self.pos_list.get_value(iter_rooms, 1),
+                "tabprivate": self.pos_list.get_value(iter_private, 1),
+                "tabsearch": self.pos_list.get_value(iter_search, 1),
+                "tabinfo": self.pos_list.get_value(iter_info, 1),
+                "tabbrowse": self.pos_list.get_value(iter_browse, 1),
                 "labelmain": self.MainAngleSpin.get_value_as_int(),
                 "labelrooms": self.ChatRoomsAngleSpin.get_value_as_int(),
                 "labelprivate": self.PrivateChatAngleSpin.get_value_as_int(),
@@ -2060,24 +2060,24 @@ class NotebookFrame(buildFrame):
         }
 
 
-class FontsFrame(buildFrame):
+class FontsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "fonts")
+        BuildFrame.__init__(self, "fonts")
 
         # Combobox for the decimal separator
-        self.DecimalSep_List = gtk.ListStore(gobject.TYPE_STRING)
-        self.DecimalSep.set_model(self.DecimalSep_List)
+        self.decimal_sep_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.DecimalSep.set_model(self.decimal_sep_store)
 
         cell2 = gtk.CellRendererText()
         self.DecimalSep.pack_start(cell2, True)
         self.DecimalSep.add_attribute(cell2, 'text', 0)
 
         for item in ["<None>", ",", ".", "<space>"]:
-            self.DecimalSep_List.append([item])
+            self.decimal_sep_store.append([item])
 
         self.options = {
             "ui": {
@@ -2090,30 +2090,30 @@ class FontsFrame(buildFrame):
             }
         }
 
-        self.DefaultFont.connect("clicked", self.OnDefaultFont)
-        self.SelectChatFont.connect("font-set", self.FontsColorsChanged)
+        self.DefaultFont.connect("clicked", self.on_default_font)
+        self.SelectChatFont.connect("font-set", self.fonts_colors_changed)
 
-        self.DefaultListFont.connect("clicked", self.OnDefaultListFont)
-        self.SelectListFont.connect("font-set", self.FontsColorsChanged)
+        self.DefaultListFont.connect("clicked", self.on_default_list_font)
+        self.SelectListFont.connect("font-set", self.fonts_colors_changed)
 
-        self.DefaultSearchFont.connect("clicked", self.OnDefaultSearchFont)
-        self.SelectSearchFont.connect("font-set", self.FontsColorsChanged)
+        self.DefaultSearchFont.connect("clicked", self.on_default_search_font)
+        self.SelectSearchFont.connect("font-set", self.fonts_colors_changed)
 
-        self.DefaultTransfersFont.connect("clicked", self.OnDefaultTransfersFont)
-        self.SelectTransfersFont.connect("font-set", self.FontsColorsChanged)
+        self.DefaultTransfersFont.connect("clicked", self.on_default_transfers_font)
+        self.SelectTransfersFont.connect("font-set", self.fonts_colors_changed)
 
-        self.DefaultBrowserFont.connect("clicked", self.OnDefaultBrowserFont)
-        self.SelectBrowserFont.connect("font-set", self.FontsColorsChanged)
-
-        self.needcolors = 0
-
-    def SetSettings(self, config):
+        self.DefaultBrowserFont.connect("clicked", self.on_default_browser_font)
+        self.SelectBrowserFont.connect("font-set", self.fonts_colors_changed)
 
         self.needcolors = 0
 
-        self.p.SetWidgetsData(config, self.options)
+    def set_settings(self, config):
 
-    def GetSettings(self):
+        self.needcolors = 0
+
+        self.p.set_widgets_data(config, self.options)
+
+    def get_settings(self):
 
         return {
             "ui": {
@@ -2126,37 +2126,37 @@ class FontsFrame(buildFrame):
             }
         }
 
-    def OnDefaultFont(self, widget):
+    def on_default_font(self, widget):
         self.SelectChatFont.set_font_name("")
         self.needcolors = 1
 
-    def OnDefaultBrowserFont(self, widget):
+    def on_default_browser_font(self, widget):
         self.SelectBrowserFont.set_font_name("")
         self.needcolors = 1
 
-    def OnDefaultListFont(self, widget):
+    def on_default_list_font(self, widget):
         self.SelectListFont.set_font_name("")
         self.needcolors = 1
 
-    def OnDefaultSearchFont(self, widget):
+    def on_default_search_font(self, widget):
         self.SelectSearchFont.set_font_name("")
         self.needcolors = 1
 
-    def OnDefaultTransfersFont(self, widget):
+    def on_default_transfers_font(self, widget):
         self.SelectTransfersFont.set_font_name("")
         self.needcolors = 1
 
-    def FontsColorsChanged(self, widget):
+    def fonts_colors_changed(self, widget):
         self.needcolors = 1
 
 
-class LogFrame(buildFrame):
+class LogFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "log")
+        BuildFrame.__init__(self, "log")
 
         self.options = {
             "logging": {
@@ -2181,9 +2181,9 @@ class LogFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         roomlogsdir = config["logging"]["roomlogsdir"]
         if roomlogsdir:
@@ -2213,7 +2213,7 @@ class LogFrame(buildFrame):
 
             self.DebugLogDir.set_current_folder(debuglogsdir)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "logging": {
@@ -2238,24 +2238,24 @@ class LogFrame(buildFrame):
             },
         }
 
-    def OnDefaultTimestamp(self, widget):
+    def on_default_timestamp(self, widget):
         defaults = self.frame.np.config.defaults
         self.LogFileFormat.set_text(defaults["logging"]["log_timestamp"])
 
-    def OnRoomDefaultTimestamp(self, widget):
+    def on_room_default_timestamp(self, widget):
         defaults = self.frame.np.config.defaults
         self.ChatRoomFormat.set_text(defaults["logging"]["rooms_timestamp"])
 
-    def OnPrivateDefaultTimestamp(self, widget):
+    def on_private_default_timestamp(self, widget):
         defaults = self.frame.np.config.defaults
         self.PrivateChatFormat.set_text(defaults["logging"]["private_timestamp"])
 
 
-class SearchFrame(buildFrame):
+class SearchFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "search")
+        BuildFrame.__init__(self, "search")
         self.options = {
             "searches": {
                 "maxresults": self.MaxResults,
@@ -2273,12 +2273,12 @@ class SearchFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         try:
             searches = config["searches"]
         except Exception:
             searches = None
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         if searches["defilter"] is not None:
             self.FilterIn.set_text(searches["defilter"][0])
@@ -2289,9 +2289,9 @@ class SearchFrame(buildFrame):
             if(len(searches["defilter"]) > 5):
                 self.FilterCC.set_text(searches["defilter"][5])
 
-        self.OnEnableSearchResults(self.ToggleResults)
+        self.on_enable_search_results(self.ToggleResults)
 
-    def GetSettings(self):
+    def get_settings(self):
         maxresults = self.MaxResults.get_value_as_int()
         return {
             "searches": {
@@ -2317,12 +2317,12 @@ class SearchFrame(buildFrame):
             }
         }
 
-    def OnEnableFiltersToggled(self, widget):
+    def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
         for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterFree:
             w.set_sensitive(active)
 
-    def OnEnableSearchResults(self, widget):
+    def on_enable_search_results(self, widget):
         active = widget.get_active()
         for w in self.MinSearchCharsL1, self.MinSearchChars, self.MinSearchCharsL2, \
                 self.MaxResults, self.MaxResultsL1, self.MaxResultsL2, \
@@ -2330,11 +2330,11 @@ class SearchFrame(buildFrame):
             w.set_sensitive(active)
 
 
-class AwayFrame(buildFrame):
+class AwayFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
-        buildFrame.__init__(self, "away")
+        BuildFrame.__init__(self, "away")
         self.options = {
             "server": {
                 "autoaway": self.AutoAway,
@@ -2342,10 +2342,10 @@ class AwayFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
-        self.p.SetWidgetsData(config, self.options)
+    def set_settings(self, config):
+        self.p.set_widgets_data(config, self.options)
 
-    def GetSettings(self):
+    def get_settings(self):
         try:
             autoaway = self.AutoAway.get_value_as_int()
         except Exception:
@@ -2358,16 +2358,16 @@ class AwayFrame(buildFrame):
         }
 
 
-class EventsFrame(buildFrame):
+class EventsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "events")
+        BuildFrame.__init__(self, "events")
 
         # Combobox for file manager
-        self.FileManagerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.file_manager_combo_store = gtk.ListStore(gobject.TYPE_STRING)
         for executable in [
             "xdg-open $",
             "explorer $",
@@ -2380,13 +2380,13 @@ class EventsFrame(buildFrame):
             "thunar $",
             "xterm -e mc $"
         ]:
-            self.FileManagerCombo_List.append([executable])
+            self.file_manager_combo_store.append([executable])
 
-        self.FileManagerCombo.set_model(self.FileManagerCombo_List)
+        self.FileManagerCombo.set_model(self.file_manager_combo_store)
         self.FileManagerCombo.set_entry_text_column(0)
 
         # Combobox for audio players
-        self.audioPlayerCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.audio_player_combo_store = gtk.ListStore(gobject.TYPE_STRING)
         for executable in [
             "amarok -a $",
             "audacious -e $",
@@ -2394,9 +2394,9 @@ class EventsFrame(buildFrame):
             "rhythmbox $",
             "xmms2 add -f $"
         ]:
-            self.audioPlayerCombo_List.append([executable])
+            self.audio_player_combo_store.append([executable])
 
-        self.audioPlayerCombo.set_model(self.audioPlayerCombo_List)
+        self.audioPlayerCombo.set_model(self.audio_player_combo_store)
         self.audioPlayerCombo.set_entry_text_column(0)
 
         self.options = {
@@ -2414,11 +2414,11 @@ class EventsFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "transfers": {
@@ -2436,13 +2436,13 @@ class EventsFrame(buildFrame):
         }
 
 
-class UrlCatchFrame(buildFrame):
+class UrlCatchFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "urlcatch")
+        BuildFrame.__init__(self, "urlcatch")
 
         self.options = {
             "urls": {
@@ -2459,7 +2459,7 @@ class UrlCatchFrame(buildFrame):
 
         self.protocols = {}
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.ProtocolHandlers,
             [_("Protocol"), -1, "text"],
             [_("Handler"), -1, "combo"]
@@ -2469,7 +2469,7 @@ class UrlCatchFrame(buildFrame):
         cols[1].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
-        self.ProtocolHandlers.get_selection().connect("changed", self.OnSelect)
+        self.ProtocolHandlers.get_selection().connect("changed", self.on_select)
 
         renderers = cols[1].get_cells()
         for render in renderers:
@@ -2508,11 +2508,11 @@ class UrlCatchFrame(buildFrame):
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         self.protocolmodel.clear()
         self.protocols.clear()
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
         urls = config["urls"]
 
@@ -2527,7 +2527,7 @@ class UrlCatchFrame(buildFrame):
                 iterator = self.protocolmodel.append([key, command])
                 self.protocols[key] = iterator
 
-        self.OnURLCatchingToggled(self.URLCatching)
+        self.on_url_catching_toggled(self.URLCatching)
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
@@ -2536,7 +2536,7 @@ class UrlCatchFrame(buildFrame):
                 selection.select_iter(iterator)
                 break
 
-    def GetSettings(self):
+    def get_settings(self):
 
         protocols = {}
 
@@ -2558,7 +2558,7 @@ class UrlCatchFrame(buildFrame):
             }
         }
 
-    def OnURLCatchingToggled(self, widget):
+    def on_url_catching_toggled(self, widget):
 
         self.HumanizeURLs.set_active(widget.get_active())
         act = self.URLCatching.get_active()
@@ -2570,7 +2570,7 @@ class UrlCatchFrame(buildFrame):
         self.ProtocolCombo.set_sensitive(act)
         self.Handler.set_sensitive(act)
 
-    def OnSelect(self, selection):
+    def on_select(self, selection):
 
         model, iterator = selection.get_selected()
 
@@ -2582,7 +2582,7 @@ class UrlCatchFrame(buildFrame):
             self.ProtocolCombo.get_child().set_text(protocol)
             self.Handler.get_child().set_text(handler)
 
-    def OnAdd(self, widget):
+    def on_add(self, widget):
 
         protocol = self.ProtocolCombo.get_child().get_text()
         command = self.Handler.get_child().get_text()
@@ -2595,7 +2595,7 @@ class UrlCatchFrame(buildFrame):
             iterator = self.protocolmodel.append([protocol, command])
             self.protocols[protocol] = iterator
 
-    def OnRemove(self, widget):
+    def on_remove(self, widget):
 
         selection = self.ProtocolHandlers.get_selection()
         model, iterator = selection.get_selected()
@@ -2606,13 +2606,13 @@ class UrlCatchFrame(buildFrame):
             del self.protocols[protocol]
 
 
-class CensorFrame(buildFrame):
+class CensorFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "censor")
+        BuildFrame.__init__(self, "censor")
 
         self.options = {
             "words": {
@@ -2624,9 +2624,9 @@ class CensorFrame(buildFrame):
 
         self.censor_list_model = gtk.ListStore(gobject.TYPE_STRING)
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.CensorList,
-            [_("Pattern"), -1, "edit", self.frame.CellDataFunc]
+            [_("Pattern"), -1, "edit", self.frame.cell_data_func]
         )
 
         cols[0].set_sort_column_id(0)
@@ -2634,11 +2634,11 @@ class CensorFrame(buildFrame):
         self.CensorList.set_model(self.censor_list_model)
 
         # Combobox for the replacement letter
-        self.CensorReplaceCombo_List = gtk.ListStore(gobject.TYPE_STRING)
+        self.censor_replace_combo_store = gtk.ListStore(gobject.TYPE_STRING)
         for letter in ["#", "$", "!", " ", "x", "*"]:
-            self.CensorReplaceCombo_List.append([letter])
+            self.censor_replace_combo_store.append([letter])
 
-        self.CensorReplaceCombo.set_model(self.CensorReplaceCombo_List)
+        self.CensorReplaceCombo.set_model(self.censor_replace_combo_store)
 
         cell = gtk.CellRendererText()
         self.CensorReplaceCombo.pack_start(cell, True)
@@ -2658,15 +2658,15 @@ class CensorFrame(buildFrame):
         else:
             store.remove(iterator)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         self.censor_list_model.clear()
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
-        self.OnCensorCheck(self.CensorCheck)
+        self.on_censor_check(self.CensorCheck)
 
-    def OnCensorCheck(self, widget):
+    def on_censor_check(self, widget):
 
         sensitive = widget.get_active()
 
@@ -2676,7 +2676,7 @@ class CensorFrame(buildFrame):
         self.ClearCensors.set_sensitive(sensitive)
         self.CensorReplaceCombo.set_sensitive(sensitive)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         censored = []
 
@@ -2697,7 +2697,7 @@ class CensorFrame(buildFrame):
             }
         }
 
-    def OnAdd(self, widget):
+    def on_add(self, widget):
 
         iterator = self.censor_list_model.append([""])
 
@@ -2709,22 +2709,22 @@ class CensorFrame(buildFrame):
 
         self.CensorList.set_cursor(self.censor_list_model.get_path(iterator), col, True)
 
-    def OnRemove(self, widget):
+    def on_remove(self, widget):
         selection = self.CensorList.get_selection()
         iterator = selection.get_selected()[1]
         if iterator is not None:
             self.censor_list_model.remove(iterator)
 
-    def OnClear(self, widget):
+    def on_clear(self, widget):
         self.censor_list_model.clear()
 
 
-class AutoReplaceFrame(buildFrame):
+class AutoReplaceFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "autoreplace")
+        BuildFrame.__init__(self, "autoreplace")
 
         self.options = {
             "words": {
@@ -2738,10 +2738,10 @@ class AutoReplaceFrame(buildFrame):
             gobject.TYPE_STRING
         )
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.ReplacementList,
-            [_("Pattern"), 150, "edit", self.frame.CellDataFunc],
-            [_("Replacement"), -1, "edit", self.frame.CellDataFunc]
+            [_("Pattern"), 150, "edit", self.frame.cell_data_func],
+            [_("Replacement"), -1, "edit", self.frame.cell_data_func]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -2759,17 +2759,17 @@ class AutoReplaceFrame(buildFrame):
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         self.replacelist.clear()
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
         words = config["words"]
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
                 self.replacelist.append([word, replacement])
 
-        self.OnReplaceCheck(self.ReplaceCheck)
+        self.on_replace_check(self.ReplaceCheck)
 
-    def OnReplaceCheck(self, widget):
+    def on_replace_check(self, widget):
         sensitive = widget.get_active()
         self.ReplacementList.set_sensitive(sensitive)
         self.RemoveReplacement.set_sensitive(sensitive)
@@ -2777,7 +2777,7 @@ class AutoReplaceFrame(buildFrame):
         self.ClearReplacements.set_sensitive(sensitive)
         self.DefaultReplacements.set_sensitive(sensitive)
 
-    def GetSettings(self):
+    def get_settings(self):
         autoreplaced = {}
         try:
             iterator = self.replacelist.get_iter_first()
@@ -2796,7 +2796,7 @@ class AutoReplaceFrame(buildFrame):
             }
         }
 
-    def OnAdd(self, widget):
+    def on_add(self, widget):
         iterator = self.replacelist.append(["", ""])
         selection = self.ReplacementList.get_selection()
         selection.unselect_all()
@@ -2805,16 +2805,16 @@ class AutoReplaceFrame(buildFrame):
 
         self.ReplacementList.set_cursor(self.replacelist.get_path(iterator), col, True)
 
-    def OnRemove(self, widget):
+    def on_remove(self, widget):
         selection = self.ReplacementList.get_selection()
         iterator = selection.get_selected()[1]
         if iterator is not None:
             self.replacelist.remove(iterator)
 
-    def OnClear(self, widget):
+    def on_clear(self, widget):
         self.replacelist.clear()
 
-    def OnDefaults(self, widget):
+    def on_defaults(self, widget):
 
         self.replacelist.clear()
         defaults = {
@@ -2831,12 +2831,12 @@ class AutoReplaceFrame(buildFrame):
             self.replacelist.append([word, replacement])
 
 
-class CompletionFrame(buildFrame):
+class CompletionFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "completion")
+        BuildFrame.__init__(self, "completion")
 
         self.options = {
             "words": {
@@ -2856,27 +2856,27 @@ class CompletionFrame(buildFrame):
             }
         }
 
-        self.CompletionTabCheck.connect("toggled", self.OnCompletionDropdownCheck)
-        self.CompletionCycleCheck.connect("toggled", self.OnCompletionCycleCheck)
-        self.CompletionDropdownCheck.connect("toggled", self.OnCompletionDropdownCheck)
-        self.CharactersCompletion.connect("changed", self.OnCompletionChanged)
-        self.CompleteAliasesCheck.connect("toggled", self.OnCompletionChanged)
-        self.CompleteCommandsCheck.connect("toggled", self.OnCompletionChanged)
-        self.CompleteUsersInRoomsCheck.connect("toggled", self.OnCompletionChanged)
-        self.CompleteBuddiesCheck.connect("toggled", self.OnCompletionChanged)
-        self.CompleteRoomNamesCheck.connect("toggled", self.OnCompletionChanged)
+        self.CompletionTabCheck.connect("toggled", self.on_completion_dropdown_check)
+        self.CompletionCycleCheck.connect("toggled", self.on_completion_cycle_check)
+        self.CompletionDropdownCheck.connect("toggled", self.on_completion_dropdown_check)
+        self.CharactersCompletion.connect("changed", self.on_completion_changed)
+        self.CompleteAliasesCheck.connect("toggled", self.on_completion_changed)
+        self.CompleteCommandsCheck.connect("toggled", self.on_completion_changed)
+        self.CompleteUsersInRoomsCheck.connect("toggled", self.on_completion_changed)
+        self.CompleteBuddiesCheck.connect("toggled", self.on_completion_changed)
+        self.CompleteRoomNamesCheck.connect("toggled", self.on_completion_changed)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         self.needcompletion = 0
 
         self.SpellCheck.set_sensitive(self.frame.gspell)
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
-    def OnCompletionChanged(self, widget):
+    def on_completion_changed(self, widget):
         self.needcompletion = 1
 
-    def OnCompletionDropdownCheck(self, widget):
+    def on_completion_dropdown_check(self, widget):
         sensitive = self.CompletionTabCheck.get_active()
         self.needcompletion = 1
 
@@ -2888,15 +2888,15 @@ class CompletionFrame(buildFrame):
         self.CompleteAliasesCheck.set_sensitive(sensitive)
         self.CompletionDropdownCheck.set_sensitive(sensitive)
 
-        self.OnCompletionCycleCheck(widget)
+        self.on_completion_cycle_check(widget)
 
-    def OnCompletionCycleCheck(self, widget):
+    def on_completion_cycle_check(self, widget):
         sensitive = (self.CompletionTabCheck.get_active() and not self.CompletionCycleCheck.get_active())
         self.CompletionDropdownCheck.set_sensitive(sensitive)
         self.CharactersCompletion.set_sensitive(sensitive)
         self.OneMatchCheck.set_sensitive(sensitive)
 
-    def GetSettings(self):
+    def get_settings(self):
         return {
             "words": {
                 "tab": self.CompletionTabCheck.get_active(),
@@ -2916,7 +2916,7 @@ class CompletionFrame(buildFrame):
         }
 
 
-class buildDialog(gtk.Dialog):
+class BuildDialog(gtk.Dialog):
     """ Class used to build a custom dialog for the plugins """
 
     def __init__(self, parent):
@@ -2931,7 +2931,7 @@ class buildDialog(gtk.Dialog):
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
 
-        self.PluginProperties = builder.get_object(window)
+        self.plugin_properties = builder.get_object(window)
 
         for i in builder.get_objects():
             try:
@@ -2941,17 +2941,17 @@ class buildDialog(gtk.Dialog):
 
         builder.connect_signals(self)
 
-        self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
+        self.plugin_properties.set_transient_for(self.settings.settings_window)
         self.tw = {}
         self.options = {}
         self.plugin = None
 
-    def GenerateLabel(self, text):
+    def generate_label(self, text):
         label = gtk.Label(text)
         label.set_line_wrap(True)
         return label
 
-    def GenerateTreeView(self, name, description, value, c=0):
+    def generate_tree_view(self, name, description, value, c=0):
 
         self.tw["box%d" % c] = gtk.Box(False, 5)
         self.tw["box%d" % c].set_orientation(gtk.Orientation.VERTICAL)
@@ -2966,19 +2966,19 @@ class buildDialog(gtk.Dialog):
 
         self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
 
-        cols = InitialiseColumns(self.tw[name], [description, 150, "edit"])
+        cols = initialise_columns(self.tw[name], [description, 150, "edit"])
 
         try:
-            self.settings.SetWidget(self.tw[name], value)
+            self.settings.set_widget(self.tw[name], value)
         except Exception:
             pass
 
-        self.addButton = gtk.Button(_("Add"), gtk.STOCK_ADD)
-        self.removeButton = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
+        self.add_button = gtk.Button(_("Add"), gtk.STOCK_ADD)
+        self.remove_button = gtk.Button(_("Remove"), gtk.STOCK_REMOVE)
 
         self.tw["vbox%d" % c] = gtk.Box(False, 5)
-        self.tw["vbox%d" % c].pack_start(self.addButton, False, False, 0)
-        self.tw["vbox%d" % c].pack_start(self.removeButton, False, False, 0)
+        self.tw["vbox%d" % c].pack_start(self.add_button, False, False, 0)
+        self.tw["vbox%d" % c].pack_start(self.remove_button, False, False, 0)
 
         self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
         self.Main.pack_start(self.tw["vbox%d" % c], False, False, 0)
@@ -2987,28 +2987,28 @@ class buildDialog(gtk.Dialog):
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.tw[name])
 
-        self.addButton.connect("clicked", self.OnAdd, self.tw[name])
-        self.removeButton.connect("clicked", self.OnRemove, self.tw[name])
+        self.add_button.connect("clicked", self.on_add, self.tw[name])
+        self.remove_button.connect("clicked", self.on_remove, self.tw[name])
 
     def cell_edited_callback(self, widget, index, value, treeview):
         store = treeview.get_model()
         iterator = store.get_iter(index)
         store.set(iterator, 0, value)
 
-    def OnAdd(self, widget, treeview):
+    def on_add(self, widget, treeview):
 
         iterator = treeview.get_model().append([""])
         col = treeview.get_column(0)
 
         treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
 
-    def OnRemove(self, widget, treeview):
+    def on_remove(self, widget, treeview):
         selection = treeview.get_selection()
         iterator = selection.get_selected()[1]
         if iterator is not None:
             treeview.get_model().remove(iterator)
 
-    def addOptions(self, plugin, options={}):
+    def add_options(self, plugin, options={}):
 
         for i in self.tw:
             self.tw[i].destroy()
@@ -3028,7 +3028,7 @@ class buildDialog(gtk.Dialog):
 
             # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
             # There's no reason more widgets cannot be added,
-            # and we can use self.settings.SetWidget and self.settings.GetWidgetData to set and get values
+            # and we can use self.settings.set_widget and self.settings.get_widget_data to set and get values
             #
             # Todo: gtk.ComboBox, and gtk.RadioButton
 
@@ -3036,38 +3036,38 @@ class buildDialog(gtk.Dialog):
 
             if data["type"] in ("integer", "int", "float"):
                 self.tw["box%d" % c] = gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.GenerateLabel(data["description"])
+                self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.SpinButton.new(gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
-                self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("bool",):
                 self.tw["box%d" % c] = gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.GenerateLabel(data["description"])
+                self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.CheckButton()
-                self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('str', 'string', 'file'):
                 self.tw["box%d" % c] = gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.GenerateLabel(data["description"])
+                self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.Entry()
-                self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data['type'] in ('textview'):
                 self.tw["box%d" % c] = gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.GenerateLabel(data["description"])
+                self.tw["label%d" % c] = self.generate_label(data["description"])
                 self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
 
                 self.tw[name] = gtk.TextView()
-                self.settings.SetWidget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 
                 self.tw["scrolledwindow%d" % c] = gtk.ScrolledWindow()
                 self.tw["scrolledwindow%d" % c].set_min_content_height(100)
@@ -3078,36 +3078,36 @@ class buildDialog(gtk.Dialog):
                 self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], False, False, 0)
                 self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
             elif data["type"] in ("list string",):
-                self.GenerateTreeView(name, data["description"], value, c)
+                self.generate_tree_view(name, data["description"], value, c)
             else:
                 print("Unknown setting type '%s', data '%s'" % (name, data))
 
             c += 1
 
-        self.PluginProperties.show_all()
+        self.plugin_properties.show_all()
 
-    def OnCancel(self, widget):
-        self.PluginProperties.hide()
+    def on_cancel(self, widget):
+        self.plugin_properties.hide()
 
-    def OnOkay(self, widget):
+    def on_okay(self, widget):
         for name in self.options:
-            value = self.settings.GetWidgetData(self.tw[name])
+            value = self.settings.get_widget_data(self.tw[name])
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
-        self.PluginProperties.hide()
+        self.plugin_properties.hide()
         self.settings.frame.np.pluginhandler.plugin_settings(self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
-    def Show(self):
-        self.PluginProperties.show()
+    def show(self):
+        self.plugin_properties.show()
 
 
-class NotificationsFrame(buildFrame):
+class NotificationsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        buildFrame.__init__(self, "notifications")
+        BuildFrame.__init__(self, "notifications")
 
         self.options = {
             "notifications": {
@@ -3123,7 +3123,7 @@ class NotificationsFrame(buildFrame):
             }
         }
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
         if self.frame.notifications.notification_provider is not None:
             self.NotificationPopupSound.set_sensitive(True)
@@ -3140,9 +3140,9 @@ class NotificationsFrame(buildFrame):
             self.NotificationPopupChatroom.set_sensitive(False)
             self.NotificationPopupChatroomMention.set_sensitive(False)
 
-        self.p.SetWidgetsData(config, self.options)
+        self.p.set_widgets_data(config, self.options)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         return {
             "notifications": {
@@ -3159,12 +3159,12 @@ class NotificationsFrame(buildFrame):
         }
 
 
-class PluginFrame(buildFrame):
+class PluginFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
-        buildFrame.__init__(self, "plugin")
+        BuildFrame.__init__(self, "plugin")
 
         self.options = {
             "plugins": {
@@ -3182,7 +3182,7 @@ class PluginFrame(buildFrame):
         self.pluginsiters = {}
         self.selected_plugin = None
 
-        cols = InitialiseColumns(
+        cols = initialise_columns(
             self.PluginTreeView,
             [_("Plugins"), 380, "text"],
             [_("Enabled"), -1, "toggle"]
@@ -3196,22 +3196,22 @@ class PluginFrame(buildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
         self.PluginTreeView.set_model(self.plugins_model)
-        self.PluginTreeView.get_selection().connect("changed", self.OnSelectPlugin)
+        self.PluginTreeView.get_selection().connect("changed", self.on_select_plugin)
 
-        self.dialog = buildDialog(self)
+        self.dialog = BuildDialog(self)
 
-    def OnPluginProperties(self, widget):
+    def on_plugin_properties(self, widget):
         if self.selected_plugin is None:
             return
 
-        self.dialog.addOptions(
+        self.dialog.add_options(
             self.selected_plugin,
             self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
-        self.dialog.Show()
+        self.dialog.show()
 
-    def OnSelectPlugin(self, selection):
+    def on_select_plugin(self, selection):
 
         model, iterator = selection.get_selected()
         if iterator is None:
@@ -3226,7 +3226,7 @@ class PluginFrame(buildFrame):
         self.PluginDescription.get_buffer().set_text("%(description)s" % {"description": info['Description'].replace(r'\n', "\n")})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
 
-        self.CheckPropertiesButton(self.selected_plugin)
+        self.check_properties_button(self.selected_plugin)
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
@@ -3244,9 +3244,9 @@ class PluginFrame(buildFrame):
                 log.add(_('Could not disable plugin.'))
                 return
 
-        self.CheckPropertiesButton(plugin)
+        self.check_properties_button(plugin)
 
-    def CheckPropertiesButton(self, plugin):
+    def check_properties_button(self, plugin):
         settings = self.frame.np.pluginhandler.get_plugin_settings(plugin)
 
         if settings is not None:
@@ -3254,10 +3254,10 @@ class PluginFrame(buildFrame):
         else:
             self.PluginProperties.set_sensitive(False)
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
 
-        self.p.SetWidgetsData(config, self.options)
-        self.OnPluginsEnable(None)
+        self.p.set_widgets_data(config, self.options)
+        self.on_plugins_enable(None)
         self.pluginsiters = {}
         self.plugins_model.clear()
         plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
@@ -3272,19 +3272,19 @@ class PluginFrame(buildFrame):
 
         return {}
 
-    def OnPluginsEnable(self, widget):
+    def on_plugins_enable(self, widget):
         self.PluginList.set_sensitive(self.PluginsEnable.get_active())
 
         if not self.PluginsEnable.get_active():
             # Disable all plugins
-            for plugin in self.frame.np.pluginhandler.enabled_plugins:
+            for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
                 self.frame.np.pluginhandler.disable_plugin(plugin)
 
             # Uncheck all checkboxes in GUI
             for plugin in self.plugins_model:
                 self.plugins_model.set(plugin.iter, 1, False)
 
-    def GetSettings(self):
+    def get_settings(self):
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
@@ -3305,7 +3305,7 @@ class Settings:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
 
-        self.SettingsWindow = builder.get_object("SettingsWindow")
+        self.settings_window = builder.get_object("SettingsWindow")
 
         for i in builder.get_objects():
             try:
@@ -3319,8 +3319,8 @@ class Settings:
         gobject.signal_new("settings-closed", gtk.Window, gobject.SignalFlags.RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
         # Connect the custom handlers
-        self.SettingsWindow.set_transient_for(frame.MainWindow)
-        self.SettingsWindow.connect("delete-event", self.OnDelete)
+        self.settings_window.set_transient_for(frame.MainWindow)
+        self.settings_window.connect("delete-event", self.on_delete)
 
         # This is ?
         self.empty_label = gtk.Label.new("")
@@ -3413,26 +3413,26 @@ class Settings:
         # Set the cursor to the second element of the TreeViewColumn.
         self.SettingsTreeview.set_cursor((0, 0))
 
-        self.UpdateColours()
+        self.update_colours()
 
-    def ColourWidgets(self, widget):
+    def colour_widgets(self, widget):
 
         if isinstance(widget, (gtk.Entry, gtk.SpinButton)):
-            self.SetTextBG(widget)
+            self.set_text_bg(widget)
         if isinstance(widget, gtk.TreeView):
-            self.frame.ChangeListFont(widget, self.frame.np.config.sections["ui"]["listfont"])
+            self.frame.change_list_font(widget, self.frame.np.config.sections["ui"]["listfont"])
 
-    def UpdateColours(self):
+    def update_colours(self):
 
         for widget in self.__dict__.values():
-            self.ColourWidgets(widget)
+            self.colour_widgets(widget)
 
         for name, page in self.pages.items():
             for widget in page.__dict__.values():
-                self.ColourWidgets(widget)
+                self.colour_widgets(widget)
 
-    def SetTextBG(self, widget, bgcolor="", fgcolor=""):
-        self.frame.SetTextBG(widget, bgcolor, fgcolor)
+    def set_text_bg(self, widget, bgcolor="", fgcolor=""):
+        self.frame.set_text_bg(widget, bgcolor, fgcolor)
 
     def switch_page(self, widget):
         child = self.viewport1.get_child()
@@ -3448,9 +3448,9 @@ class Settings:
         else:
             self.viewport1.add(self.empty_label)
 
-    def SwitchToPage(self, page):
+    def switch_to_page(self, page):
 
-        self.SettingsWindow.deiconify()
+        self.settings_window.deiconify()
         child = self.viewport1.get_child()
         if child:
             self.viewport1.remove(child)
@@ -3466,21 +3466,21 @@ class Settings:
         if path is not None:
             sel.select_path(path)
 
-    def OnApply(self, widget):
-        self.SettingsWindow.emit("settings-closed", "apply")
+    def on_apply(self, widget):
+        self.settings_window.emit("settings-closed", "apply")
 
-    def OnOk(self, widget):
-        self.SettingsWindow.emit("settings-closed", "ok")
+    def on_ok(self, widget):
+        self.settings_window.emit("settings-closed", "ok")
 
-    def OnCancel(self, widget):
-        self.SettingsWindow.emit("settings-closed", "cancel")
+    def on_cancel(self, widget):
+        self.settings_window.emit("settings-closed", "cancel")
 
-    def OnDelete(self, widget, event):
-        self.OnCancel(widget)
+    def on_delete(self, widget, event):
+        self.on_cancel(widget)
         widget.stop_emission_by_name("delete-event")
         return True
 
-    def GetPosition(self, combobox, option):
+    def get_position(self, combobox, option):
         iterator = combobox.get_model().get_iter_first()
         while iterator is not None:
             word = combobox.get_model().get_value(iterator, 0)
@@ -3489,7 +3489,7 @@ class Settings:
                 break
             iterator = combobox.get_model().iter_next(iterator)
 
-    def SetWidgetsData(self, config, options):
+    def set_widgets_data(self, config, options):
         for section, keys in options.items():
             if section not in config:
                 continue
@@ -3498,11 +3498,11 @@ class Settings:
                 if widget is None:
                     continue
                 if config[section][key] is None:
-                    self.ClearWidget(widget)
+                    self.clear_widget(widget)
                 else:
-                    self.SetWidget(widget, config[section][key])
+                    self.set_widget(widget, config[section][key])
 
-    def GetWidgetData(self, widget):
+    def get_widget_data(self, widget):
 
         if isinstance(widget, gtk.Entry):
             return widget.get_text()
@@ -3530,7 +3530,7 @@ class Settings:
                 iterator = widget.get_model().iter_next(iterator)
             return wlist
 
-    def ClearWidget(self, widget):
+    def clear_widget(self, widget):
         if isinstance(widget, gtk.Entry):
             widget.set_text("")
         elif isinstance(widget, gtk.TextView):
@@ -3542,11 +3542,11 @@ class Settings:
         elif isinstance(widget, gtk.RadioButton):
             widget.set_active(0)
         elif isinstance(widget, gtk.ComboBox):
-            self.GetPosition(widget, "")
+            self.get_position(widget, "")
         elif isinstance(widget, gtk.FontButton):
             widget.set_font("")
 
-    def SetWidget(self, widget, value):
+    def set_widget(self, widget, value):
 
         if isinstance(widget, gtk.Entry):
             if isinstance(value, str):
@@ -3566,7 +3566,7 @@ class Settings:
             widget.set_active(value)
         elif isinstance(widget, gtk.ComboBox):
             if isinstance(value, str):
-                self.GetPosition(widget, value)
+                self.get_position(widget, value)
             elif isinstance(value, int):
                 widget.set_active(value)
         elif isinstance(widget, gtk.FontButton):
@@ -3575,18 +3575,18 @@ class Settings:
             for item in value:
                 widget.get_model().append([item])
 
-    def InvalidSettings(self, domain, key):
+    def invalid_settings(self, domain, key):
         for name, page in self.pages.items():
             if domain in page.options:
                 if key in page.options[domain]:
-                    self.SwitchToPage(name)
+                    self.switch_to_page(name)
                     break
 
-    def SetSettings(self, config):
+    def set_settings(self, config):
         for page in self.pages.values():
-            page.SetSettings(config)
+            page.set_settings(config)
 
-    def GetSettings(self):
+    def get_settings(self):
 
         try:
             config = {
@@ -3605,10 +3605,10 @@ class Settings:
             }
 
             for page in self.pages.values():
-                sub = page.GetSettings()
+                sub = page.get_settings()
                 for key, data in sub.items():
                     config[key].update(data)
 
-            return self.pages["Shares"].GetNeedRescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
+            return self.pages["Shares"].get_need_rescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None

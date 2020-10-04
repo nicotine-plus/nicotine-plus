@@ -39,7 +39,7 @@
               <object class="GtkEntry" id="AddWishEntry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="activate" handler="OnAddWish" swapped="no"/>
+                <signal name="activate" handler="on_add_wish" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -53,7 +53,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="margin_end">30</property>
-                <signal name="clicked" handler="OnAddWish" swapped="no"/>
+                <signal name="clicked" handler="on_add_wish" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -88,7 +88,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnRemoveWish" swapped="no"/>
+                <signal name="clicked" handler="on_remove_wish" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -124,7 +124,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnSelectAllWishes" swapped="no"/>
+                <signal name="clicked" handler="on_select_all_wishes" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

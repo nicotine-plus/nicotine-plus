@@ -30,13 +30,13 @@ from gi.repository import Gtk as gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import OptionDialog
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import CollapseTreeview
-from pynicotine.gtkgui.utils import FillFileGroupingCombobox
+from pynicotine.gtkgui.utils import collapse_treeview
+from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import SetTreeviewSelectedRow
-from pynicotine.utils import executeCommand
+from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.utils import execute_command
 
 
 class Uploads(TransferList):
@@ -49,59 +49,59 @@ class Uploads(TransferList):
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
         popup2.setup(
-            ("#" + _("Clear finished/erred"), self.OnClearFinishedErred),
-            ("#" + _("Clear finished/aborted"), self.OnClearFinishedAborted),
-            ("#" + _("Clear finished"), self.OnClearFinished),
-            ("#" + _("Clear aborted"), self.OnClearAborted),
-            ("#" + _("Clear queued"), self.OnClearQueued),
-            ("#" + _("Clear failed"), self.OnClearFailed)
+            ("#" + _("Clear finished/erred"), self.on_clear_finished_erred),
+            ("#" + _("Clear finished/aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Clear finished"), self.on_clear_finished),
+            ("#" + _("Clear aborted"), self.on_clear_aborted),
+            ("#" + _("Clear queued"), self.on_clear_queued),
+            ("#" + _("Clear failed"), self.on_clear_failed)
         )
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
-            ("#" + _("Copy _URL"), self.OnCopyURL),
-            ("#" + _("Copy folder URL"), self.OnCopyDirURL),
-            ("#" + _("Send to _player"), self.OnPlayFiles),
-            ("#" + _("Open folder"), self.OnOpenDirectory),
-            ("#" + _("Search"), self.OnFileSearch),
-            (1, _("User(s)"), self.popup_menu_users, self.OnPopupMenuUsers),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy folder URL"), self.on_copy_dir_url),
+            ("#" + _("Send to _player"), self.on_play_files),
+            ("#" + _("Open folder"), self.on_open_directory),
+            ("#" + _("Search"), self.on_file_search),
+            (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
-            ("#" + _("Abor_t"), self.OnAbortTransfer),
-            ("#" + _("_Clear"), self.OnClearTransfer),
-            ("#" + _("_Retry"), self.OnUploadTransfer),
+            ("#" + _("Abor_t"), self.on_abort_transfer),
+            ("#" + _("_Clear"), self.on_clear_transfer),
+            ("#" + _("_Retry"), self.on_upload_transfer),
             ("", None),
             (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
 
-        frame.clearUploadFinishedErredButton.connect("clicked", self.OnClearFinishedErred)
-        frame.clearUploadQueueButton.connect("clicked", self.OnTryClearQueued)
-        frame.abortUploadButton.connect("clicked", self.OnAbortTransfer)
-        frame.abortUserUploadButton.connect("clicked", self.OnAbortUser)
-        frame.banUploadButton.connect("clicked", self.OnBan)
+        frame.clearUploadFinishedErredButton.connect("clicked", self.on_clear_finished_erred)
+        frame.clearUploadQueueButton.connect("clicked", self.on_try_clear_queued)
+        frame.abortUploadButton.connect("clicked", self.on_abort_transfer)
+        frame.abortUserUploadButton.connect("clicked", self.on_abort_user)
+        frame.banUploadButton.connect("clicked", self.on_ban)
         frame.UploadList.expand_all()
 
         self.frame.ToggleAutoclearUploads.set_active(self.frame.np.config.sections["transfers"]["autoclear_uploads"])
-        frame.ToggleAutoclearUploads.connect("toggled", self.OnToggleAutoclear)
+        frame.ToggleAutoclearUploads.connect("toggled", self.on_toggle_autoclear)
 
-        FillFileGroupingCombobox(frame.ToggleTreeUploads)
+        fill_file_grouping_combobox(frame.ToggleTreeUploads)
         frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
-        frame.ToggleTreeUploads.connect("changed", self.OnToggleTree)
-        self.OnToggleTree(None)
+        frame.ToggleTreeUploads.connect("changed", self.on_toggle_tree)
+        self.on_toggle_tree(None)
 
         self.frame.ExpandUploads.set_active(self.frame.np.config.sections["transfers"]["uploadsexpanded"])
-        frame.ExpandUploads.connect("toggled", self.OnExpandUploads)
+        frame.ExpandUploads.connect("toggled", self.on_expand_uploads)
 
-        self.OnExpandUploads(None)
+        self.on_expand_uploads(None)
 
-    def OnTryClearQueued(self, widget):
-        OptionDialog(
+    def on_try_clear_queued(self, widget):
+        option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
             message=_('Are you sure you wish to clear all queued uploads?'),
             callback=self.on_clear_response
         )
 
-    def OnOpenDirectory(self, widget):
+    def on_open_directory(self, widget):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
         incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
@@ -113,17 +113,17 @@ class Uploads(TransferList):
         transfer = next(iter(self.selected_transfers))
 
         if os.path.exists(transfer.path):
-            executeCommand(filemanager, transfer.path)
+            execute_command(filemanager, transfer.path)
         else:
-            executeCommand(filemanager, incompletedir)
+            execute_command(filemanager, incompletedir)
 
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
             self.frame.UploadList.expand_to_path(path)
         else:
-            CollapseTreeview(self.frame.UploadList, self.TreeUsers)
+            collapse_treeview(self.frame.UploadList, self.tree_users)
 
-    def OnExpandUploads(self, widget):
+    def on_expand_uploads(self, widget):
 
         expanded = self.frame.ExpandUploads.get_active()
 
@@ -131,28 +131,28 @@ class Uploads(TransferList):
             self.frame.UploadList.expand_all()
             self.frame.ExpandUploadsImage.set_from_icon_name("list-remove-symbolic", gtk.IconSize.BUTTON)
         else:
-            CollapseTreeview(self.frame.UploadList, self.TreeUsers)
+            collapse_treeview(self.frame.UploadList, self.tree_users)
             self.frame.ExpandUploadsImage.set_from_icon_name("list-add-symbolic", gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
-        self.frame.np.config.writeConfiguration()
+        self.frame.np.config.write_configuration()
 
-    def OnToggleAutoclear(self, widget):
+    def on_toggle_autoclear(self, widget):
         self.frame.np.config.sections["transfers"]["autoclear_uploads"] = self.frame.ToggleAutoclearUploads.get_active()
 
-    def OnToggleTree(self, widget):
+    def on_toggle_tree(self, widget):
 
-        self.TreeUsers = self.frame.ToggleTreeUploads.get_active()
-        self.frame.np.config.sections["transfers"]["groupuploads"] = self.TreeUsers
+        self.tree_users = self.frame.ToggleTreeUploads.get_active()
+        self.frame.np.config.sections["transfers"]["groupuploads"] = self.tree_users
 
-        self.RebuildTransfers()
+        self.rebuild_transfers()
 
-        if self.TreeUsers == 0:
+        if self.tree_users == 0:
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()
 
-    def OnAbortUser(self, widget):
+    def on_abort_user(self, widget):
 
         self.select_transfers()
 
@@ -161,11 +161,11 @@ class Uploads(TransferList):
                 if i.user == user:
                     self.selected_transfers.add(i)
 
-        TransferList.OnAbortTransfer(self, widget, False, False)
-        self.frame.np.transfers.calcUploadQueueSizes()
-        self.frame.np.transfers.checkUploadQueue()
+        TransferList.on_abort_transfer(self, widget, False, False)
+        self.frame.np.transfers.calc_upload_queue_sizes()
+        self.frame.np.transfers.check_upload_queue()
 
-    def OnUploadTransfer(self, widget):
+    def on_upload_transfer(self, widget):
 
         self.select_transfers()
 
@@ -174,27 +174,27 @@ class Uploads(TransferList):
             path = transfer.path
             user = transfer.user
 
-            if user in self.frame.np.transfers.getTransferringUsers():
+            if user in self.frame.np.transfers.get_transferring_users():
                 continue
 
-            self.frame.np.ProcessRequestToPeer(user, slskmessages.UploadQueueNotification(None))
-            self.frame.np.transfers.pushFile(user, filename, path, transfer=transfer)
+            self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
+            self.frame.np.transfers.push_file(user, filename, path, transfer=transfer)
 
-        self.frame.np.transfers.checkUploadQueue()
+        self.frame.np.transfers.check_upload_queue()
 
     def on_key_press_event(self, widget, event):
 
         key = Gdk.keyval_name(event.keyval)
 
         if key in ("P", "p"):
-            self.OnPopupMenu(widget, event, "keyboard")
+            self.on_popup_menu(widget, event, "keyboard")
         else:
             self.select_transfers()
 
             if key in ("T", "t"):
-                self.OnAbortTransfer(widget)
+                self.on_abort_transfer(widget)
             elif key == "Delete":
-                self.OnAbortTransfer(widget, False, True)
+                self.on_abort_transfer(widget, False, True)
             else:
                 # No key match, continue event
                 return False
@@ -202,10 +202,10 @@ class Uploads(TransferList):
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def OnPlayFiles(self, widget, prefix=""):
-        start_new_thread(self._OnPlayFiles, (widget, prefix))
+    def on_play_files(self, widget, prefix=""):
+        start_new_thread(self._on_play_files, (widget, prefix))
 
-    def _OnPlayFiles(self, widget, prefix=""):
+    def _on_play_files(self, widget, prefix=""):
 
         executable = self.frame.np.config.sections["players"]["default"]
 
@@ -216,13 +216,13 @@ class Uploads(TransferList):
             file = fn.realfilename
 
             if os.path.exists(file):
-                executeCommand(executable, file, background=False)
+                execute_command(executable, file, background=False)
 
-    def OnPopupMenu(self, widget, event, kind):
+    def on_popup_menu(self, widget, event, kind):
 
         if kind == "mouse":
             if event.button == 3:
-                SetTreeviewSelectedRow(widget, event)
+                set_treeview_selected_row(widget, event)
 
             else:
                 pathinfo = widget.get_path_at_pos(event.x, event.y)
@@ -231,7 +231,7 @@ class Uploads(TransferList):
                     widget.get_selection().unselect_all()
 
                 elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                    self.DoubleClick(event)
+                    self.double_click(event)
 
                 return False
 
@@ -273,7 +273,7 @@ class Uploads(TransferList):
 
         return True
 
-    def ClearByUser(self, user):
+    def clear_by_user(self, user):
 
         for i in self.list[:]:
             if i.user == user:
@@ -281,41 +281,41 @@ class Uploads(TransferList):
                     i.transfertimer.cancel()
                 self.remove_specific(i)
 
-        self.frame.np.transfers.calcUploadQueueSizes()
-        self.frame.np.transfers.checkUploadQueue()
+        self.frame.np.transfers.calc_upload_queue_sizes()
+        self.frame.np.transfers.check_upload_queue()
 
-    def DoubleClick(self, event):
+    def double_click(self, event):
 
         self.select_transfers()
         dc = self.frame.np.config.sections["transfers"]["upload_doubleclick"]
 
         if dc == 1:  # Send to player
-            self.OnPlayFiles(None)
+            self.on_play_files(None)
         elif dc == 2:  # File manager
-            self.OnOpenDirectory(None)
+            self.on_open_directory(None)
         elif dc == 3:  # Search
-            self.OnFileSearch(None)
+            self.on_file_search(None)
         elif dc == 4:  # Abort
-            self.OnAbortTransfer(None, False)
+            self.on_abort_transfer(None, False)
         elif dc == 5:  # Clear
-            self.OnClearTransfer(None)
+            self.on_clear_transfer(None)
 
-    def OnAbortTransfer(self, widget, remove=False, clear=False):
+    def on_abort_transfer(self, widget, remove=False, clear=False):
 
         self.select_transfers()
 
-        TransferList.OnAbortTransfer(self, widget, remove, clear)
-        self.frame.np.transfers.calcUploadQueueSizes()
-        self.frame.np.transfers.checkUploadQueue()
+        TransferList.on_abort_transfer(self, widget, remove, clear)
+        self.frame.np.transfers.calc_upload_queue_sizes()
+        self.frame.np.transfers.check_upload_queue()
 
-    def OnClearQueued(self, widget):
+    def on_clear_queued(self, widget):
 
-        TransferList.OnClearQueued(self, widget)
-        self.frame.np.transfers.calcUploadQueueSizes()
-        self.frame.np.transfers.checkUploadQueue()
+        TransferList.on_clear_queued(self, widget)
+        self.frame.np.transfers.calc_upload_queue_sizes()
+        self.frame.np.transfers.check_upload_queue()
 
-    def OnClearFailed(self, widget):
+    def on_clear_failed(self, widget):
 
-        TransferList.OnClearFailed(self, widget)
-        self.frame.np.transfers.calcUploadQueueSizes()
-        self.frame.np.transfers.checkUploadQueue()
+        TransferList.on_clear_failed(self, widget)
+        self.frame.np.transfers.calc_upload_queue_sizes()
+        self.frame.np.transfers.check_upload_queue()

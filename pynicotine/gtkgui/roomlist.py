@@ -40,7 +40,7 @@ class RoomList:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
 
-        self.TempWindow = builder.get_object("TempWindow")
+        self.temp_window = builder.get_object("TempWindow")
 
         for i in builder.get_objects():
             try:
@@ -48,8 +48,8 @@ class RoomList:
             except TypeError:
                 pass
 
-        self.TempWindow.remove(self.vbox2)
-        self.TempWindow.destroy()
+        self.temp_window.remove(self.vbox2)
+        self.temp_window.destroy()
 
         # self.RoomsList is the TreeView
         builder.connect_signals(self)
@@ -59,9 +59,9 @@ class RoomList:
         self.room_model = self.RoomsList.get_model()
 
         self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
-        self.AcceptPrivateRoom.connect("toggled", self.OnToggleAcceptPrivateRoom)
+        self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
-    def OnSearchRoom(self, widget):
+    def on_search_room(self, widget):
 
         if self.room_model is not self.RoomsList.get_model():
             self.room_model = self.RoomsList.get_model()
@@ -91,9 +91,9 @@ class RoomList:
 
             self.search_iter = self.room_model.iter_next(self.search_iter)
 
-    def OnRefresh(self, widget):
+    def on_refresh(self, widget):
         self.frame.np.queue.put(slskmessages.RoomList())
 
-    def OnToggleAcceptPrivateRoom(self, widget):
+    def on_toggle_accept_private_room(self, widget):
         value = self.AcceptPrivateRoom.get_active()
         self.frame.np.queue.put(slskmessages.PrivateRoomToggle(value))

@@ -31,14 +31,14 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.utils import AppendLine
-from pynicotine.gtkgui.utils import Humanize
-from pynicotine.gtkgui.utils import HumanSpeed
+from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import humanize
+from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import InitialiseColumns
+from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
-from pynicotine.utils import CleanFile
+from pynicotine.utils import clean_file
 
 
 # User Info and User Browse Notebooks
@@ -68,18 +68,18 @@ class UserTabs(IconNotebook):
         self.users = {}
         self.mytab = None
 
-    def SetTabLabel(self, mytab):
+    def set_tab_label(self, mytab):
         self.mytab = mytab
 
-    def GetUserStats(self, msg):
+    def get_user_stats(self, msg):
 
         if msg.user in self.users:
             tab = self.users[msg.user]
-            tab.speed.set_text(_("Speed: %s") % HumanSpeed(msg.avgspeed))
-            tab.filesshared.set_text(_("Files: %s") % Humanize(msg.files))
-            tab.dirsshared.set_text(_("Directories: %s") % Humanize(msg.dirs))
+            tab.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+            tab.filesshared.set_text(_("Files: %s") % humanize(msg.files))
+            tab.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
 
-    def GetUserStatus(self, msg):
+    def get_user_status(self, msg):
 
         if msg.user in self.users:
 
@@ -94,73 +94,73 @@ class UserTabs(IconNotebook):
 
             self.set_status_image(tab.Main, msg.status)
 
-    def InitWindow(self, user, conn):
+    def init_window(self, user, conn):
 
         if user in self.users:
             self.users[user].conn = conn
         else:
             w = self.subwindow(self, user, conn)
-            self.append_page(w.Main, user[:15], w.OnClose)
+            self.append_page(w.Main, user[:15], w.on_close)
             self.users[user] = w
             self.frame.np.queue.put(slskmessages.AddUser(user))
 
-    def saveColumns(self):
+    def save_columns(self):
 
         for user in self.users:
-            self.users[user].saveColumns()
+            self.users[user].save_columns()
 
-    def ShowLocalInfo(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
+    def show_local_info(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 
-        self.InitWindow(user, None)
-        self.users[user].ShowUserInfo(descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
+        self.init_window(user, None)
+        self.users[user].show_user_info(descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
         self.request_changed(self.users[user].Main)
 
         if self.mytab is not None:
-            self.frame.RequestIcon(self.mytab)
+            self.frame.request_icon(self.mytab)
 
-    def ShowInfo(self, user, msg):
+    def show_info(self, user, msg):
 
-        self.InitWindow(user, msg.conn)
-        self.users[user].ShowInfo(msg)
+        self.init_window(user, msg.conn)
+        self.users[user].show_info(msg)
         self.request_changed(self.users[user].Main)
 
         if self.mytab is not None:
-            self.frame.RequestIcon(self.mytab)
+            self.frame.request_icon(self.mytab)
 
-        self.frame.ShowTab(None, ['userinfo', self.frame.userinfovbox])
+        self.frame.show_tab(None, ['userinfo', self.frame.userinfovbox])
 
-    def ShowInterests(self, msg):
+    def show_interests(self, msg):
 
         if msg.user in self.users:
-            self.users[msg.user].ShowInterests(msg.likes, msg.hates)
+            self.users[msg.user].show_interests(msg.likes, msg.hates)
 
-    def UpdateGauge(self, msg):
+    def update_gauge(self, msg):
 
         for i in list(self.users.values()):
             if i.conn == msg.conn.conn:
-                i.UpdateGauge(msg)
+                i.update_gauge(msg)
 
-    def UpdateColours(self):
+    def update_colours(self):
 
         for i in list(self.users.values()):
-            i.ChangeColours()
+            i.change_colours()
 
-    def TabPopup(self, user):
+    def tab_popup(self, user):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Send _message"), popup.OnSendMessage),
-            ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-            ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-            ("#" + _("Brow_se files"), popup.OnBrowseUser),
-            ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
-            ("#" + _("Client Version"), popup.OnVersion),
+            ("#" + _("Send _message"), popup.on_send_message),
+            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+            ("#" + _("Brow_se files"), popup.on_browse_user),
+            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
+            ("#" + _("Client Version"), popup.on_version),
             ("", None),
-            ("$" + _("Add user to list"), popup.OnAddToList),
-            ("$" + _("Ban this user"), popup.OnBanUser),
-            ("$" + _("Ignore this user"), popup.OnIgnoreUser),
+            ("$" + _("Add user to list"), popup.on_add_to_list),
+            ("$" + _("Ban this user"), popup.on_ban_user),
+            ("$" + _("Ignore this user"), popup.on_ignore_user),
             ("", None),
-            ("#" + _("Close this tab"), self.users[user].OnClose)
+            ("#" + _("Close this tab"), self.users[user].on_close)
         )
 
         popup.set_user(user)
@@ -182,11 +182,11 @@ class UserTabs(IconNotebook):
             username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
 
             if event.button == 2:
-                self.users[username].OnClose(widget)
+                self.users[username].on_close(widget)
                 return True
 
             if event.button == 3:
-                menu = self.TabPopup(username)
+                menu = self.tab_popup(username)
                 menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
@@ -194,11 +194,11 @@ class UserTabs(IconNotebook):
 
         return False
 
-    def ConnClose(self):
+    def conn_close(self):
 
         self.connected = 0
         for user in self.users:
-            self.users[user].ConnClose()
+            self.users[user].conn_close()
             tab = self.users[user]
             tab.status = 0
             status = _("Offline")
@@ -215,7 +215,7 @@ class UserInfo:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
 
-        self.UserInfoTab = builder.get_object("UserInfoTab")
+        self.user_info_tab = builder.get_object("UserInfoTab")
 
         for i in builder.get_objects():
             try:
@@ -223,8 +223,8 @@ class UserInfo:
             except TypeError:
                 pass
 
-        self.UserInfoTab.remove(self.Main)
-        self.UserInfoTab.destroy()
+        self.user_info_tab.remove(self.Main)
+        self.user_info_tab.destroy()
 
         builder.connect_signals(self)
 
@@ -240,51 +240,51 @@ class UserInfo:
         self.actual_zoom = 0
         self.status = 0
 
-        self.hatesStore = gtk.ListStore(gobject.TYPE_STRING)
-        self.Hates.set_model(self.hatesStore)
-        cols = InitialiseColumns(self.Hates, [_("Hates"), 0, "text", self.CellDataFunc])
+        self.hates_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.Hates.set_model(self.hates_store)
+        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text", self.cell_data_func])
         cols[0].set_sort_column_id(0)
-        self.hatesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.hates_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-        self.likesStore = gtk.ListStore(gobject.TYPE_STRING)
-        self.Likes.set_model(self.likesStore)
-        cols = InitialiseColumns(self.Likes, [_("Likes"), 0, "text", self.CellDataFunc])
+        self.likes_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.Likes.set_model(self.likes_store)
+        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text", self.cell_data_func])
         cols[0].set_sort_column_id(0)
-        self.likesStore.set_sort_column_id(0, gtk.SortType.ASCENDING)
+        self.likes_store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
         self.tag_local = self.makecolour("chatremote")
-        self.ChangeColours()
+        self.change_colours()
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
-            ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
+            ("$" + _("I _like this"), self.frame.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.frame.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.frame.on_recommend_search)
         )
 
-        self.Likes.connect("button_press_event", self.OnPopupLikesMenu)
+        self.Likes.connect("button_press_event", self.on_popup_likes_menu)
 
         self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.OnLikeRecommendation),
-            ("$" + _("I _don't like this"), self.frame.OnDislikeRecommendation),
+            ("$" + _("I _like this"), self.frame.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.frame.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.OnRecommendSearch)
+            ("#" + _("_Search for this item"), self.frame.on_recommend_search)
         )
 
-        self.Hates.connect("button_press_event", self.OnPopupHatesMenu)
+        self.Hates.connect("button_press_event", self.on_popup_hates_menu)
 
         self.image_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Zoom 1:1"), self.MakeZoomNormal),
-            ("#" + _("Zoom In"), self.MakeZoomIn),
-            ("#" + _("Zoom Out"), self.MakeZoomOut),
+            ("#" + _("Zoom 1:1"), self.make_zoom_normal),
+            ("#" + _("Zoom In"), self.make_zoom_in),
+            ("#" + _("Zoom Out"), self.make_zoom_out),
             ("", None),
-            ("#" + _("Save Image"), self.OnSavePicture)
+            ("#" + _("Save Image"), self.on_save_picture)
         )
 
-    def OnPopupLikesMenu(self, widget, event):
+    def on_popup_likes_menu(self, widget, event):
 
         if event.button != 3:
             return
@@ -295,8 +295,8 @@ class UserInfo:
 
         path, column, x, y = d
 
-        iterator = self.likesStore.get_iter(path)
-        thing = self.likesStore.get_value(iterator, 0)
+        iterator = self.likes_store.get_iter(path)
+        thing = self.likes_store.get_value(iterator, 0)
         items = self.likes_popup_menu.get_children()
 
         self.likes_popup_menu.set_user(thing)
@@ -306,7 +306,7 @@ class UserInfo:
 
         self.likes_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def OnPopupHatesMenu(self, widget, event):
+    def on_popup_hates_menu(self, widget, event):
 
         if event.button != 3:
             return
@@ -317,8 +317,8 @@ class UserInfo:
 
         path, column, x, y = d
 
-        iterator = self.hatesStore.get_iter(path)
-        thing = self.hatesStore.get_value(iterator, 0)
+        iterator = self.hates_store.get_iter(path)
+        thing = self.hates_store.get_value(iterator, 0)
         items = self.hates_popup_menu.get_children()
 
         self.hates_popup_menu.set_user(thing)
@@ -328,10 +328,10 @@ class UserInfo:
 
         self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def ConnClose(self):
+    def conn_close(self):
         pass
 
-    def CellDataFunc(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
         if colour == "":
@@ -339,7 +339,7 @@ class UserInfo:
 
         cellrenderer.set_property("foreground", colour)
 
-    def ExpanderStatus(self, widget):
+    def expander_status(self, widget):
 
         if widget.get_property("expanded"):
             self.InfoVbox.set_child_packing(widget, False, True, 0, 0)
@@ -371,32 +371,32 @@ class UserInfo:
         font = self.frame.np.config.sections["ui"]["chatfont"]
         tag.set_property("font", font)
 
-    def ChangeColours(self):
+    def change_colours(self):
 
         self.changecolour(self.tag_local, "chatremote")
 
-        self.frame.ChangeListFont(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
-        self.frame.ChangeListFont(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
+        self.frame.change_list_font(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
+        self.frame.change_list_font(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
 
-    def ShowInterests(self, likes, hates):
+    def show_interests(self, likes, hates):
 
-        self.likesStore.clear()
-        self.hatesStore.clear()
+        self.likes_store.clear()
+        self.hates_store.clear()
 
         for like in likes:
-            self.likesStore.append([like])
+            self.likes_store.append([like])
 
         for hate in hates:
-            self.hatesStore.append([hate])
+            self.hates_store.append([hate])
 
-    def ShowUserInfo(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
+    def show_user_info(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 
         self.conn = None
         self._descr = descr
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
-        AppendLine(self.descr, descr, self.tag_local, showstamp=False, scroll=False)
+        append_line(self.descr, descr, self.tag_local, showstamp=False, scroll=False)
 
         self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
         self.queuesize.set_text(_("Queue size: %i") % queuesize)
@@ -441,10 +441,10 @@ class UserInfo:
                 self.image.set_from_file(name)
                 os.remove(name)
 
-    def ShowInfo(self, msg):
-        self.ShowUserInfo(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
+    def show_info(self, msg):
+        self.show_user_info(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
 
-    def UpdateGauge(self, msg):
+    def update_gauge(self, msg):
 
         if msg.total == 0 or msg.bytes == 0:
             fraction = 0.0
@@ -455,46 +455,46 @@ class UserInfo:
 
         self.progressbar.set_fraction(fraction)
 
-    def OnSendMessage(self, widget):
-        self.frame.privatechats.SendMessage(self.user)
+    def on_send_message(self, widget):
+        self.frame.privatechats.send_message(self.user)
 
-    def OnShowIPaddress(self, widget):
+    def on_show_ip_address(self, widget):
 
         if self.user not in self.frame.np.ip_requested:
             self.frame.np.ip_requested.append(self.user)
 
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
-    def OnRefresh(self, widget):
-        self.frame.LocalUserInfoRequest(self.user)
+    def on_refresh(self, widget):
+        self.frame.local_user_info_request(self.user)
 
-    def OnBrowseUser(self, widget):
-        self.frame.BrowseUser(self.user)
+    def on_browse_user(self, widget):
+        self.frame.browse_user(self.user)
 
-    def OnAddToList(self, widget):
-        self.frame.np.userlist.AddToList(self.user)
+    def on_add_to_list(self, widget):
+        self.frame.np.userlist.add_to_list(self.user)
 
-    def OnBanUser(self, widget):
-        self.frame.BanUser(self.user)
+    def on_ban_user(self, widget):
+        self.frame.ban_user(self.user)
 
-    def OnIgnoreUser(self, widget):
-        self.frame.IgnoreUser(self.user)
+    def on_ignore_user(self, widget):
+        self.frame.ignore_user(self.user)
 
-    def OnClose(self, widget):
+    def on_close(self, widget):
 
         del self.userinfos.users[self.user]
-        self.frame.np.ClosePeerConnection(self.conn)
+        self.frame.np.close_peer_connection(self.conn)
 
         self.userinfos.remove_page(self.Main)
         self.Main.destroy()
 
-    def OnSavePicture(self, widget):
+    def on_save_picture(self, widget):
 
         if self.image is None or self.image_pixbuf is None:
             return
 
         filename = "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H:%M:%S"))
-        pathname = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], CleanFile(filename))
+        pathname = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], clean_file(filename))
 
         if not os.path.exists(pathname):
             self.image_pixbuf.savev(pathname, "jpeg", ["quality"], ["100"])
@@ -502,7 +502,7 @@ class UserInfo:
         else:
             log.add(_("Picture not saved, %s already exists."), pathname)
 
-    def OnImageClick(self, widget, event):
+    def on_image_click(self, widget, event):
 
         if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 3:
             return False
@@ -520,21 +520,21 @@ class UserInfo:
 
         return True  # Don't scroll the gtk.ScrolledWindow
 
-    def OnScrollEvent(self, widget, event):
+    def on_scroll_event(self, widget, event):
 
         if event.get_scroll_deltas().delta_y < 0:
-            self.MakeZoomIn()
+            self.make_zoom_in()
         else:
-            self.MakeZoomOut()
+            self.make_zoom_out()
 
         return True  # Don't scroll the gtk.ScrolledWindow
 
-    def MakeZoomNormal(self, widget):
-        self.MakeZoomIn(zoom=True)
+    def make_zoom_normal(self, widget):
+        self.make_zoom_in(zoom=True)
 
-    def MakeZoomIn(self, widget=None, zoom=None):
+    def make_zoom_in(self, widget=None, zoom=None):
 
-        def CalcZoomIn(a):
+        def calc_zoom_in(a):
             return a + a * self.actual_zoom / 100 + a * self.zoom_factor / 100
 
         import gc
@@ -550,16 +550,16 @@ class UserInfo:
         else:
             self.actual_zoom += self.zoom_factor
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomIn(x), CalcZoomIn(y), GdkPixbuf.InterpType.TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
 
         gc.collect()
 
-    def MakeZoomOut(self, widget=None):
+    def make_zoom_out(self, widget=None):
 
-        def CalcZoomOut(a):
+        def calc_zoom_out(a):
             return a + a * self.actual_zoom / 100 - a * self.zoom_factor / 100
 
         import gc
@@ -572,11 +572,11 @@ class UserInfo:
 
         self.actual_zoom -= self.zoom_factor
 
-        if CalcZoomOut(x) < 10 or CalcZoomOut(y) < 10:
+        if calc_zoom_out(x) < 10 or calc_zoom_out(y) < 10:
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(CalcZoomOut(x), CalcZoomOut(y), GdkPixbuf.InterpType.TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.TILES)
         self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed

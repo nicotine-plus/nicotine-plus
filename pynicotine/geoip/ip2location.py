@@ -92,8 +92,8 @@ class IP2LocationRecord:
         return repr(self.__dict__)
 
 
-MAX_IPV4_RANGE = 4294967295
-MAX_IPV6_RANGE = 340282366920938463463374607431768211455
+max_ipv4_range = 4294967295
+max_ipv6_range = 340282366920938463463374607431768211455
 
 _COUNTRY_POSITION = (0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
 _REGION_POSITION = (0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3)
@@ -461,7 +461,7 @@ class IP2Location(object):
         ipv = self._parse_addr(ip)[0]
         ipnum = self._parse_addr(ip)[1]
         if ipv == 4:
-            if (ipnum == MAX_IPV4_RANGE):
+            if (ipnum == max_ipv4_range):
                 ipno = ipnum - 1
             else:
                 ipno = ipnum
@@ -477,7 +477,7 @@ class IP2Location(object):
             if self._ipv6dbcount == 0:
                 raise ValueError('Please use IPv6 BIN file for IPv6 Address.')
 
-            if (ipnum == MAX_IPV6_RANGE):
+            if (ipnum == max_ipv6_range):
                 ipno = ipnum - 1
             else:
                 ipno = ipnum

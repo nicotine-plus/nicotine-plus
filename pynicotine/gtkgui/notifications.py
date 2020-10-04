@@ -24,7 +24,7 @@ from gettext import gettext as _
 from gi.repository import GLib
 
 from pynicotine.logfacility import log
-from pynicotine.utils import executeCommand
+from pynicotine.utils import execute_command
 from pynicotine.utils import version
 
 
@@ -50,13 +50,13 @@ class Notifications:
         self.tts_playing = False
         self.continue_playing = False
 
-    def Add(self, location, user, room=None, tab=True):
+    def add(self, location, user, room=None, tab=True):
 
         if location == "rooms" and room is not None and user is not None:
             if room not in self.frame.hilites["rooms"]:
                 self.frame.hilites["rooms"].append(room)
 
-                self.frame.TrayApp.set_image()
+                self.frame.tray_app.set_image()
         elif location == "private":
             if user in self.frame.hilites[location]:
                 self.frame.hilites[location].remove(user)
@@ -64,39 +64,39 @@ class Notifications:
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
 
-                self.frame.TrayApp.set_image()
+                self.frame.tray_app.set_image()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
             self.frame.MainWindow.set_urgency_hint(True)
 
-        self.SetTitle(user)
+        self.set_title(user)
 
-    def ClearPage(self, notebook, item):
+    def clear_page(self, notebook, item):
 
         (page, label, window, focused) = item
         location = None
 
         if notebook is self.frame.ChatNotebook:
             location = "rooms"
-            self.Clear(location, room=label)
+            self.clear(location, room=label)
         elif notebook is self.frame.PrivatechatNotebook:
             location = "private"
-            self.Clear(location, user=label)
+            self.clear(location, user=label)
 
-    def Clear(self, location, user=None, room=None):
+    def clear(self, location, user=None, room=None):
 
         if location == "rooms" and room is not None:
             if room in self.frame.hilites["rooms"]:
                 self.frame.hilites["rooms"].remove(room)
-            self.SetTitle(room)
+            self.set_title(room)
         elif location == "private":
             if user in self.frame.hilites["private"]:
                 self.frame.hilites["private"].remove(user)
-            self.SetTitle(user)
+            self.set_title(user)
 
-        self.frame.TrayApp.set_image()
+        self.frame.tray_app.set_image()
 
-    def SetTitle(self, user=None):
+    def set_title(self, user=None):
 
         if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
             # Reset Title
@@ -157,9 +157,9 @@ class Notifications:
 
         self.tts_playing = True
 
-        executeCommand(self.frame.np.config.sections["ui"]["speechcommand"], message)
+        execute_command(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
-    def NewNotification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
+    def new_notification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
 
         if self.notification_provider is None:
             return

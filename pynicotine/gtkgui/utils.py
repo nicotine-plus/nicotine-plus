@@ -28,6 +28,7 @@ import time
 import types
 import urllib.parse
 import webbrowser
+
 from gettext import gettext as _
 
 from gi.repository import Gdk
@@ -37,10 +38,10 @@ from gi.repository import Gtk as gtk
 from gi.repository import Pango as pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import EntryDialog
+from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.countrycodes import code2name
 from pynicotine.logfacility import log
-from pynicotine.utils import executeCommand
+from pynicotine.utils import execute_command
 
 
 DECIMALSEP = ""
@@ -57,7 +58,7 @@ NICOTINE = None
 previouscountrypath = None
 
 
-def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
+def show_country_tooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
 
     global previouscountrypath
     try:
@@ -112,7 +113,7 @@ def showCountryTooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_')
     return True
 
 
-def FillFileGroupingCombobox(combobox):
+def fill_file_grouping_combobox(combobox):
     grouplist = gtk.ListStore(str)
     groups = [
         "No grouping",
@@ -129,7 +130,7 @@ def FillFileGroupingCombobox(combobox):
     combobox.add_attribute(renderer_text, "text", 0)
 
 
-def SelectUserRowIter(fmodel, sel, user_index, selected_user, iterator):
+def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
     while iterator is not None:
         user = fmodel.get_value(iterator, user_index)
 
@@ -138,12 +139,12 @@ def SelectUserRowIter(fmodel, sel, user_index, selected_user, iterator):
 
         child = fmodel.iter_children(iterator)
 
-        SelectUserRowIter(fmodel, sel, user_index, selected_user, child)
+        select_user_row_iter(fmodel, sel, user_index, selected_user, child)
 
         iterator = fmodel.iter_next(iterator)
 
 
-def CollapseTreeview(treeview, groupingmode):
+def collapse_treeview(treeview, groupingmode):
     treeview.collapse_all()
 
     if groupingmode == 1:
@@ -158,7 +159,7 @@ def CollapseTreeview(treeview, groupingmode):
             iterator = model.iter_next(iterator)
 
 
-def InitialiseColumns(treeview, *args):
+def initialise_columns(treeview, *args):
 
     i = 0
     cols = []
@@ -245,13 +246,13 @@ def InitialiseColumns(treeview, *args):
     return cols
 
 
-def HideColumns(cols, visibility_list):
+def hide_columns(cols, visibility_list):
     try:
         for i in range(len(cols)):
 
             parent = cols[i].get_widget().get_ancestor(gtk.Button)
             if parent:
-                parent.connect('button_press_event', PressHeader)
+                parent.connect('button_press_event', press_header)
 
             # Read Show / Hide column settings from last session
             cols[i].set_visible(visibility_list[i])
@@ -271,25 +272,31 @@ def HideColumns(cols, visibility_list):
         pass
 
 
-def PressHeader(widget, event):
+def press_header(widget, event):
     if event.button != 3:
         return False
+
     columns = widget.get_parent().get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     one_visible_column = len(visible_columns) == 1
     menu = gtk.Menu()
     pos = 1
+
     for column in columns:
         title = column.get_title()
+
         if title == "":
             title = _("Column #%i") % pos
+
         item = gtk.CheckMenuItem(title)
+
         if column in visible_columns:
             item.set_active(True)
             if one_visible_column:
                 item.set_sensitive(False)
         else:
             item.set_active(False)
+
         item.connect('activate', header_toggle, columns, pos - 1)
         menu.append(item)
         pos += 1
@@ -327,7 +334,7 @@ def header_toggle(menuitem, columns, index):
     NICOTINE.SaveColumns()
 
 
-def SetTreeviewSelectedRow(treeview, event):
+def set_treeview_selected_row(treeview, event):
     """Handles row selection when right-clicking in a treeview"""
 
     pathinfo = treeview.get_path_at_pos(event.x, event.y)
@@ -345,7 +352,7 @@ def SetTreeviewSelectedRow(treeview, event):
         selection.unselect_all()
 
 
-def ScrollBottom(widget):
+def scroll_bottom(widget):
     va = widget.get_vadjustment()
     try:
         va.set_value(va.get_upper() - va.get_page_size())
@@ -355,15 +362,15 @@ def ScrollBottom(widget):
     return False
 
 
-def UrlEvent(tag, widget, event, iterator, url):
+def url_event(tag, widget, event, iterator, url):
     if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
-        OpenUri(url, widget.get_toplevel())
+        open_uri(url, widget.get_toplevel())
     tag.last_event_type = event.button.type
 
 
-def OpenUri(uri, window):
+def open_uri(uri, window):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
     As of now failures will be silently discarded."""
@@ -376,7 +383,7 @@ def OpenUri(uri, window):
             return
         if PROTOCOL_HANDLERS[protocol]:
             try:
-                executeCommand(PROTOCOL_HANDLERS[protocol], uri)
+                execute_command(PROTOCOL_HANDLERS[protocol], uri)
                 return
             except RuntimeError as e:
                 log.add_warning("%s", e)
@@ -393,7 +400,7 @@ def OpenUri(uri, window):
         gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
 
 
-def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
+def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
 
     if type(line) not in (type(""), type("")):
         line = str(line)  # Error messages are sometimes tuples
@@ -409,7 +416,7 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         props["underline"] = pango.Underline.SINGLE
         tag = buffer.create_tag(**props)
         tag.last_event_type = -1
-        tag.connect("event", UrlEvent, url)
+        tag.connect("event", url_event, url)
         return tag
 
     def _append(buffer, text, tag):
@@ -495,20 +502,20 @@ def AppendLine(textview, line, tag=None, timestamp=None, showstamp=True, timesta
         _usertag(buffer, line)
 
     if scroll and bottom:
-        GLib.idle_add(ScrollBottom, scrolledwindow)
+        GLib.idle_add(scroll_bottom, scrolledwindow)
 
     return linenr
 
 
 class BuddiesComboBox:
 
-    def __init__(self, frame, ComboBox):
+    def __init__(self, frame, combo_box):
 
         self.frame = frame
 
         self.items = {}
 
-        self.combobox = ComboBox
+        self.combobox = combo_box
 
         self.store = gtk.ListStore(gobject.TYPE_STRING)
         self.combobox.set_model(self.store)
@@ -519,7 +526,7 @@ class BuddiesComboBox:
 
         self.combobox.show()
 
-    def Fill(self):
+    def fill(self):
 
         self.items.clear()
         self.store.clear()
@@ -531,14 +538,14 @@ class BuddiesComboBox:
 
         self.store.set_sort_column_id(0, gtk.SortType.ASCENDING)
 
-    def Append(self, item):
+    def append(self, item):
 
         if item in self.items:
             return
 
         self.items[item] = self.combobox.get_model().append([item])
 
-    def Remove(self, item):
+    def remove(self, item):
 
         if item in self.items:
             self.combobox.get_model().remove(self.items[item])
@@ -586,27 +593,29 @@ class ImageLabel(gtk.Box):
 
     def _pack_children(self):
         self.set_spacing(0)
-        if "Box" in self.__dict__:
-            for widget in self.Box.get_children():
-                self.Box.remove(widget)
-            self.remove(self.Box)
-            self.Box.destroy()
-            del self.Box
 
-        self.Box = gtk.Box()
+        if "box" in self.__dict__:
+            for widget in self.box.get_children():
+                self.box.remove(widget)
+
+            self.remove(self.box)
+            self.box.destroy()
+            del self.box
+
+        self.box = gtk.Box()
 
         if self.angle in (90, -90):
-            self.Box.set_orientation(gtk.Orientation.VERTICAL)
+            self.box.set_orientation(gtk.Orientation.VERTICAL)
         else:
             self.angle = 0
 
-        self.Box.set_spacing(2)
-        self.add(self.Box)
-        self.Box.show()
+        self.box.set_spacing(2)
+        self.add(self.box)
+        self.box.show()
 
-        self.Box.pack_start(self.statusimage, False, False, 0)
-        self.Box.pack_start(self.label, True, True, 0)
-        self.Box.pack_start(self.image, False, False, 0)
+        self.box.pack_start(self.statusimage, False, False, 0)
+        self.box.pack_start(self.label, True, True, 0)
+        self.box.pack_start(self.image, False, False, 0)
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
@@ -615,20 +624,21 @@ class ImageLabel(gtk.Box):
 
         if self.angle == 90:
             if "button" in self.__dict__ and self.closebutton != 0:
-                self.Box.reorder_child(self.button, 0)
-                self.Box.reorder_child(self.image, 1)
-                self.Box.reorder_child(self.label, 2)
-                self.Box.reorder_child(self.statusimage, 3)
+                self.box.reorder_child(self.button, 0)
+                self.box.reorder_child(self.image, 1)
+                self.box.reorder_child(self.label, 2)
+                self.box.reorder_child(self.statusimage, 3)
             else:
-                self.Box.reorder_child(self.image, 0)
-                self.Box.reorder_child(self.label, 1)
-                self.Box.reorder_child(self.statusimage, 2)
+                self.box.reorder_child(self.image, 0)
+                self.box.reorder_child(self.label, 1)
+                self.box.reorder_child(self.statusimage, 2)
         else:
-            self.Box.reorder_child(self.statusimage, 0)
-            self.Box.reorder_child(self.label, 1)
-            self.Box.reorder_child(self.image, 2)
+            self.box.reorder_child(self.statusimage, 0)
+            self.box.reorder_child(self.label, 1)
+            self.box.reorder_child(self.image, 2)
+
             if "button" in self.__dict__ and self.closebutton != 0:
-                self.Box.reorder_child(self.button, 3)
+                self.box.reorder_child(self.button, 3)
 
     def set_onclose(self, closebutton):
         self.closebutton = closebutton
@@ -637,6 +647,7 @@ class ImageLabel(gtk.Box):
             self._add_close_button()
         else:
             self._remove_close_button()
+
         self._order_children()
 
     def show_image(self, show=True):
@@ -658,21 +669,25 @@ class ImageLabel(gtk.Box):
     def _add_close_button(self):
         if "button" in self.__dict__:
             return
+
         self.button = gtk.Button()
         img = gtk.Image()
         img.set_from_icon_name("window-close-symbolic", gtk.IconSize.MENU)
         self.button.add(img)
+
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
+
         self.button.set_relief(gtk.ReliefStyle.NONE)
 
         self.button.show_all()
-        self.Box.pack_start(self.button, False, False, 0)
+        self.box.pack_start(self.button, False, False, 0)
 
     def _remove_close_button(self):
         if "button" not in self.__dict__:
             return
-        self.Box.remove(self.button)
+
+        self.box.remove(self.button)
         self.button.destroy()
         del self.button
 
@@ -714,11 +729,13 @@ class ImageLabel(gtk.Box):
     def set_status_image(self, img):
         if img is self.status_img:
             return
+
         if NICOTINE:
             if NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
                 self.statusimage.show()
             else:
                 self.statusimage.hide()
+
         self.status_img = img
         self.statusimage.set_from_pixbuf(img)
 
@@ -742,8 +759,8 @@ class IconNotebook:
     def __init__(self, images, angle=0, tabclosers=False, show_image=True, reorderable=True, show_status_image=False, notebookraw=None):
 
         # We store the real gtk.Notebook object
-        self.Notebook = notebookraw
-        self.Notebook.set_show_border(True)
+        self.notebook = notebookraw
+        self.notebook.set_show_border(True)
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable
@@ -754,8 +771,8 @@ class IconNotebook:
 
         self.pages = []
 
-        self.Notebook.connect("switch-page", self.dismiss_icon)
-        self.Notebook.connect("key_press_event", self.OnKeyPress)
+        self.notebook.connect("switch-page", self.dismiss_icon)
+        self.notebook.connect("key_press_event", self.on_key_press)
 
         self.angle = angle
 
@@ -766,7 +783,7 @@ class IconNotebook:
         for data in self.pages:
             page, label_tab, status, label_tab_menu = data
             try:
-                self.Notebook.set_tab_reorderable(page, self.reorderable)
+                self.notebook.set_tab_reorderable(page, self.reorderable)
             except Exception:
                 pass
 
@@ -798,9 +815,9 @@ class IconNotebook:
             label_tab.set_angle(angle)
 
     def set_tab_pos(self, pos):
-        self.Notebook.set_tab_pos(pos)
+        self.notebook.set_tab_pos(pos)
 
-    def OnKeyPress(self, widget, event):
+    def on_key_press(self, widget, event):
 
         if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
@@ -847,27 +864,27 @@ class IconNotebook:
         eventbox.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         eventbox.connect('button_press_event', self.on_tab_click, page)
 
-        gtk.Notebook.append_page_menu(self.Notebook, page, eventbox, label_tab_menu)
+        gtk.Notebook.append_page_menu(self.notebook, page, eventbox, label_tab_menu)
 
-        self.Notebook.set_tab_reorderable(page, self.reorderable)
-        self.Notebook.set_show_tabs(True)
+        self.notebook.set_tab_reorderable(page, self.reorderable)
+        self.notebook.set_show_tabs(True)
 
     def remove_page(self, page):
 
         for i in self.pages[:]:
             if i[0] == page:
-                gtk.Notebook.remove_page(self.Notebook, self.page_num(page))
+                gtk.Notebook.remove_page(self.notebook, self.page_num(page))
                 i[1].destroy()
                 i[3].destroy()
                 self.pages.remove(i)
 
                 break
 
-        if self.Notebook.get_n_pages() == 0:
-            self.Notebook.set_show_tabs(False)
+        if self.notebook.get_n_pages() == 0:
+            self.notebook.set_show_tabs(False)
 
-    def OnFocused(self, item):
-        self.frame.notifications.ClearPage(self, item)
+    def on_focused(self, item):
+        self.frame.notifications.clear_page(self, item)
 
     def on_tab_click(self, widget, event, child):
         pass
@@ -943,25 +960,25 @@ class IconNotebook:
         self.set_text_color(page, 1)
 
     def get_current_page(self):
-        return self.Notebook.get_current_page()
+        return self.notebook.get_current_page()
 
     def set_current_page(self, page_num):
-        return self.Notebook.set_current_page(page_num)
+        return self.notebook.set_current_page(page_num)
 
     def get_nth_page(self, page_num):
-        return self.Notebook.get_nth_page(page_num)
+        return self.notebook.get_nth_page(page_num)
 
     def page_num(self, page):
-        return self.Notebook.page_num(page)
+        return self.notebook.page_num(page)
 
     def popup_enable(self):
-        self.Notebook.popup_enable()
+        self.notebook.popup_enable()
 
     def popup_disable(self):
-        self.Notebook.popup_disable()
+        self.notebook.popup_disable()
 
     def show(self):
-        self.Notebook.show()
+        self.notebook.show()
 
 
 class PopupMenu(gtk.Menu):
@@ -1064,97 +1081,97 @@ class PopupMenu(gtk.Menu):
     def get_user(self):
         return self.user
 
-    def OnSearchUser(self, widget):
+    def on_search_user(self, widget):
         self.frame.SearchMethod.set_active_iter(self.frame.searchmethods[_("User")])
         self.frame.UserSearchCombo.get_child().set_text(self.user)
-        self.frame.ChangeMainPage(None, "search")
+        self.frame.change_main_page(None, "search")
 
-    def OnSendMessage(self, widget):
-        self.frame.privatechats.SendMessage(self.user, None, 1)
-        self.frame.ChangeMainPage(None, "private")
+    def on_send_message(self, widget):
+        self.frame.privatechats.send_message(self.user, None, 1)
+        self.frame.change_main_page(None, "private")
 
-    def OnShowIPaddress(self, widget):
+    def on_show_ip_address(self, widget):
 
         if self.user not in self.frame.np.ip_requested:
             self.frame.np.ip_requested.append(self.user)
 
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
-    def OnGetUserInfo(self, widget):
-        self.frame.LocalUserInfoRequest(self.user)
+    def on_get_user_info(self, widget):
+        self.frame.local_user_info_request(self.user)
 
-    def OnBrowseUser(self, widget):
-        self.frame.BrowseUser(self.user)
+    def on_browse_user(self, widget):
+        self.frame.browse_user(self.user)
 
-    def OnPrivateRoomAddUser(self, widget, room):
+    def on_private_room_add_user(self, widget, room):
         self.frame.np.queue.put(slskmessages.PrivateRoomAddUser(room, self.user))
 
-    def OnPrivateRoomRemoveUser(self, widget, room):
+    def on_private_room_remove_user(self, widget, room):
         self.frame.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, self.user))
 
-    def OnPrivateRoomAddOperator(self, widget, room):
+    def on_private_room_add_operator(self, widget, room):
         self.frame.np.queue.put(slskmessages.PrivateRoomAddOperator(room, self.user))
 
-    def OnPrivateRoomRemoveOperator(self, widget, room):
+    def on_private_room_remove_operator(self, widget, room):
         self.frame.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, self.user))
 
-    def OnAddToList(self, widget):
+    def on_add_to_list(self, widget):
 
         if self.editing:
             return
 
         if widget.get_active():
-            self.frame.userlist.AddToList(self.user)
+            self.frame.userlist.add_to_list(self.user)
         else:
-            self.frame.userlist.RemoveFromList(self.user)
+            self.frame.userlist.remove_from_list(self.user)
 
-    def OnBanUser(self, widget):
+    def on_ban_user(self, widget):
 
         if self.editing:
             return
 
         if widget.get_active():
-            self.frame.BanUser(self.user)
+            self.frame.ban_user(self.user)
         else:
-            self.frame.UnbanUser(self.user)
+            self.frame.unban_user(self.user)
 
-    def OnBlockUser(self, widget):
+    def on_block_user(self, widget):
 
         if self.editing:
             return
 
         if widget.get_active():
-            self.frame.OnBlockUser(self.user)
+            self.frame.on_block_user(self.user)
         else:
-            self.frame.OnUnBlockUser(self.user)
+            self.frame.on_un_block_user(self.user)
 
-    def OnIgnoreIP(self, widget):
+    def on_ignore_ip(self, widget):
 
         if self.editing:
             return
 
         if widget.get_active():
-            self.frame.OnIgnoreIP(self.user)
+            self.frame.on_ignore_ip(self.user)
         else:
-            self.frame.OnUnIgnoreIP(self.user)
+            self.frame.on_un_ignore_ip(self.user)
 
-    def OnIgnoreUser(self, widget):
+    def on_ignore_user(self, widget):
 
         if self.editing:
             return
 
         if widget.get_active():
-            self.frame.IgnoreUser(self.user)
+            self.frame.ignore_user(self.user)
         else:
-            self.frame.UnignoreUser(self.user)
+            self.frame.unignore_user(self.user)
 
-    def OnVersion(self, widget):
-        self.frame.privatechats.SendMessage(self.user, "\x01VERSION\x01", bytestring=True)
+    def on_version(self, widget):
+        self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
-    def OnCopyUser(self, widget):
+    def on_copy_user(self, widget):
         self.frame.clip.set_text(self.user, -1)
 
-    def OnGivePrivileges(self, widget):
+    def on_give_privileges(self, widget):
 
         self.frame.np.queue.put(slskmessages.CheckPrivileges())
 
@@ -1163,7 +1180,7 @@ class PopupMenu(gtk.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        text = EntryDialog(
+        text = entry_dialog(
             self.frame.MainWindow,
             _("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
             _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
@@ -1176,32 +1193,31 @@ class PopupMenu(gtk.Menu):
             except Exception as e:
                 log.add_warning("%s", e)
 
-    def OnPrivateRooms(self, widget):
+    def on_private_rooms(self, widget, popup):
 
         if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
             return False
 
         items = []
-        popup = self.frame.userlist.Popup_Menu_PrivateRooms
         popup.clear()
         popup.set_user(self.user)
 
-        for room in self.frame.chatrooms.roomsctrl.PrivateRooms:
+        for room in self.frame.chatrooms.roomsctrl.private_rooms:
 
-            if not (self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room) or self.frame.chatrooms.roomsctrl.IsPrivateRoomOperator(room)):
+            if not (self.frame.chatrooms.roomsctrl.is_private_room_owned(room) or self.frame.chatrooms.roomsctrl.is_private_room_operator(room)):
                 continue
 
-            if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["users"]:
-                items.append(("#" + _("Remove from private room %s") % room, popup.OnPrivateRoomRemoveUser, room))
+            if self.user in self.frame.chatrooms.roomsctrl.private_rooms[room]["users"]:
+                items.append(("#" + _("Remove from private room %s") % room, popup.on_private_room_remove_user, room))
             else:
-                items.append(("#" + _("Add to private room %s") % room, popup.OnPrivateRoomAddUser, room))
+                items.append(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
 
-            if self.frame.chatrooms.roomsctrl.IsPrivateRoomOwned(room):
+            if self.frame.chatrooms.roomsctrl.is_private_room_owned(room):
 
-                if self.user in self.frame.chatrooms.roomsctrl.PrivateRooms[room]["operators"]:
-                    items.append(("#" + _("Remove as operator of %s") % room, popup.OnPrivateRoomRemoveOperator, room))
+                if self.user in self.frame.chatrooms.roomsctrl.private_rooms[room]["operators"]:
+                    items.append(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
                 else:
-                    items.append(("#" + _("Add as operator of %s") % room, popup.OnPrivateRoomAddOperator, room))
+                    items.append(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
 
         popup.setup(*items)
 
@@ -1218,15 +1234,15 @@ class TextSearchBar:
 
         self.search_bar.connect_entry(self.entry)
 
-        self.entry.connect("activate", self.OnSearchNextMatch)
-        self.entry.connect("search-changed", self.OnSearchChanged)
+        self.entry.connect("activate", self.on_search_next_match)
+        self.entry.connect("search-changed", self.on_search_changed)
 
-        self.entry.connect("previous-match", self.OnSearchPreviousMatch)
-        self.entry.connect("next-match", self.OnSearchNextMatch)
+        self.entry.connect("previous-match", self.on_search_previous_match)
+        self.entry.connect("next-match", self.on_search_next_match)
 
-        self.textview.connect("key-press-event", self.OnKeyPress)
+        self.textview.connect("key-press-event", self.on_key_press)
 
-    def OnSearchChanged(self, widget):
+    def on_search_changed(self, widget):
 
         buffer = self.textview.get_buffer()
         start, end = buffer.get_bounds()
@@ -1243,7 +1259,7 @@ class TextSearchBar:
             buffer.select_range(match_end, match_start)
             self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
 
-    def OnSearchPreviousMatch(self, widget):
+    def on_search_previous_match(self, widget):
 
         buffer = self.textview.get_buffer()
         query = self.entry.get_text()
@@ -1262,9 +1278,9 @@ class TextSearchBar:
         else:
             start, end = buffer.get_bounds()
             buffer.place_cursor(end)
-            self.OnSearchPreviousMatch(widget)
+            self.on_search_previous_match(widget)
 
-    def OnSearchNextMatch(self, widget):
+    def on_search_next_match(self, widget):
 
         buffer = self.textview.get_buffer()
         query = self.entry.get_text()
@@ -1283,16 +1299,16 @@ class TextSearchBar:
         else:
             start, end = buffer.get_bounds()
             buffer.place_cursor(start)
-            self.OnSearchNextMatch(widget)
+            self.on_search_next_match(widget)
 
-    def OnKeyPress(self, widget, event):
+    def on_key_press(self, widget, event):
         key = Gdk.keyval_name(event.keyval)
 
         # Match against capslock + control and control
         if key in ("f", "F") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
-            self.ShowSearchBar()
+            self.show_search_bar()
 
-    def ShowSearchBar(self):
+    def show_search_bar(self):
         self.search_bar.set_search_mode(True)
         self.entry.grab_focus_without_selecting()
 
@@ -1300,7 +1316,7 @@ class TextSearchBar:
 size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 
 
-def HumanSize(filesize):
+def human_size(filesize):
     try:
         step_unit = 1024.0
 
@@ -1316,7 +1332,7 @@ def HumanSize(filesize):
 speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
 
 
-def HumanSpeed(filesize):
+def human_speed(filesize):
     try:
         step_unit = 1024.0
 
@@ -1329,7 +1345,7 @@ def HumanSpeed(filesize):
         return filesize
 
 
-def Humanize(number):
+def humanize(number):
     fashion = DECIMALSEP
     if fashion == "" or fashion == "<None>":
         return str(number)

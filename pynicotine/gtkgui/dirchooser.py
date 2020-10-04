@@ -27,7 +27,7 @@ from gettext import gettext as _
 from gi.repository import Gtk as gtk
 
 
-def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
+def choose_dir(parent=None, initialdir="~", title=None, multichoice=True):
     try:
         dialog = gtk.FileChooserNative.new(
             title,
@@ -66,7 +66,7 @@ def ChooseDir(parent=None, initialdir="~", title=None, multichoice=True):
     return res
 
 
-def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
+def choose_file(parent=None, initialdir="~", initialfile="", multiple=False):
     try:
         dialog = gtk.FileChooserNative.new(
             None,
@@ -103,7 +103,7 @@ def ChooseFile(parent=None, initialdir="~", initialfile="", multiple=False):
     return res
 
 
-def SaveFile(parent=None, initialdir="~", initialfile="", title=None):
+def save_file(parent=None, initialdir="~", initialfile="", title=None):
     try:
         dialog = gtk.FileChooserNative.new(
             title,

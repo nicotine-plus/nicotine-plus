@@ -473,7 +473,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnDefaultTimestamp" swapped="no"/>
+                        <signal name="clicked" handler="on_default_timestamp" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -554,7 +554,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnRoomDefaultTimestamp" swapped="no"/>
+                        <signal name="clicked" handler="on_room_default_timestamp" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -635,7 +635,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <signal name="clicked" handler="OnPrivateDefaultTimestamp" swapped="no"/>
+                        <signal name="clicked" handler="on_private_default_timestamp" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

@@ -29,11 +29,11 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 import _thread
-from pynicotine.gtkgui.dirchooser import ChooseDir
-from pynicotine.gtkgui.dialogs import ComboBoxDialog
-from pynicotine.gtkgui.utils import HumanSize
-from pynicotine.gtkgui.utils import InitialiseColumns
-from pynicotine.gtkgui.utils import OpenUri
+from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import open_uri
 
 
 def dirstats(directory):
@@ -105,7 +105,7 @@ class FastConfigureAssistant(object):
             gobject.TYPE_STRING
         )
 
-        InitialiseColumns(
+        initialise_columns(
             self.kids['shareddirectoriestree'],
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
@@ -208,25 +208,25 @@ class FastConfigureAssistant(object):
             else:
                 self.config.sections["transfers"]["shared"] = self.getshareddirs()
 
-    def OnClose(self, widget):
+    def on_close(self, widget):
         self.window.hide()
 
-    def OnApply(self, widget):
+    def on_apply(self, widget):
         self.store()
         self.window.hide()
 
         # Rescan public shares if needed
         if not self.config.sections["transfers"]["friendsonly"]:
-            self.frame.OnRescan()
+            self.frame.on_rescan()
 
         # Rescan buddy shares if needed
         if self.config.sections["transfers"]["enablebuddyshares"]:
-            self.frame.OnBuddyRescan()
+            self.frame.on_buddy_rescan()
 
-        if not self.frame.np.serverconn:
-            self.frame.OnConnect(-1)
+        if not self.frame.np.active_server_conn:
+            self.frame.on_connect(-1)
 
-    def OnCancel(self, widget):
+    def on_cancel(self, widget):
         self.window.hide()
 
     def resetcompleteness(self, page=None):
@@ -283,14 +283,14 @@ class FastConfigureAssistant(object):
 
         self.window.set_page_complete(page, complete)
 
-    def OnPrepare(self, widget, page):
+    def on_prepare(self, widget, page):
         self.window.set_page_complete(page, False)
         self.resetcompleteness(page)
 
-    def OnEntryChanged(self, widget, param1=None, param2=None, param3=None):
+    def on_entry_changed(self, widget, param1=None, param2=None, param3=None):
         self.resetcompleteness()
 
-    def OnEntryPaste(self, user_data):
+    def on_entry_paste(self, user_data):
         """
             Hack to workaround if the user paste is username or password.
             The "paste-clipboard" event of the GtkEntry doesn't seems to have a length after a text is pasted into it.
@@ -365,7 +365,7 @@ class FastConfigureAssistant(object):
         GLib.idle_add(
             self._updatedirstats,
             directory,
-            HumanSize(size),
+            human_size(size),
             files,
             subdirs,
             extstring
@@ -382,7 +382,7 @@ class FastConfigureAssistant(object):
                 self.sharelist.insert(0, [
                     directory[0],
                     directory[1],
-                    HumanSize(size),
+                    human_size(size),
                     str(files),
                     str(subdirs),
                     extensions,
@@ -394,7 +394,7 @@ class FastConfigureAssistant(object):
 
             iterator = self.sharelist.iter_next(iterator)
 
-    def OnButtonPressed(self, widget):
+    def on_button_pressed(self, widget):
 
         if self.initphase:
             return
@@ -402,7 +402,7 @@ class FastConfigureAssistant(object):
         name = gtk.Buildable.get_name(widget)
 
         if name == "checkmyport":
-            OpenUri(
+            open_uri(
                 '='.join([
                     'http://tools.slsknet.org/porttest.php?port',
                     str(self.frame.np.waitport)
@@ -412,7 +412,7 @@ class FastConfigureAssistant(object):
 
         if name == "addshare":
 
-            selected = ChooseDir(
+            selected = choose_dir(
                 self.window.get_toplevel(),
                 title=_("Add a shared directory")
             )
@@ -421,7 +421,7 @@ class FastConfigureAssistant(object):
 
                 for directory in selected:
 
-                    virtual = ComboBoxDialog(
+                    virtual = combo_box_dialog(
                         parent=self.frame.MainWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
@@ -495,21 +495,21 @@ class FastConfigureAssistant(object):
 
         self.resetcompleteness()
 
-    def OnToggled(self, widget):
+    def on_toggled(self, widget):
 
         if self.initphase:
             return
 
         self.resetcompleteness()
 
-    def OnSpinbuttonChangeValue(self, widget, scrolltype):
+    def on_spinbutton_change_value(self, widget, scrolltype):
 
         if self.initphase:
             return
 
         self.resetcompleteness()
 
-    def OnSpinbuttonValueChanged(self, widget):
+    def on_spinbutton_value_changed(self, widget):
 
         if self.initphase:
             return

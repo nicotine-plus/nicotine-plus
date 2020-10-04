@@ -84,7 +84,7 @@
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnApply" swapped="no"/>
+                <signal name="clicked" handler="on_apply" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -99,7 +99,7 @@
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnCancel" swapped="no"/>
+                <signal name="clicked" handler="on_cancel" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -114,7 +114,7 @@
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">False</property>
-                <signal name="clicked" handler="OnOk" swapped="no"/>
+                <signal name="clicked" handler="on_ok" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

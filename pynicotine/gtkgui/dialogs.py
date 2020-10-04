@@ -25,9 +25,9 @@ from gi.repository import GObject as gobject
 from gi.repository import Gtk as gtk
 
 
-def ComboBoxDialog(parent, title, message, default_text="",
-                   option=False, optionmessage="",
-                   optionvalue=False, droplist=[]):
+def combo_box_dialog(parent, title, message, default_text="",
+                     option=False, optionmessage="",
+                     optionvalue=False, droplist=[]):
 
     self = gtk.MessageDialog(
         transient_for=parent,
@@ -77,7 +77,7 @@ def ComboBoxDialog(parent, title, message, default_text="",
     return result
 
 
-def EntryDialog(parent, title, message, default=""):
+def entry_dialog(parent, title, message, default=""):
 
     self = gtk.MessageDialog(
         transient_for=parent,
@@ -105,7 +105,7 @@ def EntryDialog(parent, title, message, default=""):
     return result
 
 
-def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_label="", third=""):
+def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", third=""):
 
     self = gtk.MessageDialog(
         transient_for=parent,
@@ -132,7 +132,7 @@ def OptionDialog(parent, title, message, callback, callback_data=None, checkbox_
 
 class MetaDialog(gtk.Dialog):
 
-    def __init__(self, frame, message="", data=None, modal=True, Search=True):
+    def __init__(self, frame, message="", data=None, modal=True, search=True):
 
         gtk.Dialog.__init__(self)
         self.connect("destroy", self.quit)
@@ -144,7 +144,7 @@ class MetaDialog(gtk.Dialog):
         if modal:
             self.set_modal(True)
 
-        self.Search = Search
+        self.search = search
 
         self.box = gtk.VBox(spacing=10)
         self.box.set_border_width(10)
@@ -176,22 +176,22 @@ class MetaDialog(gtk.Dialog):
 
         self.UF.add(vbox3)
 
-        self.UsernameLabel, self.Username = self.MakeLabelStaticEntry(
+        self.username_label, self.username = self.make_label_static_entry(
             hbox2,
             "<b>%s:</b>" % _("Username"),
             "",
             expand=False
         )
 
-        self.BrowseUser = self.nicotine.CreateIconButton(
+        self.browse_user = self.nicotine.create_icon_button(
             gtk.STOCK_HARDDISK,
             "stock",
-            self.OnBrowseUser, _("Browse")
+            self.on_browse_user, _("Browse")
         )
 
-        hbox2.pack_start(self.BrowseUser, False, False, 0)
+        hbox2.pack_start(self.browse_user, False, False, 0)
 
-        self.PositionLabel, self.Position = self.MakeLabelStaticEntry(
+        self.position_label, self.position = self.make_label_static_entry(
             hbox2,
             _("<b>List Position:</b>"),
             "",
@@ -206,7 +206,7 @@ class MetaDialog(gtk.Dialog):
         hbox3.show()
         vbox3.pack_start(hbox3, False, False, 0)
 
-        self.FilenameLabel, self.Filename = self.MakeLabelStaticEntry(
+        self.filename_label, self.filename = self.make_label_static_entry(
             hbox3,
             _("<b>File Name:</b>"),
             "",
@@ -217,21 +217,21 @@ class MetaDialog(gtk.Dialog):
         hbox5.show()
         vbox3.pack_start(hbox5, False, False, 0)
 
-        self.DirectoryLabel, self.Directory = self.MakeLabelStaticEntry(
+        self.directory_label, self.directory = self.make_label_static_entry(
             hbox5,
             _("<b>Directory:</b>"),
             "",
             fill=True
         )
 
-        self.Media = gtk.Frame()
-        self.Media.show()
-        self.Media.set_shadow_type(gtk.ShadowType.ETCHED_IN)
+        self.media = gtk.Frame()
+        self.media.show()
+        self.media.set_shadow_type(gtk.ShadowType.ETCHED_IN)
         hbox6 = gtk.HBox(spacing=5, homogeneous=False)
         hbox6.set_border_width(5)
         hbox6.show()
 
-        self.SizeLabel, self.Size = self.MakeLabelStaticEntry(
+        self.size_label, self.size = self.make_label_static_entry(
             hbox6,
             _("<b>File Size:</b>"),
             "",
@@ -240,7 +240,7 @@ class MetaDialog(gtk.Dialog):
             xalign=1
         )
 
-        self.LengthLabel, self.Length = self.MakeLabelStaticEntry(
+        self.length_label, self.length = self.make_label_static_entry(
             hbox6,
             _("<b>Length:</b>"),
             "",
@@ -249,7 +249,7 @@ class MetaDialog(gtk.Dialog):
             xalign=0.5
         )
 
-        self.BitrateLabel, self.Bitrate = self.MakeLabelStaticEntry(
+        self.bitrate_label, self.bitrate = self.make_label_static_entry(
             hbox6,
             _("<b>Bitrate:</b>"),
             "",
@@ -258,14 +258,14 @@ class MetaDialog(gtk.Dialog):
             xalign=0.5
         )
 
-        self.Media.add(hbox6)
-        self.box.pack_start(self.Media, False, False, 0)
+        self.media.add(hbox6)
+        self.box.pack_start(self.media, False, False, 0)
 
         hbox7 = gtk.HBox(spacing=5, homogeneous=False)
         hbox7.show()
         self.box.pack_start(hbox7, False, False, 0)
 
-        self.ImmediateLabel, self.Immediate = self.MakeLabelStaticEntry(
+        self.immediate_label, self.immediate = self.make_label_static_entry(
             hbox7,
             _("<b>Immediate Downloads:</b>"),
             "",
@@ -274,7 +274,7 @@ class MetaDialog(gtk.Dialog):
             xalign=0.5
         )
 
-        self.QueueLabel, self.Queue = self.MakeLabelStaticEntry(
+        self.queue_label, self.queue = self.make_label_static_entry(
             hbox7,
             _("<b>Queue:</b>"),
             "",
@@ -287,7 +287,7 @@ class MetaDialog(gtk.Dialog):
         hbox4.show()
         self.box.pack_start(hbox4, False, False, 0)
 
-        self.SpeedLabel, self.Speed = self.MakeLabelStaticEntry(
+        self.speed_label, self.speed = self.make_label_static_entry(
             hbox4,
             _("<b>Last Speed:</b>"),
             "",
@@ -296,10 +296,10 @@ class MetaDialog(gtk.Dialog):
             xalign=1
         )
 
-        self.Country = gtk.Label()
-        self.Country.hide()
+        self.country = gtk.Label()
+        self.country.hide()
 
-        hbox4.pack_start(self.Country, False, False, 0)
+        hbox4.pack_start(self.country, False, False, 0)
 
         self.buttonbox = gtk.HBox(False, 2)
         self.buttonbox.show()
@@ -308,50 +308,50 @@ class MetaDialog(gtk.Dialog):
         self.box.pack_start(self.buttonbox, False, False, 0)
 
         # Download Button
-        self.DownloadItem = self.nicotine.CreateIconButton(
+        self.download_item = self.nicotine.create_icon_button(
             gtk.STOCK_GO_DOWN,
             "stock",
-            self.OnDownloadItem,
+            self.on_download_item,
             _("Download")
         )
 
-        self.buttonbox.pack_start(self.DownloadItem, False, False, 0)
+        self.buttonbox.pack_start(self.download_item, False, False, 0)
 
         # Download All Button
-        self.DownloadAll = self.nicotine.CreateIconButton(
+        self.download_all = self.nicotine.create_icon_button(
             gtk.STOCK_GO_DOWN,
             "stock",
-            self.OnDownloadAll,
+            self.on_download_all,
             _("Download All")
         )
 
-        self.buttonbox.pack_start(self.DownloadAll, False, False, 0)
+        self.buttonbox.pack_start(self.download_all, False, False, 0)
 
-        self.Selected = self.MakeLabel(
+        self.selected = self.make_label(
             self.buttonbox,
             _("<b>%s</b> File(s) Selected") % len(self.data),
             expand=False,
             xalign=1
         )
 
-        self.Previous = self.nicotine.CreateIconButton(
+        self.previous = self.nicotine.create_icon_button(
             gtk.STOCK_GO_BACK,
             "stock",
-            self.OnPrevious,
+            self.on_previous,
             _("Previous")
         )
 
-        self.Next = self.nicotine.CreateIconButton(
+        self.next = self.nicotine.create_icon_button(
             gtk.STOCK_GO_FORWARD,
             "stock",
-            self.OnNext,
+            self.on_next,
             _("Next")
         )
 
-        self.buttonbox.pack_end(self.Next, False, False, 0)
-        self.buttonbox.pack_end(self.Previous, False, False, 0)
+        self.buttonbox.pack_end(self.next, False, False, 0)
+        self.buttonbox.pack_end(self.previous, False, False, 0)
 
-        button = self.nicotine.CreateIconButton(
+        button = self.nicotine.create_icon_button(
             gtk.STOCK_CLOSE,
             "stock",
             self.click,
@@ -365,21 +365,21 @@ class MetaDialog(gtk.Dialog):
 
         self.ret = None
 
-        self.Display(self.current)
+        self.display(self.current)
 
-    def OnDownloadItem(self, widget):
+    def on_download_item(self, widget):
         meta = self.data[self.current]
-        self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "", checkduplicate=True)
+        self.nicotine.np.transfers.get_file(meta["user"], meta["fn"], "", checkduplicate=True)
 
-    def OnBrowseUser(self, widget):
+    def on_browse_user(self, widget):
         meta = self.data[self.current]
-        self.nicotine.BrowseUser(meta["user"])
+        self.nicotine.browse_user(meta["user"])
 
-    def OnDownloadAll(self, widget):
+    def on_download_all(self, widget):
         for item, meta in list(self.data.items()):
-            self.nicotine.np.transfers.getFile(meta["user"], meta["fn"], "", checkduplicate=True)
+            self.nicotine.np.transfers.get_file(meta["user"], meta["fn"], "", checkduplicate=True)
 
-    def OnPrevious(self, widget):
+    def on_previous(self, widget):
 
         if len(self.data) > 1:
 
@@ -402,9 +402,9 @@ class MetaDialog(gtk.Dialog):
         if self.current is None:
             return
 
-        self.Display(self.current)
+        self.display(self.current)
 
-    def OnNext(self, widget):
+    def on_next(self, widget):
 
         if len(self.data) > 1:
 
@@ -427,72 +427,72 @@ class MetaDialog(gtk.Dialog):
         if self.current is None:
             return
 
-        self.Display(self.current)
+        self.display(self.current)
 
-    def Display(self, item):
+    def display(self, item):
 
         if item not in self.data:
             return
 
-        if not self.Search:
-            self.Immediate.hide()
-            self.Position.hide()
-            self.Country.hide()
-            self.Queue.hide()
-            self.Immediate.hide()
-            self.ImmediateLabel.hide()
-            self.PositionLabel.hide()
-            self.QueueLabel.hide()
-            self.ImmediateLabel.hide()
-            self.DownloadItem.hide()
-            self.DownloadAll.hide()
+        if not self.search:
+            self.immediate.hide()
+            self.position.hide()
+            self.country.hide()
+            self.queue.hide()
+            self.immediate.hide()
+            self.immediate_label.hide()
+            self.position_label.hide()
+            self.queue_label.hide()
+            self.immediate_label.hide()
+            self.download_item.hide()
+            self.download_all.hide()
         else:
-            self.Immediate.show()
-            self.Position.show()
-            self.Country.show()
-            self.Queue.show()
-            self.Immediate.show()
-            self.ImmediateLabel.show()
-            self.PositionLabel.show()
-            self.QueueLabel.show()
-            self.ImmediateLabel.show()
-            self.DownloadItem.show()
-            self.DownloadAll.show()
+            self.immediate.show()
+            self.position.show()
+            self.country.show()
+            self.queue.show()
+            self.immediate.show()
+            self.immediate_label.show()
+            self.position_label.show()
+            self.queue_label.show()
+            self.immediate_label.show()
+            self.download_item.show()
+            self.download_all.show()
 
         self.current = item
         data = self.data[self.current]
-        More = False
+        more = False
 
         if len(self.data) > 1:
-            More = True
+            more = True
 
-        self.Next.set_sensitive(More)
-        self.Previous.set_sensitive(More)
-        self.DownloadAll.set_sensitive(More)
+        self.next.set_sensitive(more)
+        self.previous.set_sensitive(more)
+        self.download_all.set_sensitive(more)
 
-        self.Username.set_text(data["user"])
-        self.Filename.set_text(data["filename"])
-        self.Directory.set_text(data["directory"])
-        self.Size.set_text(str(data["size"]))
-        self.Speed.set_text(data["speed"])
-        self.Position.set_text(str(data["position"]))
+        self.username.set_text(data["user"])
+        self.filename.set_text(data["filename"])
+        self.directory.set_text(data["directory"])
+        self.size.set_text(str(data["size"]))
+        self.speed.set_text(data["speed"])
+        self.position.set_text(str(data["position"]))
 
         if data["bitrate"] not in ("", None):
-            self.Bitrate.set_text(data["bitrate"])
+            self.bitrate.set_text(data["bitrate"])
         else:
-            self.Bitrate.set_text("")
+            self.bitrate.set_text("")
 
-        self.Length.set_text(data["length"])
-        self.Queue.set_text(data["queue"])
-        self.Immediate.set_text(str(data["immediate"] == "Y"))
+        self.length.set_text(data["length"])
+        self.queue.set_text(data["queue"])
+        self.immediate.set_text(str(data["immediate"] == "Y"))
 
         country = data["country"]
         if country not in ("", None):
-            self.Country.set_markup(_("<b>Country Code:</b> ") + country)
-            self.Country.show()
+            self.country.set_markup(_("<b>Country Code:</b> ") + country)
+            self.country.show()
         else:
-            self.Country.set_text("")
-            self.Country.hide()
+            self.country.set_text("")
+            self.country.hide()
 
     def quit(self, w=None, event=None):
         self.hide()
@@ -502,7 +502,7 @@ class MetaDialog(gtk.Dialog):
     def click(self, button):
         self.quit()
 
-    def MakeLabel(self, parent, labeltitle, expand=True, fill=False, xalign=0):
+    def make_label(self, parent, labeltitle, expand=True, fill=False, xalign=0):
 
         label = gtk.Label()
         label.set_markup(labeltitle)
@@ -516,9 +516,9 @@ class MetaDialog(gtk.Dialog):
 
         return label
 
-    def MakeLabelStaticEntry(self, parent, labeltitle, entrydata,
-                             editable=False, expand=True, fill=False,
-                             width=-1, xalign=0):
+    def make_label_static_entry(self, parent, labeltitle, entrydata,
+                                editable=False, expand=True, fill=False,
+                                width=-1, xalign=0):
 
         label = gtk.Label()
         label.set_markup(labeltitle)
@@ -540,99 +540,3 @@ class MetaDialog(gtk.Dialog):
             entry.set_text(entrydata)
         parent.pack_start(entry, expand, fill, 0)
         return label, entry
-
-
-class FindDialog(gtk.Dialog):
-
-    def __init__(self, frame, message="", default_text='',
-                 textview=None, modal=True):
-
-        gtk.Dialog.__init__(self)
-
-        # Test if the signal is already binded since we do not clear it
-        # when we destroy FindDialog
-        if not gobject.signal_lookup("find-click", gtk.Window):
-            gobject.signal_new(
-                "find-click",
-                gtk.Window,
-                gobject.SignalFlags.RUN_LAST,
-                gobject.TYPE_NONE,
-                (gobject.TYPE_STRING,)
-            )
-
-        self.textview = textview
-        self.nicotine = frame
-
-        self.connect("delete-event", self.quit)
-
-        # The destroy event shoul clean up the reference to FindDialog
-        # in the NicotineFrame object
-        self.connect("destroy", self.destroy)
-
-        self.nextPosition = None
-        self.currentPosition = None
-        self.lastdirection = "next"
-
-        self.set_transient_for(frame.MainWindow)
-
-        if modal:
-            self.set_modal(True)
-
-        box = gtk.VBox(spacing=10)
-        box.set_border_width(10)
-        self.vbox.pack_start(box, False, False, 0)
-        box.show()
-
-        if message:
-            label = gtk.Label.new(message)
-            box.pack_start(label, False, False, 0)
-            label.set_line_wrap(True)
-            label.show()
-
-        self.entry = gtk.Entry()
-
-        box.pack_start(self.entry, False, False, 0)
-        self.entry.show()
-        self.entry.grab_focus()
-        self.entry.connect("activate", self.next)
-
-        Cancelbutton = self.nicotine.CreateIconButton(
-            gtk.STOCK_CANCEL,
-            "stock",
-            self.quit,
-            _("Cancel")
-        )
-        Cancelbutton.props.can_default = True
-        self.action_area.pack_start(Cancelbutton, False, False, 0)
-
-        Previousbutton = self.nicotine.CreateIconButton(
-            gtk.STOCK_GO_BACK,
-            "stock",
-            self.previous,
-            _("Previous")
-        )
-        Previousbutton.props.can_default = True
-        self.action_area.pack_start(Previousbutton, False, False, 0)
-
-        Nextbutton = self.nicotine.CreateIconButton(
-            gtk.STOCK_GO_FORWARD,
-            "stock",
-            self.next,
-            _("Next")
-        )
-        Nextbutton.props.can_default = True
-        self.action_area.pack_start(Nextbutton, False, False, 0)
-        Nextbutton.grab_default()
-
-    def next(self, button):
-        self.emit("find-click", "next")
-
-    def previous(self, button):
-        self.emit("find-click", "previous")
-
-    def quit(self, w=None, event=None):
-        self.hide()
-
-    def destroy(self, w=None, event=None):
-        if "FindDialog" in self.nicotine.__dict__:
-            del self.nicotine.FindDialog

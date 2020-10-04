@@ -76,7 +76,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnAddSharedDir" swapped="no"/>
+                    <signal name="clicked" handler="on_add_shared_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -111,7 +111,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRemoveSharedDir" swapped="no"/>
+                    <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -146,7 +146,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRenameVirtuals" swapped="no"/>
+                    <signal name="clicked" handler="on_rename_virtuals" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -203,7 +203,7 @@
                 <property name="tooltip_text" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnEnabledBuddySharesToggled" swapped="no"/>
+                <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -220,7 +220,7 @@
                 <property name="has_tooltip">True</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="OnFriendsOnlyToggled" swapped="no"/>
+                <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -288,7 +288,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnAddSharedBuddyDir" swapped="no"/>
+                    <signal name="clicked" handler="on_add_shared_buddy_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -323,7 +323,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRemoveSharedBuddyDir" swapped="no"/>
+                    <signal name="clicked" handler="on_remove_shared_buddy_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -358,7 +358,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
-                    <signal name="clicked" handler="OnRenameBuddyVirtuals" swapped="no"/>
+                    <signal name="clicked" handler="on_rename_buddy_virtuals" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
