@@ -397,7 +397,7 @@ class NetworkEventProcessor:
         self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))
 
     def server_timeout(self):
-        if self.config.needConfig() <= 1:
+        if self.config.need_config() <= 1:
             self.network_callback([slskmessages.ConnectToServer()])
 
     def stop_timers(self):
