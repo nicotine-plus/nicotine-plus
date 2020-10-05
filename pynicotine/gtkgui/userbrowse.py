@@ -155,8 +155,8 @@ class UserBrowse:
             self.folder_popup_menu.setup(
                 ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, self.on_popup_menu_dummy),
-                (1, _("Upload"), self.popup_menu_uploads_folders, self.on_popup_menu_dummy),
+                (1, _("Download"), self.popup_menu_downloads_folders, None),
+                (1, _("Upload"), self.popup_menu_uploads_folders, None),
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("#" + _("Open in File Manager"), self.on_file_manager)
@@ -165,7 +165,7 @@ class UserBrowse:
             self.folder_popup_menu.setup(
                 ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, self.on_popup_menu_dummy),
+                (1, _("Download"), self.popup_menu_downloads_folders, None),
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url)
             )
