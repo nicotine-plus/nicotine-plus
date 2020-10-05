@@ -1649,9 +1649,9 @@ class NetworkEventProcessor:
             return
 
         if checkuser == 1:
-            shares = self.config.sections["transfers"]["sharedfiles"]
+            shares = self.config.sections["transfers"]["sharedfilesstreams"]
         elif checkuser == 2:
-            shares = self.config.sections["transfers"]["bsharedfiles"]
+            shares = self.config.sections["transfers"]["bsharedfilesstreams"]
         else:
             self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
             shares = {}
@@ -1663,7 +1663,7 @@ class NetworkEventProcessor:
                 self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip('\\')]))
             else:
                 if checkuser == 2:
-                    shares = self.config.sections["transfers"]["sharedfiles"]
+                    shares = self.config.sections["transfers"]["sharedfilesstreams"]
                     if msg.dir in shares:
                         self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
                     elif msg.dir.rstrip("\\") in shares:
