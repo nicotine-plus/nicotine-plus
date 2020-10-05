@@ -40,8 +40,8 @@ counter = count(100)
 
 def new_id():
     global counter
-    id = next(counter)
-    return id
+    new_id = next(counter)
+    return new_id
 
 
 class InternalMessage:
@@ -60,6 +60,10 @@ class Conn(InternalMessage):
 
     def __repr__(self):
         return '{}: {} {} {}'.format(type(self).__name__, self.conn, self.addr, self.init)
+
+
+class DistribConn(InternalMessage):
+    pass
 
 
 class OutConn(Conn):
@@ -165,37 +169,12 @@ class SetGeoBlock(InternalMessage):
         self.config = config
 
 
-class DistribConn(InternalMessage):
-    def __init__(self):
-        pass
-
-
-class Notify(InternalMessage):
-    def __init__(self, msg):
-        self.msg = msg
-
-
 class SetCurrentConnectionCount(InternalMessage):
     """ Sent by networking thread to update the number of current
     connections shown in the GUI. """
 
     def __init__(self, msg):
         self.msg = msg
-
-
-class DebugMessage(InternalMessage):
-    def __init__(self, msg, debug_level=None):
-        ''' debug_level Options
-        0/None - Normal messages and (Human-Readable) Errors
-        1 - Warnings & Tracebacks
-        2 - Search Results
-        3 - Peer Connections
-        4 - Message Contents
-        5 - Transfers
-        6 - Connection, Bandwidth and Usage Statistics
-        '''
-        self.msg = msg
-        self.debug_level = debug_level
 
 
 class SlskMessage:
@@ -706,6 +685,7 @@ class ServerPing(ServerMessage):
         return b""
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 
@@ -781,6 +761,7 @@ class Relogged(ServerMessage):
     and then disconnects us. """
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 
@@ -1803,6 +1784,7 @@ class GetSharedFileList(PeerMessage):
         return b""
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 
@@ -2021,6 +2003,7 @@ class UserInfoRequest(PeerMessage):
         return b""
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 
@@ -2351,6 +2334,7 @@ class UnknownPeerMessage(PeerMessage):
         self.conn = conn
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 
@@ -2383,6 +2367,7 @@ class DistribAlive(DistribMessage):
         self.conn = conn
 
     def parse_network_message(self, message):
+        # Empty message
         pass
 
 

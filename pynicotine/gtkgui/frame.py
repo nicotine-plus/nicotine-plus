@@ -2003,12 +2003,11 @@ class NicotineFrame:
         # Test if they are valid regular expressions and save error messages
 
         for item in df:
-            filter, escaped = item
+            dfilter, escaped = item
             if escaped:
-                dfilter = re.escape(filter)
+                dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
-            else:
-                dfilter = filter
+
             try:
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
@@ -2033,8 +2032,8 @@ class NicotineFrame:
             if len(failed) >= 1:
                 errors = ""
 
-                for filter, error in failed.items():
-                    errors += "Filter: %s Error: %s " % (filter, error)
+                for dfilter, error in failed.items():
+                    errors += "Filter: %s Error: %s " % (dfilter, error)
 
                 error = _("Error: %(num)d Download filters failed! %(error)s ", {'num': len(failed), 'error': errors})
                 log.add(error)
@@ -2941,9 +2940,6 @@ class NicotineFrame:
                 self.tray_app.destroy_trayicon()
 
             self.MainWindow.destroy()
-
-        elif response == Gtk.ResponseType.CANCEL:
-            pass
 
         elif response == Gtk.ResponseType.REJECT:
             if checkbox:

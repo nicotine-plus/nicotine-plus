@@ -311,8 +311,8 @@ class DownloadsFrame(BuildFrame):
 
         if transfers["downloadfilters"] != []:
             for dfilter in transfers["downloadfilters"]:
-                filter, escaped = dfilter
-                self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+                dfilter, escaped = dfilter
+                self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
         self.on_enable_filters_toggle(self.DownloadFilter)
 
@@ -425,13 +425,13 @@ class DownloadsFrame(BuildFrame):
 
         if isinstance(response, list):
 
-            filter = response[0]
+            dfilter = response[0]
             escaped = response[1]
 
-            if filter in self.filtersiters:
-                self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
+            if dfilter in self.filtersiters:
+                self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
             else:
-                self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+                self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
             self.on_verify_filter(self.VerifyFilters)
 
@@ -441,8 +441,8 @@ class DownloadsFrame(BuildFrame):
 
         df = sorted(self.filtersiters.keys())
 
-        for filter in df:
-            iterator = self.filtersiters[filter]
+        for dfilter in df:
+            iterator = self.filtersiters[dfilter]
             dfilter = self.filterlist.get_value(iterator, 0)
             escaped = self.filterlist.get_value(iterator, 1)
             self.downloadfilters.append([dfilter, int(escaped)])
@@ -471,12 +471,12 @@ class DownloadsFrame(BuildFrame):
 
             if isinstance(response, list):
 
-                filter, escaped = response
+                new_dfilter, escaped = response
 
-                if filter in self.filtersiters:
-                    self.filterlist.set(self.filtersiters[filter], 0, filter, 1, escaped)
+                if new_dfilter in self.filtersiters:
+                    self.filterlist.set(self.filtersiters[new_dfilter], 0, new_dfilter, 1, escaped)
                 else:
-                    self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+                    self.filtersiters[new_dfilter] = self.filterlist.append([new_dfilter, escaped])
                     del self.filtersiters[dfilter]
                     self.filterlist.remove(iterator)
 
@@ -524,8 +524,8 @@ class DownloadsFrame(BuildFrame):
         ]
 
         for dfilter in default_filters:
-            filter, escaped = dfilter
-            self.filtersiters[filter] = self.filterlist.append([filter, escaped])
+            dfilter, escaped = dfilter
+            self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
         self.on_verify_filter(self.VerifyFilters)
 
@@ -538,9 +538,9 @@ class DownloadsFrame(BuildFrame):
         proccessedfilters = []
         failed = {}
 
-        for filter in df:
+        for dfilter in df:
 
-            iterator = self.filtersiters[filter]
+            iterator = self.filtersiters[dfilter]
             dfilter = self.filterlist.get_value(iterator, 0)
             escaped = self.filterlist.get_value(iterator, 1)
 
@@ -569,9 +569,9 @@ class DownloadsFrame(BuildFrame):
         if len(failed) >= 1:
             errors = ""
 
-            for filter, error in failed.items():
+            for dfilter, error in failed.items():
                 errors += "Filter: %(filter)s Error: %(error)s " % {
-                    'filter': filter,
+                    'filter': dfilter,
                     'error': error
                 }
 
@@ -928,9 +928,7 @@ class SharesFrame(BuildFrame):
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
-            if virtual == '' or virtual is None:
-                pass
-            else:
+            if virtual:
                 newmapping = (virtual, directory)
                 self.shareslist.set_value(iterator, 0, virtual)
                 self.shareddirs.remove(oldmapping)
@@ -953,9 +951,7 @@ class SharesFrame(BuildFrame):
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
-            if virtual == '' or virtual is None:
-                pass
-            else:
+            if virtual:
                 newmapping = (virtual, directory)
                 self.bshareslist.set_value(iterator, 0, virtual)
                 self.bshareslist.remove(oldmapping)
@@ -3008,10 +3004,13 @@ class BuildDialog(Gtk.Dialog):
         if iterator is not None:
             treeview.get_model().remove(iterator)
 
-    def add_options(self, plugin, options={}):
+    def add_options(self, plugin, options=None):
 
         for i in self.tw:
             self.tw[i].destroy()
+
+        if options is None:
+            options = {}
 
         self.options = options
         self.plugin = plugin

@@ -930,7 +930,7 @@ class PrivateChat:
 
         self.chats.remove_tab(self)
 
-    def get_completion_list(self, ix=0, text="", clist=[]):
+    def get_completion_list(self, ix=0, text="", clist=None):
 
         config = self.frame.np.config.sections["words"]
 
@@ -941,7 +941,8 @@ class PrivateChat:
         liststore = completion.get_model()
         liststore.clear()
 
-        self.clist = []
+        if clist is None:
+            clist = []
 
         if not config["tab"]:
             return

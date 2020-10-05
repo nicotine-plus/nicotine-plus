@@ -743,12 +743,16 @@ class Config:
                 filename += ".tar.bz2"
         try:
             if os.path.exists(filename):
-                raise BaseException("File %s exists", filename)
+                raise FileExistsError("File %s exists", filename)
+
             import tarfile
             tar = tarfile.open(filename, "w:bz2")
+
             if not os.path.exists(self.filename):
-                raise BaseException("Config file missing")
+                raise FileNotFoundError("Config file missing")
+
             tar.add(self.filename)
+
             if os.path.exists(self.filename + ".alias"):
                 tar.add(self.filename + ".alias")
 

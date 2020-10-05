@@ -345,13 +345,13 @@ class Searches(IconNotebook):
                     search[2].save_columns()
                     break
 
-    def tab_popup(self, id):
+    def tab_popup(self, search_id):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Copy search term"), self.searches[id][2].on_copy_search_term),
+            ("#" + _("Copy search term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
-            ("#" + _("Close this tab"), self.searches[id][2].on_close)
+            ("#" + _("Close this tab"), self.searches[search_id][2].on_close)
         )
 
         return popup
@@ -360,7 +360,7 @@ class Searches(IconNotebook):
 
         if event.type == Gdk.EventType.BUTTON_PRESS:
 
-            id = None
+            search_id = None
             n = self.page_num(child)
             page = self.get_nth_page(n)
 
@@ -369,19 +369,19 @@ class Searches(IconNotebook):
                 if data[2] is None:
                     continue
                 if data[2].Main is page:
-                    id = search
+                    search_id = search
                     break
 
-            if id is None:
+            if search_id is None:
                 log.add_warning(_("Search ID was none when clicking tab"))
                 return
 
             if event.button == 2:
-                self.searches[id][2].on_close(widget)
+                self.searches[search_id][2].on_close(widget)
                 return True
 
             if event.button == 3:
-                menu = self.tab_popup(id)
+                menu = self.tab_popup(search_id)
                 menu.popup(None, None, None, None, event.button, event.time)
                 return True
 
@@ -610,16 +610,16 @@ class Search:
 
         if self.frame.np.config.sections["searches"]["enablefilters"]:
 
-            filter = self.frame.np.config.sections["searches"]["defilter"]
+            sfilter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterIn.get_child().set_text(filter[0])
-            self.FilterOut.get_child().set_text(filter[1])
-            self.FilterSize.get_child().set_text(filter[2])
-            self.FilterBitrate.get_child().set_text(filter[3])
-            self.FilterFreeSlot.set_active(filter[4])
+            self.FilterIn.get_child().set_text(sfilter[0])
+            self.FilterOut.get_child().set_text(sfilter[1])
+            self.FilterSize.get_child().set_text(sfilter[2])
+            self.FilterBitrate.get_child().set_text(sfilter[3])
+            self.FilterFreeSlot.set_active(sfilter[4])
 
-            if(len(filter) > 5):
-                self.FilterCountry.get_child().set_text(filter[5])
+            if(len(sfilter) > 5):
+                self.FilterCountry.get_child().set_text(sfilter[5])
 
             self.filtersCheck.set_active(1)
 
@@ -818,43 +818,43 @@ class Search:
 
         return iterator
 
-    def check_digit(self, filter, value, factorize=True):
+    def check_digit(self, sfilter, value, factorize=True):
 
         op = ">="
-        if filter[:1] in (">", "<", "="):
-            op, filter = filter[:1] + "=", filter[1:]
+        if sfilter[:1] in (">", "<", "="):
+            op, sfilter = sfilter[:1] + "=", sfilter[1:]
 
-        if not filter:
+        if not sfilter:
             return True
 
         factor = 1
         if factorize:
             base = 1024
-            if filter[-1:].lower() == 'b':
-                filter = filter[:-1]  # stripping off the b, we always assume it means bytes
-            if filter[-1:].lower() == 'i':
+            if sfilter[-1:].lower() == 'b':
+                sfilter = sfilter[:-1]  # stripping off the b, we always assume it means bytes
+            if sfilter[-1:].lower() == 'i':
                 base = 1000
-                filter = filter[:-1]
-            if filter.lower()[-1:] == "g":
+                sfilter = sfilter[:-1]
+            if sfilter.lower()[-1:] == "g":
                 factor = pow(base, 3)
-                filter = filter[:-1]
-            elif filter.lower()[-1:] == "m":
+                sfilter = sfilter[:-1]
+            elif sfilter.lower()[-1:] == "m":
                 factor = pow(base, 2)
-                filter = filter[:-1]
-            elif filter.lower()[-1:] == "k":
+                sfilter = sfilter[:-1]
+            elif sfilter.lower()[-1:] == "k":
                 factor = base
-                filter = filter[:-1]
+                sfilter = sfilter[:-1]
 
-        if not filter:
+        if not sfilter:
             return True
 
         try:
-            filter = int(filter) * factor
+            sfilter = int(sfilter) * factor
         except ValueError:
             return True
 
         operation = self.operators.get(op)
-        return operation(value, filter)
+        return operation(value, sfilter)
 
     def check_filter(self, row):
 

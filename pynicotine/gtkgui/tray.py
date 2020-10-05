@@ -131,9 +131,7 @@ class TrayApp:
             droplist=users
         )
 
-        if user is None:
-            pass
-        else:
+        if user is not None:
             self.frame.local_user_info_request(user)
 
     def on_get_a_users_ip(self, widget, prefix=""):
@@ -147,9 +145,7 @@ class TrayApp:
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
         )
-        if user is None:
-            pass
-        else:
+        if user is not None:
             if user not in self.frame.np.ip_requested:
                 self.frame.np.ip_requested.append(user)
 
@@ -166,9 +162,7 @@ class TrayApp:
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
         )
-        if user is None:
-            pass
-        else:
+        if user is not None:
             self.frame.browse_user(user)
 
     def on_popup_server(self, widget):

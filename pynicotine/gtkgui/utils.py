@@ -458,16 +458,16 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     text_iter_start, text_iter_end = buffer.get_bounds()
     linenr = buffer.get_line_count()
 
-    timestamp = None
+    final_timestamp = None
     ts = 0
 
     if showstamp and NICOTINE.np.config.sections["logging"]["timestamps"]:
         if timestamp_format and not timestamp:
-            timestamp = time.strftime(timestamp_format)
-            line = "%s %s" % (timestamp, line)
+            final_timestamp = time.strftime(timestamp_format)
+            line = "%s %s" % (final_timestamp, line)
         elif timestamp_format and timestamp:
-            timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-            line = "%s %s" % (timestamp, line)
+            final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
+            line = "%s %s" % (final_timestamp, line)
 
     # Ensure newlines are in the correct place
     # We want them before the content, to prevent adding an empty line at the end of the TextView
@@ -475,8 +475,8 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     if text_iter_end.get_offset() > 0:
         line = "\n" + line
 
-    if timestamp is not None:
-        ts = len("\n") + len(timestamp)
+    if final_timestamp is not None:
+        ts = len("\n") + len(final_timestamp)
 
     # Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
     _append(buffer, line[:ts], tag)
@@ -887,6 +887,7 @@ class IconNotebook:
         self.frame.notifications.clear_page(self, item)
 
     def on_tab_click(self, widget, event, child):
+        # Dummy implementation
         pass
 
     def set_status_image(self, page, status):

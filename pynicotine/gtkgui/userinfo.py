@@ -328,9 +328,6 @@ class UserInfo:
 
         self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def conn_close(self):
-        pass
-
     def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
         colour = self.frame.np.config.sections["ui"]["search"]
