@@ -121,7 +121,10 @@ class NetworkEventProcessor:
 
         self.bindip = bindip
         self.port = port
+
         self.config.read_config()
+        log.set_log_levels(self.config.sections["logging"]["debugmodes"])
+
         self.peerconns = []
         self.watchedusers = []
         self.ipblock_requested = {}
