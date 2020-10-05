@@ -106,13 +106,13 @@ class WishList:
 
     def on_remove_wish(self, widget):
         iters = []
-        self.WishlistView.get_selection().selected_foreach(self.__remove_wish, iters)
+        self.WishlistView.get_selection().selected_foreach(self._remove_wish, iters)
 
         for iterator in iters:
             wish = self.store.get_value(iterator, 0)
             self.remove_wish(wish)
 
-    def __remove_wish(self, model, path, iterator, line):
+    def _remove_wish(self, model, path, iterator, line):
         line.append(iterator)
 
     def on_select_all_wishes(self, widget):
