@@ -116,6 +116,16 @@ def get_user_directories():
     """Returns a tuple:
     - the config directory
     - the data directory"""
+
+    if win32:
+        try:
+            data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
+        except KeyError:
+            data_dir, x = os.path.split(sys.argv[0])
+
+        config_dir = os.path.join(data_dir, "config")
+        return config_dir, data_dir
+
     home = os.path.expanduser("~")
 
     legacy_dir = os.path.join(home, '.nicotine')

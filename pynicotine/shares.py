@@ -34,7 +34,6 @@ from gettext import gettext as _
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.utils import get_user_directories
 
 if sys.platform == "win32":
     # Use semidbm for faster shelves on Windows
@@ -295,9 +294,8 @@ class Shares:
             self.send_num_shared_folders_files()
 
         except Exception as ex:
-            config_dir, data_dir = get_user_directories()
             log.add(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s"), (data_dir, ex)
+                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s"), (self.config.data_dir, ex)
             )
             if self.ui_callback:
                 self.ui_callback.hide_scan_progress(sharestype)
@@ -343,12 +341,13 @@ class Shares:
     def is_hidden(self, folder, filename=None):
         """ Stop sharing any dot/hidden directories/files """
 
-        subfolders = folder.split(os.sep)
-
         # If any part of the directory structure start with a dot we exclude it
-        for part in subfolders:
-            if part.startswith("."):
-                return True
+        if filename is None:
+            subfolders = folder.replace('\\', os.sep).split(os.sep)
+
+            for part in subfolders:
+                if part.startswith("."):
+                    return True
 
         # If we're asked to check a file we exclude it if it start with a dot
         if filename is not None and filename.startswith("."):
@@ -357,7 +356,7 @@ class Shares:
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
             if filename is not None:
-                folder = os.path.join(folder, filename)
+                folder += '\\' + filename
 
             return os.stat(folder).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 

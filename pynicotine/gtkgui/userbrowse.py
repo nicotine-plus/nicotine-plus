@@ -41,14 +41,12 @@ from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import execute_command
-from pynicotine.utils import get_user_directories
 from pynicotine.utils import get_result_bitrate_length
 
 
 class UserBrowse:
 
     def __init__(self, userbrowses, user, conn):
-        _config_dir, self.data_dir = get_user_directories()
 
         # Build the window
         builder = Gtk.Builder()
@@ -531,7 +529,7 @@ class UserBrowse:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"), {'folder': directory, 'error': msg})
 
     def on_save(self, widget):
-        sharesdir = os.path.join(self.data_dir, "usershares")
+        sharesdir = os.path.join(self.frame.data_dir, "usershares")
 
         try:
             if not os.path.exists(sharesdir):
@@ -545,6 +543,8 @@ class UserBrowse:
             sharesfile = bz2.BZ2File(os.path.join(sharesdir, clean_file(self.user)), 'w')
             mypickle.dump(self.shares, sharesfile, protocol=mypickle.HIGHEST_PROTOCOL)
             sharesfile.close()
+            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"), {'user': self.user, 'dir': sharesdir})
+
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
 
