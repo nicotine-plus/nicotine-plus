@@ -53,11 +53,12 @@ from pynicotine.utils import write_log
 class Transfer(object):
     """ This class holds information about a single transfer. """
 
-    __slots__ = ("conn", "user", "realfilename", "filename",
-                 "path", "req", "size", "file", "starttime", "lasttime",
-                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed",
-                 "timeleft", "timequeued", "transfertimer", "requestconn",
-                 "modifier", "place", "bitrate", "length", "iter", "_status", "laststatuschange")
+    __slots__ = "conn", "user", "realfilename", "filename", \
+                "path", "req", "size", "file", "starttime", "lasttime", \
+                "offset", "currentbytes", "lastbytes", "speed", "timeelapsed", \
+                "timeleft", "timequeued", "transfertimer", "requestconn", \
+                "modifier", "place", "bitrate", "length", "iter", "_status", \
+                "laststatuschange"
 
     def __init__(
         self, conn=None, user=None, realfilename=None, filename=None,
@@ -102,6 +103,9 @@ class Transfer(object):
 
 
 class TransferTimeout:
+
+    __slots__ = "req", "callback"
+
     def __init__(self, req, callback):
         self.req = req
         self.callback = callback

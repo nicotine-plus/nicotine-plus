@@ -53,6 +53,9 @@ class ConnectToServer(InternalMessage):
 
 
 class Conn(InternalMessage):
+
+    __slots__ = "conn", "addr", "init"
+
     def __init__(self, conn=None, addr=None, init=None):
         self.conn = conn
         self.addr = addr
@@ -92,6 +95,8 @@ class ConnectError(InternalMessage):
     """ Sent when a socket exception occurs. It's up to UI thread to
     handle this."""
 
+    __slots__ = "connobj", "err"
+
     def __init__(self, connobj=None, err=None):
         self.connobj = connobj
         self.err = err
@@ -108,6 +113,8 @@ class IncPort(InternalMessage):
 class PeerTransfer(InternalMessage):
     """ Used to indicate progress of long transfers. """
 
+    __slots__ = "conn", "total", "bytes", "msg"
+
     def __init__(self, conn=None, total=None, bytes=None, msg=None):
         self.conn = conn
         self.bytes = bytes
@@ -120,6 +127,8 @@ class DownloadFile(InternalMessage):
     Sent by UI to pass the file object to write and offset to resume download
     from. """
 
+    __slots__ = "conn", "offset", "file", "filesize"
+
     def __init__(self, conn=None, offset=None, file=None, filesize=None):
         self.conn = conn
         self.offset = offset
@@ -128,6 +137,9 @@ class DownloadFile(InternalMessage):
 
 
 class UploadFile(InternalMessage):
+
+    __slots__ = "conn", "file", "size", "sentbytes", "offset"
+
     def __init__(self, conn=None, file=None, size=None, sentbytes=0, offset=None):
         self.conn = conn
         self.file = file
@@ -139,6 +151,8 @@ class UploadFile(InternalMessage):
 class FileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
+
+    __slots__ = "conn", "file", "strerror"
 
     def __init__(self, conn=None, file=None, strerror=None):
         self.conn = conn
@@ -173,8 +187,19 @@ class SetCurrentConnectionCount(InternalMessage):
     """ Sent by networking thread to update the number of current
     connections shown in the GUI. """
 
+    __slots__ = "msg"
+
     def __init__(self, msg):
         self.msg = msg
+
+
+class PopupMessage:
+    """ For messages that should be shown to the user prominently, for example
+    through a popup. Should be used sparsely. """
+
+    def __init__(self, title, message):
+        self.title = title
+        self.message = message
 
 
 class SlskMessage:
@@ -270,15 +295,6 @@ class SlskMessage:
 
     def debug(self, message=None):
         debug(type(self).__name__, self.__dict__, message.__repr__())
-
-
-class PopupMessage:
-    """For messages that should be shown to the user prominently, for example
-    through a popup. Should be used sparsely. """
-
-    def __init__(self, title, message):
-        self.title = title
-        self.message = message
 
 
 """
@@ -644,7 +660,7 @@ class FileSearch(ServerMessage):
         self.searchid = requestid
         self.searchterm = text
         if text:
-            self.searchterm = ' '.join([x for x in text.split() if x != '-'])
+            self.searchterm = ' '.join((x for x in text.split() if x != '-'))
 
     def make_network_message(self):
         msg = bytearray()
@@ -1904,6 +1920,9 @@ class FileSearchResult(PeerMessage):
     """ The peer sends this when it has a file search match. The
     token/ticket is taken from original FileSearchRequest message. """
 
+    __slots__ = "conn", "user", "geoip", "token", "list", "fileindex", "freeulslots", \
+                "ulspeed", "inqueue", "fifoqueue", "numresults", "pos"
+
     def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
@@ -1944,7 +1963,7 @@ class FileSearchResult(PeerMessage):
                     self.pos, attrnum = self.get_object(message, int, self.pos, printerror=False)
                     self.pos, attr = self.get_object(message, int, self.pos, printerror=False)
                     attrs.append(attr)
-            shares.append([code, name, size, ext, attrs])
+            shares.append((code, name, size, ext, attrs))
         self.list = shares
         self.pos, self.freeulslots = self.pos + 1, message[self.pos]
         self.pos, self.ulspeed = self.get_object(message, int, self.pos, getsignedint=True)
@@ -2142,7 +2161,7 @@ class FolderContentsResponse(PeerMessage):
                         pos, attr = self.get_object(message, int, pos, printerror=False)
                         attrs.append(attr)
 
-                    shares[folder][directory].append([code, name, size, ext, attrs])
+                    shares[folder][directory].append((code, name, size, ext, attrs))
 
         self.list = shares
 
@@ -2364,6 +2383,8 @@ class DistribSearch(DistribMessage):
     (TODO: check that this works / is implemented)
     """
 
+    __slots__ = "conn", "user", "searchid", "searchterm"
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -2424,6 +2445,8 @@ class DistribServerSearch(DistribMessage):
     if we're a branch root, or by our parent using DistribSearch.
     (TODO: check that this works / is implemented)
     """
+
+    __slots__ = "conn", "user", "searchid", "searchterm"
 
     def __init__(self, conn):
         self.conn = conn

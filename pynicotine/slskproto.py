@@ -200,16 +200,23 @@ class Connection:
     init is a PeerInit object (see slskmessages docstrings).
     """
 
+    __slots__ = "conn", "addr", "ibuf", "obuf", "init", "lastactive", "lastreadlength"
+
     def __init__(self, conn=None, addr=None):
         self.conn = conn
         self.addr = addr
         self.ibuf = bytearray()
         self.obuf = bytearray()
         self.init = None
+        self.lastactive = time.time()
         self.lastreadlength = 100 * 1024
 
 
 class PeerConnection(Connection):
+
+    __slots__ = "filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw", \
+                "lastcallback", "starttime", "sentbytes2", "readbytes2"
+
     def __init__(self, conn=None, addr=None, init=None):
         Connection.__init__(self, conn, addr)
         self.filereq = None
@@ -232,6 +239,7 @@ class PeerConnectionInProgress:
     hold data about a connection that is not yet established. msgObj is
     a message to be sent after the connection has been established.
     """
+    __slots__ = "conn", "msg_obj", "lastactive"
 
     def __init__(self, conn=None, msg_obj=None):
         self.conn = conn

@@ -61,6 +61,8 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
+    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr"
+
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
         self.username = username
@@ -68,11 +70,14 @@ class PeerConnection:
         self.msgs = msgs
         self.token = token
         self.init = init
+        self.type = init.type
         self.conntimer = conntimer
         self.tryaddr = tryaddr
 
 
 class Timeout:
+
+    __slots__ = "callback"
 
     def __init__(self, callback):
         self.callback = callback
@@ -85,6 +90,8 @@ class Timeout:
 
 
 class ConnectToPeerTimeout(Timeout):
+
+    __slots__ = "conn"
 
     def __init__(self, conn, callback):
         self.conn = conn
@@ -312,7 +319,7 @@ class NetworkEventProcessor:
 
         if message.__class__ is not slskmessages.FileRequest:
             for i in self.peerconns:
-                if i.username == user and i.init.type == 'P':
+                if i.username == user and i.type == 'P':
                     conn = i
                     break
 
@@ -427,12 +434,19 @@ class NetworkEventProcessor:
     def notify(self, string):
         log.add_msg_contents("%s", string)
 
+    def contents(self, obj):
+        """ Returns variables for object, for debug output """
+        try:
+            return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
+        except AttributeError:
+            return vars(obj)
+
     def popup_message(self, msg):
         self.set_status(_(msg.title))
         self.ui_callback.popup_message(msg)
 
     def dummy_message(self, msg):
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def set_current_connection_count(self, msg):
         self.ui_callback.set_socket_status(msg.msg)
@@ -458,14 +472,16 @@ class NetworkEventProcessor:
 
         elif msg.connobj.__class__ is slskmessages.OutConn:
 
+            addr = msg.connobj.addr
+
             for i in self.peerconns:
 
-                if i.addr == msg.connobj.addr and i.conn is None:
+                if i.addr == addr and i.conn is None:
 
                     if i.token is None:
 
                         i.token = new_id()
-                        self.queue.put(slskmessages.ConnectToPeer(i.token, i.username, i.init.type))
+                        self.queue.put(slskmessages.ConnectToPeer(i.token, i.username, i.type))
 
                         if i.username in self.users:
                             self.users[i.username].behindfw = "yes"
@@ -499,10 +515,10 @@ class NetworkEventProcessor:
 
                     break
             else:
-                log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, vars(msg)))
+                log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, self.contents(msg)))
 
         else:
-            log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, self.contents(msg)))
 
             self.closed_connection(msg.connobj.conn, msg.connobj.addr, msg.err)
 
@@ -591,7 +607,7 @@ class NetworkEventProcessor:
         else:
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn(self.conn_close_template, vars(i))
+                    log.add_conn(self.conn_close_template, self.contents(i))
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -659,7 +675,7 @@ class NetworkEventProcessor:
         if msg.token is not None:
             pass
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def user_privileged(self, msg):
         if self.transfers is not None:
@@ -672,15 +688,16 @@ class NetworkEventProcessor:
             # Until I know the syntax, sending this message is probably a bad idea
             self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def p_message_user(self, msg):
 
+        conn = msg.conn.conn
         user = None
 
         # Get peer's username
         for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+            if i.conn is conn:
                 user = i.username
                 break
 
@@ -697,7 +714,7 @@ class NetworkEventProcessor:
         if self.privatechat is not None:
             self.privatechat.show_message(msg, text, status=0)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def message_user(self, msg):
 
@@ -713,14 +730,14 @@ class NetworkEventProcessor:
 
             self.queue.put(slskmessages.MessageAcked(msg.msgid))
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def user_joined_room(self, msg):
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.user_joined_room(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def public_room_message(self, msg):
 
@@ -728,7 +745,7 @@ class NetworkEventProcessor:
             self.chatrooms.roomsctrl.public_room_message(msg, msg.msg)
             self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def join_room(self, msg):
 
@@ -736,73 +753,73 @@ class NetworkEventProcessor:
 
             self.chatrooms.roomsctrl.join_room(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_users(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_users(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_owned(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_owned(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_add_user(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_add_user(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_remove_user(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_remove_user(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_operator_added(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_operator_added(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_operator_removed(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_operator_removed(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_add_operator(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_add_operator(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_remove_operator(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_remove_operator(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_added(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_added(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_removed(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_removed(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_disown(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.private_room_disown(msg)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_room_toggle(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.toggle_private_rooms(msg.enabled)
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def leave_room(self, msg):
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.leave_room(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def private_message_queue_add(self, msg, text):
 
@@ -865,7 +882,7 @@ class NetworkEventProcessor:
                 self.chatrooms.roomsctrl.say_chat_room(msg, msg.msg)
                 self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def add_user(self, msg):
 
@@ -884,7 +901,7 @@ class NetworkEventProcessor:
         if msg.files is not None:
             self.get_user_stats(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def privileged_users(self, msg):
 
@@ -895,13 +912,13 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
             self.pluginhandler.server_connect_notification()
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def add_to_privileged(self, msg):
         if self.transfers is not None:
             self.transfers.add_to_privileged(msg.user)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def check_privileges(self, msg):
 
@@ -930,29 +947,29 @@ class NetworkEventProcessor:
 
     def child_depth(self, msg):
         # TODO: Implement me
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def branch_level(self, msg):
         # TODO: Implement me
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def branch_root(self, msg):
         # TODO: Implement me
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def distrib_child_depth(self, msg):
         # TODO: Implement me
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def distrib_branch_root(self, msg):
         # TODO: Implement me
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def wishlist_interval(self, msg):
         if self.search is not None:
             self.search.wish_list.set_interval(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_user_status(self, msg):
 
@@ -971,7 +988,7 @@ class NetworkEventProcessor:
                 if self.transfers is not None:
                     self.transfers.add_to_privileged(msg.user)
                 else:
-                    log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+                    log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         self.ui_callback.get_user_status(msg)
 
@@ -993,14 +1010,14 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.get_user_status(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def user_interests(self, msg):
 
         if self.userinfo is not None:
             self.userinfo.show_interests(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_user_stats(self, msg):
 
@@ -1018,7 +1035,7 @@ class NetworkEventProcessor:
         if self.userlist is not None:
             self.userlist.get_user_stats(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -1033,7 +1050,7 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.user_left_room(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_peer_address(self, msg):
 
@@ -1045,13 +1062,13 @@ class NetworkEventProcessor:
                     if i.tryaddr == 10:
                         log.add_conn(
                             _("Server reported port 0 for the 10th time for user %(user)s, giving up"), {
-                                'user': msg.user
+                                'user': user
                             }
                         )
                     elif i.tryaddr is not None:
                         log.add_conn(
                             _("Server reported non-zero port for user %(user)s after %(tries)i retries"), {
-                                'user': msg.user,
+                                'user': user,
                                 'tries': i.tryaddr
                             }
                         )
@@ -1081,29 +1098,29 @@ class NetworkEventProcessor:
                     self.queue.put(slskmessages.GetPeerAddress(user))
                     return
 
-        if msg.user in self.users:
-            self.users[msg.user].addr = (msg.ip, msg.port)
+        if user in self.users:
+            self.users[user].addr = (msg.ip, msg.port)
         else:
-            self.users[msg.user] = UserAddr(addr=(msg.ip, msg.port))
+            self.users[user] = UserAddr(addr=(msg.ip, msg.port))
 
-        if msg.user in self.ipblock_requested:
+        if user in self.ipblock_requested:
 
-            if self.ipblock_requested[msg.user]:
-                self.ui_callback.on_un_block_user(msg.user)
+            if self.ipblock_requested[user]:
+                self.ui_callback.on_un_block_user(user)
             else:
-                self.ui_callback.on_block_user(msg.user)
+                self.ui_callback.on_block_user(user)
 
-            del self.ipblock_requested[msg.user]
+            del self.ipblock_requested[user]
             return
 
-        if msg.user in self.ipignore_requested:
+        if user in self.ipignore_requested:
 
-            if self.ipignore_requested[msg.user]:
-                self.ui_callback.on_un_ignore_user(msg.user)
+            if self.ipignore_requested[user]:
+                self.ui_callback.on_un_ignore_user(user)
             else:
-                self.ui_callback.on_ignore_user(msg.user)
+                self.ui_callback.on_ignore_user(user)
 
-            del self.ipignore_requested[msg.user]
+            del self.ipignore_requested[user]
             return
 
         cc = self.geoip.get_all(msg.ip).country_short
@@ -1111,28 +1128,28 @@ class NetworkEventProcessor:
         if cc == "-":
             cc = ""
 
-        self.ui_callback.has_user_flag(msg.user, "flag_" + cc)
+        self.ui_callback.has_user_flag(user, "flag_" + cc)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
-        if msg.user in self.private_message_queue:
-            self.private_message_queue_process(msg.user)
-        if msg.user not in self.ip_requested:
-            self.pluginhandler.user_resolve_notification(msg.user, msg.ip, msg.port)
+        if user in self.private_message_queue:
+            self.private_message_queue_process(user)
+        if user not in self.ip_requested:
+            self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port)
             return
 
-        self.ip_requested.remove(msg.user)
+        self.ip_requested.remove(user)
 
         if cc != "":
             cc = " (%s)" % cc
 
         log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
-            'user': msg.user,
+            'user': user,
             'ip': msg.ip,
             'port': msg.port,
             'country': cc
         })
-        self.pluginhandler.user_resolve_notification(msg.user, msg.ip, msg.port, cc)
+        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, cc)
 
     def relogged(self, msg):
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
@@ -1141,57 +1158,64 @@ class NetworkEventProcessor:
 
     def out_conn(self, msg):
 
+        addr = msg.addr
+
         for i in self.peerconns:
 
-            if i.addr == msg.addr and i.conn is None:
+            if i.addr == addr and i.conn is None:
+                conn = msg.conn
 
                 if i.token is None:
-                    i.init.conn = msg.conn
+                    i.init.conn = conn
                     self.queue.put(i.init)
                 else:
-                    self.queue.put(slskmessages.PierceFireWall(msg.conn, i.token))
+                    self.queue.put(slskmessages.PierceFireWall(conn, i.token))
 
-                i.conn = msg.conn
+                i.conn = conn
 
                 for j in i.msgs:
 
                     if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                        self.userinfo.init_window(i.username, msg.conn)
+                        self.userinfo.init_window(i.username, conn)
 
                     if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                        self.userbrowse.init_window(i.username, msg.conn)
+                        self.userbrowse.init_window(i.username, conn)
 
                     if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
-                        self.transfers.got_file_connect(j.req, msg.conn)
+                        self.transfers.got_file_connect(j.req, conn)
 
                     if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                        self.transfers.got_connect(j.req, msg.conn, j.direction)
+                        self.transfers.got_connect(j.req, conn, j.direction)
 
-                    j.conn = msg.conn
+                    j.conn = conn
                     self.queue.put(j)
 
                 i.msgs = []
                 break
 
-        log.add_conn("%s %s", (msg.__class__, vars(msg)))
+        log.add_conn("%s %s", (msg.__class__, self.contents(msg)))
 
     def inc_conn(self, msg):
-        log.add_conn("%s %s", (msg.__class__, vars(msg)))
+        log.add_conn("%s %s", (msg.__class__, self.contents(msg)))
 
     def connect_to_peer(self, msg):
-        init = slskmessages.PeerInit(None, msg.user, msg.type, 0)
+        user = msg.user
+        ip = msg.ip
+        port = msg.port
 
-        self.queue.put(slskmessages.OutConn(None, (msg.ip, msg.port), init))
+        init = slskmessages.PeerInit(None, user, msg.type, 0)
+
+        self.queue.put(slskmessages.OutConn(None, (ip, port), init))
         self.peerconns.append(
             PeerConnection(
-                addr=(msg.ip, msg.port),
-                username=msg.user,
+                addr=(ip, port),
+                username=user,
                 msgs=[],
                 token=msg.token,
                 init=init
             )
         )
-        log.add_conn("%s %s", (msg.__class__, vars(msg)))
+        log.add_conn("%s %s", (msg.__class__, self.contents(msg)))
 
     def check_user(self, user, addr):
         """
@@ -1278,8 +1302,10 @@ class NetworkEventProcessor:
                     pass
 
     def user_info_reply(self, msg):
+        conn = msg.conn.conn
+
         for i in self.peerconns:
-            if i.conn is msg.conn.conn and self.userinfo is not None:
+            if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
                     self.userinfo.show_info(i.username, msg)
@@ -1288,10 +1314,11 @@ class NetworkEventProcessor:
     def user_info_request(self, msg):
 
         user = ip = port = None
+        conn = msg.conn.conn
 
         # Get peer's username, ip and port
         for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+            if i.conn is conn:
                 user = i.username
                 if i.addr is not None:
                     ip, port = i.addr
@@ -1325,8 +1352,8 @@ class NetworkEventProcessor:
             else:
                 log.add(_("Blocking %s from making a UserInfo request, possible spoofing attempt from an unknown IP & port"), user)
 
-            if msg.conn.conn is not None:
-                self.queue.put(slskmessages.ConnClose(msg.conn.conn))
+            if conn is not None:
+                self.queue.put(slskmessages.ConnClose(conn))
 
             return
 
@@ -1338,7 +1365,7 @@ class NetworkEventProcessor:
                 }
             )
 
-            log.add_warning("%s %s", (msg.__class__, vars(msg)))
+            log.add_warning("%s %s", (msg.__class__, self.contents(msg)))
 
             return
 
@@ -1363,7 +1390,7 @@ class NetworkEventProcessor:
             else:
                 uploadallowed = 0
 
-            self.queue.put(slskmessages.UserInfoReply(msg.conn.conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+            self.queue.put(slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
         log.add(
             _("%(user)s is making a UserInfo request"), {
@@ -1372,16 +1399,21 @@ class NetworkEventProcessor:
         )
 
     def shared_file_list(self, msg):
+        conn = msg.conn.conn
+
         for i in self.peerconns:
-            if i.conn is msg.conn.conn and self.userbrowse is not None:
+            if i.conn is conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
                     self.userbrowse.show_info(i.username, msg)
                     break
 
     def file_search_result(self, msg):
+        conn = msg.conn
+        addr = conn.addr
+
         if self.search is not None:
-            if msg.conn.addr:
-                country = self.geoip.get_all(msg.conn.addr[0]).country_short
+            if addr:
+                country = self.geoip.get_all(addr[0]).country_short
             else:
                 country = ""
 
@@ -1389,50 +1421,53 @@ class NetworkEventProcessor:
                 country = ""
 
             self.search.show_result(msg, msg.user, country)
-            self.close_peer_connection(msg.conn)
+            self.close_peer_connection(conn)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def pierce_fire_wall(self, msg):
+        token = msg.token
 
         for i in self.peerconns:
 
-            if i.token == msg.token and i.conn is None:
+            if i.token == token and i.conn is None:
+                conn = msg.conn.conn
 
                 if i.conntimer is not None:
                     i.conntimer.cancel()
 
-                i.init.conn = msg.conn.conn
+                i.init.conn = conn
                 self.queue.put(i.init)
-                i.conn = msg.conn.conn
+                i.conn = conn
 
                 for j in i.msgs:
 
                     if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                        self.userinfo.init_window(i.username, msg.conn.conn)
+                        self.userinfo.init_window(i.username, conn)
 
                     if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                        self.userbrowse.init_window(i.username, msg.conn.conn)
+                        self.userbrowse.init_window(i.username, conn)
 
                     if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
-                        self.transfers.got_file_connect(j.req, msg.conn.conn)
+                        self.transfers.got_file_connect(j.req, conn)
 
                     if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                        self.transfers.got_connect(j.req, msg.conn.conn, j.direction)
+                        self.transfers.got_connect(j.req, conn, j.direction)
 
-                    j.conn = msg.conn.conn
+                    j.conn = conn
                     self.queue.put(j)
 
                 i.msgs = []
                 break
 
-        log.add_conn("%s %s", (msg.__class__, vars(msg)))
+        log.add_conn("%s %s", (msg.__class__, self.contents(msg)))
 
     def cant_connect_to_peer(self, msg):
+        token = msg.token
 
         for i in self.peerconns:
 
-            if i.token == msg.token:
+            if i.token == token:
 
                 if i.conntimer is not None:
                     i.conntimer.cancel()
@@ -1470,31 +1505,31 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.transfer_timeout(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_download(self, msg):
         if self.transfers is not None:
             self.transfers.file_download(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_upload(self, msg):
         if self.transfers is not None:
             self.transfers.file_upload(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_request(self, msg):
         if self.transfers is not None:
             self.transfers.file_request(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_error(self, msg):
         if self.transfers is not None:
             self.transfers.file_error(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
@@ -1502,7 +1537,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.transfer_request(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
@@ -1510,7 +1545,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.transfer_response(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_upload(self, msg):
         """ Peer code: 43 """
@@ -1518,7 +1553,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.queue_upload(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_failed(self, msg):
         """ Peer code: 50 """
@@ -1526,7 +1561,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.queue_failed(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
@@ -1534,12 +1569,12 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.place_in_queue_request(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def upload_queue_notification(self, msg):
         """ Peer code: 52 """
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
         self.transfers.upload_queue_notification(msg)
 
     def upload_failed(self, msg):
@@ -1548,7 +1583,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.upload_failed(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue(self, msg):
         """ Peer code: 44 """
@@ -1556,17 +1591,18 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.place_in_queue(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_shared_file_list(self, msg):
         """ Peer code: 4 """
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
         user = ip = port = None
+        conn = msg.conn.conn
 
         # Get peer's username, ip and port
         for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+            if i.conn is conn:
                 user = i.username
                 if i.addr is not None:
                     if len(i.addr) != 2:
@@ -1596,8 +1632,8 @@ class NetworkEventProcessor:
                         'user': user
                     })
 
-            if msg.conn.conn is not None:
-                self.queue.put(slskmessages.ConnClose(msg.conn.conn))
+            if conn is not None:
+                self.queue.put(slskmessages.ConnClose(conn))
             return
 
         log.add(_("%(user)s is making a BrowseShares request"), {
@@ -1623,21 +1659,22 @@ class NetworkEventProcessor:
 
         else:
             # Nyah, Nyah
-            m = slskmessages.SharedFileList(msg.conn.conn, {})
+            m = slskmessages.SharedFileList(conn, {})
             m.make_network_message(nozlib=0)
 
-        m.conn = msg.conn.conn
+        m.conn = conn
         self.queue.put(m)
 
     def folder_contents_request(self, msg):
         """ Peer code: 36 """
 
+        conn = msg.conn.conn
         username = None
         checkuser = None
         reason = ""
 
         for i in self.peerconns:
-            if i.conn is msg.conn.conn:
+            if i.conn is conn:
                 username = i.username
                 checkuser, reason = self.check_user(username, None)
                 break
@@ -1653,23 +1690,23 @@ class NetworkEventProcessor:
         elif checkuser == 2:
             shares = self.config.sections["transfers"]["bsharedfilesstreams"]
         else:
-            self.queue.put(slskmessages.TransferResponse(msg.conn.conn, 0, reason=reason, req=0))
+            self.queue.put(slskmessages.TransferResponse(conn, 0, reason=reason, req=0))
             shares = {}
 
         if checkuser:
             if msg.dir in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
+                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
             elif msg.dir.rstrip('\\') in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip('\\')]))
+                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
             else:
                 if checkuser == 2:
                     shares = self.config.sections["transfers"]["sharedfilesstreams"]
                     if msg.dir in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir]))
+                        self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
                     elif msg.dir.rstrip("\\") in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(msg.conn.conn, msg.dir, shares[msg.dir.rstrip("\\")]))
+                        self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip("\\")]))
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
@@ -1700,7 +1737,7 @@ class NetworkEventProcessor:
             else:
                 self.transfers.folder_contents_response(conn, file_list)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def room_list(self, msg):
         """ Server code: 64 """
@@ -1709,7 +1746,7 @@ class NetworkEventProcessor:
             self.chatrooms.roomsctrl.set_room_list(msg)
             self.set_status("")
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def global_user_list(self, msg):
         """ Server code: 67 """
@@ -1717,7 +1754,7 @@ class NetworkEventProcessor:
         if self.globallist is not None:
             self.globallist.set_global_users_list(msg)
         else:
-            log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def peer_transfer(self, msg):
         if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
@@ -1737,27 +1774,29 @@ class NetworkEventProcessor:
             peermsg.tunneledaddr = msg.addr
             self.network_callback([peermsg])
         else:
-            log.add_msg_contents(_("Unknown tunneled message: %s"), (vars(msg)))
+            log.add_msg_contents(_("Unknown tunneled message: %s"), (self.contents(msg)))
 
     def file_search_request(self, msg):
         """ Peer code: 8 """
+        conn = msg.conn.conn
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         for i in self.peerconns:
-            if i.conn == msg.conn.conn:
+            if i.conn == conn:
                 user = i.username
                 self.shares.process_search_request(msg.searchterm, user, msg.searchid, direct=1)
                 break
 
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
     def search_request(self, msg):
         """ Server code: 93 """
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
         self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=0)
         self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def room_search_request(self, msg):
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
         self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=0)
 
     def toggle_respond_distributed(self, msg, settings=False):
@@ -1812,11 +1851,11 @@ class NetworkEventProcessor:
 
                 self.process_request_to_peer(user, slskmessages.DistribConn(), None, addr)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_parent_conn(self):
         for i in self.peerconns:
-            if i.init.type == 'D':
+            if i.type == 'D':
                 return i
 
         return None
@@ -1837,7 +1876,7 @@ class NetworkEventProcessor:
         if not self.has_parent:
 
             for i in self.peerconns[:]:
-                if i.init.type == 'D':
+                if i.type == 'D':
                     """ We previously attempted to connect to all potential parents. Since we now
                     have a parent, stop connecting to the others. """
 
@@ -1856,7 +1895,7 @@ class NetworkEventProcessor:
             else:
                 self.parent_conn_closed()
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def global_recommendations(self, msg):
         """ Server code: 56 """
@@ -1884,7 +1923,7 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.ticker_set(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def room_ticker_add(self, msg):
         """ Server code: 114 """
@@ -1892,7 +1931,7 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.ticker_add(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def room_ticker_remove(self, msg):
         """ Server code: 115 """
@@ -1900,7 +1939,7 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.ticker_remove(msg)
 
-        log.add_msg_contents("%s %s", (msg.__class__, vars(msg)))
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def update_debug_log_options(self):
         """ Gives the logger updated logging settings """
