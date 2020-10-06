@@ -307,7 +307,7 @@ class Shares:
 
             raise
 
-    def rescan_dirs(self, sharestype, shared, oldmtimes, oldfiles, sharedfilesstreams, rebuild=False):
+    def rescan_dirs(self, sharestype, shared, oldmtimes, oldfiles, oldstreams, rebuild=False):
         """
         Check for modified or new files via OS's last mtime on a directory,
         or, if rebuild is True, all directories
@@ -323,15 +323,19 @@ class Shares:
 
         log.add(_("%(num)s folders found before rescan, rebuilding..."), {"num": num_folders})
 
-        newmtimes = self.get_dirs_mtimes(shared_directories)
+        newmtimes = {}
+
+        for folder in shared_directories:
+            if not self.is_hidden(folder):
+                # Get mtimes for top-level shared folders, then every subfolder
+                mtime = os.stat(folder).st_mtime
+                newmtimes[folder] = mtime
+                newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
-        newsharedfiles = self.get_files_list(sharestype, newmtimes, oldmtimes, oldfiles, rebuild)
-
-        # Pack shares data
         # returns dict in format { Directory : hex string of files+metadata, ... }
-        newsharedfilesstreams = self.get_files_streams(newmtimes, oldmtimes, sharedfilesstreams, newsharedfiles, rebuild)
+        newsharedfiles, newsharedfilesstreams = self.get_files_list(sharestype, newmtimes, oldmtimes, oldfiles, oldstreams, rebuild)
 
         # Save data to shelves
         self.set_shares(sharestype=sharestype, files=newsharedfiles, streams=newsharedfilesstreams, mtimes=newmtimes)
@@ -343,7 +347,7 @@ class Shares:
 
         log.add(_("%(num)s folders found after rescan"), {"num": len(newsharedfiles)})
 
-    def is_hidden(self, folder, filename=None):
+    def is_hidden(self, folder, filename=None, folder_obj=None):
         """ Stop sharing any dot/hidden directories/files """
 
         # If any part of the directory structure start with a dot we exclude it
@@ -362,6 +366,10 @@ class Shares:
         if sys.platform == "win32":
             if filename is not None:
                 folder += '\\' + filename
+
+            elif folder_obj is not None:
+                # Faster way if we use scandir
+                return folder_obj.stat().st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
             return os.stat(folder).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
@@ -463,49 +471,45 @@ class Shares:
             bsharedmtimes[vdir] = os.path.getmtime(rdir)
             self.newbuddyshares = True
 
-    def get_dirs_mtimes(self, dirs):
+    def get_folder_mtimes(self, folder):
         """ Get Modification Times """
 
         mtimes = {}
 
-        for folder in dirs:
+        try:
+            for entry in os.scandir(folder):
+                if entry.is_dir():
 
-            try:
-                if self.is_hidden(folder):
-                    continue
+                    path = entry.path
 
-                mtime = os.path.getmtime(folder)
-                mtimes[folder] = mtime
+                    if self.is_hidden(path):
+                        return mtimes
 
-                for entry in os.scandir(folder):
-                    if entry.is_dir():
+                    try:
+                        mtime = entry.stat().st_mtime
+                    except OSError as errtuple:
+                        log.add(_("Error while scanning %(path)s: %(error)s"), {
+                            'path': path,
+                            'error': errtuple
+                        })
+                        return mtimes
 
-                        path = entry.path
+                    mtimes[path] = mtime
+                    dircontents = self.get_folder_mtimes(path)
 
-                        try:
-                            mtime = entry.stat().st_mtime
-                        except OSError as errtuple:
-                            log.add(_("Error while scanning %(path)s: %(error)s"), {
-                                'path': path,
-                                'error': errtuple
-                            })
-                            continue
+                    for k in dircontents:
+                        mtimes[k] = dircontents[k]
 
-                        mtimes[path] = mtime
-                        dircontents = self.get_dirs_mtimes([path])
-                        for k in dircontents:
-                            mtimes[k] = dircontents[k]
-
-            except OSError as errtuple:
-                log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
-                continue
+        except OSError as errtuple:
+            log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
 
         return mtimes
 
-    def get_files_list(self, sharestype, mtimes, oldmtimes, oldfiles, rebuild=False):
+    def get_files_list(self, sharestype, mtimes, oldmtimes, oldfiles, oldstreams, rebuild=False):
         """ Get a list of files with their filelength, bitrate and track length in seconds """
 
         files = {}
+        streams = {}
         count = 0
         lastpercent = 0.0
 
@@ -522,12 +526,14 @@ class Shares:
                         self.ui_callback.set_scan_progress(sharestype, percent)
                         lastpercent = percent
 
+                virtualdir = self.real2virtual(folder)
+
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
                         if os.path.exists(folder):
                             try:
-                                virtualdir = self.real2virtual(folder)
                                 files[virtualdir] = oldfiles[virtualdir]
+                                streams[virtualdir] = oldstreams[virtualdir]
                                 continue
                             except KeyError:
                                 log.add_debug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
@@ -538,7 +544,6 @@ class Shares:
                             log.add_debug(_("Dropping missing folder %(dir)s"), {'dir': folder})
                             continue
 
-                virtualdir = self.real2virtual(folder)
                 files[virtualdir] = []
 
                 for entry in os.scandir(folder):
@@ -550,22 +555,29 @@ class Shares:
                             continue
 
                         # Get the metadata of the file
-                        data = self.get_file_info(filename, entry.path)
+                        data = self.get_file_info(filename, entry.path, entry)
                         if data is not None:
                             files[virtualdir].append(data)
+
+                streams[virtualdir] = self.get_dir_stream(files[virtualdir])
 
             except OSError as errtuple:
                 log.add(_("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple})
                 continue
 
-        return files
+        return files, streams
 
-    def get_file_info(self, name, pathname):
+    def get_file_info(self, name, pathname, file=None):
         """ Get metadata via taglib """
 
         try:
             audio = None
-            size = os.stat(pathname).st_size
+
+            if file:
+                # Faster way if we use scandir
+                size = file.stat().st_size
+            else:
+                size = os.stat(pathname).st_size
 
             if size > 0:
                 try:
@@ -583,36 +595,6 @@ class Shares:
 
         except Exception as errtuple:
             log.add(_("Error while scanning file %(path)s: %(error)s"), {'path': pathname, 'error': errtuple})
-
-    def get_files_streams(self, mtimes, oldmtimes, oldstreams, newsharedfiles, rebuild=False):
-        """ Get streams of files """
-
-        streams = {}
-
-        for folder in mtimes:
-
-            virtualdir = self.real2virtual(folder)
-
-            if not rebuild and folder in oldmtimes:
-
-                if mtimes[folder] == oldmtimes[folder]:
-                    if os.path.exists(folder):
-                        # No change
-                        try:
-                            streams[virtualdir] = oldstreams[virtualdir]
-                            continue
-                        except KeyError:
-                            log.add_debug(_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
-                                'vdir': virtualdir,
-                                'dir': folder
-                            })
-                    else:
-                        log.add_debug(_("Dropping missing folder %(dir)s"), {'dir': folder})
-                        continue
-
-            streams[virtualdir] = self.get_dir_stream(newsharedfiles[virtualdir])
-
-        return streams
 
     def get_dir_stream(self, folder):
         """ Pack all files and metadata in directory """

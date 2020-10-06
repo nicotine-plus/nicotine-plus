@@ -1126,8 +1126,10 @@ class Search:
         imdl = model.get_value(iterator, 3)
         color = imdl == "Y" and "search" or "searchq"
 
-        colour = self.frame.np.config.sections["ui"][color] or None
-        cellrenderer.set_property("foreground", colour)
+        colour = self.frame.np.config.sections["ui"][color]
+
+        if colour:
+            cellrenderer.set_property("foreground", colour)
 
     def meta_box(self, title="Meta Data", message="", data=None, modal=True):
 
