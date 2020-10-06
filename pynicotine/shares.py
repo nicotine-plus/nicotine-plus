@@ -71,8 +71,13 @@ class Shares:
         )
 
         self.compressed_shares_buddy = self.compressed_shares_normal = None
-        self.compress_shares("normal")
-        self.compress_shares("buddy")
+
+        if not self.config.sections["transfers"]["friendsonly"]:
+            self.compress_shares("normal")
+
+        if self.config.sections["transfers"]["enablebuddyshares"]:
+            self.compress_shares("buddy")
+
         self.newbuddyshares = self.newnormalshares = False
 
     """ Shares-related actions """
