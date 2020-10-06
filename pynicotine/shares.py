@@ -311,7 +311,7 @@ class Shares:
         """
 
         # returns dict in format:  { Directory : mtime, ... }
-        shared_directories = [x[1] for x in shared]
+        shared_directories = (x[1] for x in shared)
 
         try:
             num_folders = len(oldmtimes)
@@ -615,7 +615,7 @@ class Shares:
 
         message = slskmessages.SlskMessage()
         stream = bytearray()
-        stream.extend(message.pack_object(len(folder)))
+        stream.extend(message.pack_object(len(folder), unsignedint=True))
 
         for fileinfo in folder:
             stream.extend(bytes([1]))
@@ -628,9 +628,9 @@ class Shares:
                     stream.extend(message.pack_object(3))
 
                     stream.extend(message.pack_object(0))
-                    stream.extend(message.pack_object(fileinfo[2][0]))
+                    stream.extend(message.pack_object(fileinfo[2][0], unsignedint=True))
                     stream.extend(message.pack_object(1))
-                    stream.extend(message.pack_object(fileinfo[3]))
+                    stream.extend(message.pack_object(fileinfo[3], unsignedint=True))
                     stream.extend(message.pack_object(2))
                     stream.extend(message.pack_object(fileinfo[2][1]))
                 except Exception:

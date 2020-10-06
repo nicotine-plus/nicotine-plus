@@ -2152,27 +2152,9 @@ class FolderContentsResponse(PeerMessage):
         msg.extend(self.pack_object(self.dir))
         msg.extend(self.pack_object(1))
         msg.extend(self.pack_object(self.dir))
-        msg.extend(self.pack_object(len(self.list), unsignedint=True))
 
-        for fileinfo in self.list:
-            msg.extend(bytes([1]))
-            msg.extend(self.pack_object(fileinfo[0]))
-            msg.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
-            msg.extend(self.pack_object(0))
-
-            if fileinfo[2] is None:
-                msg.extend(self.pack_object(''))
-                msg.extend(self.pack_object(0))
-            else:
-                msg.extend(self.pack_object("mp3"))
-                msg.extend(self.pack_object(3))
-
-                msg.extend(self.pack_object(0))
-                msg.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
-                msg.extend(self.pack_object(1))
-                msg.extend(self.pack_object(fileinfo[3], unsignedint=True))
-                msg.extend(self.pack_object(2))
-                msg.extend(self.pack_object(fileinfo[2][1]))
+        # We already saved the folder contents as a bytearray when scanning our shares
+        msg.extend(self.list)
 
         return zlib.compress(msg)
 
