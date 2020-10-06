@@ -1906,7 +1906,7 @@ class NicotineFrame:
 
         widget.override_background_color(Gtk.StateFlags.NORMAL, rgba)
 
-        if isinstance(widget, (Gtk.Entry, Gtk.SpinButton)):
+        if isinstance(widget, Gtk.Entry):
             if fgcolor != "":
                 rgba = Gdk.RGBA()
                 rgba.parse(fgcolor)
