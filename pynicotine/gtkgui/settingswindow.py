@@ -743,6 +743,7 @@ class SharesFrame(BuildFrame):
 
     def on_enabled_buddy_shares_toggled(self, widget):
         self.on_friends_only_toggled(widget)
+        self.needrescan = True
 
     def on_friends_only_toggled(self, widget):
 
