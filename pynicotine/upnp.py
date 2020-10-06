@@ -92,7 +92,7 @@ class UPnPPortMapping:
         else:
             # If the python binding import is successful we define the
             # resulting mode
-            self.mode = 'Module'
+            self.mode = '_module'
             return (True, None)
 
     def add_port_mapping(self, np):

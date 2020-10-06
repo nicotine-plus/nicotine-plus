@@ -2104,7 +2104,7 @@ class NicotineFrame:
                 if not isinstance(mylist, (list, dict)):
                     raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': share})
 
-                username = share.split(os.sep)[-1]
+                username = share.replace('\\', os.sep).split(os.sep)[-1]
                 self.userbrowse.init_window(username, None)
 
                 if username in self.userbrowse.users:

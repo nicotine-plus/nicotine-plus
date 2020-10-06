@@ -36,9 +36,6 @@ from pynicotine.utils import get_user_directories
 # Setting gettext and locale
 apply_translation()
 
-# Detect if we're running on Windows
-win32 = platform.system().startswith("Win")
-
 
 def checkenv():
 
@@ -199,16 +196,8 @@ def run():
         usage()
         sys.exit(2)
 
-    if win32:
-        try:
-            data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
-        except KeyError:
-            data_dir, x = os.path.split(sys.argv[0])
-
-        config = os.path.join(data_dir, "config", "config")
-    else:
-        config_dir, data_dir = get_user_directories()
-        config = os.path.join(config_dir, 'config')
+    config_dir, data_dir = get_user_directories()
+    config = os.path.join(config_dir, 'config')
 
     plugins = os.path.join(data_dir, 'plugins')
 
