@@ -552,15 +552,15 @@ class TransferList:
 
                 popup = PopupMenu(self.frame, False)
                 popup.setup(
-                    ("#" + _("Send _message"), popup.OnSendMessage),
-                    ("#" + _("Show IP a_ddress"), popup.OnShowIPaddress),
-                    ("#" + _("Get user i_nfo"), popup.OnGetUserInfo),
-                    ("#" + _("Brow_se files"), popup.OnBrowseUser),
-                    ("#" + _("Gi_ve privileges"), popup.OnGivePrivileges),
+                    ("#" + _("Send _message"), popup.on_send_message),
+                    ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+                    ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+                    ("#" + _("Brow_se files"), popup.on_browse_user),
+                    ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
                     ("", None),
-                    ("$" + _("_Add user to list"), popup.OnAddToList),
-                    ("$" + _("_Ban this user"), popup.OnBanUser),
-                    ("$" + _("_Ignore this user"), popup.OnIgnoreUser),
+                    ("$" + _("_Add user to list"), popup.on_add_to_list),
+                    ("$" + _("_Ban this user"), popup.on_ban_user),
+                    ("$" + _("_Ignore this user"), popup.on_ignore_user),
                     ("#" + _("Select User's Transfers"), self.on_select_user_transfers)
                 )
                 popup.set_user(user)
