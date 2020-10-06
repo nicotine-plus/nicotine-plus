@@ -1824,10 +1824,10 @@ class ColoursFrame(BuildFrame):
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
-                if isinstance(widget, Gtk.Entry):
-                    widget.set_text(defaults[key][option])
-                elif isinstance(widget, Gtk.SpinButton):
+                if isinstance(widget, Gtk.SpinButton):
                     widget.set_value_as_int(defaults[key][option])
+                elif isinstance(widget, Gtk.Entry):
+                    widget.set_text(defaults[key][option])
                 elif isinstance(widget, Gtk.CheckButton):
                     widget.set_active(defaults[key][option])
                 elif isinstance(widget, Gtk.ComboBox):
@@ -1855,10 +1855,10 @@ class ColoursFrame(BuildFrame):
                 if option in value:
 
                     widget = self.options[section][option]
-                    if isinstance(widget, Gtk.Entry):
-                        widget.set_text("")
-                    elif isinstance(widget, Gtk.SpinButton):
+                    if isinstance(widget, Gtk.SpinButton):
                         widget.set_value_as_int(0)
+                    elif isinstance(widget, Gtk.Entry):
+                        widget.set_text("")
                     elif isinstance(widget, Gtk.CheckButton):
                         widget.set_active(0)
                     elif isinstance(widget, Gtk.ComboBox):
@@ -2274,6 +2274,7 @@ class SearchFrame(BuildFrame):
             searches = config["searches"]
         except Exception:
             searches = None
+
         self.p.set_widgets_data(config, self.options)
 
         if searches["defilter"] is not None:
@@ -3416,7 +3417,7 @@ class Settings:
 
     def colour_widgets(self, widget):
 
-        if isinstance(widget, (Gtk.Entry, Gtk.SpinButton)):
+        if isinstance(widget, Gtk.Entry):
             self.set_text_bg(widget)
         if isinstance(widget, Gtk.TreeView):
             self.frame.change_list_font(widget, self.frame.np.config.sections["ui"]["listfont"])
@@ -3503,17 +3504,15 @@ class Settings:
 
     def get_widget_data(self, widget):
 
-        if isinstance(widget, Gtk.Entry):
+        if isinstance(widget, Gtk.SpinButton):
+            return int(widget.get_value())
+        elif isinstance(widget, Gtk.Entry):
             return widget.get_text()
         elif isinstance(widget, Gtk.TextView):
             buffer = widget.get_buffer()
             start, end = buffer.get_bounds()
             return widget.get_buffer().get_text(start, end, True)
-        elif isinstance(widget, Gtk.SpinButton):
-            return int(widget.get_value())
         elif isinstance(widget, Gtk.CheckButton):
-            return widget.get_active()
-        elif isinstance(widget, Gtk.RadioButton):
             return widget.get_active()
         elif isinstance(widget, Gtk.ComboBox):
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
@@ -3530,15 +3529,13 @@ class Settings:
             return wlist
 
     def clear_widget(self, widget):
-        if isinstance(widget, Gtk.Entry):
+        if isinstance(widget, Gtk.SpinButton):
+            widget.set_value(0)
+        elif isinstance(widget, Gtk.Entry):
             widget.set_text("")
         elif isinstance(widget, Gtk.TextView):
             widget.get_buffer().set_text("")
-        elif isinstance(widget, Gtk.SpinButton):
-            widget.set_value(0)
         elif isinstance(widget, Gtk.CheckButton):
-            widget.set_active(0)
-        elif isinstance(widget, Gtk.RadioButton):
             widget.set_active(0)
         elif isinstance(widget, Gtk.ComboBox):
             self.get_position(widget, "")
@@ -3547,21 +3544,15 @@ class Settings:
 
     def set_widget(self, widget, value):
 
-        if isinstance(widget, Gtk.Entry):
-            if isinstance(value, str):
-                widget.set_text(value)
-            elif isinstance(value, int):
-                widget.set_text(str(value))
-        elif isinstance(widget, Gtk.TextView):
-            if isinstance(value, str):
-                widget.get_buffer().set_text(value)
-            elif isinstance(value, int):
-                widget.get_buffer().set_text(str(value))
-        elif isinstance(widget, Gtk.SpinButton):
+        if isinstance(widget, Gtk.SpinButton):
             widget.set_value(int(value))
+        elif isinstance(widget, Gtk.Entry):
+            if isinstance(value, (str, int)):
+                widget.set_text(value)
+        elif isinstance(widget, Gtk.TextView):
+            if isinstance(value, (str, int)):
+                widget.get_buffer().set_text(value)
         elif isinstance(widget, Gtk.CheckButton):
-            widget.set_active(value)
-        elif isinstance(widget, Gtk.RadioButton):
             widget.set_active(value)
         elif isinstance(widget, Gtk.ComboBox):
             if isinstance(value, str):
