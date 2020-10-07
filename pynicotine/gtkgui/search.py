@@ -1123,13 +1123,16 @@ class Search:
         return True
 
     def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
+
         imdl = model.get_value(iterator, 3)
-        color = imdl == "Y" and "search" or "searchq"
+        color_id = imdl == "Y" and "search" or "searchq"
 
-        colour = self.frame.np.config.sections["ui"][color]
+        color = self.frame.np.config.sections["ui"][color_id]
 
-        if colour:
-            cellrenderer.set_property("foreground", colour)
+        if color:
+            cellrenderer.set_property("foreground", color)
+        else:
+            cellrenderer.set_property("foreground-set", False)
 
     def meta_box(self, title="Meta Data", message="", data=None, modal=True):
 
