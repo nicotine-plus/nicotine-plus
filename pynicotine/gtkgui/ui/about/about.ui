@@ -13,7 +13,7 @@
     <property name="copyright">© 2001 Alexander Kanavin
 © 2003 Nicotine Team
 © 2006 Nicotine+ Team</property>
-    <property name="license_type">GTK_LICENSE_GPL_3_0_ONLY</property>
+    <property name="license_type">GTK_LICENSE_GPL_3_0</property>
     <property name="authors"># ATTRIBUTIONS
 
 - This product includes IP2Location LITE data,
