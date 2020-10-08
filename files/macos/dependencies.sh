@@ -13,7 +13,4 @@ brew install \
   taglib \
   upx
 
-# pip should not pick up our setup.cfg
-cd pynicotine
 pip3 install pep8-naming pyinstaller==3.6 pytaglib pytest
-cd ..

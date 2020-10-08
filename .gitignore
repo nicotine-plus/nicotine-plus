@@ -9,6 +9,7 @@
 
 # Ignore venv files
 venv/*
+.env/
 
 # Ignore packaging directories and files
 install.txt

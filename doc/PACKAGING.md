@@ -1,7 +1,7 @@
 # Packaging
 
 ### Note for packagers
-This is a special note for distribution packagers: There is a standard feature of github which enables you to be notified of new package releases: In the top right bar there is the *Watch* option, which has the suboption to be notified of *releases only*. Please subscribe so you won't miss any of our new releases.
+This is a special note for distribution packagers: There is a standard feature of GitHub which enables you to be notified of new package releases: In the top right bar there is the *Watch* option, which has the suboption to be notified of *releases only*. Please subscribe so you won't miss any of our new releases.
 Thanks!
 
 ### Dependencies
