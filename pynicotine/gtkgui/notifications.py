@@ -31,17 +31,25 @@ from pynicotine.utils import version
 class Notifications:
 
     def __init__(self, frame):
+
+        self.use_libnotify = False
+        self.use_plyer = False
+
         try:
             # Notification support
             gi.require_version('Notify', '0.7')
             from gi.repository import Notify
             Notify.init("Nicotine+")
             self.notification_provider = Notify
+            self.use_libnotify = True
+
         except (ImportError, ValueError):
             try:
                 # Windows support via plyer
                 from plyer import notification
                 self.notification_provider = notification
+                self.use_plyer = True
+
             except (ImportError, ValueError):
                 self.notification_provider = None
 
@@ -161,31 +169,28 @@ class Notifications:
 
     def new_notification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
 
-        if self.notification_provider is None:
-            return
-
         try:
-            notification_popup = self.notification_provider.Notification.new(title, message)
-            notification_popup.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
+            if self.use_libnotify:
+                notification_popup = self.notification_provider.Notification.new(title, message)
+                notification_popup.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
 
-            if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
-                notification_popup.set_hint("sound-name", GLib.Variant("s", soundnamenotify))
+                if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+                    notification_popup.set_hint("sound-name", GLib.Variant("s", soundnamenotify))
 
-            notification_popup.set_image_from_pixbuf(self.frame.images["notify"])
+                notification_popup.set_image_from_pixbuf(self.frame.images["notify"])
 
-            try:
                 notification_popup.show()
-            except Exception as error:
-                log.add(_("Notification Error: %s"), str(error))
-        except AttributeError:
-            # Fall back to plyer
 
-            self.notification_provider.notify(
-                app_name="Nicotine+",
-                title=title,
-                message=message
-            )
+            elif self.use_plyer:
+                self.notification_provider.notify(
+                    app_name="Nicotine+",
+                    title=title,
+                    message=message
+                )
 
-            if sys.platform == "win32" and self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
-                import winsound
-                winsound.PlaySound(soundnamewin, winsound.SND_ALIAS)
+                if sys.platform == "win32" and self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+                    import winsound
+                    winsound.PlaySound(soundnamewin, winsound.SND_ALIAS)
+
+        except Exception as error:
+            log.add(_("Unable to show notification popup: %s"), str(error))
