@@ -114,7 +114,7 @@ If you'd like to contribute, you have a couple of options to get started:
 * Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
 * For (unofficial) documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md)
 * For a current list of things to do, see the [issue tracker](https://github.com/Nicotine-Plus/nicotine-plus/issues).
-* If you want to contact someone, see [MAINTAINERS.md](AUTHORS.md).
+* For a list of contributors to Nicotine+ and its predecessors, see [AUTHORS.md](AUTHORS.md).
 
 # Continuous Integration Testing
 

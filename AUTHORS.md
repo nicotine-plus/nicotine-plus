@@ -1,10 +1,11 @@
-# Nicotine+ Maintainers
-This is a somewhat up-to-date list of current Nicotine+ maintainers. For inquiries, it is recommended to [open an issue ticket](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub.
+# Nicotine+ Contributors
+
+Have you done something for Nicotine+, and your name is missing? Please [let us know](README.md#getting-involved).
 
 ### Active
 
 eLvErDe
-- Provides Nicotine+ Website
+- Provided Nicotine+ Trac instance
 - Migrated source code from SVN to Github
 - python3-miniupnpc bindings
 - Developer
@@ -31,21 +32,21 @@ daelstorm
 
 gallows (aka 'burp O')
 - Developer, Packager
-- [g4ll0ws(at)gmail(dot)com]
 - Submitted Slack.Build file
+- [g4ll0ws(at)gmail(dot)com]
 
 QuinoX
 - Developer
 
 hedonist (formerly known as alexbk)
 - OS X nicotine.app maintainer / developer
-- [ak(at)sensi(dot)org]
 - Author of original pyslsk, which is used for nicotine core
+- [ak(at)sensi(dot)org]
 
 lee8oi
 - Bash Commander
-- [winslaya(at)gmail(dot)com]
 - New and updated /alias
+- [winslaya(at)gmail(dot)com]
 
 INMCM
 - Nicotine+ topic maintainer on ubuntuforums.org
@@ -57,7 +58,10 @@ suser-guru
 - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
 osiris
-- handy-man, documentation, some GNU/Linux packaging, Nicotine+ on win32
+- handy-man
+- documentation
+- some GNU/Linux packaging
+- Nicotine+ on win32
 - Author of Nicotine+ Guide
 - [osiris.contact(at)gmail(dot)com]
 
@@ -72,7 +76,7 @@ Mutnick
 
 ---
 
-# Nicotine Maintainers
+# Nicotine Contributors
 
 ### Retired
 
@@ -100,8 +104,8 @@ sierracat
 - Developed soulseeX
 
 Gustavo
-- [gjc(at)inescporto(dot)pt]
 - Made the exception dialog
+- [gjc(at)inescporto(dot)pt]
 
 SeeSchloss
 - Developer
@@ -110,10 +114,61 @@ SeeSchloss
 
 vasi
 - Mac developer
-- [djvasi(at)gmail(dot)com]
 - Packaged nicotine on OSX PowerPc
+- [djvasi(at)gmail(dot)com]
 
+---
 
-# Contact Info
-Have you done something for Nicotine or Nicotine+ and your name is forgotten?
-Please [let us know](https://github.com/Nicotine-Plus/nicotine-plus/issues).
+# PySoulSeek Contributors
+
+### Retired
+
+Alexander Kanavin
+- Created PySoulSeek
+- [ak(at)sensi(dot)org]
+
+Nir Arbel
+- Helped with many protocol questions I had, and of
+  course he designed and impemented the whole
+  system.
+- [nir(at)slsk(dot)org]
+			    
+Zip (Brett W. Thompson)
+- I used his client code to get an initial impression
+  of how the system works.
+- Supplied the patch for logging chat conversations.
+- [brettt(at)tfn(dot)net]
+
+Josselin Mouette
+- official Debian package maintainer
+- [joss(at)debian(dot)org]
+
+blueboy
+- former unofficial Debian package maintainer
+- [bluegeek(at)eresmas(dot)com]
+
+Christian Swinehart
+- Fink package maintainer
+- [cswinehart(at)users(dot)sourceforge(dot)net]
+
+Hyriand
+- Patches for upload bandwidth management, banning,
+  various UI improvements and more
+- [hyriand(at)thegraveyard(dot)org]
+
+Geert Kloosterman
+- a script for importing windows soulseek configuration
+- [geertk(at)ai(dot)rug(dot)nl]
+
+Joe Halliwell
+- Submitted a patch for optionally discarding search
+  results after closing a search tab
+- [s9900164(at)sms(dot)ed(dot)ac(dot)uk]
+
+Alexey Vyskubov
+- Code cleanups
+- [alexey(dot)vyskubov(at)nokia(dot)com]
+
+Jason Green
+- Ignore list and auto-join checkbox, wishlists
+- [smacklefunky(at)optusnet(dot)com(dot)au]
