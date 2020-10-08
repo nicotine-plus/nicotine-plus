@@ -328,9 +328,16 @@ class Shares:
         for folder in shared_directories:
             if not self.is_hidden(folder):
                 # Get mtimes for top-level shared folders, then every subfolder
-                mtime = os.stat(folder).st_mtime
-                newmtimes[folder] = mtime
-                newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
+                try:
+                    mtime = os.stat(folder).st_mtime
+                    newmtimes[folder] = mtime
+                    newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
+
+                except OSError as errtuple:
+                    log.add(_("Error while scanning folder %(path)s: %(error)s"), {
+                        'path': folder,
+                        'error': errtuple
+                    })
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
