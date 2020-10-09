@@ -1,4 +1,5 @@
-#!/usr/bin/bash
+#!/usr/bin/sh
+
 # COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 #

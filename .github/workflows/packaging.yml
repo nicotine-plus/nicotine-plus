@@ -36,14 +36,15 @@ jobs:
         run: |
           export ARCH=${{ matrix.arch }}
           pyinstaller files/windows/nicotine.spec
-          cd files/windows
-          makensis -DARCH=${{ matrix.arch }} nicotine.nsi
+          makensis -DARCH=${{ matrix.arch }} files/windows/nicotine.nsi
+          mkdir installer
+          cp -r files/windows/Nicotine*.exe installer/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v1
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: files/windows
+          path: installer
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v1
@@ -66,24 +67,14 @@ jobs:
       - name: Freeze application
         run: |
           pyinstaller files/macos/nicotine.spec
+          rm -rf dist/Nicotine+/
 
       - name: Generate .dmg
         run: |
-          mkdir dmg
-          cd dmg
-          create-dmg \
-            --volname "Nicotine+" \
-            "Nicotine+.dmg" \
-            "../dist/"
+          files/macos/create-dmg.sh
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v1
         with:
           name: macos-installer
           path: dmg
-
-      - name: Archive package artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: macos-package
-          path: dist

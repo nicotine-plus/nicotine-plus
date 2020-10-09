@@ -172,25 +172,39 @@ from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
 
 
-# Set our actual file limit to the OS's hard limit as a failsafe
-# If this limit is set too close to our artificial MAXFILELIMIT
-# limit, Nicotine+ will freak out due to too many open files
+""" Set the maximum number of open files to the hard limit reported by the OS.
+Our MAXSOCKETS value needs to be lower than the file limit, otherwise our open
+sockets in combination with other file activity can exceed the file limit,
+effectively halting the program. """
+
 if sys.platform == "win32":
 
-    # For Windows, FD_SETSIZE is set to 512 in Python
-    MAXFILELIMIT = int(512 * 0.9)
+    """ For Windows, FD_SETSIZE is set to 512 in the Python source.
+    This limit is hardcoded, so we'll have to live with it for now. """
+
+    MAXSOCKETS = int(512 * 0.9)
 else:
     import resource
-    softlimit, hardlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
+
+    if sys.platform == "darwin":
+
+        """ Maximum number of files a process can open is 10240 on macOS.
+        macOS reports INFINITE as hard limit, so we need this special case. """
+
+        maxfilelimit = 10240
+    else:
+        _softlimit, maxfilelimit = resource.getrlimit(resource.RLIMIT_NOFILE)
 
     try:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (hardlimit, hardlimit))
-    except Exception:
-        pass
+        resource.setrlimit(resource.RLIMIT_NOFILE, (maxfilelimit, maxfilelimit))
+    except Exception as e:
+        log.add_warning(_("Failed to set RLIMIT_NOFILE: %s") % e)
 
-    # Set our artificial file limit to prevent freezing the GUI
-    # The max is 1024, but can be lower if the hard limit is too low
-    MAXFILELIMIT = min(max(int(hardlimit * 0.75), 50), 1024)
+    """ Set the maximum number of open sockets to a lower value than the hard limit,
+    otherwise we just waste resources.
+    The maximum is 1024, but can be lower if the file limit is too low. """
+
+    MAXSOCKETS = min(max(int(maxfilelimit * 0.75), 50), 1024)
 
 
 class Connection:
@@ -894,7 +908,7 @@ class SlskProtoThread(threading.Thread):
         connection.close()
         del connection_list[connection]
 
-    def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXFILELIMIT):
+    def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXSOCKETS):
         """ Processes messages sent by UI thread. server_socket is a server connection
         socket object, queue holds the messages, conns and connsinprogress
         are dictionaries holding Connection and PeerConnectionInProgress
