@@ -38,8 +38,8 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
+from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.countrycodes import code2name
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 

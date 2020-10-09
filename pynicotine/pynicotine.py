@@ -1123,7 +1123,8 @@ class NetworkEventProcessor:
             del self.ipignore_requested[user]
             return
 
-        cc = self.geoip.get_all(msg.ip).country_short
+        ip_record = self.geoip.get_all(msg.ip)
+        cc = ip_record.country_short
 
         if cc == "-":
             cc = ""
@@ -1139,17 +1140,19 @@ class NetworkEventProcessor:
             return
 
         self.ip_requested.remove(user)
+        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, cc)
 
         if cc != "":
-            cc = " (%s)" % cc
+            country = " (%(cc)s / %(country)s)" % {'cc': cc, 'country': ip_record.country_long}
+        else:
+            country = ""
 
         log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
             'user': user,
             'ip': msg.ip,
             'port': msg.port,
-            'country': cc
+            'country': country
         })
-        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, cc)
 
     def relogged(self, msg):
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
