@@ -12,8 +12,8 @@
 
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE_3LINES
-!define MUI_ICON "nicotine-plus.ico"
-!define MUI_UNICON "nicotine-plus.ico"
+!define MUI_ICON "nicotine.ico"
+!define MUI_UNICON "nicotine.ico"
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\..\COPYING"

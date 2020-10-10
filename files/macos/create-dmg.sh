@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # COPYRIGHT (C) 2020 Nicotine+ Team
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -19,8 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Script needed because of this bug: https://bugs.python.org/issue644744
-python setup.py install --optimize=1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
+# Get directory of script
+DIR=$(cd "$(dirname "$0")"; pwd -P)
 
-# 'brp-compress' gzips the man pages without distutils knowing... fix this
-sed -i -e 's@man/man\([[:digit:]]\)/\(.\+\.[[:digit:]]\)$@man/man\1/\2.gz@g' INSTALLED_FILES
+mkdir dmg
+cd dmg
+create-dmg \
+    --volname "Nicotine+" \
+    --window-size 600 400 \
+    --app-drop-link 450 185 \
+    "Nicotine+.dmg" \
+    "$DIR/../../dist/"

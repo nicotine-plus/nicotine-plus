@@ -2696,7 +2696,7 @@ class NicotineFrame:
 
     def set_socket_status(self, status):
         self.SocketStatus.pop(self.socket_context_id)
-        self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXFILELIMIT})
+        self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
     def show_scan_progress(self, sharestype):
         if sharestype == "normal":

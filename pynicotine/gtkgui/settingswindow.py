@@ -147,7 +147,7 @@ class ServerFrame(BuildFrame):
             upnp = UPnPPortMapping()
 
             # Check if we can do a port mapping
-            (self.frame.upnppossible, errors) = upnp.IsPossible()
+            (self.frame.upnppossible, errors) = upnp.is_possible()
 
         if self.frame.upnppossible:
             # If we can do a port mapping the field is active

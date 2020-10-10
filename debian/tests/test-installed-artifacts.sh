@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Bail on any errors...
 set -e
