@@ -12,24 +12,24 @@ The current stable version of Nicotine+ is 2.1.1, released on 26 September 2020.
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
 
-### Ubuntu PPA (Stable)
-This repository also should work on Debian or any of its derivatives, provided dependencies can be satisfied. As an example Debian Buster works fine.
-
-To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable), run the following:
+### Ubuntu PPA/Debian (Stable)
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, run the following:
 
 ```console
 $ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:nicotine-team/stable
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
 $ sudo apt update
 $ sudo apt install nicotine
 ```
 
-### Ubuntu PPA (Unstable)
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). It currently contains bleeding edge packages for _Xenial_, _Bionic_, _Focal_, and _Groovy_. To use it, run the following:
+### Ubuntu PPA/Debian (Unstable)
+The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
 
 ```console
 $ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:nicotine-team/unstable
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
 $ sudo apt update
 $ sudo apt install nicotine
 ```
