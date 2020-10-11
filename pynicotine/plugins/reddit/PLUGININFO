@@ -1,4 +1,4 @@
-Version = "2015-08-02r05"
+Version = "2020-10-10r06"
 Authors = ['Mutnick']
 Name = "Reddit"
 Description = "Displays topics and links for a requested subreddit."

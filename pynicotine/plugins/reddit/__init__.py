@@ -1,3 +1,4 @@
+# COPYRIGHT (C) 2020 Nicotine+ Team
 # COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -15,16 +16,20 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-Requires feedparser
 
+"""
 Example uses:
 !reddit soulseek
 !reddit news/new
 !reddit news/top
 
 """
-import feedparser
+
+import http.client
+import json
+
+from itertools import islice
+
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import ResponseThrottle
 
@@ -48,13 +53,25 @@ class Plugin(BasePlugin):
         self.plugin_command = "!reddit"
         self.responder = ResponseThrottle(self.frame, self.__name__)
 
+    def get_feed(self, domain, path):
+        conn = http.client.HTTPSConnection(domain)
+        conn.request("GET", path, headers={"User-Agent": "Nicotine+"})
+        response = json.loads(conn.getresponse().read().decode("utf-8"))
+
+        return response
+
     def IncomingPublicChatEvent(self, room, nick, line):  # noqa
         line = line.lower().strip()
+
         if line.startswith(self.plugin_command) and (" " in line):
             subreddit = line.split(" ")[1].strip("/")
+
             if self.responder.ok_to_respond(room, nick, subreddit):
-                posts = feedparser.parse('https://www.reddit.com/r/' + subreddit + '/.rss')
-                if posts.entries:
+                response = self.get_feed('www.reddit.com', '/r/' + subreddit + '/.json')
+
+                if response:
                     self.responder.responded()
-                    for post in posts.entries[0:self.settings['reddit_links']]:
-                        self.saypublic(room, "/me {}: {}".format(post.title, post.link))
+
+                    for post in islice(response['data']['children'], self.settings['reddit_links']):
+                        post_data = post['data']
+                        self.saypublic(room, "/me {}: {}".format(post_data['title'], post_data['url']))
