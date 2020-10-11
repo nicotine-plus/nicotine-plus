@@ -1,40 +1,67 @@
 # Soulseek Protocol Documentation
 
-Last updated on 28 September 2020
+Last updated on 11 October 2020
 
 ## Sections
 
 - [Packing](#packing)
+- [Constants](#constants)
 - [Server Messages](#server-messages)
 - [Peer Messages](#peer-messages)
 - [Distributed Messages](#distributed-messages)
 - [Museek Data Types](#museek-data-types)
 
-## Packing
+# Packing
 
-String
+### String
 
 | Length of String | String |
 | ---------------- | ------ |
 | 4 Byte           | String |
 
-Integer (unsigned)
+### Integer
 
 | Number |
 | ------ |
 | 4 Byte |
 
-Large Integer (64bits for file sizes)
+### Large Integer
 
 | Number |
 | ------ |
 | 8 Byte |
 
-Bool
+### Bool
 
 | Character |
 | --------- |
 | 1 Byte    |
+
+# Constants
+
+### Connection Types
+
+| Type | Connection          |
+| ---- | ------------------- |
+| P    | Peer To Peer        |
+| F    | File Transfer       |
+| D    | Distributed Network |
+
+### Status Codes
+
+| Code | Status  |
+| ---- | ------- |
+| -1   | Unknown |
+| 0    | Offline |
+| 1    | Away    |
+| 2    | Online  |
+
+### Transfer Direction
+
+| Code | Type     |
+| ---- | -------- |
+| 0    | Download |
+| 1    | Upload   |
 
 # Server Messages
 
@@ -2924,7 +2951,7 @@ Nicotine: UploadQueueNotification
   - Receive
       - *Empty Message*
 
-## Distributed Messages
+# Distributed Messages
 
 | Send    | Send to Node      |
 | ------- | ----------------- |
@@ -3091,7 +3118,7 @@ Nicotine: DistribServerSearch
     3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
-## Museek Data Types
+# Museek Data Types
 
 ### StringMap
 
