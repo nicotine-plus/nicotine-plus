@@ -586,7 +586,11 @@ class Shares:
             else:
                 size = os.stat(pathname).st_size
 
-            if size > 0:
+            if size > 128:
+                """ On some operating systems, TagLib might crash when scanning files
+                with truncated headers. We skip metadata scanning of files without
+                meaningful content to work around this issue. """
+
                 try:
                     audio = taglib.File(pathname)
                 except IOError:
