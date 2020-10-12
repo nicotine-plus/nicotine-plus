@@ -109,10 +109,10 @@ class NicotineFrame:
         try:
             # Spell checking support
             gi.require_version('Gspell', '1')
-            from gi.repository import Gspell  # noqa: F401
-            self.gspell = True
+            from gi.repository import Gspell
+            self.spell_checker = Gspell.Checker.new()
         except (ImportError, ValueError):
-            self.gspell = False
+            self.spell_checker = None
 
         self.np = NetworkEventProcessor(
             self,
