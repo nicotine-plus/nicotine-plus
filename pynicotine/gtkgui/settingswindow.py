@@ -2867,7 +2867,7 @@ class CompletionFrame(BuildFrame):
     def set_settings(self, config):
         self.needcompletion = 0
 
-        self.SpellCheck.set_sensitive(self.frame.gspell)
+        self.SpellCheck.set_sensitive(True if self.frame.spell_checker else False)
 
         self.p.set_widgets_data(config, self.options)
 

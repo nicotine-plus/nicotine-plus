@@ -786,10 +786,10 @@ class ChatRoom:
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
         # Spell Check
-        if self.frame.gspell and self.frame.np.config.sections["ui"]["spellcheck"]:
+        if self.frame.spell_checker and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
-            spell_buffer.set_spell_checker(Gspell.Checker.new())
+            spell_buffer.set_spell_checker(self.frame.spell_checker)
             spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatEntry)
             spell_view.set_inline_spell_checking(True)
 
