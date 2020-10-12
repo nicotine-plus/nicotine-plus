@@ -3,6 +3,26 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 2.1.2 (12 October 2020)
+-----------------------------
+
+Changes
+
+ * Contents of a shared folder are now properly sent to other users
+ * Improved performance and memory usage when scanning shares
+ * Large memory usage reductions when many rooms and private chats are open
+ * Sharing downloaded files now works properly
+ * Private messages sent while the user was offline are shown separately from new messages
+ * Added transfer speeds and shortcuts to downloads/uploads in the tray
+ * Multiple under-the-hood code improvements and code style changes
+
+Issues closed on GitHub
+
+ * Improve code style/consistency ([#377](https://github.com/Nicotine-Plus/nicotine-plus/issues/377))
+ * debian packages ([#530](https://github.com/Nicotine-Plus/nicotine-plus/issues/530))
+ * running from source - missing reqs ([#531](https://github.com/Nicotine-Plus/nicotine-plus/issues/531))
+ * SIGABRT when scanning corrupt/empty FLAC file ([#730](https://github.com/Nicotine-Plus/nicotine-plus/issues/730))
+
 Version 2.1.1 (26 September 2020)
 -----------------------------
 

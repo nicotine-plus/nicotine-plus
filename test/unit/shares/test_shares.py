@@ -19,6 +19,8 @@
 import os
 import queue
 
+from time import sleep
+
 from pynicotine.shares import Shares
 from pynicotine.config import Config
 
@@ -54,6 +56,9 @@ def test_shares_scan():
     # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
     assert ogg_indexes[0] in nicotinetestdata_indexes
     assert config.sections["transfers"]["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
+
+    # Slight delay to ensure shares compression finishes in different thread
+    sleep(4)
 
     # Verify that dbs are cleared
     shares.clear_shares()
