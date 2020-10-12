@@ -24,6 +24,11 @@ mathiascode
 - Developer
 - [mail(at)mathias(dot)is]
 
+Han Boetes
+- Tester
+- Documentation
+- Bug hunting
+
 ### Retired
 
 daelstorm
