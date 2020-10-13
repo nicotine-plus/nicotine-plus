@@ -29,7 +29,6 @@ brew install \
   gobject-introspection \
   gspell \
   gtk+3 \
-  libnotify \
   librsvg \
   pygobject3 \
   taglib \

@@ -3126,21 +3126,6 @@ class NotificationsFrame(BuildFrame):
 
     def set_settings(self, config):
 
-        if self.frame.notifications.notification_provider is not None:
-            self.NotificationPopupSound.set_sensitive(True)
-            self.NotificationPopupFile.set_sensitive(True)
-            self.NotificationPopupFolder.set_sensitive(True)
-            self.NotificationPopupPrivateMessage.set_sensitive(True)
-            self.NotificationPopupChatroom.set_sensitive(True)
-            self.NotificationPopupChatroomMention.set_sensitive(True)
-        else:
-            self.NotificationPopupSound.set_sensitive(False)
-            self.NotificationPopupFile.set_sensitive(False)
-            self.NotificationPopupFolder.set_sensitive(False)
-            self.NotificationPopupPrivateMessage.set_sensitive(False)
-            self.NotificationPopupChatroom.set_sensitive(False)
-            self.NotificationPopupChatroomMention.set_sensitive(False)
-
         self.p.set_widgets_data(config, self.options)
 
     def get_settings(self):

@@ -378,7 +378,7 @@ class Config:
                 "notification_window_title": True,
                 "notification_tab_colors": False,
                 "notification_tab_icons": True,
-                "notification_popup_sound": True,
+                "notification_popup_sound": False,
                 "notification_popup_file": True,
                 "notification_popup_folder": True,
                 "notification_popup_private_message": True,
