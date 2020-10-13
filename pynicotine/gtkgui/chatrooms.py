@@ -236,8 +236,11 @@ class RoomsControl:
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not force:
             return
 
+        # page is None?
+        new_page = notebook.get_nth_page(page_num)
+
         for name, room in self.joinedrooms.items():
-            if room.Main == page:
+            if room.Main == new_page:
                 GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
