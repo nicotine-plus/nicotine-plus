@@ -48,6 +48,7 @@ from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
+from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.privatechat import PrivateChats
@@ -62,7 +63,6 @@ from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import BuddiesComboBox
-from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import open_uri
@@ -197,6 +197,8 @@ class NicotineFrame:
         self.MainWindow.connect("motion-notify-event", self.on_button_press)
 
         self.roomlist = RoomList(self)
+        self.interests = Interests(self, self.np)
+        self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
 
         # Disable a few elements until we're logged in (search field, download buttons etc.)
         self.set_widget_online_status(False)
@@ -245,17 +247,6 @@ class NicotineFrame:
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy.set_sensitive(False)
             self.browse_buddy_shares.set_sensitive(False)
-
-        """ Interests """
-
-        # for iterating buddy changes to the combos
-        self.create_recommendations_widgets()
-
-        for thing in config["interests"]["likes"]:
-            self.likes[thing] = self.likes_model.append([thing])
-
-        for thing in config["interests"]["dislikes"]:
-            self.dislikes[thing] = self.dislikes_model.append([thing])
 
         """ Notebooks """
 
@@ -330,7 +321,7 @@ class NicotineFrame:
 
             label_tab.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[label_tab])
 
-            self.__dict__[eventbox_name + "Menu"] = popup = utils.PopupMenu(self)
+            self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
 
             popup.setup(
                 (
@@ -580,7 +571,7 @@ class NicotineFrame:
         if msg.banner != "":
             append_line(self.LogWindow, msg.banner, self.tag_log)
 
-        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist
+        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist, self.interests
 
     def load_icons(self):
         self.images = {}
@@ -710,9 +701,9 @@ class NicotineFrame:
         self.SearchEntryCombo.set_sensitive(status)
 
         self.SearchButton.set_sensitive(status)
-        self.SimilarUsersButton.set_sensitive(status)
-        self.GlobalRecommendationsButton.set_sensitive(status)
-        self.RecommendationsButton.set_sensitive(status)
+        self.interests.SimilarUsersButton.set_sensitive(status)
+        self.interests.GlobalRecommendationsButton.set_sensitive(status)
+        self.interests.RecommendationsButton.set_sensitive(status)
 
         self.DownloadButtons.set_sensitive(status)
         self.UploadButtons.set_sensitive(status)
@@ -1257,6 +1248,20 @@ class NicotineFrame:
         else:
             main_notebook.set_show_tabs(True)
 
+    def on_key_press(self, widget, event):
+        self.on_button_press(None, None)
+
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
+            return False
+
+        for i in range(1, 10):
+            if event.keyval == Gdk.keyval_from_name(str(i)):
+                self.MainNotebook.set_current_page(i - 1)
+                widget.stop_emission_by_name("key_press_event")
+                return True
+
+        return False
+
     def set_main_tabs_order(self):
         tabs = self.np.config.sections["ui"]["modes_order"]
         order = 0
@@ -1448,408 +1453,6 @@ class NicotineFrame:
         else:
             self.show_tab(widget, [tab, child])
 
-    """ Interests """
-
-    def create_recommendations_widgets(self):
-
-        self.likes = {}
-        self.likes_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        cols = utils.initialise_columns(
-            self.LikesList,
-            [_("I like") + ":", 0, "text", self.cell_data_func]
-        )
-
-        cols[0].set_sort_column_id(0)
-        self.LikesList.set_model(self.likes_model)
-
-        self.til_popup_menu = popup = utils.PopupMenu(self)
-
-        popup.setup(
-            ("#" + _("_Remove this item"), self.on_remove_thing_i_like),
-            ("#" + _("Re_commendations for this item"), self.on_recommend_item),
-            ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
-        )
-
-        self.LikesList.connect("button_press_event", self.on_popup_til_menu)
-
-        self.dislikes = {}
-        self.dislikes_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        cols = utils.initialise_columns(
-            self.DislikesList,
-            [_("I dislike") + ":", 0, "text", self.cell_data_func]
-        )
-
-        cols[0].set_sort_column_id(0)
-        self.DislikesList.set_model(self.dislikes_model)
-
-        self.tidl_popup_menu = popup = utils.PopupMenu(self)
-
-        popup.setup(
-            ("#" + _("_Remove this item"), self.on_remove_thing_i_dislike),
-            ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
-        )
-
-        self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
-
-        cols = utils.initialise_columns(
-            self.RecommendationsList,
-            [_("Item"), 0, "text", self.cell_data_func],
-            [_("Rating"), 75, "text", self.cell_data_func]
-        )
-
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(2)
-
-        self.recommendations_model = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_INT
-        )
-        self.RecommendationsList.set_model(self.recommendations_model)
-
-        self.r_popup_menu = popup = utils.PopupMenu(self)
-
-        popup.setup(
-            ("$" + _("I _like this"), self.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
-            ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
-        )
-
-        self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
-
-        cols = utils.initialise_columns(
-            self.UnrecommendationsList,
-            [_("Item"), 0, "text", self.cell_data_func],
-            [_("Rating"), 75, "text", self.cell_data_func]
-        )
-
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(2)
-
-        self.unrecommendations_model = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_INT
-        )
-        self.UnrecommendationsList.set_model(self.unrecommendations_model)
-
-        self.ur_popup_menu = popup = utils.PopupMenu(self)
-
-        popup.setup(
-            ("$" + _("I _like this"), self.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
-            ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
-        )
-
-        self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
-
-        statusiconwidth = self.images["offline"].get_width() + 4
-
-        cols = utils.initialise_columns(
-            self.RecommendationUsersList,
-            ["", statusiconwidth, "pixbuf"],
-            [_("User"), 100, "text", self.cell_data_func],
-            [_("Speed"), 0, "text", self.cell_data_func],
-            [_("Files"), 0, "text", self.cell_data_func],
-        )
-
-        cols[0].set_sort_column_id(4)
-        cols[1].set_sort_column_id(1)
-        cols[2].set_sort_column_id(5)
-        cols[3].set_sort_column_id(6)
-
-        self.recommendation_users = {}
-        self.recommendation_users_model = Gtk.ListStore(
-            GObject.TYPE_OBJECT,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_INT,
-            GObject.TYPE_INT,
-            GObject.TYPE_INT
-        )
-        self.RecommendationUsersList.set_model(self.recommendation_users_model)
-        self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
-
-        self.ru_popup_menu = popup = utils.PopupMenu(self)
-        popup.setup(
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("", None),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("", None),
-            ("$" + _("_Add user to list"), popup.on_add_to_list),
-            ("$" + _("_Ban this user"), popup.on_ban_user),
-            ("$" + _("_Ignore this user"), popup.on_ignore_user)
-        )
-
-        self.RecommendationUsersList.connect("button_press_event", self.on_popup_ru_menu)
-
-    def on_add_thing_i_like(self, widget):
-        thing = self.AddLikeEntry.get_text()
-        self.AddLikeEntry.set_text("")
-
-        if thing and thing.lower() not in self.np.config.sections["interests"]["likes"]:
-            thing = thing.lower()
-            self.np.config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likes_model.append([thing])
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingILike(thing))
-
-    def on_add_thing_i_dislike(self, widget):
-        thing = self.AddDislikeEntry.get_text()
-        self.AddDislikeEntry.set_text("")
-
-        if thing and thing.lower() not in self.np.config.sections["interests"]["dislikes"]:
-            thing = thing.lower()
-            self.np.config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikes_model.append([thing])
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingIHate(thing))
-
-    def set_recommendations(self, title, recom):
-        self.recommendations_model.clear()
-
-        for (thing, rating) in recom.items():
-            self.recommendations_model.append([thing, humanize(rating), rating])
-
-        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
-
-    def set_unrecommendations(self, title, recom):
-        self.unrecommendations_model.clear()
-
-        for (thing, rating) in recom.items():
-            self.unrecommendations_model.append([thing, humanize(rating), rating])
-
-        self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-
-    def global_recommendations(self, msg):
-        self.set_recommendations("Global recommendations", msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
-
-    def recommendations(self, msg):
-        self.set_recommendations("Recommendations", msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
-
-    def item_recommendations(self, msg):
-        self.set_recommendations(_("Recommendations for %s") % msg.thing, msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
-
-    def on_global_recommendations_clicked(self, widget):
-        self.np.queue.put(slskmessages.GlobalRecommendations())
-
-    def on_recommendations_clicked(self, widget):
-        self.np.queue.put(slskmessages.Recommendations())
-
-    def on_similar_users_clicked(self, widget):
-        self.np.queue.put(slskmessages.SimilarUsers())
-
-    def similar_users(self, msg):
-        self.recommendation_users_model.clear()
-        self.recommendation_users = {}
-
-        for user in msg.users:
-            iterator = self.recommendation_users_model.append([self.images["offline"], user, "0", "0", 0, 0, 0])
-            self.recommendation_users[user] = iterator
-            self.np.queue.put(slskmessages.AddUser(user))
-
-    def get_user_status(self, msg):
-        if msg.user not in self.recommendation_users:
-            return
-
-        img = self.get_status_image(msg.status)
-        self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, img, 4, msg.status)
-
-    def get_user_stats(self, msg):
-        if msg.user not in self.recommendation_users:
-            return
-
-        self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
-
-    def on_popup_ru_menu(self, widget, event):
-        items = self.ru_popup_menu.get_children()
-        d = self.RecommendationUsersList.get_path_at_pos(int(event.x), int(event.y))
-
-        if not d:
-            return
-
-        path, column, x, y = d
-        user = self.recommendation_users_model.get_value(self.recommendation_users_model.get_iter(path), 1)
-
-        if event.button != 3:
-            if event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.privatechats.send_message(user)
-                self.change_main_page(None, "private")
-            return
-
-        self.ru_popup_menu.set_user(user)
-        items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
-        items[8].set_active(user in self.np.config.sections["server"]["banlist"])
-        items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
-
-        self.ru_popup_menu.popup(None, None, None, None, event.button, event.time)
-
-    def on_remove_thing_i_like(self, widget):
-        thing = self.til_popup_menu.get_user()
-
-        if thing not in self.np.config.sections["interests"]["likes"]:
-            return
-
-        self.likes_model.remove(self.likes[thing])
-        del self.likes[thing]
-        self.np.config.sections["interests"]["likes"].remove(thing)
-
-        self.np.config.write_configuration()
-        self.np.queue.put(slskmessages.RemoveThingILike(thing))
-
-    def on_recommend_item(self, widget):
-        thing = self.til_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(thing))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
-
-    def on_popup_til_menu(self, widget, event):
-        if event.button != 3:
-            return
-
-        d = self.LikesList.get_path_at_pos(int(event.x), int(event.y))
-
-        if not d:
-            return
-
-        path, column, x, y = d
-        iterator = self.likes_model.get_iter(path)
-        thing = self.likes_model.get_value(iterator, 0)
-
-        self.til_popup_menu.set_user(thing)
-        self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
-
-    def on_remove_thing_i_dislike(self, widget):
-        thing = self.tidl_popup_menu.get_user()
-
-        if thing not in self.np.config.sections["interests"]["dislikes"]:
-            return
-
-        self.dislikes_model.remove(self.dislikes[thing])
-        del self.dislikes[thing]
-        self.np.config.sections["interests"]["dislikes"].remove(thing)
-
-        self.np.config.write_configuration()
-        self.np.queue.put(slskmessages.RemoveThingIHate(thing))
-
-    def on_popup_tidl_menu(self, widget, event):
-        if event.button != 3:
-            return
-
-        d = self.DislikesList.get_path_at_pos(int(event.x), int(event.y))
-
-        if not d:
-            return
-
-        path, column, x, y = d
-        iterator = self.dislikes_model.get_iter(path)
-        thing = self.dislikes_model.get_value(iterator, 0)
-
-        self.tidl_popup_menu.set_user(thing)
-        self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
-
-    def on_like_recommendation(self, widget):
-        thing = widget.get_parent().get_user()
-
-        if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
-            self.np.config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likes_model.append([thing])
-
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingILike(thing))
-
-        elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
-            self.likes_model.remove(self.likes[thing])
-            del self.likes[thing]
-            self.np.config.sections["interests"]["likes"].remove(thing)
-
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.RemoveThingILike(thing))
-
-    def on_dislike_recommendation(self, widget):
-        thing = widget.get_parent().get_user()
-
-        if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
-            self.np.config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikes_model.append([thing])
-
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingIHate(thing))
-
-        elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
-            self.dislikes_model.remove(self.dislikes[thing])
-            del self.dislikes[thing]
-            self.np.config.sections["interests"]["dislikes"].remove(thing)
-
-            self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.RemoveThingIHate(thing))
-
-    def on_recommend_recommendation(self, widget):
-        thing = self.r_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(thing))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
-
-    def on_recommend_search(self, widget):
-        thing = widget.get_parent().get_user()
-        self.search_entry.set_text(thing)
-        self.change_main_page(None, "search")
-
-    def on_popup_r_menu(self, widget, event):
-        if event.button != 3:
-            return
-
-        d = self.RecommendationsList.get_path_at_pos(int(event.x), int(event.y))
-
-        if not d:
-            return
-
-        path, column, x, y = d
-        iterator = self.recommendations_model.get_iter(path)
-        thing = self.recommendations_model.get_value(iterator, 0)
-        items = self.r_popup_menu.get_children()
-
-        self.r_popup_menu.set_user(thing)
-        items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
-
-        self.r_popup_menu.popup(None, None, None, None, event.button, event.time)
-
-    def on_popup_un_rec_menu(self, widget, event):
-        if event.button != 3:
-            return
-
-        d = self.UnrecommendationsList.get_path_at_pos(int(event.x), int(event.y))
-
-        if not d:
-            return
-
-        path, column, x, y = d
-        iterator = self.unrecommendations_model.get_iter(path)
-        thing = self.unrecommendations_model.get_value(iterator, 0)
-        items = self.ur_popup_menu.get_children()
-
-        self.ur_popup_menu.set_user(thing)
-        items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
-
-        self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
-
     """ Fonts and Colors """
 
     def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
@@ -1882,11 +1485,11 @@ class NicotineFrame:
 
         for listview in [
             self.userlist.UserListTree,
-            self.RecommendationsList,
-            self.UnrecommendationsList,
-            self.RecommendationUsersList,
-            self.LikesList,
-            self.DislikesList,
+            self.interests.RecommendationsList,
+            self.interests.UnrecommendationsList,
+            self.interests.RecommendationUsersList,
+            self.interests.LikesList,
+            self.interests.DislikesList,
             self.roomlist.RoomsList
         ]:
             self.change_list_font(listview, self.np.config.sections["ui"]["listfont"])
@@ -1895,8 +1498,8 @@ class NicotineFrame:
         self.set_text_bg(self.UserInfoCombo.get_child())
         self.set_text_bg(self.UserBrowseCombo.get_child())
         self.set_text_bg(self.search_entry)
-        self.set_text_bg(self.AddLikeEntry)
-        self.set_text_bg(self.AddDislikeEntry)
+        self.set_text_bg(self.interests.AddLikeEntry)
+        self.set_text_bg(self.interests.AddDislikeEntry)
 
     def set_text_bg(self, widget, bgcolor="", fgcolor=""):
         if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
@@ -2063,6 +1666,42 @@ class NicotineFrame:
             return
         self.local_user_info_request(text)
         self.UserInfoCombo.get_child().set_text("")
+
+    def local_user_info_request(self, user):
+        # Hack for local userinfo requests, for extra security
+        if user == self.np.config.sections["server"]["login"]:
+            try:
+                if self.np.config.sections["userinfo"]["pic"] != "":
+                    userpic = self.np.config.sections["userinfo"]["pic"]
+                    if os.path.exists(userpic):
+                        has_pic = True
+                        with open(userpic, 'rb') as f:
+                            pic = f.read()
+                    else:
+                        has_pic = False
+                        pic = None
+                else:
+                    has_pic = False
+                    pic = None
+            except Exception:
+                pic = None
+
+            descr = unescape(self.np.config.sections["userinfo"]["descr"])
+
+            if self.np.transfers is not None:
+
+                totalupl = self.np.transfers.get_total_uploads_allowed()
+                queuesize = self.np.transfers.get_upload_queue_sizes()[0]
+                slotsavail = self.np.transfers.allow_new_uploads()
+                ua = self.np.config.sections["transfers"]["remotedownloads"]
+                if ua:
+                    uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
+                else:
+                    uploadallowed = ua
+                self.userinfo.show_local_info(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
+
+        else:
+            self.np.process_request_to_peer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
     """ User Browse """
 
@@ -2393,38 +2032,9 @@ class NicotineFrame:
 
     """ Various """
 
-    def button_press(self, widget, event):
-        try:
-
-            if event.type == Gdk.EventType.BUTTON_PRESS:
-                widget.popup(None, None, None, None, event.button, event.time)
-
-                # Tell calling code that we have handled this event the buck
-                # stops here.
-                return True
-                # Tell calling code that we have not handled this event pass it on.
-            return False
-
-        except Exception as e:
-            log.add_warning(_("button_press error, %(error)s"), {'error': e})
-
     def buddies_combos_fill(self, nothing):
         for widget in self.buddies_combo_entries:
             GLib.idle_add(widget.fill)
-
-    def on_key_press(self, widget, event):
-        self.on_button_press(None, None)
-
-        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
-            return False
-
-        for i in range(1, 10):
-            if event.keyval == Gdk.keyval_from_name(str(i)):
-                self.MainNotebook.set_current_page(i - 1)
-                widget.stop_emission_by_name("key_press_event")
-                return True
-
-        return False
 
     def get_status_image(self, status):
         if status == 1:
@@ -2532,45 +2142,6 @@ class NicotineFrame:
     def set_clipboard_url(self, user, path):
         self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
         self.clip_data = "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
-
-    def on_selection_get(self, widget, data, info, timestamp):
-        data.set_text(self.clip_data, -1)
-
-    def local_user_info_request(self, user):
-        # Hack for local userinfo requests, for extra security
-        if user == self.np.config.sections["server"]["login"]:
-            try:
-                if self.np.config.sections["userinfo"]["pic"] != "":
-                    userpic = self.np.config.sections["userinfo"]["pic"]
-                    if os.path.exists(userpic):
-                        has_pic = True
-                        with open(userpic, 'rb') as f:
-                            pic = f.read()
-                    else:
-                        has_pic = False
-                        pic = None
-                else:
-                    has_pic = False
-                    pic = None
-            except Exception:
-                pic = None
-
-            descr = unescape(self.np.config.sections["userinfo"]["descr"])
-
-            if self.np.transfers is not None:
-
-                totalupl = self.np.transfers.get_total_uploads_allowed()
-                queuesize = self.np.transfers.get_upload_queue_sizes()[0]
-                slotsavail = self.np.transfers.allow_new_uploads()
-                ua = self.np.config.sections["transfers"]["remotedownloads"]
-                if ua:
-                    uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
-                else:
-                    uploadallowed = ua
-                self.userinfo.show_local_info(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
-
-        else:
-            self.np.process_request_to_peer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
     """ Log Window """
 
