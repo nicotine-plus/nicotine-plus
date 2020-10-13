@@ -22,8 +22,6 @@
 
 import copy
 import os
-import re
-import sys
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -125,22 +123,10 @@ class NowPlaying:
 
     def set_player(self, player):
 
-        if player == "amarok":
-            self.NP_amarok.set_active(1)
-        elif player == "audacious":
-            self.NP_audacious.set_active(1)
-        elif player == "mpd":
-            self.NP_mpd.set_active(1)
-        elif player == "exaile":
-            self.NP_exaile.set_active(1)
-        elif player == "lastfm":
+        if player == "lastfm":
             self.NP_lastfm.set_active(1)
-        elif player == "foobar":
-            self.NP_foobar.set_active(1)
         elif player == "mpris":
             self.NP_mpris.set_active(1)
-        elif player == "xmms2":
-            self.NP_xmms2.set_active(1)
         elif player == "other":
             self.NP_other.set_active(1)
             self.player_replacers = ["$n"]
@@ -151,25 +137,13 @@ class NowPlaying:
 
         isset = False
 
-        if self.NP_mpd.get_active():
-            self.player_replacers = ["$n", "$t", "$a", "$b", "$f", "$k"]
-            isset = True
-        elif self.NP_amarok.get_active() or self.NP_audacious.get_active() or self.NP_xmms2.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b", "$c", "$k", "$y", "$r", "$f"]
-            isset = True
-        elif self.NP_exaile.get_active():
-            self.player_replacers = ["$n", "$t", "$l", "$a", "$b"]
-            isset = True
-        elif self.NP_lastfm.get_active():
+        if self.NP_lastfm.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
             self.player_input.set_text(_("Username;APIKEY :"))
             isset = True
-        elif self.NP_foobar.get_active():
-            self.player_replacers = ["$n"]
-            isset = True
         elif self.NP_mpris.get_active():
-            self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$c", "$r", "$k", "$l"]
-            self.player_input.set_text(_("Client name (empty = auto) :"))
+            self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
+            self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
             isset = True
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
@@ -218,6 +192,9 @@ class NowPlaying:
     def on_np_cancel(self, widget):
         self.quit(None)
 
+    def show(self):
+        self.now_playing_dialog.show()
+
     def quit(self, widget, s=None):
 
         # Save new defined formats in npformatlist before exiting
@@ -250,20 +227,8 @@ class NowPlaying:
 
         try:
 
-            if self.NP_amarok.get_active():
-                result = self.amarok()
-            elif self.NP_audacious.get_active():
-                result = self.audacious()
-            elif self.NP_mpd.get_active():
-                result = self.mpd()
-            elif self.NP_exaile.get_active():
-                result = self.exaile()
-            elif self.NP_lastfm.get_active():
+            if self.NP_lastfm.get_active():
                 result = self.lastfm()
-            elif self.NP_foobar.get_active():
-                result = self.foobar()
-            elif self.NP_xmms2.get_active():
-                result = self.xmms2()
             elif self.NP_other.get_active():
                 result = self.other()
             elif self.NP_mpris.get_active():
@@ -317,22 +282,10 @@ class NowPlaying:
 
     def on_np_save(self, widget):
 
-        if self.NP_amarok.get_active():
-            player = "amarok"
-        elif self.NP_audacious.get_active():
-            player = "audacious"
-        elif self.NP_mpd.get_active():
-            player = "mpd"
-        elif self.NP_exaile.get_active():
-            player = "exaile"
-        elif self.NP_lastfm.get_active():
+        if self.NP_lastfm.get_active():
             player = "lastfm"
-        elif self.NP_foobar.get_active():
-            player = "foobar"
         elif self.NP_mpris.get_active():
             player = "mpris"
-        elif self.NP_xmms2.get_active():
-            player = "xmms2"
         elif self.NP_other.get_active():
             player = "other"
 
@@ -343,154 +296,41 @@ class NowPlaying:
 
         self.quit(None)
 
-    def mpd(self):
+    def lastfm(self):
+        """ Function to get the last song played via lastfm api """
 
-        np_format = self.NPFormat.get_child().get_text()
-
-        if "$a" in np_format:
-            output = self.mpd_command("%artist%")
-            if output:
-                self.title["artist"] = output
-
-        if "$t" in np_format:
-            output = self.mpd_command("%title%")
-            if output:
-                self.title["title"] = output
-
-        if "$n" in np_format:
-            output = self.mpd_command("%artist% - %title%")
-            if output:
-                self.title["nowplaying"] = output
-
-        if "$f" in np_format:
-            output = self.mpd_command("%file%")
-            if output:
-                self.title["filename"] = output
-
-        if "$b" in np_format:
-            output = self.mpd_command("%album%")
-            if output:
-                self.title["album"] = output
-
-        return True
-
-    def mpd_command(self, command):
-
-        output = execute_command("mpc --format $", command, returnoutput=True).decode().split('\n')[0]
-
-        if output == '' or output.startswith("MPD_HOST") or output.startswith("volume: "):
-            return None
-
-        return output
-
-    def amarok(self):
-        """ Function to get amarok currently playing song """
+        import http.client
+        import json
 
         try:
-            import dbus
-            import dbus.glib
-        except ImportError as error:
-            log.add_warning(_("ERROR: amarok: failed to load dbus module: %(error)s"), {"error": error})
+            conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
+        except Exception as error:
+            log.add_warning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
-        self.bus = dbus.SessionBus()
-
-        player = self.bus.get_object('org.mpris.amarok', '/Player')
-        md = player.GetMetadata()
-
-        for key, value in md.items():
-
-            if key == 'mtime':
-                # Convert seconds to minutes:seconds
-                value = float(value) / 1000
-                m, s = divmod(value, 60)
-                self.title['length'] = "%d:%02d" % (m, s)
-            elif key == 'audio-bitrate':
-                self.title['bitrate'] = value
-            elif key == "location":
-                self.title['filename']
-            else:
-                self.title[key] = value
-
-            self.title['nowplaying'] = self.title['artist'] + ' - ' + self.title['title']
-
-        return True
-
-    def audacious(self):
-        """ Function to get audacious currently playing song """
-
-        slist = self.NPFormat.get_child().get_text()
-        output = ""
-        self.audacious_running = True
-
-        if "$n" in slist:
-            artist = self.audacious_command('current-song-tuple-data', 'artist') or "?"
-            title = self.audacious_command('current-song-tuple-data', 'title')
-            if artist and title:
-                self.title["nowplaying"] = artist + ' - ' + title
-
-        if "$t" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'title')
-            if output:
-                self.title["title"] = output
-
-        if "$l" in slist:
-            output = self.audacious_command('current-song-length')
-            if output:
-                self.title["length"] = output
-
-        if "$a" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'artist')
-            if output:
-                self.title["artist"] = output
-
-        if "$b" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'album')
-            if output:
-                self.title["album"] = output
-
-        if "$c" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'comment')
-            if output:
-                self.title["comment"] = output
-
-        if "$k" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'track-number')
-            if output:
-                self.title["track"] = output
-
-        if "$y" in slist:
-            output = self.audacious_command('current-song-tuple-data', 'year')
-            if output and not output == "0":
-                self.title["year"] = output
-
-        if "$r" in slist:
-            output = self.audacious_command('current-song-bitrate-kbps')
-            if output:
-                self.title["bitrate"] = output
-
-        if "$f" in slist:
-            path = self.audacious_command('current-song-filename')  # noqa: F841
-
-        if not self.audacious_running:
-            log.add_warning(_("ERROR: audacious: audtool didn't detect a running Audacious session."))
-            return False
-
-        return True
-
-    def audacious_command(self, command, subcommand=''):
-        """ Wrapper that calls audacious commandline audtool and parse the output """
-
         try:
-            output = execute_command("audtool %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
-        except RuntimeError:
-            output = execute_command("audtool2 %s %s" % (command, subcommand), returnoutput=True).decode().split('\n')[0]
+            (user, apikey) = self.NPCommand.get_text().split(';')
+        except ValueError:
+            log.add_warning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
+            return None
 
-        if output.startswith('audtool'):
-            output = None
-            self.audacious_running = False
+        conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json", headers={"User-Agent": "Nicotine+"})
+        resp = conn.getresponse()
+        data = resp.read().decode("utf-8")
 
-        return output
+        if resp.status != 200 or resp.reason != "OK":
+            log.add_warning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"), {"error": str(data)})
+            return None
+
+        json_api = json.loads(data)
+        lastplayed = json_api["recenttracks"]["track"][0]
+
+        self.title["artist"] = lastplayed["artist"]["#text"]
+        self.title["title"] = lastplayed["name"]
+        self.title["album"] = lastplayed["album"]["#text"]
+        self.title["nowplaying"] = "%s: %s - %s - %s" % (_("Last played"), self.title["artist"], self.title["album"], self.title["title"])
+
+        return True
 
     def mpris(self):
         """ Function to get the currently playing song via dbus mpris v2 interface """
@@ -551,8 +391,10 @@ class NowPlaying:
         mapping = [
             ('xesam:title', 'title'),
             ('xesam:album', 'album'),
+            ('xesam:contentCreated', 'year'),
             ('xesam:comment', 'comment'),
             ('xesam:audioBitrate', 'bitrate'),
+            ('xesam:url', 'filename'),
             ('xesak:trackNumber', 'track')
         ]
 
@@ -564,7 +406,7 @@ class NowPlaying:
 
         # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            self.title['length'] = self.get_length_time(metadata['mpris:length'] / 1000000)
+            self.title['length'] = self.get_length_time(metadata['mpris:length'] // 1000000)
         except KeyError:
             self.title['length'] = '?'
 
@@ -576,46 +418,12 @@ class NowPlaying:
 
         return True
 
-    def foobar(self):
-        """ Function to get foobar currently playing song on windows """
-
-        if sys.platform == "win32":
-            try:
-                from win32gui import GetWindowText, FindWindow
-            except ImportError as error:
-                log.add_warning(_("ERROR: foobar: failed to load win32gui module: %(error)s"), {"error": error})
-                return None
-        else:
-            log.add_warning(_("ERROR: foobar: is only supported on windows."))
-            return None
-
-        wnd_ids = [
-            '{DA7CD0DE-1602-45e6-89A1-C2CA151E008E}',
-            '{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}',
-            '{E7076D1C-A7BF-4f39-B771-BCBE88F2A2A8}'
-        ]
-
-        metadata = None
-
-        for wnd_id in wnd_ids:
-            wnd_txt = GetWindowText(FindWindow(wnd_id, None))
-            if wnd_txt:
-                m = re.match(r"(.*)\\s+\[foobar.*", wnd_txt)
-                if m:
-                    metadata = m.groups()[0].strip()
-
-        if metadata:
-            self.title["nowplaying"] = "now playing: " + metadata.decode('mbcs')
-            return True
-        else:
-            return None
-
     def get_length_time(self, length):
         """ Function used to normalize tracks duration """
 
         if length != '' and length is not None:
 
-            minutes = int(length) / 60
+            minutes = int(length) // 60
             seconds = str(int(length) - (60 * minutes))
 
             if len(seconds) < 2:
@@ -626,42 +434,6 @@ class NowPlaying:
             length = "0:00"
 
         return length
-
-    def lastfm(self):
-        """ Function to get the last song played via lastfm api """
-
-        import http.client
-        import json
-
-        try:
-            conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
-        except Exception as error:
-            log.add_warning(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
-            return None
-
-        try:
-            (user, apikey) = self.NPCommand.get_text().split(';')
-        except ValueError:
-            log.add_warning(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
-            return None
-
-        conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json", headers={"User-Agent": "Nicotine+"})
-        resp = conn.getresponse()
-        data = resp.read().decode("utf-8")
-
-        if resp.status != 200 or resp.reason != "OK":
-            log.add_warning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"), {"error": str(data)})
-            return None
-
-        json_api = json.loads(data)
-        lastplayed = json_api["recenttracks"]["track"][0]
-
-        self.title["artist"] = lastplayed["artist"]["#text"]
-        self.title["title"] = lastplayed["name"]
-        self.title["album"] = lastplayed["album"]["#text"]
-        self.title["nowplaying"] = "%s: %s - %s - %s" % (_("Last played"), self.title["artist"], self.title["album"], self.title["title"])
-
-        return True
 
     def other(self):
         try:
@@ -675,94 +447,3 @@ class NowPlaying:
         except Exception as error:
             log.add_warning(_("ERROR: Executing '%(command)s' failed: %(error)s"), {"command": othercommand, "error": error})
             return None
-
-    def xmms2(self):
-        """ Function to get xmms2 currently playing song """
-
-        # To communicate with xmms2d, you need an instance of the xmmsclient.XMMS object, which abstracts the connection
-        try:
-            import xmmsclient
-        except ImportError as error:
-            log.add_warning(_("ERROR: xmms2: failed to load xmmsclient module: %(error)s"), {"error": error})
-            return None
-
-        xmms = xmmsclient.XMMS("NPP")
-
-        # Now we need to connect to xmms2d
-        try:
-            xmms.connect(os.getenv("XMMS_PATH"))
-        except IOError as error:
-            log.add_warning(_("ERROR: xmms2: connecting failed: %(error)s"), {"error": error})
-            return None
-
-        # Retrieve the current playing entry
-        result = xmms.playback_current_id()
-        result.wait()
-        if result.iserror():
-            log.add_warning(_("ERROR: xmms2: playback current id error: %(error)s"), {"error": result.get_error()})
-            return None
-
-        entry_id = result.value()
-
-        # Entry 0 is non valid
-        if entry_id == 0:
-            log.add_warning(_("ERROR: xmms2: nothing is playing"))
-            return None
-
-        result = xmms.medialib_get_info(id)
-        result.wait()
-
-        # This can return error if the id is not in the medialib
-        if result.iserror():
-            log.add_warning(_("ERROR: xmms2: medialib get info error: %(error)s"), {"error": result.get_error()})
-            return None
-
-        # Extract entries from the dict
-        minfo = result.value()
-
-        try:
-            self.title["artist"] = str(minfo["artist"])
-            self.title["nowplaying"] = str(minfo["artist"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["title"] = str(minfo["title"])
-            self.title["nowplaying"] += " - " + str(minfo["title"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["album"] = str(minfo["album"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["bitrate"] = str(minfo["bitrate"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["filename"] = str(minfo["url"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["length"] = self.get_length_time(minfo["duration"] / 1000)
-        except KeyError:
-            pass
-
-        try:
-            self.title["track"] = str(minfo["tracknr"])
-        except KeyError:
-            pass
-
-        try:
-            self.title["year"] = str(minfo["date"])
-        except KeyError:
-            pass
-
-        return True
-
-    def show(self):
-        self.now_playing_dialog.show()
