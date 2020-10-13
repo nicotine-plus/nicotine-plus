@@ -638,7 +638,7 @@ class NetworkEventProcessor:
             if msg.ip is not None:
                 self.ipaddress = msg.ip
 
-            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist = self.ui_callback.init_interface(msg)
+            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
             self.transfers.set_transfer_views(downloads, uploads)
             self.shares.send_num_shared_folders_files()
@@ -990,7 +990,8 @@ class NetworkEventProcessor:
                 else:
                     log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
-        self.ui_callback.get_user_status(msg)
+        if self.interests is not None:
+            self.interests.get_user_status(msg)
 
         if self.userlist is not None:
             self.userlist.get_user_status(msg)
@@ -1024,7 +1025,8 @@ class NetworkEventProcessor:
         if msg.user == self.config.sections["server"]["login"]:
             self.speed = msg.avgspeed
 
-        self.ui_callback.get_user_stats(msg)
+        if self.interests is not None:
+            self.interests.get_user_stats(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.roomsctrl.get_user_stats(msg)
@@ -1034,8 +1036,6 @@ class NetworkEventProcessor:
 
         if self.userlist is not None:
             self.userlist.get_user_stats(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -1045,6 +1045,7 @@ class NetworkEventProcessor:
         }
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def user_left_room(self, msg):
         if self.chatrooms is not None:
@@ -1903,22 +1904,26 @@ class NetworkEventProcessor:
     def global_recommendations(self, msg):
         """ Server code: 56 """
 
-        self.ui_callback.global_recommendations(msg)
+        if self.interests is not None:
+            self.interests.global_recommendations(msg)
 
     def recommendations(self, msg):
         """ Server code: 54 """
 
-        self.ui_callback.recommendations(msg)
+        if self.interests is not None:
+            self.interests.recommendations(msg)
 
     def item_recommendations(self, msg):
         """ Server code: 111 """
 
-        self.ui_callback.item_recommendations(msg)
+        if self.interests is not None:
+            self.interests.item_recommendations(msg)
 
     def similar_users(self, msg):
         """ Server code: 110 """
 
-        self.ui_callback.similar_users(msg)
+        if self.interests is not None:
+            self.interests.similar_users(msg)
 
     def room_ticker_state(self, msg):
         """ Server code: 113 """
