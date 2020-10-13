@@ -42,71 +42,6 @@
                 <property name="column_spacing">5</property>
                 <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkRadioButton" id="NP_xmms2">
-                    <property name="label" translatable="yes">XMMS2</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="tooltip_text" translatable="yes">You must have the xmms2-python module</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="NP_audacious">
-                    <property name="label" translatable="yes">Audacious</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="NP_mpd">
-                    <property name="label" translatable="yes">MPD via mpc</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="NP_exaile">
-                    <property name="label" translatable="yes">Exaile</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkRadioButton" id="NP_lastfm">
                     <property name="label" translatable="yes">last.fm</property>
                     <property name="visible">True</property>
@@ -114,12 +49,12 @@
                     <property name="receives_default">False</property>
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
+                    <property name="group">NP_lastfm</property>
                     <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
                 <child>
@@ -130,43 +65,12 @@
                     <property name="receives_default">False</property>
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
+                    <property name="group">NP_lastfm</property>
                     <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-                    <property name="top_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="NP_amarok">
-                    <property name="label" translatable="yes">Amarok</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
                     <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRadioButton" id="NP_foobar">
-                    <property name="label" translatable="yes">foobar</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="halign">start</property>
-                    <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
-                    <signal name="clicked" handler="on_np_player" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
                   </packing>
                 </child>
                 <child>
@@ -177,12 +81,12 @@
                     <property name="receives_default">False</property>
                     <property name="halign">start</property>
                     <property name="draw_indicator">True</property>
-                    <property name="group">NP_amarok</property>
+                    <property name="group">NP_lastfm</property>
                     <signal name="clicked" handler="on_np_player" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
                   </packing>
                 </child>
               </object>
