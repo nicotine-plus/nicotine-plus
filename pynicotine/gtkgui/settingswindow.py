@@ -1577,6 +1577,11 @@ class IconsFrame(BuildFrame):
         if ui["icontheme"]:
             self.ThemeDir.set_current_folder(ui["icontheme"])
 
+        if sys.platform == "darwin":
+            # Tray icons don't work as expected on macOS
+            self.hide_tray_icon_settings()
+            return
+
         if ui["exitdialog"] is not None:
 
             exitdialog = int(ui["exitdialog"])
@@ -1587,6 +1592,24 @@ class IconsFrame(BuildFrame):
                 self.SendToTrayOnClose.set_active(True)
             elif exitdialog == 0:
                 self.QuitOnClose.set_active(True)
+
+    def hide_tray_icon_settings(self):
+
+        # Hide widgets
+        self.TraySettings.hide()
+
+        self.Trayicon_Label.hide()
+        self.Trayicon_Away.hide()
+        self.Trayicon_Away_Label.hide()
+        self.Trayicon_Connect.hide()
+        self.Trayicon_Online_Label.hide()
+        self.Trayicon_Disconnect.hide()
+        self.Trayicon_Offline_Label.hide()
+        self.Trayicon_Msg.hide()
+        self.Trayicon_Hilite_Label.hide()
+
+        # Always exit on close, since there's no tray icon
+        self.QuitOnClose.set_active(True)
 
     def on_default_theme(self, widget):
         self.ThemeDir.unselect_all()

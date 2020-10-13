@@ -23,6 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import re
+import sys
 import urllib.parse
 
 from gettext import gettext as _
@@ -400,7 +401,9 @@ class NicotineFrame:
         }
 
         # Create the trayicon if needed
-        if use_trayicon and config["ui"]["trayicon"]:
+        # Tray icons don't work as expected on macOS
+        if sys.platform != "darwin" and \
+                use_trayicon and config["ui"]["trayicon"]:
             self.tray_app.create()
 
         """ Connect """
