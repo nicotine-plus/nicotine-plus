@@ -396,6 +396,10 @@ class Config:
         if sys.platform.startswith('win'):
             self.sections['ui']['filemanager'] = 'explorer $'
 
+        if sys.platform == "darwin":
+            # Non-functional tray icon is disabled on macOS
+            self.sections['ui']['exitdialog'] = 0
+
         self.defaults = {}
         for key, value in self.sections.items():
             if isinstance(value, dict):

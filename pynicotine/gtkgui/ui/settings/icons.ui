@@ -10,7 +10,7 @@
         <property name="spacing">15</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="TraySettings">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">10</property>
@@ -196,7 +196,7 @@
                 <property name="column_spacing">10</property>
                 <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="Trayicon_Label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Trayicon&lt;/b&gt;</property>
@@ -209,7 +209,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="Trayicon_Online_Label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Online:</property>
@@ -221,7 +221,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="Trayicon_Away_Label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Away:</property>
@@ -233,7 +233,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="Trayicon_Offline_Label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Offline:</property>
@@ -241,7 +241,7 @@
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
-          Z          <property name="top_attach">2</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -289,7 +289,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="Trayicon_Hilite_Label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Nick Hilite:</property>
