@@ -27,6 +27,7 @@ from time import altzone
 from time import daylight
 
 from gi.repository import Gdk
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -246,7 +247,8 @@ class PrivateChats(IconNotebook):
             if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
                 self.frame.notifications.new_notification(
                     text,
-                    title=_("Private message from %s") % msg.user
+                    title=_("Private message from %s") % msg.user,
+                    priority=Gio.NotificationPriority.HIGH
                 )
 
         # SEND CLIENT VERSION to user if the following string is sent

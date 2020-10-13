@@ -15,13 +15,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import gi
+
 import sys
 import _thread
 
 from gettext import gettext as _
 
-from gi.repository import GLib
+from gi.repository import Gdk
+from gi.repository import Gio
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
@@ -32,28 +33,8 @@ class Notifications:
 
     def __init__(self, frame):
 
-        self.use_libnotify = False
-        self.use_plyer = False
-
-        try:
-            # Notification support
-            gi.require_version('Notify', '0.7')
-            from gi.repository import Notify
-            Notify.init("Nicotine+")
-            self.notification_provider = Notify
-            self.use_libnotify = True
-
-        except (ImportError, ValueError):
-            try:
-                # Windows support via plyer
-                from plyer import notification
-                self.notification_provider = notification
-                self.use_plyer = True
-
-            except (ImportError, ValueError):
-                self.notification_provider = None
-
         self.frame = frame
+        self.application = Gio.Application.get_default()
         self.tts = []
         self.tts_playing = False
         self.continue_playing = False
@@ -167,30 +148,36 @@ class Notifications:
 
         execute_command(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
-    def new_notification(self, message, title="Nicotine+", soundnamenotify="message-sent-instant", soundnamewin="SystemAsterisk"):
+    def new_notification(self, message, title="Nicotine+", priority=Gio.NotificationPriority.NORMAL):
 
         try:
-            if self.use_libnotify:
-                notification_popup = self.notification_provider.Notification.new(title, message)
-                notification_popup.set_hint("desktop-entry", GLib.Variant("s", "org.nicotine_plus.Nicotine"))
+            if sys.platform == "win32":
 
-                if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
-                    notification_popup.set_hint("sound-name", GLib.Variant("s", soundnamenotify))
+                """ Windows notification popup support via plyer
+                Once https://gitlab.gnome.org/GNOME/glib/-/issues/1234 is implemented, we can drop plyer """
 
-                notification_popup.set_image_from_pixbuf(self.frame.images["notify"])
+                from plyer import notification
 
-                notification_popup.show()
-
-            elif self.use_plyer:
-                self.notification_provider.notify(
+                notification.notify(
                     app_name="Nicotine+",
                     title=title,
                     message=message
                 )
 
-                if sys.platform == "win32" and self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+                if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
                     import winsound
-                    winsound.PlaySound(soundnamewin, winsound.SND_ALIAS)
+                    winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
+                return
+
+            notification_popup = Gio.Notification.new(title)
+            notification_popup.set_body(message)
+            notification_popup.set_icon(self.frame.images["notify"])
+            notification_popup.set_priority(priority)
+
+            self.application.send_notification(None, notification_popup)
+
+            if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+                Gdk.beep()
 
         except Exception as error:
             log.add(_("Unable to show notification popup: %s"), str(error))

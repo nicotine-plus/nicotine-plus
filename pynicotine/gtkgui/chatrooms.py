@@ -29,6 +29,7 @@ from gettext import gettext as _
 from os.path import commonprefix
 
 from gi.repository import Gdk
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -1141,8 +1142,7 @@ class ChatRoom:
                     self.frame.notifications.new_notification(
                         text,
                         title=_("%s mentioned you in the %s room") % (user, self.room),
-                        soundnamenotify="bell-window-system",
-                        soundnamewin="SystemExclamation"
+                        priority=Gio.NotificationPriority.HIGH
                     )
 
             else:
@@ -1161,7 +1161,8 @@ class ChatRoom:
                 elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
                     self.frame.notifications.new_notification(
                         text,
-                        title=_("Message by %s in the %s room") % (user, self.room)
+                        title=_("Message by %s in the %s room") % (user, self.room),
+                        priority=Gio.NotificationPriority.HIGH
                     )
 
         if text[:4] == "/me ":

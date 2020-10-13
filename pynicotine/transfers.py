@@ -1303,8 +1303,7 @@ class Transfers:
                     'user': i.user,
                     'file': newname.rsplit(os.sep, 1)[1]
                 },
-                title=_("File downloaded"),
-                soundnamenotify="complete-download"
+                title=_("File downloaded")
             )
 
         self.save_downloads()
@@ -1332,8 +1331,7 @@ class Transfers:
                             'user': i.user,
                             'folder': folder
                         },
-                        title=_("Folder downloaded"),
-                        soundnamenotify="complete-download"
+                        title=_("Folder downloaded")
                     )
                 if config["transfers"]["afterfolder"]:
                     if not execute_command(config["transfers"]["afterfolder"], folder):
