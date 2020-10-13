@@ -31,11 +31,11 @@ sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi py
 #### Installing the optional dependencies
 * On Redhat/Fedora based distributions:
 ```
-sudo dnf install gspell libappindicator-gtk3 libnotify
+sudo dnf install gspell libappindicator-gtk3
 ```
 * On Debian/Ubuntu based distributions:
 ```
-sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1 gir1.2-notify-0.7
+sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1
 ```
 
 #### Check the Python version.
