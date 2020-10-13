@@ -883,9 +883,6 @@ class IconNotebook:
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
 
-    def on_focused(self, item):
-        self.frame.notifications.clear_page(self, item)
-
     def on_tab_click(self, widget, event, child):
         # Dummy implementation
         pass
@@ -939,8 +936,11 @@ class IconNotebook:
 
     def dismiss_icon(self, notebook, page, page_num):
 
-        self.set_image(page, 0)
-        self.set_text_color(page, 0)
+        # page is None?
+        new_page = self.get_nth_page(page_num)
+
+        self.set_image(new_page, 0)
+        self.set_text_color(new_page, 0)
 
     def request_hilite(self, page):
 
