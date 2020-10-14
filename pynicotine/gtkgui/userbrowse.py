@@ -37,11 +37,11 @@ from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
-from pynicotine.utils import execute_command
 from pynicotine.utils import get_result_bitrate_length
 
 
@@ -834,15 +834,13 @@ class UserBrowse:
     def _on_play_files(self, widget, prefix=""):
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
-        executable = self.frame.np.config.sections["players"]["default"]
-
-        if "$" not in executable:
-            return
 
         for fn in self.selected_files:
-            file = os.sep.join([path, fn])
-            if os.path.exists(file):
-                execute_command(executable, file, background=False)
+            playfile = os.sep.join([path, fn])
+
+            if os.path.exists(playfile):
+                command = self.frame.np.config.sections["players"]["default"]
+                open_file_path(playfile, command)
 
     def find_matches(self):
 
@@ -945,7 +943,6 @@ class UserBrowse:
             return
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
-        executable = self.frame.np.config.sections["ui"]["filemanager"]
+        command = self.frame.np.config.sections["ui"]["filemanager"]
 
-        if "$" in executable:
-            execute_command(executable, path)
+        open_file_path(path, command)

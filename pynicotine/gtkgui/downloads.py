@@ -36,9 +36,9 @@ from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
+from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.utils import execute_command
 
 
 class Downloads(TransferList):
@@ -225,20 +225,23 @@ class Downloads(TransferList):
         if incompletedir == "":
             incompletedir = downloaddir
 
-        filemanager = self.frame.np.config.sections["ui"]["filemanager"]
         transfer = next(iter(self.selected_transfers))
 
         complete_path = os.path.join(downloaddir, transfer.path)
 
         if transfer.path == "":
             if transfer.status == "Finished":
-                execute_command(filemanager, downloaddir)
+                final_path = downloaddir
             else:
-                execute_command(filemanager, incompletedir)
+                final_path = incompletedir
         elif os.path.exists(complete_path):  # and tranfer.status is "Finished"
-            execute_command(filemanager, complete_path)
+            final_path = complete_path
         else:
-            execute_command(filemanager, incompletedir)
+            final_path = incompletedir
+
+        # Finally, try to open the directory we got...
+        command = self.frame.np.config.sections["ui"]["filemanager"]
+        open_file_path(final_path, command)
 
     def on_select_abort_transfer(self, widget):
         self.select_transfers()
@@ -272,11 +275,7 @@ class Downloads(TransferList):
 
     def _on_play_files(self, widget, prefix=""):
 
-        executable = self.frame.np.config.sections["players"]["default"]
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
-
-        if "$" not in executable:
-            return
 
         for fn in self.selected_transfers:
 
@@ -294,7 +293,8 @@ class Downloads(TransferList):
                     playfile = path
 
             if playfile:
-                execute_command(executable, playfile, background=False)
+                command = self.frame.np.config.sections["players"]["default"]
+                open_file_path(playfile, command)
 
     def double_click(self, event):
 

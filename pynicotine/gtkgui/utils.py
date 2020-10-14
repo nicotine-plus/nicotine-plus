@@ -31,6 +31,7 @@ import urllib.parse
 from gettext import gettext as _
 
 from gi.repository import Gdk
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -367,6 +368,20 @@ def set_treeview_selected_row(treeview, event):
             treeview.set_cursor(path, col, False)
     else:
         selection.unselect_all()
+
+
+def open_file_path(file_path, command=None):
+    """ Currently used to either open a folder or play an audio file
+    Tries to run a user-specified command first, and falls back to
+    the system default. """
+
+    if command and "$" in command:
+        execute_command(command, file_path)
+    else:
+        try:
+            Gio.AppInfo.launch_default_for_uri("file:///" + file_path)
+        except GLib.Error as error:
+            log.add_warning(_("Failed to open folder: %s"), str(error))
 
 
 def scroll_bottom(widget):
