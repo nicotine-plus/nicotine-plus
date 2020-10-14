@@ -34,9 +34,9 @@ from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox
+from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.utils import execute_command
 
 
 class Uploads(TransferList):
@@ -109,13 +109,16 @@ class Uploads(TransferList):
         if incompletedir == "":
             incompletedir = downloaddir
 
-        filemanager = self.frame.np.config.sections["ui"]["filemanager"]
         transfer = next(iter(self.selected_transfers))
 
         if os.path.exists(transfer.path):
-            execute_command(filemanager, transfer.path)
+            final_path = transfer.path
         else:
-            execute_command(filemanager, incompletedir)
+            final_path = incompletedir
+
+        # Finally, try to open the directory we got...
+        command = self.frame.np.config.sections["ui"]["filemanager"]
+        open_file_path(final_path, command)
 
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
@@ -207,16 +210,12 @@ class Uploads(TransferList):
 
     def _on_play_files(self, widget, prefix=""):
 
-        executable = self.frame.np.config.sections["players"]["default"]
-
-        if "$" not in executable:
-            return
-
         for fn in self.selected_transfers:
-            file = fn.realfilename
+            playfile = fn.realfilename
 
-            if os.path.exists(file):
-                execute_command(executable, file, background=False)
+            if os.path.exists(playfile):
+                command = self.frame.np.config.sections["players"]["default"]
+                open_file_path(playfile, command)
 
     def on_popup_menu(self, widget, event, kind):
 

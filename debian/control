@@ -30,8 +30,7 @@ Depends:
     python3 (>= 3.5),
     python3-dbus,
     python3-gi,
-    python3-taglib,
-    xdg-utils
+    python3-taglib
 Recommends:
     gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
     gir1.2-gspell-1,

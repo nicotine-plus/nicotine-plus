@@ -338,7 +338,7 @@ class Config:
                 "showaway": False,
                 "buddylistinchatrooms": 0,
                 "trayicon": True,
-                "filemanager": "xdg-open $",
+                "filemanager": "",
                 "speechenabled": False,
                 "speechprivate": "%(user)s told you.. %(message)s",
                 "speechrooms": "In %(room)s, %(user)s said %(message)s",
@@ -367,7 +367,7 @@ class Config:
             },
 
             "players": {
-                "default": "xdg-open $",
+                "default": "",
                 "npothercommand": "",
                 "npplayer": "",
                 "npformatlist": [],
