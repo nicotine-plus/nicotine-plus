@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.logfacility import log
@@ -49,23 +50,7 @@ class UserList:
         self.frame = frame
         config = self.frame.np.config.sections
 
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "buddylist.ui"))
-
-        self.temp_window = builder.get_object("TempWindow")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.temp_window.remove(self.userlistvbox)
-        self.temp_window.destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "buddylist.ui"))
 
         """ Columns """
 

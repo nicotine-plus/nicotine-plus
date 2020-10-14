@@ -46,6 +46,7 @@ from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import press_header
 from pynicotine.gtkgui.utils import scroll_bottom
@@ -753,23 +754,7 @@ class ChatRoom:
         self.frame = roomsctrl.frame
 
         # Build the window
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
-
-        self.chat_room_tab = builder.get_object("ChatRoomTab")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.chat_room_tab.remove(self.Main)
-        self.chat_room_tab.destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)

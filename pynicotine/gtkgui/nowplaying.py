@@ -27,6 +27,7 @@ from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
@@ -39,26 +40,13 @@ class NowPlaying:
         # Build the window
         self.frame = frame
 
-        builder = Gtk.Builder()
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "nowplaying.ui"))
 
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "nowplaying.ui"))
+        self.NowPlayingDialog.set_transient_for(self.frame.MainWindow)
 
-        self.now_playing_dialog = builder.get_object("NowPlayingDialog")
-
-        builder.connect_signals(self)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.now_playing_dialog.set_transient_for(self.frame.MainWindow)
-
-        self.now_playing_dialog.connect("destroy", self.quit)
-        self.now_playing_dialog.connect("destroy-event", self.quit)
-        self.now_playing_dialog.connect("delete-event", self.quit)
+        self.NowPlayingDialog.connect("destroy", self.quit)
+        self.NowPlayingDialog.connect("destroy-event", self.quit)
+        self.NowPlayingDialog.connect("delete-event", self.quit)
 
         self.title_clear()
 
@@ -193,7 +181,7 @@ class NowPlaying:
         self.quit(None)
 
     def show(self):
-        self.now_playing_dialog.show()
+        self.NowPlayingDialog.show()
 
     def quit(self, widget, s=None):
 
@@ -209,7 +197,7 @@ class NowPlaying:
         self.frame.np.config.write_configuration()
 
         # Hide the NowPlaying window
-        self.now_playing_dialog.hide()
+        self.NowPlayingDialog.hide()
         return True
 
     def on_np_test(self, widget):

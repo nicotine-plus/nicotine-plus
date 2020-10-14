@@ -65,6 +65,7 @@ from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import BuddiesComboBox
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
@@ -145,18 +146,7 @@ class NicotineFrame:
         log.add_listener(self.log_callback)
 
         # Import GtkBuilder widgets
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
         self.status_context_id = self.Statusbar.get_context_id("")
         self.socket_context_id = self.SocketStatus.get_context_id("")
@@ -786,7 +776,7 @@ class NicotineFrame:
             self.settingswindow = Settings(self)
             self.settingswindow.SettingsWindow.connect("settings-closed", self.on_settings_closed)
 
-        if self.fastconfigure is not None and self.fastconfigure.window.get_property("visible"):
+        if self.fastconfigure is not None and self.fastconfigure.FastConfigureAssistant.get_property("visible"):
             return
 
         self.settingswindow.set_settings(self.np.config.sections)

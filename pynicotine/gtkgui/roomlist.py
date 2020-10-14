@@ -23,9 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 
-from gi.repository import Gtk
-
 from pynicotine import slskmessages
+from pynicotine.gtkgui.utils import load_ui_elements
 
 
 class RoomList:
@@ -35,24 +34,7 @@ class RoomList:
         # Build the window
         self.frame = frame
 
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
-
-        self.temp_window = builder.get_object("TempWindow")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.temp_window.remove(self.vbox2)
-        self.temp_window.destroy()
-
-        # self.RoomsList is the TreeView
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
 
         self.search_iter = None
         self.query = ""

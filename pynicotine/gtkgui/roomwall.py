@@ -18,10 +18,9 @@
 
 import os
 
-from gi.repository import Gtk
-
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import load_ui_elements
 
 
 class RoomWall:
@@ -31,25 +30,14 @@ class RoomWall:
         self.frame = frame
         self.room = room
 
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomwall.ui"))
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomwall.ui"))
 
-        self.room_wall_dialog = builder.get_object("RoomWallDialog")
-        builder.connect_signals(self)
+        self.RoomWallDialog.set_transient_for(frame.MainWindow)
 
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.room_wall_dialog.set_transient_for(frame.MainWindow)
-
-        self.room_wall_dialog.connect("destroy", self.hide)
-        self.room_wall_dialog.connect("destroy-event", self.hide)
-        self.room_wall_dialog.connect("delete-event", self.hide)
-        self.room_wall_dialog.connect("delete_event", self.hide)
+        self.RoomWallDialog.connect("destroy", self.hide)
+        self.RoomWallDialog.connect("destroy-event", self.hide)
+        self.RoomWallDialog.connect("delete-event", self.hide)
+        self.RoomWallDialog.connect("delete_event", self.hide)
 
     def on_set_room_wall_message(self, widget):
         result = self.RoomWallEntry.get_text()
@@ -72,13 +60,13 @@ class RoomWall:
 
     def hide(self, w=None, event=None):
         self.RoomWallList.get_buffer().set_text("")
-        self.room_wall_dialog.hide()
+        self.RoomWallDialog.hide()
         return True
 
     def show(self):
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
-        self.room_wall_dialog.show()
+        self.RoomWallDialog.show()
 
 
 class Tickers:
