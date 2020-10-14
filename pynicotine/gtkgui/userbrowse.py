@@ -36,6 +36,7 @@ from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.logfacility import log
@@ -49,23 +50,7 @@ class UserBrowse:
     def __init__(self, userbrowses, user, conn):
 
         # Build the window
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
-
-        self.user_browse_tab = builder.get_object("UserBrowseTab")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.user_browse_tab.remove(self.Main)
-        self.user_browse_tab.destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
 
         self.userbrowses = userbrowses
 

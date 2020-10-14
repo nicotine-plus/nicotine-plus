@@ -30,12 +30,12 @@ This is the actual client code. Actual GUI classes are in the separate modules
 """
 
 import configparser
-import datetime
 import os
 import queue
 import shutil
 import threading
 import time
+
 from gettext import gettext as _
 from socket import socket
 
@@ -115,7 +115,7 @@ class NetworkEventProcessor:
         try:
             self.config = Config(config, data_dir)
         except configparser.Error:
-            corruptfile = ".".join([config, clean_file(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")), "corrupt"])
+            corruptfile = ".".join([config, clean_file(time.strftime("%Y-%m-%d_%H_%M_%S")), "corrupt"])
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings."), {'corrupt': corruptfile}

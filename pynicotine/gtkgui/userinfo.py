@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -210,23 +211,7 @@ class UserInfo:
     def __init__(self, userinfos, user, conn):
 
         # Build the window
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
-
-        self.user_info_tab = builder.get_object("UserInfoTab")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.user_info_tab.remove(self.Main)
-        self.user_info_tab.destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
@@ -257,20 +242,20 @@ class UserInfo:
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.frame.on_dislike_recommendation),
+            ("$" + _("I _like this"), self.frame.interests.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.on_recommend_search)
+            ("#" + _("_Search for this item"), self.frame.interests.on_recommend_search)
         )
 
         self.Likes.connect("button_press_event", self.on_popup_likes_menu)
 
         self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.frame.on_dislike_recommendation),
+            ("$" + _("I _like this"), self.frame.interests.on_like_recommendation),
+            ("$" + _("I _don't like this"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.on_recommend_search)
+            ("#" + _("_Search for this item"), self.frame.interests.on_recommend_search)
         )
 
         self.Hates.connect("button_press_event", self.on_popup_hates_menu)

@@ -742,7 +742,7 @@ class Config:
     def write_config_backup(self, filename=None):
 
         if filename is None:
-            filename = "%s backup %s.tar.bz2", (self.filename, time.strftime("%Y-%m-%d %H:%M:%S"))
+            filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H_%M_%S"))
         else:
             if filename[-8:-1] != ".tar.bz2":
                 filename += ".tar.bz2"
@@ -764,7 +764,7 @@ class Config:
             tar.close()
         except Exception as e:
             print(e)
-            return (1, "Cannot write backup archive: %s", e)
+            return (1, "Cannot write backup archive: %s" % e)
 
         return (0, filename)
 

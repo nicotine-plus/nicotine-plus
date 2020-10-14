@@ -31,6 +31,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.logfacility import log
 
 
@@ -45,26 +46,14 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        builder = Gtk.Builder()
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
 
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
+        self.WishListDialog.set_transient_for(frame.MainWindow)
 
-        self.wish_list_dialog = builder.get_object("WishListDialog")
-        builder.connect_signals(self)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.wish_list_dialog.set_transient_for(frame.MainWindow)
-
-        self.wish_list_dialog.connect("destroy", self.quit)
-        self.wish_list_dialog.connect("destroy-event", self.quit)
-        self.wish_list_dialog.connect("delete-event", self.quit)
-        self.wish_list_dialog.connect("delete_event", self.quit)
+        self.WishListDialog.connect("destroy", self.quit)
+        self.WishListDialog.connect("destroy-event", self.quit)
+        self.WishListDialog.connect("delete-event", self.quit)
+        self.WishListDialog.connect("delete_event", self.quit)
 
         self.store = Gtk.ListStore(GObject.TYPE_STRING)
 
@@ -202,8 +191,8 @@ class WishList:
             self.timer = None
 
     def show(self, widget):
-        self.wish_list_dialog.show()
+        self.WishListDialog.show()
 
     def quit(self, widget, event):
-        self.wish_list_dialog.hide()
+        self.WishListDialog.hide()
         return True

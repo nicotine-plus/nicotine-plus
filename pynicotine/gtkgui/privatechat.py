@@ -38,6 +38,7 @@ from pynicotine.gtkgui.chatrooms import get_completion
 from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
@@ -340,23 +341,7 @@ class PrivateChat:
         # We should reference the user as soon as possible
         self.chats.users[self.user] = self
 
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
-
-        self.private_chat_tab = builder.get_object("PrivateChatTab")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.private_chat_tab.remove(self.Main)
-        self.private_chat_tab.destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
 
         self.autoreplied = 0
         self.offlinemessage = 0

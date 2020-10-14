@@ -1,88 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkWindow" id="TempWindow">
+  <object class="GtkBox" id="vbox2">
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Room List</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkBox" id="vbox2">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
+        <property name="border_width">5</property>
+        <property name="spacing">5</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkLabel" id="ChatroomsLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="border_width">5</property>
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkLabel" id="ChatroomsLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">Chat Rooms</property>
-                <property name="use_markup">True</property>
-                <property name="margin_start">5</property>
-                <property name="margin_end">10</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSearchEntry" id="SearchRooms">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <signal name="activate" handler="on_search_room" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="RefreshButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Refresh room list</property>
-                <property name="image">refresh</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="on_refresh" swapped="no"/>
-                <child>
-                  <object class="GtkImage" id="refresh">
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Chat Rooms</property>
+            <property name="use_markup">True</property>
+            <property name="margin_start">5</property>
+            <property name="margin_end">10</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkSearchEntry" id="SearchRooms">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <child>
-              <object class="GtkTreeView" id="RoomsList">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-              </object>
-            </child>
+            <signal name="activate" handler="on_search_room" swapped="no"/>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -91,36 +40,81 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkButton" id="RefreshButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">5</property>
-            <property name="spacing">5</property>
-            <property name="orientation">vertical</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">Refresh room list</property>
+            <property name="image">refresh</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="on_refresh" swapped="no"/>
             <child>
-              <object class="GtkCheckButton" id="AcceptPrivateRoom">
-                <property name="label" translatable="yes">Accept private room invitations</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
+              <object class="GtkImage" id="refresh">
+                <property name="can_focus">False</property>
+                <property name="icon_name">view-refresh-symbolic</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
+            <property name="fill">False</property>
             <property name="position">2</property>
-            <property name="padding">5</property>
           </packing>
         </child>
       </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">automatic</property>
+        <property name="vscrollbar_policy">automatic</property>
+        <child>
+          <object class="GtkTreeView" id="RoomsList">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">5</property>
+        <property name="spacing">5</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkCheckButton" id="AcceptPrivateRoom">
+            <property name="label" translatable="yes">Accept private room invitations</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+        <property name="padding">5</property>
+      </packing>
     </child>
   </object>
 </interface>

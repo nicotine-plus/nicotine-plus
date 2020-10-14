@@ -27,7 +27,6 @@ import sys
 import time
 import types
 import urllib.parse
-import webbrowser
 
 from gettext import gettext as _
 
@@ -111,6 +110,24 @@ def show_country_tooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_
     tooltip.set_text(countryname)
 
     return True
+
+
+def load_ui_elements(ui_class, filename):
+    builder = Gtk.Builder()
+
+    builder.set_translation_domain('nicotine')
+    builder.add_from_file(filename)
+
+    for i in builder.get_objects():
+        try:
+            obj_name = Gtk.Buildable.get_name(i)
+
+            if not obj_name.startswith("_"):
+                ui_class.__dict__[obj_name] = i
+        except TypeError:
+            pass
+
+    builder.connect_signals(ui_class)
 
 
 def fill_file_grouping_combobox(combobox):
@@ -389,7 +406,8 @@ def open_uri(uri, window):
                 log.add_warning("%s", e)
 
     # Situation 2, user did not define a way of handling the protocol
-    if sys.platform == "win32" and webbrowser:
+    if sys.platform == "win32":
+        import webbrowser
         webbrowser.open(uri)
         return
 

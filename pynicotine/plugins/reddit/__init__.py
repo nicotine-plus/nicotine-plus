@@ -25,9 +25,6 @@ Example uses:
 
 """
 
-import http.client
-import json
-
 from itertools import islice
 
 from pynicotine.pluginsystem import BasePlugin
@@ -54,6 +51,9 @@ class Plugin(BasePlugin):
         self.responder = ResponseThrottle(self.frame, self.__name__)
 
     def get_feed(self, domain, path):
+        import http.client
+        import json
+
         conn = http.client.HTTPSConnection(domain)
         conn.request("GET", path, headers={"User-Agent": "Nicotine+"})
         response = json.loads(conn.getresponse().read().decode("utf-8"))

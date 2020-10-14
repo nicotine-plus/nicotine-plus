@@ -40,6 +40,7 @@ from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
@@ -59,23 +60,7 @@ class BuildFrame:
         self.frame = self.p.frame
 
         # Build the frame
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
-
-        self.__dict__[window] = builder.get_object(window)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        self.__dict__[window].remove(self.Main)
-        self.__dict__[window].destroy()
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
 
 
 class ServerFrame(BuildFrame):
@@ -173,7 +158,7 @@ class ServerFrame(BuildFrame):
 
         if str(self.Login.get_text()) == "None":
             dlg = Gtk.MessageDialog(
-                transient_for=self.p.settings_window,
+                transient_for=self.p.SettingsWindow,
                 flags=0,
                 type=Gtk.MessageType.WARNING,
                 buttons=Gtk.ButtonsType.OK,
@@ -191,7 +176,7 @@ class ServerFrame(BuildFrame):
         except Exception:
             portrange = None
             dlg = Gtk.MessageDialog(
-                transient_for=self.p.settings_window,
+                transient_for=self.p.SettingsWindow,
                 flags=0,
                 type=Gtk.MessageType.WARNING,
                 buttons=Gtk.ButtonsType.OK,
@@ -220,7 +205,7 @@ class ServerFrame(BuildFrame):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
     def on_check_port(self, widget):
-        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.settings_window)
+        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
 
 
 class DownloadsFrame(BuildFrame):
@@ -330,7 +315,7 @@ class DownloadsFrame(BuildFrame):
         if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
             dlg = Gtk.MessageDialog(
-                transient_for=self.p.settings_window,
+                transient_for=self.p.SettingsWindow,
                 flags=0,
                 type=Gtk.MessageType.WARNING,
                 buttons=Gtk.ButtonsType.OK,
@@ -414,7 +399,7 @@ class DownloadsFrame(BuildFrame):
     def on_add_filter(self, widget):
 
         response = combo_box_dialog(
-            parent=self.p.settings_window,
+            parent=self.p.SettingsWindow,
             title=_('Add a download filter'),
             message=_('Enter a new download filter:'),
             option=True,
@@ -459,7 +444,7 @@ class DownloadsFrame(BuildFrame):
             escapedvalue = self.filterlist.get_value(iterator, 1)
 
             response = combo_box_dialog(
-                parent=self.p.settings_window,
+                parent=self.p.SettingsWindow,
                 title=_('Edit a download filter'),
                 message=_('Modify this download filter:'),
                 default_text=dfilter,
@@ -708,7 +693,7 @@ class SharesFrame(BuildFrame):
         for share in self.shareddirs + self.bshareddirs:
             if homedir == share:
                 dlg = Gtk.MessageDialog(
-                    transient_for=self.p.settings_window,
+                    transient_for=self.p.SettingsWindow,
                     flags=0,
                     type=Gtk.MessageType.WARNING,
                     buttons=Gtk.ButtonsType.OK,
@@ -797,7 +782,7 @@ class SharesFrame(BuildFrame):
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     dlg = Gtk.MessageDialog(
-                        transient_for=self.p.settings_window,
+                        transient_for=self.p.SettingsWindow,
                         flags=0,
                         type=Gtk.MessageType.WARNING,
                         buttons=Gtk.ButtonsType.OK,
@@ -810,7 +795,7 @@ class SharesFrame(BuildFrame):
                 else:
 
                     virtual = combo_box_dialog(
-                        parent=self.p.settings_window,
+                        parent=self.p.SettingsWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -819,7 +804,7 @@ class SharesFrame(BuildFrame):
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.p.settings_window,
+                            transient_for=self.p.SettingsWindow,
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -861,7 +846,7 @@ class SharesFrame(BuildFrame):
                 if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
 
                     dlg = Gtk.MessageDialog(
-                        transient_for=self.p.settings_window,
+                        transient_for=self.p.SettingsWindow,
                         flags=0,
                         type=Gtk.MessageType.WARNING,
                         buttons=Gtk.ButtonsType.OK,
@@ -874,7 +859,7 @@ class SharesFrame(BuildFrame):
                 else:
 
                     virtual = combo_box_dialog(
-                        parent=self.p.settings_window,
+                        parent=self.p.SettingsWindow,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -883,7 +868,7 @@ class SharesFrame(BuildFrame):
                     if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.p.settings_window,
+                            transient_for=self.p.SettingsWindow,
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -924,7 +909,7 @@ class SharesFrame(BuildFrame):
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
-                parent=self.p.settings_window,
+                parent=self.p.SettingsWindow,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -947,7 +932,7 @@ class SharesFrame(BuildFrame):
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
-                parent=self.p.settings_window,
+                parent=self.p.SettingsWindow,
                 title=_("Virtual name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -2942,27 +2927,12 @@ class BuildDialog(Gtk.Dialog):
 
     def __init__(self, parent):
 
-        window = "PluginProperties"
-
         self.settings = parent.p
 
         # Build the window
-        builder = Gtk.Builder()
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
 
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
-
-        self.plugin_properties = builder.get_object(window)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        builder.connect_signals(self)
-
-        self.plugin_properties.set_transient_for(self.settings.settings_window)
+        self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
         self.tw = {}
         self.options = {}
         self.plugin = None
@@ -3108,21 +3078,21 @@ class BuildDialog(Gtk.Dialog):
 
             c += 1
 
-        self.plugin_properties.show_all()
+        self.PluginProperties.show_all()
 
     def on_cancel(self, widget):
-        self.plugin_properties.hide()
+        self.PluginProperties.hide()
 
     def on_okay(self, widget):
         for name in self.options:
             value = self.settings.get_widget_data(self.tw[name])
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
-        self.plugin_properties.hide()
+        self.PluginProperties.hide()
         self.settings.frame.np.pluginhandler.plugin_settings(self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def show(self):
-        self.plugin_properties.show()
+        self.PluginProperties.show()
 
 
 class NotificationsFrame(BuildFrame):
@@ -3309,27 +3279,14 @@ class Settings:
         self.frame = frame
 
         # Build the window
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
-
-        self.settings_window = builder.get_object("SettingsWindow")
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
-
-        builder.connect_signals(self)
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
 
         # Signal sent and catch by frame.py on close
         GObject.signal_new("settings-closed", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
 
         # Connect the custom handlers
-        self.settings_window.set_transient_for(frame.MainWindow)
-        self.settings_window.connect("delete-event", self.on_delete)
+        self.SettingsWindow.set_transient_for(frame.MainWindow)
+        self.SettingsWindow.connect("delete-event", self.on_delete)
 
         # This is ?
         self.empty_label = Gtk.Label.new("")
@@ -3459,7 +3416,7 @@ class Settings:
 
     def switch_to_page(self, page):
 
-        self.settings_window.deiconify()
+        self.SettingsWindow.deiconify()
         child = self.viewport1.get_child()
         if child:
             self.viewport1.remove(child)
@@ -3476,13 +3433,13 @@ class Settings:
             sel.select_path(path)
 
     def on_apply(self, widget):
-        self.settings_window.emit("settings-closed", "apply")
+        self.SettingsWindow.emit("settings-closed", "apply")
 
     def on_ok(self, widget):
-        self.settings_window.emit("settings-closed", "ok")
+        self.SettingsWindow.emit("settings-closed", "ok")
 
     def on_cancel(self, widget):
-        self.settings_window.emit("settings-closed", "cancel")
+        self.SettingsWindow.emit("settings-closed", "cancel")
 
     def on_delete(self, widget, event):
         self.on_cancel(widget)

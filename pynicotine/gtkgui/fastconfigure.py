@@ -33,6 +33,7 @@ from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 
 
@@ -75,22 +76,7 @@ class FastConfigureAssistant(object):
         self.initphase = True  # don't respond to signals unless False
         self.config = frame.np.config
 
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
-
-        self.window = builder.get_object("FastConfigureAssistant")
-        self.window.set_transient_for(frame.MainWindow)
-        builder.connect_signals(self)
-
-        self.kids = {}
-
-        for i in builder.get_objects():
-            try:
-                self.kids[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
 
         # Page specific, sharepage
         # The last column is the raw byte/unicode object
@@ -106,7 +92,7 @@ class FastConfigureAssistant(object):
         )
 
         initialise_columns(
-            self.kids['shareddirectoriestree'],
+            self.shareddirectoriestree,
             [_("Virtual Directory"), 0, "text"],
             [_("Directory"), 0, "text"],
             [_("Size"), 0, "text"],
@@ -115,8 +101,8 @@ class FastConfigureAssistant(object):
             [_("File types"), 0, "text"]
         )
 
-        self.kids['shareddirectoriestree'].set_model(self.sharelist)
-        self.kids['shareddirectoriestree'].get_selection().set_mode(
+        self.shareddirectoriestree.set_model(self.sharelist)
+        self.shareddirectoriestree.get_selection().set_mode(
             Gtk.SelectionMode.MULTIPLE
         )
 
@@ -126,33 +112,33 @@ class FastConfigureAssistant(object):
         self.initphase = True
         self._populate()
         self.initphase = False
-        self.window.show()
+        self.FastConfigureAssistant.show()
 
     def _populate(self):
 
         # userpasspage
-        self.kids['username'].set_text(
+        self.username.set_text(
             self.config.sections["server"]["login"]
         )
-        self.kids['password'].set_text(
+        self.password.set_text(
             self.config.sections["server"]["passw"]
         )
 
         if self.config.sections["server"]["firewalled"]:
-            self.kids['portclosed'].set_active(True)
+            self.portclosed.set_active(True)
         else:
-            self.kids['portopen'].set_active(True)
+            self.portopen.set_active(True)
 
-        self.kids['lowerport'].set_value(
+        self.lowerport.set_value(
             self.config.sections["server"]["portrange"][0]
         )
-        self.kids['upperport'].set_value(
+        self.upperport.set_value(
             self.config.sections["server"]["portrange"][1]
         )
 
         # sharepage
         if self.config.sections['transfers']['downloaddir']:
-            self.kids['downloaddir'].set_current_folder(
+            self.downloaddir.set_current_folder(
                 self.config.sections['transfers']['downloaddir']
             )
 
@@ -166,7 +152,7 @@ class FastConfigureAssistant(object):
             for directory in self.config.sections["transfers"]["shared"]:
                 self.addshareddir(directory)
 
-        self.kids['onlysharewithfriends'].set_active(
+        self.onlysharewithfriends.set_active(
             self.config.sections["transfers"]["friendsonly"]
         )
 
@@ -178,29 +164,29 @@ class FastConfigureAssistant(object):
             self.config.sections["transfers"]["friendsonly"]
         )
 
-        self.kids['onlysharewithfriends'].set_sensitive(self.caneditshare)
-        self.kids['addshare'].set_sensitive(self.caneditshare)
-        self.kids['removeshares'].set_sensitive(self.caneditshare)
-        self.kids['shareddirectoriestree'].set_sensitive(self.caneditshare)
+        self.onlysharewithfriends.set_sensitive(self.caneditshare)
+        self.addshare.set_sensitive(self.caneditshare)
+        self.removeshares.set_sensitive(self.caneditshare)
+        self.shareddirectoriestree.set_sensitive(self.caneditshare)
 
     def store(self):
 
         # userpasspage
-        self.config.sections["server"]["login"] = self.kids['username'].get_text()
-        self.config.sections["server"]["passw"] = self.kids['password'].get_text()
+        self.config.sections["server"]["login"] = self.username.get_text()
+        self.config.sections["server"]["passw"] = self.password.get_text()
 
         # portpage
         self.config.sections['server']['portrange'] = (
-            self.kids['lowerport'].get_value_as_int(),
-            self.kids['upperport'].get_value_as_int()
+            self.lowerport.get_value_as_int(),
+            self.upperport.get_value_as_int()
         )
-        self.config.sections['server']['firewalled'] = not self.kids['portopen'].get_active()
+        self.config.sections['server']['firewalled'] = not self.portopen.get_active()
 
         # sharepage
-        self.config.sections['transfers']['downloaddir'] = self.kids['downloaddir'].get_file().get_path()
+        self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_file().get_path()
 
         if self.caneditshare:
-            self.config.sections["transfers"]["friendsonly"] = self.kids['onlysharewithfriends'].get_active()
+            self.config.sections["transfers"]["friendsonly"] = self.onlysharewithfriends.get_active()
 
             if self.config.sections["transfers"]["friendsonly"] and \
                self.config.sections["transfers"]["enablebuddyshares"]:
@@ -209,11 +195,11 @@ class FastConfigureAssistant(object):
                 self.config.sections["transfers"]["shared"] = self.getshareddirs()
 
     def on_close(self, widget):
-        self.window.hide()
+        self.FastConfigureAssistant.hide()
 
     def on_apply(self, widget):
         self.store()
-        self.window.hide()
+        self.FastConfigureAssistant.hide()
 
         # Rescan public shares if needed
         if not self.config.sections["transfers"]["friendsonly"]:
@@ -227,7 +213,7 @@ class FastConfigureAssistant(object):
             self.frame.on_connect(-1)
 
     def on_cancel(self, widget):
-        self.window.hide()
+        self.FastConfigureAssistant.hide()
 
     def resetcompleteness(self, page=None):
         """Turns on the complete flag if everything required is filled in."""
@@ -236,8 +222,8 @@ class FastConfigureAssistant(object):
         complete = False
 
         if not page:
-            pageid = self.window.get_current_page()
-            page = self.window.get_nth_page(pageid)
+            pageid = self.FastConfigureAssistant.get_current_page()
+            page = self.FastConfigureAssistant.get_nth_page(pageid)
             if not page:
                 return
 
@@ -247,44 +233,44 @@ class FastConfigureAssistant(object):
             complete = True
 
         elif name == 'userpasspage':
-            if (len(self.kids['username'].get_text()) > 0 and len(self.kids['password'].get_text()) > 0):
+            if (len(self.username.get_text()) > 0 and len(self.password.get_text()) > 0):
                 complete = True
 
         elif name == 'portpage':
-            if self.kids['portopen'].get_active() or \
-               self.kids['portclosed'].get_active():
+            if self.portopen.get_active() or \
+               self.portclosed.get_active():
                 complete = True
 
         elif name == 'sharepage':
-            if exists(self.kids['downloaddir'].get_filename()):
+            if exists(self.downloaddir.get_filename()):
                 complete = True
 
         elif name == 'summarypage':
 
             complete = True
             showcpwarning = (
-                self.kids['portclosed'].get_active()
+                self.portclosed.get_active()
             )
 
             if showcpwarning:
-                self.kids['labelclosedport'].show()
+                self.labelclosedport.show()
             else:
-                self.kids['labelclosedport'].hide()
+                self.labelclosedport.hide()
 
             shownfwarning = (
-                self.kids['onlysharewithfriends'].get_active() or
+                self.onlysharewithfriends.get_active() or
                 len(self.getshareddirs()) == 0
             )
 
             if shownfwarning:
-                self.kids['labelnoshare'].show()
+                self.labelnoshare.show()
             else:
-                self.kids['labelnoshare'].hide()
+                self.labelnoshare.hide()
 
-        self.window.set_page_complete(page, complete)
+        self.FastConfigureAssistant.set_page_complete(page, complete)
 
     def on_prepare(self, widget, page):
-        self.window.set_page_complete(page, False)
+        self.FastConfigureAssistant.set_page_complete(page, False)
         self.resetcompleteness(page)
 
     def on_entry_changed(self, widget, param1=None, param2=None, param3=None):
@@ -302,7 +288,7 @@ class FastConfigureAssistant(object):
         name = Gtk.Buildable.get_name(user_data)
 
         # Set the text of the corresponding entry
-        self.kids[name].set_text(user_data.get_text())
+        self.__dict__[name].set_text(user_data.get_text())
 
         # Check if the form is complete
         self.resetcompleteness()
@@ -407,13 +393,13 @@ class FastConfigureAssistant(object):
                     'http://tools.slsknet.org/porttest.php?port',
                     str(self.frame.np.waitport)
                 ]),
-                self.window
+                self.FastConfigureAssistant
             )
 
         if name == "addshare":
 
             selected = choose_dir(
-                self.window.get_toplevel(),
+                self.FastConfigureAssistant.get_toplevel(),
                 title=_("Add a shared directory")
             )
 
@@ -431,7 +417,7 @@ class FastConfigureAssistant(object):
                     if virtual == '' or virtual is None:
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.window,
+                            transient_for=self.FastConfigureAssistant,
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -443,7 +429,7 @@ class FastConfigureAssistant(object):
 
                     else:
                         # We get the current defined shares from the treeview
-                        model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
+                        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
                         iterator = model.get_iter_first()
 
@@ -453,7 +439,7 @@ class FastConfigureAssistant(object):
                             if virtual == model.get_value(iterator, 0):
 
                                 dlg = Gtk.MessageDialog(
-                                    transient_for=self.window,
+                                    transient_for=self.FastConfigureAssistant,
                                     flags=0,
                                     type=Gtk.MessageType.WARNING,
                                     buttons=Gtk.ButtonsType.OK,
@@ -468,7 +454,7 @@ class FastConfigureAssistant(object):
                             elif directory == model.get_value(iterator, 6):
 
                                 dlg = Gtk.MessageDialog(
-                                    transient_for=self.window,
+                                    transient_for=self.FastConfigureAssistant,
                                     flags=0,
                                     type=Gtk.MessageType.WARNING,
                                     buttons=Gtk.ButtonsType.OK,
@@ -487,7 +473,7 @@ class FastConfigureAssistant(object):
 
         if name == "removeshares":
 
-            model, paths = self.kids['shareddirectoriestree'].get_selection().get_selected_rows()
+            model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
             refs = [Gtk.TreeRowReference(model, x) for x in paths]
 
             for i in refs:
@@ -517,10 +503,10 @@ class FastConfigureAssistant(object):
         name = Gtk.Buildable.get_name(widget)
 
         if name == "lowerport":
-            if widget.get_value() > self.kids['upperport'].get_value():
-                self.kids['upperport'].set_value(widget.get_value())
+            if widget.get_value() > self.upperport.get_value():
+                self.upperport.set_value(widget.get_value())
         if name == "upperport":
-            if widget.get_value() < self.kids['lowerport'].get_value():
-                self.kids['lowerport'].set_value(widget.get_value())
+            if widget.get_value() < self.lowerport.get_value():
+                self.lowerport.set_value(widget.get_value())
 
         self.resetcompleteness()
