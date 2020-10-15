@@ -18,21 +18,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" This script is used to install dependencies in Homebrew """
+### This script is used to install core dependencies in Homebrew ###
+### These are enough to run unit tests and use non-UI code ###
 
-# Install most dependencies from the main Homebrew repos
+# Install dependencies from the main Homebrew repos
 brew install \
-  adwaita-icon-theme \
-  create-dmg \
   flake8 \
-  gdk-pixbuf \
-  gobject-introspection \
-  gspell \
-  gtk+3 \
-  librsvg \
-  pygobject3 \
-  taglib \
-  upx
+  taglib
 
-# Use pip for packages not available in Homebrew
-pip3 install miniupnpc pep8-naming pyinstaller==3.6 pytaglib pytest
+# Install dependencies with pip
+pip3 install \
+  miniupnpc \
+  pep8-naming \
+  pytaglib \
+  pytest

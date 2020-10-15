@@ -63,7 +63,8 @@ First, follow the instructions on installing MSYS2: [https://pygobject.readthedo
 Then, install dependencies:
 
 `export ARCH=x86_64`  
-`files/windows/dependencies.sh`
+`files/windows/dependencies-core.sh`
+`files/windows/dependencies-packaging.sh`
 
 Clone the Nicotine+ git repository:
 

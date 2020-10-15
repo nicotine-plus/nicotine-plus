@@ -30,7 +30,8 @@ jobs:
       - name: Install build dependencies
         run: |
           export ARCH=${{ matrix.arch }}
-          files/windows/dependencies.sh
+          files/windows/dependencies-core.sh
+          files/windows/dependencies-packaging.sh
 
       - name: Build installer
         run: |
@@ -62,7 +63,8 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          files/macos/dependencies.sh
+          files/macos/dependencies-core.sh
+          files/macos/dependencies-packaging.sh
 
       - name: Freeze application
         run: |
