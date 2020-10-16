@@ -29,8 +29,8 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from _thread import start_new_thread
-from pynicotine.gtkgui.dialogs import MetaDialog
 from pynicotine.gtkgui.dialogs import option_dialog
+from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox
@@ -64,7 +64,7 @@ class Downloads(TransferList):
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy folder URL"), self.on_copy_dir_url),
             ("#" + _("Send to _player"), self.on_play_files),
-            ("#" + _("View Metadata of file(s)"), self.on_download_meta),
+            ("#" + _("File Properties"), self.on_file_properties),
             ("#" + _("Open folder"), self.on_open_directory),
             ("#" + _("Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
@@ -156,15 +156,6 @@ class Downloads(TransferList):
 
         self.rebuild_transfers()
 
-    def meta_box(self, title="Meta Data", message="", data=None, modal=True, search=False):
-
-        win = MetaDialog(self.frame, message, data, modal, search=search)
-        win.set_title(title)
-        win.show()
-        Gtk.main()
-
-        return win.ret
-
     def selected_results_all_data(self, model, path, iterator, data):
         if iterator in self.selected_users:
             return
@@ -172,15 +163,14 @@ class Downloads(TransferList):
         user = model.get_value(iterator, 0)
         filename = model.get_value(iterator, 2)
         fullname = model.get_value(iterator, 10)
-        size = speed = "0"
-        length = None
-        queue = immediate = num = country = bitratestr = ""
+        size = speed = length = queue = immediate = num = country = bitratestr = ""
 
         for transfer in self.frame.np.transfers.downloads:
             if transfer.user == user and fullname == transfer.filename:
-                size = human_size(transfer.size)
+                size = str(human_size(transfer.size))
                 try:
-                    speed = human_speed(transfer.speed)
+                    if transfer.speed:
+                        speed = str(human_speed(transfer.speed))
                 except Exception:
                     pass
                 bitratestr = str(transfer.bitrate)
@@ -191,7 +181,7 @@ class Downloads(TransferList):
 
         directory = fullname.rsplit("\\", 1)[0]
 
-        data[len(data)] = {
+        data.append({
             "user": user,
             "fn": fullname,
             "position": num,
@@ -204,18 +194,18 @@ class Downloads(TransferList):
             "bitrate": bitratestr,
             "length": length,
             "country": country
-        }
+        })
 
-    def on_download_meta(self, widget):
+    def on_file_properties(self, widget):
 
         if not self.frame.np.transfers:
             return
 
-        data = {}
+        data = []
         self.widget.get_selection().selected_foreach(self.selected_results_all_data, data)
 
-        if data != {}:
-            self.meta_box(title=_("Downloads Metadata"), message=_("<b>Metadata</b> for Downloads"), data=data, modal=True, search=False)
+        if data:
+            FileProperties(self.frame, data).show()
 
     def on_open_directory(self, widget):
 
@@ -346,7 +336,7 @@ class Downloads(TransferList):
             act = True
         else:
             # Disable options
-            # Copy URL, Copy Folder URL, Send to player, View Meta, File manager, Search filename
+            # Copy URL, Copy Folder URL, Send to player, File Properties, File manager, Search filename
             act = False
 
         for i in range(0, 6):
