@@ -2085,38 +2085,6 @@ class NicotineFrame:
     def on_settings_uploads(self, widget):
         self.on_settings(widget, 'Uploads')
 
-    def create_icon_button(self, icon, icontype, callback, label=None):
-        # Deprecated, to be removed
-
-        button = Gtk.Button()
-        button.connect_object("clicked", callback, "")
-        button.show()
-
-        alignment = Gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0, yscale=0)
-        alignment.show()
-
-        hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 2)
-        hbox.show()
-        hbox.set_spacing(2)
-
-        image = Gtk.Image()
-
-        if icontype == "stock":
-            image.set_from_stock(icon, 4)
-        else:
-            image.set_from_pixbuf(icon)
-
-        image.show()
-        hbox.pack_start(image, False, False, 0)
-        alignment.add(hbox)
-        if label:
-            label = Gtk.Label.new(label)
-            label.show()
-            hbox.pack_start(label, False, False, 0)
-        button.add(alignment)
-
-        return button
-
     def on_soul_seek(self, url):
         try:
             user, file = urllib.parse.unquote(url[7:]).split("/", 1)

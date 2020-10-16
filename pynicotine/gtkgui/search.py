@@ -33,8 +33,9 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dirchooser import choose_dir
-from pynicotine.gtkgui.dialogs import MetaDialog
+from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import hide_columns
@@ -573,7 +574,7 @@ class Search:
             ("#" + _("Download file(s) _to..."), self.on_download_files_to),
             ("#" + _("Download _folder(s)"), self.on_download_folders),
             ("#" + _("Download f_older(s) to..."), self.on_download_folders_to),
-            ("#" + _("View Metadata of file(s)"), self.on_search_meta),
+            ("#" + _("File _Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy folder U_RL"), self.on_copy_dir_url),
@@ -1119,15 +1120,6 @@ class Search:
         else:
             cellrenderer.set_property("foreground-set", False)
 
-    def meta_box(self, title="Meta Data", message="", data=None, modal=True):
-
-        win = MetaDialog(self.frame, message, data, modal)
-        win.set_title(title)
-        win.show()
-        Gtk.main()
-
-        return win.ret
-
     def selected_results_all_data(self, model, path, iterator, data):
 
         filename = model.get_value(iterator, 7)
@@ -1139,14 +1131,15 @@ class Search:
             immediate = model.get_value(iterator, 3)
             speed = model.get_value(iterator, 4)
             queue = model.get_value(iterator, 5)
-            directory = model.get_value(iterator, 6)
             size = model.get_value(iterator, 8)
             bitratestr = model.get_value(iterator, 9)
             length = model.get_value(iterator, 10)
             fn = model.get_value(iterator, 12)
-            country = model.get_value(iterator, 13)
+            directory = fn.rsplit('\\', 1)[0]
+            cc = model.get_value(iterator, 13)
+            country = "%s / %s" % (cc, code2name(cc))
 
-            data[len(data)] = {
+            data.append({
                 "user": user,
                 "fn": fn,
                 "position": num,
@@ -1159,18 +1152,18 @@ class Search:
                 "bitrate": bitratestr,
                 "length": length,
                 "country": country
-            }
+            })
 
-    def on_search_meta(self, widget):
+    def on_file_properties(self, widget):
 
         if not self.frame.np.transfers:
             return
 
-        data = {}
+        data = []
         self.ResultsList.get_selection().selected_foreach(self.selected_results_all_data, data)
 
-        if data != {}:
-            self.meta_box(title=_("Search Results"), message=_("<b>Metadata</b> for Search Query: <i>%s</i>") % self.text, data=data, modal=True)
+        if data:
+            FileProperties(self.frame, data).show()
 
     def on_download_files(self, widget, prefix=""):
 
