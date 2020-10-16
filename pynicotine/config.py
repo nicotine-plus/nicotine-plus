@@ -257,8 +257,6 @@ class Config:
                 "filterout": [],
                 "filtersize": [],
                 "filterbr": [],
-                "distrib_timer": False,
-                "distrib_ignore": 60,
                 "search_results": True,
                 "max_displayed_results": 1000,
                 "max_stored_results": 1500,
@@ -578,6 +576,10 @@ class Config:
 
         # Remove old log folder option, superseded by individual log folders for transfers and debug messages
         self.remove_old_option("logging", "logsdir")
+
+        # Remove option to stop responding to searches for a certain time
+        self.remove_old_option("searches", "distrib_timer")
+        self.remove_old_option("searches", "distrib_ignore")
 
         # Checking for unknown section/options
         unknown1 = [

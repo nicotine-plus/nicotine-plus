@@ -98,10 +98,6 @@ class ConnectToPeerTimeout(Timeout):
         self.callback = callback
 
 
-class RespondToDistributedSearchesTimeout(Timeout):
-    pass
-
-
 class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking thread """
 
@@ -188,12 +184,6 @@ class NetworkEventProcessor:
         self.requested_folders = {}
         self.speed = 0
 
-        self.respond_distributed = True
-        responddistributedtimeout = RespondToDistributedSearchesTimeout(self.network_callback)
-        self.respond_distributed_timer = threading.Timer(60, responddistributedtimeout.timeout)
-        self.respond_distributed_timer.setDaemon(True)
-        self.respond_distributed_timer.start()
-
         # Callback handlers for messages
         self.events = {
             slskmessages.ConnectToServer: self.connect_to_server,
@@ -275,7 +265,6 @@ class NetworkEventProcessor:
             slskmessages.DistribSearch: self.distrib_search,
             slskmessages.DistribServerSearch: self.distrib_search,
             ConnectToPeerTimeout: self.connect_to_peer_timeout,
-            RespondToDistributedSearchesTimeout: self.toggle_respond_distributed,
             transfers.TransferTimeout: self.transfer_timeout,
             str: self.notify,
             slskmessages.PopupMessage: self.popup_message,
@@ -418,9 +407,6 @@ class NetworkEventProcessor:
 
         if self.servertimer is not None:
             self.servertimer.cancel()
-
-        if self.respond_distributed_timer is not None:
-            self.respond_distributed_timer.cancel()
 
         if self.transfers is not None:
             self.transfers.abort_transfers()
@@ -589,9 +575,6 @@ class NetworkEventProcessor:
                 self.set_server_timer()
             else:
                 self.manualdisconnect = False
-
-            if self.respond_distributed_timer is not None:
-                self.respond_distributed_timer.cancel()
 
             self.active_server_conn = None
             self.watchedusers = []
@@ -1803,41 +1786,10 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
         self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=0)
 
-    def toggle_respond_distributed(self, msg, settings=False):
-        """
-        Toggle responding to distributed search each (default: 60sec)
-        interval
-        """
-
-        if not self.config.sections["searches"]["search_results"]:
-            # Don't return _any_ results when this option is disabled
-            if self.respond_distributed_timer is not None:
-                self.respond_distributed_timer.cancel()
-            self.respond_distributed = False
-            return
-
-        if self.respond_distributed_timer is not None:
-            self.respond_distributed_timer.cancel()
-
-        if self.config.sections["searches"]["distrib_timer"]:
-
-            if not settings:
-                # Don't toggle when just changing the settings
-                self.respond_distributed = not self.respond_distributed
-
-            responddistributedtimeout = RespondToDistributedSearchesTimeout(self.network_callback)
-            self.respond_distributed_timer = threading.Timer(self.config.sections["searches"]["distrib_ignore"], responddistributedtimeout.timeout)
-            self.respond_distributed_timer.setDaemon(True)
-            self.respond_distributed_timer.start()
-        else:
-            # Always respond
-            self.respond_distributed = True
-
     def distrib_search(self, msg):
         """ Distrib code: 3 """
 
-        if self.respond_distributed:  # set in ToggleRespondDistributed
-            self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
+        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
         self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
 
     def possible_parents(self, msg):
