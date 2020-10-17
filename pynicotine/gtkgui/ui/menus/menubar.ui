@@ -97,29 +97,128 @@
         <item>
           <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
           <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="target">radio-one</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
           <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="target">radio-two</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist always visible</attribute>
           <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="target">radio-three</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist hidden</attribute>
           <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="target">radio-four</attribute>
         </item>
       </section>
     </submenu>
     <submenu>
-      <attribute name="label" translatable="yes">Shares</attribute>
+      <attribute name="label" translatable="yes">_Shares</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Configure shares</attribute>
+          <attribute name="action">app.configureshares</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Rescan Public shares</attribute>
+          <attribute name="action">app.publicrescan</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Rescan B_uddy shares</attribute>
+          <attribute name="action">app.buddyrescan</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Browse Public shares</attribute>
+          <attribute name="action">app.browsepublicshares</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Bro_wse Buddy shares</attribute>
+          <attribute name="action">app.browsebuddyshares</attribute>
+        </item>
+      </section>
     </submenu>
     <submenu>
-      <attribute name="label" translatable="yes">Modes</attribute>
+      <attribute name="label" translatable="yes">_Modes</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Chat Rooms</attribute>
+          <attribute name="action">app.chatrooms</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Private Chat</attribute>
+          <attribute name="action">app.privatechat</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Downloads</attribute>
+          <attribute name="action">app.downloads</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Uploads</attribute>
+          <attribute name="action">app.uploads</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Search Files</attribute>
+          <attribute name="action">app.searchfiles</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">User I_nfo</attribute>
+          <attribute name="action">app.userinfo</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">User _Browse</attribute>
+          <attribute name="action">app.userbrowse</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Interests</attribute>
+          <attribute name="action">app.interests</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Buddy _List</attribute>
+          <attribute name="action">app.buddylist</attribute>
+        </item>
+      </section>
     </submenu>
     <submenu>
-      <attribute name="label" translatable="yes">Help</attribute>
+      <attribute name="label" translatable="yes">_Help</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">About _chat room commands</attribute>
+          <attribute name="action">app.aboutchatroomcommands</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">About _private chat commands</attribute>
+          <attribute name="action">app.aboutprivatechatcommands</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">About _search filters</attribute>
+          <attribute name="action">app.aboutfilters</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Check _latest version</attribute>
+          <attribute name="action">app.checklatest</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Report a _bug</attribute>
+          <attribute name="action">app.reportbug</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">About _Nicotine+</attribute>
+          <attribute name="action">app.about</attribute>
+        </item>
+      </section>
     </submenu>
   </menu>
-</interface>

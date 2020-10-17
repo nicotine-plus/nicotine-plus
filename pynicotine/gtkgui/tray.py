@@ -233,7 +233,7 @@ class TrayApp:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(True)
 
-    def destroy_trayicon(self):
+    def hide_trayicon(self):
         if not self.is_tray_icon_visible():
             return
 

@@ -128,7 +128,7 @@ class UserTabs(IconNotebook):
         if self.mytab is not None:
             self.frame.request_icon(self.mytab)
 
-        self.frame.show_tab(None, ['userinfo', self.frame.userinfovbox])
+        self.frame.show_tab(['userinfo', self.frame.userinfovbox])
 
     def show_interests(self, msg):
 

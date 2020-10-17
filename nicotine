@@ -74,7 +74,7 @@ You should install GTK 3.0 or newer.""") % e
     # Require pynicotine
     try:
         import pynicotine  # noqa: F401
-    except ImportError as e:  # noqa: F841
+    except ImportError:
         return _("""Can not find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
