@@ -13,7 +13,9 @@ pynicotine/gtkgui/dialogs.py
 pynicotine/gtkgui/dirchooser.py
 pynicotine/gtkgui/downloads.py
 pynicotine/gtkgui/fastconfigure.py
+pynicotine/gtkgui/fileproperties.py
 pynicotine/gtkgui/frame.py
+pynicotine/gtkgui/interests.py
 pynicotine/gtkgui/notifications.py
 pynicotine/gtkgui/nowplaying.py
 pynicotine/gtkgui/privatechat.py
@@ -32,6 +34,8 @@ pynicotine/gtkgui/wishlist.py
 [type: gettext/glade] pynicotine/gtkgui/ui/buddylist.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/chatrooms.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/fastconfigure.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/fileproperties.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/interests.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/mainwindow.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/nowplaying.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/privatechat.ui
@@ -45,6 +49,7 @@ pynicotine/gtkgui/wishlist.py
 [type: gettext/glade] pynicotine/gtkgui/ui/about/chatroomcommands.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/about/privatechatcommands.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/about/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/menus/menubar.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/autoreplace.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/away.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/ban.ui
