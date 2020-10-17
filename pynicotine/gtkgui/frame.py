@@ -45,13 +45,11 @@ from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.checklatest import checklatest
 from pynicotine.gtkgui.dirchooser import choose_file
-from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.notifications import Notifications
-from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
@@ -72,6 +70,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.logfacility import log
+from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
@@ -99,7 +98,6 @@ class NicotineFrame:
 
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
-        self.now_playing = None
         self.settingswindow = None
 
         # Commonly accessed strings
@@ -375,6 +373,10 @@ class NicotineFrame:
         self.userbrowse.set_tab_label(self.UserBrowseTabLabel)
 
         self.update_colours(1)
+
+        """ Now Playing """
+
+        self.now_playing = NowPlaying(self.np.config)
 
         """ Tray/notifications """
 
@@ -721,26 +723,16 @@ class NicotineFrame:
         self.get_privileges_action.connect("activate", self.on_get_privileges)
         self.application.add_action(self.get_privileges_action)
 
-        action = Gio.SimpleAction.new("quit", None)
-        action.connect("activate", self.on_quit)
+        action = Gio.SimpleAction.new("fastconfigure", None)
+        action.connect("activate", self.on_fast_configure)
         self.application.add_action(action)
-
-        # Edit
 
         action = Gio.SimpleAction.new("settings", None)
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("fastconfigure", None)
-        action.connect("activate", self.on_fast_configure)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("nowplaying", None)
-        action.connect("activate", self.on_now_playing_configure)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("backupconfig", None)
-        action.connect("activate", self.on_backup_config)
+        action = Gio.SimpleAction.new("quit", None)
+        action.connect("activate", self.on_quit)
         self.application.add_action(action)
 
         # View
@@ -916,10 +908,15 @@ class NicotineFrame:
         }
         open_uri(url, self.MainWindow)
 
-    def on_quit(self, *args):
-        self.MainWindow.destroy()
+    def on_fast_configure(self, *args, show=True):
+        if self.fastconfigure is None:
+            self.fastconfigure = FastConfigureAssistant(self)
 
-    # Edit
+        if self.settingswindow is not None and self.settingswindow.SettingsWindow.get_property("visible"):
+            return
+
+        if show:
+            self.fastconfigure.show()
 
     def on_settings(self, *args, page=None):
         if self.settingswindow is None:
@@ -937,36 +934,8 @@ class NicotineFrame:
         self.settingswindow.SettingsWindow.show()
         self.settingswindow.SettingsWindow.deiconify()
 
-    def on_fast_configure(self, *args, show=True):
-        if self.fastconfigure is None:
-            self.fastconfigure = FastConfigureAssistant(self)
-
-        if self.settingswindow is not None and self.settingswindow.SettingsWindow.get_property("visible"):
-            return
-
-        if show:
-            self.fastconfigure.show()
-
-    def on_now_playing_configure(self, *args):
-        if self.now_playing is None:
-            self.now_playing = NowPlaying(self)
-
-        self.now_playing.show()
-
-    def on_backup_config(self, *args):
-        response = save_file(
-            self.MainWindow.get_toplevel(),
-            os.path.dirname(self.np.config.filename),
-            title="Pick a filename for config backup, or cancel to use a timestamp"
-        )
-        if response:
-            error, message = self.np.config.write_config_backup(response[0])
-        else:
-            error, message = self.np.config.write_config_backup()
-        if error:
-            log.add("Error backing up config: %s", message)
-        else:
-            log.add("Config backed up to: %s", message)
+    def on_quit(self, *args):
+        self.MainWindow.destroy()
 
     # View
 

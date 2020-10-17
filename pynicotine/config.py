@@ -367,7 +367,7 @@ class Config:
             "players": {
                 "default": "",
                 "npothercommand": "",
-                "npplayer": "",
+                "npplayer": "mpris",
                 "npformatlist": [],
                 "npformat": ""
             },

@@ -37,7 +37,6 @@ from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
@@ -1415,10 +1414,7 @@ class ChatRoom:
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
     def display_now_playing(self):
-        if self.frame.now_playing is None:
-            self.frame.now_playing = NowPlaying(self.frame)
-
-        self.frame.now_playing.display_now_playing(None, test=0, callback=self.say)
+        self.frame.now_playing.display_now_playing(callback=self.say)
 
     def user_joined_room(self, username, userdata):
 
