@@ -77,7 +77,7 @@ class TrayApp:
                 ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
                 ("$" + _("Toggle Away"), self.frame.on_away),
                 ("#" + _("Settings"), self.frame.on_settings),
-                ("#" + _("Quit"), self.frame.on_exit)
+                ("#" + _("Quit"), self.frame.on_quit)
             )
         except Exception as e:
             log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
@@ -89,11 +89,11 @@ class TrayApp:
             self.show_window()
 
     def on_downloads(self, widget):
-        self.frame.on_downloads(None)
+        self.frame.on_downloads()
         self.show_window()
 
     def on_uploads(self, widget):
-        self.frame.on_uploads(None)
+        self.frame.on_uploads()
         self.show_window()
 
     def on_open_private_chat(self, widget, prefix=""):
@@ -113,7 +113,7 @@ class TrayApp:
 
         if user is not None:
             self.frame.privatechats.send_message(user, None, 1)
-            self.frame.change_main_page(None, "private")
+            self.frame.change_main_page("private")
             self.show_window()
 
     def on_get_a_users_info(self, widget, prefix=""):
@@ -233,7 +233,7 @@ class TrayApp:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(True)
 
-    def destroy_trayicon(self):
+    def hide(self):
         if not self.is_tray_icon_visible():
             return
 

@@ -300,7 +300,7 @@ class Interests:
     def on_recommend_search(self, widget):
         thing = widget.get_parent().get_user()
         self.frame.search_entry.set_text(thing)
-        self.frame.change_main_page(None, "search")
+        self.frame.change_main_page("search")
 
     def on_global_recommendations_clicked(self, widget):
         self.np.queue.put(slskmessages.GlobalRecommendations())
@@ -374,7 +374,7 @@ class Interests:
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.privatechats.send_message(user)
-                self.change_main_page(None, "private")
+                self.change_main_page("private")
             return
 
         self.ru_popup_menu.set_user(user)

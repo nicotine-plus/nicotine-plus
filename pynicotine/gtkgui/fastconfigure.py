@@ -78,6 +78,8 @@ class FastConfigureAssistant(object):
 
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
 
+        self.FastConfigureAssistant.set_transient_for(self.frame.MainWindow)
+
         # Page specific, sharepage
         # The last column is the raw byte/unicode object
         # for the folder (not shown)
@@ -210,7 +212,7 @@ class FastConfigureAssistant(object):
             self.frame.on_buddy_rescan()
 
         if not self.frame.np.active_server_conn:
-            self.frame.on_connect(-1)
+            self.frame.on_connect()
 
     def on_cancel(self, widget):
         self.FastConfigureAssistant.hide()

@@ -194,7 +194,7 @@ class TransferList:
 
         for transfer in self.selected_transfers:
             self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.change_main_page(None, "search")
+            self.frame.change_main_page("search")
             break
 
     def rebuild_transfers(self):

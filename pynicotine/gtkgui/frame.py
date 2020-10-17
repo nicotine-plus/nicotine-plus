@@ -21,6 +21,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import re
 import sys
@@ -79,8 +80,9 @@ from pynicotine.utils import version
 
 class NicotineFrame:
 
-    def __init__(self, data_dir, config, plugins, use_trayicon, bindip=None, port=None):
+    def __init__(self, application, data_dir, config, plugins, use_trayicon, bindip=None, port=None):
 
+        self.application = application
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
@@ -186,6 +188,9 @@ class NicotineFrame:
         self.MainWindow.connect("key_press_event", self.on_key_press)
         self.MainWindow.connect("motion-notify-event", self.on_button_press)
 
+        # Set up actions for menubar
+        self.set_up_actions()
+
         self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
         self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
@@ -230,13 +235,13 @@ class NicotineFrame:
 
         # Deactivate public shares related menu entries if we don't use them
         if self.np.config.sections["transfers"]["friendsonly"] or not self.np.config.sections["transfers"]["shared"]:
-            self.rescan_public.set_sensitive(False)
-            self.browse_public_shares.set_sensitive(False)
+            self.rescan_public_action.set_enabled(False)
+            self.browse_public_shares_action.set_enabled(False)
 
         # Deactivate buddy shares related menu entries if we don't use them
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy.set_sensitive(False)
-            self.browse_buddy_shares.set_sensitive(False)
+            self.rescan_buddy_action.set_enabled(False)
+            self.browse_buddy_shares_action.set_enabled(False)
 
         """ Notebooks """
 
@@ -411,48 +416,27 @@ class NicotineFrame:
         config_unset = self.np.config.need_config()
         if config_unset:
             if config_unset > 1:
-                self.connect1.set_sensitive(False)
-                self.rescan_public.set_sensitive(True)
+                self.connect_action.set_enabled(False)
+                self.rescan_public_action.set_enabled(True)
 
                 # Set up fast configure dialog
-                self.on_fast_configure(None, show=False)
+                self.on_fast_configure(show=False)
             else:
                 # Connect anyway
-                self.on_connect(-1)
+                self.on_connect(getmessage=False)
         else:
-            self.on_connect(-1)
+            self.on_connect(getmessage=False)
 
         self.update_bandwidth()
 
         """ Element Visibility """
 
-        self.show_log_window1.set_active(not config["logging"]["logcollapsed"])
-        self.show_debug_info1.set_active(config["logging"]["debug"])
-
-        self.on_show_log(self.show_log_window1)
-        self.on_show_debug(self.show_debug_info1)
-
-        if config["ui"]["roomlistcollapsed"]:
-            self.show_room_list1.set_active(False)
-        else:
-            self.vpaned3.pack2(self.roomlist.vbox2, True, True)
-            self.show_room_list1.set_active(True)
-
-        self.ShowFlags.set_active(not config["columns"]["hideflags"])
-
-        self.ShowTransferButtons.set_active(self.np.config.sections["transfers"]["enabletransferbuttons"])
-        self.on_show_transfer_buttons(self.ShowTransferButtons)
-
-        buddylist = config["ui"]["buddylistinchatrooms"]
-
-        if buddylist == 0:
-            self.buddylist_in_tab.set_active(True)
-        elif buddylist == 1:
-            self.buddylist_in_chatrooms1.set_active(True)
-        elif buddylist == 2:
-            self.buddylist_always_visible.set_active(True)
-        elif buddylist == 3:
-            self.buddylist_hidden.set_active(True)
+        self.set_show_log(not config["logging"]["logcollapsed"])
+        self.set_show_debug(config["logging"]["debug"])
+        self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
+        self.set_show_flags(not config["columns"]["hideflags"])
+        self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
+        self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
 
         """ Combo Boxes """
 
@@ -671,11 +655,12 @@ class NicotineFrame:
 
     def set_widget_online_status(self, status):
 
-        self.connect1.set_sensitive(not status)
-        self.disconnect1.set_sensitive(status)
-        self.awayreturn1.set_sensitive(status)
-        self.check_privileges1.set_sensitive(status)
-        self.get_privileges1.set_sensitive(status)
+        self.connect_action.set_enabled(not status)
+        self.disconnect_action.set_enabled(status)
+        self.away_action.set_enabled(status)
+        self.check_privileges_action.set_enabled(status)
+        self.get_privileges_action.set_enabled(status)
+
         self.roomlist.RoomsList.set_sensitive(status)
         self.roomlist.SearchRooms.set_sensitive(status)
         self.roomlist.RefreshButton.set_sensitive(status)
@@ -711,9 +696,174 @@ class NicotineFrame:
         self.downloads.conn_close()
 
     """ Menu Bar """
+
+    def set_up_actions(self):
+
+        # File
+
+        self.connect_action = Gio.SimpleAction.new("connect", None)
+        self.connect_action.connect("activate", self.on_connect)
+        self.application.add_action(self.connect_action)
+
+        self.disconnect_action = Gio.SimpleAction.new("disconnect", None)
+        self.disconnect_action.connect("activate", self.on_disconnect)
+        self.application.add_action(self.disconnect_action)
+
+        self.away_action = Gio.SimpleAction.new("away", None)
+        self.away_action.connect("activate", self.on_away)
+        self.application.add_action(self.away_action)
+
+        self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
+        self.check_privileges_action.connect("activate", self.on_check_privileges)
+        self.application.add_action(self.check_privileges_action)
+
+        self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
+        self.get_privileges_action.connect("activate", self.on_get_privileges)
+        self.application.add_action(self.get_privileges_action)
+
+        action = Gio.SimpleAction.new("quit", None)
+        action.connect("activate", self.on_quit)
+        self.application.add_action(action)
+
+        # Edit
+
+        action = Gio.SimpleAction.new("settings", None)
+        action.connect("activate", self.on_settings)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("fastconfigure", None)
+        action.connect("activate", self.on_fast_configure)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("nowplaying", None)
+        action.connect("activate", self.on_now_playing_configure)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("backupconfig", None)
+        action.connect("activate", self.on_backup_config)
+        self.application.add_action(action)
+
+        # View
+
+        state = not self.np.config.sections["logging"]["logcollapsed"]
+        action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_log)
+        self.MainWindow.add_action(action)
+
+        state = self.np.config.sections["logging"]["debug"]
+        action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_debug)
+        self.MainWindow.add_action(action)
+
+        state = not self.np.config.sections["ui"]["roomlistcollapsed"]
+        self.show_room_list_action = Gio.SimpleAction.new_stateful("showroomlist", None, GLib.Variant.new_boolean(state))
+        self.show_room_list_action.connect("change-state", self.on_show_room_list)
+        self.MainWindow.add_action(self.show_room_list_action)
+
+        state = not self.np.config.sections["columns"]["hideflags"]
+        action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_flags)
+        self.MainWindow.add_action(action)
+
+        state = self.np.config.sections["transfers"]["enabletransferbuttons"]
+        action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_transfer_buttons)
+        self.MainWindow.add_action(action)
+
+        state = self.np.config.sections["ui"]["buddylistinchatrooms"]
+        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(str(state)))
+        self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
+        self.MainWindow.add_action(self.toggle_buddy_list_action)
+
+        # Shares
+
+        action = Gio.SimpleAction.new("configureshares", None)
+        action.connect("activate", self.on_configure_shares)
+        self.application.add_action(action)
+
+        self.rescan_public_action = Gio.SimpleAction.new("publicrescan", None)
+        self.rescan_public_action.connect("activate", self.on_rescan)
+        self.application.add_action(self.rescan_public_action)
+
+        self.rescan_buddy_action = Gio.SimpleAction.new("buddyrescan", None)
+        self.rescan_buddy_action.connect("activate", self.on_buddy_rescan)
+        self.application.add_action(self.rescan_buddy_action)
+
+        self.browse_public_shares_action = Gio.SimpleAction.new("browsepublicshares", None)
+        self.browse_public_shares_action.connect("activate", self.on_browse_public_shares)
+        self.application.add_action(self.browse_public_shares_action)
+
+        self.browse_buddy_shares_action = Gio.SimpleAction.new("browsebuddyshares", None)
+        self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
+        self.application.add_action(self.browse_buddy_shares_action)
+
+        # Modes
+
+        action = Gio.SimpleAction.new("chatrooms", None)
+        action.connect("activate", self.on_chat_rooms)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("privatechat", None)
+        action.connect("activate", self.on_private_chat)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("downloads", None)
+        action.connect("activate", self.on_downloads)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("uploads", None)
+        action.connect("activate", self.on_uploads)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("searchfiles", None)
+        action.connect("activate", self.on_search_files)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("userinfo", None)
+        action.connect("activate", self.on_user_info)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("userbrowse", None)
+        action.connect("activate", self.on_user_browse)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("interests", None)
+        action.connect("activate", self.on_interests)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("buddylist", None)
+        action.connect("activate", self.on_buddy_list)
+        self.MainWindow.add_action(action)
+
+        # Help
+
+        action = Gio.SimpleAction.new("aboutchatroomcommands", None)
+        action.connect("activate", self.on_about_chatroom_commands)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("aboutprivatechatcommands", None)
+        action.connect("activate", self.on_about_private_chat_commands)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("aboutfilters", None)
+        action.connect("activate", self.on_about_filters)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("checklatest", None)
+        action.connect("activate", self.on_check_latest)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("reportbug", None)
+        action.connect("activate", self.on_report_bug)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", self.on_about)
+        self.application.add_action(action)
+
     # File
 
-    def on_connect(self, widget):
+    def on_connect(self, *args, getmessage=True):
 
         self.tray_app.tray_status["status"] = "connect"
         self.tray_app.set_image()
@@ -721,7 +871,7 @@ class NicotineFrame:
         if self.np.active_server_conn is not None:
             return
 
-        if widget != -1:
+        if getmessage:
             while not self.np.queue.empty():
                 self.np.queue.get(0)
 
@@ -734,12 +884,12 @@ class NicotineFrame:
             self.np.servertimer.cancel()
             self.np.servertimer = None
 
-    def on_disconnect(self, event):
-        self.disconnect1.set_sensitive(0)
+    def on_disconnect(self, *args):
+        self.disconnect_action.set_enabled(False)
         self.np.manualdisconnect = True
         self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
 
-    def on_away(self, widget):
+    def on_away(self, *args):
 
         self.away = (self.away + 1) % 2
 
@@ -757,21 +907,21 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.privatechats.update_colours()
 
-    def on_check_privileges(self, widget):
+    def on_check_privileges(self, *args):
         self.np.queue.put(slskmessages.CheckPrivileges())
 
-    def on_get_privileges(self, widget):
+    def on_get_privileges(self, *args):
         url = "%(url)s" % {
             'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(self.np.config.sections["server"]["login"])
         }
         open_uri(url, self.MainWindow)
 
-    def on_exit(self, widget):
+    def on_quit(self, *args):
         self.MainWindow.destroy()
 
     # Edit
 
-    def on_settings(self, widget, page=None):
+    def on_settings(self, *args, page=None):
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
             self.settingswindow.SettingsWindow.connect("settings-closed", self.on_settings_closed)
@@ -780,12 +930,14 @@ class NicotineFrame:
             return
 
         self.settingswindow.set_settings(self.np.config.sections)
+
         if page:
             self.settingswindow.switch_to_page(page)
+
         self.settingswindow.SettingsWindow.show()
         self.settingswindow.SettingsWindow.deiconify()
 
-    def on_fast_configure(self, widget, show=True):
+    def on_fast_configure(self, *args, show=True):
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
@@ -795,13 +947,13 @@ class NicotineFrame:
         if show:
             self.fastconfigure.show()
 
-    def on_now_playing_configure(self, widget):
+    def on_now_playing_configure(self, *args):
         if self.now_playing is None:
             self.now_playing = NowPlaying(self)
 
         self.now_playing.show()
 
-    def on_backup_config(self, widget=None):
+    def on_backup_config(self, *args):
         response = save_file(
             self.MainWindow.get_toplevel(),
             os.path.dirname(self.np.config.filename),
@@ -818,89 +970,103 @@ class NicotineFrame:
 
     # View
 
-    def on_show_log(self, widget):
-
-        show = widget.get_active()
-        self.np.config.sections["logging"]["logcollapsed"] = (not show)
-
-        if not show:
-            self.debugLogBox.hide()
-        else:
+    def set_show_log(self, show):
+        if show:
             self.debugLogBox.show()
             scroll_bottom(self.LogScrolledWindow)
+        else:
+            self.debugLogBox.hide()
 
+    def on_show_log(self, action, *args):
+
+        state = self.np.config.sections["logging"]["logcollapsed"]
+        self.set_show_log(state)
+        action.set_state(GLib.Variant.new_boolean(state))
+
+        self.np.config.sections["logging"]["logcollapsed"] = not state
         self.np.config.write_configuration()
 
-    def on_show_debug(self, widget):
-
-        show = widget.get_active()
-        self.np.config.sections["logging"]["debug"] = show
-
+    def set_show_debug(self, show):
         if show:
             self.debugButtonsBox.show()
         else:
             self.debugButtonsBox.hide()
 
+    def on_show_debug(self, action, *args):
+
+        state = self.np.config.sections["logging"]["debug"]
+        self.set_show_debug(not state)
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        self.np.config.sections["logging"]["debug"] = not state
         self.np.config.write_configuration()
 
-    def on_show_flags(self, widget):
+    def set_show_room_list(self, show):
+        if show:
+            if self.roomlist.vbox2 not in self.vpaned3.get_children():
+                self.vpaned3.pack2(self.roomlist.vbox2, True, True)
+                self.vpaned3.show()
+        else:
+            if self.roomlist.vbox2 in self.vpaned3.get_children():
+                self.vpaned3.remove(self.roomlist.vbox2)
 
-        show = widget.get_active()
-        self.np.config.sections["columns"]["hideflags"] = (not show)
+            if self.userlist.userlistvbox not in self.vpaned3.get_children():
+                self.vpaned3.hide()
 
+    def on_show_room_list(self, action, *args):
+
+        state = self.np.config.sections["ui"]["roomlistcollapsed"]
+        self.set_show_room_list(state)
+        action.set_state(GLib.Variant.new_boolean(state))
+
+        self.np.config.sections["ui"]["roomlistcollapsed"] = not state
+        self.np.config.write_configuration()
+
+    def set_show_flags(self, state):
         for room in self.chatrooms.roomsctrl.joinedrooms:
-            self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(show)
-            self.np.config.sections["columns"]["chatrooms"][room][1] = int(show)
+            self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(state)
+            self.np.config.sections["columns"]["chatrooms"][room][1] = int(state)
 
-        self.userlist.cols[1].set_visible(show)
-        self.np.config.sections["columns"]["userlist"][1] = int(show)
+        self.userlist.cols[1].set_visible(state)
+        self.np.config.sections["columns"]["userlist"][1] = int(state)
         self.np.config.write_configuration()
 
-    def on_show_transfer_buttons(self, widget):
+    def on_show_flags(self, action, *args):
 
-        show = widget.get_active()
-        self.np.config.sections["transfers"]["enabletransferbuttons"] = show
+        state = self.np.config.sections["columns"]["hideflags"]
+        self.set_show_flags(state)
+        action.set_state(GLib.Variant.new_boolean(state))
 
-        if self.np.config.sections["transfers"]["enabletransferbuttons"]:
+        self.np.config.sections["columns"]["hideflags"] = not state
+        self.np.config.write_configuration()
+
+    def set_show_transfer_buttons(self, show):
+        if show:
             self.DownloadButtons.show()
             self.UploadButtons.show()
         else:
             self.UploadButtons.hide()
             self.DownloadButtons.hide()
 
+    def on_show_transfer_buttons(self, action, *args):
+
+        state = self.np.config.sections["transfers"]["enabletransferbuttons"]
+        self.set_show_transfer_buttons(not state)
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        self.np.config.sections["transfers"]["enabletransferbuttons"] = not state
         self.np.config.write_configuration()
 
-    def on_show_room_list(self, widget):
+    def set_toggle_buddy_list(self, state):
 
-        show = widget.get_active()
-        self.np.config.sections["ui"]["roomlistcollapsed"] = (not show)
+        tab = always = chatrooms = False
 
-        if not show:
-            if self.roomlist.vbox2 in self.vpaned3.get_children():
-                self.vpaned3.remove(self.roomlist.vbox2)
-
-            if self.userlist.userlistvbox not in self.vpaned3.get_children():
-                self.vpaned3.hide()
-        else:
-            if self.roomlist.vbox2 not in self.vpaned3.get_children():
-                self.vpaned3.pack2(self.roomlist.vbox2, True, True)
-                self.vpaned3.show()
-
-        self.np.config.write_configuration()
-
-    def on_toggle_buddy_list(self, widget):
-        """ Function used to switch around the UI the BuddyList position """
-
-        tab = always = chatrooms = hidden = False
-
-        if self.buddylist_in_tab.get_active():
+        if state == 0:
             tab = True
-        if self.buddylist_always_visible.get_active():
-            always = True
-        if self.buddylist_in_chatrooms1.get_active():
+        if state == 1:
             chatrooms = True
-        if self.buddylist_hidden.get_active():
-            hidden = True
+        if state == 2:
+            always = True
 
         if self.userlist.userlistvbox in self.MainNotebook.get_children():
             if tab:
@@ -917,7 +1083,7 @@ class NicotineFrame:
                 return
             self.vpaned3.remove(self.userlist.userlistvbox)
 
-        if not self.show_room_list1.get_active():
+        if not self.show_room_list_action.get_enabled():
             if not chatrooms:
                 self.vpaned3.hide()
 
@@ -933,15 +1099,12 @@ class NicotineFrame:
 
             self.userlist.BuddiesLabel.hide()
 
-            self.np.config.sections["ui"]["buddylistinchatrooms"] = 0
-
         if chatrooms:
             self.vpaned3.show()
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
 
             self.userlist.BuddiesLabel.show()
-            self.np.config.sections["ui"]["buddylistinchatrooms"] = 1
 
         if always:
             self.vpanedm.show()
@@ -949,50 +1112,55 @@ class NicotineFrame:
                 self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
 
             self.userlist.BuddiesLabel.show()
-            self.np.config.sections["ui"]["buddylistinchatrooms"] = 2
         else:
             self.vpanedm.hide()
 
-        if hidden:
-            # Work already done by the else statement above, just save the choice to config
-            self.np.config.sections["ui"]["buddylistinchatrooms"] = 3
+    def on_toggle_buddy_list(self, action, state=0):
+        """ Function used to switch around the UI the BuddyList position """
 
+        if not isinstance(state, int):
+            state = int(state.get_string())
+
+        self.set_toggle_buddy_list(state)
+        action.set_state(GLib.Variant.new_string(str(state)))
+
+        self.np.config.sections["ui"]["buddylistinchatrooms"] = state
         self.np.config.write_configuration()
 
     # Shares
 
-    def on_settings_shares(self, widget):
-        self.on_settings(widget, 'Shares')
+    def on_configure_shares(self, *args):
+        self.on_settings(page='Shares')
 
-    def on_rescan(self, widget=None, rebuild=False):
+    def on_rescan(self, *args, rebuild=False):
 
         if self.rescanning:
             return
 
         self.rescanning = True
 
-        self.rescan_public.set_sensitive(False)
-        self.browse_public_shares.set_sensitive(False)
+        self.rescan_public_action.set_enabled(False)
+        self.browse_public_shares_action.set_enabled(False)
 
         log.add(_("Rescanning started"))
 
         _thread.start_new_thread(self.np.shares.rescan_shares, (rebuild,))
 
-    def on_buddy_rescan(self, widget=None, rebuild=False):
+    def on_buddy_rescan(self, *args, rebuild=False):
 
         if self.brescanning:
             return
 
         self.brescanning = True
 
-        self.rescan_buddy.set_sensitive(False)
-        self.browse_buddy_shares.set_sensitive(False)
+        self.rescan_buddy_action.set_enabled(False)
+        self.browse_buddy_shares_action.set_enabled(False)
 
         log.add(_("Rescanning Buddy Shares started"))
 
         _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
 
-    def on_browse_public_shares(self, widget):
+    def on_browse_public_shares(self, *args):
         """ Browse your own public shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1006,7 +1174,7 @@ class NicotineFrame:
         m.parse_network_message(m.make_network_message(nozlib=1), nozlib=1)
         self.userbrowse.show_info(login, m)
 
-    def on_browse_buddy_shares(self, widget):
+    def on_browse_buddy_shares(self, *args):
         """ Browse your own buddy shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1022,39 +1190,37 @@ class NicotineFrame:
 
     # Modes
 
-    def on_chat_rooms(self, widget):
-        self.change_main_page(widget, "chatrooms")
+    def on_chat_rooms(self, *args):
+        self.change_main_page("chatrooms")
 
-    def on_private_chat(self, widget):
-        self.change_main_page(widget, "private")
+    def on_private_chat(self, *args):
+        self.change_main_page("private")
 
-    def on_downloads(self, widget):
-        self.change_main_page(widget, "downloads")
+    def on_downloads(self, *args):
+        self.change_main_page("downloads")
 
-    def on_uploads(self, widget):
-        self.change_main_page(widget, "uploads")
+    def on_uploads(self, *args):
+        self.change_main_page("uploads")
 
-    def on_search_files(self, widget):
-        self.change_main_page(widget, "search")
+    def on_search_files(self, *args):
+        self.change_main_page("search")
 
-    def on_user_info(self, widget):
-        self.change_main_page(widget, "userinfo")
+    def on_user_info(self, *args):
+        self.change_main_page("userinfo")
 
-    def on_user_browse(self, widget):
-        self.change_main_page(widget, "userbrowse")
+    def on_user_browse(self, *args):
+        self.change_main_page("userbrowse")
 
-    def on_interests(self, widget):
-        self.change_main_page(widget, "interests")
+    def on_interests(self, *args):
+        self.change_main_page("interests")
 
-    def on_user_list(self, widget):
-        self.buddylist_in_tab.set_active(True)
-
-        self.on_toggle_buddy_list(widget)
-        self.change_main_page(widget, "userlist")
+    def on_buddy_list(self, *args):
+        self.on_toggle_buddy_list(self.toggle_buddy_list_action)
+        self.change_main_page("userlist")
 
     # Help
 
-    def on_about_chatroom_commands(self, widget):
+    def on_about_chatroom_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
@@ -1063,7 +1229,7 @@ class NicotineFrame:
         self.about_chatroom_commands.set_transient_for(self.MainWindow)
         self.about_chatroom_commands.show()
 
-    def on_about_private_chat_commands(self, widget):
+    def on_about_private_chat_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
@@ -1072,7 +1238,7 @@ class NicotineFrame:
         self.about_private_chat_commands.set_transient_for(self.MainWindow)
         self.about_private_chat_commands.show()
 
-    def on_about_filters(self, widget):
+    def on_about_filters(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
@@ -1081,14 +1247,14 @@ class NicotineFrame:
         self.about_search_filters.set_transient_for(self.MainWindow)
         self.about_search_filters.show()
 
-    def on_check_latest(self, widget):
+    def on_check_latest(self, *args):
         checklatest(self.MainWindow)
 
-    def on_report_bug(self, widget):
+    def on_report_bug(self, *args):
         url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
         open_uri(url, self.MainWindow)
 
-    def on_about(self, widget):
+    def on_about(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
@@ -1316,7 +1482,7 @@ class NicotineFrame:
         num = self.MainNotebook.page_num(tab)
         self.MainNotebook.remove_page(num)
 
-    def show_tab(self, widget, lista):
+    def show_tab(self, lista):
         name, child = lista
 
         if child in self.MainNotebook.get_children():
@@ -1433,7 +1599,7 @@ class NicotineFrame:
             return
         return child
 
-    def change_main_page(self, widget, tab):
+    def change_main_page(self, tab):
 
         page_num = self.MainNotebook.page_num
         child = self.match_main_name_page(tab)
@@ -1441,7 +1607,7 @@ class NicotineFrame:
         if child in self.MainNotebook.get_children():
             self.MainNotebook.set_current_page(page_num(child))
         else:
-            self.show_tab(widget, [tab, child])
+            self.show_tab([tab, child])
 
     """ Fonts and Colors """
 
@@ -1544,8 +1710,8 @@ class NicotineFrame:
     def _buddy_rescan_finished(self):
 
         if self.np.config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy.set_sensitive(True)
-            self.browse_buddy_shares.set_sensitive(True)
+            self.rescan_buddy_action.set_enabled(True)
+            self.browse_buddy_shares_action.set_enabled(True)
 
         self.brescanning = False
         log.add(_("Rescanning Buddy Shares finished"))
@@ -1555,8 +1721,8 @@ class NicotineFrame:
     def _rescan_finished(self):
 
         if self.np.config.sections["transfers"]["shared"]:
-            self.rescan_public.set_sensitive(True)
-            self.browse_public_shares.set_sensitive(True)
+            self.rescan_public_action.set_enabled(True)
+            self.browse_public_shares_action.set_enabled(True)
 
         self.rescanning = False
         log.add(_("Rescanning finished"))
@@ -1566,7 +1732,7 @@ class NicotineFrame:
     """ Search """
 
     def on_settings_searches(self, widget):
-        self.on_settings(widget, 'Searches')
+        self.on_settings(page='Searches')
 
     def on_search_method(self, widget):
 
@@ -1648,7 +1814,7 @@ class NicotineFrame:
     """ User Info """
 
     def on_settings_userinfo(self, widget):
-        self.on_settings(widget, 'User Info')
+        self.on_settings(page='User Info')
 
     def on_get_user_info(self, widget):
         text = self.UserInfoCombo.get_child().get_text()
@@ -1748,7 +1914,7 @@ class NicotineFrame:
     """ Private Chat """
 
     def on_settings_logging(self, widget):
-        self.on_settings(widget, 'Logging')
+        self.on_settings(page='Logging')
 
     def on_get_private_chat(self, widget):
         text = self.UserPrivateCombo.get_child().get_text()
@@ -1867,7 +2033,7 @@ class NicotineFrame:
     """ User Actions """
 
     def on_settings_ban_ignore(self, widget):
-        self.on_settings(widget, 'Ban List')
+        self.on_settings(page='Ban List')
 
     def ban_user(self, user):
         if self.np.transfers is not None:
@@ -2080,10 +2246,10 @@ class NicotineFrame:
             return self.flag_images[flag]
 
     def on_settings_downloads(self, widget):
-        self.on_settings(widget, 'Downloads')
+        self.on_settings(page='Downloads')
 
     def on_settings_uploads(self, widget):
-        self.on_settings(widget, 'Uploads')
+        self.on_settings(page='Uploads')
 
     def on_soul_seek(self, url):
         try:
@@ -2339,7 +2505,7 @@ class NicotineFrame:
         self.np.config.write_configuration()
 
         if not config["ui"]["trayicon"] and self.tray_app.is_tray_icon_visible():
-            self.tray_app.destroy_trayicon()
+            self.tray_app.hide()
         elif config["ui"]["trayicon"] and not self.tray_app.is_tray_icon_visible():
             self.tray_app.create()
 
@@ -2423,11 +2589,11 @@ class NicotineFrame:
 
         if config_unset > 1:
             if self.np.transfers is not None:
-                self.connect1.set_sensitive(0)
-            self.on_fast_configure(None)
+                self.connect_action.set_enabled(False)
+            self.on_fast_configure()
         else:
             if self.np.transfers is None:
-                self.connect1.set_sensitive(1)
+                self.connect_action.set_enabled(True)
 
     def on_delete_event(self, widget, event):
 
@@ -2467,9 +2633,6 @@ class NicotineFrame:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
 
-            if self.tray_app.trayicon:
-                self.tray_app.destroy_trayicon()
-
             self.MainWindow.destroy()
 
         elif response == Gtk.ResponseType.REJECT:
@@ -2486,10 +2649,9 @@ class NicotineFrame:
         self.MainNotebook.disconnect(self.page_removed_signal)
 
         self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
-
         self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
-
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
+
         self.np.protothread.abort()
         self.np.stop_timers()
 
@@ -2500,10 +2662,6 @@ class NicotineFrame:
 
         if self.np.transfers is not None:
             self.np.transfers.save_downloads()
-
-        # Cleaning up the trayicon
-        if self.tray_app.trayicon:
-            self.tray_app.destroy_trayicon()
 
         # Closing up all shelves db
         self.np.shares.close_shares()
@@ -2516,38 +2674,39 @@ class NicotineFrame:
 
 
 class MainApp(Gtk.Application):
+
     def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
         Gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
 
-        self.connect(
-            "activate",
-            self.on_activate,
-            data_dir,
-            config,
-            plugins,
-            trayicon,
-            start_hidden,
-            bindip,
-            port
-        )
+        self.data_dir = data_dir
+        self.config = config
+        self.plugins = plugins
+        self.trayicon = trayicon
+        self.start_hidden = start_hidden
+        self.bindip = bindip
+        self.port = port
 
-    def on_activate(self, data, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
+    def do_activate(self):
         if not self.get_windows():
             # Only allow one instance of the main window
 
             self.frame = NicotineFrame(
-                data_dir,
-                config,
-                plugins,
-                trayicon,
-                bindip,
-                port
+                self,
+                self.data_dir,
+                self.config,
+                self.plugins,
+                self.trayicon,
+                self.bindip,
+                self.port
             )
+
+            builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+            self.set_menubar(builder.get_object("menubar"))
 
             self.add_window(self.frame.MainWindow)
 
-        if not start_hidden:
+        if not self.start_hidden:
             self.frame.MainWindow.show()
 
             if self.frame.fastconfigure is not None:

@@ -1359,7 +1359,7 @@ class ChatRoom:
             self.frame.on_away(None)
 
         elif cmd in ["/q", "/quit", "/exit"]:
-            self.frame.on_exit(None)
+            self.frame.on_quit(None)
             return  # Avoid gsignal warning
 
         elif cmd == "/now":
