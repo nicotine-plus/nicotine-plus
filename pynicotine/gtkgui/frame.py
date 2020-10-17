@@ -551,31 +551,31 @@ class NicotineFrame:
         state = not self.np.config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_log)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = self.np.config.sections["logging"]["debug"]
         action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_debug)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = not self.np.config.sections["ui"]["roomlistcollapsed"]
         action = Gio.SimpleAction.new_stateful("showroomlist", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_room_list)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = not self.np.config.sections["columns"]["hideflags"]
         action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_flags)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = self.np.config.sections["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string("radio-one"))
         action.connect("activate", self.on_toggle_buddy_list)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         # Shares
 
@@ -603,39 +603,39 @@ class NicotineFrame:
 
         action = Gio.SimpleAction.new("chatrooms", None)
         action.connect("activate", self.on_chat_rooms)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("privatechat", None)
         action.connect("activate", self.on_private_chat)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("downloads", None)
         action.connect("activate", self.on_downloads)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("uploads", None)
         action.connect("activate", self.on_uploads)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("searchfiles", None)
         action.connect("activate", self.on_search_files)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("userinfo", None)
         action.connect("activate", self.on_user_info)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("userbrowse", None)
         action.connect("activate", self.on_user_browse)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("interests", None)
         action.connect("activate", self.on_interests)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         action = Gio.SimpleAction.new("buddylist", None)
         action.connect("activate", self.on_buddy_list)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         # Help
 

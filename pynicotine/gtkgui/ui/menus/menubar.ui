@@ -69,49 +69,49 @@
       <section>
         <item>
           <attribute name="label" translatable="yes">Show _log window</attribute>
-          <attribute name="action">app.showlog</attribute>
+          <attribute name="action">win.showlog</attribute>
           <attribute name="accel">&lt;Alt&gt;l</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Show _debug output controls</attribute>
-          <attribute name="action">app.showdebug</attribute>
+          <attribute name="action">win.showdebug</attribute>
         </item>
       </section>
       <section>
         <item>
           <attribute name="label" translatable="yes">Show _room list</attribute>
-          <attribute name="action">app.showroomlist</attribute>
+          <attribute name="action">win.showroomlist</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Show _flag columns in user lists</attribute>
-          <attribute name="action">app.showflags</attribute>
+          <attribute name="action">win.showflags</attribute>
           <attribute name="accel">&lt;Alt&gt;g</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Show _buttons in transfer tabs</attribute>
-          <attribute name="action">app.showtransferbuttons</attribute>
+          <attribute name="action">win.showtransferbuttons</attribute>
           <attribute name="accel">&lt;Alt&gt;b</attribute>
         </item>
       </section>
       <section>
         <item>
           <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
-          <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="action">win.togglebuddylist</attribute>
           <attribute name="target">radio-one</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
-          <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="action">win.togglebuddylist</attribute>
           <attribute name="target">radio-two</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist always visible</attribute>
-          <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="action">win.togglebuddylist</attribute>
           <attribute name="target">radio-three</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist hidden</attribute>
-          <attribute name="action">app.togglebuddylist</attribute>
+          <attribute name="action">win.togglebuddylist</attribute>
           <attribute name="target">radio-four</attribute>
         </item>
       </section>
@@ -150,39 +150,39 @@
       <section>
         <item>
           <attribute name="label" translatable="yes">_Chat Rooms</attribute>
-          <attribute name="action">app.chatrooms</attribute>
+          <attribute name="action">win.chatrooms</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Private Chat</attribute>
-          <attribute name="action">app.privatechat</attribute>
+          <attribute name="action">win.privatechat</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Downloads</attribute>
-          <attribute name="action">app.downloads</attribute>
+          <attribute name="action">win.downloads</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Uploads</attribute>
-          <attribute name="action">app.uploads</attribute>
+          <attribute name="action">win.uploads</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Search Files</attribute>
-          <attribute name="action">app.searchfiles</attribute>
+          <attribute name="action">win.searchfiles</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">User I_nfo</attribute>
-          <attribute name="action">app.userinfo</attribute>
+          <attribute name="action">win.userinfo</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">User _Browse</attribute>
-          <attribute name="action">app.userbrowse</attribute>
+          <attribute name="action">win.userbrowse</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Interests</attribute>
-          <attribute name="action">app.interests</attribute>
+          <attribute name="action">win.interests</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddy _List</attribute>
-          <attribute name="action">app.buddylist</attribute>
+          <attribute name="action">win.buddylist</attribute>
         </item>
       </section>
     </submenu>
