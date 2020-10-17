@@ -707,14 +707,14 @@ class SharesFrame(BuildFrame):
         # Buddy shares related menus are activated if needed
         buddies = self.enableBuddyShares.get_active()
 
-        self.frame.rescan_buddy.set_sensitive(buddies)
-        self.frame.browse_buddy_shares.set_sensitive(buddies)
+        self.frame.rescan_buddy_action.set_enabled(buddies)
+        self.frame.browse_buddy_shares_action.set_enabled(buddies)
 
         # Public shares related menus are deactivated if we only share with friends
         friendsonly = self.FriendsOnly.get_active()
 
-        self.frame.rescan_public.set_sensitive(not friendsonly)
-        self.frame.browse_public_shares.set_sensitive(not friendsonly)
+        self.frame.rescan_public_action.set_enabled(not friendsonly)
+        self.frame.browse_public_shares_action.set_enabled(not friendsonly)
 
         return {
             "transfers": {

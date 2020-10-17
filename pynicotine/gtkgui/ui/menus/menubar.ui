@@ -44,7 +44,7 @@
       <attribute name="label" translatable="yes">_Edit</attribute>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Settings</attribute>
+          <attribute name="label" translatable="yes">_Preferences</attribute>
           <attribute name="action">app.settings</attribute>
           <attribute name="accel">&lt;Alt&gt;s</attribute>
         </item>
@@ -97,22 +97,22 @@
         <item>
           <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
           <attribute name="action">win.togglebuddylist</attribute>
-          <attribute name="target">radio-one</attribute>
+          <attribute name="target">0</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
           <attribute name="action">win.togglebuddylist</attribute>
-          <attribute name="target">radio-two</attribute>
+          <attribute name="target">1</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist always visible</attribute>
           <attribute name="action">win.togglebuddylist</attribute>
-          <attribute name="target">radio-three</attribute>
+          <attribute name="target">2</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddylist hidden</attribute>
           <attribute name="action">win.togglebuddylist</attribute>
-          <attribute name="target">radio-four</attribute>
+          <attribute name="target">3</attribute>
         </item>
       </section>
     </submenu>
@@ -222,3 +222,4 @@
       </section>
     </submenu>
   </menu>
+</interface>

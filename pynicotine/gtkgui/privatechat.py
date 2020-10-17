@@ -741,7 +741,7 @@ class PrivateChat:
             self.frame.on_away(None)
 
         elif cmd in ["/q", "/quit", "/exit"]:
-            self.frame.on_exit(None)
+            self.frame.on_quit(None)
             return
 
         elif cmd in ["/c", "/close"]:
