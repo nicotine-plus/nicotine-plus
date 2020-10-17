@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="menubar">
+    <submenu>
+      <attribute name="label" translatable="yes">_File</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Connect</attribute>
+          <attribute name="action">app.connect</attribute>
+          <attribute name="accel">&lt;Alt&gt;c</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Disconnect</attribute>
+          <attribute name="action">app.disconnect</attribute>
+          <attribute name="accel">&lt;Alt&gt;d</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Away/Return</attribute>
+          <attribute name="action">app.away</attribute>
+          <attribute name="accel">&lt;Alt&gt;a</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Check _Privileges</attribute>
+          <attribute name="action">app.checkprivileges</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Get _Privileges</attribute>
+          <attribute name="action">app.getprivileges</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Quit</attribute>
+          <attribute name="action">app.quit</attribute>
+          <attribute name="accel">&lt;Primary&gt;q</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_Edit</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Settings</attribute>
+          <attribute name="action">app.settings</attribute>
+          <attribute name="accel">&lt;Alt&gt;s</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Fast Configure</attribute>
+          <attribute name="action">app.fastconfigure</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Configure _Now Playing</attribute>
+          <attribute name="action">app.nowplaying</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Backup Config</attribute>
+          <attribute name="action">app.backupconfig</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">_View</attribute>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Show _log window</attribute>
+          <attribute name="action">app.showlog</attribute>
+          <attribute name="accel">&lt;Alt&gt;l</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Show _debug output controls</attribute>
+          <attribute name="action">app.showdebug</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Show _room list</attribute>
+          <attribute name="action">app.showroomlist</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Show _flag columns in user lists</attribute>
+          <attribute name="action">app.showflags</attribute>
+          <attribute name="accel">&lt;Alt&gt;g</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Show _buttons in transfer tabs</attribute>
+          <attribute name="action">app.showtransferbuttons</attribute>
+          <attribute name="accel">&lt;Alt&gt;b</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
+          <attribute name="action">app.togglebuddylist</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
+          <attribute name="action">app.togglebuddylist</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Buddylist always visible</attribute>
+          <attribute name="action">app.togglebuddylist</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Buddylist hidden</attribute>
+          <attribute name="action">app.togglebuddylist</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">Shares</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">Modes</attribute>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">Help</attribute>
+    </submenu>
+  </menu>
+</interface>

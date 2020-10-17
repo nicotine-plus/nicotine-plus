@@ -77,7 +77,7 @@ class TrayApp:
                 ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
                 ("$" + _("Toggle Away"), self.frame.on_away),
                 ("#" + _("Settings"), self.frame.on_settings),
-                ("#" + _("Quit"), self.frame.on_exit)
+                ("#" + _("Quit"), self.frame.on_quit)
             )
         except Exception as e:
             log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
