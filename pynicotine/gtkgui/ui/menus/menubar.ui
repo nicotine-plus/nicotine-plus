@@ -34,33 +34,20 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Quit</attribute>
-          <attribute name="action">app.quit</attribute>
-          <attribute name="accel">&lt;Primary&gt;q</attribute>
+          <attribute name="label" translatable="yes">_Fast Configure</attribute>
+          <attribute name="action">app.fastconfigure</attribute>
         </item>
-      </section>
-    </submenu>
-    <submenu>
-      <attribute name="label" translatable="yes">_Edit</attribute>
-      <section>
         <item>
           <attribute name="label" translatable="yes">_Preferences</attribute>
           <attribute name="action">app.settings</attribute>
           <attribute name="accel">&lt;Alt&gt;s</attribute>
         </item>
-        <item>
-          <attribute name="label" translatable="yes">_Fast Configure</attribute>
-          <attribute name="action">app.fastconfigure</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">Configure _Now Playing</attribute>
-          <attribute name="action">app.nowplaying</attribute>
-        </item>
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Backup Config</attribute>
-          <attribute name="action">app.backupconfig</attribute>
+          <attribute name="label" translatable="yes">_Quit</attribute>
+          <attribute name="action">app.quit</attribute>
+          <attribute name="accel">&lt;Primary&gt;q</attribute>
         </item>
       </section>
     </submenu>
@@ -81,6 +68,7 @@
         <item>
           <attribute name="label" translatable="yes">Show _room list</attribute>
           <attribute name="action">win.showroomlist</attribute>
+          <attribute name="accel">&lt;Alt&gt;r</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Show _flag columns in user lists</attribute>

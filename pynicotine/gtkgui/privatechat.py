@@ -35,7 +35,6 @@ from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.chatrooms import get_completion
-from pynicotine.gtkgui.nowplaying import NowPlaying
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -774,10 +773,7 @@ class PrivateChat:
         widget.set_text("")
 
     def display_now_playing(self):
-        if self.frame.now_playing is None:
-            self.frame.now_playing = NowPlaying(self.frame)
-
-        self.frame.now_playing.display_now_playing(None, 0, self.send_message)
+        self.frame.now_playing.display_now_playing(callback=self.send_message)
 
     def makecolour(self, buffer, colour):
 

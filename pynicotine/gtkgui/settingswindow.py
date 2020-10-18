@@ -36,6 +36,7 @@ from gi.repository import Gtk
 import _thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.utils import human_size
@@ -2917,6 +2918,172 @@ class CompletionFrame(BuildFrame):
         }
 
 
+class NowPlayingFrame(BuildFrame):
+
+    def __init__(self, parent):
+
+        self.p = parent
+        BuildFrame.__init__(self, "nowplaying")
+
+        self.options = {
+            "players": {
+                "npothercommand": self.NPCommand
+            }
+        }
+
+        self.player_replacers = []
+
+        # Default format list
+        self.format_model = Gtk.ListStore(GObject.TYPE_STRING)
+
+        self.default_format_list = [
+            "$n",
+            "$n ($f)",
+            "$a - $t",
+            "[$a] $t",
+            "$a - $b - $t",
+            "$a - $b - $t ($l/$r KBps) from $y $c"
+        ]
+        self.custom_format_list = []
+
+        # Set the NPFormat model
+        self.NPFormat.set_entry_text_column(0)
+        self.NPFormat.set_model(self.format_model)
+
+        # Suppy the information needed for the Now Playing class to return a song
+        self.test_now_playing.connect(
+            "clicked",
+            self.p.frame.now_playing.display_now_playing,
+            self.set_now_playing_example,  # Callback to update the song displayed
+            self.get_player,               # Callback to retrieve selected player
+            self.get_command,              # Callback to retrieve command text
+            self.get_format                # Callback to retrieve format text
+        )
+
+    def set_settings(self, config):
+
+        self.p.set_widgets_data(config, self.options)
+
+        # Save reference to format list for get_settings()
+        self.custom_format_list = config["players"]["npformatlist"]
+
+        # Update UI with saved player
+        self.set_player(config["players"]["npplayer"])
+        self.update_now_playing_info()
+
+        # Add formats
+        self.format_model.clear()
+
+        for item in self.default_format_list:
+            self.format_model.append([str(item)])
+
+        if self.custom_format_list:
+            for item in self.custom_format_list:
+                self.format_model.append([str(item)])
+
+        if config["players"]["npformat"] == "":
+            # If there's no default format in the config: set the first of the list
+            self.NPFormat.set_active(0)
+        else:
+            # If there's is a default format in the config: select the right item
+            for (i, v) in enumerate(self.format_model):
+                if v[0] == config["players"]["npformat"]:
+                    self.NPFormat.set_active(i)
+
+    def get_player(self):
+
+        if self.NP_lastfm.get_active():
+            player = "lastfm"
+        elif self.NP_mpris.get_active():
+            player = "mpris"
+        elif self.NP_other.get_active():
+            player = "other"
+
+        return player
+
+    def get_command(self):
+        return self.NPCommand.get_text()
+
+    def get_format(self):
+        return self.NPFormat.get_child().get_text()
+
+    def set_player(self, player):
+
+        if player == "lastfm":
+            self.NP_lastfm.set_active(True)
+        elif player == "other":
+            self.NP_other.set_active(True)
+        else:
+            self.NP_mpris.set_active(True)
+
+    def update_now_playing_info(self, widget=None):
+
+        if self.NP_lastfm.get_active():
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
+            self.player_input.set_text(_("Username;APIKEY :"))
+
+        elif self.NP_mpris.get_active():
+            self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
+            self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
+
+        elif self.NP_other.get_active():
+            self.player_replacers = ["$n"]
+            self.player_input.set_text(_("Command :"))
+
+        legend = ""
+
+        for item in self.player_replacers:
+            legend += item + "\t"
+
+            if item == "$t":
+                legend += _("Title")
+            elif item == "$n":
+                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {'artist': _("Artist"), 'title': _("Title")}
+            elif item == "$l":
+                legend += _("Length")
+            elif item == "$r":
+                legend += _("Bitrate")
+            elif item == "$c":
+                legend += _("Comment")
+            elif item == "$a":
+                legend += _("Artist")
+            elif item == "$b":
+                legend += _("Album")
+            elif item == "$k":
+                legend += _("Track Number")
+            elif item == "$y":
+                legend += _("Year")
+            elif item == "$f":
+                legend += _("Filename (URI)")
+            elif item == "$p":
+                legend += _("Program")
+
+            legend += "\n"
+
+        self.Legend.set_text(legend)
+
+    def set_now_playing_example(self, title):
+        self.Example.set_text(title)
+
+    def get_settings(self):
+
+        npformat = self.get_format()
+
+        if npformat and not npformat.isspace() and \
+                npformat not in self.custom_format_list and \
+                npformat not in self.default_format_list:
+            self.custom_format_list.append(npformat)
+
+        return {
+            "players": {
+                "npplayer": self.get_player(),
+                "npothercommand": self.get_command(),
+                "npformat": npformat,
+                "npformatlist": self.custom_format_list
+            }
+        }
+
+
 class BuildDialog(Gtk.Dialog):
     """ Class used to build a custom dialog for the plugins """
 
@@ -3323,6 +3490,7 @@ class Settings:
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
+        self.tree["Now Playing"] = model.append(row, [_("Now Playing"), "Now Playing"])
         self.tree["Away Mode"] = model.append(row, [_("Away Mode"), "Away Mode"])
         self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
         self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
@@ -3351,6 +3519,7 @@ class Settings:
         p["Icons"] = IconsFrame(self)
         p["Notebook Tabs"] = NotebookFrame(self)
 
+        p["Now Playing"] = NowPlayingFrame(self)
         p["Away Mode"] = AwayFrame(self)
         p["Ignore List"] = IgnoreFrame(self)
         p["Censor List"] = CensorFrame(self)
@@ -3426,6 +3595,21 @@ class Settings:
         self.SettingsTreeview.expand_to_path(path)
         if path is not None:
             sel.select_path(path)
+
+    def on_backup_config(self, *args):
+        response = save_file(
+            self.SettingsWindow.get_toplevel(),
+            os.path.dirname(self.frame.np.config.filename),
+            title="Pick a filename for config backup, or cancel to use a timestamp"
+        )
+        if response:
+            error, message = self.frame.np.config.write_config_backup(response[0])
+        else:
+            error, message = self.frame.np.config.write_config_backup()
+        if error:
+            log.add("Error backing up config: %s", message)
+        else:
+            log.add("Config backed up to: %s", message)
 
     def on_apply(self, widget):
         self.SettingsWindow.emit("settings-closed", "apply")
