@@ -390,7 +390,7 @@ msgstr "Blocco %s della richiesta UserInfo, possibile tentativo di spoofing da I
 #: ../pynicotine/pynicotine.py:1350
 #, python-format
 msgid "%(user)s is banned, but is making a UserInfo request"
-msgstr "%(user)s è bloccato ma sta facendo una richiesta UerInfo"
+msgstr "%(user)s è bloccato ma sta facendo una richiesta UserInfo"
 
 #: ../pynicotine/pynicotine.py:1383
 #, python-format
