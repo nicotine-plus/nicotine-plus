@@ -121,7 +121,7 @@ class Uploads(TransferList):
         open_file_path(final_path, command)
 
     def expand(self, path):
-        if self.frame.ExpandDownloads.get_active():
+        if self.frame.ExpandUploads.get_active():
             self.frame.UploadList.expand_to_path(path)
         else:
             collapse_treeview(self.frame.UploadList, self.tree_users)
