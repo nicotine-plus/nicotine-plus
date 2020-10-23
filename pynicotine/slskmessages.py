@@ -236,12 +236,12 @@ class SlskMessage:
 
                 if rawbytes is False:
                     try:
-                        string = string.decode('utf-8')
+                        string = string.decode("utf-8")
                     except Exception:
                         # Older clients (Soulseek NS)
 
                         try:
-                            string = string.decode('iso-8859-1')
+                            string = string.decode("latin-1")
                         except Exception as error:
                             if printerror:
                                 log.add_warning("Error trying to decode string '%s': %s", (string, error))
@@ -267,7 +267,12 @@ class SlskMessage:
         elif isinstance(object, bytes):
             return struct.pack("<i", len(object)) + object
         elif isinstance(object, str):
-            encoded = object.encode("utf-8", 'replace')
+            try:
+                # Try to encode in latin-1 first for older clients (Soulseek NS)
+                encoded = object.encode("latin-1")
+            except Exception:
+                encoded = object.encode("utf-8", "replace")
+
             return struct.pack("<i", len(encoded)) + encoded
 
         log.add_warning(_("Warning: unknown object type %(obj_type)s in message %(msg_type)s"), {'obj_type': type(object), 'msg_type': self.__class__})
@@ -1953,6 +1958,7 @@ class FileSearchResult(PeerMessage):
         for i in range(nfiles):
             self.pos, code = self.pos + 1, message[self.pos]
             self.pos, name = self.get_object(message, bytes, self.pos)
+
             # suppressing errors with unpacking, can be caused by incorrect sizetype
             self.pos, size = self.get_object(message, int, self.pos, getunsignedlonglong=True, printerror=False)
             self.pos, ext = self.get_object(message, bytes, self.pos, printerror=False)
