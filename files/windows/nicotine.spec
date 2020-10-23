@@ -20,12 +20,19 @@
 
 block_cipher = None
 
-from PyInstaller.utils.hooks import get_gi_typelibs
-
 import glob
 import os
 import sys
 
+from pkgutil import walk_packages
+from PyInstaller.utils.hooks import get_gi_typelibs
+
+# Provide access to the pynicotine module
+sys.path.append('.')
+
+import pynicotine.plugins
+
+# Disable unnecessary modules
 sys.modules['FixTk'] = None
 sys.modules['lib2to3'] = None
 
@@ -40,9 +47,9 @@ if sys.platform == 'win32':
     # Notification support on Windows
     hiddenimports.append('plyer.platforms.win.notification')
 
-elif sys.platform == 'darwin':
-    # Notification support on macOS
-    hiddenimports.append('plyer.platforms.macosx.notification')
+# Include plugins
+hiddenimports += [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
+
 
 # Files to be added to the frozen app
 added_files = [

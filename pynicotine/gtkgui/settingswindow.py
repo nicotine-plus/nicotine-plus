@@ -3251,7 +3251,7 @@ class BuildDialog(Gtk.Dialog):
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
         self.PluginProperties.hide()
-        self.settings.frame.np.pluginhandler.plugin_settings(self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+        self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def show(self):
         self.PluginProperties.show()
