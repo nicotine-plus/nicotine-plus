@@ -1031,7 +1031,7 @@ class ChatRoom:
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.frame.privatechats.send_message(user, None, 1)
-                self.frame.change_main_page(None, "private")
+                self.frame.change_main_page("private")
             return
 
         self.popup_menu.editing = True
