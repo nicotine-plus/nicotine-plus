@@ -72,6 +72,20 @@ class UserTabs(IconNotebook):
     def set_tab_label(self, mytab):
         self.mytab = mytab
 
+    def init_window(self, user, conn):
+
+        if user in self.users:
+            self.users[user].conn = conn
+        else:
+            w = self.users[user] = self.subwindow(self, user)
+            self.append_page(w.Main, user[:15], w.on_close)
+            self.frame.np.queue.put(slskmessages.AddUser(user))
+
+    def save_columns(self):
+
+        for user in self.users:
+            self.users[user].save_columns()
+
     def get_user_stats(self, msg):
 
         if msg.user in self.users:
@@ -95,22 +109,7 @@ class UserTabs(IconNotebook):
 
             self.set_status_image(tab.Main, msg.status)
 
-    def init_window(self, user, conn):
-
-        if user in self.users:
-            self.users[user].conn = conn
-        else:
-            w = self.subwindow(self, user, conn)
-            self.append_page(w.Main, user[:15], w.on_close)
-            self.users[user] = w
-            self.frame.np.queue.put(slskmessages.AddUser(user))
-
-    def save_columns(self):
-
-        for user in self.users:
-            self.users[user].save_columns()
-
-    def show_local_info(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
+    def show_local_user(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
 
         self.init_window(user, None)
         self.users[user].show_user_info(descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
@@ -119,10 +118,18 @@ class UserTabs(IconNotebook):
         if self.mytab is not None:
             self.frame.request_icon(self.mytab)
 
-    def show_info(self, user, msg):
+    def show_user(self, user, msg=None):
 
-        self.init_window(user, msg.conn)
-        self.users[user].show_info(msg)
+        if msg is not None:
+            conn = msg.conn
+        else:
+            conn = None
+
+        self.init_window(user, conn)
+
+        if msg is not None:
+            self.users[user].show_user(msg)
+
         self.request_changed(self.users[user].Main)
 
         if self.mytab is not None:
@@ -137,13 +144,13 @@ class UserTabs(IconNotebook):
 
     def update_gauge(self, msg):
 
-        for i in list(self.users.values()):
+        for i in self.users.values():
             if i.conn == msg.conn.conn:
                 i.update_gauge(msg)
 
     def update_colours(self):
 
-        for i in list(self.users.values()):
+        for i in self.users.values():
             i.change_colours()
 
     def tab_popup(self, user):
@@ -168,7 +175,7 @@ class UserTabs(IconNotebook):
 
         items = popup.get_children()
 
-        items[7].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[7].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[8].set_active(user in self.frame.np.config.sections["server"]["banlist"])
         items[9].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 
@@ -180,7 +187,7 @@ class UserTabs(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
+            username = next(user for user, tab in self.users.items() if tab.Main is page)
 
             if event.button == 2:
                 self.users[username].on_close(widget)
@@ -208,7 +215,7 @@ class UserTabs(IconNotebook):
 
 class UserInfo:
 
-    def __init__(self, userinfos, user, conn):
+    def __init__(self, userinfos, user):
 
         # Build the window
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
@@ -218,7 +225,7 @@ class UserInfo:
 
         self.frame.np.queue.put(slskmessages.UserInterests(user))
         self.user = user
-        self.conn = conn
+        self.conn = None
         self._descr = ""
         self.image_pixbuf = None
         self.zoom_factor = 5
@@ -321,13 +328,6 @@ class UserInfo:
 
         cellrenderer.set_property("foreground", colour)
 
-    def expander_status(self, widget):
-
-        if widget.get_property("expanded"):
-            self.InfoVbox.set_child_packing(widget, False, True, 0, 0)
-        else:
-            self.InfoVbox.set_child_packing(widget, True, True, 0, 0)
-
     def makecolour(self, colour):
 
         buffer = self.descr.get_buffer()
@@ -423,7 +423,7 @@ class UserInfo:
                 self.image.set_from_file(name)
                 os.remove(name)
 
-    def show_info(self, msg):
+    def show_user(self, msg):
         self.show_user_info(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
 
     def update_gauge(self, msg):
@@ -437,8 +437,11 @@ class UserInfo:
 
         self.progressbar.set_fraction(fraction)
 
+    """ Events """
+
     def on_send_message(self, widget):
-        self.frame.privatechats.send_message(self.user)
+        self.frame.privatechats.send_message(self.user, show_user=True)
+        self.frame.change_main_page("private")
 
     def on_show_ip_address(self, widget):
 

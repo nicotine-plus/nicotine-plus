@@ -1136,12 +1136,12 @@ class NicotineFrame:
 
         # Deactivate if we only share with buddies
         if self.np.config.sections["transfers"]["friendsonly"]:
-            m = slskmessages.SharedFileList(None, {})
+            msg = slskmessages.SharedFileList(None, {})
         else:
-            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
+            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
 
-        m.parse_network_message(m.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_info(login, m)
+        msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
+        self.userbrowse.show_user(login, msg)
 
     def on_browse_buddy_shares(self, *args):
         """ Browse your own buddy shares """
@@ -1150,12 +1150,12 @@ class NicotineFrame:
 
         # Show public shares if we don't have specific shares for buddies
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
+            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
         else:
-            m = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
+            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
 
-        m.parse_network_message(m.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_info(login, m)
+        msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
+        self.userbrowse.show_user(login, msg)
 
     # Modes
 
@@ -1826,6 +1826,7 @@ class NicotineFrame:
                 self.userinfo.show_local_info(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
 
         else:
+            self.userinfo.show_user(user)
             self.np.process_request_to_peer(user, slskmessages.UserInfoRequest(None), self.userinfo)
 
     """ User Browse """
@@ -1839,6 +1840,7 @@ class NicotineFrame:
             if user == login:
                 self.on_browse_public_shares(None)
             else:
+                self.userbrowse.show_user(user)
                 self.np.process_request_to_peer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
 
     def on_get_shares(self, widget):
@@ -1889,7 +1891,7 @@ class NicotineFrame:
         text = self.UserPrivateCombo.get_child().get_text()
         if not text:
             return
-        self.privatechats.send_message(text, None, 1)
+        self.privatechats.send_message(text, show_user=True)
         self.UserPrivateCombo.get_child().set_text("")
 
     """ Chat """

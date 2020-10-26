@@ -140,7 +140,7 @@ class PrivateChats(IconNotebook):
             self.set_status_image(tab.Main, msg.status)
             tab.get_user_status(msg.status)
 
-    def send_message(self, user, text=None, direction=None, bytestring=False):
+    def send_message(self, user, text=None, show_user=False, bytestring=False):
 
         if user not in self.users:
             tab = PrivateChat(self, user)
@@ -148,7 +148,7 @@ class PrivateChats(IconNotebook):
             self.append_page(tab.Main, user, tab.on_close)
             self.frame.np.queue.put(slskmessages.AddUser(user))
 
-        if direction:
+        if show_user:
             if self.get_current_page() != self.page_num(self.users[user].Main):
                 self.set_current_page(self.page_num(self.users[user].Main))
 
@@ -297,7 +297,7 @@ class PrivateChats(IconNotebook):
             self.frame.np.config.sections["privatechat"]["users"].sort()
             for user in self.frame.np.config.sections["privatechat"]["users"]:
                 if user not in self.users:
-                    self.send_message(user, None, 1)
+                    self.send_message(user, show_user=True)
 
     def conn_close(self):
 
@@ -668,7 +668,7 @@ class PrivateChat:
 
         elif cmd == "/pm":
             if realargs:
-                self.frame.privatechats.send_message(realargs, None, 1)
+                self.frame.privatechats.send_message(realargs, show_user=True)
 
         elif cmd in ["/m", "/msg"]:
             if realargs:
@@ -731,7 +731,7 @@ class PrivateChat:
 
         elif cmd == "/ctcpversion":
             if args:
-                self.frame.privatechats.send_message(args, CTCP_VERSION, 1, bytestring=True)
+                self.frame.privatechats.send_message(args, CTCP_VERSION, show_user=True, bytestring=True)
 
         elif cmd in ["/clear", "/cl"]:
             self.ChatScroll.get_buffer().set_text("")

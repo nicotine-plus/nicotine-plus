@@ -112,7 +112,7 @@ class TrayApp:
         )
 
         if user is not None:
-            self.frame.privatechats.send_message(user, None, 1)
+            self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
             self.show_window()
 

@@ -47,7 +47,7 @@ from pynicotine.utils import get_result_bitrate_length
 
 class UserBrowse:
 
-    def __init__(self, userbrowses, user, conn):
+    def __init__(self, userbrowses, user):
 
         # Build the window
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
@@ -56,7 +56,7 @@ class UserBrowse:
 
         self.frame = userbrowses.frame
         self.user = user
-        self.conn = conn
+        self.conn = None
 
         # selected_folder is the current selected folder
         self.selected_folder = None
@@ -545,7 +545,7 @@ class UserBrowse:
         self.frame.np.config.sections["columns"]["userbrowse"] = columns
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
-    def show_info(self, msg):
+    def show_user(self, msg):
         self.conn = None
         self.make_new_model(msg.list)
 
