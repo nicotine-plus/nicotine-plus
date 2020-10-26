@@ -86,27 +86,37 @@ class PluginHandler(object):
             self.enable_plugin(pluginname)
 
     def load_plugin(self, pluginname):
-        path = self.__findplugin(pluginname)
 
-        if path is None:
-            log.add(_("Failed to load plugin '%s', could not find it."), pluginname)
-            return False
+        try:
+            # Import builtin plugin
+            from importlib import import_module
+            plugin = import_module("pynicotine.plugins." + pluginname)
 
-        sys.path.insert(0, path)
+        except Exception:
+            # Import user plugin
+            path = self.__findplugin(pluginname)
 
-        from importlib.machinery import SourceFileLoader
-        plugin = SourceFileLoader(pluginname, os.path.join(path, '__init__.py')).load_module()
+            if path is None:
+                log.add(_("Failed to load plugin '%s', could not find it."), pluginname)
+                return False
+
+            from importlib.machinery import SourceFileLoader
+            plugin = SourceFileLoader(pluginname, os.path.join(path, '__init__.py')).load_module()
 
         instance = plugin.Plugin(self)
-        self.plugin_settings(instance)
+        self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
-
-        sys.path = sys.path[1:]
 
         self.loaded_plugins[pluginname] = plugin
         return plugin
 
     def enable_plugin(self, pluginname):
+
+        # Our config file doesn't play nicely with some characters
+        if "=" in pluginname:
+            log.add(_("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s") % {"name": pluginname, "characters": "="})
+            return
+
         if pluginname in self.enabled_plugins:
             return
 
@@ -194,19 +204,19 @@ class PluginHandler(object):
         for plugin in to_enable:
             self.enable_plugin(plugin)
 
-    def plugin_settings(self, plugin):
+    def plugin_settings(self, pluginname, plugin):
         try:
             if not hasattr(plugin, "settings"):
                 return
 
-            if plugin.__id__ not in self.config.sections["plugins"]:
-                self.config.sections["plugins"][plugin.__id__] = plugin.settings
+            if pluginname not in self.config.sections["plugins"]:
+                self.config.sections["plugins"][pluginname] = plugin.settings
 
             for i in plugin.settings:
-                if i not in self.config.sections["plugins"][plugin.__id__]:
-                    self.config.sections["plugins"][plugin.__id__][i] = plugin.settings[i]
+                if i not in self.config.sections["plugins"][pluginname]:
+                    self.config.sections["plugins"][pluginname][i] = plugin.settings[i]
 
-            customsettings = self.config.sections["plugins"][plugin.__id__]
+            customsettings = self.config.sections["plugins"][pluginname]
 
             for key in customsettings:
                 if key in plugin.settings:
@@ -488,12 +498,7 @@ class BasePlugin(object):
         # Never override this function, override init() instead
         self.parent = parent
         self.frame = parent.frame
-        try:
-            self.__id__
-        except AttributeError:
-            # See http://docs.python.org/library/configparser.html
-            # %(name)s will lead to replacements so we need to filter out those symbols.
-            self.__id__ = self.__name__.lower().replace(' ', '_').replace('%', '_').replace('=', '_')
+
         self.init()
         for (trigger, func) in self.__publiccommands__:
             self.frame.chatrooms.roomsctrl.CMDS.add('/' + trigger + ' ')
