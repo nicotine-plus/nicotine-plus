@@ -136,6 +136,7 @@ class NetworkEventProcessor:
         self.private_message_queue = {}
         self.users = {}
         self.user_addr_requested = set()
+
         self.queue = queue.Queue(0)
         self.shares = Shares(self, self.config, self.queue, self.ui_callback)
         self.pluginhandler = PluginHandler(self.ui_callback, plugins, self.config)
@@ -578,6 +579,7 @@ class NetworkEventProcessor:
 
             self.active_server_conn = None
             self.watchedusers = []
+            self.shares.set_connected(False)
 
             if self.transfers is not None:
                 self.transfers.abort_transfers()
@@ -617,6 +619,7 @@ class NetworkEventProcessor:
 
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
+            self.shares.set_connected(True)
 
             if msg.ip is not None:
                 self.ipaddress = msg.ip

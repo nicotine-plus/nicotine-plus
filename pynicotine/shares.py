@@ -47,11 +47,12 @@ if sys.platform == "win32":
 
 class Shares:
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, np, config, queue, ui_callback=None, connected=False):
         self.np = np
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
+        self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
         self.convert_shares()
@@ -79,6 +80,9 @@ class Shares:
             self.compress_shares("buddy")
 
         self.newbuddyshares = self.newnormalshares = False
+
+    def set_connected(self, connected):
+        self.connected = connected
 
     """ Shares-related actions """
 
@@ -296,7 +300,12 @@ class Shares:
                 self.ui_callback.rescan_finished(sharestype)
 
             self.compress_shares(sharestype)
-            self.send_num_shared_folders_files()
+
+            if self.connected:
+                """ Don't attempt to send file stats to the server before we're connected. If we skip the
+                step here, it will be done once we log in instead ("login" function in pynicotine.py). """
+
+                self.send_num_shared_folders_files()
 
         except Exception as ex:
             log.add(
