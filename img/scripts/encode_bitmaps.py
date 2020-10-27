@@ -28,7 +28,6 @@ table = [
     ["img/away.png", "away"],
     ["img/online.png", "online"],
     ["img/offline.png", "offline"],
-    ["img/empty.png", "empty"],
     ["img/hilite.png", "hilite"],
     ["img/hilite3.png", "hilite3"],
     ["files/org.nicotine_plus.Nicotine.svg", "n"],
@@ -39,7 +38,7 @@ for name in sorted(os.listdir(os.path.join("img", "tray"))):
     p = os.path.join("img", "tray", name)
 
     if isfile(p):
-        table.append([p, "trayicon_%s" % name[:-4]])
+        table.append([p, "trayicon_%s" % name[27:-4]])
 
 flagtable = []
 

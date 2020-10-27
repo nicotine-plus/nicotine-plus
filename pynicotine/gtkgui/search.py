@@ -74,7 +74,7 @@ class Searches(IconNotebook):
             self.frame.images,
             angle=ui["labelsearch"],
             tabclosers=ui["tabclosers"],
-            show_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
+            show_hilite_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
             reorderable=ui["tab_reorderable"],
             notebookraw=self.frame.SearchNotebookRaw
         )
@@ -723,7 +723,7 @@ class Search:
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
             if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-                self.frame.SearchTabLabel.get_child().set_image(self.frame.images["online"])
+                self.frame.SearchTabLabel.get_child().set_hilite_image(self.frame.images["hilite"])
 
     def get_flag(self, user, flag=None):
 

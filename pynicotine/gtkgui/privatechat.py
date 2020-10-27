@@ -73,7 +73,7 @@ class PrivateChats(IconNotebook):
             self.frame.images,
             angle=config["ui"]["labelprivate"],
             tabclosers=config["ui"]["tabclosers"],
-            show_image=config["notifications"]["notification_tab_icons"],
+            show_hilite_image=config["notifications"]["notification_tab_icons"],
             reorderable=config["ui"]["tab_reorderable"],
             show_status_image=config["ui"]["tab_status_icons"],
             notebookraw=self.frame.PrivatechatNotebookRaw

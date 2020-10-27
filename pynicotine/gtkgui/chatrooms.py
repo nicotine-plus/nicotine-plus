@@ -2022,7 +2022,7 @@ class ChatRooms(IconNotebook):
             self.frame.images,
             angle=config["ui"]["labelrooms"],
             tabclosers=config["ui"]["tabclosers"],
-            show_image=config["notifications"]["notification_tab_icons"],
+            show_hilite_image=config["notifications"]["notification_tab_icons"],
             reorderable=config["ui"]["tab_reorderable"],
             notebookraw=self.frame.ChatNotebookRaw
         )
