@@ -68,7 +68,7 @@ class TrayApp:
             self.tray_popup_menu = popup = PopupMenu(self, False)
             popup.setup(
                 ("#" + _("Hide / Show Nicotine+"), self.on_hide_unhide_window),
-                (1, _("Server"), self.tray_popup_menu_server, self.on_popup_server),
+                (1, _("Server"), self.tray_popup_menu_server, None),
                 ("#" + _("Downloads"), self.on_downloads),
                 ("#" + _("Uploads"), self.on_uploads),
                 ("#" + _("Send Message"), self.on_open_private_chat),
@@ -164,16 +164,6 @@ class TrayApp:
         )
         if user is not None:
             self.frame.browse_user(user)
-
-    def on_popup_server(self, widget):
-        items = self.tray_popup_menu_server.get_children()
-
-        if self.tray_status["status"] == "disconnect":
-            items[0].set_sensitive(True)
-            items[1].set_sensitive(False)
-        else:
-            items[0].set_sensitive(False)
-            items[1].set_sensitive(True)
 
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):
@@ -313,6 +303,20 @@ class TrayApp:
 
         except Exception as e:
             log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})
+
+    def set_server_actions_sensitive(self, status):
+        items = self.tray_popup_menu.get_children()
+
+        for i in range(4, 9):
+            """ Disable Send Message, IP lookup, info lookup, shares lookup and away toggle
+            when disconnected from server """
+
+            items[i].set_sensitive(status)
+
+        items = self.tray_popup_menu_server.get_children()
+
+        items[0].set_sensitive(not status)  # Connect
+        items[1].set_sensitive(status)      # Disconnect
 
     def set_transfer_status(self, download, upload):
         if self.trayicon is not None:
