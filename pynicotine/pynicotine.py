@@ -320,7 +320,7 @@ class NetworkEventProcessor:
             self.queue.put(message)
 
             if window is not None:
-                window.init_window(conn.username, conn.conn)
+                window.show_user(conn.username, conn=conn.conn)
 
             if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
                 self.transfers.got_connect(message.req, conn.conn, message.direction)
@@ -1166,10 +1166,10 @@ class NetworkEventProcessor:
                 for j in i.msgs:
 
                     if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                        self.userinfo.init_window(i.username, conn)
+                        self.userinfo.show_user(i.username, conn=conn)
 
                     if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                        self.userbrowse.init_window(i.username, conn)
+                        self.userbrowse.show_user(i.username, conn=conn)
 
                     if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
                         self.transfers.got_file_connect(j.req, conn)
@@ -1298,7 +1298,7 @@ class NetworkEventProcessor:
             if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
-                    self.userinfo.show_user(i.username, msg)
+                    self.userinfo.show_user(i.username, msg.conn, msg)
                     break
 
     def user_info_request(self, msg):
@@ -1394,7 +1394,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
-                    self.userbrowse.show_user(i.username, msg)
+                    self.userbrowse.show_user(i.username, msg.conn, msg)
                     break
 
     def file_search_result(self, msg):
@@ -1433,10 +1433,10 @@ class NetworkEventProcessor:
                 for j in i.msgs:
 
                     if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                        self.userinfo.init_window(i.username, conn)
+                        self.userinfo.show_user(i.username, conn=conn)
 
                     if j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                        self.userbrowse.init_window(i.username, conn)
+                        self.userbrowse.show_user(i.username, conn=conn)
 
                     if j.__class__ is slskmessages.FileRequest and self.transfers is not None:
                         self.transfers.got_file_connect(j.req, conn)

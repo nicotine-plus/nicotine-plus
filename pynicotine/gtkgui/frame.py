@@ -1141,7 +1141,7 @@ class NicotineFrame:
             msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
 
         msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_user(login, msg)
+        self.userbrowse.show_user(login, msg.conn, msg)
 
     def on_browse_buddy_shares(self, *args):
         """ Browse your own buddy shares """
@@ -1155,7 +1155,7 @@ class NicotineFrame:
             msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
 
         msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_user(login, msg)
+        self.userbrowse.show_user(login, msg.conn, msg)
 
     # Modes
 
@@ -1793,41 +1793,44 @@ class NicotineFrame:
         self.UserInfoCombo.get_child().set_text("")
 
     def local_user_info_request(self, user):
+        msg = slskmessages.UserInfoRequest(None)
+
         # Hack for local userinfo requests, for extra security
         if user == self.np.config.sections["server"]["login"]:
             try:
                 if self.np.config.sections["userinfo"]["pic"] != "":
                     userpic = self.np.config.sections["userinfo"]["pic"]
                     if os.path.exists(userpic):
-                        has_pic = True
+                        msg.has_pic = True
                         with open(userpic, 'rb') as f:
-                            pic = f.read()
+                            msg.pic = f.read()
                     else:
-                        has_pic = False
-                        pic = None
+                        msg.has_pic = False
+                        msg.pic = None
                 else:
-                    has_pic = False
-                    pic = None
+                    msg.has_pic = False
+                    msg.pic = None
             except Exception:
-                pic = None
+                msg.pic = None
 
-            descr = unescape(self.np.config.sections["userinfo"]["descr"])
+            msg.descr = unescape(self.np.config.sections["userinfo"]["descr"])
 
             if self.np.transfers is not None:
 
-                totalupl = self.np.transfers.get_total_uploads_allowed()
-                queuesize = self.np.transfers.get_upload_queue_sizes()[0]
-                slotsavail = self.np.transfers.allow_new_uploads()
+                msg.totalupl = self.np.transfers.get_total_uploads_allowed()
+                msg.queuesize = self.np.transfers.get_upload_queue_sizes()[0]
+                msg.slotsavail = self.np.transfers.allow_new_uploads()
                 ua = self.np.config.sections["transfers"]["remotedownloads"]
                 if ua:
-                    uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
+                    msg.uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
                 else:
-                    uploadallowed = ua
-                self.userinfo.show_local_info(user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
+                    msg.uploadallowed = ua
+
+                self.userinfo.show_user(user, msg=msg)
 
         else:
             self.userinfo.show_user(user)
-            self.np.process_request_to_peer(user, slskmessages.UserInfoRequest(None), self.userinfo)
+            self.np.process_request_to_peer(user, msg, self.userinfo)
 
     """ User Browse """
 
@@ -1874,7 +1877,7 @@ class NicotineFrame:
                     raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': share})
 
                 username = share.replace('\\', os.sep).split(os.sep)[-1]
-                self.userbrowse.init_window(username, None)
+                self.userbrowse.show_user(username)
 
                 if username in self.userbrowse.users:
                     self.userbrowse.users[username].load_shares(mylist)

@@ -72,14 +72,27 @@ class UserTabs(IconNotebook):
     def set_tab_label(self, mytab):
         self.mytab = mytab
 
-    def init_window(self, user, conn):
+    def init_window(self, user):
+
+        w = self.users[user] = self.subwindow(self, user)
+        self.append_page(w.Main, user[:15], w.on_close)
+        self.frame.np.queue.put(slskmessages.AddUser(user))
+
+    def show_user(self, user, conn=None, msg=None):
 
         if user in self.users:
             self.users[user].conn = conn
         else:
-            w = self.users[user] = self.subwindow(self, user)
-            self.append_page(w.Main, user[:15], w.on_close)
-            self.frame.np.queue.put(slskmessages.AddUser(user))
+            self.init_window(user)
+
+        self.users[user].show_user(msg)
+        self.request_changed(self.users[user].Main)
+
+        if self.mytab is not None:
+            self.frame.request_icon(self.mytab)
+
+        tab_name = self.frame.match_main_notebox(self.mytab)
+        self.frame.change_main_page(tab_name)
 
     def save_columns(self):
 
@@ -108,34 +121,6 @@ class UserTabs(IconNotebook):
                 self.set_text(tab.Main, msg.user)
 
             self.set_status_image(tab.Main, msg.status)
-
-    def show_local_user(self, user, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
-
-        self.init_window(user, None)
-        self.users[user].show_user_info(descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed)
-        self.request_changed(self.users[user].Main)
-
-        if self.mytab is not None:
-            self.frame.request_icon(self.mytab)
-
-    def show_user(self, user, msg=None):
-
-        if msg is not None:
-            conn = msg.conn
-        else:
-            conn = None
-
-        self.init_window(user, conn)
-
-        if msg is not None:
-            self.users[user].show_user(msg)
-
-        self.request_changed(self.users[user].Main)
-
-        if self.mytab is not None:
-            self.frame.request_icon(self.mytab)
-
-        self.frame.show_tab(['userinfo', self.frame.userinfovbox])
 
     def show_interests(self, msg):
 
@@ -371,60 +356,60 @@ class UserInfo:
         for hate in hates:
             self.hates_store.append([hate])
 
-    def show_user_info(self, descr, has_pic, pic, totalupl, queuesize, slotsavail, uploadallowed):
+    def show_user(self, msg):
+
+        if msg is None:
+            return
 
         self.conn = None
-        self._descr = descr
+        self._descr = msg.descr
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
-        append_line(self.descr, descr, self.tag_local, showstamp=False, scroll=False)
+        append_line(self.descr, msg.descr, self.tag_local, showstamp=False, scroll=False)
 
-        self.uploads.set_text(_("Total uploads allowed: %i") % totalupl)
-        self.queuesize.set_text(_("Queue size: %i") % queuesize)
+        self.uploads.set_text(_("Total uploads allowed: %i") % msg.totalupl)
+        self.queuesize.set_text(_("Queue size: %i") % msg.queuesize)
 
-        if slotsavail:
+        if msg.slotsavail:
             slots = _("Yes")
         else:
             slots = _("No")
 
         self.slotsavail.set_text(_("Slots free: %s") % slots)
 
-        if uploadallowed == 0:
+        if msg.uploadallowed == 0:
             allowed = _("No one")
-        elif uploadallowed == 1:
+        elif msg.uploadallowed == 1:
             allowed = _("Everyone")
-        elif uploadallowed == 2:
+        elif msg.uploadallowed == 2:
             allowed = _("Users in list")
-        elif uploadallowed == 3:
+        elif msg.uploadallowed == 3:
             allowed = _("Trusted Users")
         else:
             allowed = _("unknown")
 
         self.AcceptUploads.set_text(_("%s") % allowed)
 
-        if has_pic and pic is not None:
+        if msg.has_pic and msg.pic is not None:
             try:
                 import gc
                 loader = GdkPixbuf.PixbufLoader()
-                loader.write(pic)
+                loader.write(msg.pic)
                 loader.close()
                 self.image_pixbuf = loader.get_pixbuf()
                 self.image.set_from_pixbuf(self.image_pixbuf)
-                del pic, loader
+                del msg.pic, loader
                 gc.collect()
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
             except TypeError:
                 name = tempfile.NamedTemporaryFile(delete=False)
                 with open(name, "w") as f:
-                    f.write(pic)
+                    f.write(msg.pic)
 
                 self.image.set_from_file(name)
                 os.remove(name)
-
-    def show_user(self, msg):
-        self.show_user_info(msg.descr, msg.has_pic, msg.pic, msg.totalupl, msg.queuesize, msg.slotsavail, msg.uploadallowed)
 
     def update_gauge(self, msg):
 

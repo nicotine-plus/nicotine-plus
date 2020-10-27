@@ -206,7 +206,7 @@ class UserBrowse:
 
         self.change_colours()
 
-        for name, object in list(self.__dict__.items()):
+        for name, object in self.__dict__.items():
             if isinstance(object, PopupMenu):
                 object.set_user(self.user)
 
@@ -546,8 +546,9 @@ class UserBrowse:
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
     def show_user(self, msg):
-        self.conn = None
-        self.make_new_model(msg.list)
+        if msg is not None:
+            self.conn = None
+            self.make_new_model(msg.list)
 
     def load_shares(self, list):
         self.make_new_model(list)
@@ -884,7 +885,7 @@ class UserBrowse:
 
             # Get matching files in the current directory
             resultfiles = []
-            for file in list(self.files.keys()):
+            for file in self.files:
                 if query in file.lower():
                     resultfiles.append(file)
 
