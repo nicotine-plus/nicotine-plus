@@ -1030,7 +1030,7 @@ class ChatRoom:
         # Double click starts a private message
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.frame.privatechats.send_message(user, None, 1)
+                self.frame.privatechats.send_message(user, show_user=True)
                 self.frame.change_main_page("private")
             return
 
@@ -1280,8 +1280,8 @@ class ChatRoom:
 
         elif cmd == "/pm":
             if byteargs:
-                self.frame.privatechats.send_message(byteargs, None, 1)
-                self.frame.on_private_chat(None)
+                self.frame.privatechats.send_message(byteargs, show_user=True)
+                self.frame.change_main_page("private")
 
         elif cmd in ["/m", "/msg"]:
             if byteargs:

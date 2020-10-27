@@ -1121,7 +1121,7 @@ class PopupMenu(Gtk.Menu):
         self.frame.change_main_page("search")
 
     def on_send_message(self, widget):
-        self.frame.privatechats.send_message(self.user, None, 1)
+        self.frame.privatechats.send_message(self.user, show_user=True)
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, widget):
