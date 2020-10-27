@@ -193,6 +193,24 @@ class NicotineFrame:
         self.interests = Interests(self, self.np)
         self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
 
+        """ Tray/notifications """
+
+        self.tray_app = TrayApp(self)
+        self.notifications = Notifications(self)
+
+        self.hilites = {
+            "rooms": [],
+            "private": []
+        }
+
+        # Create the trayicon if needed
+        # Tray icons don't work as expected on macOS
+        if sys.platform != "darwin" and \
+                use_trayicon and config["ui"]["trayicon"]:
+            self.tray_app.create()
+
+        """ Disable elements """
+
         # Disable a few elements until we're logged in (search field, download buttons etc.)
         self.set_widget_online_status(False)
 
@@ -377,22 +395,6 @@ class NicotineFrame:
         """ Now Playing """
 
         self.now_playing = NowPlaying(self.np.config)
-
-        """ Tray/notifications """
-
-        self.tray_app = TrayApp(self)
-        self.notifications = Notifications(self)
-
-        self.hilites = {
-            "rooms": [],
-            "private": []
-        }
-
-        # Create the trayicon if needed
-        # Tray icons don't work as expected on macOS
-        if sys.platform != "darwin" and \
-                use_trayicon and config["ui"]["trayicon"]:
-            self.tray_app.create()
 
         """ Connect """
 
@@ -684,6 +686,8 @@ class NicotineFrame:
 
         self.DownloadButtons.set_sensitive(status)
         self.UploadButtons.set_sensitive(status)
+
+        self.tray_app.set_server_actions_sensitive(status)
 
     def connect_error(self, conn):
 
