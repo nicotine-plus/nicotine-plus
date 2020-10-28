@@ -233,6 +233,11 @@ class Searches(IconNotebook):
     def do_global_search(self, id, text):
         self.frame.np.queue.put(slskmessages.FileSearch(id, text))
 
+        """ Request a list of related searches from the server.
+        Seemingly non-functional since 2018 (always receiving empty lists). """
+
+        # self.frame.np.queue.put(slskmessages.RelatedSearch(text))
+
     def do_rooms_search(self, id, text, room=None):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
