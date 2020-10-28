@@ -54,7 +54,7 @@ from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import Settings
-from pynicotine.gtkgui.tray import TrayApp
+from pynicotine.gtkgui.tray import Tray
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
 from pynicotine.gtkgui.userinfo import UserInfo
@@ -85,11 +85,11 @@ class NicotineFrame:
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
-        self.away = 0
         self.current_tab = 0
         self.rescanning = False
         self.brescanning = False
         self.needrescan = False
+        self.away = False
         self.autoaway = False
         self.awaytimerid = None
         self.bindip = bindip
@@ -184,7 +184,7 @@ class NicotineFrame:
         self.MainWindow.connect("delete-event", self.on_delete_event)
         self.MainWindow.connect("destroy", self.on_destroy)
         self.MainWindow.connect("key_press_event", self.on_key_press)
-        self.MainWindow.connect("motion-notify-event", self.on_button_press)
+        self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
 
         # Set up actions for menubar
         self.set_up_actions()
@@ -195,7 +195,7 @@ class NicotineFrame:
 
         """ Tray/notifications """
 
-        self.tray_app = TrayApp(self)
+        self.tray = Tray(self)
         self.notifications = Notifications(self)
 
         self.hilites = {
@@ -207,7 +207,7 @@ class NicotineFrame:
         # Tray icons don't work as expected on macOS
         if sys.platform != "darwin" and \
                 use_trayicon and config["ui"]["trayicon"]:
-            self.tray_app.create()
+            self.tray.create()
 
         """ Disable elements """
 
@@ -507,11 +507,8 @@ class NicotineFrame:
 
     def init_interface(self, msg):
 
-        if self.away == 0:
+        if not self.away:
             self.set_user_status(_("Online"))
-
-            self.tray_app.tray_status["status"] = "connect"
-            self.tray_app.set_image()
 
             autoaway = self.np.config.sections["server"]["autoaway"]
 
@@ -522,10 +519,8 @@ class NicotineFrame:
         else:
             self.set_user_status(_("Away"))
 
-            self.tray_app.tray_status["status"] = "away"
-            self.tray_app.set_image()
-
         self.set_widget_online_status(True)
+        self.tray.set_away(self.away)
 
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
@@ -628,11 +623,9 @@ class NicotineFrame:
             self.autoaway = self.away = False
 
         self.set_widget_online_status(False)
+        self.tray.set_connected(False)
 
         self.set_user_status(_("Offline"))
-
-        self.tray_app.tray_status["status"] = "disconnect"
-        self.tray_app.set_image()
 
         self.searches.wish_list.interval = 0
         self.chatrooms.conn_close()
@@ -674,16 +667,14 @@ class NicotineFrame:
         self.DownloadButtons.set_sensitive(status)
         self.UploadButtons.set_sensitive(status)
 
-        self.tray_app.set_server_actions_sensitive(status)
+        self.tray.set_server_actions_sensitive(status)
 
     def connect_error(self, conn):
 
         self.set_widget_online_status(False)
+        self.tray.set_connected(False)
 
         self.set_user_status(_("Offline"))
-
-        self.tray_app.tray_status["status"] = "disconnect"
-        self.tray_app.set_image()
 
         self.uploads.conn_close()
         self.downloads.conn_close()
@@ -702,8 +693,8 @@ class NicotineFrame:
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
 
-        self.away_action = Gio.SimpleAction.new("away", None)
-        self.away_action.connect("activate", self.on_away)
+        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(False))
+        self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
 
         self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
@@ -848,8 +839,7 @@ class NicotineFrame:
 
     def on_connect(self, *args, getmessage=True):
 
-        self.tray_app.tray_status["status"] = "connect"
-        self.tray_app.set_image()
+        self.tray.set_connected(True)
 
         if self.np.active_server_conn is not None:
             return
@@ -874,20 +864,18 @@ class NicotineFrame:
 
     def on_away(self, *args):
 
-        self.away = (self.away + 1) % 2
+        self.away = not self.away
 
-        if self.away == 0:
+        if not self.away:
             self.set_user_status(_("Online"))
-
-            self.tray_app.tray_status["status"] = "connect"
-            self.tray_app.set_image()
+            self.on_disable_auto_away()
         else:
             self.set_user_status(_("Away"))
 
-            self.tray_app.tray_status["status"] = "away"
-            self.tray_app.set_image()
+        self.tray.set_away(self.away)
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
+        self.away_action.set_state(GLib.Variant.new_boolean(self.away))
         self.privatechats.update_colours()
 
     def on_check_privileges(self, *args):
@@ -1335,7 +1323,7 @@ class NicotineFrame:
             main_notebook.set_show_tabs(True)
 
     def on_key_press(self, widget, event):
-        self.on_button_press(None, None)
+        self.on_disable_auto_away()
 
         if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
             return False
@@ -1942,14 +1930,18 @@ class NicotineFrame:
     def on_auto_away(self):
         if not self.away:
             self.autoaway = True
-            self.on_away(None)
+            self.on_away()
 
         return False
 
-    def on_button_press(self, widget, event):
+    def on_disable_auto_away(self, *args):
         if self.autoaway:
-            self.on_away(None)
             self.autoaway = False
+
+            if self.away:
+                # Disable away mode if not already done
+                self.on_away()
+
         if self.awaytimerid is not None:
             self.remove_away_timer(self.awaytimerid)
 
@@ -2377,7 +2369,7 @@ class NicotineFrame:
         self.DownStatus.push(self.down_context_id, self.down_template % {'num': total_usersdown, 'speed': down})
         self.UpStatus.push(self.up_context_id, self.up_template % {'num': total_usersup, 'speed': up})
 
-        self.tray_app.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
+        self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
     """ Exit """
 
@@ -2433,10 +2425,10 @@ class NicotineFrame:
         self.update_download_filters()
         self.np.config.write_configuration()
 
-        if not config["ui"]["trayicon"] and self.tray_app.is_tray_icon_visible():
-            self.tray_app.hide()
-        elif config["ui"]["trayicon"] and not self.tray_app.is_tray_icon_visible():
-            self.tray_app.create()
+        if not config["ui"]["trayicon"] and self.tray.is_tray_icon_visible():
+            self.tray.hide()
+        elif config["ui"]["trayicon"] and not self.tray.is_tray_icon_visible():
+            self.tray.create()
 
         if needcompletion:
             self.chatrooms.roomsctrl.update_completions()
@@ -2514,12 +2506,12 @@ class NicotineFrame:
         if not self.np.config.sections["ui"]["exitdialog"]:
             return False
 
-        if self.tray_app.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.tray.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
             return True
 
-        if self.tray_app.is_tray_icon_visible():
+        if self.tray.is_tray_icon_visible():
             option_dialog(
                 parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
