@@ -142,7 +142,8 @@ from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SearchInactivityTimeout
 from pynicotine.slskmessages import SearchParent
 from pynicotine.slskmessages import SearchRequest
-from pynicotine.slskmessages import SendSpeed
+from pynicotine.slskmessages import SendConnectToken
+from pynicotine.slskmessages import SendDownloadSpeed
 from pynicotine.slskmessages import SendUploadSpeed
 from pynicotine.slskmessages import ServerConn
 from pynicotine.slskmessages import ServerMessage
@@ -291,7 +292,8 @@ class SlskProtoThread(threading.Thread):
         FileSearch: 26,
         SetStatus: 28,
         ServerPing: 32,               # Deprecated
-        SendSpeed: 34,                # Deprecated
+        SendConnectToken: 33,         # Deprecated
+        SendDownloadSpeed: 34,        # Deprecated
         SharedFoldersFiles: 35,
         GetUserStats: 36,
         QueuedDownloads: 40,          # Deprecated
