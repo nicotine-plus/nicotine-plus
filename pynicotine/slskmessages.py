@@ -700,7 +700,8 @@ class SetStatus(ServerMessage):
 
 class ServerPing(ServerMessage):
     """ Server code: 32 """
-    """ We test if the server responds. DEPRECATED """
+    """ We test if the server responds. """
+    """ DEPRECATED """
 
     def make_network_message(self):
         return b""
@@ -710,10 +711,27 @@ class ServerPing(ServerMessage):
         pass
 
 
-class SendSpeed(ServerMessage):
+class SendConnectToken(ServerMessage):
+    """ Server code: 33 """
+    """ DEPRECATED """
+
+    def __init__(self, user, token):
+        self.user = user
+        self.token = token
+
+    def make_network_message(self):
+        return self.pack_object(self.user) + self.pack_object(self.token)
+
+    def parse_network_message(self, message):
+        pos, self.user = self.get_object(message, bytes)
+        pos, self.token = self.get_object(message, int, pos)
+
+
+class SendDownloadSpeed(ServerMessage):
     """ Server code: 34 """
     """ We used to send this after a finished download to let the server update
-    the speed statistics for a user. DEPRECATED """
+    the speed statistics for a user. """
+    """ DEPRECATED """
 
     def __init__(self, user=None, speed=None):
         self.user = user
@@ -769,7 +787,8 @@ class GetUserStats(ServerMessage):
 class QueuedDownloads(ServerMessage):
     """ Server code: 40 """
     """ The server sends this to indicate if someone has download slots available
-    or not. DEPRECATED """
+    or not. """
+    """ DEPRECATED """
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, bytes)
@@ -907,7 +926,8 @@ class UserInterests(ServerMessage):
 class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ Server sends this to indicate change in place in queue while we're
-    waiting for files from other peer. DEPRECATED """
+    waiting for files from other peer. """
+    """ DEPRECATED """
 
     def __init__(self, user=None, req=None, place=None):
         self.req = req
@@ -931,6 +951,7 @@ class PlaceInLineResponse(ServerMessage):
 class RoomAdded(ServerMessage):
     """ Server code: 62 """
     """ The server tells us a new room has been added. """
+    """ DEPRECATED """
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, bytes)
@@ -939,6 +960,7 @@ class RoomAdded(ServerMessage):
 class RoomRemoved(ServerMessage):
     """ Server code: 63 """
     """ The server tells us a room has been removed. """
+    """ DEPRECATED """
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, bytes)
@@ -989,8 +1011,8 @@ class RoomList(ServerMessage):
 
 class ExactFileSearch(ServerMessage):
     """ Server code: 65 """
-    """ Someone is searching for a file with an exact name. DEPRECATED
-    (no results even with official client) """
+    """ Someone is searching for a file with an exact name. """
+    """ DEPRECATED (no results even with official client) """
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, bytes)
@@ -1011,7 +1033,8 @@ class AdminMessage(ServerMessage):
 
 class GlobalUserList(JoinRoom):
     """ Server code: 67 """
-    """ We send this to get a global list of all users online. DEPRECATED """
+    """ We send this to get a global list of all users online. """
+    """ DEPRECATED """
 
     def make_network_message(self):
         return b""

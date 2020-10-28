@@ -93,99 +93,101 @@ and callbacks for the messages are set in pynicotine.py.
 
 #### Message Index
 
-| Code | Message                                           |
-| ---- | ------------------------------------------------- |
-| 1    | [Login](#server-code-1)                           |
-| 2    | [Set Listen Port](#server-code-2)                 |
-| 3    | [Get Peer Address](#server-code-3)                |
-| 5    | [Add User](#server-code-5)                        |
-| 6    | [Remove User](#server-code-6)                     |
-| 7    | [Get Status](#server-code-7)                      |
-| 13   | [Say in Chat Room](#server-code-13)               |
-| 14   | [Join Room](#server-code-14)                      |
-| 15   | [Leave Room](#server-code-15)                     |
-| 16   | [User Joined Room](#server-code-16)               |
-| 17   | [User Left Room](#server-code-17)                 |
-| 18   | [Connect To Peer](#server-code-18)                |
-| 22   | [Private Messages](#server-code-22)               |
-| 23   | [Acknowledge Private Message](#server-code-23)    |
-| 26   | [File Search](#server-code-26)                    |
-| 28   | [Set Online Status](#server-code-28)              |
-| 32   | [Ping](#server-code-32)                           |
-| 34   | [Send Speed](#server-code-34)                     |
-| 35   | [Shared Folders & Files](#server-code-35)         |
-| 36   | [Get User Stats](#server-code-36)                 |
-| 40   | [Queued Downloads](#server-code-40)               |
-| 41   | [Kicked from Server](#server-code-41)             |
-| 42   | [User Search](#server-code-42)                    |
-| 51   | [Interest Add](#server-code-51)                   |
-| 52   | [Interest Remove](#server-code-52)                |
-| 54   | [Get Recommendations](#server-code-54)            |
-| 56   | [Get Global Recommendations](#server-code-56)     |
-| 57   | [Get User Interests](#server-code-57)             |
-| 60   | [Place In Line Response](#server-code-60)         |
-| 62   | [Room Added](#server-code-62)                     |
-| 63   | [Room Removed](#server-code-63)                   |
-| 64   | [Room List](#server-code-64)                      |
-| 65   | [Exact File Search](#server-code-65)              |
-| 66   | [Global/Admin Message](#server-code-66)           |
-| 67   | [Global User List](#server-code-67)               |
-| 69   | [Privileged Users](#server-code-69)               |
-| 71   | [Have No Parents](#server-code-71)                |
-| 73   | [Parent's IP](#server-code-73)                    |
-| 83   | [Parent Min Speed](#server-code-83)               |
-| 84   | [Parent Speed Ratio](#server-code-84)             |
-| 86   | [Parent Inactivity Timeout](#server-code-86)      |
-| 87   | [Search Inactivity Timeout](#server-code-87)      |
-| 88   | [Minimum Parents In Cache](#server-code-88)       |
-| 90   | [Distributed Alive Interval](#server-code-90)     |
-| 91   | [Add Privileged User](#server-code-91)            |
-| 92   | [Check Privileges](#server-code-92)               |
-| 93   | [Search Request](#server-code-93)                 |
-| 100  | [Accept Children](#server-code-100)               |
-| 102  | [Possible Parents](#server-code-102)              |
-| 103  | [Wishlist Search](#server-code-103)               |
-| 104  | [Wishlist Interval](#server-code-104)             |
-| 110  | [Get Similar Users](#server-code-110)             |
-| 111  | [Get Item Recommendations](#server-code-111)      |
-| 112  | [Get Item Similar Users](#server-code-112)        |
-| 113  | [Room Tickers](#server-code-113)                  |
-| 114  | [Room Ticker Add](#server-code-114)               |
-| 115  | [Room Ticker Remove](#server-code-115)            |
-| 116  | [Set Room Ticker](#server-code-116)               |
-| 117  | [Hated Interest Add](#server-code-117)            |
-| 118  | [Hated Interest Remove](#server-code-118)         |
-| 120  | [Room Search](#server-code-120)                   |
-| 121  | [Send Upload Speed](#server-code-121)             |
-| 122  | [User Privileges](#server-code-122)               |
-| 123  | [Give Privileges](#server-code-123)               |
-| 124  | [Notify Privileges](#server-code-124)             |
-| 125  | [Acknowledge Notify Privileges](#server-code-125) |
-| 126  | [Branch Level](#server-code-126)                  |
-| 127  | [Branch Root](#server-code-127)                   |
-| 129  | [Child Depth](#server-code-129)                   |
-| 133  | [Private Room Users](#server-code-133)            |
-| 134  | [Private Room Add User](#server-code-134)         |
-| 135  | [Private Room Remove User](#server-code-135)      |
-| 136  | [Private Room Drop Membership](#server-code-136)  |
-| 137  | [Private Room Drop Ownership](#server-code-137)   |
-| 138  | [Private Room Unknown](#server-code-138)          |
-| 139  | [Private Room Added](#server-code-139)            |
-| 140  | [Private Room Removed](#server-code-140)          |
-| 141  | [Private Room Toggle](#server-code-141)           |
-| 142  | [New Password](#server-code-142)                  |
-| 143  | [Private Room Add Operator](#server-code-143)     |
-| 144  | [Private Room Remove Operator](#server-code-144)  |
-| 145  | [Private Room Operator Added](#server-code-145)   |
-| 146  | [Private Room Operator Removed](#server-code-146) |
-| 148  | [Private Room Owned](#server-code-148)            |
-| 149  | [Message Users](#server-code-149)                 |
-| 150  | [Ask Public Chat](#server-code-150)               |
-| 151  | [Stop Public Chat](#server-code-151)              |
-| 152  | [Public Chat Message](#server-code-152)           |
-| 153  | [Related Searches](#server-code-153)              |
-| 1001 | [Can't Connect To Peer](#server-code-1001)        |
-| 1002 | [Can't Create Room](#server-code-1002)            |
+| Code | Message                                           | Status     |
+| ---- | ------------------------------------------------- | ---------- |
+| 1    | [Login](#server-code-1)                           |            |
+| 2    | [Set Listen Port](#server-code-2)                 |            |
+| 3    | [Get Peer Address](#server-code-3)                |            |
+| 5    | [Add User](#server-code-5)                        |            |
+| 6    | [Remove User](#server-code-6)                     |            |
+| 7    | [Get Status](#server-code-7)                      |            |
+| 13   | [Say in Chat Room](#server-code-13)               |            |
+| 14   | [Join Room](#server-code-14)                      |            |
+| 15   | [Leave Room](#server-code-15)                     |            |
+| 16   | [User Joined Room](#server-code-16)               |            |
+| 17   | [User Left Room](#server-code-17)                 |            |
+| 18   | [Connect To Peer](#server-code-18)                |            |
+| 22   | [Private Messages](#server-code-22)               |            |
+| 23   | [Acknowledge Private Message](#server-code-23)    |            |
+| 26   | [File Search](#server-code-26)                    |            |
+| 28   | [Set Online Status](#server-code-28)              |            |
+| 32   | [Ping](#server-code-32)                           | Deprecated |
+| 33   | [Send Connect Token](#server-code-33)             | Deprecated |
+| 34   | [Send Download Speed](#server-code-34)            | Deprecated |
+| 35   | [Shared Folders & Files](#server-code-35)         |            |
+| 36   | [Get User Stats](#server-code-36)                 |            |
+| 40   | [Queued Downloads](#server-code-40)               | Deprecated |
+| 41   | [Kicked from Server](#server-code-41)             |            |
+| 42   | [User Search](#server-code-42)                    |            |
+| 51   | [Interest Add](#server-code-51)                   |            |
+| 52   | [Interest Remove](#server-code-52)                |            |
+| 54   | [Get Recommendations](#server-code-54)            |            |
+| 56   | [Get Global Recommendations](#server-code-56)     |            |
+| 57   | [Get User Interests](#server-code-57)             |            |
+| 60   | [Place In Line Response](#server-code-60)         | Deprecated |
+| 62   | [Room Added](#server-code-62)                     | Deprecated |
+| 63   | [Room Removed](#server-code-63)                   | Deprecated |
+| 64   | [Room List](#server-code-64)                      |            |
+| 65   | [Exact File Search](#server-code-65)              | Deprecated |
+| 66   | [Global/Admin Message](#server-code-66)           |            |
+| 67   | [Global User List](#server-code-67)               | Deprecated |
+| 68   | [Tunneled Message](#server-code-68)               | Deprecated |
+| 69   | [Privileged Users](#server-code-69)               |            |
+| 71   | [Have No Parents](#server-code-71)                |            |
+| 73   | [Parent's IP](#server-code-73)                    |            |
+| 83   | [Parent Min Speed](#server-code-83)               |            |
+| 84   | [Parent Speed Ratio](#server-code-84)             |            |
+| 86   | [Parent Inactivity Timeout](#server-code-86)      | Deprecated |
+| 87   | [Search Inactivity Timeout](#server-code-87)      | Deprecated |
+| 88   | [Minimum Parents In Cache](#server-code-88)       | Deprecated |
+| 90   | [Distributed Alive Interval](#server-code-90)     | Deprecated |
+| 91   | [Add Privileged User](#server-code-91)            |            |
+| 92   | [Check Privileges](#server-code-92)               |            |
+| 93   | [Search Request](#server-code-93)                 |            |
+| 100  | [Accept Children](#server-code-100)               |            |
+| 102  | [Possible Parents](#server-code-102)              |            |
+| 103  | [Wishlist Search](#server-code-103)               |            |
+| 104  | [Wishlist Interval](#server-code-104)             |            |
+| 110  | [Get Similar Users](#server-code-110)             |            |
+| 111  | [Get Item Recommendations](#server-code-111)      |            |
+| 112  | [Get Item Similar Users](#server-code-112)        |            |
+| 113  | [Room Tickers](#server-code-113)                  |            |
+| 114  | [Room Ticker Add](#server-code-114)               |            |
+| 115  | [Room Ticker Remove](#server-code-115)            |            |
+| 116  | [Set Room Ticker](#server-code-116)               |            |
+| 117  | [Hated Interest Add](#server-code-117)            |            |
+| 118  | [Hated Interest Remove](#server-code-118)         |            |
+| 120  | [Room Search](#server-code-120)                   |            |
+| 121  | [Send Upload Speed](#server-code-121)             |            |
+| 122  | [User Privileges](#server-code-122)               |            |
+| 123  | [Give Privileges](#server-code-123)               |            |
+| 124  | [Notify Privileges](#server-code-124)             |            |
+| 125  | [Acknowledge Notify Privileges](#server-code-125) |            |
+| 126  | [Branch Level](#server-code-126)                  |            |
+| 127  | [Branch Root](#server-code-127)                   |            |
+| 129  | [Child Depth](#server-code-129)                   |            |
+| 133  | [Private Room Users](#server-code-133)            |            |
+| 134  | [Private Room Add User](#server-code-134)         |            |
+| 135  | [Private Room Remove User](#server-code-135)      |            |
+| 136  | [Private Room Drop Membership](#server-code-136)  |            |
+| 137  | [Private Room Drop Ownership](#server-code-137)   |            |
+| 138  | [Private Room Unknown](#server-code-138)          |            |
+| 139  | [Private Room Added](#server-code-139)            |            |
+| 140  | [Private Room Removed](#server-code-140)          |            |
+| 141  | [Private Room Toggle](#server-code-141)           |            |
+| 142  | [New Password](#server-code-142)                  |            |
+| 143  | [Private Room Add Operator](#server-code-143)     |            |
+| 144  | [Private Room Remove Operator](#server-code-144)  |            |
+| 145  | [Private Room Operator Added](#server-code-145)   |            |
+| 146  | [Private Room Operator Removed](#server-code-146) |            |
+| 148  | [Private Room Owned](#server-code-148)            |            |
+| 149  | [Message Users](#server-code-149)                 |            |
+| 150  | [Ask Public Chat](#server-code-150)               |            |
+| 151  | [Stop Public Chat](#server-code-151)              |            |
+| 152  | [Public Chat Message](#server-code-152)           |            |
+| 153  | [Related Searches](#server-code-153)              | Deprecated |
+| 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
+| 1002 | [Can't Create Room](#server-code-1002)            | Deprecated |
 
 ### Server Code 1
 
@@ -417,7 +419,7 @@ Server sends us this message when we join a room. Contains users list with data 
         **For private rooms, also contain owner and operators**
     3.  Iterate the <ins>number of users</ins>
         **museekd uses a vector of strings**
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
     4.  **int** <ins>number of userdata</ins>
     5.  Iterate the <ins>number of users</ins>
         **museekd uses a vector of userdata**
@@ -667,14 +669,36 @@ We test if the server responds.
   - Receive
       - Empty Message
 
+### Server Code 33
+
+**Send Connect Token**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: SendConnectToken
+
+#### Description
+
+**DEPRECATED**
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>username</ins>
+    2.  **int** <ins>token</ins>
+  - Receive
+    1.  **string** <ins>username</ins>
+    2.  **int** <ins>token</ins>
+
 ### Server Code 34
 
-**Send Speed**
+**Send Download Speed**
 
 #### Function Names
 
 Museekd: SSendSpeed  
-Nicotine: SendSpeed
+Nicotine: SendDownloadSpeed
 
 #### Description
 
@@ -953,11 +977,11 @@ Nicotine: PlaceInLineResponse
 #### Data Order
 
   - Send
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
     2.  **int** <ins>req</ins>
     3.  **int** <ins>place</ins>
   - Receive
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
     2.  **int** <ins>req</ins>
     3.  **int** <ins>place</ins>
 
@@ -1134,7 +1158,7 @@ We send this to get a global list of all users online.
   - Receive
     1.  **int** <ins>number of users in room</ins>
     2.  Iterate the <ins>number of users</ins>
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
     3.  **int** <ins>number of userdata</ins>
     4.  Iterate the <ins>number of users</ins>
         1.  **int** <ins>status</ins>
@@ -1151,6 +1175,34 @@ We send this to get a global list of all users online.
     10. Iterate thru number of usercountries
         1.  **string** <ins>countrycode</ins>
             **Uppercase country code**
+
+### Server Code 68
+
+**Tunneled Message**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: TunneledMessage
+
+#### Description
+
+**DEPRECATED**
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>username</ins>
+    2.  **int** <ins>request</ins>
+    3.  **int** <ins>code</ins>
+    4.  **string** <ins>message</ins>
+  - Receive
+    1.  **string** <ins>username</ins>
+    2.  **int** <ins>code</ins>
+    3.  **int** <ins>request</ins>
+    4.  **ip** <ins>ip</ins>
+    5.  **int** <ins>port</ins>
+    6.  **string** <ins>message</ins>
 
 ### Server Code 69
 
@@ -1172,7 +1224,7 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
   - Receive
     1.  **int** <ins>number of users</ins>
     2.  Iterate <ins>number of users</ins>
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
 
 ### Server Code 71
 
@@ -1357,7 +1409,7 @@ The server sends us the username of a new privileged user, which we add to our l
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
 
 ### Server Code 92
 
@@ -1444,8 +1496,8 @@ Nicotine: PossibleParents
   - Receive *list of search parents*
     1.  **int** <ins>number of parents</ins>
     2.  Iterate for <ins>number of parents</ins>
-        1.  **string** <ins>user</ins>
-        2.  **IP** <ins>IP address</ins>
+        1.  **string** <ins>username</ins>
+        2.  **ip** <ins>ip</ins>
         3.  **int** <ins>port</ins>
 
 ### Server Code 103
@@ -1505,7 +1557,7 @@ The server sends us a list of similar users related to our interests.
   - Receive
     1.  **int** <ins>number of users</ins>
     2.  Iterate for <ins>number of user</ins>
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
         2.  **int** <ins>status</ins>
 
 ### Server Code 111
@@ -1556,7 +1608,7 @@ The server sends us a list of similar users related to a specific item, which is
     1.  **string** <ins>item</ins>
     2.  **int** <ins>number of users</ins>
     3.  Iterate for <ins>number of user</ins>
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
         2.  **int** 0
 
 ### Server Code 113
@@ -1582,7 +1634,7 @@ Tickers are customizable, user-specific messages that appear in a banner at the 
     1.  **string** <ins>room</ins>
     2.  **int** <ins>number of users</ins>
     3.  Iterate for <ins>number of user</ins>
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
         2.  **string** <ins>tickers</ins>
 
 ### Server Code 114
@@ -1606,7 +1658,7 @@ Tickers are customizable, user-specific messages that appear in a banner at the 
       - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **string** <ins>ticker</ins>
 
 ### Server Code 115
@@ -1630,7 +1682,7 @@ Tickers are customizable, user-specific messages that appear in a banner at the 
       - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 116
 
@@ -1751,9 +1803,9 @@ We ask the server whether a user is privileged or not.
 #### Data Order
 
   - Send
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
   - Receive
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
     2.  **char** <ins>privileged</ins> (boolean
         internal to museekd)
 
@@ -1773,7 +1825,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 #### Data Order
 
   - Send
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
     2.  **int** <ins>days</ins>
   - Receive
       - *No Message*
@@ -1794,10 +1846,10 @@ The server sends us a notification about our privileges.
 
   - Send
     1.  **int** <ins>token</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
   - Receive
     1.  **int** <ins>token</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 125
 
@@ -1916,10 +1968,10 @@ Nicotine: PrivateRoomAddUser
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 135
 
@@ -1938,10 +1990,10 @@ Nicotine: PrivateRoomRemoveUser
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 136
 
@@ -2209,7 +2261,7 @@ Nicotine: Unimplemented
     1.  **int** <ins>number of users</ins>
     2.  Iterate the <ins>number of users</ins>
         **museekd uses a vector of strings**
-        1.  **string** <ins>user</ins>
+        1.  **string** <ins>username</ins>
     3.  **string** <ins>message</ins>
   - Receive
       - *No Message*
@@ -2273,7 +2325,7 @@ Nicotine: PublicRoomMessage
       - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **string** <ins>message</ins>
 
 ### Server Code 153
@@ -2321,11 +2373,11 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
   - Send *to the Server if we cannot connect to a peer.*
     1.  **int** <ins>token</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
   - Receive *this response means we are both firewalled or otherwise
     unable to connect to each other.*
     1.  **int** <ins>token</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 1002
 
@@ -2430,12 +2482,12 @@ Order](#peer-connection-message-order)
 #### Data Order
 
   - Send
-      - **string** <ins>user</ins> *Local Username*
+      - **string** <ins>username</ins> *Local Username*
       - **string** <ins>type</ins> *Connection Type
         (P, F or D)*
       - **uint32** <ins>token</ins> *Unique Number*
   - Receive
-      - **string** <ins>user</ins> *Remote Username*
+      - **string** <ins>username</ins> *Remote Username*
       - **string** <ins>type</ins> *Connection Type
         (P, F or D)*
       - **uint32** <ins>token</ins> *Unique Number*
@@ -2567,7 +2619,7 @@ The peer sends this when it has a file search match. The token/ticket is taken f
 #### Data Order
 
   - Send
-    1.  **string** <ins>user</ins>
+    1.  **string** <ins>username</ins>
     2.  **int** <ins>ticket</ins>
     3.  **int** <ins>results size</ins> *number of
         results*
@@ -2586,7 +2638,7 @@ The peer sends this when it has a file search match. The token/ticket is taken f
     7.  **off\_t** <ins>queue length</ins>
   - Receive
     1.  decompress
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
     4.  **int** <ins>results size</ins>
         <ins>number of results</ins>
@@ -3044,12 +3096,12 @@ Nicotine: DistribSearch
 
   - Send
     1.  **int** <ins>unknown</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
   - Receive
     1.  **int** <ins>unknown</ins>
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
@@ -3133,12 +3185,12 @@ Nicotine: DistribServerSearch
 
   - Send
     1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
   - Receive
     1.  **off_t** <ins>unknown</ins> *always 210503729152 (?)*
-    2.  **string** <ins>user</ins>
+    2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
     4.  **string** <ins>query</ins>
 
