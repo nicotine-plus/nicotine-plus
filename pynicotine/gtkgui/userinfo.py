@@ -31,6 +31,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
@@ -39,7 +40,6 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
 
 
 # User Info and User Browse Notebooks
@@ -258,7 +258,7 @@ class UserInfo:
             ("#" + _("Zoom In"), self.make_zoom_in),
             ("#" + _("Zoom Out"), self.make_zoom_out),
             ("", None),
-            ("#" + _("Save Image"), self.on_save_picture)
+            ("#" + _("Save Picture"), self.on_save_picture)
         )
 
     def on_popup_likes_menu(self, widget, event):
@@ -463,8 +463,17 @@ class UserInfo:
         if self.image is None or self.image_pixbuf is None:
             return
 
-        filename = "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H:%M:%S"))
-        pathname = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], clean_file(filename))
+        response = save_file(
+            self.frame.MainWindow,
+            self.frame.np.config.sections["transfers"]["downloaddir"],
+            "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
+            title="Save as..."
+        )
+
+        if not response:
+            return
+
+        pathname = response[0]
 
         if not os.path.exists(pathname):
             self.image_pixbuf.savev(pathname, "jpeg", ["quality"], ["100"])
