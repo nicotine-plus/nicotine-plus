@@ -17,7 +17,7 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Away/Return</attribute>
+          <attribute name="label" translatable="yes">_Away</attribute>
           <attribute name="action">app.away</attribute>
           <attribute name="accel">&lt;Alt&gt;a</attribute>
         </item>

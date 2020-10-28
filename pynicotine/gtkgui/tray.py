@@ -27,7 +27,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 
 
-class TrayApp:
+class Tray:
 
     def __init__(self, frame):
         try:
@@ -75,7 +75,7 @@ class TrayApp:
                 ("#" + _("Lookup a User's IP"), self.on_get_a_users_ip),
                 ("#" + _("Lookup a User's Info"), self.on_get_a_users_info),
                 ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
-                ("$" + _("Toggle Away"), self.frame.on_away),
+                ("$" + _("Away"), self.frame.on_away),
                 ("#" + _("Settings"), self.frame.on_settings),
                 ("#" + _("Quit"), self.frame.on_quit)
             )
@@ -303,6 +303,30 @@ class TrayApp:
 
         except Exception as e:
             log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})
+
+    def set_away(self, enable):
+        if enable:
+            self.tray_status["status"] = "away"
+        else:
+            self.tray_status["status"] = "connect"
+
+        self.set_image()
+
+        # Toggle away checkbox in tray menu
+        away_item = self.tray_popup_menu.get_children()[8]
+        handler_id = self.tray_popup_menu.handlers[away_item]
+
+        with away_item.handler_block(handler_id):
+            # Temporarily disable handler, we only want to change the visual checkbox appearance
+            away_item.set_active(enable)
+
+    def set_connected(self, enable):
+        if enable:
+            self.tray_status["status"] = "connect"
+        else:
+            self.tray_status["status"] = "disconnect"
+
+        self.set_image()
 
     def set_server_actions_sensitive(self, status):
         items = self.tray_popup_menu.get_children()
