@@ -87,16 +87,13 @@ class PrivateChats(IconNotebook):
 
         self.notebook.connect("switch-page", self.on_switch_page)
 
-    def on_switch_page(self, notebook, page, page_num, force=0):
+    def on_switch_page(self, notebook, page, page_num, forceupdate=False):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) and not force:
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatevbox) and not forceupdate:
             return
 
-        # page is None?
-        new_page = notebook.get_nth_page(page_num)
-
         for user, tab in list(self.users.items()):
-            if tab.Main == new_page:
+            if tab.Main == page:
                 GLib.idle_add(tab.ChatLine.grab_focus)
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 if user in self.frame.hilites["private"]:

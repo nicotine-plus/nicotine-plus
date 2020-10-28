@@ -929,11 +929,8 @@ class IconNotebook:
 
     def dismiss_icon(self, notebook, page, page_num):
 
-        # page is None?
-        new_page = self.get_nth_page(page_num)
-
-        self.set_hilite_image(new_page, status=0)
-        self.set_text_color(new_page, status=0)
+        self.set_hilite_image(page, status=0)
+        self.set_text_color(page, status=0)
 
     def request_hilite(self, page):
 

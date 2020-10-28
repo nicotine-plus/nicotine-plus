@@ -1280,31 +1280,9 @@ class NicotineFrame:
             tablabel.set_hilite_image(self.images["hilite"])
             tablabel.set_text_color(2)
 
-    def on_switch_page(self, notebook, page, page_nr):
+    def on_switch_page(self, notebook, page, page_num):
 
-        tab_labels = []
-        tabs = self.MainNotebook.get_children()
-
-        for i in tabs:
-            tab_labels.append(self.MainNotebook.get_tab_label(i))
-
-        label = tab_labels[page_nr]
-
-        compare = {
-            self.ChatTabLabel: self.chat_notebook,
-            self.PrivateChatTabLabel: self.privatechat_notebook,
-            self.DownloadsTabLabel: None,
-            self.UploadsTabLabel: None,
-            self.SearchTabLabel: self.search_notebook,
-            self.UserInfoTabLabel: self.user_info_notebook,
-            self.UserBrowseTabLabel: self.user_browse_notebook,
-            self.InterestsTabLabel: None
-        }
-
-        if "buddies_tab_label" in self.__dict__:
-            compare[self.buddies_tab_label] = None
-
-        n = compare[label]
+        label = self.MainNotebook.get_tab_label(page)
         self.current_tab = label
 
         if label is not None:
@@ -1315,27 +1293,20 @@ class NicotineFrame:
                 label.get_child().set_hilite_image(None)
                 label.get_child().set_text_color(0)
 
-        if n is not None:
-            n.popup_disable()
-            n.popup_enable()
+        if page_num == self.MainNotebook.page_num(self.chathbox):
+            curr_page_num = self.chat_notebook.get_current_page()
+            curr_page = self.chat_notebook.get_nth_page(curr_page_num)
+            self.chatrooms.roomsctrl.on_switch_page(self.chat_notebook.notebook, curr_page, curr_page_num, forceupdate=True)
 
-            if n.get_current_page() != -1:
-                n.dismiss_icon(n, None, n.get_current_page())
+        elif page_num == self.MainNotebook.page_num(self.privatevbox):
+            curr_page_num = self.privatechat_notebook.get_current_page()
+            curr_page = self.privatechat_notebook.get_nth_page(curr_page_num)
+            self.privatechats.on_switch_page(self.privatechat_notebook.notebook, curr_page, curr_page_num, forceupdate=True)
 
-        if page_nr == self.MainNotebook.page_num(self.chathbox):
-            p = n.get_current_page()
-            self.chatrooms.roomsctrl.on_switch_page(n.notebook, None, p, 1)
-
-        elif page_nr == self.MainNotebook.page_num(self.privatevbox):
-            p = n.get_current_page()
-
-            if "privatechats" in self.__dict__:
-                self.privatechats.on_switch_page(n.notebook, None, p, 1)
-
-        elif page_nr == self.MainNotebook.page_num(self.uploadsvbox):
+        elif page_num == self.MainNotebook.page_num(self.uploadsvbox):
             self.uploads.update(forceupdate=True)
 
-        elif page_nr == self.MainNotebook.page_num(self.downloadsvbox):
+        elif page_num == self.MainNotebook.page_num(self.downloadsvbox):
             self.downloads.update(forceupdate=True)
 
     def on_page_removed(self, main_notebook, child, page_num):
