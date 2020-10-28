@@ -551,7 +551,7 @@ class LeaveRoom(ServerMessage):
         return self.pack_object(self.room)
 
     def parse_network_message(self, message):
-        self.room = self.get_object(message, bytes)[1]
+        pos, self.room = self.get_object(message, bytes)
 
 
 class UserJoinedRoom(ServerMessage):
@@ -933,7 +933,7 @@ class RoomAdded(ServerMessage):
     """ The server tells us a new room has been added. """
 
     def parse_network_message(self, message):
-        self.room = self.get_object(message, bytes)[1]
+        pos, self.room = self.get_object(message, bytes)
 
 
 class RoomRemoved(ServerMessage):
@@ -941,7 +941,7 @@ class RoomRemoved(ServerMessage):
     """ The server tells us a room has been removed. """
 
     def parse_network_message(self, message):
-        self.room = self.get_object(message, bytes)[1]
+        pos, self.room = self.get_object(message, bytes)
 
 
 class RoomList(ServerMessage):
@@ -1006,7 +1006,7 @@ class AdminMessage(ServerMessage):
     """ A global message from the server admin has arrived. """
 
     def parse_network_message(self, message):
-        self.msg = self.get_object(message, bytes)[1]
+        pos, self.msg = self.get_object(message, bytes)
 
 
 class GlobalUserList(JoinRoom):
@@ -1587,7 +1587,7 @@ class PrivateRoomAdded(ServerMessage):
         self.room = room
 
     def parse_network_message(self, message):
-        self.room = self.get_object(message, bytes)[1]
+        pos, self.room = self.get_object(message, bytes)
 
 
 class PrivateRoomRemoved(PrivateRoomAdded):
@@ -1736,7 +1736,7 @@ class RelatedSearch(ServerMessage):
 
 
 class CantConnectToPeer(ServerMessage):
-    """ Message 1001 """
+    """ Server code: 1001 """
     """ We send this to say we can't connect to peer after it has asked us
     to connect. We receive this if we asked peer to connect and it can't do
     this. This message means a connection can't be established either way.
@@ -1756,13 +1756,14 @@ class CantConnectToPeer(ServerMessage):
     def parse_network_message(self, message):
         pos, self.token = self.get_object(message, int)
 
-# These are probably leftovers, not sure what to do with them
 
+class CantCreateRoom(ServerMessage):
+    """ Server code: 1002 """
+    """ Server tells us a new room cannot be created. """
+    """ DEPRECATED (server sends a private message now) """
 
-# class CantCreateRoom(ServerMessage):
-    # """ Server tells us a new room cannot be created"""
-    # def parseNetworkMessage(self, message):
-        # self.room = self.getObject(message, types.StringType)[1]
+    def parse_network_message(self, message):
+        pos, self.room = self.get_object(message, bytes)
 
 
 """

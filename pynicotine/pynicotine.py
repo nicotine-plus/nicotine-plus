@@ -201,6 +201,7 @@ class NetworkEventProcessor:
             slskmessages.SayChatroom: self.say_chat_room,
             slskmessages.JoinRoom: self.join_room,
             slskmessages.UserLeftRoom: self.user_left_room,
+            slskmessages.CantCreateRoom: self.dummy_message,
             slskmessages.QueuedDownloads: self.dummy_message,
             slskmessages.GetPeerAddress: self.get_peer_address,
             slskmessages.OutConn: self.out_conn,

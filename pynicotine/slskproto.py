@@ -45,6 +45,7 @@ from pynicotine.slskmessages import AdminMessage
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
 from pynicotine.slskmessages import CantConnectToPeer
+from pynicotine.slskmessages import CantCreateRoom
 from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import ChildDepth
@@ -362,7 +363,8 @@ class SlskProtoThread(threading.Thread):
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
         RelatedSearch: 153,           # Deprecated ?
-        CantConnectToPeer: 1001
+        CantConnectToPeer: 1001,
+        CantCreateRoom: 1002          # Deprecated
     }
 
     peercodes = {

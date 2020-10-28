@@ -184,7 +184,8 @@ and callbacks for the messages are set in pynicotine.py.
 | 151  | [Stop Public Chat](#server-code-151)              |
 | 152  | [Public Chat Message](#server-code-152)           |
 | 153  | [Related Searches](#server-code-153)              |
-| 1001 | [Cannot Connect](#server-code-1001)               |
+| 1001 | [Can't Connect To Peer](#server-code-1001)        |
+| 1002 | [Can't Create Room](#server-code-1002)            |
 
 ### Server Code 1
 
@@ -2303,7 +2304,7 @@ Nicotine: RelatedSearch
 
 ### Server Code 1001
 
-**Cannot Connect**
+**Can't Connect To Peer**
 
 #### Function Names
 
@@ -2314,8 +2315,7 @@ Nicotine: CantConnectToPeer
 
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
-See also: [Peer Connection Message
-Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 #### Data Order
 
@@ -2326,6 +2326,28 @@ Order](#peer-connection-message-order)
     unable to connect to each other.*
     1.  **int** <ins>token</ins>
     2.  **string** <ins>user</ins>
+
+### Server Code 1002
+
+**Can't Create Room**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: CantConnectToPeer
+
+#### Description
+
+**DEPRECATED (server sends a private message now)**
+
+Server tells us a new room cannot be created.
+
+#### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+    1.  **string** <ins>room</ins>
 
 # Peer Messages
 
