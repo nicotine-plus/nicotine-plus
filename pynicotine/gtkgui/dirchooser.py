@@ -130,6 +130,8 @@ def save_file(parent=None, initialdir="~", initialfile="", title=None):
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
 
+    dialog.set_current_name(initialfile)
+
     response = dialog.run()
 
     if response == Gtk.ResponseType.ACCEPT:
