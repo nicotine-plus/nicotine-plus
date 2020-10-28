@@ -1174,8 +1174,7 @@ class SearchRequest(ServerMessage):
 
 class AcceptChildren(ServerMessage):
     """ Server code: 100 """
-    """ We tell the server if we want to accept child nodes.
-    TODO: actually use this somewhere """
+    """ We tell the server if we want to accept child nodes. """
 
     def __init__(self, enabled=None):
         self.enabled = enabled
@@ -1284,8 +1283,8 @@ class RoomTickerState(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, bytes)
-        pos, n = self.get_object(message, int, pos)
-        for i in range(n):
+        pos, num = self.get_object(message, int, pos)
+        for i in range(num):
             pos, user = self.get_object(message, bytes, pos)
             pos, msg = self.get_object(message, bytes, pos)
             self.msgs[user] = msg
@@ -1711,6 +1710,29 @@ class PublicRoomMessage(ServerMessage):
         pos, self.room = self.get_object(message, bytes)
         pos, self.user = self.get_object(message, bytes, pos)
         pos, self.msg = self.get_object(message, bytes, pos)
+
+
+class RelatedSearch(ServerMessage):
+    """ Server code: 153 """
+    """ The server returns a list of related search terms for a search query. """
+    """ DEPRECATED ? (empty list from server as of 2018) """
+
+    def __init__(self, query=None):
+        self.query = query
+        self.terms = []
+
+    def make_network_message(self):
+        return self.pack_object(self.query)
+
+    def parse_network_message(self, message):
+        pos, self.query = self.get_object(message, bytes)
+        pos, num = self.get_object(message, int, pos)
+
+        for i in range(num):
+            pos, term = self.get_object(message, bytes, pos)
+            pos, score = self.get_object(message, int, pos)
+
+            self.terms.append((term, score))
 
 
 class CantConnectToPeer(ServerMessage):
@@ -2386,7 +2408,6 @@ class DistribSearch(DistribMessage):
 
     Search requests are sent to us by the server using SearchRequest
     if we're a branch root, or by our parent using DistribSearch.
-    (TODO: check that this works / is implemented)
     """
 
     __slots__ = "conn", "user", "searchid", "searchterm"
@@ -2449,7 +2470,6 @@ class DistribServerSearch(DistribMessage):
 
     Search requests are sent to us by the server using SearchRequest
     if we're a branch root, or by our parent using DistribSearch.
-    (TODO: check that this works / is implemented)
     """
 
     __slots__ = "conn", "user", "searchid", "searchterm"

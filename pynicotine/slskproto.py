@@ -124,6 +124,7 @@ from pynicotine.slskmessages import QueuedDownloads
 from pynicotine.slskmessages import QueueFailed
 from pynicotine.slskmessages import QueueUpload
 from pynicotine.slskmessages import Recommendations
+from pynicotine.slskmessages import RelatedSearch
 from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import RemoveThingILike
@@ -288,11 +289,11 @@ class SlskProtoThread(threading.Thread):
         MessageAcked: 23,
         FileSearch: 26,
         SetStatus: 28,
-        ServerPing: 32,  # Depreciated
-        SendSpeed: 34,  # Depreciated
+        ServerPing: 32,               # Deprecated
+        SendSpeed: 34,                # Deprecated
         SharedFoldersFiles: 35,
         GetUserStats: 36,
-        QueuedDownloads: 40,  # Depreciated
+        QueuedDownloads: 40,          # Deprecated
         Relogged: 41,
         UserSearch: 42,
         AddThingILike: 51,
@@ -300,23 +301,23 @@ class SlskProtoThread(threading.Thread):
         Recommendations: 54,
         GlobalRecommendations: 56,
         UserInterests: 57,
-        PlaceInLineResponse: 60,  # Depreciated
-        RoomAdded: 62,  # Depreciated
-        RoomRemoved: 63,  # Depreciated
+        PlaceInLineResponse: 60,      # Deprecated
+        RoomAdded: 62,                # Deprecated
+        RoomRemoved: 63,              # Deprecated
         RoomList: 64,
-        ExactFileSearch: 65,  # Depreciated
+        ExactFileSearch: 65,          # Deprecated
         AdminMessage: 66,
-        GlobalUserList: 67,  # Depreciated
-        TunneledMessage: 68,  # Depreciated
+        GlobalUserList: 67,           # Deprecated
+        TunneledMessage: 68,          # Deprecated
         PrivilegedUsers: 69,
         HaveNoParent: 71,
         SearchParent: 73,
-        ParentMinSpeed: 83,  # Unused
-        ParentSpeedRatio: 84,  # Unused
-        ParentInactivityTimeout: 86,  # Depreciated
-        SearchInactivityTimeout: 87,  # Depreciated
-        MinParentsInCache: 88,  # Depreciated
-        DistribAliveInterval: 90,  # Depreciated
+        ParentMinSpeed: 83,           # Unused
+        ParentSpeedRatio: 84,         # Unused
+        ParentInactivityTimeout: 86,  # Deprecated
+        SearchInactivityTimeout: 87,  # Deprecated
+        MinParentsInCache: 88,        # Deprecated
+        DistribAliveInterval: 90,     # Deprecated
         AddToPrivileged: 91,
         CheckPrivileges: 92,
         SearchRequest: 93,
@@ -339,9 +340,9 @@ class SlskProtoThread(threading.Thread):
         GivePrivileges: 123,
         NotifyPrivileges: 124,
         AckNotifyPrivileges: 125,
-        BranchLevel: 126,  # Unimplemented
-        BranchRoot: 127,  # Unimplemented
-        ChildDepth: 129,  # Unimplemented
+        BranchLevel: 126,             # Unimplemented
+        BranchRoot: 127,              # Unimplemented
+        ChildDepth: 129,              # Unimplemented
         PrivateRoomUsers: 133,
         PrivateRoomAddUser: 134,
         PrivateRoomRemoveUser: 135,
@@ -360,6 +361,7 @@ class SlskProtoThread(threading.Thread):
         JoinPublicRoom: 150,
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
+        RelatedSearch: 153,           # Deprecated ?
         CantConnectToPeer: 1001
     }
 
@@ -375,7 +377,7 @@ class SlskProtoThread(threading.Thread):
         FolderContentsResponse: 37,
         TransferRequest: 40,
         TransferResponse: 41,
-        PlaceholdUpload: 42,  # Depreciated
+        PlaceholdUpload: 42,          # Deprecated
         QueueUpload: 43,
         PlaceInQueue: 44,
         UploadFailed: 46,
@@ -388,9 +390,9 @@ class SlskProtoThread(threading.Thread):
     distribclasses = {
         0: DistribAlive,
         3: DistribSearch,
-        4: DistribBranchLevel,  # Unimplemented
-        5: DistribBranchRoot,  # Unimplemented
-        7: DistribChildDepth,  # Unimplemented
+        4: DistribBranchLevel,        # Unimplemented
+        5: DistribBranchRoot,         # Unimplemented
+        7: DistribChildDepth,         # Unimplemented
         93: DistribServerSearch
     }
 

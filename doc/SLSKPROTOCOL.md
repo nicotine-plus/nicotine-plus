@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 11 October 2020
+Last updated on 28 October 2020
 
 ## Sections
 
@@ -2281,12 +2281,14 @@ Nicotine: PublicRoomMessage
 
 #### Description
 
+**DEPRECATED ? (empty list from server as of 2018)**
+
 The server returns a list of related search terms for a search query.
 
 #### Function Names
 
 Museekd: SRelatedSearch  
-Nicotine: Unimplemented
+Nicotine: RelatedSearch
 
 #### Data Order
 

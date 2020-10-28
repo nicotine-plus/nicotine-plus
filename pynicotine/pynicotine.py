@@ -261,6 +261,7 @@ class NetworkEventProcessor:
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.room_search_request,
             slskmessages.UserSearch: self.search_request,
+            slskmessages.RelatedSearch: self.dummy_message,
             slskmessages.PossibleParents: self.possible_parents,
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
