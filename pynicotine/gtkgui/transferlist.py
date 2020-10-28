@@ -182,7 +182,7 @@ class TransferList:
         if not tablabel:
             return
 
-        tablabel.set_image(self.frame.images["online"])
+        tablabel.set_hilite_image(self.frame.images["hilite"])
 
     def on_ban(self, widget):
         self.select_transfers()

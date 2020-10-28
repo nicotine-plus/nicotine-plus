@@ -231,16 +231,13 @@ class RoomsControl:
         # Save
         self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
 
-    def on_switch_page(self, notebook, page, page_num, force=0):
+    def on_switch_page(self, notebook, page, page_num, forceupdate=False):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not force:
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not forceupdate:
             return
 
-        # page is None?
-        new_page = notebook.get_nth_page(page_num)
-
         for name, room in self.joinedrooms.items():
-            if room.Main == new_page:
+            if room.Main == page:
                 GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
@@ -2022,7 +2019,7 @@ class ChatRooms(IconNotebook):
             self.frame.images,
             angle=config["ui"]["labelrooms"],
             tabclosers=config["ui"]["tabclosers"],
-            show_image=config["notifications"]["notification_tab_icons"],
+            show_hilite_image=config["notifications"]["notification_tab_icons"],
             reorderable=config["ui"]["tab_reorderable"],
             notebookraw=self.frame.ChatNotebookRaw
         )

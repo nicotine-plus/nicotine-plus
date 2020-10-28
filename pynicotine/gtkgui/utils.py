@@ -587,39 +587,35 @@ class BuddiesComboBox:
 
 class ImageLabel(Gtk.Box):
 
-    def __init__(self, label="", image=None, onclose=None, closebutton=False, angle=0, show_image=True, statusimage=None, show_status_image=False):
+    def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
         Gtk.Box.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
-        self._show_image = show_image
-        self._show_status_image = show_status_image
-        self.notify = 0
-
-        self._entered = 0
-        self._pressed = 0
 
         self.onclose = onclose
-        self.status_img = None
-        self.statusimage = Gtk.Image()
+
         self.label = Gtk.Label()
-        self.text = label
-
-        self.set_text(self.text)
-
         self.label.set_angle(angle)
         self.label.show()
 
-        if self._show_status_image:
-            self.set_status_image(statusimage)
-            self.statusimage.show()
+        self.text = label
+        self.set_text(self.text)
 
-        self.image = Gtk.Image()
-        self.set_image(image)
+        self.status_image = Gtk.Image()
+        self.status_pixbuf = None
 
-        if self._show_image:
-            self.image.show()
+        if show_status_image:
+            self.set_status_image(status_image)
+            self.status_image.show()
+
+        self.hilite_image = Gtk.Image()
+        self.hilite_pixbuf = None
+
+        if show_hilite_image:
+            self.set_hilite_image(hilite_image)
+            self.hilite_image.show()
 
         self._pack_children()
         self._order_children()
@@ -646,9 +642,9 @@ class ImageLabel(Gtk.Box):
         self.add(self.box)
         self.box.show()
 
-        self.box.pack_start(self.statusimage, False, False, 0)
+        self.box.pack_start(self.status_image, False, False, 0)
         self.box.pack_start(self.label, True, True, 0)
-        self.box.pack_start(self.image, False, False, 0)
+        self.box.pack_start(self.hilite_image, False, False, 0)
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
@@ -658,17 +654,17 @@ class ImageLabel(Gtk.Box):
         if self.angle == 90:
             if "button" in self.__dict__ and self.closebutton != 0:
                 self.box.reorder_child(self.button, 0)
-                self.box.reorder_child(self.image, 1)
+                self.box.reorder_child(self.hilite_image, 1)
                 self.box.reorder_child(self.label, 2)
-                self.box.reorder_child(self.statusimage, 3)
+                self.box.reorder_child(self.status_image, 3)
             else:
-                self.box.reorder_child(self.image, 0)
+                self.box.reorder_child(self.hilite_image, 0)
                 self.box.reorder_child(self.label, 1)
-                self.box.reorder_child(self.statusimage, 2)
+                self.box.reorder_child(self.status_image, 2)
         else:
-            self.box.reorder_child(self.statusimage, 0)
+            self.box.reorder_child(self.status_image, 0)
             self.box.reorder_child(self.label, 1)
-            self.box.reorder_child(self.image, 2)
+            self.box.reorder_child(self.hilite_image, 2)
 
             if "button" in self.__dict__ and self.closebutton != 0:
                 self.box.reorder_child(self.button, 3)
@@ -683,13 +679,11 @@ class ImageLabel(Gtk.Box):
 
         self._order_children()
 
-    def show_image(self, show=True):
-        self._show_image = show
-
-        if self._show_image:
-            self.image.show()
+    def show_hilite_image(self, show=True):
+        if show:
+            self.hilite_image.show()
         else:
-            self.image.hide()
+            self.hilite_image.hide()
 
     def set_angle(self, angle):
         self.angle = angle
@@ -703,10 +697,11 @@ class ImageLabel(Gtk.Box):
         if "button" in self.__dict__:
             return
 
+        close_image = Gtk.Image()
+        close_image.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
+
         self.button = Gtk.Button()
-        img = Gtk.Image()
-        img.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
-        self.button.add(img)
+        self.button.add(close_image)
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
@@ -725,10 +720,6 @@ class ImageLabel(Gtk.Box):
         del self.button
 
     def set_text_color(self, notify=None, text=None):
-        if notify is None:
-            notify = self.notify
-        else:
-            self.notify = notify
 
         color = NICOTINE.np.config.sections["ui"]["tab_default"]
 
@@ -752,28 +743,27 @@ class ImageLabel(Gtk.Box):
         else:
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 
-    def set_image(self, img):
-        self.img = img
-        self.image.set_from_pixbuf(img)
+    def set_hilite_image(self, pixbuf):
+        self.hilite_pixbuf = pixbuf
+        self.hilite_image.set_from_pixbuf(pixbuf)
 
-    def get_image(self):
-        return self.img
+    def get_hilite_image(self):
+        return self.hilite_pixbuf
 
     def set_status_image(self, img):
-        if img is self.status_img:
+        if img is self.status_pixbuf:
             return
 
-        if NICOTINE:
-            if NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
-                self.statusimage.show()
-            else:
-                self.statusimage.hide()
+        if NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
+            self.status_image.show()
+        else:
+            self.status_image.hide()
 
-        self.status_img = img
-        self.statusimage.set_from_pixbuf(img)
+        self.status_pixbuf = img
+        self.status_image.set_from_pixbuf(img)
 
     def get_status_image(self):
-        return self.status_img
+        return self.status_pixbuf
 
     def set_text(self, lbl):
         self.set_text_color(notify=None, text=lbl)
@@ -789,7 +779,7 @@ class IconNotebook:
     - You can choose the label orientation (angle).
     """
 
-    def __init__(self, images, angle=0, tabclosers=False, show_image=True, reorderable=True, show_status_image=False, notebookraw=None):
+    def __init__(self, images, angle=0, tabclosers=False, show_hilite_image=True, reorderable=True, show_status_image=False, notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
@@ -799,42 +789,43 @@ class IconNotebook:
         self.reorderable = reorderable
 
         self.images = images
-        self._show_image = show_image
+        self._show_hilite_image = show_hilite_image
         self._show_status_image = show_status_image
 
-        self.pages = []
-
         self.notebook.connect("switch-page", self.dismiss_icon)
-        self.notebook.connect("key_press_event", self.on_key_press)
 
         self.angle = angle
+
+    def get_labels(self, page):
+        tab_label = self.notebook.get_tab_label(page).get_child()
+        menu_label = self.notebook.get_menu_label(page)
+
+        return tab_label, menu_label
 
     def set_reorderable(self, reorderable):
 
         self.reorderable = reorderable
 
-        for data in self.pages:
-            page, label_tab, status, label_tab_menu = data
-            try:
-                self.notebook.set_tab_reorderable(page, self.reorderable)
-            except Exception:
-                pass
+        for page in self.notebook.get_children():
+            self.notebook.set_tab_reorderable(page, self.reorderable)
 
     def set_tab_closers(self, closers):
 
         self.tabclosers = closers
 
-        for data in self.pages:
-            page, label_tab, status, label_tab_menu = data
-            label_tab.set_onclose(self.tabclosers)
+        for page in self.notebook.get_children():
+            tab_label, menu_label = self.get_labels(page)
 
-    def show_images(self, show_image=True):
+            tab_label.set_onclose(self.tabclosers)
 
-        self._show_image = show_image
+    def show_hilite_images(self, show_image=True):
 
-        for data in self.pages:
-            page, label_tab, status, label_tab_menu = data
-            label_tab.show_image(self._show_image)
+        self._show_hilite_image = show_image
+
+        for page in self.notebook.get_children():
+            tab_label, menu_label = self.get_labels(page)
+
+            tab_label.show_hilite_image(self._show_hilite_image)
 
     def set_tab_angle(self, angle):
 
@@ -843,28 +834,13 @@ class IconNotebook:
 
         self.angle = angle
 
-        for data in self.pages:
-            page, label_tab, status, label_tab_menu = data
-            label_tab.set_angle(angle)
+        for page in self.notebook.get_children():
+            tab_label, menu_label = self.get_labels(page)
+
+            tab_label.set_angle(angle)
 
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
-
-    def on_key_press(self, widget, event):
-
-        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
-            return False
-
-        if event.keyval in [Gdk.keyval_from_name("Up"), Gdk.keyval_from_name("Left")]:
-            self.prev_page()
-        elif event.keyval in [Gdk.keyval_from_name("Down"), Gdk.keyval_from_name("Right")]:
-            self.next_page()
-        else:
-            return False
-
-        widget.stop_emission_by_name("key_press_event")
-
-        return True
 
     def append_page(self, page, label, onclose=None, angle=0, fulltext=None):
 
@@ -872,8 +848,8 @@ class IconNotebook:
         closebutton = self.tabclosers
 
         label_tab = ImageLabel(
-            label, self.images["empty"], onclose, closebutton=closebutton,
-            angle=angle, show_image=self._show_image, statusimage=None,
+            label, onclose, closebutton=closebutton, angle=angle,
+            show_hilite_image=self._show_hilite_image,
             show_status_image=self._show_status_image
         )
 
@@ -883,9 +859,7 @@ class IconNotebook:
         label_tab.set_tooltip_text(fulltext)
 
         # menu for all tabs
-        label_tab_menu = ImageLabel(label, self.images["empty"])
-
-        self.pages.append([page, label_tab, 0, label_tab_menu])
+        label_tab_menu = ImageLabel(label)
 
         eventbox = Gtk.EventBox()
         eventbox.set_visible_window(False)
@@ -904,14 +878,7 @@ class IconNotebook:
 
     def remove_page(self, page):
 
-        for i in self.pages[:]:
-            if i[0] == page:
-                Gtk.Notebook.remove_page(self.notebook, self.page_num(page))
-                i[1].destroy()
-                i[3].destroy()
-                self.pages.remove(i)
-
-                break
+        Gtk.Notebook.remove_page(self.notebook, self.page_num(page))
 
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
@@ -922,58 +889,48 @@ class IconNotebook:
 
     def set_status_image(self, page, status):
 
+        tab_label, menu_label = self.get_labels(page)
         image = self.images[("offline", "away", "online")[status]]
 
-        for i in self.pages:
-            if page == i[0]:
-                i[1].set_status_image(image)
-                i[3].set_status_image(image)
-                return
+        tab_label.set_status_image(image)
+        menu_label.set_status_image(image)
 
-    def set_image(self, page, status):
+    def set_hilite_image(self, page, status):
 
-        image = self.images[("empty", "hilite3", "hilite")[status]]
+        tab_label, menu_label = self.get_labels(page)
+        image = None
 
-        for i in self.pages:
-            if page == i[0]:
+        if status > 0:
+            image = self.images[("hilite3", "hilite")[status - 1]]
 
-                if status == 1 and i[2] == 2:
-                    return
+        if status == 1 and tab_label.get_hilite_image() == self.images["hilite"]:
+            # Chat mentions have priority over normal notifications
+            return
 
-                if i[2] != status:
-                    i[1].set_image(image)
-                    i[3].set_image(image)
-                    i[2] = status
-
-                return
+        tab_label.set_hilite_image(image)
+        menu_label.set_hilite_image(image)
 
     def set_text(self, page, label):
 
-        for i in self.pages:
-            if i[0] == page:
-                i[1].set_text(label)
-                i[3].set_text(label)
-                return
+        tab_label, menu_label = self.get_labels(page)
 
-    def set_text_colors(self, color=None):
+        tab_label.set_text(label)
+        menu_label.set_text(label)
 
-        for i in self.pages:
-            i[1].set_text_color(color)
+    def set_text_colors(self, status):
 
-    def set_text_color(self, page, color=None):
+        for page in self.notebook.get_children():
+            self.set_text_color(page, status)
 
-        for i in self.pages:
-            if i[0] == page:
-                i[1].set_text_color(color)
-                return
+    def set_text_color(self, page, status):
+
+        tab_label, menu_label = self.get_labels(page)
+        tab_label.set_text_color(status)
 
     def dismiss_icon(self, notebook, page, page_num):
 
-        # page is None?
-        new_page = self.get_nth_page(page_num)
-
-        self.set_image(new_page, 0)
-        self.set_text_color(new_page, 0)
+        self.set_hilite_image(page, status=0)
+        self.set_text_color(page, status=0)
 
     def request_hilite(self, page):
 
@@ -981,8 +938,8 @@ class IconNotebook:
         if current == page:
             return
 
-        self.set_image(page, 2)
-        self.set_text_color(page, 2)
+        self.set_hilite_image(page, status=2)
+        self.set_text_color(page, status=2)
 
     def request_changed(self, page):
 
@@ -990,8 +947,8 @@ class IconNotebook:
         if current == page:
             return
 
-        self.set_image(page, 1)
-        self.set_text_color(page, 1)
+        self.set_hilite_image(page, status=1)
+        self.set_text_color(page, status=1)
 
     def get_current_page(self):
         return self.notebook.get_current_page()
