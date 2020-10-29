@@ -124,6 +124,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 54   | [Get Recommendations](#server-code-54)            |            |
 | 56   | [Get Global Recommendations](#server-code-56)     |            |
 | 57   | [Get User Interests](#server-code-57)             |            |
+| 58   | [Admin Command](#server-code-58)                  |            |
 | 60   | [Place In Line Response](#server-code-60)         | Deprecated |
 | 62   | [Room Added](#server-code-62)                     | Deprecated |
 | 63   | [Room Removed](#server-code-63)                   | Deprecated |
@@ -959,6 +960,27 @@ We ask the server for a user's liked and hated interests. The server responds wi
         interests</ins>
         1.  **string** <ins>interest</ins>
 
+### Server Code 58
+
+**Admin Command**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: AdminCommand
+
+#### Description
+
+#### Data Order
+
+  - Send
+    1.  **string** <ins>string</ins>
+    2.  **int** <ins>number of strings</ins>
+    3.  Iterate for <ins>number of strings</ins>
+        1.  **string** <ins>string</ins>
+  - Receive
+      - *No Message*
+
 ### Server Code 60
 
 **Place In Line Response**
@@ -1102,19 +1124,23 @@ Nicotine: ExactFileSearch
 
 **DEPRECATED (no results even with official client)**
 
-Someone is searching for a file with an exact name.
+We send this to search for an exact file name and folder, to find other sources.
 
 #### Data Order
 
   - Send
-      - *No Message*
+    1.  **uint32** <ins>token</ins>
+    2.  **string** <ins>filename</ins>
+    3.  **string** <ins>path</ins>
+    4.  **off\_t** <ins>filesize</ins>
+    5.  **uint32** <ins>checksum</ins>
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>ticket</ins>
+    2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  **string** <ins>path</ins>
     5.  **off\_t** <ins>filesize</ins>
-    6.  **uint32** <ins>checkum</ins>
+    6.  **uint32** <ins>checksum</ins>
 
 ### Server Code 66
 
@@ -1189,17 +1215,19 @@ Nicotine: TunneledMessage
 
 **DEPRECATED**
 
+Server message for tunneling a chat message.
+
 #### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
-    2.  **int** <ins>request</ins>
+    2.  **int** <ins>token</ins>
     3.  **int** <ins>code</ins>
     4.  **string** <ins>message</ins>
   - Receive
     1.  **string** <ins>username</ins>
     2.  **int** <ins>code</ins>
-    3.  **int** <ins>request</ins>
+    3.  **int** <ins>token</ins>
     4.  **ip** <ins>ip</ins>
     5.  **int** <ins>port</ins>
     6.  **string** <ins>message</ins>
@@ -3023,9 +3051,9 @@ Nicotine: UploadQueueNotification
 #### Data Order
 
   - Send
-      - *Empty Message*
+      - Empty Message
   - Receive
-      - *Empty Message*
+      - Empty Message
 
 # Distributed Messages
 
@@ -3072,7 +3100,7 @@ Nicotine: DistribAlive
 #### Data Order
 
   - Send
-      - *Empty Message*
+      - Empty Message
   - Receive
     1.  **uint32** <ins>unknown</ins>
 

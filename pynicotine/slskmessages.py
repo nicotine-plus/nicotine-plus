@@ -923,6 +923,24 @@ class UserInterests(ServerMessage):
             self.hates.append(key)
 
 
+class AdminCommand(ServerMessage):
+    """ Server code: 58 """
+
+    def __init__(self, string=None, strings=None):
+        self.string = string
+        self.strings = strings
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.string))
+        msg.extend(self.pack_object(len(strings)))
+
+        for i in strings:
+            msg.extend(self.pack_object(i))
+
+        return msg
+
+
 class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ Server sends this to indicate change in place in queue while we're
@@ -1011,12 +1029,30 @@ class RoomList(ServerMessage):
 
 class ExactFileSearch(ServerMessage):
     """ Server code: 65 """
-    """ Someone is searching for a file with an exact name. """
+    """ We send this to search for an exact file name and folder,
+    to find other sources. """
     """ DEPRECATED (no results even with official client) """
+
+    def __init__(self, req=None, file=None, folder=None, size=None, checksum=None):
+        self.req = req
+        self.file = file
+        self.folder = folder
+        self.size = size
+        self.checksum = checksum
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.req, unsignedint=True))
+        msg.extend(self.pack_object(self.file))
+        msg.extend(self.pack_object(self.folder))
+        msg.extend(self.pack_object(self.size, unsignedlonglong=True))
+        msg.extend(self.pack_object(self.checksum))
+
+        return msg
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, bytes)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.req = self.get_object(message, int, pos, unsignedint=True)
         pos, self.file = self.get_object(message, bytes, pos)
         pos, self.folder = self.get_object(message, bytes, pos)
         pos, self.size = self.get_object(message, int, pos, getunsignedlonglong=True)
@@ -1045,6 +1081,7 @@ class GlobalUserList(JoinRoom):
 
 class TunneledMessage(ServerMessage):
     """ Server code: 68 """
+    """ Server message for tunneling a chat message. """
     """ DEPRECATED """
 
     def __init__(self, user=None, req=None, code=None, msg=None):
