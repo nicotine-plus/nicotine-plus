@@ -4,7 +4,7 @@
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="spacing">5</property>
+    <property name="spacing">6</property>
     <child>
       <object class="GtkPaned">
         <property name="visible">True</property>
@@ -35,7 +35,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="spacing">5</property>
+                <property name="spacing">6</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -63,7 +63,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">6</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="AddLikeEntry">
                         <property name="visible">True</property>
@@ -115,7 +115,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="spacing">5</property>
+                <property name="spacing">6</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -143,7 +143,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">6</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="AddDislikeEntry">
                         <property name="visible">True</property>
@@ -216,8 +216,8 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="border_width">6</property>
-                        <property name="margin_bottom">5</property>
-                        <property name="spacing">5</property>
+                        <property name="margin_bottom">6</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
@@ -243,7 +243,7 @@
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="spacing">5</property>
+                                <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkImage">
                                     <property name="visible">True</property>
@@ -279,7 +279,7 @@
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="spacing">5</property>
+                                <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkImage">
                                     <property name="visible">True</property>
@@ -404,8 +404,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">6</property>
-                    <property name="margin_bottom">5</property>
-                    <property name="spacing">5</property>
+                    <property name="margin_bottom">6</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
@@ -431,7 +431,7 @@
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>

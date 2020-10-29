@@ -28,7 +28,7 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="spacing">5</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkSearchEntry" id="LogSearchEntry">
                             <property name="visible">True</property>
@@ -97,7 +97,7 @@
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="spacing">5</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkSearchEntry" id="ChatSearchEntry">
                             <property name="visible">True</property>
@@ -152,7 +152,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">8</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="ChatEntry">
                         <property name="visible">True</property>

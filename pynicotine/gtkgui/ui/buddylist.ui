@@ -17,11 +17,12 @@
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Buddy List</property>
             <property name="use_markup">True</property>
+            <property name="margin_start">5</property>
+            <property name="margin_end">10</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="padding">2</property>
             <property name="position">0</property>
           </packing>
         </child>
