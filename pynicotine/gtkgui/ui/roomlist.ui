@@ -10,7 +10,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">6</property>
-        <property name="spacing">5</property>
+        <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="ChatroomsLabel">
             <property name="visible">True</property>
@@ -54,6 +54,9 @@
                 <property name="icon_name">view-refresh-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="circular"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -90,8 +93,7 @@
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="border_width">5</property>
-        <property name="spacing">5</property>
+        <property name="border_width">8</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkCheckButton" id="AcceptPrivateRoom">
@@ -113,7 +115,6 @@
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">2</property>
-        <property name="padding">5</property>
       </packing>
     </child>
   </object>

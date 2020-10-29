@@ -77,7 +77,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="filtersCheck">
-            <property name="label" translatable="yes">Enable filters</property>
+            <property name="label" translatable="yes">Filter results</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -93,11 +93,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="RememberCheckButton">
-            <property name="label" translatable="yes">Wish</property>
+            <property name="label" translatable="yes">Add wish</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
+            <property name="tooltip_text" translatable="yes">This search term will be requested at regular intervals</property>
             <property name="use_underline">True</property>
             <property name="draw_indicator">True</property>
             <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
@@ -205,7 +205,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_start">5</property>
-                    <property name="label" translatable="yes">Filter in:</property>
+                    <property name="label" translatable="yes">Include:</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -248,7 +248,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Filter out:</property>
+                    <property name="label" translatable="yes">Exclude:</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
