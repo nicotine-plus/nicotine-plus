@@ -532,16 +532,13 @@ class NetworkEventProcessor:
                 self.config.sections["server"]["login"],
                 self.config.sections["server"]["passw"],
 
-                # Afaik, the client version was set to 157 ns at some point in the past
-                # to support distributed searches properly. Probably no reason to mess
-                # with this (yet)
-
-                # Soulseek client version; 155, 156, 157, 180, 181, 183
+                # Soulseek client version; 155, 156, 157
+                # SoulseekQt seems to be using 157
                 157,
 
                 # Soulseek client minor version
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
-                # For client versions newer than 157, the minor version is probably 1
+                # SoulseekQt seems to go higher than this
                 19,
             )
         )

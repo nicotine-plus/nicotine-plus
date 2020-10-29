@@ -957,9 +957,9 @@ class AdminCommand(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.string))
-        msg.extend(self.pack_object(len(strings)))
+        msg.extend(self.pack_object(len(self.strings)))
 
-        for i in strings:
+        for i in self.strings:
             msg.extend(self.pack_object(i))
 
         return msg
