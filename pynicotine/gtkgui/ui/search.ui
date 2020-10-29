@@ -9,20 +9,103 @@
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="spacing">5</property>
+        <property name="spacing">6</property>
         <property name="border_width">7</property>
         <child>
-          <object class="GtkLabel" id="Counter">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Results: 0/0</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Results</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can-focus">False</property>
+                <property name="receives-default">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="width-request">24</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">5</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <object class="GtkLabel" id="Counter">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="padding">5</property>
             <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="filtersCheck">
+            <property name="label" translatable="yes">Enable filters</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="RememberCheckButton">
+            <property name="label" translatable="yes">Wish</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -43,74 +126,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="filtersCheck">
-            <property name="label" translatable="yes">Enable filters</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="RememberCheckButton">
-            <property name="label" translatable="yes">Wish</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
             <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="ResultGrouping">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="tooltip_text" translatable="yes">Result grouping mode</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="ClearButton">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Clear all results</property>
-            <property name="image">clear</property>
-            <property name="always_show_image">True</property>
-            <signal name="clicked" handler="on_clear" swapped="no"/>
-            <child>
-              <object class="GtkImage" id="clear">
-                <property name="can_focus">False</property>
-                <property name="icon_name">edit-clear-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -146,7 +162,19 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">6</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBox" id="ResultGrouping">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="tooltip_text" translatable="yes">Result grouping mode</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>
@@ -406,6 +434,9 @@
                         <property name="icon_name">dialog-question-symbolic</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="circular"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="expand">False</property>

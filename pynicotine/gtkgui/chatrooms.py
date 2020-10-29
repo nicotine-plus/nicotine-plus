@@ -1483,11 +1483,7 @@ class ChatRoom:
     def count_users(self):
 
         numusers = len(self.users)
-        if numusers > 0:
-            self.LabelPeople.show()
-            self.LabelPeople.set_text(_("User List (%i)") % numusers)
-        else:
-            self.LabelPeople.hide()
+        self.LabelPeople.set_markup("<b>%d</b>" % numusers)
 
         if self.room in self.roomsctrl.rooms:
             iterator = self.roomsctrl.roomsmodel.get_iter_first()

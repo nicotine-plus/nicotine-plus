@@ -358,6 +358,7 @@ class Searches(IconNotebook):
         popup.setup(
             ("#" + _("Copy search term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
+            ("#" + _("Clear all results"), self.searches[search_id][2].on_clear),
             ("#" + _("Close this tab"), self.searches[search_id][2].on_close)
         )
 
@@ -723,7 +724,7 @@ class Search:
                 self.showtab = True
 
             # Update counter
-            self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+            self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
 
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
@@ -928,7 +929,7 @@ class Search:
             if self.check_filter(row):
                 self.add_row_to_model(row)
 
-        self.Counter.set_text("Results: %d/%d" % (self.numvisibleresults, len(self.all_data)))
+        self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
 
     def on_popup_menu_users(self, widget):
 
