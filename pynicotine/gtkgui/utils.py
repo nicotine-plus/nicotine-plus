@@ -641,6 +641,7 @@ class ImageLabel(Gtk.Box):
         self.box.set_spacing(2)
         self.add(self.box)
         self.box.show()
+        self.status_image.set_margin_end(5)
 
         self.box.pack_start(self.status_image, False, False, 0)
         self.box.pack_start(self.label, True, True, 0)
@@ -765,6 +766,9 @@ class ImageLabel(Gtk.Box):
     def get_status_image(self):
         return self.status_pixbuf
 
+    def set_icon(self, icon_name):
+        self.status_image.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
+
     def set_text(self, lbl):
         self.set_text_color(notify=None, text=lbl)
 
@@ -783,7 +787,24 @@ class IconNotebook:
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
-        self.notebook.set_show_border(True)
+
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(
+            b"""
+            .notebook {
+                border-left: none;
+                border-right: none;
+                border-bottom: none
+            }
+
+            """
+        )
+        screen = Gdk.Screen.get_default()
+        style_context = Gtk.StyleContext()
+        style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+        context = self.notebook.get_style_context()
+        context.add_class("notebook")
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable

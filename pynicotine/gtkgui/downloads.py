@@ -83,7 +83,6 @@ class Downloads(TransferList):
         frame.retryTransferButton.connect("clicked", self.on_retry_transfer)
         frame.abortTransferButton.connect("clicked", self.on_select_abort_transfer)
         frame.deleteTransferButton.connect("clicked", self.on_abort_remove_transfer)
-        frame.banDownloadButton.connect("clicked", self.on_ban)
         frame.DownloadList.expand_all()
 
         self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])

@@ -1021,6 +1021,9 @@ class RoomList(ServerMessage):
         pos, numrooms = self.get_object(message, int)
 
         self.rooms = []
+        self.ownedprivaterooms = []
+        self.otherprivaterooms = []
+
         for i in range(numrooms):
             pos, room = self.get_object(message, str, pos)
 
@@ -1036,10 +1039,7 @@ class RoomList(ServerMessage):
         if len(message[pos:]) == 0:
             return
 
-        self.ownedprivaterooms = []
         pos, self.ownedprivaterooms = self._get_rooms(pos, message)
-
-        self.otherprivaterooms = []
         pos, self.otherprivaterooms = self._get_rooms(pos, message)
 
     def _get_rooms(self, originalpos, message):

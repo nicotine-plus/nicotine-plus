@@ -300,7 +300,8 @@ class NicotineFrame:
             # Initialize the image label
             img_label = ImageLabel(
                 translated_tablabels[tab_label], angle=config["ui"]["labelmain"],
-                show_hilite_image=config["notifications"]["notification_tab_icons"]
+                show_hilite_image=config["notifications"]["notification_tab_icons"],
+                show_status_image=True
             )
 
             # Set tab text color
@@ -322,6 +323,16 @@ class NicotineFrame:
             )
 
             popup.set_user(map_tablabels_to_box[tab_label])
+
+        # Tab icons
+        self.ChatTabLabel.get_child().set_icon("user-available-symbolic")
+        self.PrivateChatTabLabel.get_child().set_icon("mail-send-symbolic")
+        self.SearchTabLabel.get_child().set_icon("system-search-symbolic")
+        self.UserInfoTabLabel.get_child().set_icon("avatar-default-symbolic")
+        self.DownloadsTabLabel.get_child().set_icon("document-save-symbolic")
+        self.UploadsTabLabel.get_child().set_icon("emblem-shared-symbolic")
+        self.UserBrowseTabLabel.get_child().set_icon("folder-symbolic")
+        self.InterestsTabLabel.get_child().set_icon("emblem-default-symbolic")
 
         # Initialise other notebooks
         self.chat_notebook = ChatRooms(self)
@@ -1036,7 +1047,8 @@ class NicotineFrame:
                 self.vpaned3.hide()
 
         if tab:
-            self.buddies_tab_label = ImageLabel(_("Buddy list"))
+            self.buddies_tab_label = ImageLabel(_("Buddy list"), show_status_image=True)
+            self.buddies_tab_label.set_icon("system-users-symbolic")
             self.buddies_tab_label.show()
 
             if self.userlist.userlistvbox not in self.MainNotebook.get_children():
@@ -1046,6 +1058,7 @@ class NicotineFrame:
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
 
             self.userlist.BuddiesLabel.hide()
+            self.userlist.UserLabel.show()
 
         if chatrooms:
             self.vpaned3.show()
@@ -1053,6 +1066,7 @@ class NicotineFrame:
                 self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
 
             self.userlist.BuddiesLabel.show()
+            self.userlist.UserLabel.hide()
 
         if always:
             self.vpanedm.show()
@@ -1060,6 +1074,8 @@ class NicotineFrame:
                 self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
 
             self.userlist.BuddiesLabel.show()
+            self.userlist.UserLabel.hide()
+
         else:
             self.vpanedm.hide()
 
