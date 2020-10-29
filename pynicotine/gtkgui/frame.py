@@ -650,6 +650,8 @@ class NicotineFrame:
 
     def set_widget_online_status(self, status):
 
+        current_page = self.MainNotebook.get_current_page()
+
         self.connect_action.set_enabled(not status)
         self.disconnect_action.set_enabled(status)
         self.away_action.set_enabled(status)
@@ -660,17 +662,29 @@ class NicotineFrame:
         self.roomlist.SearchRooms.set_sensitive(status)
         self.roomlist.RefreshButton.set_sensitive(status)
         self.roomlist.AcceptPrivateRoom.set_sensitive(status)
+
         self.UserPrivateCombo.set_sensitive(status)
         self.sPrivateChatButton.set_sensitive(status)
+
         self.UserBrowseCombo.set_sensitive(status)
         self.sSharesButton.set_sensitive(status)
+
+        if current_page == self.MainNotebook.page_num(self.userbrowsevbox):
+            GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
+
         self.UserInfoCombo.set_sensitive(status)
         self.sUserinfoButton.set_sensitive(status)
 
+        if current_page == self.MainNotebook.page_num(self.userinfovbox):
+            GLib.idle_add(self.UserInfoCombo.get_child().grab_focus)
+
         self.UserSearchCombo.set_sensitive(status)
         self.SearchEntryCombo.set_sensitive(status)
-
         self.SearchButton.set_sensitive(status)
+
+        if current_page == self.MainNotebook.page_num(self.searchvbox):
+            GLib.idle_add(self.search_entry.grab_focus)
+
         self.interests.SimilarUsersButton.set_sensitive(status)
         self.interests.GlobalRecommendationsButton.set_sensitive(status)
         self.interests.RecommendationsButton.set_sensitive(status)
@@ -1312,6 +1326,9 @@ class NicotineFrame:
 
         elif page_num == self.MainNotebook.page_num(self.downloadsvbox):
             self.downloads.update(forceupdate=True)
+
+        elif page_num == self.MainNotebook.page_num(self.searchvbox):
+            GLib.idle_add(self.search_entry.grab_focus)
 
     def on_page_removed(self, main_notebook, child, page_num):
 
