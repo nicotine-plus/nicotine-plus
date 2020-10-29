@@ -37,7 +37,6 @@
                           <object class="GtkNotebook" id="ChatNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="border_width">5</property>
                             <property name="show_border">False</property>
                             <property name="scrollable">True</property>
                           </object>
@@ -82,13 +81,12 @@
                       <object class="GtkBox" id="privatevbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel">
@@ -129,7 +127,7 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">user-available-symbolic</property>
+                                        <property name="icon_name">mail-send-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
@@ -183,7 +181,7 @@
                           <object class="GtkNotebook" id="PrivatechatNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="show_border">False</property>
+                            <property name="show_border">True</property>
                             <property name="scrollable">True</property>
                           </object>
                           <packing>
@@ -218,13 +216,12 @@
                       <object class="GtkBox" id="downloadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel" id="DownloadUsers">
@@ -344,7 +341,6 @@
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="DownloadList">
                                 <property name="visible">True</property>
@@ -365,6 +361,7 @@
                           <object class="GtkBox" id="DownloadButtons">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkButton" id="clearFinishedAbortedButton">
@@ -435,7 +432,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="retryTransferButton">
+                              <object class="GtkButton" id="deleteTransferButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -448,14 +445,14 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">edit-redo-symbolic</property>
+                                        <property name="icon_name">edit-delete-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Retry</property>
+                                        <property name="label" translatable="yes">Delete</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                     </child>
@@ -465,7 +462,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
-                                <property name="padding">1</property>
+                                <property name="pack_type">end</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
@@ -500,11 +497,12 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
+                                <property name="pack_type">end</property>
                                 <property name="position">3</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="deleteTransferButton">
+                              <object class="GtkButton" id="retryTransferButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -517,48 +515,14 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">edit-delete-symbolic</property>
+                                        <property name="icon_name">edit-redo-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Delete</property>
-                                        <property name="use_underline">True</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">4</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="banDownloadButton">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">action-unavailable-symbolic</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Ban User(s)</property>
+                                        <property name="label" translatable="yes">Retry</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                     </child>
@@ -569,7 +533,7 @@
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="pack_type">end</property>
-                                <property name="position">5</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                           </object>
@@ -605,13 +569,12 @@
                       <object class="GtkBox" id="uploadsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel" id="UploadUsers">
@@ -732,7 +695,6 @@
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="UploadList">
                                 <property name="visible">True</property>
@@ -753,6 +715,7 @@
                           <object class="GtkBox" id="UploadButtons">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkButton" id="clearUploadFinishedErredButton">
@@ -823,7 +786,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="abortUploadButton">
+                              <object class="GtkButton" id="banUploadButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -836,14 +799,14 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">system-shutdown-symbolic</property>
+                                        <property name="icon_name">action-unavailable-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Abort</property>
+                                        <property name="label" translatable="yes">Ban User(s)</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                     </child>
@@ -853,6 +816,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
+                                <property name="pack_type">end</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
@@ -887,11 +851,12 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
+                                <property name="pack_type">end</property>
                                 <property name="position">3</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="banUploadButton">
+                              <object class="GtkButton" id="abortUploadButton">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -904,14 +869,14 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">action-unavailable-symbolic</property>
+                                        <property name="icon_name">system-shutdown-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Ban User(s)</property>
+                                        <property name="label" translatable="yes">Abort</property>
                                         <property name="use_underline">True</property>
                                       </object>
                                     </child>
@@ -958,13 +923,12 @@
                       <object class="GtkBox" id="searchvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkComboBox" id="SearchMethod">
@@ -1140,7 +1104,7 @@
                           <object class="GtkNotebook" id="SearchNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="show_border">False</property>
+                            <property name="show_border">True</property>
                             <property name="scrollable">True</property>
                           </object>
                           <packing>
@@ -1175,13 +1139,12 @@
                       <object class="GtkBox" id="userinfovbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel">
@@ -1222,7 +1185,7 @@
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">user-info-symbolic</property>
+                                        <property name="icon_name">avatar-default-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
@@ -1276,7 +1239,7 @@
                           <object class="GtkNotebook" id="UserInfoNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="show_border">False</property>
+                            <property name="show_border">True</property>
                             <property name="scrollable">True</property>
                           </object>
                           <packing>
@@ -1311,13 +1274,12 @@
                       <object class="GtkBox" id="userbrowsevbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">5</property>
-                        <property name="spacing">5</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel">
@@ -1447,7 +1409,7 @@
                           <object class="GtkNotebook" id="UserBrowseNotebookRaw">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="show_border">False</property>
+                            <property name="show_border">True</property>
                             <property name="scrollable">True</property>
                           </object>
                           <packing>
