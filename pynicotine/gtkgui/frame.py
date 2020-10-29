@@ -2392,10 +2392,10 @@ class NicotineFrame:
             down = up = human_speed(0.0)
             filesup = filesdown = total_usersdown = total_usersup = 0
 
-        self.DownloadUsers.set_text(self.users_template % total_usersdown)
-        self.UploadUsers.set_text(self.users_template % total_usersup)
-        self.DownloadFiles.set_text(self.files_template % filesdown)
-        self.UploadFiles.set_text(self.files_template % filesup)
+        self.DownloadUsers.set_markup("<b>%d</b>" % total_usersdown)
+        self.UploadUsers.set_markup("<b>%d</b>" % total_usersup)
+        self.DownloadFiles.set_markup("<b>%d</b>" % filesdown)
+        self.UploadFiles.set_markup("<b>%d</b>" % filesup)
 
         self.DownStatus.pop(self.down_context_id)
         self.UpStatus.pop(self.up_context_id)

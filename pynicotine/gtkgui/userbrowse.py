@@ -94,6 +94,8 @@ class UserBrowse:
                 ("#" + _("Get user i_nfo"), menu.on_get_user_info),
                 ("#" + _("Gi_ve privileges"), menu.on_give_privileges),
                 ("", None),
+                ("#" + _("_Save shares list to disk"), self.on_save),
+                ("", None),
                 ("$" + _("_Add user to list"), menu.on_add_to_list),
                 ("$" + _("_Ban this user"), menu.on_ban_user),
                 ("$" + _("_Ignore this user"), menu.on_ignore_user)
@@ -225,11 +227,11 @@ class UserBrowse:
         items[1].set_sensitive(act)
         items[2].set_sensitive(act)
 
-        items[5].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
-        items[6].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-        items[7].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+        items[7].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[8].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+        items[9].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
 
-        for i in range(3, 8):
+        for i in range(3, 10):
             items[i].set_sensitive(act)
 
         return True
@@ -363,8 +365,8 @@ class UserBrowse:
                 if filedata[2] < maxsize:
                     self.totalsize += filedata[2]
 
-        self.AmountShared.set_text(_("Shared: %s") % human_size(self.totalsize))
-        self.NumDirectories.set_text(_("Dirs: %s") % len(self.shares))
+        self.AmountShared.set_markup("<b>%s</b>" % human_size(self.totalsize))
+        self.NumDirectories.set_markup("<b>%d</b>" % len(self.shares))
 
         # Generate the directory tree and select first directory
         currentdir = self.browse_get_dirs()
@@ -378,7 +380,6 @@ class UserBrowse:
 
         self.FolderTreeView.set_sensitive(True)
         self.FileTreeView.set_sensitive(True)
-        self.SaveButton.set_sensitive(True)
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
@@ -918,7 +919,6 @@ class UserBrowse:
     def on_refresh(self, widget):
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
-        self.SaveButton.set_sensitive(False)
         self.frame.browse_user(self.user)
 
     def on_copy_url(self, widget):

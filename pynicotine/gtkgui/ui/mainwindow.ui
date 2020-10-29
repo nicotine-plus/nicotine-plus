@@ -87,7 +87,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -162,6 +162,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -222,29 +225,129 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">4</property>
                             <child>
-                              <object class="GtkLabel" id="DownloadUsers">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Users: 0</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Users</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="receives-default">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="DownloadUsers">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">True</property>
+                                <property name="fill">False</property>
                                 <property name="padding">5</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="DownloadFiles">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Files: 0</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Files</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="receives-default">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="DownloadFiles">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">True</property>
+                                <property name="fill">False</property>
                                 <property name="padding">5</property>
                                 <property name="position">1</property>
                               </packing>
@@ -322,6 +425,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -362,7 +468,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton" id="clearFinishedAbortedButton">
                                 <property name="visible">True</property>
@@ -575,29 +681,129 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">4</property>
                             <child>
-                              <object class="GtkLabel" id="UploadUsers">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Users: 0</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Users</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="receives-default">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="UploadUsers">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">True</property>
+                                <property name="fill">False</property>
                                 <property name="padding">5</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="UploadFiles">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Files: 0</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes">Files</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="receives-default">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="UploadFiles">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">True</property>
+                                <property name="fill">False</property>
                                 <property name="padding">5</property>
                                 <property name="position">1</property>
                               </packing>
@@ -676,6 +882,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -716,7 +925,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton" id="clearUploadFinishedErredButton">
                                 <property name="visible">True</property>
@@ -929,7 +1138,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkComboBox" id="SearchMethod">
                                 <property name="visible">True</property>
@@ -1085,6 +1294,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1145,7 +1357,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -1220,6 +1432,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1280,7 +1495,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
@@ -1390,6 +1605,9 @@
                                     <property name="icon_name">applications-system-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="circular"/>
+                                </style>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1444,7 +1662,7 @@
                       <object class="GtkBox" id="interestsvbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="spacing">5</property>
+                        <property name="spacing">6</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <placeholder/>
