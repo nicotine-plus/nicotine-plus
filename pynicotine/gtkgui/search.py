@@ -358,6 +358,7 @@ class Searches(IconNotebook):
         popup.setup(
             ("#" + _("Copy search term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
+            ("#" + _("Clear all results"), self.searches[search_id][2].on_clear),
             ("#" + _("Close this tab"), self.searches[search_id][2].on_close)
         )
 

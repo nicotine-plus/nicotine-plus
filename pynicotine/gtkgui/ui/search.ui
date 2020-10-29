@@ -76,6 +76,39 @@
           </packing>
         </child>
         <child>
+          <object class="GtkCheckButton" id="filtersCheck">
+            <property name="label" translatable="yes">Enable filters</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="RememberCheckButton">
+            <property name="label" translatable="yes">Wish</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkToggleButton" id="ExpandButton">
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
@@ -93,74 +126,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="filtersCheck">
-            <property name="label" translatable="yes">Enable filters</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="RememberCheckButton">
-            <property name="label" translatable="yes">Wish</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">This search will be opened the next time you start Nicotine+ and will send out new search requests after a server-set intervals (usually around one hour)</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_toggle_remember" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
             <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="ResultGrouping">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="tooltip_text" translatable="yes">Result grouping mode</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="ClearButton">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Clear all results</property>
-            <property name="image">clear</property>
-            <property name="always_show_image">True</property>
-            <signal name="clicked" handler="on_clear" swapped="no"/>
-            <child>
-              <object class="GtkImage" id="clear">
-                <property name="can_focus">False</property>
-                <property name="icon_name">edit-clear-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">5</property>
           </packing>
         </child>
         <child>
@@ -196,7 +162,19 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">6</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBox" id="ResultGrouping">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="tooltip_text" translatable="yes">Result grouping mode</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">5</property>
           </packing>
         </child>
       </object>

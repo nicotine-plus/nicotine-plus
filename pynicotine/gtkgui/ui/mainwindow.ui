@@ -364,6 +364,20 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkCheckButton" id="ToggleAutoclearDownloads">
+                                <property name="label" translatable="yes">Autoclear finished / filtered</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkToggleButton" id="ExpandDownloads">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -381,20 +395,6 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="ToggleAutoclearDownloads">
-                                <property name="label" translatable="yes">Autoclear finished / filtered</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
                                 <property name="position">4</property>
                               </packing>
                             </child>
@@ -820,6 +820,20 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkCheckButton" id="ToggleAutoclearUploads">
+                                <property name="label" translatable="yes">Autoclear finished / aborted</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkToggleButton" id="ExpandUploads">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -838,20 +852,6 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkCheckButton" id="ToggleAutoclearUploads">
-                                <property name="label" translatable="yes">Autoclear finished / aborted</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">False</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
                                 <property name="position">4</property>
                               </packing>
                             </child>
