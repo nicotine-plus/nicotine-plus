@@ -1,5 +1,5 @@
 hilite = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><circle r="4" cy="4" cx="4" fill="#3d73b9"/></svg>\n'
-hilite3 = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><ellipse cy="4" cx="4" rx="3.6" ry="3.6" fill="none" stroke="#3d73b9" stroke-width=".8"/></svg>\n'
+hilite3 = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><ellipse cy="3.9999981" cx="3.9999967" rx="3.2251966" ry="3.225198" fill="none" stroke="#3d73b9" stroke-width="1.5496"/></svg>\n'
 away = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#e0c314"/></svg>\n'
 offline = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#da4453"/></svg>\n'
 online = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1abd5f"/></svg>\n'
