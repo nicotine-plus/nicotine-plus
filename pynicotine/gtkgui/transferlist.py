@@ -589,7 +589,7 @@ class TransferList:
         items[2].set_sensitive(act)
         items[3].set_sensitive(act)
 
-        items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
         items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 

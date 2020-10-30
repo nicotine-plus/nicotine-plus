@@ -179,7 +179,7 @@ class PrivateChats(IconNotebook):
         me = (popup.user is None or popup.user == self.frame.np.config.sections["server"]["login"])
         items = popup.get_children()
 
-        items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
         items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
         items[9].set_active(self.frame.user_ip_is_blocked(user))
@@ -195,7 +195,7 @@ class PrivateChats(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            username = [user for user, tab in list(self.users.items()) if tab.Main is page][0]
+            username = next(user for user, tab in list(self.users.items()) if tab.Main is page)
 
             if event.button == 2:
                 self.users[username].on_close(widget)
@@ -466,7 +466,7 @@ class PrivateChat:
         items = self.popup_menu_user.get_children()
         me = (self.popup_menu_user.user is None or self.popup_menu_user.user == self.frame.np.config.sections["server"]["login"])
 
-        items[6].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[6].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[7].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
         items[8].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
         items[9].set_active(self.frame.user_ip_is_blocked(self.user))

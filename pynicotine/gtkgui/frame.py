@@ -2440,13 +2440,6 @@ class NicotineFrame:
         uploadlimit = config["transfers"]["uploadlimit"]
         limitby = config["transfers"]["limitby"]
 
-        if config["transfers"]["geoblock"]:
-            panic = config["transfers"]["geopanic"]
-            cc = config["transfers"]["geoblockcc"]
-            self.np.queue.put(slskmessages.SetGeoBlock([panic, cc]))
-        else:
-            self.np.queue.put(slskmessages.SetGeoBlock(None))
-
         self.np.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.np.queue.put(slskmessages.SetDownloadLimit(config["transfers"]["downloadlimit"]))
 

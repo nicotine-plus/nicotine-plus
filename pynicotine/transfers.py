@@ -129,8 +129,7 @@ class Transfers:
         self.downloads = []
         self.uploads = []
         self.privilegedusers = set()
-        self.requested_upload_queue = []
-        getstatus = {}
+        userstatus = set()
 
         for i in self.eventprocessor.config.sections["transfers"]["downloads"]:
             size = currentbytes = bitrate = length = None
@@ -171,9 +170,9 @@ class Transfers:
                     length=length
                 )
             )
-            getstatus[i[0]] = ""
+            userstatus.add(i[0])
 
-        for i in getstatus:
+        for i in userstatus:
             if i not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(i))
 
@@ -296,7 +295,6 @@ class Transfers:
         if status is None:
             if user not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(user))
-            self.queue.put(slskmessages.GetUserStatus(user))
 
         if transfer.status != "Filtered":
             transfer.req = new_id()
@@ -410,8 +408,6 @@ class Transfers:
         if i.user not in self.eventprocessor.watchedusers:
             self.queue.put(slskmessages.AddUser(i.user))
 
-        self.queue.put(slskmessages.GetUserStatus(i.user))
-
     def _get_cant_connect_upload(self, i):
 
         i.status = "Cannot connect"
@@ -427,7 +423,6 @@ class Transfers:
         if i.user not in self.eventprocessor.watchedusers:
             self.queue.put(slskmessages.AddUser(i.user))
 
-        self.queue.put(slskmessages.GetUserStatus(i.user))
         self.check_upload_queue()
 
     def got_file_connect(self, req, conn):
@@ -477,7 +472,9 @@ class Transfers:
                     user = i.username
                     conn = msg.conn.conn
                     addr = msg.conn.addr[0]
-        elif msg.tunneleduser is not None:
+                    break
+
+        elif msg.tunneleduser is not None:  # Deprecated
             user = msg.tunneleduser
             conn = None
             addr = "127.0.0.1"
@@ -519,13 +516,14 @@ class Transfers:
                 i.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
                 i.transfertimer.setDaemon(True)
                 i.transfertimer.start()
+
                 response = slskmessages.TransferResponse(conn, 1, req=i.req)
                 self.downloadsview.update(i)
                 break
         else:
             # If this file is not in your download queue, then it must be
             # a remotely initated download and someone is manually uploading to you
-            if self.can_upload(user) and user in self.requested_upload_queue:
+            if self.can_upload(user):
                 path = ""
                 if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
                     parentdir = msg.file.split("\\")[-2]
@@ -540,7 +538,6 @@ class Transfers:
                 if user not in self.eventprocessor.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
 
-                self.queue.put(slskmessages.GetUserStatus(user))
                 response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=transfer.req)
                 self.downloadsview.update(transfer)
             else:
@@ -566,13 +563,15 @@ class Transfers:
 
     def _transfer_request_uploads(self, msg, user, conn, addr):
 
-        # Is user alllowed to download?
+        # Is user allowed to download?
         checkuser, reason = self.eventprocessor.check_user(user, addr)
+
         if not checkuser:
             return slskmessages.TransferResponse(conn, 0, reason=reason, req=msg.req)
 
         # Do we actually share that file with the world?
         realpath = self.eventprocessor.shares.virtual2real(msg.file)
+
         if not self.file_is_shared(user, msg.file, realpath):
             return slskmessages.TransferResponse(conn, 0, reason="File not shared", req=msg.req)
 
@@ -581,11 +580,13 @@ class Transfers:
             return slskmessages.TransferResponse(conn, 0, reason="Queued", req=msg.req)
 
         # Has user hit queue limit?
-        friend = user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
-        if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-            limits = False
-        else:
-            limits = True
+        limits = True
+
+        if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
+            friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+
+            if friend:
+                limits = False
 
         if limits and self.queue_limit_reached(user):
             uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
@@ -630,6 +631,7 @@ class Transfers:
         transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
         transferobj.transfertimer.setDaemon(True)
         transferobj.transfertimer.start()
+
         self.uploadsview.update(transferobj)
         return response
 
@@ -639,6 +641,7 @@ class Transfers:
             if i.user == user and i.filename == filename:
                 self.uploads.remove(i)
                 self.uploadsview.remove_specific(i, True)
+                break
 
         self.uploads.append(transferobj)
 
@@ -679,6 +682,7 @@ class Transfers:
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
+                break
 
         if user is None:
             return
@@ -688,11 +692,13 @@ class Transfers:
 
         if not self.file_is_upload_queued(user, msg.file):
 
-            friend = user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
-            if friend and self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-                limits = 0
-            else:
-                limits = 1
+            limits = True
+
+            if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
+                friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+
+                if friend:
+                    limits = False
 
             checkuser, reason = self.eventprocessor.check_user(user, addr)
 
@@ -719,7 +725,7 @@ class Transfers:
                 newupload = Transfer(
                     user=user, filename=msg.file, realfilename=realpath,
                     path=os.path.dirname(realpath), status="Queued",
-                    timequeued=time.time(), size=self.get_file_size(realpath)
+                    timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
                 )
                 self._append_upload(user, msg.file, newupload)
                 self.uploadsview.update(newupload)
@@ -754,8 +760,7 @@ class Transfers:
 
         if self.can_upload(username):
             log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
-            if username not in self.requested_upload_queue:
-                self.requested_upload_queue.append(username)
+
         else:
             self.queue.put(
                 slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
@@ -766,12 +771,12 @@ class Transfers:
 
         transfers = self.eventprocessor.config.sections["transfers"]
 
-        if transfers["remotedownloads"] == 1:
+        if transfers["remotedownloads"]:
 
             # Remote Uploads only for users in list
             if transfers["uploadallowed"] == 2:
                 # Users in userlist
-                if user not in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
+                if user not in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
                     # Not a buddy
                     return False
 
@@ -818,14 +823,16 @@ class Transfers:
     def file_is_shared(self, user, virtualfilename, realfilename):
 
         realfilename = realfilename.replace("\\", os.sep)
+
         if not os.access(realfilename, os.R_OK):
             return False
 
-        (dir, sep, file) = virtualfilename.rpartition('\\')
+        dir, sep, file = virtualfilename.rpartition('\\')
 
         if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
-            if user in [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]:
+            if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
                 bshared = self.eventprocessor.config.sections["transfers"]["bsharedfiles"]
+
                 for i in bshared.get(str(dir), ''):
                     if file == i[0]:
                         return True
@@ -864,7 +871,6 @@ class Transfers:
         limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
         limit_upload_speed = self.eventprocessor.config.sections["transfers"]["uselimit"]
 
-        bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
         currently_negotiating = self.transfer_negotiating()
 
         if limit_upload_slots:
@@ -873,6 +879,8 @@ class Transfers:
 
             if in_progress_count + currently_negotiating >= maxupslots:
                 return False
+
+        bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
 
         if limit_upload_speed:
             max_upload_speed = self.eventprocessor.config.sections["transfers"]["uploadlimit"] * 1024
@@ -919,7 +927,6 @@ class Transfers:
                     if i.user not in self.users or self.users[i.user].status is None:
                         if i.user not in self.eventprocessor.watchedusers:
                             self.queue.put(slskmessages.AddUser(i.user))
-                        self.queue.put(slskmessages.GetUserStatus(i.user))
 
                     self.eventprocessor.process_request_to_peer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
 
@@ -940,7 +947,6 @@ class Transfers:
                     if i.user not in self.users or self.users[i.user].status is None:
                         if i.user not in self.eventprocessor.watchedusers:
                             self.queue.put(slskmessages.AddUser(i.user))
-                        self.queue.put(slskmessages.GetUserStatus(i.user))
 
                     if i.transfertimer is not None:
                         i.transfertimer.cancel()
@@ -1001,8 +1007,6 @@ class Transfers:
 
             if i.user not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(i.user))
-
-            self.queue.put(slskmessages.GetUserStatus(i.user))
 
             if i in self.downloads:
                 self.downloadsview.update(i)
@@ -1477,6 +1481,7 @@ class Transfers:
 
         if self.uploadsview is not None:
             self.uploadsview.clear_by_user(user)
+
         if user not in self.eventprocessor.config.sections["server"]["banlist"]:
             self.eventprocessor.config.sections["server"]["banlist"].append(user)
             self.eventprocessor.config.write_configuration()
@@ -1552,21 +1557,14 @@ class Transfers:
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
+                break
 
         def list_users():
-            users = []
+            users = set()
             for i in self.uploads:
                 if i.user not in users:
-                    users.append(i.user)
+                    users.add(i.user)
             return users
-
-        def count_transfers(username):
-            transfers = []
-            for i in self.uploads:
-                if i.status == "Queued":
-                    if i.user == username:
-                        transfers.append(i)
-            return len(transfers)
 
         if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
 
@@ -1626,7 +1624,7 @@ class Transfers:
             user_transfers = {}
 
             for username in upload_users:
-                user_transfers[username] = count_transfers(username)
+                user_transfers[username] = sum(1 for i in self.uploads if i.status == "Queued" and i.user == username)
                 if username is not user:
                     if user_transfers[username] >= place:
                         if username not in trusers:
@@ -1697,13 +1695,12 @@ class Transfers:
 
     def get_total_uploads_allowed(self):
 
-        useupslots = self.eventprocessor.config.sections["transfers"]["useupslots"]
-
-        if useupslots:
+        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
             maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
             return maxupslots
         else:
             lstlen = sum(1 for i in self.uploads if i.conn is not None)
+
             if self.allow_new_uploads():
                 return lstlen + 1
             else:
@@ -1711,19 +1708,16 @@ class Transfers:
 
     def user_list_privileged(self, user):
 
-        # All users
-        if self.eventprocessor.config.sections["transfers"]["preferfriends"]:
-            return any(user in i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+        for i in self.eventprocessor.config.sections["server"]["userlist"]:
+            if user == i[0]:
+                # All users
+                if self.eventprocessor.config.sections["transfers"]["preferfriends"]:
+                    return True
 
-        # Only privileged users
-        userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
-        if user not in userlist:
-            return False
+                # Only privileged users
+                return i[3]  # Privileged column
 
-        if self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][3]:
-            return True
-        else:
-            return False
+        return False
 
     def is_privileged(self, user):
 
@@ -1737,10 +1731,8 @@ class Transfers:
         he logged off, or because there's a network problem. """
 
         for i in self.downloads:
-            if i.conn != conn:
-                continue
-
-            self._conn_close(conn, addr, i, "download")
+            if i.conn == conn:
+                self._conn_close(conn, addr, i, "download")
 
         for i in self.uploads:
             if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
@@ -1814,18 +1806,16 @@ class Transfers:
             if i.conn is msg.conn.conn:
                 username = i.username
                 break
+        else:
+            return
 
-        if username:
-            for i in self.downloads:
-                if i.user != username:
-                    continue
+        filename = msg.filename
 
-                if i.filename != msg.filename:
-                    continue
-
+        for i in self.downloads:
+            if i.user == username and i.filename == filename:
                 i.place = msg.place
                 self.downloadsview.update(i)
-                break
+                return
 
     def file_error(self, msg):
         """ Networking thread encountered a local file error"""
@@ -1834,6 +1824,7 @@ class Transfers:
 
             if i.conn != msg.conn.conn:
                 continue
+
             i.status = "Local file error"
 
             try:
@@ -1875,6 +1866,7 @@ class Transfers:
                     if self.eventprocessor.config.sections["transfers"]["prioritize"]:
                         for file in file_list[i][directory]:
                             parts = file[1].rsplit('.', 1)
+
                             if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
                                 priorityfiles.append(file)
                             else:

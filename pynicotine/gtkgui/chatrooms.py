@@ -1036,7 +1036,7 @@ class ChatRoom:
 
         me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
-        self.menu_add_to_list.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        self.menu_add_to_list.set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
         self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
         self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
@@ -1456,7 +1456,7 @@ class ChatRoom:
         # Remove from completion list, and completion drop-down
         if self.frame.np.config.sections["words"]["tab"]:
 
-            if username in self.clist and username not in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]:
+            if username in self.clist and username not in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]):
 
                 self.clist.remove(username)
 
@@ -1599,7 +1599,7 @@ class ChatRoom:
             self.popup_menu.set_user(user)
             me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
 
-            self.menu_add_to_list.set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+            self.menu_add_to_list.set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
             self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
             self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
             self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
@@ -2045,7 +2045,7 @@ class ChatRooms(IconNotebook):
 
             n = self.page_num(child)
             page = self.get_nth_page(n)
-            room = [room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page][0]
+            room = next(room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page)
 
             if event.button == 2:
                 self.roomsctrl.joinedrooms[room].on_leave(widget)

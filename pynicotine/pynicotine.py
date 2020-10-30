@@ -157,13 +157,6 @@ class NetworkEventProcessor:
         self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.queue.put(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
 
-        if self.config.sections["transfers"]["geoblock"]:
-            panic = self.config.sections["transfers"]["geopanic"]
-            cc = self.config.sections["transfers"]["geoblockcc"]
-            self.queue.put(slskmessages.SetGeoBlock([panic, cc]))
-        else:
-            self.queue.put(slskmessages.SetGeoBlock(None))
-
         self.active_server_conn = None
         self.waitport = None
         self.chatrooms = None
@@ -1218,11 +1211,11 @@ class NetworkEventProcessor:
             else:
                 return 0, "Banned"
 
-        if user in [i[0] for i in self.config.sections["server"]["userlist"]] and self.config.sections["transfers"]["enablebuddyshares"]:
-            # For sending buddy-only shares
-            return 2, ""
+        if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+            if self.config.sections["transfers"]["enablebuddyshares"]:
+                # For sending buddy-only shares
+                return 2, ""
 
-        if user in [i[0] for i in self.config.sections["server"]["userlist"]]:
             return 1, ""
 
         if self.config.sections["transfers"]["friendsonly"]:
@@ -1232,16 +1225,17 @@ class NetworkEventProcessor:
             return 1, ""
 
         cc = "-"
+
         if addr is not None:
             cc = self.geoip.get_all(addr).country_short
 
         if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
                 return 0, "Sorry, geographical paranoia"
-            else:
-                return 1, ""
 
-        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
+            return 1, ""
+
+        if cc in self.config.sections["transfers"]["geoblockcc"]:
             return 0, "Sorry, your country is blocked"
 
         return 1, ""
@@ -1665,7 +1659,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn:
                 username = i.username
-                checkuser, reason = self.check_user(username, None)
+                checkuser, reason = self.check_user(username, i.addr[0])
                 break
 
         if not username:
