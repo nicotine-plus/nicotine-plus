@@ -227,7 +227,7 @@ class UserBrowse:
         items[1].set_sensitive(act)
         items[2].set_sensitive(act)
 
-        items[7].set_active(self.user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[7].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[8].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
         items[9].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
 

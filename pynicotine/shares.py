@@ -427,7 +427,7 @@ class Shares:
 
         shared[vdir] = shared.get(vdir, [])
 
-        if file not in [i[0] for i in shared[vdir]]:
+        if file not in (i[0] for i in shared[vdir]):
             fileinfo = self.get_file_info(file, name)
             shared[vdir] += [fileinfo]
 
@@ -470,7 +470,7 @@ class Shares:
 
         bshared[vdir] = bshared.get(vdir, [])
 
-        if file not in [i[0] for i in bshared[vdir]]:
+        if file not in (i[0] for i in bshared[vdir]):
 
             fileinfo = self.get_file_info(file, name)
             bshared[vdir] += [fileinfo]

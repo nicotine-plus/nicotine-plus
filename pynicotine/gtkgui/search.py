@@ -170,7 +170,7 @@ class Searches(IconNotebook):
 
         # Get excluded words (starting with "-")
         searchterm_words = text.split()
-        searchterm_words_ignore = [p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1]
+        searchterm_words_ignore = (p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1)
 
         # Remove words starting with "-", results containing these are excluded by us later
         searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
@@ -187,6 +187,7 @@ class Searches(IconNotebook):
 
         # Append excluded words
         searchterm_with_excluded = searchterm_without_excluded
+
         for word in searchterm_words_ignore:
             searchterm_with_excluded += " -" + word
 
@@ -982,7 +983,7 @@ class Search:
         items[2].set_sensitive(act)
         items[3].set_sensitive(act)
 
-        items[6].set_active(user in [i[0] for i in self.frame.np.config.sections["server"]["userlist"]])
+        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
         items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
 

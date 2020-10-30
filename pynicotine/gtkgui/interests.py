@@ -378,7 +378,7 @@ class Interests:
             return
 
         self.ru_popup_menu.set_user(user)
-        items[7].set_active(user in [i[0] for i in self.np.config.sections["server"]["userlist"]])
+        items[7].set_active(user in (i[0] for i in self.np.config.sections["server"]["userlist"]))
         items[8].set_active(user in self.np.config.sections["server"]["banlist"])
         items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
 
