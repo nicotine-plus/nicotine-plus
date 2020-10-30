@@ -695,7 +695,7 @@ class UserBrowse:
             return
 
         for subdir, subf in self.shares:
-            if dir in subdir and dir != subdir:
+            if folder in subdir and folder != subdir:
                 self.download_directory(subdir, os.path.join(ldir, ""))
 
     def on_download_files(self, widget, prefix=""):
