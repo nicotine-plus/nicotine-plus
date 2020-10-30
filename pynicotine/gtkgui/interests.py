@@ -99,16 +99,16 @@ class Interests:
 
         cols = initialise_columns(
             self.RecommendationsList,
-            [_("Item"), 0, "text", self.frame.cell_data_func],
-            [_("Rating"), 75, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text", self.frame.cell_data_func],
+            [_("Item"), -1, "text", self.frame.cell_data_func]
         )
 
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(2)
+        cols[0].set_sort_column_id(2)
+        cols[1].set_sort_column_id(1)
 
         self.recommendations_model = Gtk.ListStore(
-            str,  # (0) item
-            str,  # (1) hrating
+            str,  # (0) hrating
+            str,  # (1) item
             int   # (2) rating
         )
         self.RecommendationsList.set_model(self.recommendations_model)
@@ -127,16 +127,16 @@ class Interests:
 
         cols = initialise_columns(
             self.UnrecommendationsList,
-            [_("Item"), 0, "text", self.frame.cell_data_func],
-            [_("Rating"), 75, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text", self.frame.cell_data_func],
+            [_("Item"), -1, "text", self.frame.cell_data_func]
         )
 
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(2)
+        cols[0].set_sort_column_id(2)
+        cols[1].set_sort_column_id(1)
 
         self.unrecommendations_model = Gtk.ListStore(
-            str,  # (0) item
-            str,  # (1) hrating
+            str,  # (0) hrating
+            str,  # (1) item
             int   # (2) rating
         )
         self.UnrecommendationsList.set_model(self.unrecommendations_model)
@@ -315,7 +315,7 @@ class Interests:
         self.recommendations_model.clear()
 
         for (thing, rating) in recom.items():
-            self.recommendations_model.append([thing, humanize(rating), rating])
+            self.recommendations_model.append([humanize(rating), thing, rating])
 
         self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
@@ -323,7 +323,7 @@ class Interests:
         self.unrecommendations_model.clear()
 
         for (thing, rating) in recom.items():
-            self.unrecommendations_model.append([thing, humanize(rating), rating])
+            self.unrecommendations_model.append([humanize(rating), thing, rating])
 
         self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
