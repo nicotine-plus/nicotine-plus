@@ -891,7 +891,9 @@ class Recommendations(ServerMessage):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
 
-            self.recommendations[key] = rating
+            # The server also includes unrecommendations here for some reason, don't add them
+            if rating >= 0:
+                self.recommendations[key] = rating
 
         if len(message[pos:]) == 0:
             return
@@ -903,7 +905,9 @@ class Recommendations(ServerMessage):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
 
-            self.unrecommendations[key] = rating
+            # The server also includes recommendations here for some reason, don't add them
+            if rating < 0:
+                self.unrecommendations[key] = rating
 
 
 class GlobalRecommendations(Recommendations):
