@@ -123,8 +123,6 @@ class Uploads(TransferList):
     def expand(self, path):
         if self.frame.ExpandUploads.get_active():
             self.frame.UploadList.expand_to_path(path)
-        else:
-            collapse_treeview(self.frame.UploadList, self.tree_users)
 
     def on_expand_uploads(self, widget):
 
@@ -164,7 +162,7 @@ class Uploads(TransferList):
                 if i.user == user:
                     self.selected_transfers.add(i)
 
-        TransferList.on_abort_transfer(self, widget, False, False)
+        self.on_abort_transfer(widget, False, False)
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
 
@@ -303,18 +301,18 @@ class Uploads(TransferList):
 
         self.select_transfers()
 
-        TransferList.on_abort_transfer(self, widget, remove, clear)
+        self.on_abort_transfer(widget, remove, clear)
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
 
     def on_clear_queued(self, widget):
 
-        TransferList.on_clear_queued(self, widget)
+        self.on_clear_queued(widget)
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
 
     def on_clear_failed(self, widget):
 
-        TransferList.on_clear_failed(self, widget)
+        self.on_clear_failed(widget)
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
