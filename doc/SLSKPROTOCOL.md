@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 28 October 2020
+Last updated on 30 October 2020
 
 ## Sections
 
@@ -1062,7 +1062,7 @@ Nicotine: RoomList
 
 #### Description
 
-The server tells us a list of rooms and the number of users in them. Soulseek has a room size requirement of about 50 users when first connecting. Refreshing the list will download all rooms.
+The server tells us a list of rooms and the number of users in them. When connecting to the server, the server only sends us rooms with at least 5 users. A few select rooms are also excluded, such as nicotine and The Lobby. Requesting the room list yields a response containing the missing rooms.
 
 #### Data Order
 
