@@ -784,11 +784,6 @@ class Shares:
             queuesizes = self.np.transfers.get_upload_queue_sizes()
             slotsavail = self.np.transfers.allow_new_uploads()
 
-            if reason == "geoip":
-                geoip = 1
-            else:
-                geoip = 0
-
             if checkuser == 2:
                 fileindex = self.config.sections["transfers"]["bfileindex"]
             else:
@@ -799,7 +794,7 @@ class Shares:
             message = slskmessages.FileSearchResult(
                 None,
                 self.config.sections["server"]["login"],
-                geoip, searchid, resultlist, fileindex, slotsavail,
+                searchid, resultlist, fileindex, slotsavail,
                 self.np.speed, queuesizes, fifoqueue, numresults
             )
 

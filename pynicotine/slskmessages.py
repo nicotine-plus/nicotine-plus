@@ -176,13 +176,6 @@ class SetDownloadLimit(InternalMessage):
         self.limit = limit
 
 
-class SetGeoBlock(InternalMessage):
-    """ Sent by the GUI thread to indicate changes in GeoIP blocking"""
-
-    def __init__(self, config):
-        self.config = config
-
-
 class SetCurrentConnectionCount(InternalMessage):
     """ Sent by networking thread to update the number of current
     connections shown in the GUI. """
@@ -2073,10 +2066,9 @@ class FileSearchResult(PeerMessage):
     __slots__ = "conn", "user", "geoip", "token", "list", "fileindex", "freeulslots", \
                 "ulspeed", "inqueue", "fifoqueue", "numresults", "pos"
 
-    def __init__(self, conn, user=None, geoip=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
+    def __init__(self, conn, user=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
-        self.geoip = geoip
         self.token = token
         self.list = shares
         self.fileindex = fileindex

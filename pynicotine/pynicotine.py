@@ -157,13 +157,6 @@ class NetworkEventProcessor:
         self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.queue.put(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
 
-        if self.config.sections["transfers"]["geoblock"]:
-            panic = self.config.sections["transfers"]["geopanic"]
-            cc = self.config.sections["transfers"]["geoblockcc"]
-            self.queue.put(slskmessages.SetGeoBlock([panic, cc]))
-        else:
-            self.queue.put(slskmessages.SetGeoBlock(None))
-
         self.active_server_conn = None
         self.waitport = None
         self.chatrooms = None

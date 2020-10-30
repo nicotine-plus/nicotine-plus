@@ -129,7 +129,6 @@ class Transfers:
         self.downloads = []
         self.uploads = []
         self.privilegedusers = set()
-        self.requested_upload_queue = []
         userstatus = set()
 
         for i in self.eventprocessor.config.sections["transfers"]["downloads"]:

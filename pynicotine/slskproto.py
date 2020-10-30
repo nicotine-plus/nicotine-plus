@@ -150,7 +150,6 @@ from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import SetCurrentConnectionCount
 from pynicotine.slskmessages import SetDownloadLimit
-from pynicotine.slskmessages import SetGeoBlock
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetUploadLimit
 from pynicotine.slskmessages import SetWaitPort
@@ -439,11 +438,6 @@ class SlskProtoThread(threading.Thread):
         self.total_downloads = 0
 
         self.last_conncount_ui_update = time.time()
-
-        # GeoIP Config
-        self._geoip = None
-        # GeoIP Database
-        self.geoip = self._eventprocessor.geoip
 
         portrange = (port, port) if port else config.sections["server"]["portrange"]
         listenport = None
@@ -974,18 +968,9 @@ class SlskProtoThread(threading.Thread):
                         self._ui_callback([msg_obj])
 
                     else:
-                        checkuser = 1
-
-                        if msg_obj.__class__ is FileSearchResult and msg_obj.geoip and self.geoip and self._geoip:
-                            cc = self.geoip.get_all(conns[msg_obj.conn].addr[0]).country_short
-
-                            if (cc == "-" and self._geoip[0]) or (cc != "-" and self._geoip[1][0].find(cc) >= 0):
-                                checkuser = 0
-
-                        if checkuser:
-                            msg = msg_obj.make_network_message()
-                            conns[msg_obj.conn].obuf.extend(struct.pack("<ii", len(msg) + 4, self.peercodes[msg_obj.__class__]))
-                            conns[msg_obj.conn].obuf.extend(msg)
+                        msg = msg_obj.make_network_message()
+                        conns[msg_obj.conn].obuf.extend(struct.pack("<ii", len(msg) + 4, self.peercodes[msg_obj.__class__]))
+                        conns[msg_obj.conn].obuf.extend(msg)
 
                 else:
                     if msg_obj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
@@ -1059,9 +1044,6 @@ class SlskProtoThread(threading.Thread):
                 elif msg_obj.__class__ is UploadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].fileupl = msg_obj
                     self._reset_counters(conns)
-
-                elif msg_obj.__class__ is SetGeoBlock:
-                    self._geoip = msg_obj.config
 
                 elif msg_obj.__class__ is SetUploadLimit:
                     if msg_obj.uselimit:
