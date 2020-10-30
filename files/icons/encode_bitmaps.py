@@ -25,25 +25,32 @@ import os
 from os.path import isfile
 
 table = [
-    ["img/away.png", "away"],
-    ["img/online.png", "online"],
-    ["img/offline.png", "offline"],
-    ["img/hilite.png", "hilite"],
-    ["img/hilite3.png", "hilite3"],
     ["files/org.nicotine_plus.Nicotine.svg", "n"],
     ["files/org.nicotine_plus.Nicotine.svg", "notify"]
 ]
 
-for name in sorted(os.listdir(os.path.join("img", "tray"))):
-    p = os.path.join("img", "tray", name)
+for name in sorted(os.listdir(os.path.join("files", "icons", "hilite"))):
+    p = os.path.join("files", "icons", "hilite", name)
+
+    if isfile(p):
+        table.append([p, name[:-4]])
+
+for name in sorted(os.listdir(os.path.join("files", "icons", "status"))):
+    p = os.path.join("files", "icons", "status", name)
+
+    if isfile(p):
+        table.append([p, name[:-4]])
+
+for name in sorted(os.listdir(os.path.join("files", "icons", "tray"))):
+    p = os.path.join("files", "icons", "tray", name)
 
     if isfile(p):
         table.append([p, "trayicon_%s" % name[27:-4]])
 
 flagtable = []
 
-for name in sorted(os.listdir(os.path.join("img", "flags"))):
-    p = os.path.join("img", "flags", name)
+for name in sorted(os.listdir(os.path.join("files", "icons", "flags"))):
+    p = os.path.join("files", "icons", "flags", name)
 
     if isfile(p):
         flagtable.append([p, "flag_%s" % name[:2]])

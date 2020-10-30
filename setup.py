@@ -50,12 +50,12 @@ data_files.append(
 )
 
 # Tray icons
-tray_icons = glob.glob(os.path.join("img", "tray", "*"))
+tray_icons = glob.glob(os.path.join("files", "icons", "tray", "*"))
 
 for icon_name in tray_icons:
     data_files.append(
         (
-            "share/icons/hicolor/32x32/apps",
+            "share/icons/hicolor/scalable/apps",
             [icon_name]
         )
     )
@@ -90,7 +90,7 @@ for doc in doc_files:
 data_files.append(
     (
         "share/doc/nicotine",
-        ["img/CREDITS.md"]
+        ["files/icons/CREDITS.md"]
     )
 )
 

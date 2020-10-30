@@ -61,7 +61,7 @@ added_files = [
     ('../org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
 
     # Tray icons
-    ('../../img/tray', 'share/icons/hicolor/32x32/apps'),
+    ('../../files/icons/tray', 'share/icons/hicolor/scalable/apps'),
 
     # GTK Builder files, plugins, geoip database
     ('../../pynicotine', 'pynicotine')
