@@ -349,7 +349,7 @@ def header_toggle(menuitem, columns, index):
     prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
     prev_column.set_resizable(True)
 
-    NICOTINE.SaveColumns()
+    NICOTINE.save_columns()
 
 
 def set_treeview_selected_row(treeview, event):
