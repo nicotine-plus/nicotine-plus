@@ -1598,7 +1598,13 @@ class IconsFrame(BuildFrame):
         self.QuitOnClose.set_active(True)
 
     def on_default_theme(self, widget):
+
+        """ Since the file chooser doesn't allow us to unselect a folder,
+        we use this hack to identify a cleared state, and actually clear the theme path
+        in the config later. """
+
         self.ThemeDir.unselect_all()
+        self.ThemeDir.set_current_folder("   __invalid__   ")
 
     def get_settings(self):
 
@@ -1611,8 +1617,10 @@ class IconsFrame(BuildFrame):
                 mainwindow_close = widgets.index(i)
                 break
 
-        if self.ThemeDir.get_file() is not None:
-            icontheme = self.ThemeDir.get_file().get_path()
+        file_obj = self.ThemeDir.get_file()
+
+        if file_obj is not None and not file_obj.get_path().endswith("   __invalid__   "):
+            icontheme = file_obj.get_path()
         else:
             icontheme = ""
 
