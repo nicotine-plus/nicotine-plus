@@ -615,7 +615,6 @@ class ImageLabel(Gtk.Box):
 
         if show_hilite_image:
             self.set_hilite_image(hilite_image)
-            self.hilite_image.show()
 
         self._pack_children()
         self._order_children()
@@ -746,14 +745,19 @@ class ImageLabel(Gtk.Box):
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 
     def set_hilite_image(self, pixbuf):
+        if pixbuf is None:
+            self.show_hilite_image(False)
+        else:
+            self.show_hilite_image(True)
+
         self.hilite_pixbuf = pixbuf
         self.hilite_image.set_from_pixbuf(pixbuf)
 
     def get_hilite_image(self):
         return self.hilite_pixbuf
 
-    def set_status_image(self, img):
-        if img is self.status_pixbuf:
+    def set_status_image(self, pixbuf):
+        if pixbuf is self.status_pixbuf:
             return
 
         if NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
@@ -761,8 +765,8 @@ class ImageLabel(Gtk.Box):
         else:
             self.status_image.hide()
 
-        self.status_pixbuf = img
-        self.status_image.set_from_pixbuf(img)
+        self.status_pixbuf = pixbuf
+        self.status_image.set_from_pixbuf(pixbuf)
 
     def get_status_image(self):
         return self.status_pixbuf

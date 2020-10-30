@@ -723,8 +723,8 @@ class Search:
                 self.searches.show_tab(self, self.id, self.text, self.mode)
                 self.showtab = True
 
-            # Update counter
-            self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
+            # Update number of results
+            self.update_counter()
 
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
@@ -929,7 +929,8 @@ class Search:
             if self.check_filter(row):
                 self.add_row_to_model(row)
 
-        self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
+        # Update number of visible results
+        self.update_counter()
 
     def on_popup_menu_users(self, widget):
 
@@ -1013,6 +1014,9 @@ class Search:
         self.selected_users = set()
 
         self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
+
+    def update_counter(self):
+        self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
 
     def change_colours(self):
 
@@ -1308,6 +1312,10 @@ class Search:
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
+        self.numvisibleresults = 0
+
+        # Update number of visible results
+        self.update_counter()
 
     def on_close(self, widget):
 
