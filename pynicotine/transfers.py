@@ -1745,8 +1745,8 @@ class Transfers:
         for i in self.uploads:
             if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
                 continue
+
             if i.user != user:
-                # Connection refused, cancel all of user's transfers
                 continue
 
             self._conn_close(conn, addr, i, "upload")
@@ -1757,32 +1757,31 @@ class Transfers:
             i.status = "Connection closed by peer"
             i.req = None
 
-            if type == "download":
-                self.downloadsview.update(i)
-            elif type == "upload":
-                self.uploadsview.update(i)
-
-            self.check_upload_queue()
-
         if i.file is not None:
             i.file.close()
+
+        i.conn = None
 
         if i.status != "Finished":
             if i.user in self.users and self.users[i.user].status == 0:
                 i.status = "User logged off"
+
             elif type == "download":
                 i.status = "Connection closed by peer"
-            elif type == "upload":
+
+            elif type == "upload" and i.status in self.TRANSFER:
+                """ Only cancel files being transferred, queued files will take care of
+                themselves. We don't want to cancel all queued files at once, in case
+                it's just a connectivity fluke. """
+
                 i.status = "Cancelled"
-                self.abort_transfer(i)
+                self.abort_transfer(i, send_fail_message=False)  # Don't send "Aborted" message, let remote user recover
                 self.auto_clear_upload(i)
 
         curtime = time.time()
         for j in self.uploads:
             if j.user == i.user:
                 j.timequeued = curtime
-
-        i.conn = None
 
         if type == "download":
             self.downloadsview.update(i)
@@ -1957,13 +1956,13 @@ class Transfers:
                 self.abort_transfer(i)
                 i.status = "Old"
 
-    def abort_transfer(self, transfer, remove=0, reason="Aborted"):
+    def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):
 
         transfer.req = None
         transfer.speed = 0
         transfer.timeleft = ""
 
-        if transfer in self.uploads:
+        if send_fail_message and transfer in self.uploads:
             self.eventprocessor.process_request_to_peer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
 
         if transfer.conn is not None:
