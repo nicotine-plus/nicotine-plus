@@ -1760,6 +1760,8 @@ class Transfers:
         if i.file is not None:
             i.file.close()
 
+        i.conn = None
+
         if i.status != "Finished":
             if i.user in self.users and self.users[i.user].status == 0:
                 i.status = "User logged off"
@@ -1780,8 +1782,6 @@ class Transfers:
         for j in self.uploads:
             if j.user == i.user:
                 j.timequeued = curtime
-
-        i.conn = None
 
         if type == "download":
             self.downloadsview.update(i)
