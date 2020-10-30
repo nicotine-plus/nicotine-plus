@@ -124,8 +124,6 @@ class Downloads(TransferList):
     def expand(self, path):
         if self.frame.ExpandDownloads.get_active():
             self.frame.DownloadList.expand_to_path(path)
-        else:
-            collapse_treeview(self.frame.DownloadList, self.tree_users)
 
     def on_expand_downloads(self, widget):
 
