@@ -1241,11 +1241,19 @@ class NicotineFrame:
         if not icon_tab_label:
             return
 
-        if status == 0 and icon_tab_label.get_hilite_image() == self.images["hilite"]:
-            # Chat mentions have priority over normal notifications
+        if status == 1:
+            hilite_icon = self.images["hilite"]
+        else:
+            hilite_icon = self.images["hilite3"]
+
+            if icon_tab_label.get_hilite_image() == self.images["hilite"]:
+                # Chat mentions have priority over normal notifications
+                return
+
+        if hilite_icon == icon_tab_label.get_hilite_image():
             return
 
-        icon_tab_label.set_hilite_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
+        icon_tab_label.set_hilite_image(hilite_icon)
         icon_tab_label.set_text_color(status + 1)
 
     def on_switch_page(self, notebook, page, page_num):

@@ -754,13 +754,10 @@ class ImageLabel(Gtk.Box):
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 
     def set_hilite_image(self, pixbuf):
-        if pixbuf is None:
-            self.show_hilite_image(False)
-        else:
-            self.show_hilite_image(True)
-
         self.hilite_pixbuf = pixbuf
         self.hilite_image.set_from_pixbuf(pixbuf)
+
+        self.show_hilite_image()
 
     def get_hilite_image(self):
         return self.hilite_pixbuf
