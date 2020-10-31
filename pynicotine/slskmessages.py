@@ -1008,8 +1008,10 @@ class RoomRemoved(ServerMessage):
 class RoomList(ServerMessage):
     """ Server code: 64 """
     """ The server tells us a list of rooms and the number of users in
-    them. Soulseek has a room size requirement of about 50 users when
-    first connecting. Refreshing the list will download all rooms. """
+    them. When connecting to the server, the server only sends us rooms
+    with at least 5 users. A few select rooms are also excluded, such as
+    nicotine and The Lobby. Requesting the room list yields a response
+    containing the missing rooms. """
 
     def make_network_message(self):
         return b""
