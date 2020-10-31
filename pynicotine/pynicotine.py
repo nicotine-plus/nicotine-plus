@@ -190,6 +190,8 @@ class NetworkEventProcessor:
             slskmessages.MessageUser: self.message_user,
             slskmessages.PMessageUser: self.p_message_user,
             slskmessages.ExactFileSearch: self.dummy_message,
+            slskmessages.RoomAdded: self.dummy_message,
+            slskmessages.RoomRemoved: self.dummy_message,
             slskmessages.UserJoinedRoom: self.user_joined_room,
             slskmessages.SayChatroom: self.say_chat_room,
             slskmessages.JoinRoom: self.join_room,
@@ -290,7 +292,8 @@ class NetworkEventProcessor:
             slskmessages.PrivateRoomOperatorRemoved: self.private_room_operator_removed,
             slskmessages.PrivateRoomAddOperator: self.private_room_add_operator,
             slskmessages.PrivateRoomRemoveOperator: self.private_room_remove_operator,
-            slskmessages.PublicRoomMessage: self.public_room_message
+            slskmessages.PublicRoomMessage: self.public_room_message,
+            slskmessages.UnknownPeerMessage: self.ignore
         }
 
     def process_request_to_peer(self, user, message, window=None, address=None):
@@ -425,9 +428,6 @@ class NetworkEventProcessor:
     def popup_message(self, msg):
         self.set_status(_(msg.title))
         self.ui_callback.popup_message(msg)
-
-    def dummy_message(self, msg):
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def set_current_connection_count(self, msg):
         self.ui_callback.set_socket_status(msg.msg)
@@ -1906,6 +1906,13 @@ class NetworkEventProcessor:
         log.set_log_to_file(should_log)
         log.set_folder(log_folder)
         log.set_timestamp_format(timestamp_format)
+
+    def dummy_message(self, msg):
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+    def ignore(self, msg):
+        # Ignore received message
+        pass
 
 
 class UserAddr:
