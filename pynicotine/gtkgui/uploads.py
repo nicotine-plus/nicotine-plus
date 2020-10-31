@@ -41,10 +41,10 @@ from pynicotine.gtkgui.utils import set_treeview_selected_row
 
 class Uploads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, frame, tab):
 
         TransferList.__init__(self, frame, frame.UploadList, type='upload')
-        self.myvbox = self.frame.uploadsvbox
+        self.tab = tab
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)

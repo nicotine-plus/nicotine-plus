@@ -80,6 +80,7 @@ class Searches(IconNotebook):
         )
 
         self.popup_enable()
+        self.load_config()
 
         self.wish_list = WishList(frame, self)
 
@@ -729,8 +730,7 @@ class Search:
 
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
-            if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.searchvbox):
-                self.frame.SearchTabLabel.get_child().set_hilite_image(self.frame.images["hilite"])
+            self.frame.request_tab_icon(self.frame.SearchTabLabel)
 
     def get_flag(self, user, flag=None):
 

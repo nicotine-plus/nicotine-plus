@@ -1120,7 +1120,7 @@ class ChatRoom:
             if tag == self.tag_hilite:
 
                 self.roomsctrl.chat_notebook.request_hilite(self.Main)
-                self.frame.chat_request_icon(1, self.Main)
+                self.frame.request_tab_icon(self.frame.ChatTabLabel, status=1)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
                     self.frame.notifications.new_notification(
@@ -1131,7 +1131,7 @@ class ChatRoom:
 
             else:
                 self.roomsctrl.chat_notebook.request_changed(self.Main)
-                self.frame.chat_request_icon(0)
+                self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
 
             if self.roomsctrl.chat_notebook.get_current_page() != self.roomsctrl.chat_notebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
                 self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
@@ -1271,8 +1271,7 @@ class ChatRoom:
         elif cmd == "/ip":
             if byteargs:
                 user = byteargs
-                if user not in self.frame.np.ip_requested:
-                    self.frame.np.ip_requested.append(user)
+                self.frame.np.ip_requested.add(user)
                 self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         elif cmd == "/pm":

@@ -45,7 +45,7 @@ from pynicotine.logfacility import log
 # User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
 
-    def __init__(self, frame, subwindow, notebookraw):
+    def __init__(self, frame, subwindow, notebookraw, tab):
 
         self.frame = frame
 
@@ -67,10 +67,7 @@ class UserTabs(IconNotebook):
         self.subwindow = subwindow
 
         self.users = {}
-        self.mytab = None
-
-    def set_tab_label(self, mytab):
-        self.mytab = mytab
+        self.tab = tab
 
     def init_window(self, user):
 
@@ -88,10 +85,10 @@ class UserTabs(IconNotebook):
         self.users[user].show_user(msg)
         self.request_changed(self.users[user].Main)
 
-        if self.mytab is not None:
-            self.frame.request_icon(self.mytab)
+        if self.tab is not None:
+            self.frame.request_tab_icon(self.tab)
 
-        tab_name = self.frame.match_main_notebox(self.mytab)
+        tab_name = self.frame.match_main_notebox(self.tab)
         self.frame.change_main_page(tab_name)
 
     def save_columns(self):
@@ -430,9 +427,7 @@ class UserInfo:
 
     def on_show_ip_address(self, widget):
 
-        if self.user not in self.frame.np.ip_requested:
-            self.frame.np.ip_requested.append(self.user)
-
+        self.frame.np.ip_requested.add(self.user)
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
     def on_refresh(self, widget):

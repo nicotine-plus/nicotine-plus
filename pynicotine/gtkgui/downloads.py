@@ -43,10 +43,10 @@ from pynicotine.gtkgui.utils import set_treeview_selected_row
 
 class Downloads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, frame, tab):
 
         TransferList.__init__(self, frame, frame.DownloadList, type='download')
-        self.myvbox = self.frame.downloadsvbox
+        self.tab = tab
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)

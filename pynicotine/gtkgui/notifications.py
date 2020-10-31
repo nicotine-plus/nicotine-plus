@@ -26,7 +26,6 @@ from gi.repository import Gio
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
-from pynicotine.utils import version
 
 
 class Notifications:
@@ -46,16 +45,19 @@ class Notifications:
                 self.frame.hilites["rooms"].append(room)
 
                 self.frame.tray.set_image()
+
         elif location == "private":
             if user in self.frame.hilites[location]:
                 self.frame.hilites[location].remove(user)
                 self.frame.hilites[location].append(user)
+
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
 
                 self.frame.tray.set_image()
 
-        if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and not self.frame.got_focus:
+        if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and \
+                not self.frame.MainWindow.is_focus():
             self.frame.MainWindow.set_urgency_hint(True)
 
         self.set_title(user)
@@ -89,25 +91,25 @@ class Notifications:
 
         if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
             # Reset Title
-            if self.frame.MainWindow.get_title() != "Nicotine+" + " " + version:
-                self.frame.MainWindow.set_title("Nicotine+" + " " + version)
+            self.frame.MainWindow.set_title("Nicotine+")
+
         elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
             # Private Chats have a higher priority
             if len(self.frame.hilites["private"]) > 0:
                 user = self.frame.hilites["private"][-1]
                 self.frame.MainWindow.set_title(
-                    "Nicotine+" + " " + version + " :: " + _("Private Message from %(user)s") % {'user': user}
+                    "Nicotine+ - " + _("Private Message from %(user)s") % {'user': user}
                 )
             # Allow for the possibility the username is not available
             elif len(self.frame.hilites["rooms"]) > 0:
                 room = self.frame.hilites["rooms"][-1]
                 if user is None:
                     self.frame.MainWindow.set_title(
-                        "Nicotine+" + " " + version + " :: " + _("You've been mentioned in the %(room)s room") % {'room': room}
+                        "Nicotine+ - " + _("You've been mentioned in the %(room)s room") % {'room': room}
                     )
                 else:
                     self.frame.MainWindow.set_title(
-                        "Nicotine+" + " " + version + " :: " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
+                        "Nicotine+ - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                     )
 
     def new_tts(self, message):
