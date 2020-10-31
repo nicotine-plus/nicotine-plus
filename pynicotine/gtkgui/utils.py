@@ -189,35 +189,42 @@ def initialise_columns(treeview, *args):
             renderer.set_padding(10, 3)
 
             column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+
         elif c[2] == "center":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.5)
 
             column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+
         elif c[2] == "number":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.9)
 
             column = Gtk.TreeViewColumn(c[0], renderer, text=i)
             column.set_alignment(0.9)
+
         elif c[2] == "edit":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, 3)
             renderer.set_property('editable', True)
             column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+
         elif c[2] == "combo":
             renderer = Gtk.CellRendererCombo()
             renderer.set_padding(10, 3)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
             column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+
         elif c[2] == "progress":
             renderer = Gtk.CellRendererProgress()
             column = Gtk.TreeViewColumn(c[0], renderer, value=i)
+
         elif c[2] == "toggle":
             renderer = Gtk.CellRendererToggle()
             column = Gtk.TreeViewColumn(c[0], renderer, active=i)
             renderer.set_property("xalign", 0.5)
+
         else:
             renderer = Gtk.CellRendererPixbuf()
             column = Gtk.TreeViewColumn(c[0], renderer, pixbuf=i)
@@ -225,6 +232,7 @@ def initialise_columns(treeview, *args):
         if c[1] == -1:
             column.set_resizable(False)
             column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
+
         else:
             column.set_resizable(True)
             if c[1] == 0:
@@ -241,14 +249,15 @@ def initialise_columns(treeview, *args):
             foreground = c[4][0]
             background = c[4][1]
 
-            if foreground == "":
-                foreground = None
+            if foreground:
+                renderer.set_property("foreground", foreground)
+            else:
+                renderer.set_property("foreground-set", False)
 
-            if background == "":
-                background = None
-
-            renderer.set_property("foreground", foreground)
-            renderer.set_property("background", background)
+            if background:
+                renderer.set_property("background", background)
+            else:
+                renderer.set_property("background-set", False)
 
         column.set_reorderable(False)
         column.set_widget(Gtk.Label.new(c[0]))
@@ -681,7 +690,7 @@ class ImageLabel(Gtk.Box):
         self._order_children()
 
     def show_hilite_image(self, show=True):
-        if show:
+        if show and self.get_hilite_image() is not None:
             self.hilite_image.show()
         else:
             self.hilite_image.hide()
@@ -745,13 +754,10 @@ class ImageLabel(Gtk.Box):
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
 
     def set_hilite_image(self, pixbuf):
-        if pixbuf is None:
-            self.show_hilite_image(False)
-        else:
-            self.show_hilite_image(True)
-
         self.hilite_pixbuf = pixbuf
         self.hilite_image.set_from_pixbuf(pixbuf)
+
+        self.show_hilite_image()
 
     def get_hilite_image(self):
         return self.hilite_pixbuf
@@ -806,7 +812,7 @@ class IconNotebook:
         )
         screen = Gdk.Screen.get_default()
         style_context = Gtk.StyleContext()
-        style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         context = self.notebook.get_style_context()
         context.add_class("notebook")
@@ -1458,3 +1464,104 @@ def _expand_alias(aliases, cmd):
         log.add_warning("%s", error)
 
     return ""
+
+
+""" Fonts and Colors """
+
+
+def parse_color_string(color_string):
+    """ Take a color string, e.g. BLUE, and return a HEX color code """
+
+    if color_string:
+        color_rgba = Gdk.RGBA()
+
+        if color_rgba.parse(color_string):
+            color_hex = "#%02X%02X%02X" % (round(color_rgba.red * 255), round(color_rgba.green * 255), round(color_rgba.blue * 255))
+            return color_hex
+
+    return None
+
+
+def set_list_color(listview, color):
+
+    for c in listview.get_columns():
+        for r in c.get_cells():
+            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                set_widget_color(r, color)
+
+
+def set_list_font(listview, font):
+
+    for c in listview.get_columns():
+        for r in c.get_cells():
+            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                set_widget_font(r, font)
+
+
+def set_widget_color(widget, color):
+
+    if color:
+        widget.set_property("foreground", color)
+    else:
+        widget.set_property("foreground-set", False)
+
+
+def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
+
+    class_name = "widget_custom_color_" + str(id(widget))  # Every CSS class needs to be unique
+    css = "." + class_name + " {"
+
+    bg_color_hex = parse_color_string(bg_color)
+    fg_color_hex = parse_color_string(fg_color)
+
+    if bg_color_hex is not None:
+        css += "background: " + bg_color_hex + ";"
+    else:
+        css += "background: inherit;"
+
+    if fg_color_hex is not None:
+        css += "color: " + fg_color_hex + ";"
+    else:
+        css += "color: inherit;"
+
+    css += "}"
+
+    css_provider = Gtk.CssProvider()
+    css_provider.load_from_data(css.encode())
+
+    screen = Gdk.Screen.get_default()
+    style_context = Gtk.StyleContext()
+    style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    context = widget.get_style_context()
+
+    if not context.has_class(class_name):
+        context.add_class(class_name)
+
+
+def set_widget_font(widget, font):
+    widget.set_property("font", font)
+
+
+def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=True):
+
+    if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or \
+            isinstance(widget, Gtk.Entry):
+        if isinstance(widget, Gtk.ComboBox):
+            widget = widget.get_child()
+
+        set_widget_fg_bg_css(
+            widget,
+            bg_color=NICOTINE.np.config.sections["ui"]["textbg"],
+            fg_color=NICOTINE.np.config.sections["ui"]["inputcolor"]
+        )
+
+    elif update_text_tags and isinstance(widget, Gtk.TextTag):
+        # Chat rooms and private chats have their own code for this
+
+        set_widget_color(widget, NICOTINE.np.config.sections["ui"]["chatremote"])
+        set_widget_font(widget, NICOTINE.np.config.sections["ui"]["chatfont"])
+
+    elif isinstance(widget, Gtk.TreeView):
+        set_list_color(widget, NICOTINE.np.config.sections["ui"]["search"])
+        set_list_font(widget, NICOTINE.np.config.sections["ui"][list_font_target])

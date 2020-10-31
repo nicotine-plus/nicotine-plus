@@ -31,6 +31,7 @@ from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import update_widget_visuals
 
 
 class Interests:
@@ -58,7 +59,7 @@ class Interests:
 
         cols = initialise_columns(
             self.LikesList,
-            [_("I like") + ":", 0, "text", self.frame.cell_data_func]
+            [_("I like") + ":", 0, "text"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -81,7 +82,7 @@ class Interests:
 
         cols = initialise_columns(
             self.DislikesList,
-            [_("I dislike") + ":", 0, "text", self.frame.cell_data_func]
+            [_("I dislike") + ":", 0, "text"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -99,8 +100,8 @@ class Interests:
 
         cols = initialise_columns(
             self.RecommendationsList,
-            [_("Rating"), 0, "text", self.frame.cell_data_func],
-            [_("Item"), -1, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text"],
+            [_("Item"), -1, "text"]
         )
 
         cols[0].set_sort_column_id(2)
@@ -127,8 +128,8 @@ class Interests:
 
         cols = initialise_columns(
             self.UnrecommendationsList,
-            [_("Rating"), 0, "text", self.frame.cell_data_func],
-            [_("Item"), -1, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text"],
+            [_("Item"), -1, "text"]
         )
 
         cols[0].set_sort_column_id(2)
@@ -158,9 +159,9 @@ class Interests:
         cols = initialise_columns(
             self.RecommendationUsersList,
             ["", statusiconwidth, "pixbuf"],
-            [_("User"), 100, "text", self.frame.cell_data_func],
-            [_("Speed"), 0, "text", self.frame.cell_data_func],
-            [_("Files"), 0, "text", self.frame.cell_data_func],
+            [_("User"), 100, "text"],
+            [_("Speed"), 0, "text"],
+            [_("Files"), 0, "text"],
         )
 
         cols[0].set_sort_column_id(4)
@@ -202,6 +203,8 @@ class Interests:
 
         for thing in self.np.config.sections["interests"]["dislikes"]:
             self.dislikes[thing] = self.dislikes_model.append([thing])
+
+        self.update_visuals()
 
     def on_add_thing_i_like(self, widget):
         thing = self.AddLikeEntry.get_text()
@@ -455,3 +458,8 @@ class Interests:
         items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 
         self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
+
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)

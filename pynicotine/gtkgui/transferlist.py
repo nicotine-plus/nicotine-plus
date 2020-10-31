@@ -35,6 +35,7 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import select_user_row_iter
+from pynicotine.gtkgui.utils import update_widget_visuals
 
 
 class TransferList:
@@ -139,7 +140,7 @@ class TransferList:
         widget.connect("button_press_event", self.on_popup_menu, "mouse")
         widget.connect("key-press-event", self.on_key_press_event)
 
-        self.update_colours()
+        self.update_visuals()
 
     def save_columns(self):
         columns = []
@@ -152,8 +153,10 @@ class TransferList:
         self.frame.np.config.sections["columns"][self.type + "_columns"] = columns
         self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
 
-    def update_colours(self):
-        self.frame.change_list_font(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="transfersfont")
 
     def init_interface(self, list):
         self.list = list

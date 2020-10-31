@@ -69,6 +69,7 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
@@ -353,7 +354,8 @@ class NicotineFrame:
         self.sSharesButton.connect("clicked", self.on_get_shares)
         self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
 
-        self.update_colours(first=True)
+        self.tag_log = self.LogWindow.get_buffer().create_tag()
+        self.update_visuals()
 
         """ Now Playing """
 
@@ -570,6 +572,11 @@ class NicotineFrame:
         else:
             for name in names:
                 self.images[name] = load_static(name)
+
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     """ Connection """
 
@@ -859,7 +866,8 @@ class NicotineFrame:
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
-        self.privatechats.update_colours()
+
+        self.privatechats.update_visuals()
 
     def on_check_privileges(self, *args):
         self.np.queue.put(slskmessages.CheckPrivileges())
@@ -883,15 +891,16 @@ class NicotineFrame:
     def on_settings(self, *args, page=None):
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
-            self.settingswindow.SettingsWindow.connect("settings-closed", self.on_settings_closed)
+            self.settingswindow.SettingsWindow.connect("settings-updated", self.on_settings_updated)
 
-        if self.fastconfigure is not None and self.fastconfigure.FastConfigureAssistant.get_property("visible"):
+        if self.fastconfigure is not None and \
+                self.fastconfigure.FastConfigureAssistant.get_property("visible"):
             return
 
         self.settingswindow.set_settings(self.np.config.sections)
 
         if page:
-            self.settingswindow.switch_to_page(page)
+            self.settingswindow.set_active_page(page)
 
         self.settingswindow.SettingsWindow.show()
         self.settingswindow.SettingsWindow.deiconify()
@@ -1232,11 +1241,19 @@ class NicotineFrame:
         if not icon_tab_label:
             return
 
-        if status == 0 and icon_tab_label.get_hilite_image() == self.images["hilite"]:
-            # Chat mentions have priority over normal notifications
+        if status == 1:
+            hilite_icon = self.images["hilite"]
+        else:
+            hilite_icon = self.images["hilite3"]
+
+            if icon_tab_label.get_hilite_image() == self.images["hilite"]:
+                # Chat mentions have priority over normal notifications
+                return
+
+        if hilite_icon == icon_tab_label.get_hilite_image():
             return
 
-        icon_tab_label.set_hilite_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
+        icon_tab_label.set_hilite_image(hilite_icon)
         icon_tab_label.set_text_color(status + 1)
 
     def on_switch_page(self, notebook, page, page_num):
@@ -1518,87 +1535,6 @@ class NicotineFrame:
             self.MainNotebook.set_current_page(page_num(tab_box))
         else:
             self.show_tab(tab_box)
-
-    """ Fonts and Colors """
-
-    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
-        colour = self.np.config.sections["ui"]["search"]
-
-        if colour == "":
-            colour = None
-
-        cellrenderer.set_property("foreground", colour)
-
-    def change_list_font(self, listview, font):
-        for c in listview.get_columns():
-            for r in c.get_cells():
-                if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                    r.set_property("font", font)
-
-    def update_colours(self, first=False):
-        if first:
-            self.tag_log = self.LogWindow.get_buffer().create_tag()
-
-        color = self.np.config.sections["ui"]["chatremote"]
-
-        if color == "":
-            color = None
-
-        self.tag_log.set_property("foreground", color)
-
-        font = self.np.config.sections["ui"]["chatfont"]
-        self.tag_log.set_property("font", font)
-
-        for listview in [
-            self.userlist.UserListTree,
-            self.interests.RecommendationsList,
-            self.interests.UnrecommendationsList,
-            self.interests.RecommendationUsersList,
-            self.interests.LikesList,
-            self.interests.DislikesList,
-            self.roomlist.RoomsList
-        ]:
-            self.change_list_font(listview, self.np.config.sections["ui"]["listfont"])
-
-        self.set_text_bg(self.UserPrivateCombo.get_child())
-        self.set_text_bg(self.UserInfoCombo.get_child())
-        self.set_text_bg(self.UserBrowseCombo.get_child())
-        self.set_text_bg(self.search_entry)
-        self.set_text_bg(self.interests.AddLikeEntry)
-        self.set_text_bg(self.interests.AddDislikeEntry)
-
-    def set_text_bg(self, widget, bgcolor="", fgcolor=""):
-        if bgcolor == "" and self.np.config.sections["ui"]["textbg"] == "":
-            rgba = None
-        else:
-            if bgcolor == "":
-                bgcolor = self.np.config.sections["ui"]["textbg"]
-            rgba = Gdk.RGBA()
-            rgba.parse(bgcolor)
-
-        widget.override_background_color(Gtk.StateFlags.NORMAL, rgba)
-
-        if isinstance(widget, Gtk.Entry):
-            if fgcolor != "":
-                rgba = Gdk.RGBA()
-                rgba.parse(fgcolor)
-            elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] == "":
-                rgba = None
-            elif fgcolor == "" and self.np.config.sections["ui"]["inputcolor"] != "":
-                fgcolor = self.np.config.sections["ui"]["inputcolor"]
-                rgba = Gdk.RGBA()
-                rgba.parse(fgcolor)
-
-            widget.override_color(Gtk.StateFlags.NORMAL, rgba)
-
-        if isinstance(widget, Gtk.TreeView):
-            colour = self.np.config.sections["ui"]["search"]
-            if colour == "":
-                colour = None
-            for c in widget.get_columns():
-                for r in c.get_cells():
-                    if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                        r.set_property("foreground", colour)
 
     """ Dialogs
     TODO: move to dialogs.py what's possible """
@@ -2371,21 +2307,14 @@ class NicotineFrame:
 
         self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
-    """ Exit """
+    """ Settings """
 
-    def on_settings_closed(self, widget, msg):
-
-        if msg == "cancel":
-            self.settingswindow.SettingsWindow.hide()
-            return
+    def on_settings_updated(self, widget, msg):
 
         output = self.settingswindow.get_settings()
 
         if not isinstance(output, tuple):
             return
-
-        if msg == "ok":
-            self.settingswindow.SettingsWindow.hide()
 
         needrescan, needcolors, needcompletion, config = output
 
@@ -2420,6 +2349,7 @@ class NicotineFrame:
 
         if not config["ui"]["trayicon"] and self.tray.is_tray_icon_visible():
             self.tray.hide()
+
         elif config["ui"]["trayicon"] and not self.tray.is_tray_icon_visible():
             self.tray.create()
 
@@ -2431,16 +2361,20 @@ class NicotineFrame:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
-            self.chatrooms.roomsctrl.update_colours()
-            self.privatechats.update_colours()
-            self.searches.update_colours()
-            self.downloads.update_colours()
-            self.uploads.update_colours()
-            self.userinfo.update_colours()
-            self.userbrowse.update_colours()
-            self.settingswindow.update_colours()
-            self.userlist.update_colours()
-            self.update_colours()
+            self.chatrooms.roomsctrl.update_visuals()
+            self.privatechats.update_visuals()
+            self.searches.update_visuals()
+            self.downloads.update_visuals()
+            self.uploads.update_visuals()
+            self.userinfo.update_visuals()
+            self.userbrowse.update_visuals()
+            self.userlist.update_visuals()
+
+            self.roomlist.update_visuals()
+            self.interests.update_visuals()
+
+            self.settingswindow.update_visuals()
+            self.update_visuals()
 
         self.on_show_chat_buttons()
 
@@ -2490,6 +2424,8 @@ class NicotineFrame:
         else:
             if self.np.transfers is None:
                 self.connect_action.set_enabled(True)
+
+    """ Exit """
 
     def on_delete_event(self, widget, event):
 

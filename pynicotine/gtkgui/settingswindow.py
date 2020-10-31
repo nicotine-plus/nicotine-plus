@@ -43,6 +43,8 @@ from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
+from pynicotine.gtkgui.utils import set_widget_fg_bg_css
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
@@ -1214,8 +1216,8 @@ class IgnoreFrame(BuildFrame):
         self.ignored_ips_list = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.IgnoredIPs,
-            [_("Addresses"), -1, "text", self.frame.cell_data_func],
-            [_("Users"), -1, "text", self.frame.cell_data_func]
+            [_("Addresses"), -1, "text"],
+            [_("Users"), -1, "text"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1344,8 +1346,8 @@ class BanFrame(BuildFrame):
         self.blocked_list_model = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.BlockedList,
-            [_("Addresses"), -1, "text", self.frame.cell_data_func],
-            [_("Users"), -1, "text", self.frame.cell_data_func]
+            [_("Addresses"), -1, "text"],
+            [_("Users"), -1, "text"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1643,7 +1645,7 @@ class ColoursFrame(BuildFrame):
 
         # Combobox for user names style
         self.username_style_store = Gtk.ListStore(GObject.TYPE_STRING)
-        for item in ["bold", "italic", "underline", "normal"]:
+        for item in ("bold", "italic", "underline", "normal"):
             self.username_style_store.append([item])
 
         self.UsernameStyle.set_model(self.username_style_store)
@@ -1784,13 +1786,7 @@ class ColoursFrame(BuildFrame):
                 if option in value:
 
                     drawingarea = self.colorsd[key][option]
-
-                    try:
-                        colour = Gdk.color_parse(config[key][option])
-                    except Exception:
-                        colour = None
-
-                    drawingarea.modify_bg(Gtk.StateType.NORMAL, colour)
+                    set_widget_fg_bg_css(drawingarea, config[key][option])
                     break
 
         self.toggled_away_colours(self.DisplayAwayColours)
@@ -1842,12 +1838,16 @@ class ColoursFrame(BuildFrame):
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
+
                 if isinstance(widget, Gtk.SpinButton):
                     widget.set_value_as_int(defaults[key][option])
+
                 elif isinstance(widget, Gtk.Entry):
                     widget.set_text(defaults[key][option])
+
                 elif isinstance(widget, Gtk.CheckButton):
                     widget.set_active(defaults[key][option])
+
                 elif isinstance(widget, Gtk.ComboBox):
                     widget.get_child().set_text(defaults[key][option])
 
@@ -1856,36 +1856,32 @@ class ColoursFrame(BuildFrame):
             if option in value:
 
                 drawingarea = self.colorsd[key][option]
-
-                try:
-                    colour = Gdk.color_parse(defaults[key][option])
-                except Exception:
-                    colour = None
-
-                drawingarea.modify_bg(Gtk.StateFlags.NORMAL, colour)
+                set_widget_fg_bg_css(drawingarea, defaults[key][option])
                 break
 
     def on_clear_all_colours(self, button):
 
         for option in self.colors:
             for section, value in self.options.items():
-
                 if option in value:
-
                     widget = self.options[section][option]
+
                     if isinstance(widget, Gtk.SpinButton):
                         widget.set_value_as_int(0)
+
                     elif isinstance(widget, Gtk.Entry):
                         widget.set_text("")
+
                     elif isinstance(widget, Gtk.CheckButton):
                         widget.set_active(0)
+
                     elif isinstance(widget, Gtk.ComboBox):
                         widget.get_child().set_text("")
 
             for section, value in self.colorsd.items():
                 if option in value:
                     drawingarea = self.colorsd[section][option]
-                    drawingarea.modify_bg(Gtk.StateFlags.NORMAL, None)
+                    set_widget_fg_bg_css(drawingarea)
 
     def fonts_colors_changed(self, widget):
         self.needcolors = 1
@@ -1909,12 +1905,12 @@ class ColoursFrame(BuildFrame):
     def pick_colour(self, widget, entry, area):
 
         dlg = Gtk.ColorChooserDialog(_("Pick a color, any color"))
-        colourtext = entry.get_text()
+        color = entry.get_text()
 
-        if colourtext is not None and colourtext != '':
+        if color:
             try:
                 rgba = Gdk.RGBA()
-                rgba.parse(colourtext)
+                rgba.parse(color)
             except Exception:
                 dlg.destroy()
                 return
@@ -1924,8 +1920,8 @@ class ColoursFrame(BuildFrame):
         if dlg.run() == Gtk.ResponseType.OK:
 
             rgba = dlg.get_rgba()
-            colourtext = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
-            entry.set_text(colourtext)
+            color = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
+            entry.set_text(color)
 
             for section in self.options.keys():
 
@@ -1939,7 +1935,7 @@ class ColoursFrame(BuildFrame):
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(Gtk.StateFlags.NORMAL, rgba.to_color())
+                        set_widget_fg_bg_css(drawingarea, bg_color=color)
                         break
 
         dlg.destroy()
@@ -2636,7 +2632,7 @@ class CensorFrame(BuildFrame):
 
         cols = initialise_columns(
             self.CensorList,
-            [_("Pattern"), -1, "edit", self.frame.cell_data_func]
+            [_("Pattern"), -1, "edit"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -2750,8 +2746,8 @@ class AutoReplaceFrame(BuildFrame):
 
         cols = initialise_columns(
             self.ReplacementList,
-            [_("Pattern"), 150, "edit", self.frame.cell_data_func],
-            [_("Replacement"), -1, "edit", self.frame.cell_data_func]
+            [_("Pattern"), 150, "edit"],
+            [_("Replacement"), -1, "edit"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -3451,8 +3447,8 @@ class Settings:
         # Build the window
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
 
-        # Signal sent and catch by frame.py on close
-        GObject.signal_new("settings-closed", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
+        # Signal sent and catch by frame.py on update
+        GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
 
         # Connect the custom handlers
         self.SettingsWindow.set_transient_for(frame.MainWindow)
@@ -3551,105 +3547,86 @@ class Settings:
         # Set the cursor to the second element of the TreeViewColumn.
         self.SettingsTreeview.set_cursor((0, 0))
 
-        self.update_colours()
+        self.update_visuals()
 
-    def colour_widgets(self, widget):
-
-        if isinstance(widget, Gtk.Entry):
-            self.set_text_bg(widget)
-        if isinstance(widget, Gtk.TreeView):
-            self.frame.change_list_font(widget, self.frame.np.config.sections["ui"]["listfont"])
-
-    def update_colours(self):
+    def update_visuals(self):
 
         for widget in self.__dict__.values():
-            self.colour_widgets(widget)
+            update_widget_visuals(widget)
 
         for name, page in self.pages.items():
             for widget in page.__dict__.values():
-                self.colour_widgets(widget)
-
-    def set_text_bg(self, widget, bgcolor="", fgcolor=""):
-        self.frame.set_text_bg(widget, bgcolor, fgcolor)
+                update_widget_visuals(widget)
 
     def switch_page(self, widget):
+
         child = self.viewport1.get_child()
+
         if child:
             self.viewport1.remove(child)
+
         model, iterator = widget.get_selected()
+
         if iterator is None:
             self.viewport1.add(self.empty_label)
             return
+
         page = model.get_value(iterator, 1)
+
         if page in self.pages:
             self.viewport1.add(self.pages[page].Main)
         else:
             self.viewport1.add(self.empty_label)
 
-    def switch_to_page(self, page):
+    def set_active_page(self, page):
 
+        # Unminimize window
         self.SettingsWindow.deiconify()
+
         child = self.viewport1.get_child()
+
         if child:
             self.viewport1.remove(child)
 
         if self.tree[page] is None:
             self.viewport1.add(self.empty_label)
             return
+
         model = self.SettingsTreeview.get_model()
         sel = self.SettingsTreeview.get_selection()
         sel.unselect_all()
         path = model.get_path(self.tree[page])
+
         self.SettingsTreeview.expand_to_path(path)
+
         if path is not None:
             sel.select_path(path)
 
-    def on_backup_config(self, *args):
-        response = save_file(
-            self.SettingsWindow.get_toplevel(),
-            os.path.dirname(self.frame.np.config.filename),
-            title="Pick a filename for config backup, or cancel to use a timestamp"
-        )
-        if response:
-            error, message = self.frame.np.config.write_config_backup(response[0])
-        else:
-            error, message = self.frame.np.config.write_config_backup()
-        if error:
-            log.add("Error backing up config: %s", message)
-        else:
-            log.add("Config backed up to: %s", message)
-
-    def on_apply(self, widget):
-        self.SettingsWindow.emit("settings-closed", "apply")
-
-    def on_ok(self, widget):
-        self.SettingsWindow.emit("settings-closed", "ok")
-
-    def on_cancel(self, widget):
-        self.SettingsWindow.emit("settings-closed", "cancel")
-
-    def on_delete(self, widget, event):
-        self.on_cancel(widget)
-        widget.stop_emission_by_name("delete-event")
-        return True
-
     def get_position(self, combobox, option):
+
         iterator = combobox.get_model().get_iter_first()
+
         while iterator is not None:
             word = combobox.get_model().get_value(iterator, 0)
+
             if word.lower() == option or word == option:
                 combobox.set_active_iter(iterator)
                 break
+
             iterator = combobox.get_model().iter_next(iterator)
 
     def set_widgets_data(self, config, options):
+
         for section, keys in options.items():
             if section not in config:
                 continue
+
             for key in keys:
                 widget = options[section][key]
+
                 if widget is None:
                     continue
+
                 if config[section][key] is None:
                     self.clear_widget(widget)
                 else:
@@ -3659,39 +3636,55 @@ class Settings:
 
         if isinstance(widget, Gtk.SpinButton):
             return int(widget.get_value())
+
         elif isinstance(widget, Gtk.Entry):
             return widget.get_text()
+
         elif isinstance(widget, Gtk.TextView):
             buffer = widget.get_buffer()
             start, end = buffer.get_bounds()
+
             return widget.get_buffer().get_text(start, end, True)
+
         elif isinstance(widget, Gtk.CheckButton):
             return widget.get_active()
+
         elif isinstance(widget, Gtk.ComboBox):
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
+
         elif isinstance(widget, Gtk.FontButton):
             widget.get_font()
+
         elif isinstance(widget, Gtk.TreeView) and widget.get_model().get_n_columns() == 1:
             wlist = []
             iterator = widget.get_model().get_iter_first()
+
             while iterator:
                 word = widget.get_model().get_value(iterator, 0)
+
                 if word is not None:
                     wlist.append(word)
+
                 iterator = widget.get_model().iter_next(iterator)
+
             return wlist
 
     def clear_widget(self, widget):
         if isinstance(widget, Gtk.SpinButton):
             widget.set_value(0)
+
         elif isinstance(widget, Gtk.Entry):
             widget.set_text("")
+
         elif isinstance(widget, Gtk.TextView):
             widget.get_buffer().set_text("")
+
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
+
         elif isinstance(widget, Gtk.ComboBox):
             self.get_position(widget, "")
+
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
 
@@ -3699,33 +3692,42 @@ class Settings:
 
         if isinstance(widget, Gtk.SpinButton):
             widget.set_value(int(value))
+
         elif isinstance(widget, Gtk.Entry):
             if isinstance(value, (str, int)):
                 widget.set_text(value)
+
         elif isinstance(widget, Gtk.TextView):
             if isinstance(value, (str, int)):
                 widget.get_buffer().set_text(value)
+
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(value)
+
         elif isinstance(widget, Gtk.ComboBox):
             if isinstance(value, str):
                 self.get_position(widget, value)
+
             elif isinstance(value, int):
                 widget.set_active(value)
+
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)
+
         elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
             for item in value:
                 widget.get_model().append([item])
 
     def invalid_settings(self, domain, key):
+
         for name, page in self.pages.items():
             if domain in page.options:
                 if key in page.options[domain]:
-                    self.switch_to_page(name)
+                    self.set_active_page(name)
                     break
 
     def set_settings(self, config):
+
         for page in self.pages.values():
             page.set_settings(config)
 
@@ -3755,3 +3757,36 @@ class Settings:
             return self.pages["Shares"].get_need_rescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None
+
+    def on_backup_config(self, *args):
+
+        response = save_file(
+            self.SettingsWindow.get_toplevel(),
+            os.path.dirname(self.frame.np.config.filename),
+            title="Pick a filename for config backup, or cancel to use a timestamp"
+        )
+
+        if response:
+            error, message = self.frame.np.config.write_config_backup(response[0])
+        else:
+            error, message = self.frame.np.config.write_config_backup()
+
+        if error:
+            log.add("Error backing up config: %s", message)
+        else:
+            log.add("Config backed up to: %s", message)
+
+    def on_apply(self, widget):
+        self.SettingsWindow.emit("settings-updated", "apply")
+
+    def on_ok(self, widget):
+        self.SettingsWindow.hide()
+        self.SettingsWindow.emit("settings-updated", "ok")
+
+    def on_cancel(self, widget):
+        self.SettingsWindow.hide()
+
+    def on_delete(self, widget, event):
+        self.on_cancel(widget)
+        widget.stop_emission_by_name("delete-event")
+        return True

@@ -47,8 +47,10 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import select_user_row_iter
+from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
@@ -84,7 +86,7 @@ class Searches(IconNotebook):
 
         self.wish_list = WishList(frame, self)
 
-        self.update_colours()
+        self.update_visuals()
 
     def load_config(self):
         """
@@ -329,14 +331,14 @@ class Searches(IconNotebook):
         self.remove_page(tab.Main)
         tab.Main.destroy()
 
-    def update_colours(self):
+    def update_visuals(self):
 
         for id in self.searches.values():
             if id[2] is None:
                 continue
-            id[2].change_colours()
+            id[2].update_visuals()
 
-        self.frame.set_text_bg(self.wish_list.AddWishEntry)
+        self.wish_list.update_visuals()
 
     def save_columns(self):
 
@@ -523,7 +525,7 @@ class Search:
 
         self.ResultsList.connect("button_press_event", self.on_list_clicked)
 
-        self.change_colours()
+        self.update_visuals()
 
         """ Filters """
 
@@ -896,18 +898,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                self.frame.set_text_bg(self.FilterIn.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterIn.get_child(), "red", "white")
             else:
-                self.frame.set_text_bg(self.FilterIn.get_child())
+                set_widget_fg_bg_css(self.FilterIn.get_child())
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                self.frame.set_text_bg(self.FilterOut.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterOut.get_child(), "red", "white")
             else:
-                self.frame.set_text_bg(self.FilterOut.get_child())
+                set_widget_fg_bg_css(self.FilterOut.get_child())
 
         if size:
             self.filters[2] = size
@@ -1019,17 +1021,10 @@ class Search:
     def update_counter(self):
         self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
 
-    def change_colours(self):
+    def update_visuals(self):
 
-        self.frame.set_text_bg(self.FilterIn.get_child())
-        self.frame.set_text_bg(self.FilterOut.get_child())
-        self.frame.set_text_bg(self.FilterSize.get_child())
-        self.frame.set_text_bg(self.FilterBitrate.get_child())
-        self.frame.set_text_bg(self.FilterCountry.get_child())
-
-        font = self.frame.np.config.sections["ui"]["searchfont"]
-
-        self.frame.change_list_font(self.ResultsList, font)
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="searchfont")
 
     def save_columns(self):
 

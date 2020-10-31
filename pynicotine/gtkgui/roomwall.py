@@ -21,6 +21,7 @@ import os
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import update_widget_visuals
 
 
 class RoomWall:
@@ -40,6 +41,7 @@ class RoomWall:
         self.RoomWallDialog.connect("delete_event", self.hide)
 
     def on_set_room_wall_message(self, widget):
+
         result = self.RoomWallEntry.get_text()
         self.RoomWallEntry.set_text("")
 
@@ -58,12 +60,19 @@ class RoomWall:
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False, scroll=False)
 
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
+
     def hide(self, w=None, event=None):
+
         self.RoomWallList.get_buffer().set_text("")
         self.RoomWallDialog.hide()
         return True
 
     def show(self):
+
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
         self.RoomWallDialog.show()

@@ -25,6 +25,7 @@ import os
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import update_widget_visuals
 
 
 class RoomList:
@@ -42,6 +43,8 @@ class RoomList:
 
         self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
+
+        self.update_visuals()
 
     def on_search_room(self, widget):
 
@@ -77,5 +80,11 @@ class RoomList:
         self.frame.np.queue.put(slskmessages.RoomList())
 
     def on_toggle_accept_private_room(self, widget):
+
         value = self.AcceptPrivateRoom.get_active()
         self.frame.np.queue.put(slskmessages.PrivateRoomToggle(value))
+
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)

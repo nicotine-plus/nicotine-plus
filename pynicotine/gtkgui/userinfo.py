@@ -27,7 +27,6 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -39,6 +38,7 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
 
@@ -130,10 +130,10 @@ class UserTabs(IconNotebook):
             if i.conn == msg.conn.conn:
                 i.update_gauge(msg)
 
-    def update_colours(self):
+    def update_visuals(self):
 
         for i in self.users.values():
-            i.change_colours()
+            i.update_visuals()
 
     def tab_popup(self, user):
 
@@ -214,20 +214,25 @@ class UserInfo:
         self.actual_zoom = 0
         self.status = 0
 
-        self.hates_store = Gtk.ListStore(GObject.TYPE_STRING)
+        self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
-        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text", self.cell_data_func])
+
+        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text"])
         cols[0].set_sort_column_id(0)
+
         self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.likes_store = Gtk.ListStore(GObject.TYPE_STRING)
+        self.likes_store = Gtk.ListStore(str)
         self.Likes.set_model(self.likes_store)
-        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text", self.cell_data_func])
+
+        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text"])
         cols[0].set_sort_column_id(0)
+
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.tag_local = self.makecolour("chatremote")
-        self.change_colours()
+        self.tag_local = self.descr.get_buffer().create_tag()
+
+        self.update_visuals()
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -302,45 +307,10 @@ class UserInfo:
 
         self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
+    def update_visuals(self):
 
-        colour = self.frame.np.config.sections["ui"]["search"]
-        if colour == "":
-            colour = None
-
-        cellrenderer.set_property("foreground", colour)
-
-    def makecolour(self, colour):
-
-        buffer = self.descr.get_buffer()
-        colour = self.frame.np.config.sections["ui"][colour]
-        font = self.frame.np.config.sections["ui"]["chatfont"]
-
-        tag = buffer.create_tag(font=font)
-
-        if colour:
-            tag.set_property("foreground", colour)
-
-        return tag
-
-    def changecolour(self, tag, colour):
-
-        color = self.frame.np.config.sections["ui"][colour]
-
-        if color == "":
-            color = None
-
-        tag.set_property("foreground", color)
-
-        font = self.frame.np.config.sections["ui"]["chatfont"]
-        tag.set_property("font", font)
-
-    def change_colours(self):
-
-        self.changecolour(self.tag_local, "chatremote")
-
-        self.frame.change_list_font(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
-        self.frame.change_list_font(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     def show_interests(self, likes, hates):
 

@@ -40,6 +40,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import get_result_bitrate_length
@@ -81,7 +82,7 @@ class UserBrowse:
 
         cols = initialise_columns(
             self.FolderTreeView,
-            [_("Directories"), -1, "text", self.cell_data_func]  # 0
+            [_("Directories"), -1, "text"]  # 0
         )
         cols[0].set_sort_column_id(0)
 
@@ -165,10 +166,10 @@ class UserBrowse:
         widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
         cols = initialise_columns(
             self.FileTreeView,
-            [_("Filename"), widths[0], "text", self.cell_data_func],
-            [_("Size"), widths[1], "number", self.cell_data_func],
-            [_("Bitrate"), widths[2], "number", self.cell_data_func],
-            [_("Length"), widths[3], "number", self.cell_data_func]
+            [_("Filename"), widths[0], "text"],
+            [_("Size"), widths[1], "number"],
+            [_("Bitrate"), widths[2], "number"],
+            [_("Length"), widths[3], "number"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
@@ -206,7 +207,7 @@ class UserBrowse:
 
         self.FileTreeView.connect("button_press_event", self.on_file_clicked)
 
-        self.change_colours()
+        self.update_visuals()
 
         for name, object in self.__dict__.items():
             if isinstance(object, PopupMenu):
@@ -236,17 +237,10 @@ class UserBrowse:
 
         return True
 
-    def change_colours(self):
-        self.frame.set_text_bg(self.SearchEntry)
+    def update_visuals(self):
 
-        self.frame.change_list_font(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
-        self.frame.change_list_font(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
-
-    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
-        colour = self.frame.np.config.sections["ui"]["search"]
-        if colour == "":
-            colour = None
-        cellrenderer.set_property("foreground", colour)
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="browserfont")
 
     def on_expand(self, widget):
 
