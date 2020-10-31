@@ -38,9 +38,8 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import set_text_bg
 from pynicotine.gtkgui.utils import show_country_tooltip
-from pynicotine.gtkgui.utils import update_cell_colors
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
 
@@ -79,14 +78,14 @@ class UserList:
             self.UserListTree,
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
-            [_("User"), widths[2], "text", update_cell_colors],
-            [_("Speed"), widths[3], "number", update_cell_colors],
-            [_("Files"), widths[4], "number", update_cell_colors],
+            [_("User"), widths[2], "text"],
+            [_("Speed"), widths[3], "number"],
+            [_("Files"), widths[4], "number"],
             [_("Trusted"), widths[5], "toggle"],
             [_("Notify"), widths[6], "toggle"],
             [_("Privileged"), widths[7], "toggle"],
-            [_("Last seen"), widths[8], "text", update_cell_colors],
-            [_("Comments"), widths[9], "edit", update_cell_colors]
+            [_("Last seen"), widths[8], "text"],
+            [_("Comments"), widths[9], "edit"]
         )
 
         self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last_seen, self.col_comments = cols
@@ -199,6 +198,8 @@ class UserList:
 
         self.UserListTree.connect("button_press_event", self.on_popup_menu)
 
+        self.update_visuals()
+
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 14, 'flag_')
 
@@ -212,7 +213,9 @@ class UserList:
         self.add_to_list(text)
 
     def update_visuals(self):
-        set_text_bg(self.AddUserEntry)
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     def on_settings_ban_ignore(self, widget):
         self.frame.on_settings_ban_ignore(widget)

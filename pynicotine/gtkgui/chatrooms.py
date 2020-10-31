@@ -40,7 +40,6 @@ from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
@@ -54,10 +53,10 @@ from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import show_country_tooltip
-from pynicotine.gtkgui.utils import set_text_bg
-from pynicotine.gtkgui.utils import update_cell_colors
-from pynicotine.gtkgui.utils import update_color
-from pynicotine.gtkgui.utils import update_font
+from pynicotine.gtkgui.utils import set_widget_fg_bg_css
+from pynicotine.gtkgui.utils import set_widget_color
+from pynicotine.gtkgui.utils import set_widget_font
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import cmp
@@ -150,7 +149,7 @@ class RoomsControl:
         self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
         self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
 
-        set_text_bg(self.frame.roomlist.SearchRooms)
+        self.update_visuals()
 
     def is_private_room_owned(self, room):
 
@@ -204,8 +203,6 @@ class RoomsControl:
         else:
             cellrenderer.set_property("weight", Pango.Weight.NORMAL)
             cellrenderer.set_property("underline", Pango.Underline.NONE)
-
-        update_cell_colors(column, cellrenderer, model, iterator)
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -680,8 +677,6 @@ class RoomsControl:
 
     def update_visuals(self):
 
-        set_text_bg(self.frame.roomlist.SearchRooms)
-
         for room in self.joinedrooms.values():
             room.update_visuals()
             room.update_tags()
@@ -811,8 +806,8 @@ class ChatRoom:
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.user_column_draw],
-            [_("Speed"), widths[3], "number", update_cell_colors],
-            [_("Files"), widths[4], "number", update_cell_colors]
+            [_("Speed"), widths[3], "number"],
+            [_("Files"), widths[4], "number"]
         )
 
         cols[0].set_sort_column_id(5)
@@ -1519,8 +1514,6 @@ class ChatRoom:
                 cellrenderer.set_property("weight", Pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", Pango.Underline.NONE)
 
-        update_cell_colors(column, cellrenderer, model, iterator)
-
     def get_user_stats(self, user, avgspeed, files):
 
         if user not in self.users:
@@ -1562,8 +1555,8 @@ class ChatRoom:
 
         tag = buffer.create_tag()
 
-        update_color(tag, self.frame.np.config.sections["ui"][color])
-        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
+        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
+        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         if username is not None:
 
@@ -1618,10 +1611,10 @@ class ChatRoom:
 
     def update_visuals(self):
 
-        change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, update_text_tags=False)
 
-        set_text_bg(self.ChatEntry)
-        set_text_bg(self.room_wall.RoomWallEntry)
+        self.room_wall.update_visuals()
 
     def create_tags(self):
 
@@ -1655,8 +1648,8 @@ class ChatRoom:
 
     def update_tag_visuals(self, tag, color):
 
-        update_color(tag, self.frame.np.config.sections["ui"][color])
-        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
+        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
+        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         # Hotspots
         if color in ("useraway", "useronline", "useroffline"):

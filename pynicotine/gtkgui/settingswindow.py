@@ -43,7 +43,7 @@ from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
-from pynicotine.gtkgui.utils import update_cell_colors
+from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.upnp import UPnPPortMapping
@@ -1216,8 +1216,8 @@ class IgnoreFrame(BuildFrame):
         self.ignored_ips_list = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.IgnoredIPs,
-            [_("Addresses"), -1, "text", update_cell_colors],
-            [_("Users"), -1, "text", update_cell_colors]
+            [_("Addresses"), -1, "text"],
+            [_("Users"), -1, "text"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1346,8 +1346,8 @@ class BanFrame(BuildFrame):
         self.blocked_list_model = Gtk.ListStore(str, str)
         cols = initialise_columns(
             self.BlockedList,
-            [_("Addresses"), -1, "text", update_cell_colors],
-            [_("Users"), -1, "text", update_cell_colors]
+            [_("Addresses"), -1, "text"],
+            [_("Users"), -1, "text"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
@@ -1645,7 +1645,7 @@ class ColoursFrame(BuildFrame):
 
         # Combobox for user names style
         self.username_style_store = Gtk.ListStore(GObject.TYPE_STRING)
-        for item in ["bold", "italic", "underline", "normal"]:
+        for item in ("bold", "italic", "underline", "normal"):
             self.username_style_store.append([item])
 
         self.UsernameStyle.set_model(self.username_style_store)
@@ -1786,13 +1786,7 @@ class ColoursFrame(BuildFrame):
                 if option in value:
 
                     drawingarea = self.colorsd[key][option]
-
-                    try:
-                        colour = Gdk.color_parse(config[key][option])
-                    except Exception:
-                        colour = None
-
-                    drawingarea.modify_bg(Gtk.StateType.NORMAL, colour)
+                    set_widget_fg_bg_css(drawingarea, config[key][option])
                     break
 
         self.toggled_away_colours(self.DisplayAwayColours)
@@ -1844,12 +1838,16 @@ class ColoursFrame(BuildFrame):
         for key, value in self.options.items():
             if option in value:
                 widget = self.options[key][option]
+
                 if isinstance(widget, Gtk.SpinButton):
                     widget.set_value_as_int(defaults[key][option])
+
                 elif isinstance(widget, Gtk.Entry):
                     widget.set_text(defaults[key][option])
+
                 elif isinstance(widget, Gtk.CheckButton):
                     widget.set_active(defaults[key][option])
+
                 elif isinstance(widget, Gtk.ComboBox):
                     widget.get_child().set_text(defaults[key][option])
 
@@ -1858,36 +1856,32 @@ class ColoursFrame(BuildFrame):
             if option in value:
 
                 drawingarea = self.colorsd[key][option]
-
-                try:
-                    colour = Gdk.color_parse(defaults[key][option])
-                except Exception:
-                    colour = None
-
-                drawingarea.modify_bg(Gtk.StateFlags.NORMAL, colour)
+                set_widget_fg_bg_css(drawingarea, defaults[key][option])
                 break
 
     def on_clear_all_colours(self, button):
 
         for option in self.colors:
             for section, value in self.options.items():
-
                 if option in value:
-
                     widget = self.options[section][option]
+
                     if isinstance(widget, Gtk.SpinButton):
                         widget.set_value_as_int(0)
+
                     elif isinstance(widget, Gtk.Entry):
                         widget.set_text("")
+
                     elif isinstance(widget, Gtk.CheckButton):
                         widget.set_active(0)
+
                     elif isinstance(widget, Gtk.ComboBox):
                         widget.get_child().set_text("")
 
             for section, value in self.colorsd.items():
                 if option in value:
                     drawingarea = self.colorsd[section][option]
-                    drawingarea.modify_bg(Gtk.StateFlags.NORMAL, None)
+                    set_widget_fg_bg_css(drawingarea)
 
     def fonts_colors_changed(self, widget):
         self.needcolors = 1
@@ -1911,12 +1905,12 @@ class ColoursFrame(BuildFrame):
     def pick_colour(self, widget, entry, area):
 
         dlg = Gtk.ColorChooserDialog(_("Pick a color, any color"))
-        colourtext = entry.get_text()
+        color = entry.get_text()
 
-        if colourtext is not None and colourtext != '':
+        if color:
             try:
                 rgba = Gdk.RGBA()
-                rgba.parse(colourtext)
+                rgba.parse(color)
             except Exception:
                 dlg.destroy()
                 return
@@ -1926,8 +1920,8 @@ class ColoursFrame(BuildFrame):
         if dlg.run() == Gtk.ResponseType.OK:
 
             rgba = dlg.get_rgba()
-            colourtext = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
-            entry.set_text(colourtext)
+            color = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
+            entry.set_text(color)
 
             for section in self.options.keys():
 
@@ -1941,7 +1935,7 @@ class ColoursFrame(BuildFrame):
 
                     if entry is value:
                         drawingarea = self.colorsd[section][key]
-                        drawingarea.modify_bg(Gtk.StateFlags.NORMAL, rgba.to_color())
+                        set_widget_fg_bg_css(drawingarea, bg_color=color)
                         break
 
         dlg.destroy()
@@ -2638,7 +2632,7 @@ class CensorFrame(BuildFrame):
 
         cols = initialise_columns(
             self.CensorList,
-            [_("Pattern"), -1, "edit", update_cell_colors]
+            [_("Pattern"), -1, "edit"]
         )
 
         cols[0].set_sort_column_id(0)
@@ -2752,8 +2746,8 @@ class AutoReplaceFrame(BuildFrame):
 
         cols = initialise_columns(
             self.ReplacementList,
-            [_("Pattern"), 150, "edit", update_cell_colors],
-            [_("Replacement"), -1, "edit", update_cell_colors]
+            [_("Pattern"), 150, "edit"],
+            [_("Replacement"), -1, "edit"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)

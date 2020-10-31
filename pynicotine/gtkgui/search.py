@@ -36,7 +36,6 @@ from pynicotine import slskmessages
 from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import hide_columns
@@ -48,9 +47,10 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import select_user_row_iter
-from pynicotine.gtkgui.utils import set_text_bg
+from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
@@ -338,7 +338,7 @@ class Searches(IconNotebook):
                 continue
             id[2].update_visuals()
 
-        set_text_bg(self.wish_list.AddWishEntry)
+        self.wish_list.update_visuals()
 
     def save_columns(self):
 
@@ -898,18 +898,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                set_text_bg(self.FilterIn.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterIn.get_child(), "red", "white")
             else:
-                set_text_bg(self.FilterIn.get_child())
+                set_widget_fg_bg_css(self.FilterIn.get_child())
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                set_text_bg(self.FilterOut.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterOut.get_child(), "red", "white")
             else:
-                set_text_bg(self.FilterOut.get_child())
+                set_widget_fg_bg_css(self.FilterOut.get_child())
 
         if size:
             self.filters[2] = size
@@ -1023,13 +1023,8 @@ class Search:
 
     def update_visuals(self):
 
-        set_text_bg(self.FilterIn.get_child())
-        set_text_bg(self.FilterOut.get_child())
-        set_text_bg(self.FilterSize.get_child())
-        set_text_bg(self.FilterBitrate.get_child())
-        set_text_bg(self.FilterCountry.get_child())
-
-        change_list_font(self.ResultsList, self.frame.np.config.sections["ui"]["searchfont"])
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="searchfont")
 
     def save_columns(self):
 

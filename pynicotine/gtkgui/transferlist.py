@@ -29,13 +29,13 @@ from time import time
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import select_user_row_iter
+from pynicotine.gtkgui.utils import update_widget_visuals
 
 
 class TransferList:
@@ -154,7 +154,9 @@ class TransferList:
         self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
 
     def update_visuals(self):
-        change_list_font(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="transfersfont")
 
     def init_interface(self, list):
         self.list = list

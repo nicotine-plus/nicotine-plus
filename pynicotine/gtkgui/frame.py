@@ -62,17 +62,14 @@ from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import BuddiesComboBox
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import set_text_bg
 from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import update_color
-from pynicotine.gtkgui.utils import update_font
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
@@ -578,26 +575,8 @@ class NicotineFrame:
 
     def update_visuals(self):
 
-        update_color(self.tag_log, self.np.config.sections["ui"]["chatremote"])
-        update_font(self.tag_log, self.np.config.sections["ui"]["chatfont"])
-
-        for listview in [
-            self.userlist.UserListTree,
-            self.interests.RecommendationsList,
-            self.interests.UnrecommendationsList,
-            self.interests.RecommendationUsersList,
-            self.interests.LikesList,
-            self.interests.DislikesList,
-            self.roomlist.RoomsList
-        ]:
-            change_list_font(listview, self.np.config.sections["ui"]["listfont"])
-
-        set_text_bg(self.UserPrivateCombo.get_child())
-        set_text_bg(self.UserInfoCombo.get_child())
-        set_text_bg(self.UserBrowseCombo.get_child())
-        set_text_bg(self.search_entry)
-        set_text_bg(self.interests.AddLikeEntry)
-        set_text_bg(self.interests.AddDislikeEntry)
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     """ Connection """
 
@@ -2382,6 +2361,9 @@ class NicotineFrame:
             self.userinfo.update_visuals()
             self.userbrowse.update_visuals()
             self.userlist.update_visuals()
+
+            self.roomlist.update_visuals()
+            self.interests.update_visuals()
 
             self.settingswindow.update_visuals()
             self.update_visuals()

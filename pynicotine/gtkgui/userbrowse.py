@@ -33,16 +33,14 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import set_text_bg
 from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import update_cell_colors
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import get_result_bitrate_length
@@ -84,7 +82,7 @@ class UserBrowse:
 
         cols = initialise_columns(
             self.FolderTreeView,
-            [_("Directories"), -1, "text", update_cell_colors]  # 0
+            [_("Directories"), -1, "text"]  # 0
         )
         cols[0].set_sort_column_id(0)
 
@@ -168,10 +166,10 @@ class UserBrowse:
         widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
         cols = initialise_columns(
             self.FileTreeView,
-            [_("Filename"), widths[0], "text", update_cell_colors],
-            [_("Size"), widths[1], "number", update_cell_colors],
-            [_("Bitrate"), widths[2], "number", update_cell_colors],
-            [_("Length"), widths[3], "number", update_cell_colors]
+            [_("Filename"), widths[0], "text"],
+            [_("Size"), widths[1], "number"],
+            [_("Bitrate"), widths[2], "number"],
+            [_("Length"), widths[3], "number"]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
@@ -241,10 +239,8 @@ class UserBrowse:
 
     def update_visuals(self):
 
-        set_text_bg(self.SearchEntry)
-
-        change_list_font(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
-        change_list_font(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, list_font_target="browserfont")
 
     def on_expand(self, widget):
 

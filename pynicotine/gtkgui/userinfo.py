@@ -32,16 +32,13 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import save_file
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import update_cell_colors
-from pynicotine.gtkgui.utils import update_color
-from pynicotine.gtkgui.utils import update_font
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
 
@@ -220,7 +217,7 @@ class UserInfo:
         self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
 
-        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text", update_cell_colors])
+        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text"])
         cols[0].set_sort_column_id(0)
 
         self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -228,14 +225,12 @@ class UserInfo:
         self.likes_store = Gtk.ListStore(str)
         self.Likes.set_model(self.likes_store)
 
-        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text", update_cell_colors])
+        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text"])
         cols[0].set_sort_column_id(0)
 
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.tag_local = self.descr.get_buffer().create_tag()
-        update_color(self.tag_local, self.frame.np.config.sections["ui"]["chatremote"])
-        update_font(self.tag_local, self.frame.np.config.sections["ui"]["chatfont"])
 
         self.update_visuals()
 
@@ -314,11 +309,8 @@ class UserInfo:
 
     def update_visuals(self):
 
-        update_color(self.tag_local, self.frame.np.config.sections["ui"]["chatremote"])
-        update_font(self.tag_local, self.frame.np.config.sections["ui"]["chatfont"])
-
-        change_list_font(self.Likes, self.frame.np.config.sections["ui"]["listfont"])
-        change_list_font(self.Hates, self.frame.np.config.sections["ui"]["listfont"])
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     def show_interests(self, likes, hates):
 

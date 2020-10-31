@@ -42,10 +42,10 @@ from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import set_text_bg
 from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import update_color
-from pynicotine.gtkgui.utils import update_font
+from pynicotine.gtkgui.utils import set_widget_color
+from pynicotine.gtkgui.utils import set_widget_font
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import version
@@ -777,13 +777,15 @@ class PrivateChat:
         self.frame.now_playing.display_now_playing(callback=self.send_message)
 
     def update_visuals(self):
-        set_text_bg(self.ChatLine)
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, update_text_tags=False)
 
     def create_tag(self, buffer, color):
 
         tag = buffer.create_tag()
-        update_color(tag, self.frame.np.config.sections["ui"][color])
-        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
+        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
+        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         return tag
 
@@ -837,8 +839,8 @@ class PrivateChat:
 
     def update_tag_visuals(self, tag, color):
 
-        update_color(tag, self.frame.np.config.sections["ui"][color])
-        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
+        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
+        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         if color in ("useraway", "useronline", "useroffline"):
 

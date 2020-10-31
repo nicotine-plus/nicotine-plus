@@ -32,6 +32,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
 
@@ -78,6 +79,7 @@ class WishList:
         self.frame.WishList.connect("clicked", self.show)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
+
         store = treeview.get_model()
         iterator = store.get_iter(index)
         old_value = store.get_value(iterator, 0)
@@ -87,6 +89,7 @@ class WishList:
             self.add_wish(value)
 
     def on_add_wish(self, widget):
+
         wish = self.AddWishEntry.get_text()
         self.AddWishEntry.set_text("")
 
@@ -94,6 +97,7 @@ class WishList:
             self.do_wishlist_search(self.searches.searchid, wish)
 
     def on_remove_wish(self, widget):
+
         iters = []
         self.WishlistView.get_selection().selected_foreach(self._remove_wish, iters)
 
@@ -108,6 +112,7 @@ class WishList:
         self.WishlistView.get_selection().select_all()
 
     def add_wish(self, wish):
+
         if not wish:
             return False
 
@@ -123,6 +128,7 @@ class WishList:
         return True
 
     def remove_wish(self, wish):
+
         if wish in self.wishes:
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
@@ -146,6 +152,7 @@ class WishList:
                     break
 
     def set_interval(self, msg):
+
         self.interval = msg.seconds
 
         if not self.disconnected:
@@ -189,6 +196,11 @@ class WishList:
         if self.timer is not None:
             GLib.source_remove(self.timer)
             self.timer = None
+
+    def update_visuals(self):
+
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget)
 
     def show(self, widget):
         self.WishListDialog.show()
