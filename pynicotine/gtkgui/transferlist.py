@@ -172,17 +172,7 @@ class TransferList:
         self.widget.get_selection().selected_foreach(self.selected_transfers_callback)
 
     def new_transfer_notification(self):
-        current_page = self.frame.MainNotebook.get_current_page()
-        my_page = self.frame.MainNotebook.page_num(self.myvbox)
-
-        if (current_page == my_page):
-            return
-
-        tablabel = self.frame.get_tab_label(self.frame.MainNotebook.get_tab_label(self.myvbox))
-        if not tablabel:
-            return
-
-        tablabel.set_hilite_image(self.frame.images["hilite"])
+        self.frame.request_tab_icon(self.tab)
 
     def on_ban(self, widget):
         self.select_transfers()
@@ -254,10 +244,7 @@ class TransferList:
             self.last_save = curtime
 
         if not forceupdate:
-            current_page = self.frame.MainNotebook.get_current_page()
-            my_page = self.frame.MainNotebook.page_num(self.myvbox)
-
-            if (current_page != my_page):
+            if self.frame.current_tab != self.tab:
                 """ No need to do unnecessary work if transfers are not visible """
                 return
 

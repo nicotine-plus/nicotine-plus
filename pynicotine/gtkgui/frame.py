@@ -94,7 +94,6 @@ class NicotineFrame:
         self.awaytimerid = None
         self.bindip = bindip
         self.port = port
-        self.got_focus = False
 
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
@@ -155,11 +154,9 @@ class NicotineFrame:
         self.down_context_id = self.DownStatus.get_context_id("")
         self.up_context_id = self.UpStatus.get_context_id("")
 
-        self.MainWindow.set_title("Nicotine+" + " " + version)
         self.MainWindow.set_default_icon(self.images["n"])
 
         self.MainWindow.connect("focus_in_event", self.on_focus_in)
-        self.MainWindow.connect("focus_out_event", self.on_focus_out)
         self.MainWindow.connect("configure_event", self.on_window_change)
 
         width = self.np.config.sections["ui"]["width"]
@@ -334,62 +331,45 @@ class NicotineFrame:
         self.UserBrowseTabLabel.get_child().set_icon("folder-symbolic")
         self.InterestsTabLabel.get_child().set_icon("emblem-default-symbolic")
 
-        # Initialise other notebooks
-        self.chat_notebook = ChatRooms(self)
-        self.privatechat_notebook = PrivateChats(self)
-        self.user_info_notebook = UserTabs(self, UserInfo, self.UserInfoNotebookRaw)
-        self.user_browse_notebook = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw)
-        self.search_notebook = Searches(self)
-
-        self.chatrooms = self.chat_notebook
-        self.chatrooms.show()
-
         # Create Search combo ListStores
-        self.search_entry_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.search_entry_combo_model = Gtk.ListStore(str)
         self.SearchEntryCombo.set_model(self.search_entry_combo_model)
         self.SearchEntryCombo.set_entry_text_column(0)
 
         self.search_entry = self.SearchEntryCombo.get_child()
         self.search_entry.connect("activate", self.on_search)
 
-        self.room_search_combo_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.room_search_combo_model = Gtk.ListStore(str)
         self.RoomSearchCombo.set_model(self.room_search_combo_model)
         self.RoomSearchCombo.set_entry_text_column(0)
 
-        self.search_method_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.search_method_model = Gtk.ListStore(str)
         self.SearchMethod.set_model(self.search_method_model)
+
         renderer_text = Gtk.CellRendererText()
         self.SearchMethod.pack_start(renderer_text, True)
         self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
-        self.searches = self.search_notebook
-        self.searches.show()
-        self.searches.load_config()
-
-        self.downloads = Downloads(self)
-        self.uploads = Uploads(self)
+        # Initialise other notebooks
+        self.chatrooms = ChatRooms(self)
+        self.searches = Searches(self)
+        self.downloads = Downloads(self, self.DownloadsTabLabel)
+        self.uploads = Uploads(self, self.UploadsTabLabel)
         self.userlist = UserList(self)
 
-        self.privatechats = self.privatechat_notebook
+        self.privatechats = PrivateChats(self)
         self.sPrivateChatButton.connect("clicked", self.on_get_private_chat)
         self.UserPrivateCombo.get_child().connect("activate", self.on_get_private_chat)
-        self.privatechats.show()
 
-        self.userinfo = self.user_info_notebook
+        self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel)
         self.sUserinfoButton.connect("clicked", self.on_get_user_info)
         self.UserInfoCombo.get_child().connect("activate", self.on_get_user_info)
-        self.userinfo.show()
 
-        self.userbrowse = self.user_browse_notebook
+        self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel)
         self.sSharesButton.connect("clicked", self.on_get_shares)
         self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
-        self.userbrowse.show()
 
-        # For tab notifications
-        self.userinfo.set_tab_label(self.UserInfoTabLabel)
-        self.userbrowse.set_tab_label(self.UserBrowseTabLabel)
-
-        self.update_colours(1)
+        self.update_colours(first=True)
 
         """ Now Playing """
 
@@ -495,21 +475,16 @@ class NicotineFrame:
     """ Window """
 
     def on_focus_in(self, widget, event):
-        self.MainWindow.set_icon(self.images["n"])
-        self.got_focus = True
         if self.MainWindow.get_urgency_hint():
             self.MainWindow.set_urgency_hint(False)
 
-    def on_focus_out(self, widget, event):
-        self.got_focus = False
-
     def on_window_change(self, widget, blag):
-        (width, height) = self.MainWindow.get_size()
+        width, height = self.MainWindow.get_size()
 
         self.np.config.sections["ui"]["height"] = height
         self.np.config.sections["ui"]["width"] = width
 
-        (xpos, ypos) = self.MainWindow.get_position()
+        xpos, ypos = self.MainWindow.get_position()
 
         self.np.config.sections["ui"]["xposition"] = xpos
         self.np.config.sections["ui"]["yposition"] = ypos
@@ -650,8 +625,6 @@ class NicotineFrame:
 
     def set_widget_online_status(self, status):
 
-        current_page = self.MainNotebook.get_current_page()
-
         self.connect_action.set_enabled(not status)
         self.disconnect_action.set_enabled(status)
         self.away_action.set_enabled(status)
@@ -669,20 +642,20 @@ class NicotineFrame:
         self.UserBrowseCombo.set_sensitive(status)
         self.sSharesButton.set_sensitive(status)
 
-        if current_page == self.MainNotebook.page_num(self.userbrowsevbox):
+        if self.current_tab == self.UserBrowseTabLabel:
             GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
 
         self.UserInfoCombo.set_sensitive(status)
         self.sUserinfoButton.set_sensitive(status)
 
-        if current_page == self.MainNotebook.page_num(self.userinfovbox):
+        if self.current_tab == self.UserInfoTabLabel:
             GLib.idle_add(self.UserInfoCombo.get_child().grab_focus)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchEntryCombo.set_sensitive(status)
         self.SearchButton.set_sensitive(status)
 
-        if current_page == self.MainNotebook.page_num(self.searchvbox):
+        if self.current_tab == self.SearchTabLabel:
             GLib.idle_add(self.search_entry.grab_focus)
 
         self.interests.SimilarUsersButton.set_sensitive(status)
@@ -1264,39 +1237,22 @@ class NicotineFrame:
         except AttributeError:
             return tab_label
 
-    def chat_request_icon(self, status=0, widget=None):
+    def request_tab_icon(self, tab_label, status=1):
 
-        if status == 1 and not self.got_focus:
-            self.MainWindow.set_icon(self.images["hilite"])
-
-        if self.MainNotebook.get_current_page() == self.MainNotebook.page_num(self.chathbox):
+        if self.current_tab == tab_label:
             return
 
-        tablabel = self.get_tab_label(self.ChatTabLabel)
+        icon_tab_label = self.get_tab_label(tab_label)
 
-        if not tablabel:
+        if not icon_tab_label:
             return
 
-        if status == 0:
-            if tablabel.get_hilite_image() == self.images["hilite"]:
-                return
-
-        tablabel.set_hilite_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
-        tablabel.set_text_color(status + 1)
-
-    def request_icon(self, tab_label, widget=None):
-
-        if tab_label == self.PrivateChatTabLabel and not self.got_focus:
-            self.MainWindow.set_icon(self.images["hilite"])
-
-        tablabel = self.get_tab_label(tab_label)
-
-        if not tablabel:
+        if status == 0 and icon_tab_label.get_hilite_image() == self.images["hilite"]:
+            # Chat mentions have priority over normal notifications
             return
 
-        if self.current_tab != tab_label:
-            tablabel.set_hilite_image(self.images["hilite"])
-            tablabel.set_text_color(2)
+        icon_tab_label.set_hilite_image(status == 1 and self.images["hilite"] or self.images["hilite3"])
+        icon_tab_label.set_text_color(status + 1)
 
     def on_switch_page(self, notebook, page, page_num):
 
@@ -1312,14 +1268,14 @@ class NicotineFrame:
                 label.get_child().set_text_color(0)
 
         if page_num == self.MainNotebook.page_num(self.chathbox):
-            curr_page_num = self.chat_notebook.get_current_page()
-            curr_page = self.chat_notebook.get_nth_page(curr_page_num)
-            self.chatrooms.roomsctrl.on_switch_page(self.chat_notebook.notebook, curr_page, curr_page_num, forceupdate=True)
+            curr_page_num = self.chatrooms.get_current_page()
+            curr_page = self.chatrooms.get_nth_page(curr_page_num)
+            self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif page_num == self.MainNotebook.page_num(self.privatevbox):
-            curr_page_num = self.privatechat_notebook.get_current_page()
-            curr_page = self.privatechat_notebook.get_nth_page(curr_page_num)
-            self.privatechats.on_switch_page(self.privatechat_notebook.notebook, curr_page, curr_page_num, forceupdate=True)
+            curr_page_num = self.privatechats.get_current_page()
+            curr_page = self.privatechats.get_nth_page(curr_page_num)
+            self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif page_num == self.MainNotebook.page_num(self.uploadsvbox):
             self.uploads.update(forceupdate=True)
@@ -1482,16 +1438,16 @@ class NicotineFrame:
                 tab_label.get_child().set_angle(ui["labelmain"])
 
         # Other notebooks
-        self.chat_notebook.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
-        self.chat_notebook.set_tab_angle(ui["labelrooms"])
-        self.privatechat_notebook.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
-        self.privatechat_notebook.set_tab_angle(ui["labelprivate"])
-        self.user_info_notebook.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
-        self.user_info_notebook.set_tab_angle(ui["labelinfo"])
-        self.user_browse_notebook.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
-        self.user_browse_notebook.set_tab_angle(ui["labelbrowse"])
-        self.search_notebook.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
-        self.search_notebook.set_tab_angle(ui["labelsearch"])
+        self.chatrooms.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
+        self.chatrooms.set_tab_angle(ui["labelrooms"])
+        self.privatechats.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
+        self.privatechats.set_tab_angle(ui["labelprivate"])
+        self.userinfo.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
+        self.userinfo.set_tab_angle(ui["labelinfo"])
+        self.userbrowse.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
+        self.userbrowse.set_tab_angle(ui["labelbrowse"])
+        self.searches.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
+        self.searches.set_tab_angle(ui["labelsearch"])
 
     def match_main_notebox(self, tab):
 
@@ -1570,7 +1526,7 @@ class NicotineFrame:
                 if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
                     r.set_property("font", font)
 
-    def update_colours(self, first=0):
+    def update_colours(self, first=False):
         if first:
             self.tag_log = self.LogWindow.get_buffer().create_tag()
 
@@ -1868,8 +1824,10 @@ class NicotineFrame:
 
     def on_get_private_chat(self, widget):
         text = self.UserPrivateCombo.get_child().get_text()
+
         if not text:
             return
+
         self.privatechats.send_message(text, show_user=True)
         self.UserPrivateCombo.get_child().set_text("")
 
@@ -2450,9 +2408,9 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.np.queue.put(slskmessages.SetDownloadLimit(config["transfers"]["downloadlimit"]))
 
-        if self.search_notebook:
-            self.search_notebook.maxdisplayedresults = config["searches"]["max_displayed_results"]
-            self.search_notebook.maxstoredresults = config["searches"]["max_stored_results"]
+        if self.searches:
+            self.searches.maxdisplayedresults = config["searches"]["max_displayed_results"]
+            self.searches.maxstoredresults = config["searches"]["max_stored_results"]
 
         # Modify GUI
         self.update_download_filters()
@@ -2485,7 +2443,7 @@ class NicotineFrame:
         self.on_show_chat_buttons()
 
         # Other notebooks
-        for w in [self.chat_notebook, self.privatechat_notebook, self.user_info_notebook, self.user_browse_notebook, self.search_notebook]:
+        for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
             w.show_hilite_images(config["notifications"]["notification_tab_icons"])

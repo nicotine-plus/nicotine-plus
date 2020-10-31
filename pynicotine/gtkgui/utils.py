@@ -1109,9 +1109,7 @@ class PopupMenu(Gtk.Menu):
 
     def on_show_ip_address(self, widget):
 
-        if self.user not in self.frame.np.ip_requested:
-            self.frame.np.ip_requested.append(self.user)
-
+        self.frame.np.ip_requested.add(self.user)
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
     def on_get_user_info(self, widget):

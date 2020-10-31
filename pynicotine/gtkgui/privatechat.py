@@ -235,7 +235,7 @@ class PrivateChats(IconNotebook):
         self.request_changed(chat.Main)
 
         # Hilight main private chats Label
-        self.frame.request_icon(self.frame.PrivateChatTabLabel, chat.Main)
+        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
 
         # Show notifications if the private chats notebook isn't selected,
         # the tab is not selected, or the main window isn't mapped
@@ -659,8 +659,7 @@ class PrivateChat:
         elif cmd == "/ip":
             if args:
                 user = args
-                if user not in self.frame.np.ip_requested:
-                    self.frame.np.ip_requested.append(user)
+                self.frame.np.ip_requested.add(user)
                 self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         elif cmd == "/pm":

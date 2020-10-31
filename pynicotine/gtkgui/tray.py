@@ -146,9 +146,7 @@ class Tray:
             droplist=users
         )
         if user is not None:
-            if user not in self.frame.np.ip_requested:
-                self.frame.np.ip_requested.append(user)
-
+            self.frame.np.ip_requested.add(user)
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
     def on_get_a_users_shares(self, widget, prefix=""):

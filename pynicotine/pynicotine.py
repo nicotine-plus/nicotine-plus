@@ -129,10 +129,10 @@ class NetworkEventProcessor:
         log.set_log_levels(self.config.sections["logging"]["debugmodes"])
 
         self.peerconns = []
-        self.watchedusers = []
+        self.watchedusers = set()
         self.ipblock_requested = {}
         self.ipignore_requested = {}
-        self.ip_requested = []
+        self.ip_requested = set()
         self.private_message_queue = {}
         self.users = {}
         self.user_addr_requested = set()
@@ -576,7 +576,7 @@ class NetworkEventProcessor:
                 self.manualdisconnect = False
 
             self.active_server_conn = None
-            self.watchedusers = []
+            self.watchedusers.clear()
             self.shares.set_connected(False)
 
             if self.transfers is not None:
@@ -870,8 +870,7 @@ class NetworkEventProcessor:
 
     def add_user(self, msg):
 
-        if msg.user not in self.watchedusers:
-            self.watchedusers.append(msg.user)
+        self.watchedusers.add(msg.user)
 
         if not msg.userexists:
             if msg.user not in self.users:
