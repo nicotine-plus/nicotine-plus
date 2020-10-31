@@ -258,11 +258,9 @@ class NicotineFrame:
 
         """ Notebooks """
 
-        self.hidden_tabs = {}
-
         # Initialise main notebook
-        for tab in self.MainNotebook.get_children():
-            self.MainNotebook.set_tab_reorderable(tab, config["ui"]["tab_reorderable"])
+
+        self.hidden_tabs = {}
 
         # Translation for the labels of tabs
         translated_tablabels = {
@@ -276,23 +274,11 @@ class NicotineFrame:
             self.InterestsTabLabel: _("Interests")
         }
 
-        # Mapping between the pseudo tabs and their vbox/hbox
-        map_tablabels_to_box = {
-            self.ChatTabLabel: "chathbox",
-            self.PrivateChatTabLabel: "privatevbox",
-            self.SearchTabLabel: "searchvbox",
-            self.UserInfoTabLabel: "userinfovbox",
-            self.DownloadsTabLabel: "downloadsvbox",
-            self.UploadsTabLabel: "uploadsvbox",
-            self.UserBrowseTabLabel: "userbrowsevbox",
-            self.InterestsTabLabel: "interestsvbox"
-        }
-
         hide_tab_template = _("Hide %(tab)s")
 
         # Initialize tabs labels
-        for page in self.MainNotebook.get_children():
-            tab_label = self.MainNotebook.get_tab_label(page)
+        for tab_box in self.MainNotebook.get_children():
+            tab_label = self.MainNotebook.get_tab_label(tab_box)
 
             # Initialize the image label
             img_label = ImageLabel(
@@ -311,15 +297,13 @@ class NicotineFrame:
             # Set the menu to hide the tab
             eventbox_name = Gtk.Buildable.get_name(tab_label)
 
-            tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu", map_tablabels_to_box[tab_label])
+            tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
 
-            self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self).setup(
+            self.__dict__[eventbox_name + "Menu"] = PopupMenu(self).setup(
                 (
-                    "#" + hide_tab_template % {"tab": translated_tablabels[tab_label]}, self.hide_tab, [tab_label, map_tablabels_to_box[tab_label]]
+                    "#" + hide_tab_template % {"tab": translated_tablabels[tab_label]}, self.hide_tab, [tab_label, tab_box]
                 )
             )
-
-            popup.set_user(map_tablabels_to_box[tab_label])
 
         # Tab icons
         self.ChatTabLabel.get_child().set_icon("user-available-symbolic")
@@ -464,6 +448,7 @@ class NicotineFrame:
         """ Tab Reordering """
 
         self.set_tab_positions()
+        self.set_main_tabs_reorderable()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
@@ -1256,55 +1241,56 @@ class NicotineFrame:
 
     def on_switch_page(self, notebook, page, page_num):
 
-        label = self.MainNotebook.get_tab_label(page)
-        self.current_tab = label
+        tab_label = self.MainNotebook.get_tab_label(page)
+        icon_tab_label = self.get_tab_label(tab_label)
+        self.current_tab = tab_label
 
-        if label is not None:
-            try:
-                label.set_hilite_image(None)
-                label.set_text_color(0)
-            except AttributeError:
-                label.get_child().set_hilite_image(None)
-                label.get_child().set_text_color(0)
+        if icon_tab_label is not None:
+            # Defaults
+            icon_tab_label.set_hilite_image(None)
+            icon_tab_label.set_text_color(0)
 
-        if page_num == self.MainNotebook.page_num(self.chathbox):
+        if tab_label == self.ChatTabLabel:
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
             self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
-        elif page_num == self.MainNotebook.page_num(self.privatevbox):
+        elif tab_label == self.PrivateChatTabLabel:
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
             self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
-        elif page_num == self.MainNotebook.page_num(self.uploadsvbox):
+        elif tab_label == self.UploadsTabLabel:
             self.uploads.update(forceupdate=True)
 
-        elif page_num == self.MainNotebook.page_num(self.downloadsvbox):
+        elif tab_label == self.DownloadsTabLabel:
             self.downloads.update(forceupdate=True)
 
-        elif page_num == self.MainNotebook.page_num(self.searchvbox):
+        elif tab_label == self.SearchTabLabel:
             GLib.idle_add(self.search_entry.grab_focus)
 
     def on_page_removed(self, main_notebook, child, page_num):
 
         name = self.match_main_notebox(child)
-        self.np.config.sections["ui"]["modes_visible"][name] = 0
+        self.np.config.sections["ui"]["modes_visible"][name] = False
+
         self.on_page_reordered(main_notebook, child, page_num)
 
     def on_page_added(self, main_notebook, child, page_num):
 
         name = self.match_main_notebox(child)
-        self.np.config.sections["ui"]["modes_visible"][name] = 1
+        self.np.config.sections["ui"]["modes_visible"][name] = True
+
         self.on_page_reordered(main_notebook, child, page_num)
 
     def on_page_reordered(self, main_notebook, child, page_num):
 
-        tabs = []
-        for children in self.MainNotebook.get_children():
-            tabs.append(self.match_main_notebox(children))
+        tab_names = []
 
-        self.np.config.sections["ui"]["modes_order"] = tabs
+        for children in self.MainNotebook.get_children():
+            tab_names.append(self.match_main_notebox(children))
+
+        self.np.config.sections["ui"]["modes_order"] = tab_names
 
         if main_notebook.get_n_pages() == 0:
             main_notebook.set_show_tabs(False)
@@ -1312,6 +1298,7 @@ class NicotineFrame:
             main_notebook.set_show_tabs(True)
 
     def on_key_press(self, widget, event):
+
         self.on_disable_auto_away()
 
         if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
@@ -1325,43 +1312,55 @@ class NicotineFrame:
 
         return False
 
+    def set_main_tabs_reorderable(self):
+
+        reorderable = self.np.config.sections["ui"]["tab_reorderable"]
+
+        for tab_box in self.MainNotebook.get_children():
+            self.MainNotebook.set_tab_reorderable(tab_box, reorderable)
+
     def set_main_tabs_order(self):
-        tabs = self.np.config.sections["ui"]["modes_order"]
+
+        tab_names = self.np.config.sections["ui"]["modes_order"]
         order = 0
 
-        for name in tabs:
-            tab = self.match_main_name_page(name)
+        for name in tab_names:
+            tab_box = self.match_main_name_page(name)
 
             # Ensure that the tab exists (Buddy List tab may be hidden)
-            if tab is None or self.MainNotebook.page_num(tab) == -1:
+            if tab_box is None or self.MainNotebook.page_num(tab_box) == -1:
                 continue
 
-            self.MainNotebook.reorder_child(tab, order)
+            self.MainNotebook.reorder_child(tab_box, order)
             order += 1
 
     def set_main_tabs_visibility(self):
-        visible = self.np.config.sections["ui"]["modes_visible"]
 
-        for name in visible:
-            tab = self.match_main_name_page(name)
-            if tab is None:
+        tab_names = self.np.config.sections["ui"]["modes_visible"]
+
+        for name in tab_names:
+            tab_box = self.match_main_name_page(name)
+
+            if tab_box is None:
                 continue
 
-            if not visible[name]:
-                if tab not in self.MainNotebook.get_children():
+            if not tab_names[name]:
+                if tab_box not in self.MainNotebook.get_children():
                     continue
 
-                if tab in self.hidden_tabs:
+                if tab_box in self.hidden_tabs:
                     continue
 
-                self.hidden_tabs[tab] = self.MainNotebook.get_tab_label(tab)
-                num = self.MainNotebook.page_num(tab)
+                self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
+
+                num = self.MainNotebook.page_num(tab_box)
                 self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() == 0:
             self.MainNotebook.set_show_tabs(False)
 
     def set_last_session_tab(self):
+
         try:
             if self.np.config.sections["ui"]["tab_select_previous"]:
                 lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
@@ -1369,57 +1368,64 @@ class NicotineFrame:
                 if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
                     self.MainNotebook.set_current_page(lasttabid)
                     return
+
         except Exception:
             pass
 
         self.MainNotebook.set_current_page(0)
 
     def hide_tab(self, widget, lista):
-        eventbox, child = lista
-        tab = self.__dict__[child]
 
-        if tab not in self.MainNotebook.get_children():
+        event_box, tab_box = lista
+
+        if tab_box not in self.MainNotebook.get_children():
             return
 
-        if tab in self.hidden_tabs:
+        if tab_box in self.hidden_tabs:
             return
 
-        self.hidden_tabs[tab] = eventbox
+        self.hidden_tabs[tab_box] = event_box
 
-        num = self.MainNotebook.page_num(tab)
+        num = self.MainNotebook.page_num(tab_box)
         self.MainNotebook.remove_page(num)
 
-    def show_tab(self, lista):
-        name, child = lista
+    def show_tab(self, tab_box):
 
-        if child in self.MainNotebook.get_children():
+        if tab_box in self.MainNotebook.get_children():
             return
 
-        if child not in self.hidden_tabs:
+        if tab_box not in self.hidden_tabs:
             return
 
-        eventbox = self.hidden_tabs[child]
+        event_box = self.hidden_tabs[tab_box]
 
-        self.MainNotebook.append_page(child, eventbox)
-        self.MainNotebook.set_tab_reorderable(child, self.np.config.sections["ui"]["tab_reorderable"])
+        self.MainNotebook.append_page(tab_box, event_box)
+        self.MainNotebook.set_tab_reorderable(tab_box, self.np.config.sections["ui"]["tab_reorderable"])
 
-        del self.hidden_tabs[child]
+        del self.hidden_tabs[tab_box]
 
-    def on_tab_click(self, widget, event, id, child):
+    def on_tab_click(self, widget, event, popup_id):
+
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.__dict__[id].popup(None, None, None, None, event.button, event.time)
+            self.__dict__[popup_id].popup(None, None, None, None, event.button, event.time)
 
     def get_tab_position(self, string):
+
         if string in ("Top", "top", _("Top")):
             position = Gtk.PositionType.TOP
+
         elif string in ("Bottom", "bottom", _("Bottom")):
             position = Gtk.PositionType.BOTTOM
+
         elif string in ("Left", "left", _("Left")):
             position = Gtk.PositionType.LEFT
+
         elif string in ("Right", "right", _("Right")):
             position = Gtk.PositionType.RIGHT
+
         else:
             position = Gtk.PositionType.TOP
+
         return position
 
     def set_tab_positions(self):
@@ -1431,44 +1437,46 @@ class NicotineFrame:
 
         for page in self.MainNotebook.get_children():
             tab_label = self.MainNotebook.get_tab_label(page)
+            tab_label = self.get_tab_label(tab_label)
 
-            try:
-                tab_label.set_angle(ui["labelmain"])
-            except AttributeError:
-                tab_label.get_child().set_angle(ui["labelmain"])
+            tab_label.set_angle(ui["labelmain"])
 
         # Other notebooks
         self.chatrooms.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
         self.chatrooms.set_tab_angle(ui["labelrooms"])
+
         self.privatechats.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
         self.privatechats.set_tab_angle(ui["labelprivate"])
+
         self.userinfo.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
         self.userinfo.set_tab_angle(ui["labelinfo"])
+
         self.userbrowse.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
         self.userbrowse.set_tab_angle(ui["labelbrowse"])
+
         self.searches.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
         self.searches.set_tab_angle(ui["labelsearch"])
 
     def match_main_notebox(self, tab):
 
         if tab == self.chathbox:
-            name = "chatrooms"  # Chatrooms
+            name = "chatrooms"   # Chatrooms
         elif tab == self.privatevbox:
-            name = "private"  # Private rooms
+            name = "private"     # Private rooms
         elif tab == self.downloadsvbox:
-            name = "downloads"  # Downloads
+            name = "downloads"   # Downloads
         elif tab == self.uploadsvbox:
-            name = "uploads"  # Uploads
+            name = "uploads"     # Uploads
         elif tab == self.searchvbox:
-            name = "search"  # Searches
+            name = "search"      # Searches
         elif tab == self.userinfovbox:
-            name = "userinfo"  # Userinfo
+            name = "userinfo"    # Userinfo
         elif tab == self.userbrowsevbox:
             name = "userbrowse"  # User browse
         elif tab == self.interestsvbox:
             name = "interests"   # Interests
         elif tab == self.userlist.userlistvbox:
-            name = "userlist"   # Buddy list
+            name = "userlist"    # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
             return
@@ -1478,37 +1486,38 @@ class NicotineFrame:
     def match_main_name_page(self, tab):
 
         if tab == "chatrooms":
-            child = self.chathbox  # Chatrooms
+            child = self.chathbox               # Chatrooms
         elif tab == "private":
-            child = self.privatevbox  # Private rooms
+            child = self.privatevbox            # Private rooms
         elif tab == "downloads":
-            child = self.downloadsvbox  # Downloads
+            child = self.downloadsvbox          # Downloads
         elif tab == "uploads":
-            child = self.uploadsvbox  # Uploads
+            child = self.uploadsvbox            # Uploads
         elif tab == "search":
-            child = self.searchvbox  # Searches
+            child = self.searchvbox             # Searches
         elif tab == "userinfo":
-            child = self.userinfovbox  # Userinfo
+            child = self.userinfovbox           # Userinfo
         elif tab == "userbrowse":
-            child = self.userbrowsevbox  # User browse
+            child = self.userbrowsevbox         # User browse
         elif tab == "interests":
-            child = self.interestsvbox  # Interests
+            child = self.interestsvbox          # Interests
         elif tab == "userlist":
             child = self.userlist.userlistvbox  # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
             return
+
         return child
 
-    def change_main_page(self, tab):
+    def change_main_page(self, tab_name):
 
-        page_num = self.MainNotebook.page_num
-        child = self.match_main_name_page(tab)
+        tab_box = self.match_main_name_page(tab_name)
 
-        if child in self.MainNotebook.get_children():
-            self.MainNotebook.set_current_page(page_num(child))
+        if tab_box in self.MainNotebook.get_children():
+            page_num = self.MainNotebook.page_num
+            self.MainNotebook.set_current_page(page_num(tab_box))
         else:
-            self.show_tab([tab, child])
+            self.show_tab(tab_box)
 
     """ Fonts and Colors """
 
@@ -2452,13 +2461,10 @@ class NicotineFrame:
         # Main notebook
         for page in self.MainNotebook.get_children():
             tab_label = self.MainNotebook.get_tab_label(page)
+            icon_tab_label = self.get_tab_label(tab_label)
 
-            try:
-                tab_label.show_hilite_image(config["notifications"]["notification_tab_icons"])
-                tab_label.set_text_color(0)
-            except AttributeError:
-                tab_label.get_child().show_hilite_image(config["notifications"]["notification_tab_icons"])
-                tab_label.get_child().set_text_color(0)
+            icon_tab_label.show_hilite_image(config["notifications"]["notification_tab_icons"])
+            icon_tab_label.set_text_color(0)
 
             self.MainNotebook.set_tab_reorderable(page, config["ui"]["tab_reorderable"])
 
