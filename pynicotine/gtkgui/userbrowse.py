@@ -33,13 +33,16 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import set_text_bg
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import update_cell_colors
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import get_result_bitrate_length
@@ -81,7 +84,7 @@ class UserBrowse:
 
         cols = initialise_columns(
             self.FolderTreeView,
-            [_("Directories"), -1, "text", self.cell_data_func]  # 0
+            [_("Directories"), -1, "text", update_cell_colors]  # 0
         )
         cols[0].set_sort_column_id(0)
 
@@ -165,10 +168,10 @@ class UserBrowse:
         widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
         cols = initialise_columns(
             self.FileTreeView,
-            [_("Filename"), widths[0], "text", self.cell_data_func],
-            [_("Size"), widths[1], "number", self.cell_data_func],
-            [_("Bitrate"), widths[2], "number", self.cell_data_func],
-            [_("Length"), widths[3], "number", self.cell_data_func]
+            [_("Filename"), widths[0], "text", update_cell_colors],
+            [_("Size"), widths[1], "number", update_cell_colors],
+            [_("Bitrate"), widths[2], "number", update_cell_colors],
+            [_("Length"), widths[3], "number", update_cell_colors]
         )
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(4)
@@ -206,7 +209,7 @@ class UserBrowse:
 
         self.FileTreeView.connect("button_press_event", self.on_file_clicked)
 
-        self.change_colours()
+        self.update_visuals()
 
         for name, object in self.__dict__.items():
             if isinstance(object, PopupMenu):
@@ -236,17 +239,12 @@ class UserBrowse:
 
         return True
 
-    def change_colours(self):
-        self.frame.set_text_bg(self.SearchEntry)
+    def update_visuals(self):
 
-        self.frame.change_list_font(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
-        self.frame.change_list_font(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+        set_text_bg(self.SearchEntry)
 
-    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
-        colour = self.frame.np.config.sections["ui"]["search"]
-        if colour == "":
-            colour = None
-        cellrenderer.set_property("foreground", colour)
+        change_list_font(self.FolderTreeView, self.frame.np.config.sections["ui"]["browserfont"])
+        change_list_font(self.FileTreeView, self.frame.np.config.sections["ui"]["browserfont"])
 
     def on_expand(self, widget):
 

@@ -681,7 +681,7 @@ class ImageLabel(Gtk.Box):
         self._order_children()
 
     def show_hilite_image(self, show=True):
-        if show:
+        if show and self.get_hilite_image() is not None:
             self.hilite_image.show()
         else:
             self.hilite_image.hide()
@@ -1458,3 +1458,76 @@ def _expand_alias(aliases, cmd):
         log.add_warning("%s", error)
 
     return ""
+
+
+""" Fonts and Colors """
+
+
+def change_list_color(listview, color):
+
+    for c in listview.get_columns():
+        for r in c.get_cells():
+            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                update_color(r, color)
+
+
+def change_list_font(listview, font):
+
+    for c in listview.get_columns():
+        for r in c.get_cells():
+            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                update_font(r, font)
+
+
+def set_text_bg(widget, bgcolor="", fgcolor=""):
+    if bgcolor == "" and NICOTINE.np.config.sections["ui"]["textbg"] == "":
+        rgba = None
+    else:
+        if bgcolor == "":
+            bgcolor = NICOTINE.np.config.sections["ui"]["textbg"]
+        rgba = Gdk.RGBA()
+        rgba.parse(bgcolor)
+
+    widget.override_background_color(Gtk.StateFlags.NORMAL, rgba)
+
+    if isinstance(widget, Gtk.Entry):
+        if fgcolor != "":
+            rgba = Gdk.RGBA()
+            rgba.parse(fgcolor)
+        elif fgcolor == "" and NICOTINE.np.config.sections["ui"]["inputcolor"] == "":
+            rgba = None
+        elif fgcolor == "" and NICOTINE.np.config.sections["ui"]["inputcolor"] != "":
+            fgcolor = NICOTINE.np.config.sections["ui"]["inputcolor"]
+            rgba = Gdk.RGBA()
+            rgba.parse(fgcolor)
+
+        widget.override_color(Gtk.StateFlags.NORMAL, rgba)
+
+    if isinstance(widget, Gtk.TreeView):
+        change_list_color(widget, NICOTINE.np.config.sections["ui"]["search"])
+
+
+def update_cell_colors(column, cellrenderer, model, iterator, dummy="dummy"):
+    update_color(cellrenderer, NICOTINE.np.config.sections["ui"]["search"])
+
+
+def update_color(widget, color):
+
+    if color:
+        widget.set_property("foreground", color)
+    else:
+        widget.set_property("foreground-set", False)
+
+
+def update_font(widget, font):
+
+    widget.set_property("font", font)
+
+
+def update_widget_visuals(widget):
+
+    if isinstance(widget, Gtk.Entry):
+        set_text_bg(widget)
+
+    if isinstance(widget, Gtk.TreeView):
+        change_list_font(widget, NICOTINE.np.config.sections["ui"]["listfont"])

@@ -40,6 +40,7 @@ from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
@@ -53,6 +54,10 @@ from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import set_text_bg
+from pynicotine.gtkgui.utils import update_cell_colors
+from pynicotine.gtkgui.utils import update_color
+from pynicotine.gtkgui.utils import update_font
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import cmp
@@ -145,7 +150,7 @@ class RoomsControl:
         self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
         self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
 
-        self.frame.set_text_bg(self.frame.roomlist.SearchRooms)
+        set_text_bg(self.frame.roomlist.SearchRooms)
 
     def is_private_room_owned(self, room):
 
@@ -200,7 +205,7 @@ class RoomsControl:
             cellrenderer.set_property("weight", Pango.Weight.NORMAL)
             cellrenderer.set_property("underline", Pango.Underline.NONE)
 
-        self.frame.cell_data_func(column, cellrenderer, model, iterator)
+        update_cell_colors(column, cellrenderer, model, iterator)
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -673,12 +678,13 @@ class RoomsControl:
 
         room.say_chat_room(msg, text, public=True)
 
-    def update_colours(self):
+    def update_visuals(self):
 
-        self.frame.set_text_bg(self.frame.roomlist.SearchRooms)
+        set_text_bg(self.frame.roomlist.SearchRooms)
 
         for room in self.joinedrooms.values():
-            room.change_colours()
+            room.update_visuals()
+            room.update_tags()
 
     def save_columns(self):
 
@@ -805,8 +811,8 @@ class ChatRoom:
             [_("Status"), widths[0], "pixbuf"],
             [_("Country"), widths[1], "pixbuf"],
             [_("User"), widths[2], "text", self.user_column_draw],
-            [_("Speed"), widths[3], "number", self.frame.cell_data_func],
-            [_("Files"), widths[4], "number", self.frame.cell_data_func]
+            [_("Speed"), widths[3], "number", update_cell_colors],
+            [_("Files"), widths[4], "number", update_cell_colors]
         )
 
         cols[0].set_sort_column_id(5)
@@ -864,7 +870,8 @@ class ChatRoom:
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        self.update_colours()
+        self.create_tags()
+        self.update_visuals()
 
         self.UserList.set_model(self.usersmodel)
 
@@ -1206,9 +1213,9 @@ class ChatRoom:
             color = self.get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
 
         if user not in self.tag_users:
-            self.tag_users[user] = self.makecolour(self.ChatScroll.get_buffer(), color, user)
+            self.tag_users[user] = self.create_tag(self.ChatScroll.get_buffer(), color, user)
         else:
-            self.changecolour(self.tag_users[user], color)
+            self.update_tag_visuals(self.tag_users[user], color)
 
     def thread_alias(self, alias):
 
@@ -1512,7 +1519,7 @@ class ChatRoom:
                 cellrenderer.set_property("weight", Pango.Weight.NORMAL)
                 cellrenderer.set_property("underline", Pango.Underline.NONE)
 
-        self.frame.cell_data_func(column, cellrenderer, model, iterator)
+        update_cell_colors(column, cellrenderer, model, iterator)
 
     def get_user_stats(self, user, avgspeed, files):
 
@@ -1540,7 +1547,7 @@ class ChatRoom:
 
         if user in self.tag_users:
             color = self.get_user_status_color(status)
-            self.changecolour(self.tag_users[user], color)
+            self.update_tag_visuals(self.tag_users[user], color)
 
         self.usersmodel.set(self.users[user], 0, img, 5, status)
 
@@ -1551,15 +1558,12 @@ class ChatRoom:
 
         self.usersmodel.set(self.users[user], 1, self.frame.get_flag_image(flag), 8, flag)
 
-    def makecolour(self, buffer, colour, username=None):
+    def create_tag(self, buffer, color, username=None):
 
-        colour = self.frame.np.config.sections["ui"][colour]
-        font = self.frame.np.config.sections["ui"]["chatfont"]
+        tag = buffer.create_tag()
 
-        tag = buffer.create_tag(font=font)
-
-        if colour:
-            tag.set_property("foreground", colour)
+        update_color(tag, self.frame.np.config.sections["ui"][color])
+        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         if username is not None:
 
@@ -1612,26 +1616,28 @@ class ChatRoom:
 
         return True
 
-    def update_colours(self):
+    def update_visuals(self):
 
-        self.frame.change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+        change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
+
+        set_text_bg(self.ChatEntry)
+        set_text_bg(self.room_wall.RoomWallEntry)
+
+    def create_tags(self):
 
         buffer = self.ChatScroll.get_buffer()
 
-        self.tag_remote = self.makecolour(buffer, "chatremote")
-        self.tag_local = self.makecolour(buffer, "chatlocal")
-        self.tag_me = self.makecolour(buffer, "chatme")
-        self.tag_hilite = self.makecolour(buffer, "chathilite")
+        self.tag_remote = self.create_tag(buffer, "chatremote")
+        self.tag_local = self.create_tag(buffer, "chatlocal")
+        self.tag_me = self.create_tag(buffer, "chatme")
+        self.tag_hilite = self.create_tag(buffer, "chathilite")
 
         self.tag_users = {}
         for user in self.tag_users:
             self.get_user_tag(user)
 
         logbuffer = self.RoomLog.get_buffer()
-        self.tag_log = self.makecolour(logbuffer, "chatremote")
-
-        self.frame.set_text_bg(self.ChatEntry)
-        self.frame.set_text_bg(self.room_wall.RoomWallEntry)
+        self.tag_log = self.create_tag(logbuffer, "chatremote")
 
     def get_user_status_color(self, status):
 
@@ -1647,20 +1653,13 @@ class ChatRoom:
 
         return color
 
-    def changecolour(self, tag, colour):
+    def update_tag_visuals(self, tag, color):
 
-        color = self.frame.np.config.sections["ui"][colour]
-
-        if color == "":
-            color = None
-
-        tag.set_property("foreground", color)
-
-        font = self.frame.np.config.sections["ui"]["chatfont"]
-        tag.set_property("font", font)
+        update_color(tag, self.frame.np.config.sections["ui"][color])
+        update_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
 
         # Hotspots
-        if colour in ["useraway", "useronline", "useroffline"]:
+        if color in ("useraway", "useronline", "useroffline"):
 
             usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
 
@@ -1679,20 +1678,16 @@ class ChatRoom:
             else:
                 tag.set_property("underline", Pango.Underline.NONE)
 
-    def change_colours(self):
+    def update_tags(self):
 
-        self.changecolour(self.tag_remote, "chatremote")
-        self.changecolour(self.tag_local, "chatlocal")
-        self.changecolour(self.tag_me, "chatme")
-        self.changecolour(self.tag_hilite, "chathilite")
-        self.changecolour(self.tag_log, "chatremote")
+        self.update_tag_visuals(self.tag_remote, "chatremote")
+        self.update_tag_visuals(self.tag_local, "chatlocal")
+        self.update_tag_visuals(self.tag_me, "chatme")
+        self.update_tag_visuals(self.tag_hilite, "chathilite")
+        self.update_tag_visuals(self.tag_log, "chatremote")
 
         for user in self.tag_users:
             self.get_user_tag(user)
-
-        self.frame.set_text_bg(self.ChatEntry)
-        self.frame.set_text_bg(self.room_wall.RoomWallEntry)
-        self.frame.change_list_font(self.UserList, self.frame.np.config.sections["ui"]["listfont"])
 
     def on_leave(self, widget=None):
 
@@ -1747,7 +1742,7 @@ class ChatRoom:
             del config["columns"]["chatrooms_widths"][self.room]
 
         for tag in self.tag_users.values():
-            self.changecolour(tag, "useroffline")
+            self.update_tag_visuals(tag, "useroffline")
 
         self.tickers.set_ticker([])
 

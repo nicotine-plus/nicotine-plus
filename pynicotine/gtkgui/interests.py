@@ -31,6 +31,7 @@ from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import update_cell_colors
 
 
 class Interests:
@@ -58,7 +59,7 @@ class Interests:
 
         cols = initialise_columns(
             self.LikesList,
-            [_("I like") + ":", 0, "text", self.frame.cell_data_func]
+            [_("I like") + ":", 0, "text", update_cell_colors]
         )
 
         cols[0].set_sort_column_id(0)
@@ -81,7 +82,7 @@ class Interests:
 
         cols = initialise_columns(
             self.DislikesList,
-            [_("I dislike") + ":", 0, "text", self.frame.cell_data_func]
+            [_("I dislike") + ":", 0, "text", update_cell_colors]
         )
 
         cols[0].set_sort_column_id(0)
@@ -99,8 +100,8 @@ class Interests:
 
         cols = initialise_columns(
             self.RecommendationsList,
-            [_("Rating"), 0, "text", self.frame.cell_data_func],
-            [_("Item"), -1, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text", update_cell_colors],
+            [_("Item"), -1, "text", update_cell_colors]
         )
 
         cols[0].set_sort_column_id(2)
@@ -127,8 +128,8 @@ class Interests:
 
         cols = initialise_columns(
             self.UnrecommendationsList,
-            [_("Rating"), 0, "text", self.frame.cell_data_func],
-            [_("Item"), -1, "text", self.frame.cell_data_func]
+            [_("Rating"), 0, "text", update_cell_colors],
+            [_("Item"), -1, "text", update_cell_colors]
         )
 
         cols[0].set_sort_column_id(2)
@@ -158,9 +159,9 @@ class Interests:
         cols = initialise_columns(
             self.RecommendationUsersList,
             ["", statusiconwidth, "pixbuf"],
-            [_("User"), 100, "text", self.frame.cell_data_func],
-            [_("Speed"), 0, "text", self.frame.cell_data_func],
-            [_("Files"), 0, "text", self.frame.cell_data_func],
+            [_("User"), 100, "text", update_cell_colors],
+            [_("Speed"), 0, "text", update_cell_colors],
+            [_("Files"), 0, "text", update_cell_colors],
         )
 
         cols[0].set_sort_column_id(4)

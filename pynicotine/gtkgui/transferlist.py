@@ -29,6 +29,7 @@ from time import time
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.utils import change_list_font
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
@@ -139,7 +140,7 @@ class TransferList:
         widget.connect("button_press_event", self.on_popup_menu, "mouse")
         widget.connect("key-press-event", self.on_key_press_event)
 
-        self.update_colours()
+        self.update_visuals()
 
     def save_columns(self):
         columns = []
@@ -152,8 +153,8 @@ class TransferList:
         self.frame.np.config.sections["columns"][self.type + "_columns"] = columns
         self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
 
-    def update_colours(self):
-        self.frame.change_list_font(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
+    def update_visuals(self):
+        change_list_font(self.widget, self.frame.np.config.sections["ui"]["transfersfont"])
 
     def init_interface(self, list):
         self.list = list
