@@ -145,11 +145,9 @@ class Interests:
 
         self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
-        statusiconwidth = self.frame.images["offline"].get_width() + 4
-
         cols = initialise_columns(
             self.RecommendationUsersList,
-            ["", statusiconwidth, "pixbuf"],
+            ["", 16, "pixbuf"],
             [_("User"), 100, "text"],
             [_("Speed"), 0, "text"],
             [_("Files"), 0, "text"],

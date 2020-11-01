@@ -800,7 +800,7 @@ class ChatRoom:
             self.AutoJoin.set_active(True)
 
         if room not in config["columns"]["chatrooms_widths"]:
-            config["columns"]["chatrooms_widths"][room] = [0, 25, 100, 0, 0]
+            config["columns"]["chatrooms_widths"][room] = [16, 25, 100, 0, 0]
 
         widths = self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
         self.cols = cols = initialise_columns(

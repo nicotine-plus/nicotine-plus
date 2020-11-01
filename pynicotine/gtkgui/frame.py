@@ -124,15 +124,6 @@ class NicotineFrame:
         # Import GtkBuilder widgets
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
-        """ Icons """
-
-        self.load_icons()
-
-        """ Menu Bar """
-
-        builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
-        self.application.set_menubar(builder.get_object("menubar"))
-
         """ Window Properties """
 
         self.application.add_window(self.MainWindow)
@@ -143,8 +134,6 @@ class NicotineFrame:
         self.MainWindow.connect("destroy", self.on_destroy)
         self.MainWindow.connect("key_press_event", self.on_key_press)
         self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
-
-        self.MainWindow.set_default_icon(self.images["n"])
 
         self.MainWindow.resize(
             config["ui"]["width"],
@@ -182,6 +171,12 @@ class NicotineFrame:
         self.user_context_id = self.UserStatus.get_context_id("")
         self.down_context_id = self.DownStatus.get_context_id("")
         self.up_context_id = self.UpStatus.get_context_id("")
+
+        """ Icons """
+
+        self.load_icons()
+
+        self.MainWindow.set_default_icon(self.images["n"])
 
         """ Notebooks """
 
@@ -522,25 +517,34 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.spell_checker = False
 
+    def get_flag_image(self, flag):
+
+        if flag is None:
+            return
+
+        flag = flag.lower()
+
+        if flag not in self.flag_images:
+            if hasattr(imagedata, flag):
+                data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, flag)))
+                pixbuf = GdkPixbuf.Pixbuf.new_from_stream(data)
+
+                self.flag_images[flag] = pixbuf
+
+            else:
+                return None
+
+        return self.flag_images[flag]
+
     def load_icons(self):
 
         self.images = {}
-        self.icons = {}
         self.flag_images = {}
         self.flag_users = {}
-        scale = None
 
         def load_static(name):
-            loader = GdkPixbuf.PixbufLoader()
-            data = getattr(imagedata, "%s" % (name,))
-            loader.write(data)
-            loader.close()
-            pixbuf = loader.get_pixbuf()
-            if scale:
-                w, h = pixbuf.get_width(), pixbuf.get_height()
-                if w == h:
-                    pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
-            return pixbuf
+            data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, "%s" % (name,))))
+            return GdkPixbuf.Pixbuf.new_from_stream(data)
 
         names = [
             "away",
@@ -558,33 +562,23 @@ class NicotineFrame:
 
         if self.np.config.sections["ui"].get("icontheme"):
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+
             for name in names:
                 path = None
                 exts = extensions[:]
                 loaded = False
+
                 while not path or (exts and not loaded):
                     path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
-                    if os.path.exists(path):
-                        data = open(path, 'rb')
-                        s = data.read()
-                        data.close()
-                        loader = GdkPixbuf.PixbufLoader()
-                        try:
-                            loader.write(s)
-                            loader.close()
-                            pixbuf = loader.get_pixbuf()
-                            if scale:
-                                w, h = pixbuf.get_width(), pixbuf.get_height()
-                                if w == h:
-                                    pixbuf = pixbuf.scale_simple(scale, scale, Gdk.INTERP_BILINEAR)
-                            self.images[name] = pixbuf
+
+                    if os.path.isfile(path):
+                        with open(path, 'rb') as data:
+                            self.images[name] = GdkPixbuf.Pixbuf.new_from_stream(data)
                             loaded = True
-                        except GObject.GError:
-                            pass
-                        del loader
-                        del s
+
                 if name not in self.images:
                     self.images[name] = load_static(name)
+
         else:
             for name in names:
                 self.images[name] = load_static(name)
@@ -2095,31 +2089,6 @@ class NicotineFrame:
         else:
             return self.flag_users[user]
 
-    def get_flag_image(self, flag):
-
-        if flag is None:
-            return
-
-        flag = flag.lower()
-
-        if flag not in self.flag_images:
-            if hasattr(imagedata, flag):
-                img = None
-                try:
-                    loader = GdkPixbuf.PixbufLoader()
-                    data = getattr(imagedata, flag)
-                    loader.write(data)
-                    loader.close()
-                    img = loader.get_pixbuf()
-                except Exception as e:
-                    log.add_warning(_("Error loading image for %(flag)s: %(error)s"), {'flag': flag, 'error': e})
-                self.flag_images[flag] = img
-                return img
-            else:
-                return None
-        else:
-            return self.flag_images[flag]
-
     def on_settings_downloads(self, widget):
         self.on_settings(page='Downloads')
 
@@ -2534,3 +2503,6 @@ class MainApp(Gtk.Application):
                 self.bindip,
                 self.port
             )
+
+            builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+            self.set_menubar(builder.get_object("menubar"))
