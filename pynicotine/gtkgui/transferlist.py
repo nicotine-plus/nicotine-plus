@@ -507,8 +507,16 @@ class TransferList:
 
             # Expand path
             if parent is not None:
-                path = self.transfersmodel.get_path(iterator)
-                self.expand(path)
+                transfer_path = self.transfersmodel.get_path(iterator)
+
+                if self.tree_users == 1:
+                    # Group by folder, we need the user path to expand it
+
+                    user_path = self.transfersmodel.get_path(self.users[user])
+                else:
+                    user_path = None
+
+                self.expand(transfer_path, user_path)
 
     def remove_specific(self, transfer, cleartreeviewonly=False):
         if not cleartreeviewonly:

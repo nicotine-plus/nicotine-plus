@@ -120,9 +120,14 @@ class Uploads(TransferList):
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def expand(self, path):
+    def expand(self, transfer_path, user_path):
         if self.frame.ExpandUploads.get_active():
-            self.frame.UploadList.expand_to_path(path)
+            self.frame.UploadList.expand_to_path(transfer_path)
+
+        elif user_path and self.tree_users == 1:
+            # Group by folder, show user folders in collapsed mode
+
+            self.frame.UploadList.expand_to_path(user_path)
 
     def on_expand_uploads(self, widget):
 
