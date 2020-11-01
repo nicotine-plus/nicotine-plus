@@ -124,12 +124,27 @@ class NicotineFrame:
         # Import GtkBuilder widgets
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
+        """ Icons """
+
+        self.load_icons()
+
+        """ Menu Bar """
+
+        builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+        self.application.set_menubar(builder.get_object("menubar"))
+
+        """ Window Properties """
+
+        self.application.add_window(self.MainWindow)
+
         self.MainWindow.connect("focus_in_event", self.on_focus_in)
         self.MainWindow.connect("configure_event", self.on_window_change)
         self.MainWindow.connect("delete-event", self.on_delete_event)
         self.MainWindow.connect("destroy", self.on_destroy)
         self.MainWindow.connect("key_press_event", self.on_key_press)
         self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+
+        self.MainWindow.set_default_icon(self.images["n"])
 
         self.MainWindow.resize(
             config["ui"]["width"],
@@ -154,12 +169,6 @@ class NicotineFrame:
         """ Logging """
 
         log.add_listener(self.log_callback)
-
-        """ Icons """
-
-        self.load_icons()
-
-        self.MainWindow.set_default_icon(self.images["n"])
 
         """ Status Bar """
 
@@ -2525,8 +2534,3 @@ class MainApp(Gtk.Application):
                 self.bindip,
                 self.port
             )
-
-            builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
-            self.set_menubar(builder.get_object("menubar"))
-
-            self.add_window(self.frame.MainWindow)
