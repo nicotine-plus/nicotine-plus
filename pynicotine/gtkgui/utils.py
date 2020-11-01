@@ -813,11 +813,8 @@ class IconNotebook:
 
             """
         )
-        screen = Gdk.Screen.get_default()
-        style_context = Gtk.StyleContext()
-        style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
         context = self.notebook.get_style_context()
+        context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         context.add_class("notebook")
 
         self.tabclosers = tabclosers
@@ -1517,9 +1514,12 @@ def set_widget_color(widget, color):
         widget.set_property("foreground-set", False)
 
 
+css_providers = {}
+
+
 def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
 
-    class_name = "widget_custom_color_" + str(id(widget))  # Every CSS class needs to be unique
+    class_name = "widget_custom_color"
     css = "." + class_name + " {"
 
     bg_color_hex = parse_color_string(bg_color)
@@ -1527,27 +1527,20 @@ def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
 
     if bg_color_hex is not None:
         css += "background: " + bg_color_hex + ";"
-    else:
-        css += "background: inherit;"
 
     if fg_color_hex is not None:
         css += "color: " + fg_color_hex + ";"
-    else:
-        css += "color: inherit;"
 
     css += "}"
 
-    css_provider = Gtk.CssProvider()
-    css_provider.load_from_data(css.encode())
-
-    screen = Gdk.Screen.get_default()
-    style_context = Gtk.StyleContext()
-    style_context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
     context = widget.get_style_context()
 
-    if not context.has_class(class_name):
+    if widget not in css_providers:
+        css_providers[widget] = Gtk.CssProvider()
+        context.add_provider(css_providers[widget], Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         context.add_class(class_name)
+
+    css_providers[widget].load_from_data(css.encode())
 
 
 def set_widget_font(widget, font):
