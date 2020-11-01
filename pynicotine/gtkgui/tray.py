@@ -18,6 +18,7 @@
 
 import gi
 import os
+import sys
 
 from gettext import gettext as _
 
@@ -180,6 +181,58 @@ class Tray:
         if button == 3:
             self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
 
+    def check_icon_path(self, icon_name, icon_path, icon_type="local"):
+
+        """
+        Check if tray icons exist in the specified icon path.
+        There are two naming schemes for tray icons:
+        - System-wide/local icons: "org.nicotine_plus.Nicotine-<icon_name>"
+        - Custom icons: "trayicon_<icon_name>"
+        """
+
+        if icon_type == "local":
+            icon_scheme = "org.nicotine_plus.Nicotine-" + icon_name + "."
+        else:
+            icon_scheme = "trayicon_" + icon_name + "."
+
+        try:
+            for entry in os.scandir(icon_path):
+                if entry.is_file() and entry.name.startswith(icon_scheme):
+                    return True
+
+        except FileNotFoundError:
+            pass
+
+        return False
+
+    def get_final_icon_path(self):
+
+        """ Returns an icon path to use for tray icons, or None to fall back to
+        system-wide icons. """
+
+        custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
+
+        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
+            # Virtual environment
+            local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
+        else:
+            # Git folder
+            local_icon_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "files", "icons", "tray"))
+
+        for icon_name in ("away", "connect", "disconnect", "msg"):
+
+            # Check if custom icons exist
+            if self.check_icon_path(icon_name, custom_icon_path, icon_type="custom"):
+                self.custom_icons = True
+                return custom_icon_path
+
+            # Check if local icons exist
+            if self.check_icon_path(icon_name, local_icon_path, icon_type="local"):
+                self.local_icons = True
+                return local_icon_path
+
+        return None
+
     def load(self):
 
         """ Create """
@@ -206,27 +259,7 @@ class Tray:
 
         """ Set up icons """
 
-        custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
-        final_icon_path = ""
-
-        for icon_name in ("away", "connect", "disconnect", "msg"):
-            """
-            There are two naming schemes for tray icons:
-            - System-wide/local icons: "org.nicotine_plus.Nicotine-<icon_name>"
-            - Custom icons: "trayicon_<icon_name>"
-            """
-
-            if os.path.isfile(os.path.join(custom_icon_path, "trayicon_" + icon_name) + ".*"):
-                final_icon_path = custom_icon_path
-                self.custom_icons = True
-                break
-
-            if os.path.isfile(os.path.join("img", "tray", "org.nicotine_plus.Nicotine-" + icon_name) + ".*"):
-                final_icon_path = os.path.abspath(
-                    os.path.join("img", "tray")
-                )
-                self.local_icons = True
-                break
+        final_icon_path = self.get_final_icon_path()
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
         if self.appindicator is not None and final_icon_path:
