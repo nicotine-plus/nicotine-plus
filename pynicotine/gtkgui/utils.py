@@ -26,14 +26,12 @@ import re
 import sys
 import time
 import types
-import urllib.parse
 
 from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -44,13 +42,7 @@ from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
 
-DECIMALSEP = ""
-
 URL_RE = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
-PROTOCOL_HANDLERS = {}
-CATCH_URLS = 0
-HUMANIZE_URLS = 0
-USERNAMEHOTSPOTS = 0
 NICOTINE = None
 
 
@@ -418,16 +410,17 @@ def open_uri(uri, window):
 
     # Situation 1, user defined a way of handling the protocol
     protocol = uri[:uri.find(":")]
-    if protocol in PROTOCOL_HANDLERS:
-        if isinstance(PROTOCOL_HANDLERS[protocol], types.MethodType):
-            PROTOCOL_HANDLERS[protocol](uri.strip())
+    protocol_handlers = NICOTINE.np.config.sections["urls"]["protocols"]
+
+    if protocol in protocol_handlers and protocol_handlers[protocol]:
+        try:
+            execute_command(protocol_handlers[protocol], uri)
             return
-        if PROTOCOL_HANDLERS[protocol]:
-            try:
-                execute_command(PROTOCOL_HANDLERS[protocol], uri)
-                return
-            except RuntimeError as e:
-                log.add_warning("%s", e)
+        except RuntimeError as e:
+            log.add_warning("%s", e)
+
+    if protocol == "slsk":
+        self.on_soul_seek_uri(uri.strip())
 
     # Situation 2, user did not define a way of handling the protocol
     if sys.platform == "win32":
@@ -440,6 +433,21 @@ def open_uri(uri, window):
     except AttributeError:
         screen = window.get_screen()
         Gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
+
+
+def on_soul_seek_uri(url):
+    import urllib.parse
+
+    try:
+        user, file = urllib.parse.unquote(url[7:]).split("/", 1)
+
+        if file[-1] == "/":
+            NICOTINE.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
+        else:
+            NICOTINE.np.transfers.get_file(user, file.replace("/", "\\"), "")
+
+    except Exception:
+        log.add(_("Invalid SoulSeek meta-url: %s"), url)
 
 
 def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
@@ -471,7 +479,7 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if USERNAMEHOTSPOTS and username is not None and usertag is not None:
+        if NICOTINE.np.config.sections["ui"]["usernamehotspots"] and username is not None and usertag is not None:
             np = re.compile(re.escape(str(username)))
             match = np.search(section)
             if match is not None:
@@ -526,14 +534,15 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     # Match first url
     match = URL_RE.search(line)
     # Highlight urls, if found and tag them
-    while CATCH_URLS and match:
+    while NICOTINE.np.config.sections["urls"]["urlcatching"] and match:
         start = line[:match.start()]
         _usertag(buffer, start)
         url = match.group()
         urltag = _makeurltag(buffer, url)
         line = line[match.end():]
 
-        if url.startswith("slsk://") and HUMANIZE_URLS:
+        if url.startswith("slsk://") and NICOTINE.np.config.sections["urls"]["humanizeurls"]:
+            import urllib.parse
             url = urllib.parse.unquote(url)
 
         _append(buffer, url, urltag)
@@ -559,12 +568,9 @@ class BuddiesComboBox:
 
         self.combobox = combo_box
 
-        self.store = Gtk.ListStore(GObject.TYPE_STRING)
+        self.store = Gtk.ListStore(str)
         self.combobox.set_model(self.store)
         self.combobox.set_entry_text_column(0)
-
-        self.store.set_default_sort_func(lambda *args: -1)
-        self.store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.combobox.show()
 
@@ -577,8 +583,6 @@ class BuddiesComboBox:
 
         for user in self.frame.np.config.sections["server"]["userlist"]:
             self.items[user[0]] = self.store.append([user[0]])
-
-        self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
     def append(self, item):
 
@@ -1367,21 +1371,29 @@ def human_speed(filesize):
 
 
 def humanize(number):
-    fashion = DECIMALSEP
+
+    fashion = NICOTINE.np.config.sections["ui"]["decimalsep"]
+
     if fashion == "" or fashion == "<None>":
         return str(number)
+
     elif fashion == "<space>":
         fashion = " "
+
     number = str(number)
+
     if number[0] == "-":
         neg = "-"
         number = number[1:]
     else:
         neg = ""
+
     ret = ""
+
     while number[-3:]:
         part, number = number[-3:], number[:-3]
         ret = "%s%s%s" % (part, fashion, ret)
+
     return neg + ret[:-1]
 
 

@@ -25,7 +25,6 @@
 import os
 import re
 import sys
-import urllib.parse
 
 from gettext import gettext as _
 
@@ -80,7 +79,7 @@ from pynicotine.utils import version
 
 class NicotineFrame:
 
-    def __init__(self, application, data_dir, config, plugins, use_trayicon, bindip=None, port=None):
+    def __init__(self, application, data_dir, config, plugins, use_trayicon, start_hidden, bindip=None, port=None):
 
         self.application = application
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
@@ -95,26 +94,13 @@ class NicotineFrame:
         self.awaytimerid = None
         self.bindip = bindip
         self.port = port
+        utils.NICOTINE = self
 
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
         self.settingswindow = None
 
-        # Commonly accessed strings
-        self.users_template = _("Users: %s")
-        self.files_template = _("Files: %s")
-        self.down_template = _("Down: %(num)i users, %(speed)s")
-        self.up_template = _("Up: %(num)i users, %(speed)s")
-        self.tray_download_template = _("Downloads: %(speed)s")
-        self.tray_upload_template = _("Uploads: %(speed)s")
-
-        try:
-            # Spell checking support
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker.new()
-        except (ImportError, ValueError):
-            self.spell_checker = None
+        self.spell_checker = None
 
         self.np = NetworkEventProcessor(
             self,
@@ -127,46 +113,31 @@ class NicotineFrame:
             plugins
         )
 
-        self.load_icons()
-
         config = self.np.config.sections
 
         # Dark mode
-        dark_mode_state = config["ui"]["dark_mode"]
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        dark_mode = config["ui"]["dark_mode"]
 
-        utils.DECIMALSEP = config["ui"]["decimalsep"]
-        utils.CATCH_URLS = config["urls"]["urlcatching"]
-        utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
-        utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
-        utils.PROTOCOL_HANDLERS["slsk"] = self.on_soul_seek
-        utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
-        utils.NICOTINE = self
-
-        log.add_listener(self.log_callback)
+        if dark_mode:
+            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode)
 
         # Import GtkBuilder widgets
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
 
-        self.status_context_id = self.Statusbar.get_context_id("")
-        self.socket_context_id = self.SocketStatus.get_context_id("")
-        self.socket_template = _("%(current)s/%(limit)s Connections")
-        self.user_context_id = self.UserStatus.get_context_id("")
-        self.down_context_id = self.DownStatus.get_context_id("")
-        self.up_context_id = self.UpStatus.get_context_id("")
-
-        self.MainWindow.set_default_icon(self.images["n"])
-
         self.MainWindow.connect("focus_in_event", self.on_focus_in)
         self.MainWindow.connect("configure_event", self.on_window_change)
+        self.MainWindow.connect("delete-event", self.on_delete_event)
+        self.MainWindow.connect("destroy", self.on_destroy)
+        self.MainWindow.connect("key_press_event", self.on_key_press)
+        self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
 
-        width = self.np.config.sections["ui"]["width"]
-        height = self.np.config.sections["ui"]["height"]
+        self.MainWindow.resize(
+            config["ui"]["width"],
+            config["ui"]["height"]
+        )
 
-        self.MainWindow.resize(width, height)
-
-        xpos = self.np.config.sections["ui"]["xposition"]
-        ypos = self.np.config.sections["ui"]["yposition"]
+        xpos = config["ui"]["xposition"]
+        ypos = config["ui"]["yposition"]
 
         # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
         if min(xpos, ypos) < 0:
@@ -174,88 +145,34 @@ class NicotineFrame:
         else:
             self.MainWindow.move(xpos, ypos)
 
-        maximized = self.np.config.sections["ui"]["maximized"]
-
-        if maximized:
+        if config["ui"]["maximized"]:
             self.MainWindow.maximize()
 
-        self.MainWindow.connect("delete-event", self.on_delete_event)
-        self.MainWindow.connect("destroy", self.on_destroy)
-        self.MainWindow.connect("key_press_event", self.on_key_press)
-        self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+        if not start_hidden:
+            self.MainWindow.show()
 
-        # Set up actions for menubar
-        self.set_up_actions()
+        """ Logging """
 
-        self.roomlist = RoomList(self)
-        self.interests = Interests(self, self.np)
-        self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
+        log.add_listener(self.log_callback)
 
-        """ Tray/notifications """
+        """ Icons """
 
-        self.tray = Tray(self)
-        self.notifications = Notifications(self)
+        self.load_icons()
 
-        self.hilites = {
-            "rooms": [],
-            "private": []
-        }
+        self.MainWindow.set_default_icon(self.images["n"])
 
-        # Create the trayicon if needed
-        # Tray icons don't work as expected on macOS
-        if sys.platform != "darwin" and \
-                use_trayicon and config["ui"]["trayicon"]:
-            self.tray.create()
+        """ Status Bar """
 
-        """ Disable elements """
+        # Commonly accessed strings
+        self.down_template = _("Down: %(num)i users, %(speed)s")
+        self.up_template = _("Up: %(num)i users, %(speed)s")
+        self.socket_template = _("%(current)s/%(limit)s Connections")
 
-        # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.set_widget_online_status(False)
-
-        """ Log """
-
-        # Popup menu on the log windows
-        self.logpopupmenu = PopupMenu(self).setup(
-            ("#" + _("Find"), self.on_find_log_window),
-            ("", None),
-            ("#" + _("Copy"), self.on_copy_log_window),
-            ("#" + _("Copy All"), self.on_copy_all_log_window),
-            ("", None),
-            ("#" + _("Clear log"), self.on_clear_log_window)
-        )
-
-        # Debug
-        self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
-        self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
-        self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
-        self.debugMessages.set_active((4 in config["logging"]["debugmodes"]))
-        self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
-        self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
-
-        # Text Search
-        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
-
-        """ Scanning """
-
-        if config["transfers"]["rescanonstartup"]:
-
-            # Rescan public shares if needed
-            if not self.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
-                self.on_rescan()
-
-            # Rescan buddy shares if needed
-            if self.np.config.sections["transfers"]["enablebuddyshares"]:
-                self.on_buddy_rescan()
-
-        # Deactivate public shares related menu entries if we don't use them
-        if self.np.config.sections["transfers"]["friendsonly"] or not self.np.config.sections["transfers"]["shared"]:
-            self.rescan_public_action.set_enabled(False)
-            self.browse_public_shares_action.set_enabled(False)
-
-        # Deactivate buddy shares related menu entries if we don't use them
-        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy_action.set_enabled(False)
-            self.browse_buddy_shares_action.set_enabled(False)
+        self.status_context_id = self.Statusbar.get_context_id("")
+        self.socket_context_id = self.SocketStatus.get_context_id("")
+        self.user_context_id = self.UserStatus.get_context_id("")
+        self.down_context_id = self.DownStatus.get_context_id("")
+        self.up_context_id = self.UpStatus.get_context_id("")
 
         """ Notebooks """
 
@@ -336,6 +253,10 @@ class NicotineFrame:
         self.SearchMethod.add_attribute(renderer_text, "text", 0)
 
         # Initialise other notebooks
+        self.roomlist = RoomList(self)
+        self.interests = Interests(self, self.np)
+        self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
+
         self.chatrooms = ChatRooms(self)
         self.searches = Searches(self)
         self.downloads = Downloads(self, self.DownloadsTabLabel)
@@ -357,6 +278,97 @@ class NicotineFrame:
         self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.update_visuals()
 
+        """ Tray/notifications """
+
+        # Commonly accessed strings
+        self.tray_download_template = _("Downloads: %(speed)s")
+        self.tray_upload_template = _("Uploads: %(speed)s")
+
+        self.tray = Tray(self)
+        self.notifications = Notifications(self)
+
+        self.hilites = {
+            "rooms": [],
+            "private": []
+        }
+
+        # Create the trayicon if needed
+        # Tray icons don't work as expected on macOS
+        if sys.platform != "darwin" and \
+                use_trayicon and config["ui"]["trayicon"]:
+            self.tray.load()
+
+        """ Tab Visibility/Order """
+
+        self.set_tab_positions()
+        self.set_main_tabs_reorderable()
+        self.set_main_tabs_order()
+        self.set_main_tabs_visibility()
+        self.set_last_session_tab()
+
+        """ Set up actions for menubar """
+
+        self.set_up_actions()
+
+        """ Element Visibility """
+
+        self.set_show_log(not config["logging"]["logcollapsed"])
+        self.set_show_debug(config["logging"]["debug"])
+        self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
+        self.set_show_flags(not config["columns"]["hideflags"])
+        self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
+        self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
+
+        """ Disable elements """
+
+        # Disable a few elements until we're logged in (search field, download buttons etc.)
+        self.set_widget_online_status(False)
+
+        """ Log """
+
+        # Popup menu on the log windows
+        self.logpopupmenu = PopupMenu(self).setup(
+            ("#" + _("Find"), self.on_find_log_window),
+            ("", None),
+            ("#" + _("Copy"), self.on_copy_log_window),
+            ("#" + _("Copy All"), self.on_copy_all_log_window),
+            ("", None),
+            ("#" + _("Clear log"), self.on_clear_log_window)
+        )
+
+        # Debug
+        self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
+        self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
+        self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
+        self.debugMessages.set_active((4 in config["logging"]["debugmodes"]))
+        self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
+        self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
+
+        # Text Search
+        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+
+        """ Scanning """
+
+        if config["transfers"]["rescanonstartup"]:
+
+            # Rescan public shares if needed
+            if not config["transfers"]["friendsonly"] and config["transfers"]["shared"]:
+                self.on_rescan()
+
+            # Rescan buddy shares if needed
+            if config["transfers"]["enablebuddyshares"]:
+                self.on_buddy_rescan()
+
+        # Deactivate public shares related menu entries if we don't use them
+        if config["transfers"]["friendsonly"] or not config["transfers"]["shared"]:
+            self.rescan_public_action.set_enabled(False)
+            self.browse_public_shares_action.set_enabled(False)
+
+        # Deactivate buddy shares related menu entries if we don't use them
+        if not config["transfers"]["enablebuddyshares"]:
+            self.rescan_buddy_action.set_enabled(False)
+            self.browse_buddy_shares_action.set_enabled(False)
+
         """ Now Playing """
 
         self.now_playing = NowPlaying(self.np.config)
@@ -364,7 +376,7 @@ class NicotineFrame:
         """ Connect """
 
         # Test if we want to do a port mapping
-        if self.np.config.sections["server"]["upnp"]:
+        if config["server"]["upnp"]:
 
             # Initialise a UPnPPortMapping object
             upnp = UPnPPortMapping()
@@ -397,15 +409,6 @@ class NicotineFrame:
             self.on_connect(getmessage=False)
 
         self.update_bandwidth()
-
-        """ Element Visibility """
-
-        self.set_show_log(not config["logging"]["logcollapsed"])
-        self.set_show_debug(config["logging"]["debug"])
-        self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
-        self.set_show_flags(not config["columns"]["hideflags"])
-        self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
-        self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
 
         """ Combo Boxes """
 
@@ -447,13 +450,7 @@ class NicotineFrame:
 
         self.update_download_filters()
 
-        """ Tab Reordering """
-
-        self.set_tab_positions()
-        self.set_main_tabs_reorderable()
-        self.set_main_tabs_order()
-        self.set_main_tabs_visibility()
-        self.set_last_session_tab()
+        """ Tab Signals """
 
         self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
         self.MainNotebook.connect("page-reordered", self.on_page_reordered)
@@ -507,7 +504,17 @@ class NicotineFrame:
 
         return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist, self.interests
 
+    def init_spell_checker(self):
+
+        try:
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell
+            self.spell_checker = Gspell.Checker.new()
+        except (ImportError, ValueError):
+            self.spell_checker = False
+
     def load_icons(self):
+
         self.images = {}
         self.icons = {}
         self.flag_images = {}
@@ -873,6 +880,8 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.CheckPrivileges())
 
     def on_get_privileges(self, *args):
+        import urllib.parse
+
         url = "%(url)s" % {
             'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(self.np.config.sections["server"]["login"])
         }
@@ -2108,19 +2117,8 @@ class NicotineFrame:
     def on_settings_uploads(self, widget):
         self.on_settings(page='Uploads')
 
-    def on_soul_seek(self, url):
-        try:
-            user, file = urllib.parse.unquote(url[7:]).split("/", 1)
-
-            if file[-1] == "/":
-                self.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
-            else:
-                self.np.transfers.get_file(user, file.replace("/", "\\"), "")
-
-        except Exception:
-            log.add(_("Invalid SoulSeek meta-url: %s"), url)
-
     def set_clipboard_url(self, user, path):
+        import urllib.parse
         self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
         self.clip_data = "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
 
@@ -2326,12 +2324,6 @@ class NicotineFrame:
         self.np.update_debug_log_options()
 
         # Write utils.py options
-        utils.DECIMALSEP = config["ui"]["decimalsep"]
-        utils.CATCH_URLS = config["urls"]["urlcatching"]
-        utils.HUMANIZE_URLS = config["urls"]["humanizeurls"]
-        utils.PROTOCOL_HANDLERS = config["urls"]["protocols"].copy()
-        utils.PROTOCOL_HANDLERS["slsk"] = self.on_soul_seek
-        utils.USERNAMEHOTSPOTS = config["ui"]["usernamehotspots"]
         uselimit = config["transfers"]["uselimit"]
         uploadlimit = config["transfers"]["uploadlimit"]
         limitby = config["transfers"]["limitby"]
@@ -2351,7 +2343,7 @@ class NicotineFrame:
             self.tray.hide()
 
         elif config["ui"]["trayicon"] and not self.tray.is_tray_icon_visible():
-            self.tray.create()
+            self.tray.load()
 
         if needcompletion:
             self.chatrooms.roomsctrl.update_completions()
@@ -2529,6 +2521,7 @@ class MainApp(Gtk.Application):
                 self.config,
                 self.plugins,
                 self.trayicon,
+                self.start_hidden,
                 self.bindip,
                 self.port
             )
@@ -2537,9 +2530,3 @@ class MainApp(Gtk.Application):
             self.set_menubar(builder.get_object("menubar"))
 
             self.add_window(self.frame.MainWindow)
-
-        if not self.start_hidden:
-            self.frame.MainWindow.show()
-
-            if self.frame.fastconfigure is not None:
-                self.frame.fastconfigure.show()

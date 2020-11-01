@@ -26,7 +26,6 @@
 Nicotine+ Launcher.
 """
 
-import platform
 import sys
 from gettext import gettext as _
 

@@ -31,7 +31,6 @@ import os
 import sys
 import time
 
-from codecs import encode, decode
 from gettext import gettext as _
 from subprocess import PIPE
 from subprocess import Popen
@@ -334,7 +333,7 @@ def apply_translation():
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
-    string = decode(encode(string, 'latin-1', 'backslashreplace'), 'unicode-escape')
+    string = string.encode('latin-1', 'backslashreplace').decode('unicode-escape')
 
     if (string[0] == string[-1]) and string.startswith(("'", '"')):
         return string[1:-1]
