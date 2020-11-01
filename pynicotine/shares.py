@@ -71,13 +71,6 @@ class Shares:
         )
 
         self.compressed_shares_buddy = self.compressed_shares_normal = None
-
-        if not self.config.sections["transfers"]["friendsonly"]:
-            self.compress_shares("normal")
-
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            self.compress_shares("buddy")
-
         self.newbuddyshares = self.newnormalshares = False
 
     def set_connected(self, connected):

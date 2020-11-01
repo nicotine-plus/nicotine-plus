@@ -25,6 +25,7 @@
 import os
 import re
 import sys
+import threading
 
 from gettext import gettext as _
 
@@ -352,15 +353,10 @@ class NicotineFrame:
 
         """ Scanning """
 
-        if config["transfers"]["rescanonstartup"]:
-
-            # Rescan public shares if needed
-            if not config["transfers"]["friendsonly"] and config["transfers"]["shared"]:
-                self.on_rescan()
-
-            # Rescan buddy shares if needed
-            if config["transfers"]["enablebuddyshares"]:
-                self.on_buddy_rescan()
+        # Slight delay to prevent minor performance hit when compressing large file share
+        timer = threading.Timer(2.0, self.rescan_startup)
+        timer.setDaemon(True)
+        timer.start()
 
         # Deactivate public shares related menu entries if we don't use them
         if config["transfers"]["friendsonly"] or not config["transfers"]["shared"]:
@@ -1557,6 +1553,29 @@ class NicotineFrame:
         dialog.show()
 
     """ Scanning """
+
+    def rescan_startup(self):
+
+        if self.rescanning:
+            return
+
+        if self.np.config.sections["transfers"]["rescanonstartup"]:
+
+            # Rescan public shares if needed
+            if not self.np.config.sections["transfers"]["friendsonly"] and \
+                    self.np.config.sections["transfers"]["shared"]:
+                GLib.idle_add(self.on_rescan)
+
+            # Rescan buddy shares if needed
+            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+                GLib.idle_add(self.on_buddy_rescan)
+
+        else:
+            if not self.np.config.sections["transfers"]["friendsonly"]:
+                self.np.shares.compress_shares("normal")
+
+            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+                self.np.shares.compress_shares("buddy")
 
     def rescan_finished(self, type):
         if type == "buddy":
