@@ -33,6 +33,7 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 
 import _thread
@@ -571,8 +572,12 @@ class NicotineFrame:
                     path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
 
                     if os.path.isfile(path):
-                        self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
-                        loaded = True
+                        try:
+                            self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
+                            loaded = True
+
+                        except GObject.GError as e:
+                            log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:
                     self.images[name] = load_static(name)
