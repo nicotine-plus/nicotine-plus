@@ -147,7 +147,7 @@ class Interests:
 
         cols = initialise_columns(
             self.RecommendationUsersList,
-            ["", 16, "pixbuf"],
+            ["", 25, "pixbuf"],
             [_("User"), 100, "text"],
             [_("Speed"), 0, "text"],
             [_("Files"), 0, "text"],
