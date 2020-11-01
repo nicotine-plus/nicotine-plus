@@ -100,7 +100,6 @@ class NicotineFrame:
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
         self.settingswindow = None
-
         self.spell_checker = None
 
         self.np = NetworkEventProcessor(
@@ -116,14 +115,29 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
-        # Dark mode
+        """ Dark Mode """
+
         dark_mode = config["ui"]["dark_mode"]
 
         if dark_mode:
             Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode)
 
-        # Import GtkBuilder widgets
+        """ Main Window UI """
+
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
+
+        """ Menu Bar """
+
+        self.set_up_actions()
+
+        builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+        self.application.set_menubar(builder.get_object("menubar"))
+
+        """ Icons """
+
+        self.load_icons()
+
+        self.MainWindow.set_default_icon(self.images["n"])
 
         """ Window Properties """
 
@@ -172,12 +186,6 @@ class NicotineFrame:
         self.user_context_id = self.UserStatus.get_context_id("")
         self.down_context_id = self.DownStatus.get_context_id("")
         self.up_context_id = self.UpStatus.get_context_id("")
-
-        """ Icons """
-
-        self.load_icons()
-
-        self.MainWindow.set_default_icon(self.images["n"])
 
         """ Notebooks """
 
@@ -310,10 +318,6 @@ class NicotineFrame:
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
-
-        """ Set up actions for menubar """
-
-        self.set_up_actions()
 
         """ Element Visibility """
 
@@ -2515,7 +2519,7 @@ class MainApp(Gtk.Application):
         if not self.get_windows():
             # Only allow one instance of the main window
 
-            self.frame = NicotineFrame(
+            NicotineFrame(
                 self,
                 self.data_dir,
                 self.config,
@@ -2525,6 +2529,3 @@ class MainApp(Gtk.Application):
                 self.bindip,
                 self.port
             )
-
-            builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
-            self.set_menubar(builder.get_object("menubar"))
