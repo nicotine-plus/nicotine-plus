@@ -771,6 +771,9 @@ class ChatRoom:
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
         # Spell Check
+        if self.frame.spell_checker is None:
+            self.frame.init_spell_checker()
+
         if self.frame.spell_checker and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
@@ -797,7 +800,7 @@ class ChatRoom:
             self.AutoJoin.set_active(True)
 
         if room not in config["columns"]["chatrooms_widths"]:
-            config["columns"]["chatrooms_widths"][room] = [0, 25, 100, 0, 0]
+            config["columns"]["chatrooms_widths"][room] = [25, 25, 100, 0, 0]
 
         widths = self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
         self.cols = cols = initialise_columns(

@@ -22,6 +22,7 @@
 
 import os
 import sys
+import _thread
 
 from ast import literal_eval
 from gettext import gettext as _
@@ -81,9 +82,9 @@ class PluginHandler(object):
         on = pluginname in self.enabled_plugins
 
         if on:
-            self.disable_plugin(pluginname)
+            _thread.start_new_thread(self.disable_plugin, (pluginname,))
         else:
-            self.enable_plugin(pluginname)
+            _thread.start_new_thread(self.enable_plugin, (pluginname,))
 
     def load_plugin(self, pluginname):
 
@@ -202,7 +203,7 @@ class PluginHandler(object):
         to_enable = self.config.sections["plugins"]["enabled"]
 
         for plugin in to_enable:
-            self.enable_plugin(plugin)
+            _thread.start_new_thread(self.enable_plugin, (plugin,))
 
     def plugin_settings(self, pluginname, plugin):
         try:

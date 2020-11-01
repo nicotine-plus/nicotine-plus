@@ -32,7 +32,6 @@ This is the actual client code. Actual GUI classes are in the separate modules
 import configparser
 import os
 import queue
-import shutil
 import threading
 import time
 
@@ -111,6 +110,7 @@ class NetworkEventProcessor:
         try:
             self.config = Config(config, data_dir)
         except configparser.Error:
+            import shutil
             corruptfile = ".".join([config, clean_file(time.strftime("%Y-%m-%d_%H_%M_%S")), "corrupt"])
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")

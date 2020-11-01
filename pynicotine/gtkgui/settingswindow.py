@@ -50,11 +50,6 @@ from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
 
 
-win32 = sys.platform.startswith("win")
-if not win32:
-    import pwd
-
-
 class BuildFrame:
     """ This class build the individual frames from the settings window """
 
@@ -308,12 +303,8 @@ class DownloadsFrame(BuildFrame):
 
     def get_settings(self):
 
-        if win32:
-            place = "Windows"
-            homedir = "C:\\windows"
-        else:
-            place = "Home"
-            homedir = pwd.getpwuid(os.getuid())[5]
+        place = _("home")
+        homedir = os.path.expanduser('~')
 
         if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
 
@@ -686,12 +677,8 @@ class SharesFrame(BuildFrame):
 
     def get_settings(self):
 
-        if win32:
-            place = "Windows"
-            homedir = "C:\\windows"
-        else:
-            place = "Home"
-            homedir = pwd.getpwuid(os.getuid())[5]
+        place = _("home")
+        homedir = os.path.expanduser('~')
 
         for share in self.shareddirs + self.bshareddirs:
             if homedir == share:

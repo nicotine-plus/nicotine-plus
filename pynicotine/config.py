@@ -231,7 +231,7 @@ class Config:
                 "userbrowse": [1, 1, 1, 1],
                 "userbrowse_widths": [600, 100, 70, 0],
                 "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "userlist_widths": [0, 25, 180, 0, 0, 0, 0, 0, 160, 0],
+                "userlist_widths": [25, 25, 180, 0, 0, 0, 0, 0, 160, 0],
                 "chatrooms": {},
                 "chatrooms_widths": {},
                 "download_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

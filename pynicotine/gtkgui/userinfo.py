@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import tempfile
 import time
 from gettext import gettext as _
 
@@ -371,6 +370,7 @@ class UserInfo:
                 self.actual_zoom = 0
                 self.SavePicture.set_sensitive(True)
             except TypeError:
+                import tempfile
                 name = tempfile.NamedTemporaryFile(delete=False)
                 with open(name, "w") as f:
                     f.write(msg.pic)

@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import copy
-
 from gettext import gettext as _
 
 from pynicotine.logfacility import log
@@ -89,13 +87,10 @@ class NowPlaying:
         # Since we need unicode instead of bytes we'll try to force such a
         # conversion. Individual player commands should have done this already
         # - this is a failsafe.
-        oldtitle = copy.copy(self.title)
 
-        self.title_clear()
-
-        for key, value in oldtitle.items():
+        for key, value in self.title.items():
             try:
-                self.title[key] = str(value, "UTF-8", "replace")
+                self.title[key] = str(value, "utf-8", "replace")
             except TypeError:
                 self.title[key] = value  # already unicode
 

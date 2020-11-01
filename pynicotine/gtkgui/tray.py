@@ -15,8 +15,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import gi
-import glob
 import os
 
 from gettext import gettext as _
@@ -30,16 +30,17 @@ from pynicotine.logfacility import log
 class Tray:
 
     def __init__(self, frame):
+
         try:
             # Check if AyatanaAppIndicator3 is available
             gi.require_version('AyatanaAppIndicator3', '0.1')
-            from gi.repository import AyatanaAppIndicator3  # noqa: F401
+            from gi.repository import AyatanaAppIndicator3
             self.appindicator = AyatanaAppIndicator3
         except (ImportError, ValueError):
             try:
                 # Check if AppIndicator3 is available
                 gi.require_version('AppIndicator3', '0.1')
-                from gi.repository import AppIndicator3  # noqa: F401
+                from gi.repository import AppIndicator3
                 self.appindicator = AppIndicator3
             except (ImportError, ValueError):
                 # No AppIndicator support, fall back to GtkStatusIcon
@@ -58,6 +59,7 @@ class Tray:
         self.create_menu()
 
     def create_menu(self):
+
         try:
             self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
             popup0.setup(
@@ -83,6 +85,7 @@ class Tray:
             log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
 
     def on_hide_unhide_window(self, widget):
+
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
         else:
@@ -124,6 +127,7 @@ class Tray:
             users.append(entry[0])
 
         users.sort()
+
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get User Info"),
@@ -136,30 +140,38 @@ class Tray:
 
     def on_get_a_users_ip(self, widget, prefix=""):
         users = []
+
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
+
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
         )
+
         if user is not None:
             self.frame.np.ip_requested.add(user)
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
     def on_get_a_users_shares(self, widget, prefix=""):
+
         users = []
         for entry in self.frame.np.config.sections["server"]["userlist"]:
             users.append(entry[0])
+
         users.sort()
+
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
             title="Nicotine+" + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
         )
+
         if user is not None:
             self.frame.browse_user(user)
 
@@ -168,12 +180,10 @@ class Tray:
         if button == 3:
             self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
 
-    def create(self):
-        self.load()
-        self.draw()
-
     def load(self):
+
         """ Create """
+
         if self.trayicon is None:
             if self.appindicator is not None:
                 trayicon = self.appindicator.Indicator.new(
@@ -181,29 +191,37 @@ class Tray:
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 trayicon.set_menu(self.tray_popup_menu)
+
+                # Action to hide/unhide main window when middle clicking the tray icon
+                hide_unhide_item = self.tray_popup_menu.get_children()[0]
+                trayicon.set_secondary_activate_target(hide_unhide_item)
+
             else:
                 # GtkStatusIcon fallback
                 trayicon = self.gtk.StatusIcon()
+                trayicon.connect("activate", self.on_hide_unhide_window)
+                trayicon.connect("popup-menu", self.on_status_icon_popup)
 
             self.trayicon = trayicon
 
         """ Set up icons """
+
         custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
         final_icon_path = ""
 
-        for icon_name in ["away", "connect", "disconnect", "msg"]:
+        for icon_name in ("away", "connect", "disconnect", "msg"):
             """
             There are two naming schemes for tray icons:
             - System-wide/local icons: "org.nicotine_plus.Nicotine-<icon_name>"
             - Custom icons: "trayicon_<icon_name>"
             """
 
-            if glob.glob(os.path.join(custom_icon_path, "trayicon_" + icon_name) + ".*"):
+            if os.path.isfile(os.path.join(custom_icon_path, "trayicon_" + icon_name) + ".*"):
                 final_icon_path = custom_icon_path
                 self.custom_icons = True
                 break
 
-            if glob.glob(os.path.join("img", "tray", "org.nicotine_plus.Nicotine-" + icon_name) + ".*"):
+            if os.path.isfile(os.path.join("img", "tray", "org.nicotine_plus.Nicotine-" + icon_name) + ".*"):
                 final_icon_path = os.path.abspath(
                     os.path.join("img", "tray")
                 )
@@ -214,6 +232,8 @@ class Tray:
         if self.appindicator is not None and final_icon_path:
             self.trayicon.set_icon_theme_path(final_icon_path)
 
+        self.set_image(self.tray_status["status"])
+
         """ Set visible """
         if self.appindicator is not None:
             self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
@@ -222,6 +242,7 @@ class Tray:
             self.trayicon.set_visible(True)
 
     def hide(self):
+
         if not self.is_tray_icon_visible():
             return
 
@@ -231,21 +252,6 @@ class Tray:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(False)
 
-    def draw(self):
-        if not self.is_tray_icon_visible():
-            return
-
-        if self.appindicator is not None:
-            # Action to hide/unhide main window when middle clicking the tray icon
-            hide_unhide_item = self.tray_popup_menu.get_children()[0]
-            self.trayicon.set_secondary_activate_target(hide_unhide_item)
-        else:
-            # GtkStatusIcon fallback
-            self.trayicon.connect("activate", self.on_hide_unhide_window)
-            self.trayicon.connect("popup-menu", self.on_status_icon_popup)
-
-        self.set_image(self.tray_status["status"])
-
     def show_window(self):
         self.frame.MainWindow.show()
 
@@ -253,6 +259,7 @@ class Tray:
         self.frame.privatechats.clear_notifications()
 
     def is_tray_icon_visible(self):
+
         if self.trayicon is None:
             return False
 
@@ -303,6 +310,7 @@ class Tray:
             log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})
 
     def set_away(self, enable):
+
         if enable:
             self.tray_status["status"] = "away"
         else:
@@ -319,6 +327,7 @@ class Tray:
             away_item.set_active(enable)
 
     def set_connected(self, enable):
+
         if enable:
             self.tray_status["status"] = "connect"
         else:
@@ -327,6 +336,7 @@ class Tray:
         self.set_image()
 
     def set_server_actions_sensitive(self, status):
+
         items = self.tray_popup_menu.get_children()
 
         for i in range(4, 9):
@@ -341,6 +351,7 @@ class Tray:
         items[1].set_sensitive(status)      # Disconnect
 
     def set_transfer_status(self, download, upload):
+
         if self.trayicon is not None:
             self.tray_popup_menu.get_children()[2].set_label(download)
             self.tray_popup_menu.get_children()[3].set_label(upload)

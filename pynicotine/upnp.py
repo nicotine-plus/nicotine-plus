@@ -20,9 +20,6 @@
 
 import re
 from gettext import gettext as _
-from subprocess import PIPE
-from subprocess import STDOUT
-from subprocess import Popen
 
 from pynicotine.logfacility import log
 
@@ -55,9 +52,13 @@ class UPnPPortMapping:
         Also prevent the command prompt from being shown on Windows.
         """
 
+        from subprocess import PIPE
+        from subprocess import STDOUT
+        from subprocess import Popen
+
         p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
 
-        (out, err) = p.communicate()
+        out, err = p.communicate()
 
         return out.decode('utf-8').rstrip()
 

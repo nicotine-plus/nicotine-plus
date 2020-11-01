@@ -31,10 +31,7 @@ import os
 import sys
 import time
 
-from codecs import encode, decode
 from gettext import gettext as _
-from subprocess import PIPE
-from subprocess import Popen
 
 version = "2.2.0.dev1"
 
@@ -334,7 +331,7 @@ def apply_translation():
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
-    string = decode(encode(string, 'latin-1', 'backslashreplace'), 'unicode-escape')
+    string = string.encode('latin-1', 'backslashreplace').decode('unicode-escape')
 
     if (string[0] == string[-1]) and string.startswith(("'", '"')):
         return string[1:-1]
@@ -365,6 +362,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
     * echo $ | flite -t """
+
+    from subprocess import PIPE
+    from subprocess import Popen
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:

@@ -352,6 +352,9 @@ class PrivateChat:
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry)
 
         # Spell Check
+        if self.frame.spell_checker is None:
+            self.frame.init_spell_checker()
+
         if self.frame.spell_checker and self.frame.np.config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatLine.get_buffer())

@@ -26,15 +26,26 @@
 Nicotine+ Launcher.
 """
 
-import platform
+import importlib
 import sys
 from gettext import gettext as _
 
 from pynicotine.utils import apply_translation
 from pynicotine.utils import get_user_directories
 
-# Setting gettext and locale
-apply_translation()
+
+def usage():
+    print(_("""Nicotine+ is a Soulseek client.
+Usage: nicotine [OPTION]...
+  -c file, --config=file      Use non-default configuration file
+  -p dir,  --plugins=dir      Use non-default directory for plugins
+  -t,      --enable-trayicon  Enable the tray icon
+  -d,      --disable-trayicon Disable the tray icon
+  -h,      --help             Show help and exit
+  -s,      --hidden           Start the program hidden so only the tray icon is shown
+  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
+  -l port, --port=port        Listen on the given port. Overrides the portrange configuration
+  -v,      --version          Display version and exit"""))
 
 
 def checkenv():
@@ -66,15 +77,11 @@ You should install GTK 3.0 or newer.""") % e
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
     # Require pytaglib
-    try:
-        import taglib
-    except ImportError:
+    if not importlib.util.find_spec("taglib"):
         return _("Cannot find pytaglib, please install it.")
 
     # Require pynicotine
-    try:
-        import pynicotine  # noqa: F401
-    except ImportError:
+    if not importlib.util.find_spec("pynicotine"):
         return _("""Can not find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
@@ -88,23 +95,10 @@ binary package and what you try to run Nicotine+ with).""")
 def version():
     try:
         import pynicotine.utils
-        print((_("Nicotine+ version %s" % pynicotine.utils.version)))
+        print(_("Nicotine+ version %s") % pynicotine.utils.version)
+
     except ImportError:
         print(_("Cannot find the pynicotine.utils module."))
-
-
-def usage():
-    print((_("""Nicotine+ is a Soulseek client.
-Usage: nicotine [OPTION]...
-  -c file, --config=file      Use non-default configuration file
-  -p dir,  --plugins=dir      Use non-default directory for plugins
-  -t,      --enable-trayicon  Enable the tray icon
-  -d,      --disable-trayicon Disable the tray icon
-  -h,      --help             Show help and exit
-  -s,      --hidden           Start the program hidden so only the tray icon is shown
-  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
-  -l port, --port=port        Listen on the given port. Overrides the portrange configuration
-  -v,      --version          Display version and exit""")))
 
 
 def renameprocess(newname, debug=False):
@@ -147,14 +141,13 @@ def rescanshares(config, data_dir):
 
     from pynicotine.config import Config
     from pynicotine.logfacility import console
-    from pynicotine.logfacility import log
     from pynicotine.shares import Shares
 
     config = Config(config, data_dir)
     config.read_config()
 
     # Show normal log messages in console
-    console.set_log_levels((0,1))
+    console.set_log_levels((0, 1))
 
     print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
 your shares this way, keep Nicotine+ closed until rescanning is done."""))
@@ -178,19 +171,19 @@ def run():
         opts, args = getopt.getopt(sys.argv[1:],
                                    "hc:p:tdrvswb:",
                                    [
-                                        "help",  # noqa: E126
-                                        "rescan",
-                                        "config=",
-                                        "plugins=",
-                                        "profile",
-                                        "enable-trayicon",
-                                        "disable-trayicon",
-                                        "version",
-                                        "hidden",
-                                        "bindip=",
-                                        "port="
-                                   ]  # noqa: E126
-                                   )
+                                       "help",
+                                       "rescan",
+                                       "config=",
+                                       "plugins=",
+                                       "profile",
+                                       "enable-trayicon",
+                                       "disable-trayicon",
+                                       "version",
+                                       "hidden",
+                                       "bindip=",
+                                       "port="
+        ]
+        )
     except getopt.GetoptError:
         # print help information and exit
         usage()
@@ -198,11 +191,10 @@ def run():
 
     config_dir, data_dir = get_user_directories()
     config = os.path.join(config_dir, 'config')
-
     plugins = os.path.join(data_dir, 'plugins')
 
-    profile = 0
-    trayicon = 1
+    profile = False
+    trayicon = True
     rescan = False
     hidden = False
     bindip = None
@@ -212,25 +204,35 @@ def run():
         if o in ("-h", "--help"):
             usage()
             sys.exit()
+
         if o in ("-c", "--config"):
             config = a
+
         if o in ("-p", "--plugins"):
             plugins = a
+
         if o in ("-b", "--bindip"):
             bindip = a
+
         if o in ("-l", "--port"):
             port = a
+
         if o == "--profile":
-            profile = 1
+            profile = True
+
         if o in ("-t", "--enable-trayicon"):
-            trayicon = 1
+            trayicon = True
+
         if o in ("-d", "--disable-trayicon"):
-            trayicon = 0
+            trayicon = False
+
         if o in ('-r', '--rescan'):
             """ Flag currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation) """
             rescan = True
+
         if o in ('-s', '--hidden'):
             hidden = True
+
         if o in ("-v", "--version"):
             version()
             sys.exit()
@@ -238,6 +240,9 @@ def run():
     result = checkenv()
 
     if result is None:
+
+        # Setting gettext and locale
+        apply_translation()
 
         if rescan:
             rescanshares(config, data_dir)

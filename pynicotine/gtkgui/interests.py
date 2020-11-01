@@ -30,6 +30,7 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
@@ -41,17 +42,7 @@ class Interests:
         self.frame = frame
         self.np = np
 
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "interests.ui"))
-
-        builder.connect_signals(self)
-
-        for i in builder.get_objects():
-            try:
-                self.__dict__[Gtk.Buildable.get_name(i)] = i
-            except TypeError:
-                pass
+        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "interests.ui"))
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
@@ -154,11 +145,9 @@ class Interests:
 
         self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
-        statusiconwidth = self.frame.images["offline"].get_width() + 4
-
         cols = initialise_columns(
             self.RecommendationUsersList,
-            ["", statusiconwidth, "pixbuf"],
+            ["", 25, "pixbuf"],
             [_("User"), 100, "text"],
             [_("Speed"), 0, "text"],
             [_("Files"), 0, "text"],

@@ -392,7 +392,7 @@ class UserList:
         if iterator is None:
             return
 
-        if user not in [i[2] for i in self.usersmodel]:
+        if user not in (i[2] for i in self.usersmodel):
             return
 
         self.usersmodel.set(
@@ -403,7 +403,7 @@ class UserList:
 
     def add_to_list(self, user):
 
-        if user in [i[2] for i in self.usersmodel]:
+        if user in (i[2] for i in self.usersmodel):
             return
 
         row = [self.frame.get_status_image(0), None, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
