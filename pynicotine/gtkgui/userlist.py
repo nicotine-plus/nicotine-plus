@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from datetime import datetime
+import time
 from gettext import gettext as _
 
 from gi.repository import Gdk
@@ -130,8 +130,7 @@ class UserList:
             username, comment, notify, privileged, trusted, last_seen, country = user
 
             try:
-                date = datetime.strptime(last_seen, "%m/%d/%Y %H:%M:%S")
-                time_from_epoch = datetime.timestamp(date)
+                time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
             except ValueError:
                 last_seen = _("Never seen")
                 time_from_epoch = 0
@@ -244,8 +243,8 @@ class UserList:
         time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
 
         if not online:
-            last_seen = datetime.strptime(last_seen, "%m/%d/%Y %H:%M:%S")
-            time_from_epoch = datetime.timestamp(datetime.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+            last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
+            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
 
         for i in self.usersmodel:
             if i[2] == user:

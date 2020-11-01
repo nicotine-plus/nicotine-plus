@@ -25,7 +25,6 @@
 import re
 import sys
 import time
-import types
 
 from gettext import gettext as _
 
@@ -420,7 +419,7 @@ def open_uri(uri, window):
             log.add_warning("%s", e)
 
     if protocol == "slsk":
-        self.on_soul_seek_uri(uri.strip())
+        on_soul_seek_uri(uri.strip())
 
     # Situation 2, user did not define a way of handling the protocol
     if sys.platform == "win32":

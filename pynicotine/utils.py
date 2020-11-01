@@ -32,8 +32,6 @@ import sys
 import time
 
 from gettext import gettext as _
-from subprocess import PIPE
-from subprocess import Popen
 
 version = "2.2.0.dev1"
 
@@ -364,6 +362,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
     * echo $ | flite -t """
+
+    from subprocess import PIPE
+    from subprocess import Popen
 
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:

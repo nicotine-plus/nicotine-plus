@@ -28,16 +28,15 @@
 the transfer manager.
 """
 
-import hashlib
 import os
 import os.path
 import re
-import shutil
 import stat
 import threading
 import time
 
 from gettext import gettext as _
+from hashlib import md5
 from time import sleep
 
 from pynicotine import slskmessages
@@ -1073,7 +1072,7 @@ class Transfers:
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
-                m = hashlib.md5()
+                m = md5()
                 m.update((i.filename + i.user).encode('utf-8'))
 
                 pynewfname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
@@ -1267,6 +1266,7 @@ class Transfers:
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
+            import shutil
             shutil.move(file.name, newname)
         except (IOError, OSError) as inst:
             log.add_warning(

@@ -18,13 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import hashlib
 import os
 import socket
 import struct
 import zlib
 
 from gettext import gettext as _
+from hashlib import md5
 from itertools import count
 from itertools import islice
 
@@ -331,7 +331,7 @@ class Login(ServerMessage):
         msg.extend(self.pack_object(self.version))
 
         payload = self.username + self.passwd
-        md5hash = hashlib.md5(payload.encode()).hexdigest()
+        md5hash = md5(payload.encode()).hexdigest()
         msg.extend(self.pack_object(md5hash))
 
         msg.extend(self.pack_object(self.minorversion))

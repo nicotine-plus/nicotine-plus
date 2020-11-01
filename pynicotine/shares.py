@@ -27,7 +27,6 @@ import shelve
 import stat
 import string
 import sys
-import taglib
 import _thread
 
 from gettext import gettext as _
@@ -601,6 +600,7 @@ class Shares:
                 meaningful content to work around this issue. """
 
                 try:
+                    import taglib
                     audio = taglib.File(pathname)
                 except IOError:
                     pass
