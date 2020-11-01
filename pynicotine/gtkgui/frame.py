@@ -33,7 +33,6 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 import _thread
