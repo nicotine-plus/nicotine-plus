@@ -299,10 +299,16 @@ class Shares:
 
                 self.send_num_shared_folders_files()
 
-        except Exception as ex:
+        except Exception:
+            from traceback import format_exc
+
             log.add(
-                _("Failed to rebuild share, serious error occurred. If this problem persists delete %s/*.db and try again. If that doesn't help please file a bug report with the stack trace included (see terminal output after this message). Technical details: %s"), (self.config.data_dir, ex)
+                _("Serious error occurred while rescanning shares. If this problem persists, delete %(dir)s/*.db and try again. If that doesn't help, please file a bug report with this stack trace included: %(trace)s"), {
+                    "dir": self.config.data_dir,
+                    "trace": "\n" + format_exc()
+                }
             )
+
             if self.ui_callback:
                 self.ui_callback.hide_scan_progress(sharestype)
 
@@ -595,8 +601,14 @@ class Shares:
                 try:
                     import taglib
                     audio = taglib.File(pathname)
-                except IOError:
-                    pass
+
+                except Exception as errtuple:
+                    log.add(
+                        _("pytaglib error while scanning metadata for file %(path)s: %(error)s"), {
+                            'path': pathname,
+                            'error': errtuple
+                        }
+                    )
 
             if audio is not None:
                 bitrateinfo = (int(audio.bitrate), int(False))  # Second argument used to be VBR (variable bitrate)
@@ -632,6 +644,7 @@ class Shares:
                     stream.extend(message.pack_object(fileinfo[3], unsignedint=True))
                     stream.extend(message.pack_object(2))
                     stream.extend(message.pack_object(fileinfo[2][1]))
+
                 except Exception:
                     log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s"), {
                         'file': fileinfo[0],
