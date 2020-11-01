@@ -571,9 +571,8 @@ class NicotineFrame:
                     path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
 
                     if os.path.isfile(path):
-                        with open(path, 'rb') as data:
-                            self.images[name] = GdkPixbuf.Pixbuf.new_from_stream(data)
-                            loaded = True
+                        self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
+                        loaded = True
 
                 if name not in self.images:
                     self.images[name] = load_static(name)
