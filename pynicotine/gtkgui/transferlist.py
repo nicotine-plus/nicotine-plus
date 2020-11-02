@@ -45,7 +45,7 @@ class TransferList:
         self.widget = widget
         self.type = type
         self.last_ui_update = self.last_save = time()
-        self.list = None
+        self.list = []
         self.users = {}
         self.paths = {}
 
@@ -165,7 +165,7 @@ class TransferList:
 
     def conn_close(self):
         self.widget.set_sensitive(False)
-        self.list = None
+        self.list = []
         self.clear()
 
     def select_transfers(self):
@@ -518,7 +518,21 @@ class TransferList:
 
                 self.expand(transfer_path, user_path)
 
+    def abort_transfers(self, remove_file=False, clear=False):
+
+        for i in self.selected_transfers:
+            if i.status != "Finished":
+                self.frame.np.transfers.abort_transfer(i, remove_file)
+
+                if not clear:
+                    i.status = "Aborted"
+                    self.update(i)
+
+            if clear:
+                self.remove_specific(i)
+
     def remove_specific(self, transfer, cleartreeviewonly=False):
+
         if not cleartreeviewonly:
             self.list.remove(transfer)
 
@@ -527,7 +541,20 @@ class TransferList:
 
         self.update_parent_rows(only_remove=True)
 
+    def clear_transfers(self, status):
+
+        for i in self.list[:]:
+            if i.status in status:
+                if i.transfertimer is not None:
+                    i.transfertimer.cancel()
+
+                if i.status == "Queued":
+                    self.frame.np.transfers.abort_transfer(i)
+
+                self.remove_specific(i)
+
     def clear(self):
+
         self.users.clear()
         self.paths.clear()
         self.selected_transfers = set()
@@ -627,22 +654,9 @@ class TransferList:
 
         self.frame.set_clipboard_url(i.user, path)
 
-    def on_abort_transfer(self, widget, remove=False, clear=False):
-
-        for i in self.selected_transfers:
-
-            if i.status != "Finished":
-                self.frame.np.transfers.abort_transfer(i, remove)
-
-                if not clear:
-                    i.status = "Aborted"
-                    self.update(i)
-
-            if clear:
-                self.remove_specific(i)
-
     def on_clear_transfer(self, widget):
-        self.on_abort_transfer(widget, False, True)
+        self.select_transfers()
+        self.abort_transfers(remove_file=False, clear=True)
 
     def on_clear_response(self, dialog, response, data=None):
         if response == Gtk.ResponseType.OK:
@@ -650,40 +664,20 @@ class TransferList:
 
         dialog.destroy()
 
-    def clear_transfers(self, status):
-
-        for i in self.list[:]:
-            if i.status in status:
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
-                self.remove_specific(i)
-
     def on_clear_finished(self, widget):
         self.clear_transfers(["Finished"])
 
     def on_clear_aborted(self, widget):
-        statuslist = ["Aborted", "Cancelled"]
-        self.clear_transfers(statuslist)
+        self.clear_transfers(["Aborted", "Cancelled"])
 
     def on_clear_filtered(self, widget):
-        statuslist = ["Filtered"]
-        self.clear_transfers(statuslist)
-
-    def on_clear_failed(self, widget):
-        statuslist = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"]
-        self.clear_transfers(statuslist)
+        self.clear_transfers(["Filtered"])
 
     def on_clear_paused(self, widget):
-        statuslist = ["Paused"]
-        self.clear_transfers(statuslist)
+        self.clear_transfers(["Paused"])
 
     def on_clear_finished_aborted(self, widget):
-        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered"]
-        self.clear_transfers(statuslist)
+        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])
 
     def on_clear_finished_erred(self, widget):
-        statuslist = ["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
-        self.clear_transfers(statuslist)
-
-    def on_clear_queued(self, widget):
-        self.clear_transfers(["Queued"])
+        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"])
