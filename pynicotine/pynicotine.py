@@ -60,9 +60,9 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr", "direction"
+    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr"
 
-    def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None, direction=None):
+    def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
         self.username = username
         self.conn = conn
@@ -72,7 +72,6 @@ class PeerConnection:
         self.type = init.type
         self.conntimer = conntimer
         self.tryaddr = tryaddr
-        self.direction = direction
 
 
 class Timeout:
@@ -304,13 +303,7 @@ class NetworkEventProcessor:
         conn = None
 
         # Check if there's already a connection object for the specified username
-        if message.__class__ is slskmessages.FileRequest:
-            for i in self.peerconns:
-                if i.username == user and i.direction == message.direction:
-                    conn = i
-                    break
-
-        else:
+        if message.__class__ is not slskmessages.FileRequest:
             for i in self.peerconns:
                 if i.username == user and i.type == "P":
                     conn = i
@@ -349,7 +342,6 @@ class NetworkEventProcessor:
 
         init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], message_type, 0)
         addr = None
-        direction = None
 
         if user in self.users:
             addr = self.users[user].addr
@@ -357,9 +349,6 @@ class NetworkEventProcessor:
         elif address is not None:
             self.users[user] = UserAddr(status=-1, addr=address)
             addr = address
-
-        if message.__class__ is slskmessages.FileRequest:
-            direction = message.direction
 
         if addr is None:
             self.queue.put(slskmessages.GetPeerAddress(user))
@@ -375,11 +364,9 @@ class NetworkEventProcessor:
                 addr=addr,
                 username=user,
                 msgs=[message],
-                init=init,
-                direction=direction
+                init=init
             )
         )
-        print(self.peerconns)
 
     def get_peer_address(self, msg):
 
@@ -539,6 +526,7 @@ class NetworkEventProcessor:
         init = slskmessages.PeerInit(None, user, msg.type, 0)
 
         self.queue.put(slskmessages.OutConn(None, (ip, port), init))
+
         self.peerconns.append(
             PeerConnection(
                 addr=(ip, port),

@@ -968,7 +968,7 @@ class Transfers:
                 i.size = msg.filesize
                 i.status = "Establishing connection"
                 # Have to establish 'F' connection here
-                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req, direction=0))
+                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
                 self.downloadsview.update(i)
                 break
         else:
@@ -978,7 +978,7 @@ class Transfers:
                     continue
 
                 i.status = "Establishing connection"
-                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req, direction=1))
+                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
                 self.uploadsview.update(i)
                 self.check_upload_queue()
                 break
