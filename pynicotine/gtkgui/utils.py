@@ -441,7 +441,7 @@ def on_soul_seek_uri(url):
         user, file = urllib.parse.unquote(url[7:]).split("/", 1)
 
         if file[-1] == "/":
-            NICOTINE.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
+            NICOTINE.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
         else:
             NICOTINE.np.transfers.get_file(user, file.replace("/", "\\"), "")
 

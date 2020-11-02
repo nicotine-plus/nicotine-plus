@@ -599,7 +599,7 @@ class PrivateChat:
 
         if self.PeerPrivateMessages.get_active():
             # not in the soulseek protocol
-            self.frame.np.process_request_to_peer(self.user, slskmessages.PMessageUser(None, my_username, payload))
+            self.frame.np.send_message_to_peer(self.user, slskmessages.PMessageUser(None, my_username, payload))
         else:
             self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
 

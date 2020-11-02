@@ -20,7 +20,6 @@
 
 import os
 from gettext import gettext as _
-from os.path import exists
 from os.path import getsize
 from os.path import join
 
@@ -125,11 +124,6 @@ class FastConfigureAssistant(object):
         self.password.set_text(
             self.config.sections["server"]["passw"]
         )
-
-        if self.config.sections["server"]["firewalled"]:
-            self.portclosed.set_active(True)
-        else:
-            self.portopen.set_active(True)
 
         self.lowerport.set_value(
             self.config.sections["server"]["portrange"][0]
@@ -239,12 +233,10 @@ class FastConfigureAssistant(object):
                 complete = True
 
         elif name == 'portpage':
-            if self.portopen.get_active() or \
-               self.portclosed.get_active():
-                complete = True
+            complete = True
 
         elif name == 'sharepage':
-            if exists(self.downloaddir.get_filename()):
+            if self.downloaddir.get_file():
                 complete = True
 
         elif name == 'summarypage':
