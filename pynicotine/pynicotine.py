@@ -1197,7 +1197,7 @@ class NetworkEventProcessor:
         )
         log.add_conn("%s %s", (msg.__class__, self.contents(msg)))
 
-    def check_user(self, user, addr):
+    def check_user(self, user, ip):
         """
         Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings.
@@ -1224,8 +1224,8 @@ class NetworkEventProcessor:
 
         cc = "-"
 
-        if addr is not None:
-            cc = self.geoip.get_all(addr).country_short
+        if ip is not None:
+            cc = self.geoip.get_all(ip).country_short
 
         if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
@@ -1621,8 +1621,8 @@ class NetworkEventProcessor:
             'user': user
         })
 
-        addr = msg.conn.addr[0]
-        checkuser, reason = self.check_user(user, addr)
+        ip, port = msg.conn.addr
+        checkuser, reason = self.check_user(user, ip)
 
         if checkuser == 1:
             # Send Normal Shares
@@ -1650,6 +1650,7 @@ class NetworkEventProcessor:
         """ Peer code: 36 """
 
         conn = msg.conn.conn
+        ip, port = msg.conn.addr
         username = None
         checkuser = None
         reason = ""
@@ -1657,7 +1658,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn:
                 username = i.username
-                checkuser, reason = self.check_user(username, i.addr[0])
+                checkuser, reason = self.check_user(username, ip)
                 break
 
         if not username:
