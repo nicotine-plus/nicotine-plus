@@ -1958,7 +1958,6 @@ class Transfers:
             self.eventprocessor.process_request_to_peer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
 
         if transfer.conn is not None:
-            self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
 
         if transfer.transfertimer is not None:

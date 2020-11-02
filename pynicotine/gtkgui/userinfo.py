@@ -186,8 +186,8 @@ class UserTabs(IconNotebook):
     def conn_close(self):
 
         self.connected = 0
+
         for user in self.users:
-            self.users[user].conn_close()
             tab = self.users[user]
             tab.status = 0
             status = _("Offline")

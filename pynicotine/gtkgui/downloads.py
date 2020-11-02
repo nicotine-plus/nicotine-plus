@@ -72,7 +72,6 @@ class Downloads(TransferList):
             ("#" + _("_Retry"), self.on_retry_transfer),
             ("", None),
             ("#" + _("Abor_t"), self.on_abort_transfer),
-            ("#" + _("Abort & Delete"), self.on_abort_remove_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
             (1, _("Clear Groups"), self.popup_menu_clear, None)
@@ -81,8 +80,8 @@ class Downloads(TransferList):
         frame.clearFinishedAbortedButton.connect("clicked", self.on_clear_finished_aborted)
         frame.clearQueuedButton.connect("clicked", self.on_try_clear_queued)
         frame.retryTransferButton.connect("clicked", self.on_retry_transfer)
-        frame.abortTransferButton.connect("clicked", self.on_select_abort_transfer)
-        frame.deleteTransferButton.connect("clicked", self.on_abort_remove_transfer)
+        frame.abortTransferButton.connect("clicked", self.on_abort_transfer)
+        frame.deleteTransferButton.connect("clicked", self.on_clear_transfer)
         frame.DownloadList.expand_all()
 
         self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
@@ -235,11 +234,6 @@ class Downloads(TransferList):
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def on_select_abort_transfer(self, widget):
-        self.select_transfers()
-
-        self.on_abort_transfer(widget, False)
-
     def on_key_press_event(self, widget, event):
 
         key = Gdk.keyval_name(event.keyval)
@@ -363,6 +357,13 @@ class Downloads(TransferList):
 
         return True
 
+    def on_abort_transfer(self, widget):
+        self.select_transfers()
+        self.abort_transfers()
+
+    def on_clear_queued(self, widget):
+        self.clear_transfers(["Queued"])
+
     def on_retry_transfer(self, widget):
 
         self.select_transfers()
@@ -374,8 +375,3 @@ class Downloads(TransferList):
 
             self.frame.np.transfers.abort_transfer(transfer)
             self.frame.np.transfers.get_file(transfer.user, transfer.filename, transfer.path, transfer)
-
-    def on_abort_remove_transfer(self, widget):
-        self.select_transfers()
-
-        self.on_clear_transfer(widget)
