@@ -689,7 +689,7 @@ class NetworkEventProcessor:
             text = msg.msg
 
         if self.privatechat is not None:
-            self.privatechat.show_message(msg, text, status=0)
+            self.privatechat.show_message(msg, text)
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
