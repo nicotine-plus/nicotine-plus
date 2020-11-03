@@ -59,7 +59,7 @@
             <property name="margin_end">5</property>
             <property name="margin_top">5</property>
             <property name="margin_bottom">5</property>
-            <property name="label" translatable="yes">In order to start you need to fill in a few details. Press "Next" to start configuring Nicotine+.</property>
+            <property name="label" translatable="yes">In order to start, you need to fill in a few details. Press "Next" to start configuring Nicotine+.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
@@ -568,7 +568,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Since your port is closed you will be unable to connect to roughly 50% of the people. This is inherent to Peer-2-Peer and not specifically a problem of Nicotine+.</property>
+            <property name="label" translatable="yes">If your port is closed, you will be unable to connect to roughly 50% of the people. This is inherent to Peer-2-Peer and not specifically a problem of Nicotine+.</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
@@ -585,7 +585,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">You do not publicly share any files. In itself this is not a problem but many people will ban you if you're downloading from them for this reason.</property>
+            <property name="label" translatable="yes">You do not publicly share any files. This in itself is not a problem, but many people will ban you if you're downloading from them for this reason.</property>
             <property name="use_markup">True</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>

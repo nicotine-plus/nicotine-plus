@@ -222,6 +222,7 @@ class PrivateChats(IconNotebook):
             ip, port = self.frame.np.users[msg.user].addr
             if self.frame.np.ip_ignored(ip):
                 return
+
         elif newmessage:
             self.frame.np.queue.put(slskmessages.GetPeerAddress(msg.user))
             self.frame.np.private_message_queue_add(msg, text)

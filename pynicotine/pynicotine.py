@@ -323,8 +323,6 @@ class NetworkEventProcessor:
         else:
             """ This is a new peer, initiate a connection """
 
-            print("hit")
-            print(user)
             self.initiate_connection_to_peer(user, message, address)
 
     def initiate_connection_to_peer(self, user, message, address=None):
@@ -366,6 +364,13 @@ class NetworkEventProcessor:
                 msgs=[message],
                 init=init
             )
+        )
+
+        log.add_conn(
+            _("Initialising new connection to user %(user)s, type %(type)s"), {
+                'user': user,
+                'type': message_type
+            }
         )
 
     def get_peer_address(self, msg):
@@ -606,7 +611,7 @@ class NetworkEventProcessor:
         except ValueError:
             pass
 
-        log.add(_("User %s does not respond to connect request, giving up"), conn.username)
+        log.add_conn(_("User %s does not respond to connect request, giving up"), conn.username)
 
         for i in conn.msgs:
             if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
@@ -711,6 +716,13 @@ class NetworkEventProcessor:
                             i.conntimer.cancel()
 
                         i.conntimer = timer
+
+                        log.add_conn(
+                            _("Direct connection of type %(type)s to user %(username)s failed, attempting indirect connection"), {
+                                "type": i.type,
+                                "username": i.username
+                            }
+                        )
 
                     else:
                         for j in i.msgs:

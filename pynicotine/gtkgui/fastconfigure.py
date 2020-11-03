@@ -242,14 +242,6 @@ class FastConfigureAssistant(object):
         elif name == 'summarypage':
 
             complete = True
-            showcpwarning = (
-                self.portclosed.get_active()
-            )
-
-            if showcpwarning:
-                self.labelclosedport.show()
-            else:
-                self.labelclosedport.hide()
 
             shownfwarning = (
                 self.onlysharewithfriends.get_active() or

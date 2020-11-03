@@ -87,7 +87,6 @@ class Config:
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
                 "passw": '',
-                "firewalled": False,
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
@@ -580,6 +579,9 @@ class Config:
         # Remove option to stop responding to searches for a certain time
         self.remove_old_option("searches", "distrib_timer")
         self.remove_old_option("searches", "distrib_ignore")
+
+        # Remove "I can receive direct connections"-option, it's redundant now
+        self.remove_old_option("server", "firewalled")
 
         # Checking for unknown section/options
         unknown1 = [

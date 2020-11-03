@@ -29,6 +29,7 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 from _thread import start_new_thread
+from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
@@ -319,6 +320,7 @@ class Uploads(TransferList):
             if user in self.frame.np.transfers.get_transferring_users():
                 continue
 
+            self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
             self.frame.np.transfers.push_file(user, filename, path, transfer=transfer)
 
         self.frame.np.transfers.check_upload_queue()
