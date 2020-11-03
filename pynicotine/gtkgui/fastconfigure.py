@@ -410,7 +410,7 @@ class FastConfigureAssistant(object):
                 for directory in selected:
 
                     virtual = combo_box_dialog(
-                        parent=self.frame.MainWindow,
+                        parent=self.FastConfigureAssistant,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -430,6 +430,9 @@ class FastConfigureAssistant(object):
                         dlg.destroy()
 
                     else:
+                        # Remove slashes from share name to avoid path conflicts
+                        virtual = virtual.replace('/', '_').replace('\\', '_')
+
                         # We get the current defined shares from the treeview
                         model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 

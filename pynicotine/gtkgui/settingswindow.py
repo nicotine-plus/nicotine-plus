@@ -769,7 +769,7 @@ class SharesFrame(BuildFrame):
             for directory in dir1:
 
                 # If the directory is already shared
-                if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
+                if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
 
                     dlg = Gtk.MessageDialog(
                         transient_for=self.p.SettingsWindow,
@@ -790,8 +790,11 @@ class SharesFrame(BuildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
+                    # Remove slashes from share name to avoid path conflicts
+                    virtual = virtual.replace('/', '_').replace('\\', '_')
+
                     # If the virtual share name is not already used
-                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
+                    if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
 
                         dlg = Gtk.MessageDialog(
                             transient_for=self.p.SettingsWindow,
@@ -833,7 +836,7 @@ class SharesFrame(BuildFrame):
             for directory in dir1:
 
                 # If the directory is already shared
-                if directory in [x[1] for x in self.shareddirs + self.bshareddirs]:
+                if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
 
                     dlg = Gtk.MessageDialog(
                         transient_for=self.p.SettingsWindow,
@@ -854,8 +857,11 @@ class SharesFrame(BuildFrame):
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
+                    # Remove slashes from share name to avoid path conflicts
+                    virtual = virtual.replace('/', '_').replace('\\', '_')
+
                     # If the virtual share name is not already used
-                    if virtual == '' or virtual is None or virtual in [x[0] for x in self.shareddirs + self.bshareddirs]:
+                    if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
 
                         dlg = Gtk.MessageDialog(
                             transient_for=self.p.SettingsWindow,
@@ -905,6 +911,9 @@ class SharesFrame(BuildFrame):
             )
 
             if virtual:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace('/', '_').replace('\\', '_')
+
                 newmapping = (virtual, directory)
                 self.shareslist.set_value(iterator, 0, virtual)
                 self.shareddirs.remove(oldmapping)
@@ -928,6 +937,9 @@ class SharesFrame(BuildFrame):
             )
 
             if virtual:
+                # Remove slashes from share name to avoid path conflicts
+                virtual = virtual.replace('/', '_').replace('\\', '_')
+
                 newmapping = (virtual, directory)
                 self.bshareslist.set_value(iterator, 0, virtual)
                 self.bshareslist.remove(oldmapping)

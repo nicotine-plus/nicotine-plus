@@ -82,26 +82,34 @@ class Shares:
         path = os.path.normpath(path)
 
         for (virtual, real) in self._virtualmapping():
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+
             real = os.path.normpath(real)
 
             if path == real:
                 return virtual
+
             if path.startswith(real + os.sep):
                 virtualpath = virtual + '\\' + path[len(real + os.sep):].replace(os.sep, '\\')
                 return virtualpath
+
         return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
         path = os.path.normpath(path)
 
         for (virtual, real) in self._virtualmapping():
-            virtual = os.path.normpath(virtual)
+            # Remove slashes from share name to avoid path conflicts
+            virtual = os.path.normpath(virtual.replace('/', '_').replace('\\', '_'))
 
             if path == virtual:
                 return real
+
             if path.startswith(virtual + '\\'):
                 realpath = real + path[len(virtual):].replace('\\', os.sep)
                 return realpath
+
         return "__INTERNAL_ERROR__" + path
 
     def _virtualmapping(self):
@@ -601,6 +609,10 @@ class Shares:
                 try:
                     import taglib
                     audio = taglib.File(pathname)
+
+                except IOError:
+                    # We don't care, this happens when a file is not audio
+                    pass
 
                 except Exception as errtuple:
                     log.add(
