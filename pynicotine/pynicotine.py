@@ -404,7 +404,7 @@ class NetworkEventProcessor:
 
     def connect_to_peer_indirect(self, conn):
 
-        """ Send a message to the server to ask the peer to connect to us instead """
+        """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
         conn.token = new_id()
         self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
@@ -457,11 +457,17 @@ class NetworkEventProcessor:
 
     def get_peer_address(self, msg):
 
+        """ Server responds with the IP address and port of the user we requested """
+
         user = msg.user
 
         for i in self.peerconns:
             if i.username == user and i.addr is None:
                 if msg.port != 0 or i.tryaddr == 10:
+
+                    """ We now have the IP address for a user we previously didn't know,
+                    attempt a direct connection to the peer/user """
+
                     if i.tryaddr == 10:
                         log.add_conn(
                             _("Server reported port 0 for the 10th time for user %(user)s, giving up"), {
@@ -486,6 +492,9 @@ class NetworkEventProcessor:
                         if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
                             self.transfers.got_address(j.req, j.direction)
                 else:
+
+                    """ Server responded with an incorrect port, request peer address again """
+
                     if i.tryaddr is None:
                         i.tryaddr = 1
                         log.add_conn(
@@ -558,6 +567,8 @@ class NetworkEventProcessor:
 
     def process_conn_messages(self, peerconn, conn):
 
+        """ We may have messages from our peer, represent these in our UI """
+
         for j in peerconn.msgs:
 
             if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
@@ -581,6 +592,9 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def out_conn(self, msg):
+
+        """ Direct connection to peer was successful, send pierce firewall message
+        and process any messages associated with the connection """
 
         addr = msg.addr
 
@@ -626,6 +640,10 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def cant_connect_to_peer(self, msg):
+
+        """ Server informs us that an indirect connection with a peer has failed.
+        Game over. """
+
         token = msg.token
 
         for i in self.peerconns:
@@ -639,7 +657,7 @@ class NetworkEventProcessor:
 
                 self.peerconns.remove(i)
 
-                log.add_conn(_("Can't connect to %s (either way), giving up"), i.username)
+                log.add_conn(_("Can't connect to user %s neither directly nor indirectly, giving up"), i.username)
 
                 for j in i.msgs:
                     if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
@@ -647,6 +665,9 @@ class NetworkEventProcessor:
                 break
 
     def connect_to_peer_timeout(self, msg):
+
+        """ Peer was not able to repond to our indirect connection request """
+
         conn = msg.conn
 
         if conn == self.get_parent_conn():
@@ -657,7 +678,7 @@ class NetworkEventProcessor:
         except ValueError:
             pass
 
-        log.add_conn(_("User %s does not respond to connect request, giving up"), conn.username)
+        log.add_conn(_("Indirect connect request of type %(type)s to user %(username)s expired, giving up"), conn.username)
 
         for i in conn.msgs:
             if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
@@ -693,6 +714,9 @@ class NetworkEventProcessor:
             self.pluginhandler.server_disconnect_notification(userchoice)
 
         else:
+
+            """ A peer connection has died, remove it """
+
             for i in self.peerconns:
                 if i.conn == conn:
                     log.add_conn(self.conn_close_template, self.contents(i))
@@ -745,14 +769,21 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.addr == addr and i.conn is None:
                     if i.token is None:
+
+                        """ We can't correct to peer directly, request indirect connection """
+
                         self.connect_to_peer_indirect(i)
 
                     else:
+
+                        """ Peer sent us an indirect connection request, and we weren't able to
+                        connect to them. Send a notification to them via the server. """
+
                         for j in i.msgs:
                             if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
                                 self.transfers.got_cant_connect(j.req)
 
-                        log.add_conn(_("Can't connect to %s, sending notification via the server"), i.username)
+                        log.add_conn(_("Can't connect to user %s neither directly nor indirectly, informing user via the server"), i.username)
                         self.queue.put(slskmessages.CantConnectToPeer(i.token, i.username))
 
                         if i.conntimer is not None:
