@@ -568,7 +568,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">If your port is closed, you will be unable to connect to roughly 50% of the people. This is inherent to Peer-2-Peer and not specifically a problem of Nicotine+.</property>
+            <property name="label" translatable="yes">If your port is closed, you will be unable to connect to other users with closed ports. This is inherent to Peer-to-Peer and not specifically a problem of Nicotine+.</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
