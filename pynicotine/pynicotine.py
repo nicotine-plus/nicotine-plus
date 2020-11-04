@@ -208,7 +208,7 @@ class NetworkEventProcessor:
             slskmessages.GetSharedFileList: self.get_shared_file_list,
             slskmessages.FileSearchRequest: self.file_search_request,
             slskmessages.FileSearchResult: self.file_search_result,
-            slskmessages.ConnectToPeer: self.connect_to_peer,
+            slskmessages.ConnectToPeer: self.connect_to_peer_request,
             slskmessages.GetUserStatus: self.get_user_status,
             slskmessages.GetUserStats: self.get_user_stats,
             slskmessages.Relogged: self.relogged,
@@ -295,6 +295,22 @@ class NetworkEventProcessor:
             slskmessages.UnknownPeerMessage: self.ignore
         }
 
+    def peer_init(self, msg):
+
+        """ Peer wants to connect to us, remember them """
+
+        self.peerconns.append(
+            PeerConnection(
+                addr=msg.conn.addr,
+                username=msg.user,
+                conn=msg.conn.conn,
+                init=msg,
+                msgs=[]
+            )
+        )
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
     def send_message_to_peer(self, user, message, address=None):
 
         """ Sends message to a peer. Used primarily when we know the username of a peer,
@@ -302,10 +318,11 @@ class NetworkEventProcessor:
 
         conn = None
 
-        # Check if there's already a connection object for the specified username
         if message.__class__ is not slskmessages.FileRequest:
+            """ Check if there's already a connection object for the specified username """
+
             for i in self.peerconns:
-                if i.username == user and i.type == "P":
+                if i.username == user and i.type == 'P':
                     conn = i
                     break
 
@@ -327,7 +344,7 @@ class NetworkEventProcessor:
 
     def initiate_connection_to_peer(self, user, message, address=None):
 
-        """ Initiates a connection with a peer """
+        """ Prepare to initiate a connection with a peer """
 
         if message.__class__ is slskmessages.FileRequest:
             message_type = 'F'
@@ -354,8 +371,14 @@ class NetworkEventProcessor:
             if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
                 self.transfers.getting_address(message.req, message.direction)
 
+            log.add_conn(
+                _("Requesting address for user %(user)s"), {
+                    'user': user
+                }
+            )
+
         else:
-            self.queue.put(slskmessages.OutConn(None, addr))
+            self.connect_to_peer_direct(user, addr, message_type)
 
         self.peerconns.append(
             PeerConnection(
@@ -366,12 +389,71 @@ class NetworkEventProcessor:
             )
         )
 
+    def connect_to_peer_direct(self, user, addr, message_type, init=None):
+
+        """ Initiate a connection with a peer directly """
+
+        self.queue.put(slskmessages.OutConn(None, addr, init))
+
         log.add_conn(
-            _("Initialising new connection to user %(user)s, type %(type)s"), {
-                'user': user,
-                'type': message_type
+            _("Initialising direct connection of type %(type)s to user %(user)s"), {
+                'type': message_type,
+                'user': user
             }
         )
+
+    def connect_to_peer_indirect(self, conn):
+
+        """ Send a message to the server to ask the peer to connect to us instead """
+
+        conn.token = new_id()
+        self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
+
+        for j in conn.msgs:
+            if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
+                self.transfers.got_connect_error(j.req, j.direction)
+
+        conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
+        timer = threading.Timer(20.0, conntimeout.timeout)
+        timer.setDaemon(True)
+        timer.start()
+
+        if conn.conntimer is not None:
+            conn.conntimer.cancel()
+
+        conn.conntimer = timer
+
+        log.add_conn(
+            _("Direct connection of type %(type)s to user %(username)s failed, attempting indirect connection"), {
+                "type": conn.type,
+                "username": conn.username
+            }
+        )
+
+    def connect_to_peer_request(self, msg):
+
+        """ Peer sent us an indirect connection request via the server, attempt to
+        connect to them """
+
+        user = msg.user
+        ip = msg.ip
+        port = msg.port
+        addr = (ip, port)
+
+        init = slskmessages.PeerInit(None, user, msg.type, 0)
+        self.connect_to_peer_direct(user, addr, msg.type, init)
+
+        self.peerconns.append(
+            PeerConnection(
+                addr=(ip, port),
+                username=user,
+                msgs=[],
+                token=msg.token,
+                init=init
+            )
+        )
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_peer_address(self, msg):
 
@@ -398,7 +480,7 @@ class NetworkEventProcessor:
                     i.addr = (msg.ip, msg.port)
                     i.tryaddr = None
 
-                    self.queue.put(slskmessages.OutConn(None, i.addr))
+                    self.connect_to_peer_direct(user, i.addr, i.type)
 
                     for j in i.msgs:
                         if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
@@ -519,42 +601,6 @@ class NetworkEventProcessor:
                 self.process_conn_messages(i, conn)
 
                 break
-
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-
-    def connect_to_peer(self, msg):
-
-        user = msg.user
-        ip = msg.ip
-        port = msg.port
-
-        init = slskmessages.PeerInit(None, user, msg.type, 0)
-
-        self.queue.put(slskmessages.OutConn(None, (ip, port), init))
-
-        self.peerconns.append(
-            PeerConnection(
-                addr=(ip, port),
-                username=user,
-                msgs=[],
-                token=msg.token,
-                init=init
-            )
-        )
-
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-
-    def peer_init(self, msg):
-
-        self.peerconns.append(
-            PeerConnection(
-                addr=msg.conn.addr,
-                username=msg.user,
-                conn=msg.conn.conn,
-                init=msg,
-                msgs=[]
-            )
-        )
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
@@ -699,30 +745,7 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.addr == addr and i.conn is None:
                     if i.token is None:
-
-                        i.token = new_id()
-                        self.queue.put(slskmessages.ConnectToPeer(i.token, i.username, i.type))
-
-                        for j in i.msgs:
-                            if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                                self.transfers.got_connect_error(j.req, j.direction)
-
-                        conntimeout = ConnectToPeerTimeout(i, self.network_callback)
-                        timer = threading.Timer(20.0, conntimeout.timeout)
-                        timer.setDaemon(True)
-                        timer.start()
-
-                        if i.conntimer is not None:
-                            i.conntimer.cancel()
-
-                        i.conntimer = timer
-
-                        log.add_conn(
-                            _("Direct connection of type %(type)s to user %(username)s failed, attempting indirect connection"), {
-                                "type": i.type,
-                                "username": i.username
-                            }
-                        )
+                        self.connect_to_peer_indirect(i)
 
                     else:
                         for j in i.msgs:
