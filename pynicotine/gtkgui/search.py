@@ -256,7 +256,7 @@ class Searches(IconNotebook):
 
     def do_peer_search(self, id, text, users):
         for user in users:
-            self.frame.np.process_request_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
+            self.frame.np.send_message_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
 
     def get_user_search_name(self, id):
 
@@ -1208,7 +1208,7 @@ class Search:
                 """ Ensure we don't send folder content requests for a folder more than once,
                 e.g. when several selected resuls belong to the same folder. """
 
-                self.frame.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+                self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
                 requested_folders[user].append(folder)
 
     def on_download_folders_to(self, widget):
@@ -1233,7 +1233,7 @@ class Search:
                 e.g. when several selected resuls belong to the same folder. """
 
                 self.frame.np.requested_folders[user][folder] = destination
-                self.frame.np.process_request_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+                self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def on_copy_url(self, widget):
         user, path = next(iter(self.selected_results))[:2]

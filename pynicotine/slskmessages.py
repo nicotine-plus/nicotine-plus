@@ -2497,9 +2497,10 @@ class FileRequest(PeerMessage):
     """ Request a file from peer, or tell a peer that we want to send a file to
     them. """
 
-    def __init__(self, conn, req=None):
+    def __init__(self, conn, req=None, direction=None):
         self.conn = conn
         self.req = req
+        self.direction = direction
 
     def make_network_message(self):
         msg = self.pack_object(self.req)

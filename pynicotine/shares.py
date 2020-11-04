@@ -816,7 +816,7 @@ class Shares:
                 self.np.speed, queuesizes, fifoqueue, numresults
             )
 
-            self.np.process_request_to_peer(user, message)
+            self.np.send_message_to_peer(user, message)
 
             if direct:
                 log.add_search(

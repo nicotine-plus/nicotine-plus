@@ -1745,7 +1745,7 @@ class NicotineFrame:
 
         else:
             self.userinfo.show_user(user)
-            self.np.process_request_to_peer(user, msg, self.userinfo)
+            self.np.send_message_to_peer(user, msg)
 
     """ User Browse """
 
@@ -1759,7 +1759,7 @@ class NicotineFrame:
                 self.on_browse_public_shares(None)
             else:
                 self.userbrowse.show_user(user)
-                self.np.process_request_to_peer(user, slskmessages.GetSharedFileList(None), self.userbrowse)
+                self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
 
     def on_get_shares(self, widget):
         text = self.UserBrowseCombo.get_child().get_text()

@@ -320,7 +320,7 @@ class Uploads(TransferList):
             if user in self.frame.np.transfers.get_transferring_users():
                 continue
 
-            self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
+            self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
             self.frame.np.transfers.push_file(user, filename, path, transfer=transfer)
 
         self.frame.np.transfers.check_upload_queue()

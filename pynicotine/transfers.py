@@ -254,8 +254,10 @@ class Transfers:
         self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename)
 
     def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None):
+
         """ Get a single file. path is a local path. if transfer object is
         not None, update it, otherwise create a new one."""
+
         if transfer is None:
             transfer = Transfer(
                 user=user, filename=filename, realfilename=realfilename, path=path,
@@ -299,7 +301,7 @@ class Transfers:
             transfer.req = new_id()
             realpath = self.eventprocessor.shares.virtual2real(filename)
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath)
-            self.eventprocessor.process_request_to_peer(user, request)
+            self.eventprocessor.send_message_to_peer(user, request)
 
         if shouldupdate:
             if direction == 0:
@@ -469,13 +471,11 @@ class Transfers:
             for i in self.peerconns:
                 if i.conn is msg.conn.conn:
                     user = i.username
-                    conn = msg.conn.conn
                     addr = msg.conn.addr[0]
                     break
 
         elif msg.tunneleduser is not None:  # Deprecated
             user = msg.tunneleduser
-            conn = None
             addr = "127.0.0.1"
 
         if user is None:
@@ -483,16 +483,13 @@ class Transfers:
             return
 
         if msg.direction == 1:
-            response = self.transfer_request_downloads(msg, user, conn, addr)
+            response = self.transfer_request_downloads(msg, user)
         else:
-            response = self.transfer_request_uploads(msg, user, conn, addr)
+            response = self.transfer_request_uploads(msg, user, addr)
 
-        if msg.conn is not None:
-            self.queue.put(response)
-        else:
-            self.eventprocessor.process_request_to_peer(user, response)
+        self.eventprocessor.send_message_to_peer(user, response)
 
-    def transfer_request_downloads(self, msg, user, conn, addr):
+    def transfer_request_downloads(self, msg, user):
 
         for i in self.downloads:
             if i.filename == msg.file and user == i.user and i.status not in ["Aborted", "Paused"]:
@@ -502,6 +499,7 @@ class Transfers:
                 send a malformed file size (0 bytes) in the TransferRequest response.
                 In that case, we rely on the cached, correct file size we received when
                 we initially added the download. """
+
                 if msg.filesize > 0:
                     i.size = msg.filesize
 
@@ -516,7 +514,7 @@ class Transfers:
                 i.transfertimer.setDaemon(True)
                 i.transfertimer.start()
 
-                response = slskmessages.TransferResponse(conn, 1, req=i.req)
+                response = slskmessages.TransferResponse(None, 1, req=i.req)
                 self.downloadsview.update(i)
                 break
         else:
@@ -537,46 +535,46 @@ class Transfers:
                 if user not in self.eventprocessor.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
 
-                response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=transfer.req)
+                response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
                 self.downloadsview.update(transfer)
             else:
-                response = slskmessages.TransferResponse(conn, 0, reason="Cancelled", req=msg.req)
+                response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
                 log.add_transfer(_("Denied file request: User %(user)s, %(msg)s"), {
                     'user': user,
                     'msg': str(vars(msg))
                 })
         return response
 
-    def transfer_request_uploads(self, msg, user, conn, addr):
+    def transfer_request_uploads(self, msg, user, addr):
         """
         Remote peer is requesting to download a file through
         your Upload queue
         """
 
-        response = self._transfer_request_uploads(msg, user, conn, addr)
+        response = self._transfer_request_uploads(msg, user, addr)
         log.add_transfer(_("Upload request: %(req)s Response: %(resp)s"), {
             'req': str(vars(msg)),
             'resp': response
         })
         return response
 
-    def _transfer_request_uploads(self, msg, user, conn, addr):
+    def _transfer_request_uploads(self, msg, user, addr):
 
         # Is user allowed to download?
         checkuser, reason = self.eventprocessor.check_user(user, addr)
 
         if not checkuser:
-            return slskmessages.TransferResponse(conn, 0, reason=reason, req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason=reason, req=msg.req)
 
         # Do we actually share that file with the world?
         realpath = self.eventprocessor.shares.virtual2real(msg.file)
 
         if not self.file_is_shared(user, msg.file, realpath):
-            return slskmessages.TransferResponse(conn, 0, reason="File not shared", req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="File not shared", req=msg.req)
 
         # Is that file already in the queue?
         if self.file_is_upload_queued(user, msg.file):
-            return slskmessages.TransferResponse(conn, 0, reason="Queued", req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="Queued", req=msg.req)
 
         # Has user hit queue limit?
         limits = True
@@ -589,12 +587,12 @@ class Transfers:
 
         if limits and self.queue_limit_reached(user):
             uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-            return slskmessages.TransferResponse(conn, 0, reason="User limit of %i megabytes exceeded" % (uploadslimit), req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="User limit of %i megabytes exceeded" % (uploadslimit), req=msg.req)
 
         if limits and self.file_limit_reached(user):
             filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
             limitmsg = "User limit of %i files exceeded" % (filelimit)
-            return slskmessages.TransferResponse(conn, 0, reason=limitmsg, req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
 
         # All checks passed, user can queue file!
         if self.pluginhandler:
@@ -603,7 +601,7 @@ class Transfers:
         # Is user already downloading/negotiating a download?
         if not self.allow_new_uploads() or user in self.get_transferring_users():
 
-            response = slskmessages.TransferResponse(conn, 0, reason="Queued", req=msg.req)
+            response = slskmessages.TransferResponse(None, 0, reason="Queued", req=msg.req)
             newupload = Transfer(
                 user=user, filename=msg.file, realfilename=realpath,
                 path=os.path.dirname(realpath), status="Queued",
@@ -617,7 +615,7 @@ class Transfers:
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(realpath)
-        response = slskmessages.TransferResponse(conn, 1, req=msg.req, filesize=size)
+        response = slskmessages.TransferResponse(None, 1, req=msg.req, filesize=size)
 
         transfertimeout = TransferTimeout(msg.req, self.network_callback)
         transferobj = Transfer(
@@ -908,6 +906,7 @@ class Transfers:
         return size
 
     def transfer_response(self, msg):
+
         """ Got a response to the file request from the peer."""
 
         if msg.reason is not None:
@@ -927,7 +926,7 @@ class Transfers:
                         if i.user not in self.eventprocessor.watchedusers:
                             self.queue.put(slskmessages.AddUser(i.user))
 
-                    self.eventprocessor.process_request_to_peer(i.user, slskmessages.PlaceInQueueRequest(None, i.filename))
+                    self.queue.put(slskmessages.PlaceInQueueRequest(msg.conn.conn, i.filename))
 
                 self.check_upload_queue()
                 break
@@ -969,7 +968,7 @@ class Transfers:
                 i.size = msg.filesize
                 i.status = "Establishing connection"
                 # Have to establish 'F' connection here
-                self.eventprocessor.process_request_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
+                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
                 self.downloadsview.update(i)
                 break
         else:
@@ -979,7 +978,7 @@ class Transfers:
                     continue
 
                 i.status = "Establishing connection"
-                self.eventprocessor.process_request_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
+                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
                 self.uploadsview.update(i)
                 self.check_upload_queue()
                 break
@@ -1475,7 +1474,7 @@ class Transfers:
                 continue
 
             if upload.status == "Queued":
-                self.eventprocessor.process_request_to_peer(user, slskmessages.QueueFailed(None, file=upload.filename, reason=banmsg))
+                self.eventprocessor.send_message_to_peer(user, slskmessages.QueueFailed(None, file=upload.filename, reason=banmsg))
             else:
                 self.abort_transfer(upload, reason=banmsg)
 
@@ -1503,8 +1502,9 @@ class Transfers:
             if transfer.status in statuslist:
                 self.abort_transfer(transfer)
                 self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+
             elif transfer.status == "Queued":
-                self.eventprocessor.process_request_to_peer(transfer.user, slskmessages.PlaceInQueueRequest(None, transfer.filename))
+                self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.PlaceInQueueRequest(None, transfer.filename))
 
         self.start_check_download_queue_timer()
 
@@ -1955,7 +1955,7 @@ class Transfers:
         transfer.timeleft = ""
 
         if send_fail_message and transfer in self.uploads:
-            self.eventprocessor.process_request_to_peer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
+            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
 
         if transfer.conn is not None:
             transfer.conn = None

@@ -762,7 +762,7 @@ class UserBrowse:
         if user is None or user == "":
             return
 
-        self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
 
         self.upload_directory_to(user, folder, recurse)
 
@@ -818,7 +818,7 @@ class UserBrowse:
         if user is None or user == "":
             return
 
-        self.frame.np.process_request_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
 
         for fn in self.selected_files:
             self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
