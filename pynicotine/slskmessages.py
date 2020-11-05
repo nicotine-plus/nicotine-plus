@@ -83,7 +83,13 @@ class IncConn(Conn):
 
 class ConnClose(Conn):
     """ Sent by networking thread to indicate a connection has been closed."""
-    pass
+
+    __slots__ = "conn", "addr", "callback"
+
+    def __init__(self, conn=None, addr=None, callback=True):
+        self.conn = conn
+        self.addr = addr
+        self.callback = callback
 
 
 class ServerConn(OutConn):

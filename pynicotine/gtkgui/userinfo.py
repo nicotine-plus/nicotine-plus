@@ -428,7 +428,6 @@ class UserInfo:
     def on_close(self, widget):
 
         del self.userinfos.users[self.user]
-        self.frame.np.close_peer_connection(self.conn)
 
         self.userinfos.remove_page(self.Main)
         self.Main.destroy()
