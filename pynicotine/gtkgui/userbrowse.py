@@ -923,7 +923,6 @@ class UserBrowse:
     def on_close(self, widget):
 
         del self.userbrowses.users[self.user]
-        self.frame.np.close_peer_connection(self.conn)
 
         self.userbrowses.remove_page(self.Main)
         self.Main.destroy()

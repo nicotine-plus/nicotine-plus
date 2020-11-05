@@ -1002,7 +1002,9 @@ class SlskProtoThread(threading.Thread):
                             server_socket.close()
 
                 elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
-                    self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
+                    if msg_obj.callback:
+                        self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
+
                     self.close_connection(conns, msg_obj.conn)
 
                 elif msg_obj.__class__ is OutConn:

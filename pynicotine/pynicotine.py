@@ -36,7 +36,6 @@ import threading
 import time
 
 from gettext import gettext as _
-from socket import socket
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -120,7 +119,6 @@ class NetworkEventProcessor:
 
         # These strings are accessed frequently. We store them to prevent requesting the translation every time.
         self.conn_close_template = _("Connection closed by peer: %s")
-        self.conn_remove_template = _("Removed connection closed by peer: %(conn_obj)s %(address)s")
 
         self.bindip = bindip
         self.port = port
@@ -639,6 +637,27 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
+    def close_peer_connection(self, conn, username):
+
+        """ Forcibly close a peer connection. Only used after receiving a search result,
+        as we need to get rid of connections before they pile up """
+
+        if conn is None:
+            return
+
+        if not self.protothread.socket_still_active(conn.conn):
+
+            for i in reversed(self.peerconns):  # File connections are added after peer connections
+                if i.username == username and i.type == 'F':
+                    # File transfer in progress, don't kill peer connection yet
+                    return
+
+                if i.conn == conn.conn:
+                    self.peerconns.remove(i)
+                    break
+
+            self.queue.put(slskmessages.ConnClose(conn.conn, callback=False))
+
     def show_connection_error_message(self, conn):
 
         """ Request UI to show error messages related to connectivity """
@@ -666,7 +685,7 @@ class NetworkEventProcessor:
                 if i.conntimer is not None:
                     i.conntimer.cancel()
 
-                if i == self.get_parent_conn():
+                if i.type == 'D':
                     self.parent_conn_closed()
 
                 self.peerconns.remove(i)
@@ -681,7 +700,7 @@ class NetworkEventProcessor:
 
         conn = msg.conn
 
-        if conn == self.get_parent_conn():
+        if conn.type == 'D':
             self.parent_conn_closed()
 
         try:
@@ -740,18 +759,11 @@ class NetworkEventProcessor:
                     if self.transfers is not None:
                         self.transfers.conn_close(conn, addr, i.username, error)
 
-                    if i == self.get_parent_conn():
+                    if i.type == 'D':
                         self.parent_conn_closed()
 
                     self.peerconns.remove(i)
-                    break
-            else:
-                log.add_conn(
-                    self.conn_remove_template, {
-                        'conn_obj': conn,
-                        'address': addr
-                    }
-                )
+                    return
 
     def conn_close(self, msg):
         self.closed_connection(msg.conn, msg.addr)
@@ -1388,30 +1400,6 @@ class NetworkEventProcessor:
                         return 1
         return 0
 
-    def close_peer_connection(self, peerconn):
-        try:
-            conn = peerconn.conn
-        except AttributeError:
-            conn = peerconn
-
-        if conn is None:
-            return
-
-        if not self.protothread.socket_still_active(conn):
-            self.queue.put(slskmessages.ConnClose(conn))
-
-            if isinstance(peerconn, socket):
-
-                for i in self.peerconns:
-                    if i.conn == peerconn:
-                        self.peerconns.remove(i)
-                        break
-            else:
-                try:
-                    self.peerconns.remove(peerconn)
-                except ValueError:
-                    pass
-
     def user_info_reply(self, msg):
         conn = msg.conn.conn
 
@@ -1519,6 +1507,7 @@ class NetworkEventProcessor:
                     break
 
     def file_search_result(self, msg):
+
         conn = msg.conn
         addr = conn.addr
 
@@ -1532,7 +1521,9 @@ class NetworkEventProcessor:
                 country = ""
 
             self.search.show_result(msg, msg.user, country)
-            self.close_peer_connection(conn)
+
+            # Close peer connection immediately, otherwise we exhaust our connection limit
+            self.close_peer_connection(conn, msg.user)
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
@@ -1860,6 +1851,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_parent_conn(self):
+
         for i in self.peerconns:
             if i.type == 'D':
                 return i
@@ -1888,7 +1880,10 @@ class NetworkEventProcessor:
 
                     if i.conn != msg.conn.conn:
                         if i.conn is not None:
-                            self.queue.put(slskmessages.ConnClose(i.conn))
+                            self.queue.put(slskmessages.ConnClose(i.conn, callback=False))
+
+                        if i.conntimer is not None:
+                            i.conntimer.cancel()
 
                         self.peerconns.remove(i)
 
