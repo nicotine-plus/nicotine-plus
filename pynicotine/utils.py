@@ -219,8 +219,11 @@ def get_result_bitrate_length(filesize, attributes):
                 bitrate = first
                 h_bitrate = str(bitrate) + h_bitrate
 
-                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize / (bitrate / 8 * 1000)
+                if bitrate <= 0:
+                    length = 0
+                else:
+                    # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+                    length = filesize / (bitrate / 8 * 1000)
 
                 h_length = '%i:%02i' % (length / 60, length % 60)
 
