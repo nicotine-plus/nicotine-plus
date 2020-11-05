@@ -306,20 +306,6 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="Requirement">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">Only disable direct connections if the above ports aren't accessible after attempting UPnP and manual port forwarding, if possible. This can happen if your ISP blocks ports.</property>
-        <property name="wrap">True</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">10</property>
-      </packing>
-    </child>
-    <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>

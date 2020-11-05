@@ -424,9 +424,9 @@ class NetworkEventProcessor:
         conn.conntimer = timer
 
         log.add_conn(
-            _("Direct connection of type %(type)s to user %(username)s failed, attempting indirect connection"), {
+            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection"), {
                 "type": conn.type,
-                "username": conn.username
+                "user": conn.username
             }
         )
 
@@ -690,7 +690,12 @@ class NetworkEventProcessor:
             pass
 
         self.show_connection_error_message(conn)
-        log.add_conn(_("Indirect connect request of type %(type)s to user %(username)s expired, giving up"), conn.username)
+        log.add_conn(
+            _("Indirect connect request of type %(type)s to user %(user)s expired, giving up"), {
+                'type': conn.type,
+                'user': conn.username
+            }
+        )
 
     def closed_connection(self, conn, addr, error=None):
 
