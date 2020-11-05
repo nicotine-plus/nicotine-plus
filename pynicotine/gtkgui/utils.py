@@ -882,6 +882,7 @@ class IconNotebook:
         label_tab = ImageLabel(
             label, onclose, closebutton=closebutton, angle=angle,
             show_hilite_image=self._show_hilite_image,
+            status_image=self.images["offline"],
             show_status_image=self._show_status_image
         )
 
@@ -1002,6 +1003,28 @@ class IconNotebook:
 
     def show(self):
         self.notebook.show()
+
+
+class InfoBar:
+
+    """ Wrapper for setting up a GtkInfoBar """
+
+    def __init__(self, info_bar, message_type):
+
+        self.info_bar = info_bar
+        self.info_bar.set_message_type(message_type)
+        self.info_bar.connect("response", self.hide)
+
+    def show_message(self, message):
+
+        label = self.info_bar.get_content_area().get_children()[0]
+        label.set_text(message)
+
+        self.info_bar.set_revealed(True)
+        self.info_bar.set_show_close_button(True)
+
+    def hide(self, *args):
+        self.info_bar.set_revealed(False)
 
 
 class PopupMenu(Gtk.Menu):

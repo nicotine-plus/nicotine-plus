@@ -639,6 +639,20 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
+    def show_connection_error_message(self, conn):
+
+        """ Request UI to show error messages related to connectivity """
+
+        for i in conn.msgs:
+            if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
+                self.transfers.got_cant_connect(i.req)
+
+            if i.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
+                self.userbrowse.show_connection_error(conn.username)
+
+            if i.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
+                self.userinfo.show_connection_error(conn.username)
+
     def cant_connect_to_peer(self, msg):
 
         """ Server informs us that an indirect connection with a peer has failed.
@@ -657,11 +671,8 @@ class NetworkEventProcessor:
 
                 self.peerconns.remove(i)
 
+                self.show_connection_error_message(i)
                 log.add_conn(_("Can't connect to user %s neither directly nor indirectly, giving up"), i.username)
-
-                for j in i.msgs:
-                    if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                        self.transfers.got_cant_connect(j.req)
                 break
 
     def connect_to_peer_timeout(self, msg):
@@ -678,11 +689,8 @@ class NetworkEventProcessor:
         except ValueError:
             pass
 
+        self.show_connection_error_message(conn)
         log.add_conn(_("Indirect connect request of type %(type)s to user %(username)s expired, giving up"), conn.username)
-
-        for i in conn.msgs:
-            if i.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                self.transfers.got_cant_connect(i.req)
 
     def closed_connection(self, conn, addr, error=None):
 
