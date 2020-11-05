@@ -35,6 +35,7 @@ from pynicotine.gtkgui.dirchooser import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
+from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
@@ -541,9 +542,26 @@ class UserBrowse:
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
     def show_user(self, msg):
-        if msg is not None:
-            self.conn = None
-            self.make_new_model(msg.list)
+
+        if msg is None:
+            return
+
+        self.conn = None
+        self.make_new_model(msg.list)
+
+        if len(msg.list) == 0:
+            InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+                _("User's list of shared files is empty. Either the user is not sharing anything, or they are sharing files privately.")
+            )
+
+        else:
+            self.InfoBar.set_revealed(False)
+
+    def show_connection_error(self):
+
+        InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+            _("Unable to request shared files from user. Either the user is offline, you both have a closed listening port, or there's a temporary connectivity issue.")
+        )
 
     def load_shares(self, list):
         self.make_new_model(list)

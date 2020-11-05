@@ -34,6 +34,7 @@ from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
+from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
@@ -89,6 +90,9 @@ class UserTabs(IconNotebook):
 
         tab_name = self.frame.match_main_notebox(self.tab)
         self.frame.change_main_page(tab_name)
+
+    def show_connection_error(self, user):
+        self.users[user].show_connection_error()
 
     def save_columns(self):
 
@@ -377,6 +381,12 @@ class UserInfo:
 
                 self.image.set_from_file(name)
                 os.remove(name)
+
+    def show_connection_error(self):
+
+        InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+            _("Unable to request information from user. Either you both have a closed listening port, the user is offline, or there's a temporary connectivity issue.")
+        )
 
     def update_gauge(self, msg):
 
