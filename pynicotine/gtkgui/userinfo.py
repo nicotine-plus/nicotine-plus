@@ -72,7 +72,13 @@ class UserTabs(IconNotebook):
     def init_window(self, user):
 
         w = self.users[user] = self.subwindow(self, user)
-        self.append_page(w.Main, user[:15], w.on_close)
+
+        if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+            userlabel = "%s (%s)" % (user[:15], _("Offline"))
+        else:
+            userlabel = user
+
+        self.append_page(w.Main, userlabel, w.on_close)
         self.frame.np.queue.put(slskmessages.AddUser(user))
 
     def show_user(self, user, conn=None, msg=None):
@@ -194,8 +200,13 @@ class UserTabs(IconNotebook):
         for user in self.users:
             tab = self.users[user]
             tab.status = 0
-            status = _("Offline")
-            self.set_text(tab.Main, "%s (%s)" % (user[:15], status))
+
+            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+                self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
+            else:
+                self.set_text(tab.Main, user)
+
+            self.set_status_image(tab.Main, 0)
 
 
 class UserInfo:

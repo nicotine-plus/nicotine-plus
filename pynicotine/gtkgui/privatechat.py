@@ -145,7 +145,13 @@ class PrivateChats(IconNotebook):
         if user not in self.users:
             tab = PrivateChat(self, user)
             self.users[user] = tab
-            self.append_page(tab.Main, user, tab.on_close)
+
+            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+                userlabel = "%s (%s)" % (user[:15], _("Offline"))
+            else:
+                userlabel = user
+
+            self.append_page(tab.Main, userlabel, tab.on_close)
             self.frame.np.queue.put(slskmessages.AddUser(user))
 
         if show_user:
@@ -304,10 +310,16 @@ class PrivateChats(IconNotebook):
     def conn_close(self):
 
         self.connected = 0
+
         for user in self.users:
             self.users[user].conn_close()
             tab = self.users[user]
-            self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
+
+            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
+                self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
+            else:
+                self.set_text(tab.Main, user)
+
             self.set_status_image(tab.Main, 0)
             tab.get_user_status(0)
 

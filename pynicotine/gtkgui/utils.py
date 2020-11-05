@@ -859,6 +859,10 @@ class IconNotebook:
 
             tab_label.show_hilite_image(self._show_hilite_image)
 
+    def show_status_images(self, show_image=True):
+
+        self._show_status_image = show_image
+
     def set_tab_angle(self, angle):
 
         if angle == self.angle:
