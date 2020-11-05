@@ -2379,6 +2379,7 @@ class NicotineFrame:
             w.set_tab_closers(config["ui"]["tabclosers"])
             w.set_reorderable(config["ui"]["tab_reorderable"])
             w.show_hilite_images(config["notifications"]["notification_tab_icons"])
+            w.show_status_images(config["ui"]["tab_status_icons"])
             w.set_text_colors(None)
 
         # Main notebook
