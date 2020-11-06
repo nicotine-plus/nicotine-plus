@@ -292,20 +292,6 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="labelRequirementsUPnP">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">If you wish to use UPnP to fix portmapping on your router please install MiniUPnP client binary or the MiniUPnP client module for Python.</property>
-        <property name="wrap">True</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">8</property>
-      </packing>
-    </child>
-    <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -317,7 +303,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
-        <property name="position">11</property>
+        <property name="position">8</property>
       </packing>
     </child>
     <child>
@@ -332,7 +318,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
-        <property name="position">12</property>
+        <property name="position">9</property>
       </packing>
     </child>
   </object>

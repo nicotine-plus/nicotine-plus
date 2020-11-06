@@ -73,7 +73,7 @@ from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
-from pynicotine.upnp import UPnPPortMapping
+from pynicotine.upnp.portmapper import UPnPPortMapping
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -385,18 +385,8 @@ class NicotineFrame:
             # Initialise a UPnPPortMapping object
             upnp = UPnPPortMapping()
 
-            # Check if we can do a port mapping
-            (self.upnppossible, errors) = upnp.is_possible()
-
-            # Test if we are able to do a port mapping
-            if self.upnppossible:
-                # Do the port mapping
-                _thread.start_new_thread(upnp.add_port_mapping, (self.np,))
-            else:
-                # Display errors
-                if errors is not None:
-                    for err in errors:
-                        log.add_warning(err)
+            # Do the port mapping
+            _thread.start_new_thread(upnp.add_port_mapping, (self.np,))
 
         config_unset = self.np.config.need_config()
         if config_unset:

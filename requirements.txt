@@ -1,3 +1,2 @@
-miniupnpc>=2.0.2
 pygobject>=3.28.0
 pytaglib>=1.4.6

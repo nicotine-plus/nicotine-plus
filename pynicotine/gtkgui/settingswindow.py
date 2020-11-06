@@ -46,7 +46,6 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
-from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
 
 
@@ -113,33 +112,6 @@ class ServerFrame(BuildFrame):
 
         if server["ctcpmsgs"] is not None:
             self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-
-        # We need to check if the frame has the upnppossible attribute
-        # If UPnP port mapping is wanted, OnFirstConnect has been called
-        # and the attribute is set.
-        # Otherwise we need to check if we have the prerequisites for allowing it.
-        # The initialization of the UPnPPortMapping object and the check
-        # don't generate any unwanted network traffic.
-        if not hasattr(self.frame, 'upnppossible'):
-
-            # Initialiase a UPnPPortMapping object
-            upnp = UPnPPortMapping()
-
-            # Check if we can do a port mapping
-            (self.frame.upnppossible, errors) = upnp.is_possible()
-
-        if self.frame.upnppossible:
-            # If we can do a port mapping the field is active
-            # if the config said so
-            self.UseUPnP.set_active(server["upnp"])
-            self.UseUPnP.set_sensitive(True)
-            self.labelRequirementsUPnP.hide()
-        else:
-            # If we cant do a port mapping: highlight the requirements
-            # & disable the choice
-            self.UseUPnP.set_active(False)
-            self.UseUPnP.set_sensitive(False)
-            self.labelRequirementsUPnP.show()
 
     def get_settings(self):
 
