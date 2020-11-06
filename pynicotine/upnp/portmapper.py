@@ -79,7 +79,7 @@ class UPnPPortMapping:
         period of 24 hours.
         """
 
-        log.add_debug(_('Creating Port Mapping rule via UPnP...'))
+        log.add_debug('Creating Port Mapping rule via UPnP...')
 
         # Placeholder LAN IP address, updated in AddPortMappingBinary or AddPortMappingModule
         self.internalipaddress = "127.0.0.1"
@@ -88,8 +88,12 @@ class UPnPPortMapping:
         self.internallanport = np.protothread._p.getsockname()[1]
         self.externalwanport = self.internallanport
 
-        # Find devices
+        # Find router
         router = UPnp.find_router()
+
+        if not router:
+            log.add_debug('UPnP does not work on this network')
+            return
 
         # Create a UDP socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

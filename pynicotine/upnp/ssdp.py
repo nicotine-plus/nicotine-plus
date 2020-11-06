@@ -77,7 +77,7 @@ class SSDP:
     def list(cls, refresh=False):
         """ list finds all devices responding to an SSDP search for WANIPConnection:1 and WANIPConnection:2 """
 
-        log.add_debug('Discovering... delay=%s seconds', SSDP.response_time_secs)
+        log.add_debug('UPnP: Discovering... delay=%s seconds', SSDP.response_time_secs)
 
         # Create a UDP socket and set its timeout
         sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
@@ -137,7 +137,7 @@ class SSDP:
             r.uuid = uuid
             r.type = svc_type
 
-        log.add_debug('%s device(s) detected', len(routers))
+        log.add_debug('UPnP: %s device(s) detected', str(len(routers)))
 
         return routers
 

@@ -57,7 +57,7 @@ class PortMapping:
 
         doc = ElementTree.fromstring(xml_text)
 
-        generic_portmap_tag_text = f"{{{router_type}}}GetGenericPortMappingEntryResponse"
+        generic_portmap_tag_text = "{{{}}}GetGenericPortMappingEntryResponse".format(router_type)
 
         response_tag = doc[0][0]
 
