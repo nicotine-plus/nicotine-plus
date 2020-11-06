@@ -28,9 +28,9 @@ brew install \
   gobject-introspection \
   gtk+3 \
   librsvg \
-  pygobject3 \
   upx
 
 # Install dependencies with pip
 pip3 install \
+  pygobject \
   pyinstaller==3.6
