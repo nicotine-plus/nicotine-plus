@@ -34,6 +34,7 @@ import os
 import queue
 import threading
 import time
+import _thread
 
 from gettext import gettext as _
 from socket import socket
@@ -47,6 +48,7 @@ from pynicotine.logfacility import log
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
+from pynicotine.upnp.portmapper import UPnPPortMapping
 from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
@@ -148,6 +150,9 @@ class NetworkEventProcessor:
         self.update_debug_log_options()
 
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
+
+        # UPnP
+        _thread.start_new_thread(self.add_upnp_portmapping, ())
 
         uselimit = self.config.sections["transfers"]["uselimit"]
         uploadlimit = self.config.sections["transfers"]["uploadlimit"]
@@ -810,6 +815,28 @@ class NetworkEventProcessor:
             self.closed_connection(msg.connobj.conn, msg.connobj.addr, msg.err)
 
         log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, self.contents(msg)))
+
+    def start_upnp_timer(self):
+        """ Port mapping entries last 24 hours, we need to regularly renew them """
+
+        delay = 21600  # 6 hours in seconds
+
+        timer = threading.Timer(delay, self.add_upnp_portmapping)
+        timer.setDaemon(True)
+        timer.start()
+
+    def add_upnp_portmapping(self):
+
+        # Test if we want to do a port mapping
+        if self.config.sections["server"]["upnp"]:
+
+            # Initialise a UPnPPortMapping object
+            upnp = UPnPPortMapping()
+
+            # Do the port mapping
+            upnp.add_port_mapping(self)
+
+        self.start_upnp_timer()
 
     def set_server_timer(self):
 

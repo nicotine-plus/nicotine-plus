@@ -69,7 +69,7 @@ class PortMapping:
             private_port = 0
             is_enabled = None
             description = ''
-            lease_duration = -1
+            lease_duration = 86400  # Expires in 24 hours
 
             for prop in response_tag:
                 if prop.tag == 'NewRemoteHost':

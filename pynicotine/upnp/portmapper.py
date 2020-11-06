@@ -47,32 +47,10 @@ class UPnPPortMapping:
         Need a reference to the np object to extract the internal LAN
         local from the protothread socket.
 
-        From the UPnP IGD reference:
-        http://upnp.org/specs/gw/UPnP-gw-WANIPConnection-v2-Service.pdf
-
-        IGDv1 and IGDV2: AddPortMapping:
-        This action creates a new port mapping or overwrites
-        an existing mapping with the same internal client.
-        If the ExternalPort and PortMappingProtocol pair is already mapped
-        to another internal client, an error is returned.
-
-        IGDv1: NewLeaseDuration:
-        This argument defines the duration of the port mapping.
-        If the value of this argument is 0, it means it's a static port mapping
-        that never expire.
-
-        IGDv2: NewLeaseDuration:
-        This argument defines the duration of the port mapping.
-        The value of this argument MUST be greater than 0.
-        A NewLeaseDuration with value 0 means static port mapping,
-        but static port mappings can only be created through
-        an out-of-band mechanism.
-        If this parameter is set to 0, default value of 604800 MUST be used.
-
-        BTW since we don't recheck periodically ports mappings
-        while nicotine+ runs, any UPnP port mapping done with IGDv2
-        (any modern router does that) will expire after 7 days.
-        The client won't be able to send/receive files anymore...
+        Any UPnP port mapping done with IGDv2 will expire after a
+        maximum of 7 days (lease period), according to the protocol.
+        We set the lease period to a shorter 24 hours, and regularly
+        renew the port mapping (see pynicotine.py).
         """
 
         try:
@@ -97,14 +75,11 @@ class UPnPPortMapping:
     def _add_port_mapping(self, np):
         """
         Function that actually creates the port mapping.
-
-        IGDv1: If a Port Mapping already exist:
-            It's updated with a new static port mapping that does not expire.
-        IGDv2: If a Port Mapping already exist:
-            It's updated with a new lease duration of 7 days.
+        If a port mapping already exists, it is updated with a lease
+        period of 24 hours.
         """
 
-        log.add(_('Creating Port Mapping rule via UPnP...'))
+        log.add_debug(_('Creating Port Mapping rule via UPnP...'))
 
         # Placeholder LAN IP address, updated in AddPortMappingBinary or AddPortMappingModule
         self.internalipaddress = "127.0.0.1"

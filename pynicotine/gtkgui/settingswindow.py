@@ -68,6 +68,8 @@ class ServerFrame(BuildFrame):
 
         BuildFrame.__init__(self, "server")
 
+        self.needportmap = False
+
         self.options = {
             "server": {
                 "server": None,
@@ -112,6 +114,8 @@ class ServerFrame(BuildFrame):
 
         if server["ctcpmsgs"] is not None:
             self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
+
+        self.needportmap = False
 
     def get_settings(self):
 
@@ -164,11 +168,17 @@ class ServerFrame(BuildFrame):
             }
         }
 
+    def get_need_portmap(self):
+        return self.needportmap
+
     def on_change_password(self, widget):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
+
+    def on_toggle_upnp(self, widget, *args):
+        self.needportmap = widget.get_active()
 
 
 class DownloadsFrame(BuildFrame):
@@ -3718,7 +3728,8 @@ class Settings:
                 for key, data in sub.items():
                     config[key].update(data)
 
-            return self.pages["Shares"].get_need_rescan(), (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
+            return self.pages["Server"].get_need_portmap(), self.pages["Shares"].get_need_rescan(), \
+                (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None
 

@@ -27,6 +27,7 @@
 import time
 import select
 import socket
+import sys
 
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
@@ -88,7 +89,7 @@ class SSDP:
             'HOST': "{}:{}".format(SSDP.multicast_host, SSDP.multicast_port),
             'MAN': '"ssdp:discover"',
             'MX': str(SSDP.response_time_secs),
-            'USER-AGENT': 'UPnP/x App/x Python/x'
+            'USER-AGENT': '{}/1.0 UPnP/1.1 Nicotine/1.0'.format(sys.platform)
         }
 
         wan_ip1_sent = False
