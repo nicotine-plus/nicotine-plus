@@ -424,7 +424,7 @@ class Config:
         try:
             self.parser.read([self.filename], encoding="utf-8")
 
-        except configparser.ParsingError as e:
+        except configparser.ParsingError:
             # Ignore parsing errors, the offending lines are removed later
             pass
 
@@ -536,8 +536,10 @@ class Config:
 
                     try:
                         if not isinstance(default_val, str):
-                            # Values are read as strings, evaluate them
+                            # Values are always read as strings, evaluate them if they aren't
+                            # supposed to remain as strings
                             eval_val = literal_eval(val)
+
                         else:
                             eval_val = val
 
@@ -545,7 +547,7 @@ class Config:
                             if (isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val != 0 and eval_val != 1) or \
                                     (not isinstance(default_val, bool) and type(eval_val) != type(default_val)):
 
-                                raise Exception("Invalid config value type detected")
+                                raise TypeError("Invalid config value type detected")
 
                         self.sections[i][j] = eval_val
 
@@ -553,10 +555,10 @@ class Config:
                         # Value was unexpected, reset option
                         self.sections[i][j] = default_val
 
-                        log.add_warning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
-                            str((i[:120] + '..') if len(i) > 120 else i),
-                            str((j[:120] + '..') if len(j) > 120 else j),
-                            str((val[:120] + '..') if len(val) > 120 else val)
+                        log.add_warning("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
+                            (i[:120] + '..') if len(i) > 120 else i,
+                            (j[:120] + '..') if len(j) > 120 else j,
+                            (val[:120] + '..') if len(val) > 120 else val
                         )
                         )
 
