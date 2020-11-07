@@ -823,6 +823,9 @@ class NetworkEventProcessor:
         """ Port mapping entries last 24 hours, we need to regularly renew them """
         """ The default interval is 4 hours """
 
+        if self.upnp_interval < 1:
+            return
+
         upnp_interval_seconds = self.upnp_interval * 60 * 60
 
         self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
