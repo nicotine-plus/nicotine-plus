@@ -73,7 +73,6 @@ from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
-from pynicotine.upnp import UPnPPortMapping
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -101,6 +100,12 @@ class NicotineFrame:
         self.fastconfigure = None
         self.settingswindow = None
         self.spell_checker = None
+
+        """ Logging """
+
+        log.add_listener(self.log_callback)
+
+        """ Network Event Processor """
 
         self.np = NetworkEventProcessor(
             self,
@@ -169,10 +174,6 @@ class NicotineFrame:
 
         if not start_hidden:
             self.MainWindow.show()
-
-        """ Logging """
-
-        log.add_listener(self.log_callback)
 
         """ Status Bar """
 
@@ -360,6 +361,7 @@ class NicotineFrame:
 
         # Slight delay to prevent minor performance hit when compressing large file share
         timer = threading.Timer(2.0, self.rescan_startup)
+        timer.setName("RescanSharesTimer")
         timer.setDaemon(True)
         timer.start()
 
@@ -378,25 +380,6 @@ class NicotineFrame:
         self.now_playing = NowPlaying(self.np.config)
 
         """ Connect """
-
-        # Test if we want to do a port mapping
-        if config["server"]["upnp"]:
-
-            # Initialise a UPnPPortMapping object
-            upnp = UPnPPortMapping()
-
-            # Check if we can do a port mapping
-            (self.upnppossible, errors) = upnp.is_possible()
-
-            # Test if we are able to do a port mapping
-            if self.upnppossible:
-                # Do the port mapping
-                _thread.start_new_thread(upnp.add_port_mapping, (self.np,))
-            else:
-                # Display errors
-                if errors is not None:
-                    for err in errors:
-                        log.add_warning(err)
 
         config_unset = self.np.config.need_config()
         if config_unset:
@@ -2318,7 +2301,7 @@ class NicotineFrame:
         if not isinstance(output, tuple):
             return
 
-        needrescan, needcolors, needcompletion, config = output
+        needportmap, needrescan, needcolors, needcompletion, config = output
 
         for key, data in config.items():
             self.np.config.sections[key].update(data)
@@ -2326,6 +2309,14 @@ class NicotineFrame:
         config = self.np.config.sections
 
         self.np.update_debug_log_options()
+
+        # UPnP
+        if (not config["server"]["upnp"] or needportmap) and self.np.upnp_timer:
+            self.np.upnp_timer.cancel()
+
+        if needportmap:
+            self.np.upnp_interval = config["server"]["upnp_interval"]
+            _thread.start_new_thread(self.np.add_upnp_portmapping, ())
 
         # Write utils.py options
         uselimit = config["transfers"]["uselimit"]

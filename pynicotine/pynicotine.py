@@ -34,6 +34,7 @@ import os
 import queue
 import threading
 import time
+import _thread
 
 from gettext import gettext as _
 
@@ -46,6 +47,7 @@ from pynicotine.logfacility import log
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
+from pynicotine.upnp.portmapper import UPnPPortMapping
 from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
@@ -146,6 +148,11 @@ class NetworkEventProcessor:
         self.update_debug_log_options()
 
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
+
+        # UPnP
+        self.upnp_interval = self.config.sections["server"]["upnp_interval"]
+        self.upnp_timer = None
+        _thread.start_new_thread(self.add_upnp_portmapping, ())
 
         uselimit = self.config.sections["transfers"]["uselimit"]
         uploadlimit = self.config.sections["transfers"]["uploadlimit"]
@@ -413,6 +420,7 @@ class NetworkEventProcessor:
 
         conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
         timer = threading.Timer(20.0, conntimeout.timeout)
+        timer.setName("ConnectionTimer")
         timer.setDaemon(True)
         timer.start()
 
@@ -823,6 +831,34 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s %s", (msg.err, msg.__class__, self.contents(msg)))
 
+    def start_upnp_timer(self):
+        """ Port mapping entries last 24 hours, we need to regularly renew them """
+        """ The default interval is 4 hours """
+
+        if self.upnp_interval < 1:
+            return
+
+        upnp_interval_seconds = self.upnp_interval * 60 * 60
+
+        self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
+        self.upnp_timer.setName("UPnPTimer")
+        self.upnp_timer.setDaemon(True)
+        self.upnp_timer.start()
+
+    def add_upnp_portmapping(self):
+
+        # Repeat
+        self.start_upnp_timer()
+
+        # Test if we want to do a port mapping
+        if self.config.sections["server"]["upnp"]:
+
+            # Initialise a UPnPPortMapping object
+            upnp = UPnPPortMapping()
+
+            # Do the port mapping
+            upnp.add_port_mapping(self)
+
     def set_server_timer(self):
 
         if self.server_timeout_value == -1:
@@ -831,6 +867,7 @@ class NetworkEventProcessor:
             self.server_timeout_value = self.server_timeout_value * 2
 
         self.servertimer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.servertimer.setName("ServerTimer")
         self.servertimer.setDaemon(True)
         self.servertimer.start()
 

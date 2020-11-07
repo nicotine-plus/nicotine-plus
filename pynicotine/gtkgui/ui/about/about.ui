@@ -14,17 +14,7 @@
 © 2003 Nicotine Team
 © 2006 Nicotine+ Team</property>
     <property name="license_type">GTK_LICENSE_GPL_3_0</property>
-    <property name="authors"># Attributions
-
-- This product includes IP2Location LITE data,
-  available from:
-  https://www.ip2location.com
-
-- Country flags licensed under the MIT License.
-  Copyright (c) 2013 Panayiotis Lipiridis
-  https://github.com/lipis/flag-icon-css
-
-# Nicotine+ Contributors
+    <property name="authors"># Nicotine+ Contributors
 
 ### Active
 
@@ -204,7 +194,22 @@ Alexey Vyskubov
 
 Jason Green
 - Ignore list and auto-join checkbox, wishlists
-- [smacklefunky(at)optusnet(dot)com(dot)au]</property>
+- [smacklefunky(at)optusnet(dot)com(dot)au]
+
+# Attributions
+
+- This product includes IP2Location LITE data,
+  available from:
+  https://www.ip2location.com
+
+- Country flags licensed under the MIT License.
+  Copyright (c) 2013 Panayiotis Lipiridis
+  https://github.com/lipis/flag-icon-css
+
+- UPnP code adapted from the pyupnp project.
+  pyupnp is licensed under the MIT License.
+  Copyright (c) 2019 Dave Mulford
+  https://github.com/davemulford/pyupnp</property>
     <property name="translator_credits">Dutch
  * nince78 (2007)
  * hyriand

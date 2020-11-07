@@ -511,6 +511,7 @@ class Transfers:
                     i.transfertimer.cancel()
 
                 i.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+                i.transfertimer.setName("TransferTimer")
                 i.transfertimer.setDaemon(True)
                 i.transfertimer.start()
 
@@ -626,6 +627,7 @@ class Transfers:
 
         self._append_upload(user, msg.file, transferobj)
         transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+        transferobj.transfertimer.setName("TransferTimer")
         transferobj.transfertimer.setDaemon(True)
         transferobj.transfertimer.start()
 
@@ -1488,6 +1490,7 @@ class Transfers:
 
     def start_check_download_queue_timer(self):
         timer = threading.Timer(60.0, self.check_download_queue)
+        timer.setName("DownloadQueueTimer")
         timer.setDaemon(True)
         timer.start()
 

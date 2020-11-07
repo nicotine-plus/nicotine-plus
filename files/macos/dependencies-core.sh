@@ -28,7 +28,6 @@ brew install \
 
 # Install dependencies with pip
 pip3 install \
-  miniupnpc \
   pep8-naming \
   pytaglib \
   pytest

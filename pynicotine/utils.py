@@ -463,6 +463,20 @@ def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
         print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
 
 
+def http_request(url_scheme, base_url, path, request_type="GET", body="", headers={}, timeout=10):
+
+    import http.client
+
+    if url_scheme == "https":
+        conn = http.client.HTTPSConnection(base_url, timeout=timeout)
+    else:
+        conn = http.client.HTTPConnection(base_url, timeout=timeout)
+
+    conn.request(request_type, path, body=body, headers=headers)
+
+    return conn.getresponse().read().decode("utf-8")
+
+
 """ Debugging """
 
 

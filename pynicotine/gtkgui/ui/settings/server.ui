@@ -13,6 +13,12 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment_UPnPInterval">
+    <property name="upper">148</property>
+    <property name="value">4</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -208,6 +214,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">adjustment_FirstPort</property>
+            <signal name="value-changed" handler="on_modify_port" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -232,6 +239,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">adjustment_LastPort</property>
+            <signal name="value-changed" handler="on_modify_port" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -278,12 +286,13 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="UseUPnP">
-        <property name="label" translatable="yes">Use UPnP to map the port on my router (requires restart)</property>
+        <property name="label" translatable="yes">Use UPnP to automatically map the port on my router</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
         <property name="use_underline">True</property>
         <property name="draw_indicator">True</property>
+        <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -292,16 +301,53 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="labelRequirementsUPnP">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">If you wish to use UPnP to fix portmapping on your router please install MiniUPnP client binary or the MiniUPnP client module for Python.</property>
-        <property name="wrap">True</property>
+        <property name="spacing">5</property>
+        <child>
+          <object class="GtkLabel" id="UPnPIntervalL1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xalign">1</property>
+            <property name="label" translatable="yes">Automatically renew port mappings every</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="UPnPInterval">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="width_chars">6</property>
+            <property name="adjustment">adjustment_UPnPInterval</property>
+            <signal name="value-changed" handler="on_modify_upnp_interval" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="UPnPIntervalL2">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">hour(s)</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="fill">False</property>
+        <property name="fill">True</property>
         <property name="position">8</property>
       </packing>
     </child>
@@ -317,7 +363,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
-        <property name="position">11</property>
+        <property name="position">9</property>
       </packing>
     </child>
     <child>
@@ -332,7 +378,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">False</property>
-        <property name="position">12</property>
+        <property name="position">10</property>
       </packing>
     </child>
   </object>
