@@ -361,6 +361,7 @@ class NicotineFrame:
 
         # Slight delay to prevent minor performance hit when compressing large file share
         timer = threading.Timer(2.0, self.rescan_startup)
+        timer.setName("RescanSharesTimer")
         timer.setDaemon(True)
         timer.start()
 
@@ -2310,7 +2311,11 @@ class NicotineFrame:
         self.np.update_debug_log_options()
 
         # UPnP
+        if (not config["server"]["upnp"] or needportmap) and self.np.upnp_timer:
+            self.np.upnp_timer.cancel()
+
         if needportmap:
+            self.np.upnp_interval = config["server"]["upnp_interval"]
             _thread.start_new_thread(self.np.add_upnp_portmapping, ())
 
         # Write utils.py options

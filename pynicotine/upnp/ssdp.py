@@ -127,6 +127,9 @@ class SSDP:
                     time_end = time.time() + SSDP.response_time_secs
                     wan_ip2_sent = True
 
+            # Cooldown
+            time.sleep(0.4)
+
         for r in routers:
             serial_number, control_url, uuid, svc_type = SSDP._get_router_service_description(
                 r.url_scheme, r.base_url, r.root_url

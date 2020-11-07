@@ -92,6 +92,7 @@ class Config:
                 "autoreply": "",
                 "portrange": (2234, 2239),
                 "upnp": True,
+                "upnp_interval": 4,
                 "userlist": [],
                 "banlist": [],
                 "ignorelist": [],

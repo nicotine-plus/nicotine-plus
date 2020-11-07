@@ -77,6 +77,7 @@ class ServerFrame(BuildFrame):
                 "passw": self.Password,
                 "portrange": None,
                 "upnp": self.UseUPnP,
+                "upnp_interval": self.UPnPInterval,
                 "ctcpmsgs": self.ctcptogglebutton
             }
         }
@@ -164,6 +165,7 @@ class ServerFrame(BuildFrame):
                 "passw": self.Password.get_text(),
                 "portrange": portrange,
                 "upnp": self.UseUPnP.get_active(),
+                "upnp_interval": self.UPnPInterval.get_value_as_int(),
                 "ctcpmsgs": not self.ctcptogglebutton.get_active(),
             }
         }
@@ -174,11 +176,22 @@ class ServerFrame(BuildFrame):
     def on_change_password(self, widget):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
+    def on_modify_port(self, widget, *args):
+        self.needportmap = True
+
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
 
     def on_toggle_upnp(self, widget, *args):
-        self.needportmap = widget.get_active()
+        active = widget.get_active()
+        self.needportmap = active
+
+        self.UPnPIntervalL1.set_sensitive(active)
+        self.UPnPInterval.set_sensitive(active)
+        self.UPnPIntervalL2.set_sensitive(active)
+
+    def on_modify_upnp_interval(self, widget, *args):
+        self.needportmap = True
 
 
 class DownloadsFrame(BuildFrame):

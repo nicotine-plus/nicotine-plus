@@ -410,6 +410,8 @@ class SlskProtoThread(threading.Thread):
         """
         threading.Thread.__init__(self)
 
+        self.name = "NetworkThread"
+
         self._ui_callback = ui_callback
         self._queue = queue
         self._want_abort = False

@@ -152,6 +152,8 @@ class NetworkEventProcessor:
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
 
         # UPnP
+        self.upnp_interval = self.config.sections["server"]["upnp_interval"]
+        self.upnp_timer = None
         _thread.start_new_thread(self.add_upnp_portmapping, ())
 
         uselimit = self.config.sections["transfers"]["uselimit"]
@@ -420,6 +422,7 @@ class NetworkEventProcessor:
 
         conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
         timer = threading.Timer(20.0, conntimeout.timeout)
+        timer.setName("ConnectionTimer")
         timer.setDaemon(True)
         timer.start()
 
@@ -818,14 +821,19 @@ class NetworkEventProcessor:
 
     def start_upnp_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them """
+        """ The default interval is 4 hours """
 
-        delay = 21600  # 6 hours in seconds
+        upnp_interval_seconds = self.upnp_interval * 60 * 60
 
-        timer = threading.Timer(delay, self.add_upnp_portmapping)
-        timer.setDaemon(True)
-        timer.start()
+        self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
+        self.upnp_timer.setName("UPnPTimer")
+        self.upnp_timer.setDaemon(True)
+        self.upnp_timer.start()
 
     def add_upnp_portmapping(self):
+
+        # Repeat
+        self.start_upnp_timer()
 
         # Test if we want to do a port mapping
         if self.config.sections["server"]["upnp"]:
@@ -836,8 +844,6 @@ class NetworkEventProcessor:
             # Do the port mapping
             upnp.add_port_mapping(self)
 
-        self.start_upnp_timer()
-
     def set_server_timer(self):
 
         if self.server_timeout_value == -1:
@@ -846,6 +852,7 @@ class NetworkEventProcessor:
             self.server_timeout_value = self.server_timeout_value * 2
 
         self.servertimer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.servertimer.setName("ServerTimer")
         self.servertimer.setDaemon(True)
         self.servertimer.start()
 
