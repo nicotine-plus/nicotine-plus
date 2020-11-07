@@ -115,7 +115,7 @@ class NetworkEventProcessor:
             corruptfile = ".".join([config, clean_file(time.strftime("%Y-%m-%d_%H_%M_%S")), "corrupt"])
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
-            long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings."), {'corrupt': corruptfile}
+            long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
             self.config = Config(config, data_dir)
             self.network_callback([slskmessages.PopupMessage(short, long)])
 

@@ -72,14 +72,14 @@ class Config:
 
         self.filename = filename
         self.data_dir = data_dir
-        self.parser = configparser.RawConfigParser()
+        self.parser = configparser.RawConfigParser(strict=False)
 
         try:
-            self.parser.read([self.filename], encoding="utf-8")
+            self.parse_config()
 
         except UnicodeDecodeError:
             self.convert_config()
-            self.parser.read([self.filename], encoding="utf-8")
+            self.parse_config()
 
         log_dir = os.path.join(data_dir, "logs")
 
@@ -418,6 +418,16 @@ class Config:
         except Exception:
             self.aliases = {}
 
+    def parse_config(self):
+        """ Parses the config file """
+
+        try:
+            self.parser.read([self.filename], encoding="utf-8")
+
+        except configparser.ParsingError as e:
+            # Ignore parsing errors, the offending lines are removed later
+            pass
+
     def convert_config(self):
         """ Converts the config to utf-8.
         Mainly for upgrading Windows build. (22 July, 2020) """
@@ -641,10 +651,12 @@ class Config:
         self.remove_old_option("server", "firewalled")
 
     def remove_old_option(self, section, option):
+
         if section in self.parser.sections() and option in self.parser.options(section):
             self.parser.remove_option(section, option)
 
     def remove_old_section(self, section):
+
         if section in self.parser.sections():
             self.parser.remove_section(section)
 
