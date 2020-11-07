@@ -76,6 +76,7 @@ class Config:
 
         try:
             self.parser.read([self.filename], encoding="utf-8")
+
         except UnicodeDecodeError:
             self.convert_config()
             self.parser.read([self.filename], encoding="utf-8")
@@ -132,8 +133,8 @@ class Config:
                 "friendsnolimits": False,
                 "enablebuddyshares": False,
                 "enabletransferbuttons": True,
-                "groupdownloads": True,
-                "groupuploads": True,
+                "groupdownloads": 1,
+                "groupuploads": 1,
                 "geoblock": False,
                 "geopanic": False,
                 "geoblockcc": [""],
@@ -153,7 +154,7 @@ class Config:
                 "bwordindex": {},
                 "bfileindex": {},
                 "bsharedmtimes": {},
-                "rescanonstartup": 0,
+                "rescanonstartup": False,
                 "enablefilters": True,
                 "downloadregexp": "",
                 "downloadfilters": [
@@ -413,6 +414,7 @@ class Config:
             f = open(filename + ".alias", 'rb')
             self.aliases = RestrictedUnpickler(f).load()
             f.close()
+
         except Exception:
             self.aliases = {}
 
@@ -422,6 +424,7 @@ class Config:
 
         try:
             from chardet import detect
+
         except ImportError:
             print("Failed to convert config file to UTF-8. Please install python3-chardet and start Nicotine+ again.")
             sys.exit()
@@ -442,45 +445,14 @@ class Config:
 
     def need_config(self):
 
-        errorlevel = 0
+        # Check if we have specified a username or password
+        if not self.sections["server"]["login"] or \
+                not self.sections["server"]["passw"]:
 
-        try:
-            for i in self.sections:
-                for j in self.sections[i]:
+            log.add(_("You need to specify a username and password before connecting..."))
+            return True
 
-                    if not isinstance(self.sections[i][j], (type(None), type(""))):
-                        continue
-
-                    if self.sections[i][j] is None or self.sections[i][j] == '' \
-                       and i not in ("userinfo", "ui", "players") \
-                       and j not in ("incompletedir", "autoreply", 'afterfinish', 'afterfolder', 'geoblockcc', 'downloadregexp'):
-
-                        # Repair options set to None with defaults
-                        if self.sections[i][j] is None and self.defaults[i][j] is not None:
-
-                            self.sections[i][j] = self.defaults[i][j]
-                            log.add(
-                                _("Config option reset to default: Section: %(section)s, Option: %(option)s, to: %(default)s"), {
-                                    'section': i,
-                                    'option': j,
-                                    'default': self.sections[i][j]
-                                }
-                            )
-
-                            if errorlevel == 0:
-                                errorlevel = 1
-                        else:
-
-                            if errorlevel < 2:
-                                log.add(_("You need to configure your settings (Server, Username, Password, Download Directory) before connecting..."))
-                                errorlevel = 2
-
-        except Exception as error:
-            log.add(_("Config error: %s"), error)
-            if errorlevel < 3:
-                errorlevel = 3
-
-        return errorlevel
+        return False
 
     def read_config(self):
 
@@ -490,13 +462,17 @@ class Config:
             # <1.2.13 stored transfers inside the main config
             try:
                 handle = open(os.path.join(self.data_dir, 'transfers.pickle'), 'rb')
+
             except IOError as inst:
                 log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
+
             else:
                 try:
                     self.sections['transfers']['downloads'] = RestrictedUnpickler(handle).load()
+
                 except Exception as inst:
                     log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+
             try:
                 handle.close()
             except Exception:
@@ -506,14 +482,94 @@ class Config:
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
+
         except OSError as msg:
             log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
 
         try:
             if not os.path.isdir(self.data_dir):
                 os.makedirs(self.data_dir)
+
         except OSError as msg:
             log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
+
+        # Clean up old config options
+        self.remove_old_options()
+
+        # Check for unknown or invalid section/options
+        self.sanitize_config()
+
+    def sanitize_config(self):
+        """ Remove invalid values from config options """
+
+        for i in self.parser.sections():
+            for j, val in self.parser.items(i, raw=True):
+
+                try:
+                    default_val = self.defaults[i][j]
+
+                except KeyError:
+                    # Custom config option, possibly from a plugin
+                    default_val = val
+
+                # Check if config section exists in defaults
+                if i not in self.defaults:
+                    log.add_warning(_("Unknown config section '%s'"), i)
+
+                # Check if config option exists in defaults
+                elif j not in self.defaults[i] and i != "plugins" and j != "filter":
+                    log.add_warning(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
+
+                else:
+                    # Ensure that the value of a config option is of the same type as the default value
+                    # If not, reset the value
+
+                    try:
+                        if not isinstance(default_val, str):
+                            # Values are read as strings, evaluate them
+                            eval_val = literal_eval(val)
+                        else:
+                            eval_val = val
+
+                        if i != "plugins" and j != "filter":
+                            if (isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val != 0 and eval_val != 1) or \
+                                    (not isinstance(default_val, bool) and type(eval_val) != type(default_val)):
+
+                                raise Exception("Invalid config value type detected")
+
+                        self.sections[i][j] = eval_val
+
+                    except Exception:
+                        # Value was unexpected, reset option
+                        self.sections[i][j] = default_val
+
+                        log.add_warning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
+                            str((i[:120] + '..') if len(i) > 120 else i),
+                            str((j[:120] + '..') if len(j) > 120 else j),
+                            str((val[:120] + '..') if len(val) > 120 else val)
+                        )
+                        )
+
+        server = self.sections["server"]
+
+        # Check if server value is valid
+        if len(server["server"]) != 2 or \
+                not isinstance(server["server"][0], str) or \
+                not isinstance(server["server"][1], int):
+
+            server["server"] = self.defaults["server"]["server"]
+
+        # Check if port range value is valid
+        if len(server["portrange"]) != 2 or \
+                not all(isinstance(i, int) for i in server["portrange"]):
+
+            server["portrange"] = self.defaults["server"]["portrange"]
+
+        else:
+            # Setting the port range in numerical order
+            server["portrange"] = (min(server["portrange"]), max(server["portrange"]))
+
+    def remove_old_options(self):
 
         # Transition from 1.2.16 -> 1.4.0
         # Do the cleanup early so we don't get the annoying
@@ -584,58 +640,6 @@ class Config:
         # Remove "I can receive direct connections"-option, it's redundant now
         self.remove_old_option("server", "firewalled")
 
-        # Checking for unknown section/options
-        unknown1 = [
-            'login', 'passw', 'enc', 'downloaddir', 'uploaddir', 'customban',
-            'descr', 'pic', 'transferslogsdir', 'roomlogsdir', 'privatelogsdir',
-            'incompletedir', 'autoreply', 'afterfinish', 'downloadregexp',
-            'afterfolder', 'default', 'chatfont', 'npothercommand', 'npplayer',
-            'npformat', 'private_timestamp', 'rooms_timestamp', 'log_timestamp',
-            'debuglogsdir'
-        ]
-
-        unknown2 = {
-            'ui': [
-                "roomlistcollapsed", "tab_select_previous", "tabclosers",
-                "tab_colors", "tab_reorderable", "buddylistinchatrooms", "trayicon",
-                "showaway", "usernamehotspots", "exitdialog",
-                "tab_icons", "spellcheck", "modes_order", "modes_visible",
-                "chat_hidebuttons", "tab_status_icons", "notexists",
-                "speechenabled", "enablefilters", "width",
-                "height", "xposition", "yposition", "labelmain", "labelrooms",
-                "labelprivate", "labelinfo", "labelbrowse", "labelsearch", "maximized",
-                "dark_mode"
-            ],
-            'words': [
-                "completion", "censorwords", "replacewords", "autoreplaced",
-                "censored", "characters", "tab", "cycle", "dropdown",
-                "roomnames", "buddies", "roomusers", "commands",
-                "aliases", "onematch"
-            ]
-        }
-
-        for i in self.parser.sections():
-            for j in self.parser.options(i):
-                val = self.parser.get(i, j, raw=1)
-                if i not in self.sections:
-                    log.add_warning(_("Unknown config section '%s'"), i)
-                elif j not in self.sections[i] and not (j == "filter" or i in ('plugins',)):
-                    log.add_warning(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
-                elif j in unknown1 or (i in unknown2 and j not in unknown2[i]):
-                    if val is not None and val != "None":
-                        self.sections[i][j] = val
-                    else:
-                        self.sections[i][j] = None
-                else:
-                    try:
-                        self.sections[i][j] = literal_eval(val)
-                    except Exception:
-                        self.sections[i][j] = None
-                        log.add_warning("CONFIG ERROR: Couldn't decode '%s' section '%s' value '%s'", (str(j), str(i), str(val)))
-
-        # Setting the port range in numerical order
-        self.sections["server"]["portrange"] = (min(self.sections["server"]["portrange"]), max(self.sections["server"]["portrange"]))
-
     def remove_old_option(self, section, option):
         if section in self.parser.sections() and option in self.parser.options(section):
             self.parser.remove_option(section, option)
@@ -687,9 +691,11 @@ class Config:
         for i in self.sections:
             if not self.parser.has_section(i):
                 self.parser.add_section(i)
+
             for j in self.sections[i]:
                 if j not in external_sections:
                     self.parser.set(i, j, self.sections[i][j])
+
                 else:
                     self.parser.remove_option(i, j)
 
@@ -697,6 +703,7 @@ class Config:
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)
+
         except OSError as msg:
             log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
 
@@ -704,15 +711,18 @@ class Config:
 
         try:
             f = open(self.filename + ".new", "w", encoding="utf-8")
+
         except IOError as e:
             log.add_warning(_("Can't save config file, I/O error: %s"), e)
             return
         else:
             try:
                 self.parser.write(f)
+
             except IOError as e:
                 log.add_warning(_("Can't save config file, I/O error: %s"), e)
                 return
+
             else:
                 f.close()
 
@@ -730,17 +740,22 @@ class Config:
                 try:
                     if os.path.exists(self.filename + ".old"):
                         os.remove(self.filename + ".old")
+
                 except OSError:
                     log.add_warning(_("Can't remove %s", self.filename + ".old"))
+
                 try:
                     os.rename(self.filename, self.filename + ".old")
+
                 except OSError as error:
                     log.add_warning(_("Can't back config file up, error: %s"), error)
+
         except OSError:
             pass
 
         try:
             os.rename(self.filename + ".new", self.filename)
+
         except OSError as error:
             log.add_warning(_("Can't rename config file, error: %s"), error)
 
@@ -748,9 +763,11 @@ class Config:
 
         if filename is None:
             filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H_%M_%S"))
+
         else:
             if filename[-8:-1] != ".tar.bz2":
                 filename += ".tar.bz2"
+
         try:
             if os.path.exists(filename):
                 raise FileExistsError("File %s exists", filename)
@@ -767,6 +784,7 @@ class Config:
                 tar.add(self.filename + ".alias")
 
             tar.close()
+
         except Exception as e:
             print(e)
             return (1, "Cannot write backup archive: %s" % e)
@@ -777,12 +795,15 @@ class Config:
 
         try:
             f = open(self.filename + ".alias", "wb")
+
         except Exception as e:
             log.add_warning(_("Something went wrong while opening your alias file: %s"), e)
+
         else:
             try:
                 pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
                 f.close()
+
             except Exception as e:
                 log.add_warning(_("Something went wrong while saving your alias file: %s"), e)
         finally:
@@ -794,26 +815,33 @@ class Config:
     def add_alias(self, rest):
         if rest:
             args = rest.split(" ", 1)
+
             if len(args) == 2:
                 if args[0] in ("alias", "unalias"):
                     return "I will not alias that!\n"
                 self.aliases[args[0]] = args[1]
                 self.write_aliases()
+
             if args[0] in self.aliases:
                 return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
             else:
                 return _("No such alias (%s)") % rest + "\n"
+
         else:
             m = "\n" + _("Aliases:") + "\n"
+
             for (key, value) in self.aliases.items():
                 m = m + "%s: %s\n" % (key, value)
+
             return m + "\n"
 
     def unalias(self, rest):
         if rest and rest in self.aliases:
             x = self.aliases[rest]
             del self.aliases[rest]
+
             self.write_aliases()
             return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
+
         else:
             return _("No such alias (%(alias)s)\n") % {'alias': rest}

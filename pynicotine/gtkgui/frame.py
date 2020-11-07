@@ -384,17 +384,13 @@ class NicotineFrame:
 
         """ Connect """
 
-        config_unset = self.np.config.need_config()
-        if config_unset:
-            if config_unset > 1:
-                self.connect_action.set_enabled(False)
-                self.rescan_public_action.set_enabled(True)
+        if self.np.config.need_config():
+            self.connect_action.set_enabled(False)
+            self.rescan_public_action.set_enabled(True)
 
-                # Set up fast configure dialog
-                self.on_fast_configure(show=False)
-            else:
-                # Connect anyway
-                self.on_connect(getmessage=False)
+            # Set up fast configure dialog
+            self.on_fast_configure()
+
         else:
             self.on_connect(getmessage=False)
 
@@ -838,6 +834,7 @@ class NicotineFrame:
                 self.np.queue.get(0)
 
         self.set_user_status("...")
+
         server = self.np.config.sections["server"]["server"]
         self.set_status_text(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
         self.np.queue.put(slskmessages.ServerConn(None, server))
@@ -2469,12 +2466,12 @@ class NicotineFrame:
             if self.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.on_buddy_rescan()
 
-        config_unset = self.np.config.need_config()
-
-        if config_unset > 1:
+        if self.np.config.need_config():
             if self.np.transfers is not None:
                 self.connect_action.set_enabled(False)
+
             self.on_fast_configure()
+
         else:
             if self.np.transfers is None:
                 self.connect_action.set_enabled(True)
