@@ -515,13 +515,6 @@ class Config:
         for i in self.parser.sections():
             for j, val in self.parser.items(i, raw=True):
 
-                try:
-                    default_val = self.defaults[i][j]
-
-                except KeyError:
-                    # Custom config option, possibly from a plugin
-                    default_val = val
-
                 # Check if config section exists in defaults
                 if i not in self.defaults:
                     log.add_warning(_("Unknown config section '%s'"), i)
@@ -531,8 +524,23 @@ class Config:
                     log.add_warning(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
 
                 else:
-                    # Ensure that the value of a config option is of the same type as the default value
-                    # If not, reset the value
+                    """ Attempt to get the default value for a config option. If there's no default
+                    value, it's a custom option from a plugin, so no checks are needed. """
+
+                    try:
+                        default_val = self.defaults[i][j]
+
+                    except KeyError:
+                        try:
+                            val = literal_eval(val)
+                        except Exception:
+                            pass
+
+                        self.sections[i][j] = val
+                        continue
+
+                    """ Check that the value of a config option is of the same type as the default
+                    value. If that's not the case, reset the value. """
 
                     try:
                         if not isinstance(default_val, str):
