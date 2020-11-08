@@ -29,7 +29,7 @@ from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dirchooser import save_file
+from pynicotine.gtkgui.dialogs import save_file
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
