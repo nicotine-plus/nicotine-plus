@@ -79,13 +79,13 @@ def clean_path(path, absolute=False):
 
 def get_latest_version():
 
-    import http.client
     import json
 
-    conn = http.client.HTTPSConnection("api.github.com")
-    conn.request("GET", "/repos/Nicotine-Plus/nicotine-plus/releases/latest", headers={"User-Agent": "Nicotine+"})
-    resp = conn.getresponse()
-    data = json.loads(resp.read().decode("utf-8"))
+    response = http_request(
+        "https", "api.github.com", "/repos/Nicotine-Plus/nicotine-plus/releases/latest",
+        headers={"User-Agent": "Nicotine+"}
+    )
+    data = json.loads(response)
 
     hlatest = data['tag_name']
     latest = int(make_version(hlatest))

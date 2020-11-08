@@ -31,7 +31,7 @@ from gi.repository import Gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size

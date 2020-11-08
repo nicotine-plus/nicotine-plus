@@ -34,7 +34,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.geoip.countrycodes import code2name
-from pynicotine.gtkgui.dirchooser import choose_dir
+from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import fill_file_grouping_combobox

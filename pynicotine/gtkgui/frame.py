@@ -43,9 +43,9 @@ from pynicotine import slskproto
 from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
-from pynicotine.gtkgui.checklatest import checklatest
-from pynicotine.gtkgui.dirchooser import choose_file
 from pynicotine.gtkgui.downloads import Downloads
+from pynicotine.gtkgui.dialogs import choose_file
+from pynicotine.gtkgui.dialogs import message_dialog
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.interests import Interests
@@ -73,6 +73,8 @@ from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
+from pynicotine.utils import get_latest_version
+from pynicotine.utils import make_version
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -86,6 +88,7 @@ class NicotineFrame:
         self.clip_data = ""
         self.data_dir = data_dir
         self.current_tab = 0
+        self.checking_update = False
         self.rescanning = False
         self.brescanning = False
         self.needrescan = False
@@ -1191,7 +1194,52 @@ class NicotineFrame:
         self.about_search_filters.show()
 
     def on_check_latest(self, *args):
-        checklatest(self.MainWindow)
+
+        if not self.checking_update:
+            _thread.start_new_thread(self._on_check_latest, ())
+            self.checking_update = True
+
+    def _on_check_latest(self):
+
+        try:
+            hlatest, latest, date = get_latest_version()
+            myversion = int(make_version(version))
+
+        except Exception as m:
+            GLib.idle_add(
+                message_dialog,
+                self.MainWindow,
+                _("Error retrieving latest version"),
+                str(m)
+            )
+            self.checking_update = False
+            return
+
+        if latest > myversion:
+            GLib.idle_add(
+                message_dialog,
+                self.MainWindow,
+                _("Out of date"),
+                _("A newer version %s is available, released on %s.") % (hlatest, date)
+            )
+
+        elif myversion > latest:
+            GLib.idle_add(
+                message_dialog,
+                self.MainWindow,
+                _("Up to date"),
+                _("You appear to be using a development version of Nicotine+.")
+            )
+
+        else:
+            GLib.idle_add(
+                message_dialog,
+                self.MainWindow,
+                _("Up to date"),
+                _("You are using the latest version of Nicotine+.")
+            )
+
+        self.checking_update = False
 
     def on_report_bug(self, *args):
         url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
