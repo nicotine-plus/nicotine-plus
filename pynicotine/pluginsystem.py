@@ -358,8 +358,8 @@ class PluginHandler(object):
     def outgoing_buddy_search_event(self, text):
         return self.trigger_event("OutgoingBuddySearchEvent", (text,))
 
-    def outgoing_user_search_event(self, users):
-        return self.trigger_event("OutgoingUserSearchEvent", (users,))
+    def outgoing_user_search_event(self, users, text):
+        return self.trigger_event("OutgoingUserSearchEvent", (users, text))
 
     def user_resolve_notification(self, user, ip, port, country=None):
         """Notification for user IP:Port resolving.
@@ -557,7 +557,7 @@ class BasePlugin(object):
     def OutgoingBuddySearchEvent(self, text):  # noqa
         pass
 
-    def OutgoingUserSearchEvent(self, users):  # noqa
+    def OutgoingUserSearchEvent(self, users, text):  # noqa
         pass
 
     def UserResolveNotification(self, user, ip, port, country):  # noqa

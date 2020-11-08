@@ -53,8 +53,8 @@ class Plugin(BasePlugin):
     def OutgoingBuddySearchEvent(self, text):  # noqa
         self.log('OutgoingBuddySearchEvent, text=%s' % (text,))
 
-    def OutgoingUserSearchEvent(self, users):  # noqa
-        self.log('OutgoingUserSearchEvent, users=%s' % (users,))
+    def OutgoingUserSearchEvent(self, users, text):  # noqa
+        self.log('OutgoingUserSearchEvent, users=%s, text=%s' % (users, text))
 
     def UserResolveNotification(self, user, ip, port, country):  # noqa
         self.log('UserResolveNotification, user=%s, ip=%s, port=%s, country=%s' % (user, ip, port, country))

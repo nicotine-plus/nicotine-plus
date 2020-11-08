@@ -158,9 +158,9 @@ class Searches(IconNotebook):
             if feedback is not None:
                 text = feedback[0]
         elif mode == 3:
-            feedback = self.frame.np.pluginhandler.outgoing_user_search_event(users)
+            feedback = self.frame.np.pluginhandler.outgoing_user_search_event(users, text)
             if feedback is not None:
-                users = feedback[0]
+                (users, text) = feedback
         else:
             log.add_warning(_("Unknown search mode, not using plugin system. Fix me!"))
             feedback = True
