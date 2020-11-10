@@ -87,7 +87,7 @@ class NicotineFrame:
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
-        self.current_tab = 0
+        self.current_tab_label = None
         self.checking_update = False
         self.rescanning = False
         self.brescanning = False
@@ -284,11 +284,11 @@ class NicotineFrame:
         self.sPrivateChatButton.connect("clicked", self.on_get_private_chat)
         self.UserPrivateCombo.get_child().connect("activate", self.on_get_private_chat)
 
-        self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel)
+        self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
         self.sUserinfoButton.connect("clicked", self.on_get_user_info)
         self.UserInfoCombo.get_child().connect("activate", self.on_get_user_info)
 
-        self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel)
+        self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
         self.sSharesButton.connect("clicked", self.on_get_shares)
         self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
 
@@ -633,20 +633,20 @@ class NicotineFrame:
         self.UserBrowseCombo.set_sensitive(status)
         self.sSharesButton.set_sensitive(status)
 
-        if self.current_tab == self.UserBrowseTabLabel:
+        if self.current_tab_label == self.UserBrowseTabLabel:
             GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
 
         self.UserInfoCombo.set_sensitive(status)
         self.sUserinfoButton.set_sensitive(status)
 
-        if self.current_tab == self.UserInfoTabLabel:
+        if self.current_tab_label == self.UserInfoTabLabel:
             GLib.idle_add(self.UserInfoCombo.get_child().grab_focus)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchEntryCombo.set_sensitive(status)
         self.SearchButton.set_sensitive(status)
 
-        if self.current_tab == self.SearchTabLabel:
+        if self.current_tab_label == self.SearchTabLabel:
             GLib.idle_add(self.search_entry.grab_focus)
 
         self.interests.SimilarUsersButton.set_sensitive(status)
@@ -1279,7 +1279,7 @@ class NicotineFrame:
 
     def request_tab_icon(self, tab_label, status=1):
 
-        if self.current_tab == tab_label:
+        if self.current_tab_label == tab_label:
             return
 
         icon_tab_label = self.get_tab_label(tab_label)
@@ -1306,7 +1306,7 @@ class NicotineFrame:
 
         tab_label = self.MainNotebook.get_tab_label(page)
         icon_tab_label = self.get_tab_label(tab_label)
-        self.current_tab = tab_label
+        self.current_tab_label = tab_label
 
         if icon_tab_label is not None:
             # Defaults
@@ -1430,12 +1430,18 @@ class NicotineFrame:
 
                 if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
                     self.MainNotebook.set_current_page(lasttabid)
+
+                    page = self.MainNotebook.get_nth_page(lasttabid)
+                    self.current_tab_label = self.MainNotebook.get_tab_label(page)
                     return
 
         except Exception:
             pass
 
         self.MainNotebook.set_current_page(0)
+
+        page = self.MainNotebook.get_nth_page(0)
+        self.current_tab_label = self.MainNotebook.get_tab_label(page)
 
     def hide_tab(self, widget, lista):
 

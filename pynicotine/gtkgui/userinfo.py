@@ -45,7 +45,7 @@ from pynicotine.logfacility import log
 # User Info and User Browse Notebooks
 class UserTabs(IconNotebook):
 
-    def __init__(self, frame, subwindow, notebookraw, tab):
+    def __init__(self, frame, subwindow, notebookraw, tab_label, tab_name):
 
         self.frame = frame
 
@@ -67,7 +67,8 @@ class UserTabs(IconNotebook):
         self.subwindow = subwindow
 
         self.users = {}
-        self.tab = tab
+        self.tab_label = tab_label
+        self.tab_name = tab_name
 
     def init_window(self, user):
 
@@ -89,13 +90,9 @@ class UserTabs(IconNotebook):
             self.init_window(user)
 
         self.users[user].show_user(msg)
-        self.request_changed(self.users[user].Main)
 
-        if self.tab is not None:
-            self.frame.request_tab_icon(self.tab)
-
-        tab_name = self.frame.match_main_notebox(self.tab)
-        self.frame.change_main_page(tab_name)
+        self.set_current_page(self.page_num(self.users[user].Main))
+        self.frame.change_main_page(self.tab_name)
 
     def show_connection_error(self, user):
         self.users[user].show_connection_error()

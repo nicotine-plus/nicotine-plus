@@ -175,7 +175,7 @@ class TransferList:
         self.widget.get_selection().selected_foreach(self.selected_transfers_callback)
 
     def new_transfer_notification(self):
-        self.frame.request_tab_icon(self.tab)
+        self.frame.request_tab_icon(self.tab_label)
 
     def on_ban(self, widget):
         self.select_transfers()
@@ -247,7 +247,7 @@ class TransferList:
             self.last_save = curtime
 
         if not forceupdate:
-            if self.frame.current_tab != self.tab:
+            if self.frame.current_tab_label != self.tab_label:
                 """ No need to do unnecessary work if transfers are not visible """
                 return
 

@@ -577,6 +577,11 @@ class UserBrowse:
 
         self.progressbar1.set_fraction(fraction)
 
+        if fraction == 1.0:
+            # Tab notification
+            self.frame.request_tab_icon(self.frame.UserBrowseTabLabel)
+            self.userbrowses.request_changed(self.Main)
+
     def on_select_dir(self, selection):
 
         model, iterator = selection.get_selected()
