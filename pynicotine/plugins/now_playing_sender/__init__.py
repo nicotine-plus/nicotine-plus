@@ -118,6 +118,11 @@ class Plugin(BasePlugin):
         except AttributeError:
             return
 
+        if not changed_song_url:
+            # Song url empty, the player most likely stopped playing
+            self.last_song_url = ""
+            return
+
         if changed_song_url == self.last_song_url:
             # A new song didn't start playing, exit
             return
