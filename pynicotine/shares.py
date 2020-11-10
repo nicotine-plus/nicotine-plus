@@ -145,10 +145,14 @@ class Shares:
             try:
                 self.config.sections["transfers"][destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception:
+                from traceback import format_exc
+
                 errors.append(shelvefile)
+                exception = format_exc()
 
         if errors:
             log.add_warning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
+            log.add_warning(exception)
 
             self.clear_shares()
 
