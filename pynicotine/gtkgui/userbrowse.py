@@ -541,7 +541,9 @@ class UserBrowse:
         self.frame.np.config.sections["columns"]["userbrowse"] = columns
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
-    def show_user(self, msg):
+    def show_user(self, msg, indeterminate_progress=False):
+
+        self.set_in_progress(indeterminate_progress)
 
         if msg is None:
             return
@@ -557,14 +559,36 @@ class UserBrowse:
         else:
             self.InfoBar.set_revealed(False)
 
+        self.set_finished()
+
     def show_connection_error(self):
 
         InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
             _("Unable to request shared files from user. Either the user is offline, you both have a closed listening port, or there's a temporary connectivity issue.")
         )
 
+        self.set_finished()
+
     def load_shares(self, list):
         self.make_new_model(list)
+
+    def set_in_progress(self, indeterminate_progress):
+
+        if not indeterminate_progress:
+            self.progressbar1.set_fraction(0.0)
+        else:
+            self.progressbar1.set_fraction(0.5)
+
+        self.RefreshButton.set_sensitive(False)
+
+    def set_finished(self):
+
+        # Tab notification
+        self.frame.request_tab_icon(self.frame.UserBrowseTabLabel)
+        self.userbrowses.request_changed(self.Main)
+
+        self.progressbar1.set_fraction(1.0)
+        self.RefreshButton.set_sensitive(True)
 
     def update_gauge(self, msg):
 
@@ -576,11 +600,6 @@ class UserBrowse:
             fraction = float(msg.bytes) / msg.total
 
         self.progressbar1.set_fraction(fraction)
-
-        if fraction == 1.0:
-            # Tab notification
-            self.frame.request_tab_icon(self.frame.UserBrowseTabLabel)
-            self.userbrowses.request_changed(self.Main)
 
     def on_select_dir(self, selection):
 

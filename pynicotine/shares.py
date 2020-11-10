@@ -70,7 +70,9 @@ class Shares:
             ]
         )
 
-        self.compressed_shares_buddy = self.compressed_shares_normal = None
+        self.create_compressed_shares_message("normal")
+        self.create_compressed_shares_message("buddy")
+
         self.newbuddyshares = self.newnormalshares = False
 
     def set_connected(self, connected):
@@ -193,24 +195,32 @@ class Shares:
         self.set_shares(sharestype="normal", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
         self.set_shares(sharestype="buddy", files={}, streams={}, mtimes={}, wordindex={}, fileindex={})
 
+    def create_compressed_shares_message(self, sharestype):
+
+        """ Create a message that will later contain a compressed list of our shares """
+
+        if sharestype == "normal":
+            self.compressed_shares_normal = slskmessages.SharedFileList(
+                None,
+                self.config.sections["transfers"]["sharedfilesstreams"]
+            )
+
+        elif sharestype == "buddy":
+            self.compressed_shares_buddy = slskmessages.SharedFileList(
+                None,
+                self.config.sections["transfers"]["bsharedfilesstreams"]
+            )
+
     def compress_shares(self, sharestype):
 
-        if sharestype == "normal":
-            streams = self.config.sections["transfers"]["sharedfilesstreams"]
-        elif sharestype == "buddy":
-            streams = self.config.sections["transfers"]["bsharedfilesstreams"]
-
-        if streams is None:
-            log.add_warning(_("ERROR: No %(type)s shares database available") % {"type": sharestype})
-            return
-
-        m = slskmessages.SharedFileList(None, streams)
-        _thread.start_new_thread(m.make_network_message, (0, True))
+        """ Begin compressing the shares list. This compressed list will be used to
+        quickly send our file list to users. """
 
         if sharestype == "normal":
-            self.compressed_shares_normal = m
+            _thread.start_new_thread(self.compressed_shares_normal.make_network_message, (0, True))
+
         elif sharestype == "buddy":
-            self.compressed_shares_buddy = m
+            _thread.start_new_thread(self.compressed_shares_buddy.make_network_message, (0, True))
 
     def close_shares(self):
         for db in [
@@ -303,6 +313,7 @@ class Shares:
             if self.ui_callback:
                 self.ui_callback.rescan_finished(sharestype)
 
+            self.create_compressed_shares_message(sharestype)
             self.compress_shares(sharestype)
 
             if self.connected:

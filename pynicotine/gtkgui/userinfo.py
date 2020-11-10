@@ -82,17 +82,18 @@ class UserTabs(IconNotebook):
         self.append_page(w.Main, userlabel, w.on_close)
         self.frame.np.queue.put(slskmessages.AddUser(user))
 
-    def show_user(self, user, conn=None, msg=None):
+    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True):
 
         if user in self.users:
             self.users[user].conn = conn
         else:
             self.init_window(user)
 
-        self.users[user].show_user(msg)
+        self.users[user].show_user(msg, indeterminate_progress)
 
-        self.set_current_page(self.page_num(self.users[user].Main))
-        self.frame.change_main_page(self.tab_name)
+        if change_page:
+            self.set_current_page(self.page_num(self.users[user].Main))
+            self.frame.change_main_page(self.tab_name)
 
     def show_connection_error(self, user):
         self.users[user].show_connection_error()

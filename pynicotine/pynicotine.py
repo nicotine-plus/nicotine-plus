@@ -1444,7 +1444,8 @@ class NetworkEventProcessor:
             if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
-                    self.userinfo.show_user(i.username, msg.conn, msg)
+                    indeterminate_progress = change_page = False
+                    self.userinfo.show_user(i.username, msg.conn, msg, indeterminate_progress, change_page)
                     break
 
     def user_info_request(self, msg):
@@ -1540,7 +1541,8 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
-                    self.userbrowse.show_user(i.username, msg.conn, msg)
+                    indeterminate_progress = change_page = False
+                    self.userbrowse.show_user(i.username, msg.conn, msg, indeterminate_progress, change_page)
                     break
 
     def file_search_result(self, msg):
@@ -1709,6 +1711,7 @@ class NetworkEventProcessor:
         if checkuser == 1:
             # Send Normal Shares
             if self.shares.newnormalshares:
+                self.shares.create_compressed_shares_message("normal")
                 self.shares.compress_shares("normal")
                 self.shares.newnormalshares = False
             m = self.shares.compressed_shares_normal
@@ -1716,6 +1719,7 @@ class NetworkEventProcessor:
         elif checkuser == 2:
             # Send Buddy Shares
             if self.shares.newbuddyshares:
+                self.shares.create_compressed_shares_message("buddy")
                 self.shares.compress_shares("buddy")
                 self.shares.newbuddyshares = False
             m = self.shares.compressed_shares_buddy
