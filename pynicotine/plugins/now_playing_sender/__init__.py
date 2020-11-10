@@ -127,8 +127,13 @@ class Plugin(BasePlugin):
             # A new song didn't start playing, exit
             return
 
-        player = self.get_current_mpris_player()
-        selected_client_song_url = self.get_current_mpris_song_url(player)
+        try:
+            player = self.get_current_mpris_player()
+            selected_client_song_url = self.get_current_mpris_song_url(player)
+
+        except Exception:
+            # Selected player is invalid
+            return
 
         if selected_client_song_url != changed_song_url:
             # Song change was from another MPRIS client than the selected one, exit
