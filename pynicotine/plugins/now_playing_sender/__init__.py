@@ -118,12 +118,22 @@ class Plugin(BasePlugin):
         except AttributeError:
             return
 
+        if not changed_song_url:
+            # Song url empty, the player most likely stopped playing
+            self.last_song_url = ""
+            return
+
         if changed_song_url == self.last_song_url:
             # A new song didn't start playing, exit
             return
 
-        player = self.get_current_mpris_player()
-        selected_client_song_url = self.get_current_mpris_song_url(player)
+        try:
+            player = self.get_current_mpris_player()
+            selected_client_song_url = self.get_current_mpris_song_url(player)
+
+        except Exception:
+            # Selected player is invalid
+            return
 
         if selected_client_song_url != changed_song_url:
             # Song change was from another MPRIS client than the selected one, exit
