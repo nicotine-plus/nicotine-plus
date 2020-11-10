@@ -1115,10 +1115,10 @@ class NicotineFrame:
         if self.np.config.sections["transfers"]["friendsonly"]:
             msg = slskmessages.SharedFileList(None, {})
         else:
-            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
+            msg = self.np.shares.compressed_shares_normal
 
-        msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_user(login, msg.conn, msg)
+        _thread.start_new_thread(self.parse_local_shares, (login, msg))
+        self.userbrowse.show_user(login, indeterminate_progress=True)
 
     def on_browse_buddy_shares(self, *args):
         """ Browse your own buddy shares """
@@ -1127,12 +1127,12 @@ class NicotineFrame:
 
         # Show public shares if we don't have specific shares for buddies
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["sharedfilesstreams"])
+            msg = self.np.shares.compressed_shares_normal
         else:
-            msg = slskmessages.SharedFileList(None, self.np.config.sections["transfers"]["bsharedfilesstreams"])
+            msg = self.np.shares.compressed_shares_buddy
 
-        msg.parse_network_message(msg.make_network_message(nozlib=1), nozlib=1)
-        self.userbrowse.show_user(login, msg.conn, msg)
+        _thread.start_new_thread(self.parse_local_shares, (login, msg))
+        self.userbrowse.show_user(login, indeterminate_progress=True)
 
     # Modes
 
@@ -1623,6 +1623,7 @@ class NicotineFrame:
                 self.np.shares.compress_shares("buddy")
 
     def rescan_finished(self, type):
+
         if type == "buddy":
             GLib.idle_add(self._buddy_rescan_finished)
         elif type == "normal":
@@ -1797,6 +1798,15 @@ class NicotineFrame:
             else:
                 self.userbrowse.show_user(user)
                 self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
+
+    def parse_local_shares(self, username, msg):
+        """ Parse our local shares list and show it in the UI """
+
+        built = msg.make_network_message(nozlib=0)
+        msg.parse_network_message(built)
+
+        indeterminate_progress = change_page = False
+        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page)
 
     def on_get_shares(self, widget):
         text = self.UserBrowseCombo.get_child().get_text()
