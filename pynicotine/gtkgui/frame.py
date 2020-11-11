@@ -2541,6 +2541,9 @@ class NicotineFrame:
         self.np.protothread.abort()
         self.np.stop_timers()
 
+        # Explicitly hide tray icon, otherwise it will not disappear on Windows
+        self.tray.hide()
+
         if not self.np.manualdisconnect:
             self.on_disconnect(None)
 
