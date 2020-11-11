@@ -252,6 +252,7 @@ class Tray:
             else:
                 # GtkStatusIcon fallback
                 trayicon = self.gtk.StatusIcon()
+                trayicon.set_tooltip_text("Nicotine+")
                 trayicon.connect("activate", self.on_hide_unhide_window)
                 trayicon.connect("popup-menu", self.on_status_icon_popup)
 
