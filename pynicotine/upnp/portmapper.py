@@ -35,8 +35,7 @@ class UPnPPortMapping:
         # List of existing port mappings
         self.existingportsmappings = []
 
-        # Initial value that determine if a port mapping already exist to the
-        # client
+        # Initial value that determine if a port mapping already exist to the client
         self.foundexistingmapping = False
 
     def add_port_mapping(self, np):
@@ -92,8 +91,7 @@ class UPnPPortMapping:
         router = UPnp.find_router()
 
         if not router:
-            log.add_debug('UPnP does not work on this network')
-            return
+            raise RuntimeError('UPnP does not work on this network')
 
         # Create a UDP socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -138,7 +136,8 @@ class UPnPPortMapping:
                 public_port=self.externalwanport,
                 private_ip=self.internalipaddress,
                 private_port=self.internallanport,
-                mapping_description='Nicotine+'
+                mapping_description='Nicotine+',
+                lease_duration=86400  # Expires in 24 hours
             )
 
         except Exception as e:

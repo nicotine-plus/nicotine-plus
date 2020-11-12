@@ -176,7 +176,6 @@ class FastConfigureAssistant(object):
             self.lowerport.get_value_as_int(),
             self.upperport.get_value_as_int()
         )
-        self.config.sections['server']['firewalled'] = not self.portopen.get_active()
 
         # sharepage
         self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_file().get_path()
