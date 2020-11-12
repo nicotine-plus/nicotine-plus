@@ -63,7 +63,7 @@ You should install Python 3.5 or newer.""") % (e)
     try:
         import gi
     except ImportError:
-        return _("Cannot find pygobject, please install it.")
+        return _("Cannot find %s, please install it.") % "pygobject"
     else:
         try:
             gi.require_version('Gtk', '3.0')
@@ -78,7 +78,11 @@ You should install GTK 3.0 or newer.""") % e
 
     # Require pytaglib
     if not importlib.util.find_spec("taglib"):
-        return _("Cannot find pytaglib, please install it.")
+        return _("Cannot find %s, please install it.") % "pytaglib"
+
+    # Require semidbm on Windows, for faster loading of shelves
+    if sys.platform == "win32" and not importlib.util.find_spec("semidbm"):
+        return _("Cannot find %s, please install it.") % "semidbm"
 
     # Require pynicotine
     if not importlib.util.find_spec("pynicotine"):
