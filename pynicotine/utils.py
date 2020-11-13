@@ -336,8 +336,12 @@ def unescape(string):
 
     string = string.encode('latin-1', 'backslashreplace').decode('unicode-escape')
 
-    if (string[0] == string[-1]) and string.startswith(("'", '"')):
-        return string[1:-1]
+    try:
+        if (string[0] == string[-1]) and string.startswith(("'", '"')):
+            return string[1:-1]
+    except IndexError:
+        pass
+
     return string
 
 
