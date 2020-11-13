@@ -1,7 +1,5 @@
-recursive-include po *
-recursive-include pynicotine *
+recursive-include po *.in *.po *.pot
+recursive-include pynicotine *.bin *.md *.py *.ui PLUGININFO
 recursive-include test *
 
-recursive-exclude * __pycache__
 recursive-exclude * *.mo
-recursive-exclude * *.pyc

@@ -38,7 +38,8 @@ from pynicotine.utils import version
 packages = ["pynicotine"] + \
     [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
 
-package_data = dict((package, ["*"]) for package in packages)
+package_data = dict((package, ["*.bin", "*.md", "*.py", "*.ui", "PLUGININFO"]) for package in packages)
+
 data_files = []
 
 # Program icon
