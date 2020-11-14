@@ -29,16 +29,6 @@ from pynicotine.upnp.upnp import UPnp
 class UPnPPortMapping:
     """ Class that handles UPnP Port Mapping """
 
-    def __init__(self):
-        """ Initialize the UPnP Port Mapping object """
-
-        # List of existing port mappings
-        self.existingportsmappings = []
-
-        # Initial value that determine if a port mapping already exist to the
-        # client
-        self.foundexistingmapping = False
-
     def add_port_mapping(self, np):
         """
         This function supports creating a Port Mapping via the UPnP
@@ -81,19 +71,11 @@ class UPnPPortMapping:
 
         log.add_debug('Creating Port Mapping rule via UPnP...')
 
-        # Placeholder LAN IP address, updated in AddPortMappingBinary or AddPortMappingModule
-        self.internalipaddress = "127.0.0.1"
-
-        # Store the Local LAN port
-        self.internallanport = np.protothread._p.getsockname()[1]
-        self.externalwanport = self.internallanport
-
         # Find router
         router = UPnp.find_router()
 
         if not router:
-            log.add_debug('UPnP does not work on this network')
-            return
+            raise RuntimeError('UPnP does not work on this network')
 
         # Create a UDP socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -107,22 +89,9 @@ class UPnPPortMapping:
         # Close the socket
         s.close()
 
-        # Get existing port mappings
-        for i in UPnp.list_port_mappings(router):
-            self.existingportsmappings.append(
-                (
-                    i.public_port,
-                    i.protocol,
-                    (i.private_ip, i.private_port),
-                    i.description,
-                    i.is_enabled,
-                    i.remote_host,
-                    i.lease_duration
-                )
-            )
-
-        # Find a suitable external WAN port to map to based on the existing mappings
-        self.find_suitable_external_wan_port()
+        # Store the Local LAN port
+        self.internallanport = np.protothread._p.getsockname()[1]
+        self.externalwanport = self.internallanport
 
         # Do the port mapping
         log.add_debug('Trying to redirect external WAN port %s TCP => %s port %s TCP', (
@@ -138,7 +107,8 @@ class UPnPPortMapping:
                 public_port=self.externalwanport,
                 private_ip=self.internalipaddress,
                 private_port=self.internallanport,
-                mapping_description='Nicotine+'
+                mapping_description='Nicotine+',
+                lease_duration=86400  # Expires in 24 hours
             )
 
         except Exception as e:
@@ -146,38 +116,3 @@ class UPnPPortMapping:
                 _('Failed to map the external WAN port: %(error)s') %
                 {'error': str(e)}
             )
-
-    def find_suitable_external_wan_port(self):
-        """ Function to find a suitable external WAN port to map to the client.
-        It will detect if a port mapping to the client already exists. """
-
-        # Analyze ports mappings
-        for m in sorted(self.existingportsmappings):
-
-            e_port, protocol, (int_client, iport), desc, enabled, rhost, duration = m
-
-            # A Port Mapping is already in place with the client: we will
-            # rewrite it to avoid a timeout on the duration of the mapping
-            if protocol == "TCP" and \
-                    str(int_client) == str(self.internalipaddress) and \
-                    str(iport) == str(self.internallanport):
-
-                log.add_debug('Port Mapping already in place: %s', str(m))
-                self.externalwanport = e_port
-                self.foundexistingmapping = True
-                break
-
-        # If no mapping already in place we try to found a suitable external WAN port
-        if not self.foundexistingmapping:
-
-            # Find the first external WAN port > requestedwanport that's not already reserved
-            tcpportsreserved = [x[0] for x in sorted(self.existingportsmappings) if x[1] == "TCP"]
-
-            while str(self.externalwanport) in tcpportsreserved:
-                if self.externalwanport + 1 <= 65535:
-                    self.externalwanport += 1
-
-                else:
-                    raise AssertionError(
-                        _('Failed to find a suitable external WAN port, bailing out.')
-                    )

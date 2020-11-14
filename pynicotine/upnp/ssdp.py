@@ -27,7 +27,6 @@
 import time
 import select
 import socket
-import sys
 
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
@@ -88,15 +87,28 @@ class SSDP:
         headers = {
             'HOST': "{}:{}".format(SSDP.multicast_host, SSDP.multicast_port),
             'MAN': '"ssdp:discover"',
-            'MX': str(SSDP.response_time_secs),
-            'USER-AGENT': '{}/1.0 UPnP/1.1 Nicotine/1.0'.format(sys.platform)
+            'MX': str(SSDP.response_time_secs)
         }
 
+        # Protocol 1
         wan_ip1_sent = False
         wan_ip1 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANIPConnection:1', headers=headers)
 
+        wan_ppp1_sent = False
+        wan_ppp1 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANPPPConnection:1', headers=headers)
+
+        wan_igd1_sent = False
+        wan_igd1 = SSDP._create_msearch_request('urn:schemas-upnp-org:device:InternetGatewayDevice:1', headers=headers)
+
+        # Protocol 2
         wan_ip2_sent = False
         wan_ip2 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANIPConnection:2', headers=headers)
+
+        wan_ppp2_sent = False
+        wan_ppp2 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANPPPConnection:2', headers=headers)
+
+        wan_igd2_sent = False
+        wan_igd2 = SSDP._create_msearch_request('urn:schemas-upnp-org:device:InternetGatewayDevice:2', headers=headers)
 
         inputs = [sock]
         outputs = [sock]
@@ -111,6 +123,8 @@ class SSDP:
             for _sock in readable:
                 msg, sender = _sock.recvfrom(SSDP.buffer_size)
                 response = SSDPResponse.parse(msg.decode())
+                log.add_debug('UPnP: Device search response: %s', bytes(response))
+
                 router = Router.parse_ssdp_response(response, sender)
 
                 if router:
@@ -119,13 +133,39 @@ class SSDP:
             for _sock in writable:
                 if not wan_ip1_sent:
                     wan_ip1.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH IP request 1')
                     time_end = time.time() + SSDP.response_time_secs
                     wan_ip1_sent = True
 
+                if not wan_ppp1_sent:
+                    wan_ppp1.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH PPP request 1')
+                    time_end = time.time() + SSDP.response_time_secs
+                    wan_ppp1_sent = True
+
+                if not wan_igd1_sent:
+                    wan_igd1.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH IGD request 1')
+                    time_end = time.time() + SSDP.response_time_secs
+                    wan_igd1_sent = True
+
                 if not wan_ip2_sent:
                     wan_ip2.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH IP request 2')
                     time_end = time.time() + SSDP.response_time_secs
                     wan_ip2_sent = True
+
+                if not wan_ppp2_sent:
+                    wan_ppp2.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH PPP request 2')
+                    time_end = time.time() + SSDP.response_time_secs
+                    wan_ppp2_sent = True
+
+                if not wan_igd2_sent:
+                    wan_igd2.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
+                    log.add_debug('UPnP: Sent M-SEARCH IGD request 2')
+                    time_end = time.time() + SSDP.response_time_secs
+                    wan_igd2_sent = True
 
             # Cooldown
             time.sleep(0.4)
@@ -262,6 +302,7 @@ class SSDPRequest(SSDPMessage):
     @classmethod
     def parse(cls, msg):
         """ Parse message string to request object """
+
         lines = msg.splitlines()
         method, uri, version = lines[0].split()
         headers = cls.parse_headers('\r\n'.join(lines[1:]))
@@ -278,10 +319,12 @@ class SSDPRequest(SSDPMessage):
                 IP address and port pair to send the message to.
         """
         msg = bytes(self) + b'\r\n'
+        log.add_debug('UPnP: SSDP request: %s', msg)
         transport.sendto(msg, addr)
 
     def __str__(self):
         """ Return complete SSDP request """
+
         lines = list()
         lines.append(' '.join(
             [self.method, self.uri, self.version]

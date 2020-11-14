@@ -125,13 +125,6 @@ class FastConfigureAssistant(object):
             self.config.sections["server"]["passw"]
         )
 
-        self.lowerport.set_value(
-            self.config.sections["server"]["portrange"][0]
-        )
-        self.upperport.set_value(
-            self.config.sections["server"]["portrange"][1]
-        )
-
         # sharepage
         if self.config.sections['transfers']['downloaddir']:
             self.downloaddir.set_current_folder(
@@ -170,13 +163,6 @@ class FastConfigureAssistant(object):
         # userpasspage
         self.config.sections["server"]["login"] = self.username.get_text()
         self.config.sections["server"]["passw"] = self.password.get_text()
-
-        # portpage
-        self.config.sections['server']['portrange'] = (
-            self.lowerport.get_value_as_int(),
-            self.upperport.get_value_as_int()
-        )
-        self.config.sections['server']['firewalled'] = not self.portopen.get_active()
 
         # sharepage
         self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_file().get_path()
@@ -474,28 +460,5 @@ class FastConfigureAssistant(object):
 
         if self.initphase:
             return
-
-        self.resetcompleteness()
-
-    def on_spinbutton_change_value(self, widget, scrolltype):
-
-        if self.initphase:
-            return
-
-        self.resetcompleteness()
-
-    def on_spinbutton_value_changed(self, widget):
-
-        if self.initphase:
-            return
-
-        name = Gtk.Buildable.get_name(widget)
-
-        if name == "lowerport":
-            if widget.get_value() > self.upperport.get_value():
-                self.upperport.set_value(widget.get_value())
-        if name == "upperport":
-            if widget.get_value() < self.lowerport.get_value():
-                self.lowerport.set_value(widget.get_value())
 
         self.resetcompleteness()

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkAdjustment" id="lowerportadjuster">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">100</property>
-  </object>
-  <object class="GtkAdjustment" id="upperportadjuster">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">100</property>
-  </object>
   <object class="GtkAssistant" id="FastConfigureAssistant">
     <property name="can_focus">False</property>
     <property name="modal">True</property>
@@ -55,11 +45,7 @@
             <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
-            <property name="margin_start">5</property>
-            <property name="margin_end">5</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">5</property>
-            <property name="label" translatable="yes">In order to start, you need to fill in a few details. Press "Next" to start configuring Nicotine+.</property>
+            <property name="label" translatable="yes">Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing network.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
@@ -69,6 +55,24 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="label" translatable="yes">Press "Next" to start configuring Nicotine+.</property>
+            <property name="justify">center</property>
+            <property name="wrap">True</property>
+            <property name="width_chars">60</property>
+            <property name="max_width_chars">60</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
@@ -93,9 +97,9 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have an account at the server, fill in those details.
+            <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have a Soulseek account, fill in your chosen details.
 
-Please keep in mind that more common usernames may be taken. If you're unable to connect later, change your username in the settings.</property>
+Please keep in mind that more common usernames may be taken. If you're unable to connect, you can change your username in the preferences later.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
@@ -242,7 +246,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">The Nicotine+ port is called open when other people can connect to your computer without being blocked by your firewall or router. An open port is crucial to prevent connection trouble.</property>
+                <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. An open listening port is crucial to allow users to connect to you without trouble.</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <property name="width_chars">60</property>
@@ -252,6 +256,38 @@ Please keep in mind that more common usernames may be taken. If you're unable to
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">The default listening port should work fine in most cases. If you need to use a different port, you can change it in the preferences later.</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="width_chars">60</property>
+                <property name="max_width_chars">60</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Nicotine+ will still work to some degree if your port is closed. However, do keep in mind that you won't be able to connect to users whose port is also closed.</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="width_chars">60</property>
+                <property name="max_width_chars">60</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -266,7 +302,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -274,96 +310,6 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_top">10</property>
-            <property name="margin_bottom">10</property>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">10</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Use the first available port in the range from </property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="lowerport">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="max_length">6</property>
-                <property name="invisible_char">●</property>
-                <property name="width_chars">6</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-                <property name="adjustment">lowerportadjuster</property>
-                <property name="numeric">True</property>
-                <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
-                <signal name="value-changed" handler="on_spinbutton_value_changed" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">to</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="upperport">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="max_length">6</property>
-                <property name="invisible_char">●</property>
-                <property name="width_chars">6</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-                <property name="adjustment">upperportadjuster</property>
-                <property name="numeric">True</property>
-                <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
-                <signal name="value-changed" handler="on_spinbutton_value_changed" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
           </packing>
         </child>
       </object>
@@ -387,7 +333,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">Download to the following directory:</property>
+            <property name="label" translatable="yes">Download files to the following directory:</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -495,7 +441,7 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             </child>
             <child>
               <object class="GtkCheckButton" id="onlysharewithfriends">
-                <property name="label" translatable="yes">Only share with friends</property>
+                <property name="label" translatable="yes">Only share files with friends</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -564,11 +510,11 @@ Please keep in mind that more common usernames may be taken. If you're unable to
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="labelclosedport">
+          <object class="GtkLabel" id="labelnoshare">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">If your port is closed, you will be unable to connect to other users with closed ports. This is inherent to Peer-to-Peer and not specifically a problem of Nicotine+.</property>
+            <property name="label" translatable="yes">You do not publicly share any files. Sharing files is crucial for the health of the Soulseek network, and many people will ban you if you download from them without sharing anything yourself.</property>
             <property name="justify">fill</property>
             <property name="wrap">True</property>
             <property name="width_chars">60</property>
@@ -578,24 +524,6 @@ Please keep in mind that more common usernames may be taken. If you're unable to
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="labelnoshare">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">You do not publicly share any files. This in itself is not a problem, but many people will ban you if you're downloading from them for this reason.</property>
-            <property name="use_markup">True</property>
-            <property name="justify">fill</property>
-            <property name="wrap">True</property>
-            <property name="width_chars">60</property>
-            <property name="max_width_chars">60</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">3</property>
           </packing>
         </child>
       </object>
