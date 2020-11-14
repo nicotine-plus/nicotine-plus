@@ -61,7 +61,7 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr"
+    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr", "indirectattempt"
 
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
@@ -73,6 +73,9 @@ class PeerConnection:
         self.type = init.type
         self.conntimer = conntimer
         self.tryaddr = tryaddr
+
+        """ Track if we've asked this peer to connect to us (indirect connection) """
+        self.indirectattempt = False
 
 
 class Timeout:
@@ -412,6 +415,7 @@ class NetworkEventProcessor:
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
         conn.token = new_id()
+        conn.indirectattempt = True
         self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
 
         for j in conn.msgs:
@@ -814,6 +818,13 @@ class NetworkEventProcessor:
 
                         for j in i.msgs:
                             if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
+                                if not i.indirectattempt:
+                                    """ It's possible that the peer never attempted to connect
+                                    directly to us, ask them to do so just to make sure. """
+
+                                    self.connect_to_peer_indirect(i)
+                                    return
+
                                 self.transfers.got_cant_connect(j.req)
 
                         log.add_conn(_("Can't connect to user %s neither directly nor indirectly, informing user via the server"), i.username)
