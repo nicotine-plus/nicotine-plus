@@ -27,7 +27,6 @@
 import time
 import select
 import socket
-import sys
 
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
