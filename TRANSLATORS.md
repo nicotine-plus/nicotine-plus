@@ -21,6 +21,7 @@
  * Dreslo
 
 ##### French
+ * m-balthazar (2020)
  * Michael Labouebe (2016-2017) < gfarmerfr (at) free.fr >
  * ManWell (2007)
  * zniavre (2007)
