@@ -139,12 +139,8 @@
       <attribute name="label" translatable="yes">_Modes</attribute>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Chat Rooms</attribute>
-          <attribute name="action">win.chatrooms</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">_Private Chat</attribute>
-          <attribute name="action">win.privatechat</attribute>
+          <attribute name="label" translatable="yes">_Search Files</attribute>
+          <attribute name="action">win.searchfiles</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_Downloads</attribute>
@@ -155,24 +151,28 @@
           <attribute name="action">win.uploads</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_Search Files</attribute>
-          <attribute name="action">win.searchfiles</attribute>
+          <attribute name="label" translatable="yes">User _Browse</attribute>
+          <attribute name="action">win.userbrowse</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">User I_nfo</attribute>
           <attribute name="action">win.userinfo</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">User _Browse</attribute>
-          <attribute name="action">win.userbrowse</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">_Interests</attribute>
-          <attribute name="action">win.interests</attribute>
+          <attribute name="label" translatable="yes">_Private Chat</attribute>
+          <attribute name="action">win.privatechat</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Buddy _List</attribute>
           <attribute name="action">win.buddylist</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Chat Rooms</attribute>
+          <attribute name="action">win.chatrooms</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Interests</attribute>
+          <attribute name="action">win.interests</attribute>
         </item>
       </section>
     </submenu>

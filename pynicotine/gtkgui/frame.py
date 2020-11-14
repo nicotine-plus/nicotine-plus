@@ -199,13 +199,13 @@ class NicotineFrame:
 
         # Translation for the labels of tabs
         translated_tablabels = {
-            self.ChatTabLabel: _("Chat rooms"),
-            self.PrivateChatTabLabel: _("Private chat"),
             self.SearchTabLabel: _("Search files"),
-            self.UserInfoTabLabel: _("User info"),
             self.DownloadsTabLabel: _("Downloads"),
             self.UploadsTabLabel: _("Uploads"),
             self.UserBrowseTabLabel: _("User browse"),
+            self.UserInfoTabLabel: _("User info"),
+            self.PrivateChatTabLabel: _("Private chat"),
+            self.ChatTabLabel: _("Chat rooms"),
             self.InterestsTabLabel: _("Interests")
         }
 
@@ -241,13 +241,13 @@ class NicotineFrame:
             )
 
         # Tab icons
-        self.ChatTabLabel.get_child().set_icon("user-available-symbolic")
-        self.PrivateChatTabLabel.get_child().set_icon("mail-send-symbolic")
         self.SearchTabLabel.get_child().set_icon("system-search-symbolic")
-        self.UserInfoTabLabel.get_child().set_icon("avatar-default-symbolic")
         self.DownloadsTabLabel.get_child().set_icon("document-save-symbolic")
         self.UploadsTabLabel.get_child().set_icon("emblem-shared-symbolic")
         self.UserBrowseTabLabel.get_child().set_icon("folder-symbolic")
+        self.UserInfoTabLabel.get_child().set_icon("avatar-default-symbolic")
+        self.PrivateChatTabLabel.get_child().set_icon("mail-send-symbolic")
+        self.ChatTabLabel.get_child().set_icon("user-available-symbolic")
         self.InterestsTabLabel.get_child().set_icon("emblem-default-symbolic")
 
         # Create Search combo ListStores
@@ -315,14 +315,6 @@ class NicotineFrame:
                 use_trayicon and config["ui"]["trayicon"]:
             self.tray.load()
 
-        """ Tab Visibility/Order """
-
-        self.set_tab_positions()
-        self.set_main_tabs_reorderable()
-        self.set_main_tabs_order()
-        self.set_main_tabs_visibility()
-        self.set_last_session_tab()
-
         """ Element Visibility """
 
         self.set_show_log(not config["logging"]["logcollapsed"])
@@ -331,6 +323,14 @@ class NicotineFrame:
         self.set_show_flags(not config["columns"]["hideflags"])
         self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
         self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
+
+        """ Tab Visibility/Order """
+
+        self.set_tab_positions()
+        self.set_main_tabs_reorderable()
+        self.set_main_tabs_order()
+        self.set_main_tabs_visibility()
+        self.set_last_session_tab()
 
         """ Disable elements """
 
@@ -628,6 +628,7 @@ class NicotineFrame:
 
         self.UserBrowseCombo.set_sensitive(status)
         self.sSharesButton.set_sensitive(status)
+        self.LoadFromDisk.set_sensitive(status)
 
         if self.current_tab_label == self.UserBrowseTabLabel:
             GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
