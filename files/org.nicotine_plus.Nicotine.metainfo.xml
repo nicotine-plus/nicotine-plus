@@ -26,20 +26,21 @@
   </categories>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/appdata/images/screenshot1.png</image>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/screenshots/screenshot1.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/appdata/images/screenshot2.png</image>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/screenshots/screenshot2.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/appdata/images/screenshot3.png</image>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/screenshots/screenshot3.png</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/appdata/images/screenshot4.png</image>
+      <image>https://raw.githubusercontent.com/Nicotine-Plus/nicotine-plus/master/files/screenshots/screenshot4.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://nicotine-plus.org/</url>
   <url type="bugtracker">https://github.com/Nicotine-Plus/nicotine-plus/issues</url>
+  <developer_name>Nicotine+ Team</developer_name>
   <content_rating type="oars-1.0">
     <content_attribute id="social-chat">intense</content_attribute>
     <content_attribute id="social-info">mild</content_attribute>

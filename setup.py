@@ -73,7 +73,7 @@ data_files.append(
 data_files.append(
     (
         "share/metainfo",
-        ["files/appdata/org.nicotine_plus.Nicotine.appdata.xml"]
+        ["files/org.nicotine_plus.Nicotine.metainfo.xml"]
     )
 )
 
