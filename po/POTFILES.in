@@ -7,11 +7,9 @@ pynicotine/shares.py
 pynicotine/slskmessages.py
 pynicotine/slskproto.py
 pynicotine/transfers.py
-pynicotine/upnp.py
+pynicotine/utils.py
 pynicotine/gtkgui/chatrooms.py
-pynicotine/gtkgui/checklatest.py
 pynicotine/gtkgui/dialogs.py
-pynicotine/gtkgui/dirchooser.py
 pynicotine/gtkgui/downloads.py
 pynicotine/gtkgui/fastconfigure.py
 pynicotine/gtkgui/fileproperties.py
@@ -31,6 +29,7 @@ pynicotine/gtkgui/userinfo.py
 pynicotine/gtkgui/userlist.py
 pynicotine/gtkgui/utils.py
 pynicotine/gtkgui/wishlist.py
+pynicotine/upnp/portmapper.py
 [type: gettext/glade] pynicotine/gtkgui/ui/buddylist.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/chatrooms.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/fastconfigure.ui
@@ -65,8 +64,8 @@ pynicotine/gtkgui/wishlist.py
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/notebook.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/notifications.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/nowplaying.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/settings/pluginproperties.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/plugin.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/pluginproperties.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/search.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/server.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/settingswindow.ui
