@@ -3,6 +3,56 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 2.2.0 (unreleased / unstable)
+-----------------------------
+
+Changes
+
+ * Modernized the default icon theme and several parts of the UI
+ * Searching for file names containing special characters returns more search results than previously
+ * Reduced the number of connectivity issues when transferring files from and to other users
+ * Downloading folders recursively works properly again
+ * Updated keyboard shortcuts, since the old ones conflicted with accelerator keys
+ * Tray icons are properly detected in more cases
+ * User browse and user info tabs now open immediately when requesting info for users
+ * Show info message if user shares can't be loaded
+ * Minor performance improvements when uploading a lot of files
+ * Slightly improved startup times
+ * Improved UI responsiveness when browsing your own shares
+ * Added "Now Playing Search" plugin for searching files based on data from songs playing in your media player
+ * Added "Now Playing Sender" plugin for automatically sending names of songs playing to select chat rooms 
+ * Builtin plugins load properly on Windows again
+ * Peer-to-peer (direct) private messaging works properly again
+ * General usability improvements to macOS builds
+ * Removed option to stop responding to search requests for certain time periods
+ * Removed libnotify, miniupnpc and xdg-utils dependencies, as functionality is now handled by Nicotine+.
+ * Multiple under-the-hood code improvements and code style changes, as well as smaller bug fixes
+
+Issues closed on GitHub
+
+ * Brew OSX Install ([#58](https://github.com/Nicotine-Plus/nicotine-plus/issues/58))
+ * a separate program for database scanning ([#443](https://github.com/Nicotine-Plus/nicotine-plus/issues/443))
+ * Failed to map the external WAN port: Invalid Args ([#597](https://github.com/Nicotine-Plus/nicotine-plus/issues/597))
+ * After requesting user info put that user's info tab on top. ([#651](https://github.com/Nicotine-Plus/nicotine-plus/issues/651))
+ * Feature request: share and/or cache message connections to remote clients ([#663](https://github.com/Nicotine-Plus/nicotine-plus/issues/663))
+ * Search Now playing ([#664](https://github.com/Nicotine-Plus/nicotine-plus/issues/664))
+ * Compile pytaglib for Python 2 or 3? - Error Trying To Run 2.1.1 ([#726](https://github.com/Nicotine-Plus/nicotine-plus/issues/726))
+ * Follow X Session Management Protocol ([#729](https://github.com/Nicotine-Plus/nicotine-plus/issues/729))
+ * provided extentions doesn't load ([#761](https://github.com/Nicotine-Plus/nicotine-plus/issues/761))
+ * Enabled plugins are no more activated at startup ([#762](https://github.com/Nicotine-Plus/nicotine-plus/issues/762))
+ * Plugin properties aren't editable ([#763](https://github.com/Nicotine-Plus/nicotine-plus/issues/763))
+ * some users aren't browsable ([#766](https://github.com/Nicotine-Plus/nicotine-plus/issues/766))
+ * tray icon problem ([#767](https://github.com/Nicotine-Plus/nicotine-plus/issues/767))
+ * Connection issue ([#768](https://github.com/Nicotine-Plus/nicotine-plus/issues/768))
+ * Uploads Cancelled ([#784](https://github.com/Nicotine-Plus/nicotine-plus/issues/784))
+ * Download recursive ([#790](https://github.com/Nicotine-Plus/nicotine-plus/issues/790))
+ * not sure if this is a bug or something else ([#791](https://github.com/Nicotine-Plus/nicotine-plus/issues/791))
+ * Can't scan any songs ([#798](https://github.com/Nicotine-Plus/nicotine-plus/issues/798))
+ * Search problem? ([#822](https://github.com/Nicotine-Plus/nicotine-plus/issues/822))
+ * windows unstable build can't rebuild shares ([#829](https://github.com/Nicotine-Plus/nicotine-plus/issues/829))
+ * Nicotine 2.1.2 fails to launch in FreeBSD due to missing pytaglib ([#843](https://github.com/Nicotine-Plus/nicotine-plus/issues/843))
+ * Download Recursive ([#844](https://github.com/Nicotine-Plus/nicotine-plus/issues/844))
+
 Version 2.1.2 (12 October 2020)
 -----------------------------
 
