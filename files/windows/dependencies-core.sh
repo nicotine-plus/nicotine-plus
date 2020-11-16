@@ -23,24 +23,12 @@
 
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
-  mingw-w64-$ARCH-cython \
-  mingw-w64-$ARCH-gcc \
   mingw-w64-$ARCH-python \
   mingw-w64-$ARCH-python-flake8 \
   mingw-w64-$ARCH-python-pip \
-  mingw-w64-$ARCH-python-pytest \
-  mingw-w64-$ARCH-taglib
+  mingw-w64-$ARCH-python-pytest
 
 # Install dependencies with pip
 pip3 install \
   pep8-naming \
   semidbm
-
-# pytaglib
-wget https://github.com/supermihi/pytaglib/archive/v1.4.6.tar.gz
-tar -zxvf v1.4.6.tar.gz
-cd pytaglib-1.4.6/
-sed -i "/is_windows = / s/sys.platform.startswith('win')/False/" setup.py
-python setup.py install
-cd ..
-rm -rf pytaglib-1.4.6/

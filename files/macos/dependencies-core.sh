@@ -23,11 +23,9 @@
 
 # Install dependencies from the main Homebrew repos
 brew install \
-  flake8 \
-  taglib
+  flake8
 
 # Install dependencies with pip
 pip3 install \
   pep8-naming \
-  pytaglib \
   pytest

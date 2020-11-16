@@ -25,7 +25,7 @@ Changes
  * Peer-to-peer (direct) private messaging works properly again
  * General usability improvements to macOS builds
  * Removed option to stop responding to search requests for certain time periods
- * Removed libnotify, miniupnpc and xdg-utils dependencies, as functionality is now handled by Nicotine+.
+ * Removed libnotify, miniupnpc, pytaglib and xdg-utils dependencies, as functionality is now handled by Nicotine+.
  * Multiple under-the-hood code improvements and code style changes, as well as smaller bug fixes
 
 Issues closed on GitHub

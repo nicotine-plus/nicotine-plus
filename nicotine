@@ -76,10 +76,6 @@ You should install GTK 3.0 or newer.""") % e
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
-    # Require pytaglib
-    if not importlib.util.find_spec("taglib"):
-        return _("Cannot find %s, please install it.") % "pytaglib"
-
     # Require semidbm on Windows, for faster loading of shelves
     if sys.platform == "win32" and not importlib.util.find_spec("semidbm"):
         return _("Cannot find %s, please install it.") % "semidbm"
