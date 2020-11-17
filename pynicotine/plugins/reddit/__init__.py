@@ -57,6 +57,7 @@ class Plugin(BasePlugin):
         conn = http.client.HTTPSConnection(domain)
         conn.request("GET", path, headers={"User-Agent": "Nicotine+"})
         response = json.loads(conn.getresponse().read().decode("utf-8"))
+        conn.close()
 
         return response
 

@@ -477,8 +477,10 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
         conn = http.client.HTTPConnection(base_url, timeout=timeout)
 
     conn.request(request_type, path, body=body, headers=headers)
+    response = conn.getresponse().read().decode("utf-8")
+    conn.close()
 
-    return conn.getresponse().read().decode("utf-8")
+    return response
 
 
 """ Debugging """

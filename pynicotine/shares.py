@@ -515,12 +515,15 @@ class Shares:
         mtimes = {}
 
         try:
-            for entry in os.scandir(folder):
+            scandir = os.scandir(folder)
+
+            for entry in scandir:
                 if entry.is_dir():
 
                     path = entry.path
 
                     if self.is_hidden(path):
+                        scandir.close()
                         return mtimes
 
                     try:
@@ -530,6 +533,7 @@ class Shares:
                             'path': path,
                             'error': errtuple
                         })
+                        scandir.close()
                         return mtimes
 
                     mtimes[path] = mtime
