@@ -335,7 +335,7 @@ class UserInfo:
         for hate in hates:
             self.hates_store.append([hate])
 
-    def show_user(self, msg):
+    def show_user(self, msg, indeterminate_progress=False):
 
         if msg is None:
             return
@@ -390,6 +390,8 @@ class UserInfo:
 
                 self.image.set_from_file(name)
                 os.remove(name)
+
+        self.progressbar.set_fraction(1.0)
 
     def show_connection_error(self):
 
