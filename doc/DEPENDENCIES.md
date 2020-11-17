@@ -1,22 +1,31 @@
 # Dependencies
 
-## Required
+## Runtime
+
+### Required
 
 * [python3](https://www.python.org/) >= 3.5 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
-* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
-* [robotframework](https://robotframework.org/) for CI testing.
+* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK.
 
-## Optional
+### Optional
 
 * [gir1.2-appindicator3-0.1](https://lazka.github.io/pgi-docs/AppIndicator3-0.1/index.html) or [gir1.2-ayatanaappindicator3-0.1](https://lazka.github.io/pgi-docs/AyatanaAppIndicator3-0.1/index.html) for tray icon;
-* [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat;
+* [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat.
+
+## Testing
+
+* [python3-flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
+* [python3-pep8-naming](https://pypi.org/project/pep8-naming/) for checking PEP 8 naming conventions;
+* [python3-pytest](https://docs.pytest.org/en/stable/getting-started.html) for unit tests;
+* [robotframework](https://robotframework.org/) for GUI tests.
 
 ## Installing dependencies
+
 ### GNU/Linux
 
-#### Installing the required dependencies
+#### Installing the required runtime dependencies
 * On Redhat/Fedora based distributions:
 ```
 sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject
@@ -26,7 +35,7 @@ sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject
 sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi
 ```
 
-#### Installing the optional dependencies
+#### Installing the optional runtime dependencies
 * On Redhat/Fedora based distributions:
 ```
 sudo dnf install gspell libappindicator-gtk3
@@ -34,6 +43,16 @@ sudo dnf install gspell libappindicator-gtk3
 * On Debian/Ubuntu based distributions:
 ```
 sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1
+```
+
+#### Installing the test dependencies
+* On Redhat/Fedora based distributions:
+```
+sudo dnf install python3-flake8 python3-pep8-naming python3-pytest
+```
+* On Debian/Ubuntu based distributions:
+```
+sudo apt install python3-flake8 python3-pep8-naming python3-pytest
 ```
 
 #### Check the Python version.
@@ -49,5 +68,5 @@ Not to worry, Python 3 is often installed alongside and can be used like this:
 Python 3.7.3
 ```
 
-## Windows
+### Windows
 See [PACKAGING.md](PACKAGING.md#windows)
