@@ -33,6 +33,7 @@ from gettext import gettext as _
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.metadata.tinytag import TinyTag
 
 if sys.platform == "win32":
     # Use semidbm for faster shelves on Windows
@@ -605,10 +606,12 @@ class Shares:
         return files, streams
 
     def get_file_info(self, name, pathname, file=None):
-        """ Get metadata via taglib """
+        """ Get file metadata """
 
         try:
             audio = None
+            bitrateinfo = None
+            duration = None
 
             if file:
                 # Faster way if we use scandir
@@ -616,34 +619,27 @@ class Shares:
             else:
                 size = os.stat(pathname).st_size
 
+            """ We skip metadata scanning of files without meaningful content """
             if size > 128:
-                """ On some operating systems, TagLib might crash when scanning files
-                with truncated headers. We skip metadata scanning of files without
-                meaningful content to work around this issue. """
-
                 try:
-                    import taglib
-                    audio = taglib.File(pathname)
-
-                except IOError:
-                    # We don't care, this happens when a file is not audio
-                    pass
+                    audio = TinyTag.get(pathname, size)
 
                 except Exception as errtuple:
                     log.add(
-                        _("pytaglib error while scanning metadata for file %(path)s: %(error)s"), {
+                        _("Error while scanning metadata for file %(path)s: %(error)s"), {
                             'path': pathname,
                             'error': errtuple
                         }
                     )
 
             if audio is not None:
-                bitrateinfo = (int(audio.bitrate), int(False))  # Second argument used to be VBR (variable bitrate)
-                fileinfo = (name, size, bitrateinfo, int(audio.length))
-            else:
-                fileinfo = (name, size, None, None)
+                if audio.bitrate is not None:
+                    bitrateinfo = (int(audio.bitrate), int(False))  # Second argument used to be VBR (variable bitrate)
 
-            return fileinfo
+                if audio.duration is not None:
+                    duration = int(audio.duration)
+
+            return (name, size, bitrateinfo, duration)
 
         except Exception as errtuple:
             log.add(_("Error while scanning file %(path)s: %(error)s"), {'path': pathname, 'error': errtuple})
@@ -660,7 +656,7 @@ class Shares:
             stream.extend(message.pack_object(fileinfo[0]))
             stream.extend(message.pack_object(fileinfo[1], unsignedlonglong=True))
 
-            if fileinfo[2] is not None:
+            if fileinfo[2] is not None and fileinfo[3] is not None:
                 try:
                     stream.extend(message.pack_object('mp3'))
                     stream.extend(message.pack_object(3))

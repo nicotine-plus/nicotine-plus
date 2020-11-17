@@ -26,8 +26,7 @@ pacman --noconfirm -S --needed \
   mingw-w64-$ARCH-gspell \
   mingw-w64-$ARCH-gtk3 \
   mingw-w64-$ARCH-nsis \
-  mingw-w64-$ARCH-python-gobject \
-  mingw-w64-$ARCH-taglib
+  mingw-w64-$ARCH-python-gobject
 
 # Install dependencies with pip
 pip3 install \
