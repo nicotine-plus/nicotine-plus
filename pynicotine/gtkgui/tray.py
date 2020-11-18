@@ -200,7 +200,12 @@ class Tray:
 
             for entry in scandir:
                 if entry.is_file() and entry.name.startswith(icon_scheme):
-                    scandir.close()
+                    try:
+                        scandir.close()
+                    except AttributeError:
+                        # Python 3.5 compatibility
+                        pass
+
                     return True
 
         except FileNotFoundError:

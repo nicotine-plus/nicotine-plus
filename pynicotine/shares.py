@@ -523,7 +523,12 @@ class Shares:
                     path = entry.path
 
                     if self.is_hidden(path):
-                        scandir.close()
+                        try:
+                            scandir.close()
+                        except AttributeError:
+                            # Python 3.5 compatibility
+                            pass
+
                         return mtimes
 
                     try:
@@ -533,7 +538,13 @@ class Shares:
                             'path': path,
                             'error': errtuple
                         })
-                        scandir.close()
+
+                        try:
+                            scandir.close()
+                        except AttributeError:
+                            # Python 3.5 compatibility
+                            pass
+
                         return mtimes
 
                     mtimes[path] = mtime

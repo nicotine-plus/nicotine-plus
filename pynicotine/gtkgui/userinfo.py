@@ -213,6 +213,7 @@ class UserInfo:
 
         # Build the window
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
+        self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
@@ -391,13 +392,24 @@ class UserInfo:
                 self.image.set_from_file(name)
                 os.remove(name)
 
-        self.progressbar.set_fraction(1.0)
+        self.info_bar.set_visible(False)
+        self.set_finished()
 
     def show_connection_error(self):
 
-        InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+        self.info_bar.show_message(
             _("Unable to request information from user. Either you both have a closed listening port, the user is offline, or there's a temporary connectivity issue.")
         )
+
+        self.set_finished()
+
+    def set_finished(self):
+
+        # Tab notification
+        self.frame.request_tab_icon(self.frame.UserInfoTabLabel)
+        self.userinfos.request_changed(self.Main)
+
+        self.progressbar.set_fraction(1.0)
 
     def update_gauge(self, msg):
 
@@ -422,6 +434,8 @@ class UserInfo:
         self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
 
     def on_refresh(self, widget):
+        self.info_bar.set_visible(False)
+        self.progressbar.set_fraction(0.0)
         self.frame.local_user_info_request(self.user)
 
     def on_browse_user(self, widget):

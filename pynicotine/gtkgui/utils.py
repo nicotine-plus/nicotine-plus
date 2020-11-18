@@ -1010,25 +1010,35 @@ class IconNotebook:
 
 
 class InfoBar:
-
     """ Wrapper for setting up a GtkInfoBar """
 
     def __init__(self, info_bar, message_type):
 
         self.info_bar = info_bar
         self.info_bar.set_message_type(message_type)
-        self.info_bar.connect("response", self.hide)
+        self.info_bar.set_show_close_button(True)
+        self.info_bar.connect("response", self._hide)
+
+        self.set_visible(False)
+
+    def _hide(self, *args):
+        self.set_visible(False)
+
+    def set_visible(self, visible):
+
+        try:
+            self.info_bar.set_revealed(visible)
+
+        except AttributeError:
+            # Older GTK version
+            self.info_bar.set_visible(visible)
 
     def show_message(self, message):
 
         label = self.info_bar.get_content_area().get_children()[0]
         label.set_text(message)
 
-        self.info_bar.set_revealed(True)
-        self.info_bar.set_show_close_button(True)
-
-    def hide(self, *args):
-        self.info_bar.set_revealed(False)
+        self.set_visible(True)
 
 
 class PopupMenu(Gtk.Menu):

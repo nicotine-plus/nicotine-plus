@@ -53,6 +53,7 @@ class UserBrowse:
 
         # Build the window
         load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
+        self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         self.userbrowses = userbrowses
 
@@ -552,18 +553,18 @@ class UserBrowse:
         self.make_new_model(msg.list)
 
         if len(msg.list) == 0:
-            InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+            self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, or they are sharing files privately.")
             )
 
         else:
-            self.InfoBar.set_revealed(False)
+            self.info_bar.set_visible(False)
 
         self.set_finished()
 
     def show_connection_error(self):
 
-        InfoBar(self.InfoBar, Gtk.MessageType.INFO).show_message(
+        self.info_bar.show_message(
             _("Unable to request shared files from user. Either the user is offline, you both have a closed listening port, or there's a temporary connectivity issue.")
         )
 
@@ -952,6 +953,7 @@ class UserBrowse:
         self.Main.destroy()
 
     def on_refresh(self, widget):
+        self.info_bar.set_visible(False)
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
         self.frame.browse_user(self.user)
