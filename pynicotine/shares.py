@@ -638,7 +638,7 @@ class Shares:
             """ We skip metadata scanning of files without meaningful content """
             if size > 128:
                 try:
-                    audio = self.tinytag.get(pathname, size)
+                    audio = self.tinytag.get(pathname, size, tags=False)
 
                 except Exception as errtuple:
                     log.add(
