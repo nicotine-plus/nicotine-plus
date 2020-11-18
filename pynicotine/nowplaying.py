@@ -144,6 +144,7 @@ class NowPlaying:
         conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&format=json", headers={"User-Agent": "Nicotine+"})
         resp = conn.getresponse()
         data = resp.read().decode("utf-8")
+        conn.close()
 
         if resp.status != 200 or resp.reason != "OK":
             log.add_warning(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"), {"error": str(data)})

@@ -280,7 +280,6 @@
               <object class="GtkInfoBar" id="InfoBar">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="revealed">False</property>
                 <child internal-child="content_area">
                   <object class="GtkBox">
                     <property name="can-focus">False</property>

@@ -196,8 +196,16 @@ class Tray:
             icon_scheme = "trayicon_" + icon_name + "."
 
         try:
-            for entry in os.scandir(icon_path):
+            scandir = os.scandir(icon_path)
+
+            for entry in scandir:
                 if entry.is_file() and entry.name.startswith(icon_scheme):
+                    try:
+                        scandir.close()
+                    except AttributeError:
+                        # Python 3.5 compatibility
+                        pass
+
                     return True
 
         except FileNotFoundError:

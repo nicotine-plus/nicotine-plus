@@ -180,6 +180,7 @@ class SSDP:
             r.uuid = uuid
             r.type = svc_type
 
+        sock.close()
         log.add_debug('UPnP: %s device(s) detected', str(len(routers)))
 
         return routers
