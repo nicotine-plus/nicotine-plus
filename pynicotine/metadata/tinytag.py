@@ -68,7 +68,7 @@ def _bytes_to_int(b):
 
 
 class TinyTag(object):
-    def __init__(self, filehandler, filesize, ignore_errors=False):
+    def __init__(self, filehandler=None, filesize=0, ignore_errors=False):
         if isinstance(filehandler, str):
             raise Exception('Use `TinyTag.get(filepath)` instead of `TinyTag(filepath)`')
         self._filehandler = filehandler
@@ -93,42 +93,31 @@ class TinyTag(object):
         self._load_image = False
         self._image_data = None
         self._ignore_errors = ignore_errors
+        self._mapping = None
 
     def get_image(self):
         return self._image_data
 
-    @classmethod
-    def _get_parser_for_filename(cls, filename):
-        mapping = {
-            ('.mp3',): ID3,
-            ('.oga', '.ogg', '.opus'): Ogg,
-            ('.wav',): Wave,
-            ('.flac',): Flac,
-            ('.wma',): Wma,
-            ('.m4b', '.m4a', '.mp4'): MP4,
-        }
-        for ext, tagclass in mapping.items():
+    def get(self, filename, size, tags=True, duration=True, image=False, ignore_errors=False):
+        parser_class = None
+        if self._mapping is None:
+            self._mapping = {
+                ('.mp3',): ID3,
+                ('.oga', '.ogg', '.opus'): Ogg,
+                ('.wav',): Wave,
+                ('.flac',): Flac,
+                ('.wma',): Wma,
+                ('.m4b', '.m4a', '.mp4'): MP4,
+            }
+        for ext, tagclass in self._mapping.items():
             if filename.lower().endswith(ext):
-                return tagclass
-        return None
-
-    @classmethod
-    def get_parser_class(cls, filename):
-        if cls != TinyTag:  # if `get` is invoked on TinyTag, find parser by ext
-            return cls  # otherwise use the class on which `get` was invoked
-        parser_class = cls._get_parser_for_filename(filename)
-        return parser_class
-
-    @classmethod
-    def get(cls, filename, size, tags=True, duration=True, image=False, ignore_errors=False):
-        filename = os.path.expanduser(filename)
-        parser_class = cls.get_parser_class(filename)
-        if parser_class is not None:
-            with io.open(filename, 'rb') as af:
-                tag = parser_class(af, size, ignore_errors=ignore_errors)
-                tag.load(tags=tags, duration=duration, image=image)
-                return tag
-        return TinyTag(None, 0)
+                parser_class = tagclass
+        if parser_class is None:
+            return None
+        with io.open(filename, 'rb') as af:
+            tag = parser_class(af, size, ignore_errors=ignore_errors)
+            tag.load(tags=tags, duration=duration, image=image)
+            return tag
 
     def load(self, tags, duration, image=False):
         self._load_image = image

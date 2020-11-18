@@ -47,7 +47,6 @@ from pynicotine.logfacility import log
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
-from pynicotine.upnp.portmapper import UPnPPortMapping
 from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
@@ -865,6 +864,7 @@ class NetworkEventProcessor:
         if self.config.sections["server"]["upnp"]:
 
             # Initialise a UPnPPortMapping object
+            from pynicotine.upnp.portmapper import UPnPPortMapping
             upnp = UPnPPortMapping()
 
             # Do the port mapping
