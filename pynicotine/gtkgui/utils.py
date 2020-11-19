@@ -1300,64 +1300,55 @@ class TextSearchBar:
 
         self.textview.connect("key-press-event", self.on_key_press)
 
-    def on_search_changed(self, widget):
+    def on_search_match(self, search_type, restarted=False):
 
         buffer = self.textview.get_buffer()
-        start, end = buffer.get_bounds()
         query = self.entry.get_text()
 
         self.textview.emit("select-all", False)
 
-        iterator = start
-        match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        if search_type == "typing":
+            start, end = buffer.get_bounds()
+            iterator = start
+        else:
+            current = buffer.get_mark("insert")
+            iterator = buffer.get_iter_at_mark(current)
+
+        if search_type == "previous":
+            match = iterator.backward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+        else:
+            match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match
-            buffer.place_cursor(match_end)
-            buffer.select_range(match_end, match_start)
+
+            if search_type == "previous":
+                buffer.place_cursor(match_start)
+                buffer.select_range(match_start, match_end)
+            else:
+                buffer.place_cursor(match_end)
+                buffer.select_range(match_end, match_start)
+
             self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
+
+        elif not restarted and search_type != "typing":
+            start, end = buffer.get_bounds()
+
+            if search_type == "previous":
+                buffer.place_cursor(end)
+            elif search_type == "next":
+                buffer.place_cursor(start)
+
+            self.on_search_match(search_type, restarted=True)
+
+    def on_search_changed(self, widget):
+        self.on_search_match(search_type="typing")
 
     def on_search_previous_match(self, widget):
-
-        buffer = self.textview.get_buffer()
-        query = self.entry.get_text()
-
-        self.textview.emit("select-all", False)
-
-        current = buffer.get_mark("insert")
-        iterator = buffer.get_iter_at_mark(current)
-        match = iterator.backward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-        if match is not None and len(match) == 2:
-            match_start, match_end = match
-            buffer.place_cursor(match_start)
-            buffer.select_range(match_start, match_end)
-            self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-        else:
-            start, end = buffer.get_bounds()
-            buffer.place_cursor(end)
-            self.on_search_previous_match(widget)
+        self.on_search_match(search_type="previous")
 
     def on_search_next_match(self, widget):
-
-        buffer = self.textview.get_buffer()
-        query = self.entry.get_text()
-
-        self.textview.emit("select-all", False)
-
-        current = buffer.get_mark("insert")
-        iterator = buffer.get_iter_at_mark(current)
-        match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
-
-        if match is not None and len(match) == 2:
-            match_start, match_end = match
-            buffer.place_cursor(match_end)
-            buffer.select_range(match_end, match_start)
-            self.textview.scroll_to_iter(match_start, 0, False, 0.5, 0.5)
-        else:
-            start, end = buffer.get_bounds()
-            buffer.place_cursor(start)
-            self.on_search_next_match(widget)
+        self.on_search_match(search_type="next")
 
     def on_key_press(self, widget, event):
         key = Gdk.keyval_name(event.keyval)
