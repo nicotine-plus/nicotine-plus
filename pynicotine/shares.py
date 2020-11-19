@@ -54,6 +54,7 @@ class Shares:
         self.queue = queue
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+        self.tinytag = TinyTag()
 
         self.convert_shares()
         self.load_shares(
@@ -637,7 +638,7 @@ class Shares:
             """ We skip metadata scanning of files without meaningful content """
             if size > 128:
                 try:
-                    audio = TinyTag.get(pathname, size)
+                    audio = self.tinytag.get(pathname, size, tags=False)
 
                 except Exception as errtuple:
                     log.add(
