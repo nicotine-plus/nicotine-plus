@@ -1,6 +1,6 @@
 # Icon Credits
 
-Created by alekksander (released under LGPLv3+)
+Created by alekksander (released under LGPLv3+)  
 Modified by mathiascode
  
 online.svg  
@@ -11,20 +11,19 @@ hilite3.svg
 
 ---
 
-Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
-Modified by alekksander and mathiascode
+Created by mathiascode (released under LGPLv3+)
+
+org.nicotine_plus.Nicotine.svg  
+org.nicotine_plus.Nicotine-symbolic.svg
+
+---
+
+Created by mathiascode (released under LGPLv3+)
 
 trayicon_away.svg  
 trayicon_connect.svg  
 trayicon_disconnect.svg  
 trayicon_msg.svg
-
----
-
-Created by Quinox (released under GPLv2+ and upgraded to GPLv3+)
-Modified by mathiascode
-
-org.nicotine_plus.Nicotine.svg
 
 ---
 
