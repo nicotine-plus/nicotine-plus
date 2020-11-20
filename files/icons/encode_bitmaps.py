@@ -24,10 +24,7 @@
 import os
 from os.path import isfile
 
-table = [
-    ["files/org.nicotine_plus.Nicotine.svg", "n"],
-    ["files/org.nicotine_plus.Nicotine.svg", "notify"]
-]
+table = []
 
 for name in sorted(os.listdir(os.path.join("files", "icons", "hilite"))):
     p = os.path.join("files", "icons", "hilite", name)
@@ -40,12 +37,6 @@ for name in sorted(os.listdir(os.path.join("files", "icons", "status"))):
 
     if isfile(p):
         table.append([p, name[:-4]])
-
-for name in sorted(os.listdir(os.path.join("files", "icons", "tray"))):
-    p = os.path.join("files", "icons", "tray", name)
-
-    if isfile(p):
-        table.append([p, "trayicon_%s" % name[27:-4]])
 
 flagtable = []
 

@@ -53,6 +53,7 @@ class Tray:
         self.trayicon = None
         self.custom_icons = False
         self.local_icons = False
+        self.final_icon_path = None
         self.tray_status = {
             "status": "disconnect",
             "last": "disconnect"
@@ -268,11 +269,11 @@ class Tray:
 
         """ Set up icons """
 
-        final_icon_path = self.get_final_icon_path()
+        self.final_icon_path = self.get_final_icon_path()
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
-        if self.appindicator is not None and final_icon_path:
-            self.trayicon.set_icon_theme_path(final_icon_path)
+        if self.appindicator is not None and self.final_icon_path:
+            self.trayicon.set_icon_theme_path(self.final_icon_path)
 
         self.set_image(self.tray_status["status"])
 
@@ -342,9 +343,8 @@ class Tray:
             else:
                 # GtkStatusIcon fallback
                 if self.custom_icons or self.local_icons:
-                    self.trayicon.set_from_pixbuf(
-                        self.frame.images["trayicon_" + icon_name]
-                    )
+                    self.trayicon.set_from_file(os.path.join(self.final_icon_path, "org.nicotine_plus.Nicotine-" + icon_name))
+
                 else:
                     self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
 

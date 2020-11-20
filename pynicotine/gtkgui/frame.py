@@ -145,7 +145,8 @@ class NicotineFrame:
 
         self.load_icons()
 
-        self.MainWindow.set_default_icon(self.images["n"])
+        if self.images["n"]:
+            self.MainWindow.set_default_icon(self.images["n"])
 
         """ Window Properties """
 
@@ -525,8 +526,11 @@ class NicotineFrame:
         self.flag_users = {}
 
         def load_static(name):
-            data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, "%s" % (name,))))
-            return GdkPixbuf.Pixbuf.new_from_stream(data)
+            if hasattr(imagedata, name):
+                data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, name)))
+                return GdkPixbuf.Pixbuf.new_from_stream(data)
+
+            return None
 
         names = [
             "away",

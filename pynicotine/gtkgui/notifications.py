@@ -173,7 +173,10 @@ class Notifications:
 
             notification_popup = Gio.Notification.new(title)
             notification_popup.set_body(message)
-            notification_popup.set_icon(self.frame.images["notify"])
+
+            if self.frame.images["notify"]:
+                notification_popup.set_icon(self.frame.images["notify"])
+
             notification_popup.set_priority(priority)
 
             self.application.send_notification(None, notification_popup)
