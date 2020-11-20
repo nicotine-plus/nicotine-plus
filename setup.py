@@ -50,6 +50,13 @@ data_files.append(
     )
 )
 
+data_files.append(
+    (
+        "share/icons/hicolor/scalable/apps",
+        ["files/org.nicotine_plus.Nicotine-symbolic.svg"]
+    )
+)
+
 # Tray icons
 tray_icons = glob.glob(os.path.join("files", "icons", "tray", "*"))
 
