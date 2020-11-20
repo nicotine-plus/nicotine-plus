@@ -52,7 +52,7 @@ data_files.append(
 
 data_files.append(
     (
-        "share/icons/hicolor/scalable/apps",
+        "share/icons/hicolor/symbolic/apps",
         ["files/org.nicotine_plus.Nicotine-symbolic.svg"]
     )
 )
