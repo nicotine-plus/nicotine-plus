@@ -157,6 +157,17 @@ $ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
       --qemu-options='-enable-kvm'
 ```
 
+# Where did the name Nicotine come from?
+
+> I was in a geeky mood and was browsing [http://www.bash.org](http://www.bash.org)'s QDB.  
+I stumbled across this quote:  
+>> **\<etc>** so tempting to release a product called 'nicotine' and wait for the patches.  
+>> **\<etc>** then i would have a reason to only apply one patch a day. otherwise, i'm going against medical advise.  
+>
+> So I thought what the hell and bluntly stole etc's idea.  
+
+<p align="right">Hyriand, <i>founder of the Nicotine project</i></p>
+
 # Legal and Privacy
 
 - By using Nicotine+, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682), as long as you are using the official Soulseek server.
