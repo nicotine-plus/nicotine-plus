@@ -275,14 +275,14 @@ class Tray:
         if self.appindicator is not None and self.final_icon_path:
             self.trayicon.set_icon_theme_path(self.final_icon_path)
 
-        self.set_image(self.tray_status["status"])
-
         """ Set visible """
         if self.appindicator is not None:
             self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
         else:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(True)
+
+        self.set_image(self.tray_status["status"])
 
     def hide(self):
 
