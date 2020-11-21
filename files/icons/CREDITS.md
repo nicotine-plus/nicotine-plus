@@ -1,6 +1,6 @@
 # Icon Credits
 
-Created by alekksander (released under LGPLv3+)  
+Created by alekksander (released under GPLv3+)  
 Modified by mathiascode
  
 online.svg  
