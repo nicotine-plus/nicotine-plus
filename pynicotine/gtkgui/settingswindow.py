@@ -1527,6 +1527,7 @@ class IconsFrame(BuildFrame):
             "ui": {
                 "icontheme": self.ThemeDir,
                 "trayicon": self.TrayiconCheck,
+                "startup_hidden": self.StartupHidden,
                 "exitdialog": None
             }
         }
@@ -1556,6 +1557,9 @@ class IconsFrame(BuildFrame):
             # Tray icons don't work as expected on macOS
             self.hide_tray_icon_settings()
             return
+
+        sensitive = self.TrayiconCheck.get_active()
+        self.StartupHidden.set_sensitive(sensitive)
 
         if ui["exitdialog"] is not None:
 
@@ -1595,6 +1599,13 @@ class IconsFrame(BuildFrame):
         self.ThemeDir.unselect_all()
         self.ThemeDir.set_current_folder("   __invalid__   ")
 
+    def on_toggle_tray(self, widget):
+
+        self.StartupHidden.set_sensitive(widget.get_active())
+
+        if not widget.get_active() and self.StartupHidden.get_active():
+            self.StartupHidden.set_active(widget.get_active())
+
     def get_settings(self):
 
         mainwindow_close = 0
@@ -1617,6 +1628,7 @@ class IconsFrame(BuildFrame):
             "ui": {
                 "icontheme": icontheme,
                 "trayicon": self.TrayiconCheck.get_active(),
+                "startup_hidden": self.StartupHidden.get_active(),
                 "exitdialog": mainwindow_close
             }
         }

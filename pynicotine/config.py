@@ -337,6 +337,7 @@ class Config:
                 "showaway": False,
                 "buddylistinchatrooms": 0,
                 "trayicon": True,
+                "startup_hidden": False,
                 "filemanager": "",
                 "speechenabled": False,
                 "speechprivate": "%(user)s told you.. %(message)s",
