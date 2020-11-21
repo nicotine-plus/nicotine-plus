@@ -1,61 +1,61 @@
-# List of translators for Nicotine & Nicotine+:
+# Nicotine+ Translators
 
-##### English
+## English
  * mathiascode (2020)
- * Michael Labouebe (2016) < gfarmerfr (at) free.fr >
+ * Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
  * hyriand
  * daelstorm
 
-##### Dutch
+## Dutch
  * nince78 (2007)
  * hyriand
 
-##### German
+## German
  * Meokater (2007)
  * (.\_.) (2007)
  * lippel (2004)
  * hyriand (2003)
 
-##### Spanish
+## Spanish
  * Silvio Orta (2007)
  * Dreslo
 
-##### French
+## French
  * m-balthazar (2020)
- * Michael Labouebe (2016-2017) < gfarmerfr (at) free.fr >
+ * Michael Labouebe (2016-2017) [gfarmerfr(at)free(dot)fr]
  * ManWell (2007)
  * zniavre (2007)
  * flashfr
  * systr
 
-##### Italian
+## Italian
  * Gianluca Boiano
- * Nicola (2007) < info (at) nicoladimaria.info >
+ * Nicola (2007) [info(at)nicoladimaria(dot)info]
  * dbazza
 
-##### Polish
+## Polish
  * Amun-Ra (2007)
  * thine (2007)
  * owczi
 
-##### Swedish
- * alimony < markus (at) samsonrourke.com >
+## Swedish
+ * alimony [markus(at)samsonrourke(dot)com]
 
-##### Hungarian
- * djbaloo < dj_baloo (at) freemail.hu >
+## Hungarian
+ * djbaloo [dj_baloo(at)freemail(dot)hu]
 
-##### Slovak
- * Josef Riha (2006) < jose1711 (at) gmail.com >
+## Slovak
+ * Josef Riha (2006) [jose1711(at)gmail(dot)com]
 
-##### Portuguese Brazilian
- * Suicide|Solution (2006) < felipe (at) bunghole.com.br >
+## Portuguese Brazilian
+ * Suicide\|Solution (2006) [felipe(at)bunghole(dot)com(dot)br]
  * yyyyyyyan (2020)
 
-##### Lithuanian
- * Žygimantas (2006) < uid0 (at) akl.lt >
+## Lithuanian
+ * Žygimantas (2006) [uid0(at)akl(dot)lt]
 
-##### Finnish
- * Kalevi < mr_auer (at) welho.net >
+## Finnish
+ * Kalevi [mr_auer(at)welho(dot)net]
 
-##### Euskara
- * The Librezale.org Team < librezale (at) librezale.org >
+## Euskara
+ * The Librezale.org Team [librezale(at)librezale(dot)org]

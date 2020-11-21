@@ -13,7 +13,9 @@ The dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.m
 
 To build source distribution files (.tar.bz2 & .tar.gz) from the git repository run:
 
-`python setup.py sdist --formats=bztar,gztar`
+```console
+python setup.py sdist --formats=bztar,gztar
+```
 
 The source distribution files will be located in the `dist` subdirectory of your git repository.
 
@@ -22,32 +24,45 @@ The source distribution files will be located in the `dist` subdirectory of your
 Unstable and stable PPAs are already provided for pre-compiled packages, as described in the `README.md`. However, if you wish to build your own package perform the following.
 
 Start by generating the "upstream" tarball:
-```
-$ cd nicotine_source
-$ ./debian/rules get-orig-source
+
+```console
+cd nicotine_source
+./debian/rules get-orig-source
 ```
 
 Build the Debian source package:
-```
-$ debuild -S -sa
+
+```console
+debuild -S -sa
 ```
 
 Build the binary from the source package and upstream tarball via `sbuild`:
-```
-$ sbuild ../nicotine(...).dsc
+
+```console
+sbuild ../nicotine(...).dsc
 ```
 
 #### Building a RPM package
 
 You need to install the RPM building tools first:
 
-* On Redhat/Fedora based distributions: `sudo dnf install rpm-build python3-gobject-devel`
+* On Redhat/Fedora based distributions:
 
-* On Debian/Ubuntu based distributions: `sudo apt install rpm`
+```console
+sudo dnf install rpm-build python3-gobject-devel
+```
+
+* On Debian/Ubuntu based distributions:
+
+```console
+sudo apt install rpm
+```
 
 Then you can create an RPM with:
 
-`python setup.py bdist_rpm`
+```console
+python setup.py bdist_rpm
+```
 
 The RPM package will be located in the `dist` subdirectory of your git repository.
 
@@ -62,19 +77,25 @@ First, follow the instructions on installing MSYS2: [https://pygobject.readthedo
 
 Then, install dependencies:
 
-`export ARCH=x86_64`  
-`files/windows/dependencies-core.sh`
-`files/windows/dependencies-packaging.sh`
+```console
+export ARCH=x86_64
+files/windows/dependencies-core.sh
+files/windows/dependencies-packaging.sh
+```
 
 Clone the Nicotine+ git repository:
 
-`pacman -S git`  
-`git clone https://github.com/Nicotine-Plus/nicotine-plus`  
-`cd nicotine-plus`
+```console
+pacman -S git
+git clone https://github.com/Nicotine-Plus/nicotine-plus
+cd nicotine-plus
+```
 
 Run PyInstaller:
 
-`pyinstaller files/windows/nicotine.spec`
+```console
+pyinstaller files/windows/nicotine.spec
+```
 
 After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
 
@@ -84,8 +105,10 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 
 Run the following:
 
-`cd files/windows`  
-`makensis -DARCH=x86_64 nicotine.nsi`
+```console
+cd files/windows
+makensis -DARCH=x86_64 nicotine.nsi
+```
 
 You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
 

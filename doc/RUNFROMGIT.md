@@ -4,22 +4,24 @@ This is not particularly hard, but it may come with some additional required ski
 
 ## Clone the repository and run Nicotine+
 This is great if you're the only Nicotine+ user on your system and you want to test the latest version. Using a Python virtual environment (venv) is recommended, as this ensures you have the correct dependencies to run Nicotine+.
-```
-$ git clone https://github.com/Nicotine-Plus/nicotine-plus.git
-$ cd nicotine-plus
-$ python3 -m venv .env
-$ .env/bin/pip install -r requirements.txt
-$ .env/bin/python3 setup.py install
-$ .env/bin/nicotine
+
+```console
+git clone https://github.com/Nicotine-Plus/nicotine-plus.git
+cd nicotine-plus
+python3 -m venv .env
+.env/bin/pip install -r requirements.txt
+.env/bin/python3 setup.py install
+.env/bin/nicotine
 ```
 
 For Windows, follow the instructions in [PACKAGING.md](PACKAGING.md#windows) instead.
 
 ## Updating your cloned Nicotine+
 If you want to update to the latest version of Nicotine+, proceed like this:
-```
-$ cd nicotine-plus
-$ git pull
-$ .env/bin/python3 setup.py install
-$ .env/bin/nicotine
+
+```console
+cd nicotine-plus
+git pull
+.env/bin/python3 setup.py install
+.env/bin/nicotine
 ```

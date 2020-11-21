@@ -1,12 +1,3 @@
+# This file is responsible for generating the main website from our GitHub repository
 title: Nicotine+
-logo: /files/org.nicotine_plus.Nicotine.svg
 description: A graphical client for Soulseek
-
-plugins:
-  - jekyll-relative-links
-
-relative_links:
-  enabled: true
-  collections: true
-
-theme: jekyll-theme-minimal
