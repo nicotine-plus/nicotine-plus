@@ -58,7 +58,7 @@ class PluginHandler(object):
             pass
 
         # Load system-wide plugins
-        prefix = os.path.dirname(__file__)
+        prefix = os.path.dirname(os.path.realpath(__file__))
         self.plugindirs.append(os.path.join(prefix, "plugins"))
 
         # Load home directory plugins

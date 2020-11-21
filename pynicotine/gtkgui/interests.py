@@ -42,7 +42,7 @@ class Interests:
         self.frame = frame
         self.np = np
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "interests.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)

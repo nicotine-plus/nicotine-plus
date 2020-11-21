@@ -51,7 +51,7 @@ class UserList:
         self.frame = frame
         config = self.frame.np.config.sections
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "buddylist.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "buddylist.ui"))
 
         """ Columns """
 

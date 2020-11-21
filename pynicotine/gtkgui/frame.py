@@ -86,6 +86,7 @@ class NicotineFrame:
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
+        self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.current_tab_label = None
         self.checking_update = False
         self.rescanning = False
@@ -131,13 +132,13 @@ class NicotineFrame:
 
         """ Main Window UI """
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
+        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
 
         """ Menu Bar """
 
         self.set_up_actions()
 
-        builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+        builder = Gtk.Builder().new_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
         self.application.set_menubar(builder.get_object("menubar"))
 
         """ Icons """
@@ -509,7 +510,7 @@ class NicotineFrame:
         try:
             if flag not in self.flag_images:
                 self.flag_images[flag] = GdkPixbuf.Pixbuf.new_from_file(
-                    os.path.join(os.path.dirname(os.path.realpath(__file__)), "icons", "flags", flag[5:] + ".svg")
+                    os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
                 )
 
         except GObject.GError:
@@ -522,7 +523,7 @@ class NicotineFrame:
 
         try:
             return GdkPixbuf.Pixbuf.new_from_file(
-                os.path.join(os.path.dirname(os.path.realpath(__file__)), "icons", name + ".svg")
+                os.path.join(self.gui_dir, "icons", name + ".svg")
             )
 
         except GObject.GError:
@@ -566,7 +567,7 @@ class NicotineFrame:
             icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
             # Git folder
-            icon_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "files"))
+            icon_path = os.path.abspath(os.path.join(self.gui_dir, "..", "..", "files"))
 
         # Window and notification icons
         try:
@@ -1240,7 +1241,7 @@ class NicotineFrame:
     def on_about_chatroom_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "chatroomcommands.ui"))
 
         self.about_chatroom_commands = builder.get_object("AboutChatRoomCommands")
         self.about_chatroom_commands.set_transient_for(self.MainWindow)
@@ -1249,7 +1250,7 @@ class NicotineFrame:
     def on_about_private_chat_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "privatechatcommands.ui"))
 
         self.about_private_chat_commands = builder.get_object("AboutPrivateChatCommands")
         self.about_private_chat_commands.set_transient_for(self.MainWindow)
@@ -1258,7 +1259,7 @@ class NicotineFrame:
     def on_about_filters(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "searchfilters.ui"))
 
         self.about_search_filters = builder.get_object("AboutSearchFilters")
         self.about_search_filters.set_transient_for(self.MainWindow)
@@ -1319,7 +1320,7 @@ class NicotineFrame:
     def on_about(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "about.ui"))
 
         self.about = builder.get_object("About")
 

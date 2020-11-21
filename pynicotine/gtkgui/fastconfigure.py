@@ -75,7 +75,7 @@ class FastConfigureAssistant(object):
         self.initphase = True  # don't respond to signals unless False
         self.config = frame.np.config
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "fastconfigure.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "fastconfigure.ui"))
 
         self.FastConfigureAssistant.set_transient_for(self.frame.MainWindow)
 

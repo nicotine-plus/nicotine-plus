@@ -51,13 +51,13 @@ class UserBrowse:
 
     def __init__(self, userbrowses, user):
 
+        self.userbrowses = userbrowses
+        self.frame = userbrowses.frame
+
         # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userbrowse.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
-        self.userbrowses = userbrowses
-
-        self.frame = userbrowses.frame
         self.user = user
         self.conn = None
 

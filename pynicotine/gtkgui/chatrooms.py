@@ -746,11 +746,10 @@ class ChatRoom:
     def __init__(self, roomsctrl, room, users, meta=False):
 
         self.roomsctrl = roomsctrl
-
         self.frame = roomsctrl.frame
 
         # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "chatrooms.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)

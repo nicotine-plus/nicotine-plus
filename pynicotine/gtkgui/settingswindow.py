@@ -57,7 +57,7 @@ class BuildFrame:
         self.frame = self.p.frame
 
         # Build the frame
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", window + ".ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", window + ".ui"))
 
 
 class ServerFrame(BuildFrame):
@@ -3083,7 +3083,7 @@ class BuildDialog(Gtk.Dialog):
         self.settings = parent.p
 
         # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "pluginproperties.ui"))
+        load_ui_elements(self, os.path.join(self.settings.frame.gui_dir, "ui", "settings", "pluginproperties.ui"))
 
         self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
         self.tw = {}
@@ -3432,7 +3432,7 @@ class Settings:
         self.frame = frame
 
         # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "settings", "settingswindow.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", "settingswindow.ui"))
 
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))

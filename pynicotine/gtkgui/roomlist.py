@@ -35,7 +35,7 @@ class RoomList:
         # Build the window
         self.frame = frame
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomlist.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "roomlist.ui"))
 
         self.search_iter = None
         self.query = ""

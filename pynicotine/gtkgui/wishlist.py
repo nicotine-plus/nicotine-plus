@@ -47,7 +47,7 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "wishlist.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "wishlist.ui"))
 
         self.WishListDialog.set_transient_for(frame.MainWindow)
 

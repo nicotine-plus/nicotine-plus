@@ -31,7 +31,7 @@ class RoomWall:
         self.frame = frame
         self.room = room
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "roomwall.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "roomwall.ui"))
 
         self.RoomWallDialog.set_transient_for(frame.MainWindow)
 
