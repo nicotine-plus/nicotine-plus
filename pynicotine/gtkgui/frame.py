@@ -176,7 +176,8 @@ class NicotineFrame:
         if config["ui"]["maximized"]:
             self.MainWindow.maximize()
 
-        if not start_hidden:
+        # Check command line option and config option
+        if not start_hidden and not config["ui"]["startup_hidden"]:
             self.MainWindow.show()
 
         """ Status Bar """
@@ -2553,6 +2554,9 @@ class NicotineFrame:
         else:
             if self.np.transfers is None:
                 self.connect_action.set_enabled(True)
+
+        if msg == "ok" and not self.np.config.sections["ui"]["trayicon"]:
+            self.MainWindow.show()
 
     """ Exit """
 
