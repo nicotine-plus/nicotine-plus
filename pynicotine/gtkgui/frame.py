@@ -519,32 +519,18 @@ class NicotineFrame:
 
         return self.flag_images[flag]
 
-    def load_icons(self):
+    def load_icon_data(self, name):
+        """ Attempts to load an icon from imagedata.py, returns None
+        if icon was not found. """
 
-        self.images = {}
-        self.flag_images = {}
-        self.flag_users = {}
+        if hasattr(imagedata, name):
+            data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, name)))
+            return GdkPixbuf.Pixbuf.new_from_stream(data)
 
-        def load_static(name):
-            if hasattr(imagedata, name):
-                data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, name)))
-                return GdkPixbuf.Pixbuf.new_from_stream(data)
+        return None
 
-            return None
-
-        names = [
-            "away",
-            "online",
-            "offline",
-            "hilite",
-            "hilite3",
-            "trayicon_away",
-            "trayicon_connect",
-            "trayicon_disconnect",
-            "trayicon_msg",
-            "n",
-            "notify"
-        ]
+    def load_custom_icons(self, names):
+        """ Load custom icon theme if one is selected """
 
         if self.np.config.sections["ui"].get("icontheme"):
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
@@ -566,11 +552,90 @@ class NicotineFrame:
                             log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:
-                    self.images[name] = load_static(name)
+                    self.images[name] = self.load_icon_data(name)
 
+            return True
+
+        return False
+
+    def load_icons(self):
+        """ Load custom icons necessary for Nicotine+ to function """
+
+        self.images = {}
+        self.flag_images = {}
+        self.flag_users = {}
+
+        names = [
+            "away",
+            "online",
+            "offline",
+            "hilite",
+            "hilite3",
+            "trayicon_away",
+            "trayicon_connect",
+            "trayicon_disconnect",
+            "trayicon_msg",
+            "n",
+            "notify"
+        ]
+
+        """ Load custom icon theme if available """
+
+        if self.load_custom_icons(names):
+            return
+
+        """ No custom icons found, load icons specified in imagedata.py """
+
+        for name in names:
+            self.images[name] = self.load_icon_data(name)
+
+        """ Load local icons not specified in imagedata.py. If no local
+        icons are found, system-wide icons will be used instead. """
+
+        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
+            # Virtual environment
+            icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
-            for name in names:
-                self.images[name] = load_static(name)
+            # Git folder
+            icon_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "files"))
+
+        # Window and notification icons
+        try:
+            scandir = os.scandir(icon_path)
+
+            for entry in scandir:
+                if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine.svg":
+                    try:
+                        scandir.close()
+                    except AttributeError:
+                        # Python 3.5 compatibility
+                        pass
+
+                    for name in ("n", "notify"):
+                        self.images[name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+        except FileNotFoundError:
+            pass
+
+        # Tray icons
+        if icon_path.endswith("files"):
+            icon_path = os.path.join(icon_path, "icons", "tray")
+
+        for name in ("away", "connect", "disconnect", "msg"):
+            try:
+                scandir = os.scandir(icon_path)
+
+                for entry in scandir:
+                    if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine-" + name + ".svg":
+                        try:
+                            scandir.close()
+                        except AttributeError:
+                            # Python 3.5 compatibility
+                            pass
+
+                        self.images["trayicon_" + name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+
+            except FileNotFoundError:
+                pass
 
     def update_visuals(self):
 
@@ -1261,6 +1326,9 @@ class NicotineFrame:
 
         # Override link handler with our own
         self.about.connect("activate-link", self.on_about_uri)
+
+        if self.images["n"]:
+            self.about.set_logo(self.images["n"])
 
         self.about.set_transient_for(self.MainWindow)
         self.about.set_version(version)

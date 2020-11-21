@@ -343,7 +343,9 @@ class Tray:
             else:
                 # GtkStatusIcon fallback
                 if self.custom_icons or self.local_icons:
-                    self.trayicon.set_from_file(os.path.join(self.final_icon_path, "org.nicotine_plus.Nicotine-" + icon_name))
+                    self.trayicon.set_from_pixbuf(
+                        self.frame.images["trayicon_" + icon_name]
+                    )
 
                 else:
                     self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
