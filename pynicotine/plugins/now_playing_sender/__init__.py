@@ -1,3 +1,4 @@
+from gi.repository import Gio
 from pynicotine.pluginsystem import BasePlugin
 
 
@@ -24,14 +25,11 @@ class Plugin(BasePlugin):
 
     def init(self):
 
-        import dbus
-        from dbus.mainloop.glib import DBusGMainLoop
-
         self.last_song_url = ""
         self.stop = False
 
-        DBusGMainLoop(set_as_default=True)
-        self.bus = dbus.SessionBus()
+        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self.signal_id = None
 
         self.dbus_mpris_service = 'org.mpris.MediaPlayer2.'
         self.dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
@@ -41,22 +39,18 @@ class Plugin(BasePlugin):
     def add_mpris_signal_receiver(self):
         """ Receive updates related to MPRIS """
 
-        self.bus.add_signal_receiver(
-            self.song_change,
-            "PropertiesChanged",
-            path=self.dbus_mpris_path,
-            dbus_interface=self.dbus_property
-        )
+        self.signal_id = self.bus.signal_subscribe(None,
+                                                   self.dbus_property,
+                                                   "PropertiesChanged",
+                                                   self.dbus_mpris_path,
+                                                   None,
+                                                   Gio.DBusSignalFlags.NONE,
+                                                   self.song_change)
 
     def remove_mpris_signal_receiver(self):
         """ Stop receiving updates related to MPRIS """
 
-        self.bus.remove_signal_receiver(
-            self.song_change,
-            "PropertiesChanged",
-            path=self.dbus_mpris_path,
-            dbus_interface=self.dbus_property
-        )
+        self.bus.signal_unsubscribe(self.signal_id)
 
     def get_current_mpris_player(self):
         """ Returns the MPRIS client currently selected in Now Playing """
@@ -64,7 +58,7 @@ class Plugin(BasePlugin):
         player = self.frame.np.config.sections["players"]["npothercommand"]
 
         if not player:
-            names = self.bus.list_names()
+            names = self.bus.ListNames()
 
             for name in names:
                 if name.startswith(self.dbus_mpris_service):
@@ -76,12 +70,15 @@ class Plugin(BasePlugin):
     def get_current_mpris_song_url(self, player):
         """ Returns the current song url for the selected MPRIS client """
 
-        import dbus
+        dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
+                                            Gio.DBusProxyFlags.NONE,
+                                            None,
+                                            self.dbus_mpris_service + player,
+                                            self.dbus_mpris_path,
+                                            self.dbus_property,
+                                            None)
 
-        player_obj = self.bus.get_object(self.dbus_mpris_service + player, self.dbus_mpris_path)
-        player_property_obj = dbus.Interface(player_obj, dbus_interface=self.dbus_property)
-
-        metadata = player_property_obj.Get(self.dbus_mpris_player_service, "Metadata")
+        metadata = dbus_proxy.Get('(ss)', self.dbus_mpris_player_service, 'Metadata')
         song_url = metadata.get("xesam:url")
 
         return song_url
@@ -105,7 +102,7 @@ class Plugin(BasePlugin):
             if playing:
                 self.saypublic(room, playing)
 
-    def song_change(self, interface_name, changed_properties, invalidated_properties):
+    def song_change(self, connection, sender_name, object_path, interface_name, signal_name, parameters):
 
         if self.frame.np.config.sections["players"]["npplayer"] != "mpris":
             # MPRIS is not active, exit
@@ -113,7 +110,7 @@ class Plugin(BasePlugin):
 
         # Get the changed song url received from the the signal
         try:
-            changed_song_url = changed_properties.get("Metadata").get("xesam:url")
+            changed_song_url = parameters[1].get("Metadata").get("xesam:url")
 
         except AttributeError:
             return

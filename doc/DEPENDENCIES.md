@@ -28,11 +28,11 @@
 #### Installing the required runtime dependencies
 * On Redhat/Fedora based distributions:
 ```
-sudo dnf install gobject-introspection gtk3 python3-dbus python3-gobject
+sudo dnf install gobject-introspection gtk3 python3-gobject
 ```
 * On Debian/Ubuntu based distributions:
 ```
-sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-dbus python3-gi
+sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-gi
 ```
 
 #### Installing the optional runtime dependencies

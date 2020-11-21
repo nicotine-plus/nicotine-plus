@@ -164,14 +164,9 @@ class NowPlaying:
         """ Function to get the currently playing song via dbus mpris v2 interface """
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
-        try:
-            import dbus
-            import dbus.glib
-        except ImportError as error:
-            log.add_warning(_("ERROR: MPRIS: failed to load dbus module: %(error)s"), {"error": error})
-            return None
 
-        self.bus = dbus.SessionBus()
+        from gi.repository import Gio
+        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         dbus_mpris_service = 'org.mpris.MediaPlayer2.'
         dbus_mpris_player_service = 'org.mpris.MediaPlayer2.Player'
@@ -180,7 +175,15 @@ class NowPlaying:
 
         if not player:
 
-            names = self.bus.list_names()
+            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
+                                                Gio.DBusProxyFlags.NONE,
+                                                None,
+                                                'org.freedesktop.DBus',
+                                                '/org/freedesktop/DBus',
+                                                'org.freedesktop.DBus',
+                                                None)
+
+            names = dbus_proxy.ListNames()
             players = []
 
             for name in names:
@@ -193,14 +196,21 @@ class NowPlaying:
 
             player = players[0]
             if len(players) > 1:
-                log.add_warning(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
+                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
             else:
-                log.add_warning(_("Auto-detected MPRIS player: %s."), player)
+                log.add(_("Auto-detected MPRIS player: %s."), player)
 
         try:
-            player_obj = self.bus.get_object(dbus_mpris_service + player, dbus_mpris_path)
-            player_property_obj = dbus.Interface(player_obj, dbus_interface=dbus_property)
-            metadata = player_property_obj.Get(dbus_mpris_player_service, "Metadata")
+            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
+                                                Gio.DBusProxyFlags.NONE,
+                                                None,
+                                                dbus_mpris_service + player,
+                                                dbus_mpris_path,
+                                                dbus_property,
+                                                None)
+
+            metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
+
         except Exception as exception:
             log.add_warning(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"), {'player': player, 'exception': exception})
             return None
