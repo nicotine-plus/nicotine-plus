@@ -40,7 +40,6 @@ from gi.repository import Gtk
 import _thread
 from pynicotine import slskmessages
 from pynicotine import slskproto
-from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
@@ -507,27 +506,27 @@ class NicotineFrame:
 
         flag = flag.lower()
 
-        if flag not in self.flag_images:
-            if hasattr(imagedata, flag):
-                data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, flag)))
-                pixbuf = GdkPixbuf.Pixbuf.new_from_stream(data)
+        try:
+            if flag not in self.flag_images:
+                self.flag_images[flag] = GdkPixbuf.Pixbuf.new_from_file(
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), "icons", "flags", flag[5:] + ".svg")
+                )
 
-                self.flag_images[flag] = pixbuf
-
-            else:
-                return None
+        except GObject.GError:
+            return None
 
         return self.flag_images[flag]
 
-    def load_icon_data(self, name):
-        """ Attempts to load an icon from imagedata.py, returns None
-        if icon was not found. """
+    def load_ui_icon(self, name):
+        """ Load icon required by the UI """
 
-        if hasattr(imagedata, name):
-            data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, name)))
-            return GdkPixbuf.Pixbuf.new_from_stream(data)
+        try:
+            return GdkPixbuf.Pixbuf.new_from_file(
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), "icons", name + ".svg")
+            )
 
-        return None
+        except GObject.GError:
+            return None
 
     def load_custom_icons(self, names):
         """ Load custom icon theme if one is selected """
@@ -552,7 +551,7 @@ class NicotineFrame:
                             log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:
-                    self.images[name] = self.load_icon_data(name)
+                    self.images[name] = self.load_ui_icon(name)
 
             return True
 
@@ -636,7 +635,7 @@ class NicotineFrame:
         """ Load icons required by Nicotine+, such as status icons """
 
         for name in names:
-            self.images[name] = self.load_icon_data(name)
+            self.images[name] = self.load_ui_icon(name)
 
         """ Load local icons, if available """
 
