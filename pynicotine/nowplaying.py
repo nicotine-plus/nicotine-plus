@@ -196,9 +196,9 @@ class NowPlaying:
 
             player = players[0]
             if len(players) > 1:
-                log.add_warning(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
+                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
             else:
-                log.add_warning(_("Auto-detected MPRIS player: %s."), player)
+                log.add(_("Auto-detected MPRIS player: %s."), player)
 
         try:
             dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
