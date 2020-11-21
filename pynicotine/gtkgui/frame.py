@@ -558,39 +558,9 @@ class NicotineFrame:
 
         return False
 
-    def load_icons(self):
-        """ Load custom icons necessary for Nicotine+ to function """
-
-        self.images = {}
-        self.flag_images = {}
-        self.flag_users = {}
-
-        names = [
-            "away",
-            "online",
-            "offline",
-            "hilite",
-            "hilite3",
-            "trayicon_away",
-            "trayicon_connect",
-            "trayicon_disconnect",
-            "trayicon_msg",
-            "n",
-            "notify"
-        ]
-
-        """ Load custom icon theme if available """
-
-        if self.load_custom_icons(names):
-            return
-
-        """ No custom icons found, load icons specified in imagedata.py """
-
-        for name in names:
-            self.images[name] = self.load_icon_data(name)
-
-        """ Load local icons not specified in imagedata.py. If no local
-        icons are found, system-wide icons will be used instead. """
+    def load_local_icons(self):
+        """ Attempt to load local window, notification and tray icons.
+        If not found, system-wide icons will be used instead. """
 
         if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
             # Virtual environment
@@ -636,6 +606,41 @@ class NicotineFrame:
 
             except FileNotFoundError:
                 pass
+
+    def load_icons(self):
+        """ Load custom icons necessary for Nicotine+ to function """
+
+        self.images = {}
+        self.flag_images = {}
+        self.flag_users = {}
+
+        names = [
+            "away",
+            "online",
+            "offline",
+            "hilite",
+            "hilite3",
+            "trayicon_away",
+            "trayicon_connect",
+            "trayicon_disconnect",
+            "trayicon_msg",
+            "n",
+            "notify"
+        ]
+
+        """ Load custom icon theme if available """
+
+        if self.load_custom_icons(names):
+            return
+
+        """ Load icons required by Nicotine+, such as status icons """
+
+        for name in names:
+            self.images[name] = self.load_icon_data(name)
+
+        """ Load local icons, if available """
+
+        self.load_local_icons()
 
     def update_visuals(self):
 
