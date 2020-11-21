@@ -74,7 +74,7 @@ class SSDP:
 
     @classmethod
     def list(cls, refresh=False):
-        """ list finds all devices responding to an SSDP search for WANIPConnection:1 and WANIPConnection:2 """
+        """ list finds all devices responding to an SSDP search """
 
         log.add_debug('UPnP: Discovering... delay=%s seconds', SSDP.response_time_secs)
 
@@ -103,9 +103,6 @@ class SSDP:
         # Protocol 2
         wan_ip2_sent = False
         wan_ip2 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANIPConnection:2', headers=headers)
-
-        wan_ppp2_sent = False
-        wan_ppp2 = SSDP._create_msearch_request('urn:schemas-upnp-org:service:WANPPPConnection:2', headers=headers)
 
         wan_igd2_sent = False
         wan_igd2 = SSDP._create_msearch_request('urn:schemas-upnp-org:device:InternetGatewayDevice:2', headers=headers)
@@ -154,12 +151,6 @@ class SSDP:
                     log.add_debug('UPnP: Sent M-SEARCH IP request 2')
                     time_end = time.time() + SSDP.response_time_secs
                     wan_ip2_sent = True
-
-                if not wan_ppp2_sent:
-                    wan_ppp2.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug('UPnP: Sent M-SEARCH PPP request 2')
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_ppp2_sent = True
 
                 if not wan_igd2_sent:
                     wan_igd2.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))

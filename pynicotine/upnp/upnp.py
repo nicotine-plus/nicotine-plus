@@ -112,9 +112,9 @@ class PortMapping:
 
 class UPnp:
 
-    _add_port_mapping_template = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping xmlns:u="{}"><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol><NewInternalPort>{}</NewInternalPort><NewInternalClient>{}</NewInternalClient><NewEnabled>1</NewEnabled><NewPortMappingDescription>{}</NewPortMappingDescription><NewLeaseDuration>{}</NewLeaseDuration></u:AddPortMapping></s:Body></s:Envelope>'
-    _delete_port_mapping_template = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:DeletePortMapping xmlns:u="{}"><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol></u:AddPortMapping></s:Body></s:Envelope>'
-    _list_port_mappings_template = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:GetGenericPortMappingEntry xmlns:u="{}"><NewPortMappingIndex>{}</NewPortMappingIndex></u:GetGenericPortMappingEntry></s:Body></s:Envelope>'
+    _add_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol><NewInternalPort>{}</NewInternalPort><NewInternalClient>{}</NewInternalClient><NewEnabled>1</NewEnabled><NewPortMappingDescription>{}</NewPortMappingDescription><NewLeaseDuration>{}</NewLeaseDuration></u:AddPortMapping></s:Body></s:Envelope>'
+    _delete_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:DeletePortMapping xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol></u:AddPortMapping></s:Body></s:Envelope>'
+    _list_port_mappings_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:GetGenericPortMappingEntry xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewPortMappingIndex>{}</NewPortMappingIndex></u:GetGenericPortMappingEntry></s:Body></s:Envelope>'
 
     @classmethod
     def add_port_mapping(cls, router, protocol, public_port, private_ip, private_port, mapping_description, lease_duration):
@@ -134,7 +134,6 @@ class UPnp:
         }
 
         data = UPnp._add_port_mapping_template.format(
-            router.type,
             public_port,
             protocol,
             private_port,
@@ -182,7 +181,7 @@ class UPnp:
             'SOAPACTION': '{}#DeletePortMapping'.format(router.type)
         }
 
-        data = UPnp._delete_port_mapping_template.format(router.type, public_port, protocol)
+        data = UPnp._delete_port_mapping_template.format(public_port, protocol)
         log.add_debug('UPnP: Delete port mapping request: %s', data)
 
         response = http_request(
@@ -210,7 +209,7 @@ class UPnp:
 
         while portmap_found:
             index += 1
-            data = UPnp._list_port_mappings_template.format(router.type, index)
+            data = UPnp._list_port_mappings_template.format(index)
             log.add_debug('UPnP: List port mappings request: %s', data)
 
             response = http_request(
