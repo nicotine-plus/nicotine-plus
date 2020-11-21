@@ -1,6 +1,6 @@
 # Icon Credits
 
-Created by alekksander (released under LGPLv3+)  
+Created by alekksander (released under GPLv3+)  
 Modified by mathiascode
  
 online.svg  
@@ -11,14 +11,14 @@ hilite3.svg
 
 ---
 
-Created by mathiascode (released under LGPLv3+)
+Created by mathiascode (released under GPLv3+)
 
 org.nicotine_plus.Nicotine.svg  
 org.nicotine_plus.Nicotine-symbolic.svg
 
 ---
 
-Created by mathiascode (released under LGPLv3+)
+Created by mathiascode (released under GPLv3+)
 
 trayicon_away.svg  
 trayicon_connect.svg  

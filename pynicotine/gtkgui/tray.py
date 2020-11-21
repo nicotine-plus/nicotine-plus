@@ -53,6 +53,7 @@ class Tray:
         self.trayicon = None
         self.custom_icons = False
         self.local_icons = False
+        self.final_icon_path = None
         self.tray_status = {
             "status": "disconnect",
             "last": "disconnect"
@@ -225,7 +226,7 @@ class Tray:
             local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
             # Git folder
-            local_icon_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "files", "icons", "tray"))
+            local_icon_path = os.path.abspath(os.path.join(self.frame.gui_dir, "..", "..", "files", "icons", "tray"))
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
 
@@ -268,13 +269,11 @@ class Tray:
 
         """ Set up icons """
 
-        final_icon_path = self.get_final_icon_path()
+        self.final_icon_path = self.get_final_icon_path()
 
         # If custom icon path was found, use it, otherwise we fall back to system icons
-        if self.appindicator is not None and final_icon_path:
-            self.trayicon.set_icon_theme_path(final_icon_path)
-
-        self.set_image(self.tray_status["status"])
+        if self.appindicator is not None and self.final_icon_path:
+            self.trayicon.set_icon_theme_path(self.final_icon_path)
 
         """ Set visible """
         if self.appindicator is not None:
@@ -282,6 +281,8 @@ class Tray:
         else:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(True)
+
+        self.set_image(self.tray_status["status"])
 
     def hide(self):
 
@@ -345,6 +346,7 @@ class Tray:
                     self.trayicon.set_from_pixbuf(
                         self.frame.images["trayicon_" + icon_name]
                     )
+
                 else:
                     self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
 

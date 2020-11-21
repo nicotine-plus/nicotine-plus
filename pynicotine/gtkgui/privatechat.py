@@ -354,7 +354,7 @@ class PrivateChat:
         # We should reference the user as soon as possible
         self.chats.users[self.user] = self
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "privatechat.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
 
         self.autoreplied = 0
         self.offlinemessage = 0

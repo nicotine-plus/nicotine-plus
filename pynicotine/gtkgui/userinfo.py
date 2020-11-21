@@ -211,12 +211,12 @@ class UserInfo:
 
     def __init__(self, userinfos, user):
 
-        # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "userinfo.ui"))
-        self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
-
         self.userinfos = userinfos
         self.frame = userinfos.frame
+
+        # Build the window
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
+        self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         self.frame.np.queue.put(slskmessages.UserInterests(user))
         self.user = user

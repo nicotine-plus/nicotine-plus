@@ -408,7 +408,7 @@ class Search:
         self.frame = searches.frame
 
         # Build the window
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "search.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
 
         self.text = text
         self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]

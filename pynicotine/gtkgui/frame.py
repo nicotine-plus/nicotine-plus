@@ -40,7 +40,6 @@ from gi.repository import Gtk
 import _thread
 from pynicotine import slskmessages
 from pynicotine import slskproto
-from pynicotine.gtkgui import imagedata
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
@@ -87,6 +86,7 @@ class NicotineFrame:
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
+        self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.current_tab_label = None
         self.checking_update = False
         self.rescanning = False
@@ -132,20 +132,21 @@ class NicotineFrame:
 
         """ Main Window UI """
 
-        load_ui_elements(self, os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "mainwindow.ui"))
+        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
 
         """ Menu Bar """
 
         self.set_up_actions()
 
-        builder = Gtk.Builder().new_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "menus", "menubar.ui"))
+        builder = Gtk.Builder().new_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
         self.application.set_menubar(builder.get_object("menubar"))
 
         """ Icons """
 
         self.load_icons()
 
-        self.MainWindow.set_default_icon(self.images["n"])
+        if self.images["n"]:
+            self.MainWindow.set_default_icon(self.images["n"])
 
         """ Window Properties """
 
@@ -506,41 +507,30 @@ class NicotineFrame:
 
         flag = flag.lower()
 
-        if flag not in self.flag_images:
-            if hasattr(imagedata, flag):
-                data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, flag)))
-                pixbuf = GdkPixbuf.Pixbuf.new_from_stream(data)
+        try:
+            if flag not in self.flag_images:
+                self.flag_images[flag] = GdkPixbuf.Pixbuf.new_from_file(
+                    os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
+                )
 
-                self.flag_images[flag] = pixbuf
-
-            else:
-                return None
+        except GObject.GError:
+            return None
 
         return self.flag_images[flag]
 
-    def load_icons(self):
+    def load_ui_icon(self, name):
+        """ Load icon required by the UI """
 
-        self.images = {}
-        self.flag_images = {}
-        self.flag_users = {}
+        try:
+            return GdkPixbuf.Pixbuf.new_from_file(
+                os.path.join(self.gui_dir, "icons", name + ".svg")
+            )
 
-        def load_static(name):
-            data = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(getattr(imagedata, "%s" % (name,))))
-            return GdkPixbuf.Pixbuf.new_from_stream(data)
+        except GObject.GError:
+            return None
 
-        names = [
-            "away",
-            "online",
-            "offline",
-            "hilite",
-            "hilite3",
-            "trayicon_away",
-            "trayicon_connect",
-            "trayicon_disconnect",
-            "trayicon_msg",
-            "n",
-            "notify"
-        ]
+    def load_custom_icons(self, names):
+        """ Load custom icon theme if one is selected """
 
         if self.np.config.sections["ui"].get("icontheme"):
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
@@ -562,11 +552,95 @@ class NicotineFrame:
                             log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:
-                    self.images[name] = load_static(name)
+                    self.images[name] = self.load_ui_icon(name)
 
+            return True
+
+        return False
+
+    def load_local_icons(self):
+        """ Attempt to load local window, notification and tray icons.
+        If not found, system-wide icons will be used instead. """
+
+        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
+            # Virtual environment
+            icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
-            for name in names:
-                self.images[name] = load_static(name)
+            # Git folder
+            icon_path = os.path.abspath(os.path.join(self.gui_dir, "..", "..", "files"))
+
+        # Window and notification icons
+        try:
+            scandir = os.scandir(icon_path)
+
+            for entry in scandir:
+                if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine.svg":
+                    try:
+                        scandir.close()
+                    except AttributeError:
+                        # Python 3.5 compatibility
+                        pass
+
+                    for name in ("n", "notify"):
+                        self.images[name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+        except FileNotFoundError:
+            pass
+
+        # Tray icons
+        if icon_path.endswith("files"):
+            icon_path = os.path.join(icon_path, "icons", "tray")
+
+        for name in ("away", "connect", "disconnect", "msg"):
+            try:
+                scandir = os.scandir(icon_path)
+
+                for entry in scandir:
+                    if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine-" + name + ".svg":
+                        try:
+                            scandir.close()
+                        except AttributeError:
+                            # Python 3.5 compatibility
+                            pass
+
+                        self.images["trayicon_" + name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+
+            except FileNotFoundError:
+                pass
+
+    def load_icons(self):
+        """ Load custom icons necessary for Nicotine+ to function """
+
+        self.images = {}
+        self.flag_images = {}
+        self.flag_users = {}
+
+        names = [
+            "away",
+            "online",
+            "offline",
+            "hilite",
+            "hilite3",
+            "trayicon_away",
+            "trayicon_connect",
+            "trayicon_disconnect",
+            "trayicon_msg",
+            "n",
+            "notify"
+        ]
+
+        """ Load custom icon theme if available """
+
+        if self.load_custom_icons(names):
+            return
+
+        """ Load icons required by Nicotine+, such as status icons """
+
+        for name in names:
+            self.images[name] = self.load_ui_icon(name)
+
+        """ Load local icons, if available """
+
+        self.load_local_icons()
 
     def update_visuals(self):
 
@@ -1167,7 +1241,7 @@ class NicotineFrame:
     def on_about_chatroom_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "chatroomcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "chatroomcommands.ui"))
 
         self.about_chatroom_commands = builder.get_object("AboutChatRoomCommands")
         self.about_chatroom_commands.set_transient_for(self.MainWindow)
@@ -1176,7 +1250,7 @@ class NicotineFrame:
     def on_about_private_chat_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "privatechatcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "privatechatcommands.ui"))
 
         self.about_private_chat_commands = builder.get_object("AboutPrivateChatCommands")
         self.about_private_chat_commands.set_transient_for(self.MainWindow)
@@ -1185,7 +1259,7 @@ class NicotineFrame:
     def on_about_filters(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "searchfilters.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "searchfilters.ui"))
 
         self.about_search_filters = builder.get_object("AboutSearchFilters")
         self.about_search_filters.set_transient_for(self.MainWindow)
@@ -1246,7 +1320,7 @@ class NicotineFrame:
     def on_about(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), "ui", "about", "about.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "about.ui"))
 
         self.about = builder.get_object("About")
 
@@ -1257,6 +1331,9 @@ class NicotineFrame:
 
         # Override link handler with our own
         self.about.connect("activate-link", self.on_about_uri)
+
+        if self.images["n"]:
+            self.about.set_logo(self.images["n"])
 
         self.about.set_transient_for(self.MainWindow)
         self.about.set_version(version)
