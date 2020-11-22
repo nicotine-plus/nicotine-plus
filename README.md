@@ -1,13 +1,15 @@
 # Nicotine+
+<img src="files/org.nicotine_plus.Nicotine.svg" align="right" width="128" style="margin: 0 10px">
 
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network.
 
 Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to the official Soulseek client, providing additional functionality while keeping current with the Soulseek protocol.
 
-[Screenshots](files/screenshots/SCREENSHOTS.md)
+Check out the [screenshots](files/screenshots/SCREENSHOTS.md) and [source code](https://github.com/Nicotine-Plus/nicotine-plus).
+<br clear="right">
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 2.1.2, released on 12 October 2020. See the [changelog](NEWS.md).
+The current stable version of Nicotine+ is 2.1.2, released on 12 October 2020. See the [release notes](NEWS.md).
 
 ## GNU/Linux
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
@@ -15,51 +17,51 @@ If you have no need to modify the Nicotine+ source, you are strongly recommended
 ### Ubuntu PPA/Debian (Stable)
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, run the following:
 
-```console
-$ sudo apt install software-properties-common
-$ sudo add-apt-repository ppa:nicotine-team/stable
-$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
-$ sudo apt update
-$ sudo apt install nicotine
+```sh
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:nicotine-team/stable
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
+sudo apt update
+sudo apt install nicotine
 ```
 
 ### Ubuntu PPA/Debian (Unstable)
 The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
 
-```console
-$ sudo apt install software-properties-common
-$ sudo add-apt-repository ppa:nicotine-team/unstable
-$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
-$ sudo apt update
-$ sudo apt install nicotine
+```sh
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:nicotine-team/unstable
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
+sudo apt update
+sudo apt install nicotine
 ```
 
 ### Arch Linux/Manjaro/Parabola (Stable)
 Nicotine+ is available in the community repository of Arch Linux, Manjaro and Parabola. To install, run the following:
 
-```console
-$ sudo pacman -S nicotine+
+```sh
+sudo pacman -S nicotine+
 ```
 
 ### Void Linux (Stable)
 To install Nicotine+ on Void Linux, run the following:
 
-```console
-$ sudo xbps-install -S nicotine+
+```sh
+sudo xbps-install -S nicotine+
 ```
 
 ### Fedora (Stable)
 To install Nicotine+ on Fedora, run the following:
 
-```console
-$ sudo dnf install nicotine+
+```sh
+sudo dnf install nicotine+
 ```
 
 ### Guix (Stable)
 To install Nicotine+ on Guix, run the following:
 
-```console
-$ guix install nicotine+
+```sh
+guix install nicotine+
 ```
 
 ### Flathub (Stable)
@@ -133,26 +135,30 @@ There are [different ways](https://wiki.debian.org/qa.debian.org#Other_distribut
 
 ## Autopkgtest
 On Debian based distributions, `autopkgtest` implements the DEP-8 standard. To create and use a build image environment for Ubuntu, follow these steps. First install the autopkgtest(1) tools:
-```
-$ sudo apt install autopkgtest
+
+```sh
+sudo apt install autopkgtest
 ```
 
 Next create the test image, substituting `groovy` or `amd64` for other releases or architectures:
-```
-$ autopkgtest-buildvm-ubuntu-cloud -r groovy -a amd64
+
+```sh
+autopkgtest-buildvm-ubuntu-cloud -r groovy -a amd64
 ```
 
 Generate a Nicotine+ source package in the parent directory of `nicotine_source`:
-```
-$ cd nicotine_source
-$ sudo apt build-dep nicotine
-$ ./debian/rules get-orig-source
-$ debuild -S -sa
+
+```sh
+cd nicotine_source
+sudo apt build-dep nicotine
+./debian/rules get-orig-source
+debuild -S -sa
 ```
 
 Test the source package on the host architecture in QEMU with KVM support and 8GB of RAM and four CPUs:
-```
-$ autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
+
+```sh
+autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
       qemu --ram-size=8192 --cpus=4 --show-boot path_to_build_image.img \
       --qemu-options='-enable-kvm'
 ```

@@ -26,44 +26,55 @@
 ### GNU/Linux
 
 #### Installing the required runtime dependencies
-* On Redhat/Fedora based distributions:
-```
-sudo dnf install gobject-introspection gtk3 python3-gobject
-```
 * On Debian/Ubuntu based distributions:
-```
+
+```sh
 sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-gi
 ```
 
-#### Installing the optional runtime dependencies
 * On Redhat/Fedora based distributions:
+
+```sh
+sudo dnf install gobject-introspection gtk3 python3-gobject
 ```
-sudo dnf install gspell libappindicator-gtk3
-```
+
+#### Installing the optional runtime dependencies
 * On Debian/Ubuntu based distributions:
-```
+
+```sh
 sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1
 ```
 
-#### Installing the test dependencies
 * On Redhat/Fedora based distributions:
+
+```sh
+sudo dnf install gspell libappindicator-gtk3
 ```
-sudo dnf install python3-flake8 python3-pep8-naming python3-pytest
-```
+
+#### Installing the test dependencies
 * On Debian/Ubuntu based distributions:
-```
+
+```sh
 sudo apt install python3-flake8 python3-pep8-naming python3-pytest
 ```
 
-#### Check the Python version.
-To check that the Python version you are using is 3.5 or newer, use `python -V`. On a lot of older systems, the response will look something like this:  
+* On Redhat/Fedora based distributions:
+
+```sh
+sudo dnf install python3-flake8 python3-pep8-naming python3-pytest
 ```
+
+#### Check the Python version.
+To check that the Python version you are using is 3.5 or newer, use `python -V`. On a lot of older systems, the response will look something like this:
+
+```console
 % python -V
 Python 2.7.16
 ```
 
-Not to worry, Python 3 is often installed alongside and can be used like this:  
-```
+Not to worry, Python 3 is often installed alongside and can be used like this:
+
+```console
 % python3 -V
 Python 3.7.3
 ```
