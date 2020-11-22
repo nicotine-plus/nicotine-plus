@@ -122,7 +122,7 @@ class NetworkEventProcessor:
             self.network_callback([slskmessages.PopupMessage(short, long)])
 
         # These strings are accessed frequently. We store them to prevent requesting the translation every time.
-        self.conn_close_template = _("Connection closed by peer: %s")
+        self.conn_close_template = _("Connection closed by peer: %(peer)s. Error: %(error)s")
 
         self.bindip = bindip
         self.port = port
@@ -767,7 +767,7 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn(self.conn_close_template, self.contents(i))
+                    log.add_conn(self.conn_close_template, {'peer': self.contents(i), 'error': error})
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -809,7 +809,7 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.addr == addr and i.conn is None:
-                    if i.token is None:
+                    if not i.indirectattempt:
 
                         """ We can't correct to peer directly, request indirect connection """
 
@@ -822,16 +822,12 @@ class NetworkEventProcessor:
 
                         for j in i.msgs:
                             if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                                if not i.indirectattempt:
-                                    """ It's possible that the peer never attempted to connect
-                                    directly to us, ask them to do so just to make sure. """
-
-                                    self.connect_to_peer_indirect(i)
-                                    return
-
                                 self.transfers.got_cant_connect(j.req)
 
-                        log.add_conn(_("Can't connect to user %s neither directly nor indirectly, informing user via the server"), i.username)
+                        log.add_conn(_("Can't connect to user %(user)s neither directly nor indirectly, informing user via the server. Error: %(error)s"), {
+                            'user': i.username,
+                            'error': msg.err
+                        })
                         self.queue.put(slskmessages.CantConnectToPeer(i.token, i.username))
 
                         if i.conntimer is not None:
