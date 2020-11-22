@@ -1764,7 +1764,7 @@ class Transfers:
             elif type == "download":
                 i.status = "Connection closed by peer"
 
-            elif type == "upload" and i.status in self.TRANSFER:
+            elif type == "upload" and i.status == "Transferring":
                 """ Only cancel files being transferred, queued files will take care of
                 themselves. We don't want to cancel all queued files at once, in case
                 it's just a connectivity fluke. """
