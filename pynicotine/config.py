@@ -32,7 +32,6 @@ import configparser
 import os
 import pickle
 import sys
-import time
 
 from ast import literal_eval
 from gettext import gettext as _
@@ -782,14 +781,10 @@ class Config:
         except OSError as error:
             log.add_warning(_("Can't rename config file, error: %s"), error)
 
-    def write_config_backup(self, filename=None):
+    def write_config_backup(self, filename):
 
-        if filename is None:
-            filename = "%s backup %s.tar.bz2" % (self.filename, time.strftime("%Y-%m-%d %H_%M_%S"))
-
-        else:
-            if filename[-8:-1] != ".tar.bz2":
-                filename += ".tar.bz2"
+        if filename[-8:-1] != ".tar.bz2":
+            filename += ".tar.bz2"
 
         try:
             if os.path.exists(filename):
@@ -810,9 +805,9 @@ class Config:
 
         except Exception as e:
             print(e)
-            return (1, "Cannot write backup archive: %s" % e)
+            return (True, "Cannot write backup archive: %s" % e)
 
-        return (0, filename)
+        return (False, filename)
 
     def write_aliases(self):
 

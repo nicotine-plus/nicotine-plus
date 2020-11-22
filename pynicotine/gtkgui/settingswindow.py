@@ -25,6 +25,8 @@
 import os
 import re
 import sys
+import time
+
 from gettext import gettext as _
 
 from gi.repository import Gdk
@@ -3763,18 +3765,19 @@ class Settings:
         response = save_file(
             self.SettingsWindow.get_toplevel(),
             os.path.dirname(self.frame.np.config.filename),
-            title="Pick a filename for config backup, or cancel to use a timestamp"
+            "config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            title=_("Pick a filename for config backup")
         )
 
-        if response:
-            error, message = self.frame.np.config.write_config_backup(response[0])
-        else:
-            error, message = self.frame.np.config.write_config_backup()
+        if not response:
+            return
+
+        error, message = self.frame.np.config.write_config_backup(response[0])
 
         if error:
-            log.add("Error backing up config: %s", message)
+            log.add(_("Error backing up config: %s"), message)
         else:
-            log.add("Config backed up to: %s", message)
+            log.add(_("Config backed up to: %s"), message)
 
     def on_apply(self, widget):
         self.SettingsWindow.emit("settings-updated", "apply")
