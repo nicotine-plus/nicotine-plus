@@ -628,23 +628,28 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def pierce_fire_wall(self, msg):
+
+        # Sometimes a token is seemingly not sent by the peer, check if the
+        # IP address matches in that case
         token = msg.token
 
         for i in self.peerconns:
-            if i.token == token and i.conn is None:
-                conn = msg.conn.conn
+            if i.conn is None:
+                if token is not None and i.token == token or \
+                        token is None and i.token is not None and i.addr == msg.conn.addr:
+                    conn = msg.conn.conn
 
-                if i.conntimer is not None:
-                    i.conntimer.cancel()
+                    if i.conntimer is not None:
+                        i.conntimer.cancel()
 
-                i.init.conn = conn
-                self.queue.put(i.init)
-                i.conn = conn
+                    i.init.conn = conn
+                    self.queue.put(i.init)
+                    i.conn = conn
 
-                # Update UI with contents from messages
-                self.process_conn_messages(i, conn)
+                    # Update UI with contents from messages
+                    self.process_conn_messages(i, conn)
 
-                break
+                    break
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
