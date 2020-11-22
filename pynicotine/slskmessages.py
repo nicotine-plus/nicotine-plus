@@ -1909,7 +1909,9 @@ class PierceFireWall(PeerMessage):
         return self.pack_object(self.token, unsignedint=True)
 
     def parse_network_message(self, message):
-        pos, self.token = self.get_object(message, int)
+        if len(message) > 0:
+            # A token is not guaranteed to be sent
+            pos, self.token = self.get_object(message, int)
 
 
 class PeerInit(PeerMessage):
@@ -1935,7 +1937,10 @@ class PeerInit(PeerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.type = self.get_object(message, str, pos)
-        pos, self.token = self.get_object(message, int, pos)
+
+        if len(message[pos:]) > 0:
+            # A token is not guaranteed to be sent
+            pos, self.token = self.get_object(message, int, pos)
 
 
 class GetSharedFileList(PeerMessage):
