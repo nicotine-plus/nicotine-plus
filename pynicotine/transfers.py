@@ -1128,6 +1128,7 @@ class Transfers:
 
             if needupdate:
                 self.downloadsview.update(i)
+
         else:
             log.add_warning(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
@@ -1171,6 +1172,11 @@ class Transfers:
 
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
+
+            if i.size == 0:
+                # If filesize is 0, we will not receive a UploadFile message later. Finish now.
+                self.upload_finished(f, i)
+
         else:
             log.add_warning(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
@@ -1246,6 +1252,7 @@ class Transfers:
             break
 
     def download_finished(self, file, i):
+
         file.close()
         i.file = None
 
@@ -1406,38 +1413,42 @@ class Transfers:
                 self.check_upload_queue()
                 sleep(0.01)
             else:
-                if i.speed is not None:
-                    speedbytes = int(i.speed)
-                    self.eventprocessor.speed = speedbytes
-                    self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
-
-                msg.file.close()
-                i.status = "Finished"
-                i.speed = 0
-                i.timeleft = ""
-
-                for j in self.uploads:
-                    if j.user == i.user:
-                        j.timequeued = curtime
-
-                self.log_transfer(
-                    _("Upload finished: %(user)s, file %(file)s") % {
-                        'user': i.user,
-                        'file': i.filename
-                    }
-                )
-
-                self.check_upload_queue()
-                self.uploadsview.update(i)
-
-                # Autoclear this upload
-                self.auto_clear_upload(i)
+                self.upload_finished(msg.file, i)
                 needupdate = False
 
             if needupdate:
                 self.uploadsview.update(i)
 
             break
+
+    def upload_finished(self, file, i):
+
+        if i.speed is not None:
+            speedbytes = int(i.speed)
+            self.eventprocessor.speed = speedbytes
+            self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
+
+        file.close()
+        i.status = "Finished"
+        i.speed = 0
+        i.timeleft = ""
+
+        for j in self.uploads:
+            if j.user == i.user:
+                j.timequeued = i.lasttime
+
+        self.log_transfer(
+            _("Upload finished: %(user)s, file %(file)s") % {
+                'user': i.user,
+                'file': i.filename
+            }
+        )
+
+        self.check_upload_queue()
+        self.uploadsview.update(i)
+
+        # Autoclear this upload
+        self.auto_clear_upload(i)
 
     def auto_clear_download(self, transfer):
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
