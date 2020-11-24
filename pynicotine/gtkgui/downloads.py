@@ -248,7 +248,7 @@ class Downloads(TransferList):
             elif key in ("R", "r"):
                 self.on_retry_transfer(widget)
             elif key == "Delete":
-                self.on_abort_transfer(widget, True, True)
+                self.on_abort_transfer(widget, clear=True)
             else:
                 # No key match, continue event
                 return False
@@ -294,7 +294,7 @@ class Downloads(TransferList):
         elif dc == 3:  # Search
             self.on_file_search(None)
         elif dc == 4:  # Abort
-            self.on_abort_transfer(None, False)
+            self.on_abort_transfer(None)
         elif dc == 5:  # Clear
             self.on_clear_transfer(None)
         elif dc == 6:  # Retry
@@ -357,9 +357,9 @@ class Downloads(TransferList):
 
         return True
 
-    def on_abort_transfer(self, widget):
+    def on_abort_transfer(self, widget, remove_file=False, clear=False):
         self.select_transfers()
-        self.abort_transfers()
+        self.abort_transfers(remove_file, clear)
 
     def on_clear_queued(self, widget):
         self.clear_transfers(["Queued"])
