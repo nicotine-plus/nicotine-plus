@@ -329,7 +329,10 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.username == user and i.type == 'P':
                     conn = i
-                    log.add_conn(_("Found existing connection of type %(type)s for user %(user)s, using it") % {'type': i.type, 'user': user})
+                    log.add_conn(_("Found existing connection of type %(type)s for user %(user)s, using it.") % {
+                        'type': i.type,
+                        'user': user
+                    })
                     break
 
         if conn is not None and conn.conn is not None:
@@ -347,6 +350,11 @@ class NetworkEventProcessor:
             """ This is a new peer, initiate a connection """
 
             self.initiate_connection_to_peer(user, message, address)
+
+        log.add_conn(_("Sending message of type %(type)s to user %(user)s") % {
+            'type': message.__class__,
+            'user': user
+        })
 
     def initiate_connection_to_peer(self, user, message, address=None):
 
