@@ -224,10 +224,7 @@ class Transfers:
 
         for i in self.uploads[:]:
             if msg.user == i.user and i.status != "Finished":
-                if msg.status != 0:
-                    if i.status == "Getting status":
-                        self.push_file(i.user, i.filename, i.realfilename, i.path, i)
-                else:
+                if msg.status == 0:
                     if i.transfertimer is not None:
                         i.transfertimer.cancel()
                     self.uploads.remove(i)
