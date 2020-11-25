@@ -303,17 +303,37 @@ class NetworkEventProcessor:
 
         """ Peer wants to connect to us, remember them """
 
-        self.peerconns.append(
-            PeerConnection(
-                addr=msg.conn.addr,
-                username=msg.user,
-                conn=msg.conn.conn,
-                init=msg,
-                msgs=[]
-            )
-        )
+        user = msg.user
+        addr = msg.conn.addr
+        conn = msg.conn.conn
+        msg_type = msg.type
+        found_conn = False
 
-        log.add_conn(_("Received incoming connection of type %(type)s from user %(user)s") % {'type': msg.type, 'user': msg.user})
+        if user != self.config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
+            for i in self.peerconns:
+                if i.username == user and i.type == msg_type:
+                    i.addr = addr
+                    i.conn = conn
+                    i.token = None
+                    i.init = msg
+
+                    found_conn = True
+                    break
+
+        if not found_conn:
+            """ No previous connection exists for user """
+
+            self.peerconns.append(
+                PeerConnection(
+                    addr=addr,
+                    username=user,
+                    conn=conn,
+                    init=msg,
+                    msgs=[]
+                )
+            )
+
+        log.add_conn(_("Received incoming connection of type %(type)s from user %(user)s") % {'type': msg_type, 'user': user})
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def send_message_to_peer(self, user, message, address=None):
@@ -454,19 +474,35 @@ class NetworkEventProcessor:
         ip = msg.ip
         port = msg.port
         addr = (ip, port)
+        token = msg.token
+        msg_type = msg.type
+        found_conn = False
 
-        init = slskmessages.PeerInit(None, user, msg.type, 0)
-        self.connect_to_peer_direct(user, addr, msg.type, init)
+        init = slskmessages.PeerInit(None, user, msg_type, 0)
+        self.connect_to_peer_direct(user, addr, msg_type, init)
 
-        self.peerconns.append(
-            PeerConnection(
-                addr=(ip, port),
-                username=user,
-                msgs=[],
-                token=msg.token,
-                init=init
+        if user != self.config.sections["server"]["login"]:
+            for i in self.peerconns:
+                if i.username == user and i.type == msg_type:
+                    i.addr = addr
+                    i.token = token
+                    i.init = init
+
+                    found_conn = True
+                    break
+
+        if not found_conn:
+            """ No previous connection exists for user """
+
+            self.peerconns.append(
+                PeerConnection(
+                    addr=addr,
+                    username=user,
+                    msgs=[],
+                    token=token,
+                    init=init
+                )
             )
-        )
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
