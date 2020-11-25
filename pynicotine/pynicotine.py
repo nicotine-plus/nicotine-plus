@@ -1597,94 +1597,96 @@ class NetworkEventProcessor:
     def transfer_timeout(self, msg):
         if self.transfers is not None:
             self.transfers.transfer_timeout(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_download(self, msg):
         if self.transfers is not None:
             self.transfers.file_download(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_upload(self, msg):
         if self.transfers is not None:
             self.transfers.file_upload(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_request(self, msg):
         if self.transfers is not None:
             self.transfers.file_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_error(self, msg):
         if self.transfers is not None:
             self.transfers.file_error(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
 
         if self.transfers is not None:
             self.transfers.transfer_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
 
         if self.transfers is not None:
             self.transfers.transfer_response(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_upload(self, msg):
         """ Peer code: 43 """
 
         if self.transfers is not None:
             self.transfers.queue_upload(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_failed(self, msg):
         """ Peer code: 50 """
 
         if self.transfers is not None:
             self.transfers.queue_failed(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
 
         if self.transfers is not None:
             self.transfers.place_in_queue_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def upload_queue_notification(self, msg):
         """ Peer code: 52 """
 
+        if self.transfers is not None:
+            self.transfers.upload_queue_notification(msg)
+
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-        self.transfers.upload_queue_notification(msg)
 
     def upload_failed(self, msg):
         """ Peer code: 46 """
 
         if self.transfers is not None:
             self.transfers.upload_failed(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue(self, msg):
         """ Peer code: 44 """
 
         if self.transfers is not None:
             self.transfers.place_in_queue(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_shared_file_list(self, msg):
         """ Peer code: 4 """
