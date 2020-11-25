@@ -24,6 +24,7 @@
 
 import os
 import re
+import signal
 import sys
 import threading
 
@@ -158,6 +159,9 @@ class NicotineFrame:
         self.MainWindow.connect("destroy", self.on_destroy)
         self.MainWindow.connect("key_press_event", self.on_key_press)
         self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+
+        # Handle Ctrl+C exit gracefully
+        signal.signal(signal.SIGINT, self.on_quit)
 
         self.MainWindow.resize(
             config["ui"]["width"],
