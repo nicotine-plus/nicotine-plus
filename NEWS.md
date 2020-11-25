@@ -19,9 +19,11 @@ Changes
  * Minor performance improvements when uploading a lot of files
  * Slightly improved startup times
  * Improved UI responsiveness when browsing your own shares
+ * Added option to minimize Nicotine+ to tray on startup
  * Added "Now Playing Search" plugin for searching files based on data from songs playing in your media player
  * Added "Now Playing Sender" plugin for automatically sending names of songs playing to select chat rooms 
  * Builtin plugins load properly on Windows again
+ * Modified config backup behavior to not back up the config if "Cancel" is pressed in the file chooser
  * Peer-to-peer (direct) private messaging works properly again
  * General usability improvements to macOS builds
  * Removed option to stop responding to search requests for certain time periods
@@ -52,6 +54,7 @@ Issues closed on GitHub
  * windows unstable build can't rebuild shares ([#829](https://github.com/Nicotine-Plus/nicotine-plus/issues/829))
  * Nicotine 2.1.2 fails to launch in FreeBSD due to missing pytaglib ([#843](https://github.com/Nicotine-Plus/nicotine-plus/issues/843))
  * Download Recursive ([#844](https://github.com/Nicotine-Plus/nicotine-plus/issues/844))
+ * Option to start application hidden when tray icon enabled ([#864](https://github.com/Nicotine-Plus/nicotine-plus/issues/864))
 
 Version 2.1.2 (12 October 2020)
 -----------------------------
