@@ -148,6 +148,7 @@ class RoomsControl:
         self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
         self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
 
+        self.frame.roomlist.update_visuals()
         self.update_visuals()
 
     def is_private_room_owned(self, room):

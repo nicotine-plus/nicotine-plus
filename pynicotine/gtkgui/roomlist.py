@@ -44,8 +44,6 @@ class RoomList:
         self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
-        self.update_visuals()
-
     def on_search_room(self, widget):
 
         if self.room_model is not self.RoomsList.get_model():
