@@ -311,7 +311,7 @@ class NetworkEventProcessor:
 
         if user != self.config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
             for i in self.peerconns:
-                if i.username == user and i.type == msg_type:
+                if i.username == user and i.type != 'F' and i.type == msg_type:
                     i.addr = addr
                     i.conn = conn
                     i.token = None
@@ -483,7 +483,7 @@ class NetworkEventProcessor:
 
         if user != self.config.sections["server"]["login"]:
             for i in self.peerconns:
-                if i.username == user and i.type == msg_type:
+                if i.username == user and i.type != 'F' and i.type == msg_type:
                     i.addr = addr
                     i.token = token
                     i.init = init

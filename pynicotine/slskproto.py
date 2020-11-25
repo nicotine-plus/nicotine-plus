@@ -1011,7 +1011,7 @@ class SlskProtoThread(threading.Thread):
 
                 elif msg_obj.__class__ is OutConn:
                     if msg_obj.addr[1] == 0:
-                        self._ui_callback([ConnectError(msg_obj, (0, "Port cannot be zero"))])
+                        self._ui_callback([ConnectError(msg_obj, "Port cannot be zero")])
 
                     elif maxsockets == -1 or numsockets < maxsockets:
                         try:
@@ -1033,7 +1033,7 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ConnectError(msg_obj, err)])
                             conn.close()
                     else:
-                        self._ui_callback([ConnectError(msg_obj)])
+                        self._ui_callback([ConnectError(msg_obj, "Connection limit reached")])
 
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj
@@ -1274,7 +1274,7 @@ class SlskProtoThread(threading.Thread):
 
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
 
-                    self._ui_callback([ConnectError(msg_obj)])
+                    self._ui_callback([ConnectError(msg_obj, "Timed out")])
                     self.close_connection(connsinprogress, connection_in_progress)
                     continue
 
