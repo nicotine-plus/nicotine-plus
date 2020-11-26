@@ -436,7 +436,7 @@ class NetworkEventProcessor:
             }
         )
 
-    def connect_to_peer_indirect(self, conn):
+    def connect_to_peer_indirect(self, conn, error):
 
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
@@ -459,9 +459,10 @@ class NetworkEventProcessor:
         conn.conntimer = timer
 
         log.add_conn(
-            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection"), {
+            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s"), {
                 "type": conn.type,
-                "user": conn.username
+                "user": conn.username,
+                "error": error
             }
         )
 
@@ -871,7 +872,7 @@ class NetworkEventProcessor:
 
                         """ We can't correct to peer directly, request indirect connection """
 
-                        self.connect_to_peer_indirect(i)
+                        self.connect_to_peer_indirect(i, msg.err)
 
                     else:
 
