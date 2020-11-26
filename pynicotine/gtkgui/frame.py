@@ -905,6 +905,7 @@ class NicotineFrame:
     def on_connect(self, *args, getmessage=True):
 
         self.tray.set_connected(True)
+        self.np.protothread.server_connect()
 
         if self.np.active_server_conn is not None:
             return

@@ -415,6 +415,7 @@ class SlskProtoThread(threading.Thread):
         self._ui_callback = ui_callback
         self._queue = queue
         self._want_abort = False
+        self._server_disconnect = True
         self._bindip = bindip
         self._config = config
         self._eventprocessor = eventprocessor
@@ -1003,18 +1004,11 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ConnectError(msg_obj, err)])
                             server_socket.close()
 
-                elif msg_obj.__class__ is ConnClose:
-                    if msg_obj.conn in connsinprogress:
-                        if msg_obj.callback:
-                            self._ui_callback([ConnClose(msg_obj.conn, connsinprogress[msg_obj.conn].addr)])
+                elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
+                    if msg_obj.callback:
+                        self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
 
-                        self.close_connection(connsinprogress, msg_obj.conn)
-
-                    elif msg_obj.conn in conns:
-                        if msg_obj.callback:
-                            self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
-
-                        self.close_connection(conns, msg_obj.conn)
+                    self.close_connection(conns, msg_obj.conn)
 
                 elif msg_obj.__class__ is OutConn:
                     if msg_obj.addr[1] == 0:
@@ -1183,6 +1177,12 @@ class SlskProtoThread(threading.Thread):
         queue = self._queue
 
         while not self._want_abort:
+
+            if self._server_disconnect:
+                # We're not connected to the server at the moment
+                self._ui_callback([SetCurrentConnectionCount(0)])
+                time.sleep(0.2)
+                continue
 
             if not queue.empty():
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
@@ -1397,6 +1397,14 @@ class SlskProtoThread(threading.Thread):
             server_socket.close()
 
         # Networking thread aborted
+
+    def server_connect(self):
+        """ We've connected to the server """
+        self._server_disconnect = False
+
+    def server_disconnect(self):
+        """ We've disconnected from the server """
+        self._server_disconnect = True
 
     def abort(self):
         """ Call this to abort the thread """

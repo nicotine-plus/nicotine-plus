@@ -804,10 +804,16 @@ class NetworkEventProcessor:
 
             self.active_server_conn = None
 
+            # Clear messages in progress
+            with self.queue.mutex:
+                self.queue.queue.clear()
+
+            # Inform networking thread we've disconnected from server
+            self.protothread.server_disconnect()
+
             # Clean up connections
             for i in self.peerconns[:]:
                 self.peerconns.remove(i)
-                self.queue.put(slskmessages.ConnClose(i.conn, callback=False))
 
             self.watchedusers.clear()
             self.shares.set_connected(False)
