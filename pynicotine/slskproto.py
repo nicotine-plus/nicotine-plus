@@ -1003,11 +1003,18 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ConnectError(msg_obj, err)])
                             server_socket.close()
 
-                elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
-                    if msg_obj.callback:
-                        self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
+                elif msg_obj.__class__ is ConnClose:
+                    if msg_obj.conn in connsinprogress:
+                        if msg_obj.callback:
+                            self._ui_callback([ConnClose(msg_obj.conn, connsinprogress[msg_obj.conn].addr)])
 
-                    self.close_connection(conns, msg_obj.conn)
+                        self.close_connection(connsinprogress, msg_obj.conn)
+
+                    elif msg_obj.conn in conns:
+                        if msg_obj.callback:
+                            self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
+
+                        self.close_connection(conns, msg_obj.conn)
 
                 elif msg_obj.__class__ is OutConn:
                     if msg_obj.addr[1] == 0:
