@@ -802,11 +802,17 @@ class NetworkEventProcessor:
                 self.manualdisconnect = False
 
             self.active_server_conn = None
+
+            # Clean up connections
+            for i in self.peerconns[:]:
+                self.peerconns.remove(i)
+                self.queue.put(slskmessages.ConnClose(i.conn, callback=False))
+
             self.watchedusers.clear()
             self.shares.set_connected(False)
 
             if self.transfers is not None:
-                self.transfers.abort_transfers()
+                self.transfers.abort_transfers(send_fail_message=False)
                 self.transfers.save_downloads()
 
             self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None

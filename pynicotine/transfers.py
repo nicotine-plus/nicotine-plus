@@ -1948,15 +1948,15 @@ class Transfers:
 
         return destination
 
-    def abort_transfers(self):
+    def abort_transfers(self, send_fail_message=True):
         """ Stop all transfers """
 
         for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
-                self.abort_transfer(i)
+                self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Paused"
             elif i.status != "Finished":
-                self.abort_transfer(i)
+                self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
 
     def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):
