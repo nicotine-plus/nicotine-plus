@@ -805,8 +805,8 @@ class NetworkEventProcessor:
             self.active_server_conn = None
 
             # Clear messages in progress
-            with self.queue.mutex:
-                self.queue.queue.clear()
+            while not self.queue.empty():
+                self.queue.get(0)
 
             # Inform networking thread we've disconnected from server
             self.protothread.server_disconnect()
@@ -967,7 +967,7 @@ class NetworkEventProcessor:
             self.transfers.abort_transfers()
 
     def connect_to_server(self, msg):
-        self.ui_callback.on_connect(None)
+        self.ui_callback.on_connect()
 
     # notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
