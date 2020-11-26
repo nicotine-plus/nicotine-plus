@@ -2628,8 +2628,8 @@ class NicotineFrame:
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray.hide()
 
-        if not self.np.manualdisconnect:
-            self.on_disconnect(None)
+        # Inform networking thread we've disconnected from server
+        self.np.protothread.server_disconnect()
 
         self.save_columns()
 

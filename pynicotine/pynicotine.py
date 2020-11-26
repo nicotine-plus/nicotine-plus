@@ -804,16 +804,8 @@ class NetworkEventProcessor:
 
             self.active_server_conn = None
 
-            # Clear messages in progress
-            while not self.queue.empty():
-                self.queue.get(0)
-
-            # Inform networking thread we've disconnected from server
-            self.protothread.server_disconnect()
-
             # Clean up connections
-            for i in self.peerconns[:]:
-                self.peerconns.remove(i)
+            self.peerconns.clear()
 
             self.watchedusers.clear()
             self.shares.set_connected(False)
