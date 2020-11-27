@@ -895,17 +895,16 @@ class NetworkEventProcessor:
                     else:
 
                         """ Peer sent us an indirect connection request, and we weren't able to
-                        connect to them. Send a notification to them via the server. """
+                        connect to them. """
 
                         for j in i.msgs:
                             if j.__class__ in (slskmessages.TransferRequest, slskmessages.FileRequest) and self.transfers is not None:
                                 self.transfers.got_cant_connect(j.req)
 
-                        log.add_conn(_("Can't connect to user %(user)s neither directly nor indirectly, informing user via the server. Error: %(error)s"), {
+                        log.add_conn(_("Can't connect to user %(user)s indirectly. Error: %(error)s"), {
                             'user': i.username,
                             'error': msg.err
                         })
-                        self.queue.put(slskmessages.CantConnectToPeer(i.token, i.username))
 
                         if i.conntimer is not None:
                             i.conntimer.cancel()
