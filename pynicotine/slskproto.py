@@ -399,7 +399,7 @@ class SlskProtoThread(threading.Thread):
         93: DistribServerSearch
     }
 
-    IN_PROGRESS_STALE_AFTER = 5
+    IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
     CONNCOUNT_UI_INTERVAL = 0.5
 
