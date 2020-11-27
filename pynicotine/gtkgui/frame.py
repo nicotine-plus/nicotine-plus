@@ -689,6 +689,9 @@ class NicotineFrame:
         self.userinfo.conn_close()
         self.userbrowse.conn_close()
 
+        # Reset transfer stats (speed, total files/users)
+        self.update_bandwidth()
+
     def set_widget_online_status(self, status):
 
         self.connect_action.set_enabled(not status)
