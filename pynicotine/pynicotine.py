@@ -478,19 +478,30 @@ class NetworkEventProcessor:
         token = msg.token
         msg_type = msg.type
         found_conn = False
+        should_connect = False
 
         init = slskmessages.PeerInit(None, user, msg_type, 0)
-        self.connect_to_peer_direct(user, addr, msg_type, init)
 
         if user != self.config.sections["server"]["login"]:
             for i in self.peerconns:
                 if i.username == user and i.type != 'F' and i.type == msg_type:
-                    i.addr = addr
-                    i.token = token
-                    i.init = init
+                    """ Only update existing connection if it hasn't been established yet,
+                    otherwise ignore indirect connection request. """
+
+                    if i.conn is None:
+                        i.addr = addr
+                        i.token = token
+                        i.init = init
+                        should_connect = True
 
                     found_conn = True
                     break
+
+            else:
+                should_connect = True
+
+        if should_connect:
+            self.connect_to_peer_direct(user, addr, msg_type, init)
 
         if not found_conn:
             """ No previous connection exists for user """
