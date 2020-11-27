@@ -349,7 +349,7 @@ class TransferList:
             iterator = self.transfersmodel.iter_next(iterator)
 
         if totalsize > 0:
-            percent = ((100 * position) / totalsize)
+            percent = min(((100 * position) / totalsize), 100)
 
         if speed > 0:
             hspeed = human_speed(speed)
@@ -422,10 +422,7 @@ class TransferList:
 
         try:
             icurrentbytes = int(currentbytes)
-            if icurrentbytes == int(transfer.size):
-                percent = 100
-            else:
-                percent = ((100 * icurrentbytes) / int(size))
+            percent = min(((100 * icurrentbytes) / int(size)), 100)
         except Exception:
             icurrentbytes = 0
             percent = 0
