@@ -756,6 +756,8 @@ class NetworkEventProcessor:
 
         """ Server informs us that an indirect connection with a peer has failed.
         Game over. """
+        """ DEPRECATED. While we can still receive CantConnectToPeer messages by
+        other clients, Nicotine+ does not send such messages anymore. """
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 

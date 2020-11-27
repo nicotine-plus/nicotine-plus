@@ -187,7 +187,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 151  | [Stop Public Chat](#server-code-151)              |            |
 | 152  | [Public Chat Message](#server-code-152)           |            |
 | 153  | [Related Searches](#server-code-153)              | Deprecated |
-| 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
+| 1001 | [Can't Connect To Peer](#server-code-1001)        | Deprecated |
 | 1002 | [Can't Create Room](#server-code-1002)            | Deprecated |
 
 ### Server Code 1
@@ -2392,6 +2392,8 @@ Museekd: SCannotConnect
 Nicotine: CantConnectToPeer
 
 #### Description
+
+**DEPRECATED. Since direct and indirect connection attempts are made simultaneously by the official client nowadays, it's not safe to send this message, as we can't be certain that both connection methods have been fully attempted. The order of the attempts is also unpredictable.**
 
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 

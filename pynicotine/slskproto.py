@@ -364,7 +364,7 @@ class SlskProtoThread(threading.Thread):
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
         RelatedSearch: 153,           # Deprecated ?
-        CantConnectToPeer: 1001,
+        CantConnectToPeer: 1001,      # Deprecated
         CantCreateRoom: 1002          # Deprecated
     }
 
