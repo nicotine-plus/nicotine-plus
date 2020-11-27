@@ -46,6 +46,7 @@ def test_instantiate_proto(config) -> None:
         ui_callback=Mock(), queue=Mock(), bindip='',
         port=None, config=config, eventprocessor=Mock()
     )
+    proto.server_connect()
     proto.abort()
 
 
@@ -56,6 +57,7 @@ def test_server_conn(config, monkeypatch) -> None:
         ui_callback=Mock(), queue=Queue(0), bindip='',
         port=None, config=config, eventprocessor=Mock()
     )
+    proto.server_connect()
     proto._queue.put(ServerConn())
 
     sleep(SLSKPROTO_RUN_TIME)
@@ -88,6 +90,7 @@ def test_login(config, monkeypatch) -> None:
         ui_callback=Mock(), queue=Queue(0), bindip='',
         port=None, config=config, eventprocessor=Mock()
     )
+    proto.server_connect()
     proto._queue.put(ServerConn())
 
     sleep(SLSKPROTO_RUN_TIME / 2)

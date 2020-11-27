@@ -60,7 +60,7 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr", "indirectattempt"
+    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr"
 
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
         self.addr = addr
@@ -72,9 +72,6 @@ class PeerConnection:
         self.type = init.type
         self.conntimer = conntimer
         self.tryaddr = tryaddr
-
-        """ Track if we've asked this peer to connect to us (indirect connection) """
-        self.indirectattempt = False
 
 
 class Timeout:
@@ -122,7 +119,7 @@ class NetworkEventProcessor:
             self.network_callback([slskmessages.PopupMessage(short, long)])
 
         # These strings are accessed frequently. We store them to prevent requesting the translation every time.
-        self.conn_close_template = _("Connection closed by peer: %s")
+        self.conn_close_template = _("Connection closed by peer: %(peer)s. Error: %(error)s")
 
         self.bindip = bindip
         self.port = port
@@ -306,16 +303,37 @@ class NetworkEventProcessor:
 
         """ Peer wants to connect to us, remember them """
 
-        self.peerconns.append(
-            PeerConnection(
-                addr=msg.conn.addr,
-                username=msg.user,
-                conn=msg.conn.conn,
-                init=msg,
-                msgs=[]
-            )
-        )
+        user = msg.user
+        addr = msg.conn.addr
+        conn = msg.conn.conn
+        msg_type = msg.type
+        found_conn = False
 
+        if user != self.config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
+            for i in self.peerconns:
+                if i.username == user and i.type != 'F' and i.type == msg_type:
+                    i.addr = addr
+                    i.conn = conn
+                    i.token = None
+                    i.init = msg
+
+                    found_conn = True
+                    break
+
+        if not found_conn:
+            """ No previous connection exists for user """
+
+            self.peerconns.append(
+                PeerConnection(
+                    addr=addr,
+                    username=user,
+                    conn=conn,
+                    init=msg,
+                    msgs=[]
+                )
+            )
+
+        log.add_conn(_("Received incoming connection of type %(type)s from user %(user)s") % {'type': msg_type, 'user': user})
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def send_message_to_peer(self, user, message, address=None):
@@ -331,6 +349,10 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.username == user and i.type == 'P':
                     conn = i
+                    log.add_conn(_("Found existing connection of type %(type)s for user %(user)s, using it.") % {
+                        'type': i.type,
+                        'user': user
+                    })
                     break
 
         if conn is not None and conn.conn is not None:
@@ -348,6 +370,11 @@ class NetworkEventProcessor:
             """ This is a new peer, initiate a connection """
 
             self.initiate_connection_to_peer(user, message, address)
+
+        log.add_conn(_("Sending message of type %(type)s to user %(user)s") % {
+            'type': message.__class__,
+            'user': user
+        })
 
     def initiate_connection_to_peer(self, user, message, address=None):
 
@@ -409,12 +436,11 @@ class NetworkEventProcessor:
             }
         )
 
-    def connect_to_peer_indirect(self, conn):
+    def connect_to_peer_indirect(self, conn, error):
 
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
         conn.token = new_id()
-        conn.indirectattempt = True
         self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
 
         for j in conn.msgs:
@@ -433,9 +459,10 @@ class NetworkEventProcessor:
         conn.conntimer = timer
 
         log.add_conn(
-            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection"), {
+            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s"), {
                 "type": conn.type,
-                "user": conn.username
+                "user": conn.username,
+                "error": error
             }
         )
 
@@ -448,19 +475,35 @@ class NetworkEventProcessor:
         ip = msg.ip
         port = msg.port
         addr = (ip, port)
+        token = msg.token
+        msg_type = msg.type
+        found_conn = False
 
-        init = slskmessages.PeerInit(None, user, msg.type, 0)
-        self.connect_to_peer_direct(user, addr, msg.type, init)
+        init = slskmessages.PeerInit(None, user, msg_type, 0)
+        self.connect_to_peer_direct(user, addr, msg_type, init)
 
-        self.peerconns.append(
-            PeerConnection(
-                addr=(ip, port),
-                username=user,
-                msgs=[],
-                token=msg.token,
-                init=init
+        if user != self.config.sections["server"]["login"]:
+            for i in self.peerconns:
+                if i.username == user and i.type != 'F' and i.type == msg_type:
+                    i.addr = addr
+                    i.token = token
+                    i.init = init
+
+                    found_conn = True
+                    break
+
+        if not found_conn:
+            """ No previous connection exists for user """
+
+            self.peerconns.append(
+                PeerConnection(
+                    addr=addr,
+                    username=user,
+                    msgs=[],
+                    token=token,
+                    init=init
+                )
             )
-        )
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
@@ -620,6 +663,11 @@ class NetworkEventProcessor:
 
                 i.conn = conn
 
+                log.add_conn(_("Connection established with user %(user)s, connection contains messages: %(messages)s") % {
+                    'user': i.username,
+                    'messages': i.msgs
+                })
+
                 # Update UI with contents from messages
                 self.process_conn_messages(i, conn)
 
@@ -628,23 +676,33 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def pierce_fire_wall(self, msg):
+
+        # Sometimes a token is seemingly not sent by the peer, check if the
+        # IP address matches in that case
         token = msg.token
 
         for i in self.peerconns:
-            if i.token == token and i.conn is None:
-                conn = msg.conn.conn
+            if i.conn is None:
+                if token is not None and i.token == token or \
+                        token is None and i.token is not None and i.addr == msg.conn.addr:
+                    conn = msg.conn.conn
 
-                if i.conntimer is not None:
-                    i.conntimer.cancel()
+                    if i.conntimer is not None:
+                        i.conntimer.cancel()
 
-                i.init.conn = conn
-                self.queue.put(i.init)
-                i.conn = conn
+                    i.init.conn = conn
+                    self.queue.put(i.init)
+                    i.conn = conn
 
-                # Update UI with contents from messages
-                self.process_conn_messages(i, conn)
+                    log.add_conn(_("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s") % {
+                        'user': i.username,
+                        'messages': i.msgs
+                    })
 
-                break
+                    # Update UI with contents from messages
+                    self.process_conn_messages(i, conn)
+
+                    break
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
@@ -745,11 +803,15 @@ class NetworkEventProcessor:
                 self.manualdisconnect = False
 
             self.active_server_conn = None
+
+            # Clean up connections
+            self.peerconns.clear()
+
             self.watchedusers.clear()
             self.shares.set_connected(False)
 
             if self.transfers is not None:
-                self.transfers.abort_transfers()
+                self.transfers.abort_transfers(send_fail_message=False)
                 self.transfers.save_downloads()
 
             self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
@@ -762,7 +824,7 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn(self.conn_close_template, self.contents(i))
+                    log.add_conn(self.conn_close_template, {'peer': self.contents(i), 'error': error})
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -808,7 +870,7 @@ class NetworkEventProcessor:
 
                         """ We can't correct to peer directly, request indirect connection """
 
-                        self.connect_to_peer_indirect(i)
+                        self.connect_to_peer_indirect(i, msg.err)
 
                     else:
 
@@ -816,17 +878,13 @@ class NetworkEventProcessor:
                         connect to them. Send a notification to them via the server. """
 
                         for j in i.msgs:
-                            if j.__class__ in [slskmessages.TransferRequest, slskmessages.FileRequest] and self.transfers is not None:
-                                if not i.indirectattempt:
-                                    """ It's possible that the peer never attempted to connect
-                                    directly to us, ask them to do so just to make sure. """
-
-                                    self.connect_to_peer_indirect(i)
-                                    return
-
+                            if j.__class__ in (slskmessages.TransferRequest, slskmessages.FileRequest) and self.transfers is not None:
                                 self.transfers.got_cant_connect(j.req)
 
-                        log.add_conn(_("Can't connect to user %s neither directly nor indirectly, informing user via the server"), i.username)
+                        log.add_conn(_("Can't connect to user %(user)s neither directly nor indirectly, informing user via the server. Error: %(error)s"), {
+                            'user': i.username,
+                            'error': msg.err
+                        })
                         self.queue.put(slskmessages.CantConnectToPeer(i.token, i.username))
 
                         if i.conntimer is not None:
@@ -901,7 +959,7 @@ class NetworkEventProcessor:
             self.transfers.abort_transfers()
 
     def connect_to_server(self, msg):
-        self.ui_callback.on_connect(None)
+        self.ui_callback.on_connect()
 
     # notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
@@ -1580,94 +1638,96 @@ class NetworkEventProcessor:
     def transfer_timeout(self, msg):
         if self.transfers is not None:
             self.transfers.transfer_timeout(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_download(self, msg):
         if self.transfers is not None:
             self.transfers.file_download(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_upload(self, msg):
         if self.transfers is not None:
             self.transfers.file_upload(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_request(self, msg):
         if self.transfers is not None:
             self.transfers.file_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def file_error(self, msg):
         if self.transfers is not None:
             self.transfers.file_error(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
 
         if self.transfers is not None:
             self.transfers.transfer_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
 
         if self.transfers is not None:
             self.transfers.transfer_response(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_upload(self, msg):
         """ Peer code: 43 """
 
         if self.transfers is not None:
             self.transfers.queue_upload(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def queue_failed(self, msg):
         """ Peer code: 50 """
 
         if self.transfers is not None:
             self.transfers.queue_failed(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
 
         if self.transfers is not None:
             self.transfers.place_in_queue_request(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def upload_queue_notification(self, msg):
         """ Peer code: 52 """
 
+        if self.transfers is not None:
+            self.transfers.upload_queue_notification(msg)
+
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-        self.transfers.upload_queue_notification(msg)
 
     def upload_failed(self, msg):
         """ Peer code: 46 """
 
         if self.transfers is not None:
             self.transfers.upload_failed(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def place_in_queue(self, msg):
         """ Peer code: 44 """
 
         if self.transfers is not None:
             self.transfers.place_in_queue(msg)
-        else:
-            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+
+        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
     def get_shared_file_list(self, msg):
         """ Peer code: 4 """

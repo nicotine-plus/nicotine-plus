@@ -224,10 +224,7 @@ class Transfers:
 
         for i in self.uploads[:]:
             if msg.user == i.user and i.status != "Finished":
-                if msg.status != 0:
-                    if i.status == "Getting status":
-                        self.push_file(i.user, i.filename, i.realfilename, i.path, i)
-                else:
+                if msg.status == 0:
                     if i.transfertimer is not None:
                         i.transfertimer.cancel()
                     self.uploads.remove(i)
@@ -1131,6 +1128,7 @@ class Transfers:
 
             if needupdate:
                 self.downloadsview.update(i)
+
         else:
             log.add_warning(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
@@ -1174,6 +1172,11 @@ class Transfers:
 
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
+
+            if i.size == 0:
+                # If filesize is 0, we will not receive a UploadFile message later. Finish now.
+                self.upload_finished(f, i)
+
         else:
             log.add_warning(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
                 'req': str(vars(msg)),
@@ -1249,6 +1252,7 @@ class Transfers:
             break
 
     def download_finished(self, file, i):
+
         file.close()
         i.file = None
 
@@ -1409,38 +1413,42 @@ class Transfers:
                 self.check_upload_queue()
                 sleep(0.01)
             else:
-                if i.speed is not None:
-                    speedbytes = int(i.speed)
-                    self.eventprocessor.speed = speedbytes
-                    self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
-
-                msg.file.close()
-                i.status = "Finished"
-                i.speed = 0
-                i.timeleft = ""
-
-                for j in self.uploads:
-                    if j.user == i.user:
-                        j.timequeued = curtime
-
-                self.log_transfer(
-                    _("Upload finished: %(user)s, file %(file)s") % {
-                        'user': i.user,
-                        'file': i.filename
-                    }
-                )
-
-                self.check_upload_queue()
-                self.uploadsview.update(i)
-
-                # Autoclear this upload
-                self.auto_clear_upload(i)
+                self.upload_finished(msg.file, i)
                 needupdate = False
 
             if needupdate:
                 self.uploadsview.update(i)
 
             break
+
+    def upload_finished(self, file, i):
+
+        if i.speed is not None:
+            speedbytes = int(i.speed)
+            self.eventprocessor.speed = speedbytes
+            self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
+
+        file.close()
+        i.status = "Finished"
+        i.speed = 0
+        i.timeleft = ""
+
+        for j in self.uploads:
+            if j.user == i.user:
+                j.timequeued = i.lasttime
+
+        self.log_transfer(
+            _("Upload finished: %(user)s, file %(file)s") % {
+                'user': i.user,
+                'file': i.filename
+            }
+        )
+
+        self.check_upload_queue()
+        self.uploadsview.update(i)
+
+        # Autoclear this upload
+        self.auto_clear_upload(i)
 
     def auto_clear_download(self, transfer):
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
@@ -1764,7 +1772,7 @@ class Transfers:
             elif type == "download":
                 i.status = "Connection closed by peer"
 
-            elif type == "upload" and i.status in self.TRANSFER:
+            elif type == "upload" and i.status == "Transferring":
                 """ Only cancel files being transferred, queued files will take care of
                 themselves. We don't want to cancel all queued files at once, in case
                 it's just a connectivity fluke. """
@@ -1940,15 +1948,15 @@ class Transfers:
 
         return destination
 
-    def abort_transfers(self):
+    def abort_transfers(self, send_fail_message=True):
         """ Stop all transfers """
 
         for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
-                self.abort_transfer(i)
+                self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Paused"
             elif i.status != "Finished":
-                self.abort_transfer(i)
+                self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
 
     def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):

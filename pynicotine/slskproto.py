@@ -415,6 +415,7 @@ class SlskProtoThread(threading.Thread):
         self._ui_callback = ui_callback
         self._queue = queue
         self._want_abort = False
+        self._server_disconnect = True
         self._bindip = bindip
         self._config = config
         self._eventprocessor = eventprocessor
@@ -907,8 +908,13 @@ class SlskProtoThread(threading.Thread):
             )
 
     def close_connection(self, connection_list, connection):
-        connection.close()
-        del connection_list[connection]
+        try:
+            connection.close()
+            del connection_list[connection]
+
+        except KeyError:
+            # Already removed
+            pass
 
     def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXSOCKETS):
         """ Processes messages sent by UI thread. server_socket is a server connection
@@ -1004,14 +1010,20 @@ class SlskProtoThread(threading.Thread):
                             server_socket.close()
 
                 elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
-                    if msg_obj.callback:
-                        self._ui_callback([ConnClose(msg_obj.conn, conns[msg_obj.conn].addr)])
+                    conn = msg_obj.conn
 
-                    self.close_connection(conns, msg_obj.conn)
+                    if msg_obj.callback:
+                        self._ui_callback([ConnClose(conn, conns[conn].addr)])
+
+                    if conn == server_socket:
+                        # Disconnected from server, clean up connections and queue
+                        self.server_disconnect()
+
+                    self.close_connection(conns, conn)
 
                 elif msg_obj.__class__ is OutConn:
                     if msg_obj.addr[1] == 0:
-                        self._ui_callback([ConnectError(msg_obj, (0, "Port cannot be zero"))])
+                        self._ui_callback([ConnectError(msg_obj, "Port cannot be zero")])
 
                     elif maxsockets == -1 or numsockets < maxsockets:
                         try:
@@ -1033,7 +1045,7 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ConnectError(msg_obj, err)])
                             conn.close()
                     else:
-                        self._ui_callback([ConnectError(msg_obj)])
+                        self._ui_callback([ConnectError(msg_obj, "Connection limit reached")])
 
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj
@@ -1177,6 +1189,11 @@ class SlskProtoThread(threading.Thread):
 
         while not self._want_abort:
 
+            if self._server_disconnect:
+                # We're not connected to the server at the moment
+                time.sleep(0.2)
+                continue
+
             if not queue.empty():
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
@@ -1274,7 +1291,7 @@ class SlskProtoThread(threading.Thread):
 
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
 
-                    self._ui_callback([ConnectError(msg_obj)])
+                    self._ui_callback([ConnectError(msg_obj, "Timed out")])
                     self.close_connection(connsinprogress, connection_in_progress)
                     continue
 
@@ -1390,6 +1407,28 @@ class SlskProtoThread(threading.Thread):
             server_socket.close()
 
         # Networking thread aborted
+
+    def server_connect(self):
+        """ We've connected to the server """
+        self._server_disconnect = False
+
+    def server_disconnect(self):
+        """ We've disconnected from the server, clean up """
+
+        self._server_disconnect = True
+
+        for i in self._conns.copy():
+            i.close()
+            del self._conns[i]
+
+        for i in self._connsinprogress.copy():
+            i.close()
+            del self._connsinprogress[i]
+
+        while not self._queue.empty():
+            self._queue.get(0)
+
+        self._ui_callback([SetCurrentConnectionCount(0)])
 
     def abort(self):
         """ Call this to abort the thread """

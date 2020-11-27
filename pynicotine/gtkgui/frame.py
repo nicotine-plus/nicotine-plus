@@ -398,7 +398,7 @@ class NicotineFrame:
             self.on_fast_configure()
 
         else:
-            self.on_connect(getmessage=False)
+            self.on_connect()
 
         self.update_bandwidth()
 
@@ -902,16 +902,17 @@ class NicotineFrame:
 
     # File
 
-    def on_connect(self, *args, getmessage=True):
+    def on_connect(self, *args):
 
         self.tray.set_connected(True)
+        self.np.protothread.server_connect()
 
         if self.np.active_server_conn is not None:
             return
 
-        if getmessage:
-            while not self.np.queue.empty():
-                self.np.queue.get(0)
+        # Clear any potential messages queued up to this point (should not happen)
+        while not self.np.queue.empty():
+            self.np.queue.get(0)
 
         self.set_user_status("...")
 
@@ -2627,8 +2628,8 @@ class NicotineFrame:
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray.hide()
 
-        if not self.np.manualdisconnect:
-            self.on_disconnect(None)
+        # Inform networking thread we've disconnected from server
+        self.np.protothread.server_disconnect()
 
         self.save_columns()
 
