@@ -479,7 +479,7 @@ class NetworkEventProcessor:
         token = msg.token
         msg_type = msg.type
         found_conn = False
-        should_connect = False
+        should_connect = True
 
         init = slskmessages.PeerInit(None, user, msg_type, 0)
 
@@ -489,17 +489,16 @@ class NetworkEventProcessor:
                     """ Only update existing connection if it hasn't been established yet,
                     otherwise ignore indirect connection request. """
 
+                    found_conn = True
+
                     if i.conn is None:
                         i.addr = addr
                         i.token = token
                         i.init = init
-                        should_connect = True
+                        break
 
-                    found_conn = True
+                    should_connect = False
                     break
-
-            else:
-                should_connect = True
 
         if should_connect:
             self.connect_to_peer_direct(user, addr, msg_type, init)
