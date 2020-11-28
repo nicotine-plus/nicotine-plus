@@ -80,7 +80,7 @@ class Tray:
                 ("#" + _("Lookup a User's Info"), self.on_get_a_users_info),
                 ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
                 ("$" + _("Away"), self.frame.on_away),
-                ("#" + _("Settings"), self.frame.on_settings),
+                ("#" + _("Preferences"), self.frame.on_settings),
                 ("#" + _("Quit"), self.frame.on_quit)
             )
         except Exception as e:
