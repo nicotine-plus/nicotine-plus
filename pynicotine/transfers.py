@@ -300,6 +300,19 @@ class Transfers:
             request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath)
             self.eventprocessor.send_message_to_peer(user, request)
 
+            if direction == 0:
+                log.add_transfer(_("Requesting to download file %(filename)s with transfer request %(request)s from user %(user)s"), {
+                    "filename": filename,
+                    "request": transfer.req,
+                    "user": user
+                })
+            else:
+                log.add_transfer(_("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s"), {
+                    "filename": filename,
+                    "request": transfer.req,
+                    "user": user
+                })
+
         if shouldupdate:
             if direction == 0:
                 self.downloadsview.update(transfer)
@@ -480,9 +493,36 @@ class Transfers:
             return
 
         if msg.direction == 1:
+            log.add_transfer(_("Received upload request %(request)s for file %(filename)s from user %(user)s"), {
+                "request": msg.req,
+                "filename": msg.file,
+                "user": user
+            })
+
             response = self.transfer_request_downloads(msg, user)
+
+            log.add_transfer(_("Sending response to upload request %(request)s for file %(filename)s from user %(user)s: %(allowed)s"), {
+                "request": response.req,
+                "filename": msg.file,
+                "user": user,
+                "allowed": response.allowed
+            })
+
         else:
+            log.add_transfer(_("Received download request %(request)s for file %(filename)s from user %(user)s"), {
+                "request": msg.req,
+                "filename": msg.file,
+                "user": user
+            })
+
             response = self.transfer_request_uploads(msg, user, addr)
+
+            log.add_transfer(_("Sending response to download request %(request)s for file %(filename)s from user %(user)s: %(allowed)s"), {
+                "request": response.req,
+                "filename": msg.file,
+                "user": user,
+                "allowed": response.allowed
+            })
 
         self.eventprocessor.send_message_to_peer(user, response)
 
@@ -908,6 +948,13 @@ class Transfers:
 
         """ Got a response to the file request from the peer."""
 
+        log.add_transfer(_("Received response for transfer request %(request)s. Allowed: %(allowed)s. Reason: %(reason)s. Filesize: %(size)s"), {
+            "request": msg.req,
+            "allowed": msg.allowed,
+            "reason": msg.reason,
+            "size": msg.filesize
+        })
+
         if msg.reason is not None:
 
             for i in self.downloads:
@@ -994,6 +1041,12 @@ class Transfers:
             if i.status in ["Queued", "User logged off", "Paused"] + self.COMPLETED_TRANSFERS:
                 continue
 
+            log.add_transfer(_("Transfer %(filename)s with request %(request)s for user %(user)s timed out"), {
+                "filename": i.filename,
+                "request": i.req,
+                "user": i.user
+            })
+
             i.status = "Cannot connect"
             i.req = None
             curtime = time.time()
@@ -1016,7 +1069,11 @@ class Transfers:
 
     def file_request(self, msg):
         """ Got an incoming file request. Could be an upload request or a
-        request to get the file that was previously queued"""
+        request to get the file that was previously queued """
+
+        log.add_transfer(_("Received file request %(request)s"), {
+            "request": msg.req
+        })
 
         for i in self.downloads:
             if msg.req == i.req:
@@ -1031,6 +1088,12 @@ class Transfers:
         self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _file_request_download(self, msg, i):
+
+        log.add_transfer(_("Received file upload request %(request)s for file %(filename)s from user %(user)s"), {
+            "request": msg.req,
+            "filename": i.filename,
+            "user": i.user
+        })
 
         downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
         incompletedir = self.eventprocessor.config.sections["transfers"]["incompletedir"]
@@ -1139,6 +1202,12 @@ class Transfers:
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
     def _file_request_upload(self, msg, i):
+
+        log.add_transfer(_("Received file download request %(request)s for file %(filename)s from user %(user)s"), {
+            "request": msg.req,
+            "filename": i.filename,
+            "user": i.user
+        })
 
         if i.conn is None:
             i.conn = msg.conn
