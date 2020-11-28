@@ -449,7 +449,7 @@ class NetworkEventProcessor:
                 self.transfers.got_connect_error(j.req, j.direction)
 
         conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
-        timer = threading.Timer(10.0, conntimeout.timeout)
+        timer = threading.Timer(20.0, conntimeout.timeout)
         timer.setName("ConnectionTimer")
         timer.setDaemon(True)
         timer.start()
