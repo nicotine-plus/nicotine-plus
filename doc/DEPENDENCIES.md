@@ -6,10 +6,9 @@
 
 * [python3](https://www.python.org/) >= 3.5 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
-* [gobject-introspection](https://gi.readthedocs.io/en/latest/) for GObject introspection;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK.
 
-### Optional
+### Recommended
 
 * [gir1.2-appindicator3-0.1](https://lazka.github.io/pgi-docs/AppIndicator3-0.1/index.html) or [gir1.2-ayatanaappindicator3-0.1](https://lazka.github.io/pgi-docs/AyatanaAppIndicator3-0.1/index.html) for tray icon;
 * [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat.
@@ -29,16 +28,16 @@
 * On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install gobject-introspection gir1.2-gtk-3.0 python3-gi
+sudo apt install gir1.2-gtk-3.0 python3-gi
 ```
 
 * On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install gobject-introspection gtk3 python3-gobject
+sudo dnf install gtk3 python3-gobject
 ```
 
-#### Installing the optional runtime dependencies
+#### Installing the recommended runtime dependencies
 * On Debian/Ubuntu based distributions:
 
 ```sh
