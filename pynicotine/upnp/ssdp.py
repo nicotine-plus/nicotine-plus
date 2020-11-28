@@ -177,7 +177,10 @@ class SSDP:
         return routers
 
     @classmethod
-    def _create_msearch_request(cls, service_type, headers={}):
+    def _create_msearch_request(cls, service_type, headers=None):
+        if headers is None:
+            headers = {}
+
         headers["ST"] = service_type
         return SSDPRequest('M-SEARCH', headers=headers)
 

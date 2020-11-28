@@ -976,7 +976,7 @@ class NicotineFrame:
             self.settingswindow.SettingsWindow.connect("settings-updated", self.on_settings_updated)
 
         if self.fastconfigure is not None and \
-                self.fastconfigure.FastConfigureAssistant.get_property("visible"):
+                self.fastconfigure.FastConfigureDialog.get_property("visible"):
             return
 
         self.settingswindow.set_settings(self.np.config.sections)

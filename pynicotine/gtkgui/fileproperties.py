@@ -35,7 +35,7 @@ class FileProperties:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "fileproperties.ui"))
 
-        self.FileProperties.set_transient_for(self.frame.MainWindow)
+        self.FilePropertiesDialog.set_transient_for(self.frame.MainWindow)
 
         self.current_index = 0
 
@@ -60,7 +60,7 @@ class FileProperties:
         self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
 
     def update_title(self):
-        self.FileProperties.set_title(_("File Properties (%(num)i of %(total)i)") % {
+        self.FilePropertiesDialog.set_title(_("File Properties (%(num)i of %(total)i)") % {
             'num': self.current_index + 1,
             'total': len(self.properties)
         })
@@ -141,4 +141,4 @@ class FileProperties:
 
     def show(self):
         self.update_current_file()
-        self.FileProperties.show()
+        self.FilePropertiesDialog.show()

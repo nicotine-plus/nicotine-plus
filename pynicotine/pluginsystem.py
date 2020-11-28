@@ -507,6 +507,7 @@ class BasePlugin(object):
             self.frame.privatechats.CMDS.add('/' + trigger + ' ')
 
     def init(self):
+        # Custom init function for plugins
         pass
 
     def LoadSettings(self, settings):  # noqa

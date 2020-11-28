@@ -77,7 +77,7 @@ class FastConfigureAssistant(object):
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "fastconfigure.ui"))
 
-        self.FastConfigureAssistant.set_transient_for(self.frame.MainWindow)
+        self.FastConfigureDialog.set_transient_for(self.frame.MainWindow)
 
         # Page specific, sharepage
         # The last column is the raw byte/unicode object
@@ -113,7 +113,7 @@ class FastConfigureAssistant(object):
         self.initphase = True
         self._populate()
         self.initphase = False
-        self.FastConfigureAssistant.show()
+        self.FastConfigureDialog.show()
 
     def _populate(self):
 
@@ -177,11 +177,11 @@ class FastConfigureAssistant(object):
                 self.config.sections["transfers"]["shared"] = self.getshareddirs()
 
     def on_close(self, widget):
-        self.FastConfigureAssistant.hide()
+        self.FastConfigureDialog.hide()
 
     def on_apply(self, widget):
         self.store()
-        self.FastConfigureAssistant.hide()
+        self.FastConfigureDialog.hide()
 
         # Rescan public shares if needed
         if not self.config.sections["transfers"]["friendsonly"]:
@@ -195,7 +195,7 @@ class FastConfigureAssistant(object):
             self.frame.on_connect()
 
     def on_cancel(self, widget):
-        self.FastConfigureAssistant.hide()
+        self.FastConfigureDialog.hide()
 
     def resetcompleteness(self, page=None):
         """Turns on the complete flag if everything required is filled in."""
@@ -204,8 +204,8 @@ class FastConfigureAssistant(object):
         complete = False
 
         if not page:
-            pageid = self.FastConfigureAssistant.get_current_page()
-            page = self.FastConfigureAssistant.get_nth_page(pageid)
+            pageid = self.FastConfigureDialog.get_current_page()
+            page = self.FastConfigureDialog.get_nth_page(pageid)
             if not page:
                 return
 
@@ -239,10 +239,10 @@ class FastConfigureAssistant(object):
             else:
                 self.labelnoshare.hide()
 
-        self.FastConfigureAssistant.set_page_complete(page, complete)
+        self.FastConfigureDialog.set_page_complete(page, complete)
 
     def on_prepare(self, widget, page):
-        self.FastConfigureAssistant.set_page_complete(page, False)
+        self.FastConfigureDialog.set_page_complete(page, False)
         self.resetcompleteness(page)
 
     def on_entry_changed(self, widget, param1=None, param2=None, param3=None):
@@ -365,13 +365,13 @@ class FastConfigureAssistant(object):
                     'http://tools.slsknet.org/porttest.php?port',
                     str(self.frame.np.waitport)
                 ]),
-                self.FastConfigureAssistant
+                self.FastConfigureDialog
             )
 
         if name == "addshare":
 
             selected = choose_dir(
-                self.FastConfigureAssistant.get_toplevel(),
+                self.FastConfigureDialog.get_toplevel(),
                 title=_("Add a shared directory")
             )
 
@@ -380,7 +380,7 @@ class FastConfigureAssistant(object):
                 for directory in selected:
 
                     virtual = combo_box_dialog(
-                        parent=self.FastConfigureAssistant,
+                        parent=self.FastConfigureDialog,
                         title=_("Virtual name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
@@ -389,7 +389,7 @@ class FastConfigureAssistant(object):
                     if virtual == '' or virtual is None:
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.FastConfigureAssistant,
+                            transient_for=self.FastConfigureDialog,
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -414,7 +414,7 @@ class FastConfigureAssistant(object):
                             if virtual == model.get_value(iterator, 0):
 
                                 dlg = Gtk.MessageDialog(
-                                    transient_for=self.FastConfigureAssistant,
+                                    transient_for=self.FastConfigureDialog,
                                     flags=0,
                                     type=Gtk.MessageType.WARNING,
                                     buttons=Gtk.ButtonsType.OK,
@@ -429,7 +429,7 @@ class FastConfigureAssistant(object):
                             elif directory == model.get_value(iterator, 6):
 
                                 dlg = Gtk.MessageDialog(
-                                    transient_for=self.FastConfigureAssistant,
+                                    transient_for=self.FastConfigureDialog,
                                     flags=0,
                                     type=Gtk.MessageType.WARNING,
                                     buttons=Gtk.ButtonsType.OK,

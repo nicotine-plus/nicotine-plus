@@ -5,20 +5,20 @@
 # https://github.com/devsnd/tinytag/
 
 # MIT License
-
+#
 # Copyright (c) 2020 Nicotine+ Team
 # Copyright (c) 2014-2019 Tom Wallroth
-
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -69,8 +69,6 @@ def _bytes_to_int(b):
 
 class TinyTag(object):
     def __init__(self, filehandler=None, filesize=0, ignore_errors=False):
-        if isinstance(filehandler, str):
-            raise Exception('Use `TinyTag.get(filepath)` instead of `TinyTag(filepath)`')
         self._filehandler = filehandler
         self.filesize = filesize
         self.album = None
@@ -572,10 +570,7 @@ class ID3(TinyTag):
             major, rev = header[1:3]
             if DEBUG:
                 stderr('Found id3 v2.%s' % major)
-            # unsync = (header[3] & 0x80) > 0
             extended = (header[3] & 0x40) > 0
-            # experimental = (header[3] & 0x20) > 0
-            # footer = (header[3] & 0x10) > 0
             size = self._calc_size(header[4:8], 7)
             self._bytepos_after_id3v2 = size
             end_pos = fh.tell() + size
@@ -624,7 +619,6 @@ class ID3(TinyTag):
         if DEBUG:
             stderr('Found id3 Frame %s at %d-%d of %d' % (frame_id, fh.tell(), fh.tell() + frame_size, self.filesize))
         if frame_size > 0:
-            # flags = frame[1+frame_size_bytes:] # dont care about flags.
             if frame_id not in ID3.PARSABLE_FRAME_IDS:  # jump over unparsable frames
                 fh.seek(frame_size, os.SEEK_CUR)
                 return frame_size
@@ -677,7 +671,6 @@ class ID3(TinyTag):
                 bytestr = bytestr[1:]
                 encoding = 'UTF-8'
             else:
-                bytestr = bytestr
                 encoding = 'ISO-8859-1'  # wild guess
             if bytestr[:4] == b'eng\x00':
                 bytestr = bytestr[4:]  # remove language
@@ -934,8 +927,6 @@ class Flac(TinyTag):
                 # #---4---# #---5---# #---6---# #---7---# #--8-~   ~-12-#
                 self.samplerate = _bytes_to_int(header[4:7]) >> 4
                 self.channels = ((header[6] >> 1) & 0x07) + 1
-                # bit_depth = ((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4)
-                # bit_depth = (bit_depth + 1)
                 total_sample_bytes = [(header[7] & 0x0F)] + list(header[8:12])
                 total_samples = _bytes_to_int(total_sample_bytes)
                 self.duration = float(total_samples) / self.samplerate
@@ -995,15 +986,6 @@ class Wma(TinyTag):
             decoded[block[0]] = val
         return decoded
 
-    def __bytes_to_guid(self, obj_id_bytes):
-        return '-'.join([
-            hex(_bytes_to_int_le(obj_id_bytes[:-12]))[2:].zfill(6),
-            hex(_bytes_to_int_le(obj_id_bytes[-12:-10]))[2:].zfill(4),
-            hex(_bytes_to_int_le(obj_id_bytes[-10:-8]))[2:].zfill(4),
-            hex(_bytes_to_int(obj_id_bytes[-8:-6]))[2:].zfill(4),
-            hex(_bytes_to_int(obj_id_bytes[-6:]))[2:].zfill(12),
-        ])
-
     def __decode_string(self, bytestring):
         return self._unpad(codecs.decode(bytestring, 'utf-16'))
 
@@ -1021,8 +1003,8 @@ class Wma(TinyTag):
         guid = fh.read(16)  # 128 bit GUID
         if guid != b'0&\xb2u\x8ef\xcf\x11\xa6\xd9\x00\xaa\x00b\xcel':
             return  # not a valid ASF container! see: http://www.garykessler.net/library/file_sigs.html
-        struct.unpack('Q', fh.read(8))[0]  # size
-        struct.unpack('I', fh.read(4))[0]  # obj_count
+        struct.unpack('Q', fh.read(8))  # size
+        struct.unpack('I', fh.read(4))  # obj_count
         if fh.read(2) != b'\x01\x02':
             # http://web.archive.org/web/20131203084402/http://msdn.microsoft.com/en-us/library/bb643323.aspx#_Toc521913958
             return  # not a valid asf header!
