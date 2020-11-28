@@ -1999,7 +1999,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn == conn:
                 user = i.username
-                self.shares.process_search_request(msg.searchterm, user, msg.searchid, direct=1)
+                self.shares.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
                 break
 
     def search_request(self, msg):
@@ -2007,17 +2007,17 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
-        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=0)
+        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
         self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
 
     def room_search_request(self, msg):
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-        self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=0)
+        self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=False)
 
     def distrib_search(self, msg):
         """ Distrib code: 3 """
 
-        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, 0)
+        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
         self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
 
     def possible_parents(self, msg):

@@ -778,7 +778,7 @@ class Shares:
             # DB is closed, perhaps when rescanning share or closing Nicotine+
             return
 
-    def process_search_request(self, searchterm, user, searchid, direct=0):
+    def process_search_request(self, searchterm, user, searchid, direct=False):
         """ Note: since this section is accessed every time a search request arrives,
         several times a second, please keep it as optimized and memory
         sparse as possible! """
@@ -790,8 +790,9 @@ class Shares:
         if searchterm is None:
             return
 
-        if user == self.config.sections["server"]["login"]:
-            # We shouldn't send a search response if we initiated the search request
+        if not direct and user == self.config.sections["server"]["login"]:
+            # We shouldn't send a search response if we initiated the search request,
+            # unless we're specifically searching our own username
             return
 
         maxresults = self.config.sections["searches"]["maxresults"]
