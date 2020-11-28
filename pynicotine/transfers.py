@@ -1565,10 +1565,14 @@ class Transfers:
 
     def place_in_queue_request(self, msg):
 
+        user = None
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
                 break
+
+        if user is None:
+            return
 
         def list_users():
             users = set()

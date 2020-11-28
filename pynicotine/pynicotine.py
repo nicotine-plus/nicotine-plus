@@ -1670,8 +1670,6 @@ class NetworkEventProcessor:
 
     def shared_file_list(self, msg):
 
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-
         conn = msg.conn.conn
 
         for i in self.peerconns:
@@ -1922,8 +1920,6 @@ class NetworkEventProcessor:
 
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
-
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.transfers is not None:
             conn = msg.conn.conn

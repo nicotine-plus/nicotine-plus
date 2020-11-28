@@ -96,7 +96,9 @@ class UserTabs(IconNotebook):
             self.frame.change_main_page(self.tab_name)
 
     def show_connection_error(self, user):
-        self.users[user].show_connection_error()
+
+        if user in self.users:
+            self.users[user].show_connection_error()
 
     def save_columns(self):
 
