@@ -33,4 +33,4 @@ brew install \
 # Install dependencies with pip
 pip3 install \
   pygobject \
-  pyinstaller==3.6
+  pyinstaller==4.1
