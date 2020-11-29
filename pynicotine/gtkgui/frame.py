@@ -97,6 +97,7 @@ class NicotineFrame:
         self.away = False
         self.autoaway = False
         self.awaytimerid = None
+        self.shutdown = False
         self.bindip = bindip
         self.port = port
         utils.NICOTINE = self
@@ -656,6 +657,7 @@ class NicotineFrame:
     """ Connection """
 
     def on_network_event(self, msgs):
+
         for i in msgs:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
@@ -663,7 +665,8 @@ class NicotineFrame:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
     def network_callback(self, msgs):
-        if len(msgs) > 0:
+
+        if not self.shutdown and len(msgs) > 0:
             GLib.idle_add(self.on_network_event, msgs)
 
     def conn_close(self, conn, addr):
@@ -2260,7 +2263,9 @@ class NicotineFrame:
     """ Log Window """
 
     def log_callback(self, timestamp_format, debug_level, msg):
-        GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
+
+        if not self.shutdown:
+            GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
 
     def update_log(self, msg, debug_level=None):
         '''For information about debug levels see
@@ -2618,6 +2623,15 @@ class NicotineFrame:
 
     def on_destroy(self, widget):
 
+        # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
+        self.shutdown = True
+
+        self.np.protothread.abort()
+        self.np.stop_timers()
+
+        # Inform networking thread we've disconnected from server
+        self.np.protothread.server_disconnect()
+
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)
 
@@ -2625,14 +2639,8 @@ class NicotineFrame:
         self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
         self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 
-        self.np.protothread.abort()
-        self.np.stop_timers()
-
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray.hide()
-
-        # Inform networking thread we've disconnected from server
-        self.np.protothread.server_disconnect()
 
         self.save_columns()
 
