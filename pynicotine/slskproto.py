@@ -1170,6 +1170,10 @@ class SlskProtoThread(threading.Thread):
             conn.lastreadlength = limit
             conn.readbytes2 += len(data)
 
+        if not data and not conn.obuf:  # Make sure we don't have data to send on this connection
+            self._ui_callback([ConnClose(i, conn.addr)])
+            self.close_connection(conns, i)
+
     def run(self):
         """ Actual networking loop is here."""
 
