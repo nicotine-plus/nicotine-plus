@@ -25,7 +25,6 @@ brew install \
   adwaita-icon-theme \
   create-dmg \
   gdk-pixbuf \
-  gobject-introspection \
   gtk+3 \
   librsvg \
   upx
