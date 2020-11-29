@@ -150,6 +150,8 @@ class NicotineFrame:
 
         if self.images["n"]:
             self.MainWindow.set_default_icon(self.images["n"])
+        else:
+            self.MainWindow.set_default_icon_name("org.nicotine_plus.Nicotine")
 
         """ Window Properties """
 
