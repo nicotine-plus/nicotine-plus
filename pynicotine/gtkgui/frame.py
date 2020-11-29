@@ -75,6 +75,7 @@ from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import make_version
+from pynicotine.utils import RestrictedUnpickler
 from pynicotine.utils import unescape
 from pynicotine.utils import version
 
@@ -1912,11 +1913,10 @@ class NicotineFrame:
             return
         for share in shares:
             try:
-                import pickle as mypickle
                 import bz2
 
                 sharefile = bz2.BZ2File(share)
-                mylist = mypickle.load(sharefile)
+                mylist = RestrictedUnpickler(sharefile, encoding='utf-8').load()
                 sharefile.close()
 
                 if not isinstance(mylist, (list, dict)):
