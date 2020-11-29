@@ -38,17 +38,7 @@ from gettext import gettext as _
 from os.path import exists
 
 from pynicotine.logfacility import log
-
-
-class RestrictedUnpickler(pickle.Unpickler):
-    """
-    Don't allow code execution from pickles
-    """
-
-    def find_class(self, module, name):
-        # Forbid all globals
-        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
-                                     (module, name))
+from pynicotine.utils import RestrictedUnpickler
 
 
 class Config:
@@ -412,7 +402,7 @@ class Config:
 
         try:
             f = open(filename + ".alias", 'rb')
-            self.aliases = RestrictedUnpickler(f).load()
+            self.aliases = RestrictedUnpickler(f, encoding='utf-8').load()
             f.close()
 
         except Exception:
@@ -478,7 +468,7 @@ class Config:
 
             else:
                 try:
-                    self.sections['transfers']['downloads'] = RestrictedUnpickler(handle).load()
+                    self.sections['transfers']['downloads'] = RestrictedUnpickler(handle, encoding='utf-8').load()
 
                 except Exception as inst:
                     log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})

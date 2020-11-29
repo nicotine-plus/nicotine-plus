@@ -28,6 +28,7 @@ This module contains utility functions.
 import gettext
 import locale
 import os
+import pickle
 import sys
 import time
 
@@ -481,6 +482,17 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
     conn.close()
 
     return response
+
+
+class RestrictedUnpickler(pickle.Unpickler):
+    """
+    Don't allow code execution from pickles
+    """
+
+    def find_class(self, module, name):
+        # Forbid all globals
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
+                                     (module, name))
 
 
 """ Debugging """
