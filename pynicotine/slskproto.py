@@ -1428,7 +1428,8 @@ class SlskProtoThread(threading.Thread):
         while not self._queue.empty():
             self._queue.get(0)
 
-        self._ui_callback([SetCurrentConnectionCount(0)])
+        if not self._want_abort:
+            self._ui_callback([SetCurrentConnectionCount(0)])
 
     def abort(self):
         """ Call this to abort the thread """
