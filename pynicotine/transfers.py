@@ -269,6 +269,14 @@ class Transfers:
         else:
             transfer.status = "Getting status"
 
+        log.add_transfer(
+            _("Initializing transfer request for file %(file)s to user %(user)s, direction: %(direction)s"), {
+                'file': filename,
+                'user': user,
+                'direction': direction
+            }
+        )
+
         try:
             status = self.users[user].status
         except KeyError:
@@ -1637,6 +1645,13 @@ class Transfers:
                     mintimequeued = i.timequeued
 
         if transfercandidate is not None:
+            log.add_transfer(
+                _("Checked upload queue, attempting to upload file %(file)s to user %(user)s"), {
+                    'file': transfercandidate.filename,
+                    'user': transfercandidate.user
+                }
+            )
+
             self.push_file(
                 user=transfercandidate.user, filename=transfercandidate.filename,
                 realfilename=transfercandidate.realfilename, transfer=transfercandidate
