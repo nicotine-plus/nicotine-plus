@@ -320,6 +320,7 @@ class NetworkEventProcessor:
                     i.init = msg
 
                     found_conn = True
+                    self.process_conn_messages(i, conn)
                     break
 
         if not found_conn:
