@@ -90,19 +90,29 @@ Unstable Windows packages are generated after every commit to the master branch,
 
 - [64/32-bit Installers / Packages](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
-## macOS 10.15+
+## macOS
 
-### Stable
+### Stable (Catalina/10.15 and newer)
 
-A stable macOS installer for Nicotine+ is available.
+A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
-- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.2/macos-installer.zip)
+- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.1.2/macos-installer.zip)
 
-### Unstable
+### Stable (High Sierra/10.13 and Mojave/10.14)
 
-Unstable MacOS packages are generated after every commit to the master branch, and should only be used for testing. You need to be signed into a GitHub account to download the packages.
+On macOS version 10.13 (High Sierra) and 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
 
-- [Download Installer / Package](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
+Once Homebrew is set up, run the following:
+
+```sh
+brew install nicotine-plus
+```
+
+### Unstable (Catalina/10.15 or newer)
+
+Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing. You need to be signed into a GitHub account to download the installers.
+
+- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
 ## Building from git (Unstable)
 For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
