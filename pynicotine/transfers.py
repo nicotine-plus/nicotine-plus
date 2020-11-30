@@ -998,6 +998,13 @@ class Transfers:
                     self.uploads.remove(i)
                     self.uploadsview.remove_specific(i, True)
 
+                elif msg.reason == "Complete":
+
+                    """ Edge case. There are rare cases where a "Complete" status is sent to us by
+                    SoulseekQt, even though it shouldn't be (?) """
+
+                    self.upload_finished(i)
+
                 elif msg.reason == "Cancelled":
 
                     self.auto_clear_upload(i)
@@ -1244,7 +1251,7 @@ class Transfers:
 
             if i.size == 0:
                 # If filesize is 0, we will not receive a UploadFile message later. Finish now.
-                self.upload_finished(f, i)
+                self.upload_finished(i, file=f)
 
         else:
             log.add_warning(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
@@ -1352,6 +1359,7 @@ class Transfers:
             )
 
         i.status = "Finished"
+        i.currentbytes = i.size
         i.speed = 0
         i.timeleft = ""
 
@@ -1482,7 +1490,7 @@ class Transfers:
                 self.check_upload_queue()
                 sleep(0.01)
             else:
-                self.upload_finished(msg.file, i)
+                self.upload_finished(i, file=msg.file)
                 needupdate = False
 
             if needupdate:
@@ -1490,15 +1498,18 @@ class Transfers:
 
             break
 
-    def upload_finished(self, file, i):
+    def upload_finished(self, i, file=None):
 
         if i.speed is not None:
             speedbytes = int(i.speed)
             self.eventprocessor.speed = speedbytes
             self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
 
-        file.close()
+        if file is not None:
+            file.close()
+
         i.status = "Finished"
+        i.currentbytes = i.size
         i.speed = 0
         i.timeleft = ""
 

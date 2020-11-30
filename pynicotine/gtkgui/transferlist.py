@@ -350,6 +350,8 @@ class TransferList:
 
         if totalsize > 0:
             percent = min(((100 * position) / totalsize), 100)
+        else:
+            percent = 100
 
         if speed > 0:
             hspeed = human_speed(speed)
@@ -423,9 +425,10 @@ class TransferList:
         try:
             icurrentbytes = int(currentbytes)
             percent = min(((100 * icurrentbytes) / int(size)), 100)
+
         except Exception:
             icurrentbytes = 0
-            percent = 0
+            percent = 100
 
         # Modify old transfer
         if transfer.iter is not None:
