@@ -90,7 +90,7 @@ Unstable Windows packages are generated after every commit to the master branch,
 
 - [64/32-bit Installers / Packages](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
-## macOS
+## macOS 10.15+
 
 ### Stable
 
