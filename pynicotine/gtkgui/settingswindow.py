@@ -3168,9 +3168,6 @@ class BuildDialog(Gtk.Dialog):
 
     def add_options(self, plugin, options=None):
 
-        for i in self.tw:
-            self.tw[i].destroy()
-
         if options is None:
             options = {}
 
@@ -3231,13 +3228,13 @@ class BuildDialog(Gtk.Dialog):
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 
                 self.tw["scrolledwindow%d" % c] = Gtk.ScrolledWindow()
-                self.tw["scrolledwindow%d" % c].set_min_content_height(100)
-                self.tw["scrolledwindow%d" % c].set_min_content_width(400)
+                self.tw["scrolledwindow%d" % c].set_min_content_height(200)
+                self.tw["scrolledwindow%d" % c].set_min_content_width(600)
                 self.tw["scrolledwindow%d" % c].set_shadow_type(Gtk.ShadowType.IN)
                 self.tw["scrolledwindow%d" % c].add(self.tw[name])
 
-                self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], False, False, 0)
-                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
+                self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], True, True, 0)
+                self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
             elif data["type"] in ("list string",):
                 self.generate_tree_view(name, data["description"], value, c)
             else:
@@ -3248,14 +3245,14 @@ class BuildDialog(Gtk.Dialog):
         self.PluginProperties.show_all()
 
     def on_cancel(self, widget):
-        self.PluginProperties.hide()
+        self.PluginProperties.destroy()
 
     def on_okay(self, widget):
         for name in self.options:
             value = self.settings.get_widget_data(self.tw[name])
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
-        self.PluginProperties.hide()
+        self.PluginProperties.destroy()
         self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def show(self):
@@ -3344,18 +3341,18 @@ class PluginFrame(BuildFrame):
         self.PluginTreeView.set_model(self.plugins_model)
         self.PluginTreeView.get_selection().connect("changed", self.on_select_plugin)
 
-        self.dialog = BuildDialog(self)
-
     def on_plugin_properties(self, widget):
         if self.selected_plugin is None:
             return
 
-        self.dialog.add_options(
+        dialog = BuildDialog(self)
+
+        dialog.add_options(
             self.selected_plugin,
             self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
-        self.dialog.show()
+        dialog.show()
 
     def on_select_plugin(self, selection):
 
