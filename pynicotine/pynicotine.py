@@ -692,30 +692,31 @@ class NetworkEventProcessor:
 
         # Sometimes a token is seemingly not sent by the peer, check if the
         # IP address matches in that case
-        token = msg.token
 
         for i in self.peerconns:
-            if i.conn is None:
-                if token is not None and i.token == token or \
-                        token is None and i.token is not None and i.addr == msg.conn.addr:
-                    conn = msg.conn.conn
+            if i.token is None or i.conn is not None:
+                continue
 
-                    if i.conntimer is not None:
-                        i.conntimer.cancel()
+            if msg.token is None and i.addr == msg.conn.addr or \
+                    i.token == msg.token:
+                conn = msg.conn.conn
 
-                    i.init.conn = conn
-                    self.queue.put(i.init)
-                    i.conn = conn
+                if i.conntimer is not None:
+                    i.conntimer.cancel()
 
-                    log.add_conn(_("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s") % {
-                        'user': i.username,
-                        'messages': i.msgs
-                    })
+                i.init.conn = conn
+                self.queue.put(i.init)
+                i.conn = conn
 
-                    # Update UI with contents from messages
-                    self.process_conn_messages(i, conn)
+                log.add_conn(_("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s") % {
+                    'user': i.username,
+                    'messages': i.msgs
+                })
 
-                    break
+                # Update UI with contents from messages
+                self.process_conn_messages(i, conn)
+
+                break
 
     def close_peer_connection(self, conn, username):
 
