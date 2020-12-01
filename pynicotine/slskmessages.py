@@ -128,6 +128,12 @@ class PeerTransfer(InternalMessage):
         self.msg = msg
 
 
+class CheckDownloadQueue(InternalMessage):
+    """ Sent from a timer to the main thread to indicate that stuck downloads
+    should be checked. """
+    pass
+
+
 class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write and offset to resume download

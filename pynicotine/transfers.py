@@ -120,7 +120,7 @@ class Transfers:
     PRE_TRANSFER = ["Queued"]
     TRANSFER = ["Requesting file", "Initializing transfer", "Transferring"]
 
-    def __init__(self, peerconns, queue, eventprocessor, users, network_callback, notifications=None, pluginhandler=None):
+    def __init__(self, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
 
         self.peerconns = peerconns
         self.queue = queue
@@ -176,7 +176,7 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(i))
 
         self.users = users
-        self.network_callback = network_callback
+        self.ui_callback = ui_callback
         self.notifications = notifications
         self.pluginhandler = pluginhandler
         self.downloadsview = None
@@ -550,7 +550,7 @@ class Transfers:
 
                 i.req = msg.req
                 i.status = "Waiting for download"
-                transfertimeout = TransferTimeout(i.req, self.network_callback)
+                transfertimeout = TransferTimeout(i.req, self.ui_callback)
 
                 if i.transfertimer is not None:
                     i.transfertimer.cancel()
@@ -663,7 +663,7 @@ class Transfers:
         size = self.get_file_size(realpath)
         response = slskmessages.TransferResponse(None, 1, req=msg.req, filesize=size)
 
-        transfertimeout = TransferTimeout(msg.req, self.network_callback)
+        transfertimeout = TransferTimeout(msg.req, self.ui_callback)
         transferobj = Transfer(
             user=user, realfilename=realpath, filename=msg.file,
             path=os.path.dirname(realpath), status="Waiting for upload",
@@ -1585,7 +1585,7 @@ class Transfers:
             self.eventprocessor.config.write_download_queue()
 
     def start_check_download_queue_timer(self):
-        timer = threading.Timer(60.0, self.check_download_queue)
+        timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
         timer.setName("DownloadQueueTimer")
         timer.setDaemon(True)
         timer.start()
