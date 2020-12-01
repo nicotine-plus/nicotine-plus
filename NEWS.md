@@ -26,9 +26,10 @@ Changes
  * Modified config backup behavior to not back up the config if "Cancel" is pressed in the file chooser
  * Shares lists saved in older versions of Nicotine+ can now be loaded again
  * Peer-to-peer (direct) private messaging works properly again
+ * Fixed a crash when checking for stuck downloads (regression in Nicotine+ 2.1.2)
  * General usability improvements to macOS builds
  * Removed option to stop responding to search requests for certain time periods
- * Removed libnotify, miniupnpc, pytaglib and xdg-utils dependencies, as functionality is now handled by Nicotine+.
+ * Removed dbus-python, libnotify, miniupnpc, pytaglib and xdg-utils dependencies, as functionality is now handled by Nicotine+
  * Multiple under-the-hood code improvements and code style changes, as well as smaller bug fixes
 
 Issues closed on GitHub
@@ -41,6 +42,7 @@ Issues closed on GitHub
  * Search Now playing ([#664](https://github.com/Nicotine-Plus/nicotine-plus/issues/664))
  * Compile pytaglib for Python 2 or 3? - Error Trying To Run 2.1.1 ([#726](https://github.com/Nicotine-Plus/nicotine-plus/issues/726))
  * Follow X Session Management Protocol ([#729](https://github.com/Nicotine-Plus/nicotine-plus/issues/729))
+ * sometimes, nicotine eats all memory ([#750](https://github.com/Nicotine-Plus/nicotine-plus/issues/750))
  * provided extentions doesn't load ([#761](https://github.com/Nicotine-Plus/nicotine-plus/issues/761))
  * Enabled plugins are no more activated at startup ([#762](https://github.com/Nicotine-Plus/nicotine-plus/issues/762))
  * Plugin properties aren't editable ([#763](https://github.com/Nicotine-Plus/nicotine-plus/issues/763))
@@ -56,6 +58,7 @@ Issues closed on GitHub
  * Nicotine 2.1.2 fails to launch in FreeBSD due to missing pytaglib ([#843](https://github.com/Nicotine-Plus/nicotine-plus/issues/843))
  * Download Recursive ([#844](https://github.com/Nicotine-Plus/nicotine-plus/issues/844))
  * Option to start application hidden when tray icon enabled ([#864](https://github.com/Nicotine-Plus/nicotine-plus/issues/864))
+ * Missing application icon from window list ([#879](https://github.com/Nicotine-Plus/nicotine-plus/issues/879))
 
 Version 2.1.2 (12 October 2020)
 -----------------------------
