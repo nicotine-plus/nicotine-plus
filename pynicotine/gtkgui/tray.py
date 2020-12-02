@@ -116,7 +116,7 @@ class Tray:
             droplist=users
         )
 
-        if user is not None:
+        if user:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
             self.show_window()
@@ -137,7 +137,7 @@ class Tray:
             droplist=users
         )
 
-        if user is not None:
+        if user:
             self.frame.local_user_info_request(user)
 
     def on_get_a_users_ip(self, widget, prefix=""):
@@ -155,7 +155,7 @@ class Tray:
             droplist=users
         )
 
-        if user is not None:
+        if user:
             self.frame.np.ip_requested.add(user)
             self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
@@ -174,7 +174,7 @@ class Tray:
             droplist=users
         )
 
-        if user is not None:
+        if user:
             self.frame.browse_user(user)
 
     # GtkStatusIcon fallback

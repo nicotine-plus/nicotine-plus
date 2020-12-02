@@ -1229,7 +1229,7 @@ class PopupMenu(Gtk.Menu):
     def on_copy_user(self, widget):
         self.frame.clip.set_text(self.user, -1)
 
-    def on_give_privileges(self, widget):
+    def on_give_privileges(self, widget, error=None):
 
         self.frame.np.queue.put(slskmessages.CheckPrivileges())
 
@@ -1238,18 +1238,24 @@ class PopupMenu(Gtk.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        text = entry_dialog(
+        message = _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
+
+        if error:
+            message += "\n\n" + error
+
+        days = entry_dialog(
             self.frame.MainWindow,
             _("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
-            _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
+            message
         )
 
-        if text:
+        if days:
             try:
-                days = int(text)
+                days = int(days)
                 self.frame.np.queue.put(slskmessages.GivePrivileges(self.user, days))
-            except Exception as e:
-                log.add_warning("%s", e)
+
+            except ValueError:
+                self.on_give_privileges(widget, error=_("Please enter a whole number!"))
 
     def on_private_rooms(self, widget, popup):
 
