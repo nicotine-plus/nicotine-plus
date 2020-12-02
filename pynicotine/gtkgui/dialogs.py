@@ -31,6 +31,10 @@ from gi.repository import Gtk
 """ General Dialogs """
 
 
+def activate(self, dialog):
+    dialog.response(Gtk.ResponseType.OK)
+
+
 def combo_box_dialog(parent, title, message, default_text="",
                      option=False, optionmessage="",
                      optionvalue=False, droplist=[]):
@@ -55,6 +59,7 @@ def combo_box_dialog(parent, title, message, default_text="",
     for i in droplist:
         self.combo_list.append([i])
 
+    self.combo.get_child().connect("activate", activate, self)
     self.combo.get_child().set_text(default_text)
 
     self.get_message_area().pack_start(self.combo, False, False, 0)
@@ -97,6 +102,7 @@ def entry_dialog(parent, title, message, default=""):
     self.format_secondary_text(message)
 
     entry = Gtk.Entry()
+    entry.connect("activate", activate, self)
     entry.set_activates_default(True)
     entry.set_text(default)
     self.get_message_area().pack_start(entry, True, True, 0)
