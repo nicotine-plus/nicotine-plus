@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import importlib
 import os
 import pickle
 import re
@@ -35,12 +36,20 @@ from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.metadata.tinytag import TinyTag
 
-if sys.platform == "win32":
-    # Use semidbm for faster shelves on Windows
+if not importlib.util.find_spec("_gdbm"):
+    # gdbm not found, use semidbm instead
 
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        import semidbm
-        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
+        try:
+            import semidbm
+            return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
+
+        except ImportError:
+            print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+                "option1": "gdbm",
+                "option2": "semidbm"
+            })
+            sys.exit()
 
     shelve.open = shelve_open_semidbm
 

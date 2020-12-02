@@ -76,9 +76,13 @@ You should install GTK 3.0 or newer.""") % e
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
-    # Require semidbm on Windows, for faster loading of shelves
-    if sys.platform == "win32" and not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %s, please install it.") % "semidbm"
+    # Require gdbm or semidbm, for faster loading of shelves
+    if not importlib.util.find_spec("_gdbm") and \
+            not importlib.util.find_spec("semidbm"):
+        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+            "option1": "gdbm",
+            "option2": "semidbm"
+        }
 
     # Require pynicotine
     if not importlib.util.find_spec("pynicotine"):

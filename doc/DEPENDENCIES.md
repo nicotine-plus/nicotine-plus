@@ -7,6 +7,7 @@
 * [python3](https://www.python.org/) >= 3.5 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK.
+* [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files;
 
 ### Recommended
 
@@ -28,13 +29,13 @@
 * On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install gir1.2-gtk-3.0 python3-gi
+sudo apt install gir1.2-gtk-3.0 python3-gi python3-gdbm
 ```
 
 * On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install gtk3 python3-gobject
+sudo dnf install gtk3 python3-gobject gdbm
 ```
 
 #### Installing the recommended runtime dependencies
