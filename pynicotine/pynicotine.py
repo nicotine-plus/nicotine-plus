@@ -897,7 +897,7 @@ class NetworkEventProcessor:
 
                         self.connect_to_peer_indirect(i, msg.err)
 
-                    else:
+                    elif i.conntimer is None:
 
                         """ Peer sent us an indirect connection request, and we weren't able to
                         connect to them. """
@@ -910,9 +910,6 @@ class NetworkEventProcessor:
                             'user': i.username,
                             'error': msg.err
                         })
-
-                        if i.conntimer is not None:
-                            i.conntimer.cancel()
 
                         self.peerconns.remove(i)
 
