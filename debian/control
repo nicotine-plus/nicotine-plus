@@ -10,6 +10,7 @@ Build-Depends:
     gettext,
     lintian,
     python3 (>= 3.5),
+    python3-gdbm,
     python3-pep8-naming,
     python3-pytest
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
@@ -25,6 +26,7 @@ Depends:
     ${misc:Depends},
     gir1.2-gtk-3.0,
     python3 (>= 3.5),
+    python3-gdbm,
     python3-gi
 Recommends:
     gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
