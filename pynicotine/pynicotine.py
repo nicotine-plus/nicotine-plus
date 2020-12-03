@@ -778,9 +778,6 @@ class NetworkEventProcessor:
                 if i.conntimer is not None:
                     i.conntimer.cancel()
 
-                if i.type == 'D':
-                    self.parent_conn_closed()
-
                 self.peerconns.remove(i)
 
                 self.show_connection_error_message(i)
@@ -794,9 +791,6 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         conn = msg.conn
-
-        if conn.type == 'D':
-            self.parent_conn_closed()
 
         try:
             self.peerconns.remove(conn)
