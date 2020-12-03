@@ -320,6 +320,9 @@ class NetworkEventProcessor:
                     i.token = None
                     i.init = msg
 
+                    if i.conntimer is not None:
+                        i.conntimer.cancel()
+
                     found_conn = True
                     self.process_conn_messages(i, conn)
                     break
@@ -498,6 +501,9 @@ class NetworkEventProcessor:
                         i.token = token
                         i.init = init
                         break
+
+                    if i.conntimer is not None:
+                        i.conntimer.cancel()
 
                     should_connect = False
                     break
