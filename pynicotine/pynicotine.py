@@ -1350,7 +1350,6 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.set_privileged_users(msg.users)
             log.add(_("%i privileged users"), (len(msg.users)))
-            self.queue.put(slskmessages.HaveNoParent(1))
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
             self.pluginhandler.server_connect_notification()
 
@@ -2033,7 +2032,7 @@ class NetworkEventProcessor:
 
         potential_parents = msg.list
 
-        if potential_parents:
+        if not self.has_parent and potential_parents:
 
             for user in potential_parents:
                 addr = potential_parents[user]
