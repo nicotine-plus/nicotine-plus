@@ -118,9 +118,6 @@ class NetworkEventProcessor:
             self.config = Config(config, data_dir)
             self.network_callback([slskmessages.PopupMessage(short, long)])
 
-        # These strings are accessed frequently. We store them to prevent requesting the translation every time.
-        self.conn_close_template = _("Connection closed by peer: %(peer)s. Error: %(error)s")
-
         self.bindip = bindip
         self.port = port
 
@@ -340,7 +337,7 @@ class NetworkEventProcessor:
                 )
             )
 
-        log.add_conn(_("Received incoming connection of type %(type)s from user %(user)s") % {'type': msg_type, 'user': user})
+        log.add_conn("Received incoming connection of type %(type)s from user %(user)s" % {'type': msg_type, 'user': user})
 
     def send_message_to_peer(self, user, message, address=None):
 
@@ -355,7 +352,7 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.username == user and i.type == 'P':
                     conn = i
-                    log.add_conn(_("Found existing connection of type %(type)s for user %(user)s, using it.") % {
+                    log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it." % {
                         'type': i.type,
                         'user': user
                     })
@@ -377,7 +374,7 @@ class NetworkEventProcessor:
 
             self.initiate_connection_to_peer(user, message, address)
 
-        log.add_conn(_("Sending message of type %(type)s to user %(user)s") % {
+        log.add_conn("Sending message of type %(type)s to user %(user)s" % {
             'type': message.__class__,
             'user': user
         })
@@ -411,11 +408,9 @@ class NetworkEventProcessor:
             if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
                 self.transfers.getting_address(message.req, message.direction)
 
-            log.add_conn(
-                _("Requesting address for user %(user)s"), {
-                    'user': user
-                }
-            )
+            log.add_conn("Requesting address for user %(user)s", {
+                'user': user
+            })
 
         else:
             self.connect_to_peer_direct(user, addr, message_type)
@@ -435,12 +430,10 @@ class NetworkEventProcessor:
 
         self.queue.put(slskmessages.OutConn(None, addr, init))
 
-        log.add_conn(
-            _("Initialising direct connection of type %(type)s to user %(user)s"), {
-                'type': message_type,
-                'user': user
-            }
-        )
+        log.add_conn("Initialising direct connection of type %(type)s to user %(user)s", {
+            'type': message_type,
+            'user': user
+        })
 
     def connect_to_peer_indirect(self, conn, error):
 
@@ -465,7 +458,7 @@ class NetworkEventProcessor:
         conn.conntimer = timer
 
         log.add_conn(
-            _("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s"), {
+            "Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s", {
                 "type": conn.type,
                 "user": conn.username,
                 "error": error
@@ -541,14 +534,14 @@ class NetworkEventProcessor:
 
                     if i.tryaddr == 10:
                         log.add_conn(
-                            _("Server reported port 0 for the 10th time for user %(user)s, giving up"), {
+                            "Server reported port 0 for the 10th time for user %(user)s, giving up", {
                                 'user': user
                             }
                         )
 
                     elif i.tryaddr is not None:
                         log.add_conn(
-                            _("Server reported non-zero port for user %(user)s after %(tries)i retries"), {
+                            "Server reported non-zero port for user %(user)s after %(tries)i retries", {
                                 'user': user,
                                 'tries': i.tryaddr
                             }
@@ -569,7 +562,7 @@ class NetworkEventProcessor:
                     if i.tryaddr is None:
                         i.tryaddr = 1
                         log.add_conn(
-                            _("Server reported port 0 for user %(user)s, retrying"), {
+                            "Server reported port 0 for user %(user)s, retrying", {
                                 'user': user
                             }
                         )
@@ -684,7 +677,7 @@ class NetworkEventProcessor:
 
                 i.conn = conn
 
-                log.add_conn(_("Connection established with user %(user)s, connection contains messages: %(messages)s") % {
+                log.add_conn("Connection established with user %(user)s, connection contains messages: %(messages)s" % {
                     'user': i.username,
                     'messages': i.msgs
                 })
@@ -716,7 +709,7 @@ class NetworkEventProcessor:
                 self.queue.put(i.init)
                 i.conn = conn
 
-                log.add_conn(_("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s") % {
+                log.add_conn("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s" % {
                     'user': i.username,
                     'messages': i.msgs
                 })
@@ -781,7 +774,7 @@ class NetworkEventProcessor:
                 self.peerconns.remove(i)
 
                 self.show_connection_error_message(i)
-                log.add_conn(_("Can't connect to user %s neither directly nor indirectly, giving up"), i.username)
+                log.add_conn("Can't connect to user %s neither directly nor indirectly, giving up", i.username)
                 break
 
     def connect_to_peer_timeout(self, msg):
@@ -799,7 +792,7 @@ class NetworkEventProcessor:
 
         self.show_connection_error_message(conn)
         log.add_conn(
-            _("Indirect connect request of type %(type)s to user %(user)s expired, giving up"), {
+            "Indirect connect request of type %(type)s to user %(user)s expired, giving up", {
                 'type': conn.type,
                 'user': conn.username
             }
@@ -844,7 +837,7 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn(self.conn_close_template, {'peer': self.contents(i), 'error': error})
+                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s", {'peer': self.contents(i), 'error': error})
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -906,7 +899,7 @@ class NetworkEventProcessor:
                             if j.__class__ in (slskmessages.TransferRequest, slskmessages.FileRequest) and self.transfers is not None:
                                 self.transfers.got_cant_connect(j.req)
 
-                        log.add_conn(_("Can't connect to user %(user)s indirectly. Error: %(error)s"), {
+                        log.add_conn("Can't connect to user %(user)s indirectly. Error: %(error)s", {
                             'user': i.username,
                             'error': msg.err
                         })
@@ -1989,7 +1982,7 @@ class NetworkEventProcessor:
             peermsg.tunneledaddr = msg.addr
             self.network_callback([peermsg])
         else:
-            log.add_msg_contents(_("Unknown tunneled message: %s"), (self.contents(msg)))
+            log.add_msg_contents("Unknown tunneled message: %s", self.contents(msg))
 
     def file_search_request(self, msg):
         """ Peer code: 8 """

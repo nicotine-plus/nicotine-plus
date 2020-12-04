@@ -270,7 +270,7 @@ class Transfers:
             transfer.status = "Getting status"
 
         log.add_transfer(
-            _("Initializing transfer request for file %(file)s to user %(user)s, direction: %(direction)s"), {
+            "Initializing transfer request for file %(file)s to user %(user)s, direction: %(direction)s", {
                 'file': filename,
                 'user': user,
                 'direction': direction
@@ -289,7 +289,7 @@ class Transfers:
             try:
                 downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
                 if downloadregexp.search(filename) is not None:
-                    log.add_transfer(_("Filtering: %s"), filename)
+                    log.add_transfer("Filtering: %s", filename)
                     self.abort_transfer(transfer)
                     # The string to be displayed on the GUI
                     transfer.status = "Filtered"
@@ -309,13 +309,13 @@ class Transfers:
             self.eventprocessor.send_message_to_peer(user, request)
 
             if direction == 0:
-                log.add_transfer(_("Requesting to download file %(filename)s with transfer request %(request)s from user %(user)s"), {
+                log.add_transfer("Requesting to download file %(filename)s with transfer request %(request)s from user %(user)s", {
                     "filename": filename,
                     "request": transfer.req,
                     "user": user
                 })
             else:
-                log.add_transfer(_("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s"), {
+                log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
                     "filename": filename,
                     "request": transfer.req,
                     "user": user
@@ -497,11 +497,11 @@ class Transfers:
             addr = "127.0.0.1"
 
         if user is None:
-            log.add_transfer(_("Got transfer request %s but cannot determine requestor"), vars(msg))
+            log.add_transfer("Got transfer request %s but cannot determine requestor", vars(msg))
             return
 
         if msg.direction == 1:
-            log.add_transfer(_("Received upload request %(request)s for file %(filename)s from user %(user)s"), {
+            log.add_transfer("Received upload request %(request)s for file %(filename)s from user %(user)s", {
                 "request": msg.req,
                 "filename": msg.file,
                 "user": user
@@ -509,7 +509,7 @@ class Transfers:
 
             response = self.transfer_request_downloads(msg, user)
 
-            log.add_transfer(_("Sending response to upload request %(request)s for file %(filename)s from user %(user)s: %(allowed)s"), {
+            log.add_transfer("Sending response to upload request %(request)s for file %(filename)s from user %(user)s: %(allowed)s", {
                 "request": response.req,
                 "filename": msg.file,
                 "user": user,
@@ -517,7 +517,7 @@ class Transfers:
             })
 
         else:
-            log.add_transfer(_("Received download request %(request)s for file %(filename)s from user %(user)s"), {
+            log.add_transfer("Received download request %(request)s for file %(filename)s from user %(user)s", {
                 "request": msg.req,
                 "filename": msg.file,
                 "user": user
@@ -525,7 +525,7 @@ class Transfers:
 
             response = self.transfer_request_uploads(msg, user, addr)
 
-            log.add_transfer(_("Sending response to download request %(request)s for file %(filename)s from user %(user)s: %(allowed)s"), {
+            log.add_transfer("Sending response to download request %(request)s for file %(filename)s from user %(user)s: %(allowed)s", {
                 "request": response.req,
                 "filename": msg.file,
                 "user": user,
@@ -585,7 +585,7 @@ class Transfers:
                 self.downloadsview.update(transfer)
             else:
                 response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
-                log.add_transfer(_("Denied file request: User %(user)s, %(msg)s"), {
+                log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
                     'user': user,
                     'msg': str(vars(msg))
                 })
@@ -598,7 +598,7 @@ class Transfers:
         """
 
         response = self._transfer_request_uploads(msg, user, addr)
-        log.add_transfer(_("Upload request: %(req)s Response: %(resp)s"), {
+        log.add_transfer("Upload request: %(req)s Response: %(resp)s", {
             'req': str(vars(msg)),
             'resp': response
         })
@@ -783,7 +783,7 @@ class Transfers:
                     slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason="File not shared")
                 )
 
-        log.add_transfer(_("Queued upload request: User %(user)s, %(msg)s"), {
+        log.add_transfer("Queued upload request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
@@ -956,7 +956,7 @@ class Transfers:
 
         """ Got a response to the file request from the peer."""
 
-        log.add_transfer(_("Received response for transfer request %(request)s. Allowed: %(allowed)s. Reason: %(reason)s. Filesize: %(size)s"), {
+        log.add_transfer("Received response for transfer request %(request)s. Allowed: %(allowed)s. Reason: %(reason)s. Filesize: %(size)s", {
             "request": msg.req,
             "allowed": msg.allowed,
             "reason": msg.reason,
@@ -1044,7 +1044,7 @@ class Transfers:
                 self.check_upload_queue()
                 break
             else:
-                log.add_transfer(_("Got unknown transfer response: %s"), str(vars(msg)))
+                log.add_transfer("Got unknown transfer response: %s", str(vars(msg)))
 
     def transfer_timeout(self, msg):
 
@@ -1056,7 +1056,7 @@ class Transfers:
             if i.status in ["Queued", "User logged off", "Paused"] + self.COMPLETED_TRANSFERS:
                 continue
 
-            log.add_transfer(_("Transfer %(filename)s with request %(request)s for user %(user)s timed out"), {
+            log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
                 "filename": i.filename,
                 "request": i.req,
                 "user": i.user
@@ -1086,7 +1086,7 @@ class Transfers:
         """ Got an incoming file request. Could be an upload request or a
         request to get the file that was previously queued """
 
-        log.add_transfer(_("Received file request %(request)s"), {
+        log.add_transfer("Received file request %(request)s", {
             "request": msg.req
         })
 
@@ -1104,7 +1104,7 @@ class Transfers:
 
     def _file_request_download(self, msg, i):
 
-        log.add_transfer(_("Received file upload request %(request)s for file %(filename)s from user %(user)s"), {
+        log.add_transfer("Received file upload request %(request)s for file %(filename)s from user %(user)s", {
             "request": msg.req,
             "filename": i.filename,
             "user": i.user
@@ -1195,7 +1195,7 @@ class Transfers:
                     if i.size > size:
                         i.status = "Transferring"
                         self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
-                        log.add_transfer(_("Download started: %s"), f.name)
+                        log.add_transfer("Download started: %s", f.name)
 
                         self.log_transfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, show_ui=1)
                     else:
@@ -1218,7 +1218,7 @@ class Transfers:
 
     def _file_request_upload(self, msg, i):
 
-        log.add_transfer(_("Received file download request %(request)s for file %(filename)s from user %(user)s"), {
+        log.add_transfer("Received file download request %(request)s for file %(filename)s from user %(user)s", {
             "request": msg.req,
             "filename": i.filename,
             "user": i.user
@@ -1372,7 +1372,7 @@ class Transfers:
         i.timeleft = ""
 
         log.add_transfer(
-            _("Download finished: %(file)s"), {
+            "Download finished: %(file)s", {
                 'file': newname
             }
         )
@@ -1646,7 +1646,7 @@ class Transfers:
 
         if transfercandidate is not None:
             log.add_transfer(
-                _("Checked upload queue, attempting to upload file %(file)s to user %(user)s"), {
+                "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
                     'file': transfercandidate.filename,
                     'user': transfercandidate.user
                 }
