@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 2.2.0 (unreleased / unstable)
+Version 2.2.0 (December 4, 2020)
 -----------------------------
 
 Changes
@@ -59,6 +59,7 @@ Issues closed on GitHub
  * Download Recursive ([#844](https://github.com/Nicotine-Plus/nicotine-plus/issues/844))
  * Option to start application hidden when tray icon enabled ([#864](https://github.com/Nicotine-Plus/nicotine-plus/issues/864))
  * Missing application icon from window list ([#879](https://github.com/Nicotine-Plus/nicotine-plus/issues/879))
+ * Python 3.8 Crashes ([#882](https://github.com/Nicotine-Plus/nicotine-plus/issues/882))
 
 Version 2.1.2 (12 October 2020)
 -----------------------------
