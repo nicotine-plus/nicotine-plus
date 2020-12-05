@@ -525,37 +525,22 @@ class Shares:
         mtimes = {}
 
         try:
-            scandir = os.scandir(folder)
-
-            for entry in scandir:
+            for entry in os.scandir(folder):
                 if entry.is_dir():
-
-                    path = entry.path
+                    path = entry.path.replace('\\', os.sep)
 
                     if self.is_hidden(path):
-                        try:
-                            scandir.close()
-                        except AttributeError:
-                            # Python 3.5 compatibility
-                            pass
-
-                        return mtimes
+                        continue
 
                     try:
                         mtime = entry.stat().st_mtime
+
                     except OSError as errtuple:
                         log.add(_("Error while scanning %(path)s: %(error)s"), {
                             'path': path,
                             'error': errtuple
                         })
-
-                        try:
-                            scandir.close()
-                        except AttributeError:
-                            # Python 3.5 compatibility
-                            pass
-
-                        return mtimes
+                        continue
 
                     mtimes[path] = mtime
                     dircontents = self.get_folder_mtimes(path)
