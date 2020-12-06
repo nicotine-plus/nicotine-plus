@@ -732,7 +732,28 @@ class Transfers:
             return
 
         addr = msg.conn.addr[0]
-        realpath = self.eventprocessor.shares.virtual2real(msg.file)
+
+        """ Under certain conditions, SoulseekQt will send a file name/path containing both
+        mojibake (utf-8 incorrectly decoded as latin-1) and correct utf-8. This was observed
+        when a file name contains special characters, and is downloaded directly from
+        a user share. In this case, the folder path is garbled, while the file name is correct.
+        Downloading from search results results in no such issue.
+
+        Decode the incorrect parts as utf-8, if necessary, otherwise Nicotine+ thinks the file
+        isn't shared. """
+
+        filename_parts = msg.file.split('\\')
+
+        for i, part in enumerate(filename_parts):
+            try:
+                filename_parts[i] = part.encode('latin-1').decode('utf-8')
+
+            except Exception:
+                # Already utf-8
+                pass
+
+        filename_utf8 = '\\'.join(filename_parts)
+        realpath = self.eventprocessor.shares.virtual2real(filename_utf8)
 
         if not self.file_is_upload_queued(user, msg.file):
 
@@ -765,7 +786,7 @@ class Transfers:
                     slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
-            elif self.file_is_shared(user, msg.file, realpath):
+            elif self.file_is_shared(user, filename_utf8, realpath):
                 newupload = Transfer(
                     user=user, filename=msg.file, realfilename=realpath,
                     path=os.path.dirname(realpath), status="Queued",
@@ -868,7 +889,16 @@ class Transfers:
 
         realfilename = realfilename.replace("\\", os.sep)
 
+        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
+
         if not os.access(realfilename, os.R_OK):
+            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
             return False
 
         folder, sep, file = virtualfilename.rpartition('\\')
@@ -887,6 +917,10 @@ class Transfers:
             if file == i[0]:
                 return True
 
+        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
         return False
 
     def get_transferring_users(self):
