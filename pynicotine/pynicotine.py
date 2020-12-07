@@ -1532,7 +1532,10 @@ class NetworkEventProcessor:
 
             return 1, ""
 
-        if cc in self.config.sections["transfers"]["geoblockcc"]:
+        """ Please note that all country codes are stored in the same string at the first index
+        of an array, separated by commas (no idea why...) """
+
+        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
             return 0, "Sorry, your country is blocked"
 
         return 1, ""
