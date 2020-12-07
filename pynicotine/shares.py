@@ -36,22 +36,30 @@ from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.metadata.tinytag import TinyTag
 
-if not importlib.util.find_spec("_gdbm"):
-    # gdbm not found, use semidbm instead
+""" Check if there's an appropriate (performant) database type for shelves """
+
+if importlib.util.find_spec("_gdbm"):
+
+    def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
+        import _gdbm
+        return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
+
+    shelve.open = shelve_open_gdbm
+
+elif importlib.util.find_spec("semidbm"):
 
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        try:
-            import semidbm
-            return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
-
-        except ImportError:
-            print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-                "option1": "gdbm",
-                "option2": "semidbm"
-            })
-            sys.exit()
+        import semidbm
+        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_semidbm
+
+else:
+    print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+        "option1": "gdbm",
+        "option2": "semidbm"
+    })
+    sys.exit()
 
 
 class Shares:
