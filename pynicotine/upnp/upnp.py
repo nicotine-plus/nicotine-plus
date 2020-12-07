@@ -149,7 +149,7 @@ class UPnp:
             request_type="POST", body=data, headers=headers
         )
 
-        log.add_debug('UPnP: Add port mapping response: %s', response.encode())
+        log.add_debug('UPnP: Add port mapping response: %s', response.encode('utf-8'))
 
         xml = ElementTree.fromstring(response)
 
@@ -189,7 +189,7 @@ class UPnp:
             request_type="POST", body=data, headers=headers
         )
 
-        log.add_debug('UPnP: Delete port mapping response: %s', response.encode())
+        log.add_debug('UPnP: Delete port mapping response: %s', response.encode('utf-8'))
 
     @classmethod
     def list_port_mappings(cls, router):
@@ -217,7 +217,7 @@ class UPnp:
                 request_type="POST", body=data, headers=headers
             )
 
-            log.add_debug('UPnP: List port mappings response: %s', response.encode())
+            log.add_debug('UPnP: List port mappings response: %s', response.encode('utf-8'))
 
             portmap = PortMapping.parse_port_map_xml(response, router.type)
 

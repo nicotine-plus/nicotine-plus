@@ -119,7 +119,7 @@ class SSDP:
 
             for _sock in readable:
                 msg, sender = _sock.recvfrom(SSDP.buffer_size)
-                response = SSDPResponse.parse(msg.decode())
+                response = SSDPResponse.parse(msg.decode('utf-8'))
                 log.add_debug('UPnP: Device search response: %s', bytes(response))
 
                 router = Router.parse_ssdp_response(response, sender)
@@ -254,7 +254,7 @@ class SSDPMessage:
 
     def __bytes__(self):
         """ Return complete HTTP message as bytes """
-        return self.__str__().encode().replace(b'\n', b'\r\n')
+        return self.__str__().encode('utf-8').replace(b'\n', b'\r\n')
 
 
 class SSDPResponse(SSDPMessage):

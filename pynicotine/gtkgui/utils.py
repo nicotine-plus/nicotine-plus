@@ -1574,7 +1574,7 @@ def set_widget_fg_bg_css(widget, bg_color=None, fg_color=None):
         context.add_provider(css_providers[widget], Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         context.add_class(class_name)
 
-    css_providers[widget].load_from_data(css.encode())
+    css_providers[widget].load_from_data(css.encode('utf-8'))
 
 
 def set_widget_font(widget, font):

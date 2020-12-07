@@ -462,7 +462,7 @@ def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
             os.umask(oldumask)
 
             text = "%s %s\n" % (time.strftime(timestamp_format), msg)
-            logfile.write(text.encode('UTF-8', 'replace'))
+            logfile.write(text.encode('utf-8', 'replace'))
 
     except IOError as error:
         print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
