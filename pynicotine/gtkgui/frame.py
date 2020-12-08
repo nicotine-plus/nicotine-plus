@@ -542,6 +542,7 @@ class NicotineFrame:
         """ Load custom icon theme if one is selected """
 
         if self.np.config.sections["ui"].get("icontheme"):
+            log.add_debug("Loading custom icons when available")
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
             for name in names:
@@ -578,12 +579,16 @@ class NicotineFrame:
             # Git folder
             icon_path = os.path.abspath(os.path.join(self.gui_dir, "..", "..", "files"))
 
+        log.add_debug("Loading local icons, using path %s", icon_path)
+
         # Window and notification icons
         try:
             scandir = os.scandir(icon_path)
 
             for entry in scandir:
                 if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine.svg":
+                    log.add_debug("Detected Nicotine+ icon: %s", entry.name)
+
                     try:
                         scandir.close()
                     except AttributeError:
@@ -592,6 +597,7 @@ class NicotineFrame:
 
                     for name in ("n", "notify"):
                         self.images[name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+
         except FileNotFoundError:
             pass
 
@@ -605,6 +611,8 @@ class NicotineFrame:
 
                 for entry in scandir:
                     if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine-" + name + ".svg":
+                        log.add_debug("Detected tray icon: %s", entry.name)
+
                         try:
                             scandir.close()
                         except AttributeError:
