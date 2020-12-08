@@ -35,7 +35,6 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 import _thread
@@ -141,7 +140,9 @@ class NicotineFrame:
 
         self.set_up_actions()
 
-        builder = Gtk.Builder().new_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
+        builder = Gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
         self.application.set_menubar(builder.get_object("menubar"))
 
         """ Icons """
@@ -522,7 +523,7 @@ class NicotineFrame:
                     os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
                 )
 
-        except GObject.GError:
+        except Exception:
             return None
 
         return self.flag_images[flag]
@@ -535,7 +536,7 @@ class NicotineFrame:
                 os.path.join(self.gui_dir, "icons", name + ".svg")
             )
 
-        except GObject.GError:
+        except Exception:
             return None
 
     def load_custom_icons(self, names):
@@ -558,7 +559,7 @@ class NicotineFrame:
                             self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
                             loaded = True
 
-                        except GObject.GError as e:
+                        except Exception as e:
                             log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:

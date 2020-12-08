@@ -256,50 +256,18 @@ def apply_translation():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
+    # Locales handling: We let the system handle the locales
+    try:
+        locale.setlocale(locale.LC_ALL, '')
+
+    except Exception as e:
+        print("Error while attempting to set locale: %s" % e)
+
     # package name for gettext
     package = 'nicotine'
 
     # Local path where to find translation (mo) files
     local_mo_path = 'mo'
-
-    # Python 2.7.X is build via Visual Studio 2008 on Windows:
-    # https://stackoverflow.com/questions/32037573/load-gtk-glade-translations-in-windows-using-python-pygobject
-    # https://docs.python.org/devguide/setup.html#windows
-    # The locales table for VS2008 can be found here:
-    # https://msdn.microsoft.com/en-us/library/cdax410z(v=vs.90).aspx
-    # https://msdn.microsoft.com/en-us/library/39cwe7zf(v=vs.90).aspx
-    def _build_localename_win(localetuple):
-        """ Builds a locale code from the given tuple (language code, encoding).
-            No aliasing or normalizing takes place."""
-
-        language, encoding = localetuple
-
-        if language is None:
-            language = 'C'
-
-        if encoding is None:
-            return language
-        else:
-            return language + '.' + encoding
-
-    # Locales handling
-    if win32:
-
-        # On windows python can get a normalize tuple (language code, encoding)
-        locale_win = locale.getdefaultlocale()
-
-        # Build a locale name compatible with gettext
-        locale_win_gettext = _build_localename_win(locale_win)
-
-        # Fix environnement variables
-        os.environ['LC_ALL'] = locale_win_gettext
-
-    else:
-        # Unix locales handling: We let the system handle the locales
-        try:
-            locale.setlocale(locale.LC_ALL, '')
-        except Exception as e:
-            print("Error while attempting to set locale: %s" % e)
 
     # Gettext handling
     if gettext.find(package, localedir=local_mo_path) is None:
@@ -312,22 +280,8 @@ def apply_translation():
     else:
 
         # Locales are in the current dir: install them
-        if win32:
-
-            # On windows we use libintl-8.dll: the core DLL of GNU gettext-runtime on Windows
-            import ctypes
-
-            libintl = ctypes.cdll.LoadLibrary("libintl-8.dll")
-
-            libintl.bindtextdomain(package, local_mo_path)
-            libintl.bind_textdomain_codeset(package, "UTF-8")
-
-        else:
-            locale.bindtextdomain(package, local_mo_path)
-            gettext.bindtextdomain(package, local_mo_path)
-
-        tr = gettext.translation(package, localedir=local_mo_path)
-        tr.install()
+        gettext.bindtextdomain(package, local_mo_path)
+        gettext.install(package, local_mo_path)
 
     gettext.textdomain(package)
 
