@@ -522,7 +522,7 @@ class NicotineFrame:
                     os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
                 )
 
-        except GObject.GError:
+        except Exception:
             return None
 
         return self.flag_images[flag]
@@ -535,7 +535,7 @@ class NicotineFrame:
                 os.path.join(self.gui_dir, "icons", name + ".svg")
             )
 
-        except GObject.GError:
+        except Exception:
             return None
 
     def load_custom_icons(self, names):
@@ -558,7 +558,7 @@ class NicotineFrame:
                             self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
                             loaded = True
 
-                        except GObject.GError as e:
+                        except Exception as e:
                             log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
 
                 if name not in self.images:
