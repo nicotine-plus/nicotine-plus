@@ -35,7 +35,6 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 import _thread
@@ -141,7 +140,9 @@ class NicotineFrame:
 
         self.set_up_actions()
 
-        builder = Gtk.Builder().new_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
+        builder = Gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
         self.application.set_menubar(builder.get_object("menubar"))
 
         """ Icons """
