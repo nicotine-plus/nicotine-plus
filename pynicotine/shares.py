@@ -181,6 +181,8 @@ class Shares:
 
     def set_shares(self, sharestype="normal", files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
 
+        self.config.create_data_folder()
+
         if sharestype == "normal":
             storable_objects = [
                 (files, "sharedfiles", "files.db"),
