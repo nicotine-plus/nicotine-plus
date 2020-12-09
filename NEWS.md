@@ -3,6 +3,23 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 2.2.1 (unstable / unreleased)
+-----------------------------
+
+Changes
+
+ * Fixed an issue where the file scanner wouldn't scan a folder completely if a hidden subfolder was detected
+ * Fixed a crash when trying to start Nicotine+ on a non-English Windows system
+ * Fixed an issue where a "File not shared" status was sent when attempting to upload certain files
+ * Geo block feature is functional again
+ * Translations for the menu bar now show up in the UI again
+
+Issues closed on GitHub
+
+ * No icons in FreeBSD ([#889](https://github.com/Nicotine-Plus/nicotine-plus/issues/889))
+ * GeoBlock Not Blocking ([#891](https://github.com/Nicotine-Plus/nicotine-plus/issues/891))
+ * Nicotine v2.2.0 immediately crashes on startup on Windows 10 v19042.630 ([#893](https://github.com/Nicotine-Plus/nicotine-plus/issues/893))
+
 Version 2.2.0 (December 4, 2020)
 -----------------------------
 
