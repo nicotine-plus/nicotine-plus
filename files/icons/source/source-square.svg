@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -38,22 +39,29 @@
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      id="namedview895"
-     showgrid="false"
-     inkscape:zoom="8.7725435"
-     inkscape:cx="42.289275"
-     inkscape:cy="54.03285"
+     showgrid="true"
+     inkscape:zoom="4.3862718"
+     inkscape:cx="86.166575"
+     inkscape:cy="76.752305"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg893" />
+     inkscape:current-layer="svg893"
+     inkscape:document-rotation="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1549" />
+  </sodipodi:namedview>
   <path
-     d="m 8,18 v 98 H 27 V 37 h 10 c 6,0 9,6 9,9 v 70 H 65 V 98 h 18 v 18 h 19 V 98 h 18 V 80 H 102 V 61 H 83 V 80 H 65 V 46 C 65,34 54,18 38,18 Z"
+     d="M 8,12 V 116 H 28 V 36 h 8 c 8,0 12,4 12,12 v 68 h 20 v -16 h 16 v 16 h 20 v -16 h 16 V 80 H 104 V 60 H 84 V 80 H 68 V 48 C 68,32 56,12 40,12 Z"
      fill="#d38c2d"
      id="path889"
-     sodipodi:nodetypes="ccccssccccccccccccccssc" />
+     sodipodi:nodetypes="ccccssccccccccccccccssc"
+     style="stroke-width:1" />
   <path
-     d="m 8,14 v 98 H 27 V 33 h 10 c 6,0 9,6 9,9 v 70 H 65 V 94 h 18 v 18 h 19 V 94 h 18 V 76 H 102 V 57 H 83 V 76 H 65 V 42 C 65,30 54,14 38,14 Z"
+     d="M 8,12 V 112 H 28 V 32 h 8 c 8,0 12,4 12,12 v 68 H 68 V 96 h 16 v 16 h 20 V 96 h 16 V 80 H 104 V 60 H 84 V 80 H 68 V 44 C 68,28 56,12 40,12 Z"
      fill="#f9aa40"
      id="path891"
-     sodipodi:nodetypes="ccccssccccccccccccccssc" />
+     sodipodi:nodetypes="ccccssccccccccccccccssc"
+     style="stroke-width:1" />
 </svg>
