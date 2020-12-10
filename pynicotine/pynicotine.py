@@ -29,7 +29,6 @@
 This is the actual client code. Actual GUI classes are in the separate modules
 """
 
-import configparser
 import os
 import queue
 import threading
@@ -109,7 +108,8 @@ class NetworkEventProcessor:
 
         try:
             self.config = Config(config, data_dir)
-        except configparser.Error:
+
+        except Exception:
             import shutil
             corruptfile = ".".join([config, clean_file(time.strftime("%Y-%m-%d_%H_%M_%S")), "corrupt"])
             shutil.move(config, corruptfile)
@@ -121,7 +121,6 @@ class NetworkEventProcessor:
         self.bindip = bindip
         self.port = port
 
-        self.config.read_config()
         log.set_log_levels(self.config.sections["logging"]["debugmodes"])
 
         self.peerconns = []

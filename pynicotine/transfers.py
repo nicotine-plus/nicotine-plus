@@ -30,6 +30,7 @@ the transfer manager.
 
 import os
 import os.path
+import pickle
 import re
 import stat
 import threading
@@ -46,6 +47,7 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import RestrictedUnpickler
 from pynicotine.utils import write_log
 
 
@@ -130,7 +132,7 @@ class Transfers:
         self.privilegedusers = set()
         userstatus = set()
 
-        for i in self.eventprocessor.config.sections["transfers"]["downloads"]:
+        for i in self.load_download_queue():
             size = currentbytes = bitrate = length = None
 
             if len(i) >= 6:
@@ -190,6 +192,21 @@ class Transfers:
 
         # Check for failed downloads if option is enabled (1 min delay)
         self.start_check_download_queue_timer()
+
+    def load_download_queue(self):
+
+        if not os.path.exists(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')):
+            try:
+                with open(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle'), 'rb') as handle:
+                    return RestrictedUnpickler(handle, encoding='utf-8').load()
+
+            except IOError as inst:
+                log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
+
+            except Exception as inst:
+                log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+
+        return []
 
     def set_transfer_views(self, downloads, uploads):
         self.downloadsview = downloads
@@ -1616,7 +1633,6 @@ class Transfers:
         if user not in self.eventprocessor.config.sections["server"]["banlist"]:
             self.eventprocessor.config.sections["server"]["banlist"].append(user)
             self.eventprocessor.config.write_configuration()
-            self.eventprocessor.config.write_download_queue()
 
     def start_check_download_queue_timer(self):
         timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
@@ -2149,5 +2165,16 @@ class Transfers:
 
     def save_downloads(self):
         """ Save list of files to be downloaded """
-        self.eventprocessor.config.sections["transfers"]["downloads"] = self.get_downloads()
-        self.eventprocessor.config.write_download_queue()
+
+        self.eventprocessor.config.create_data_folder()
+        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')
+
+        try:
+            with open(downloads_file, 'wb') as handle:
+                pickle.dump(self.get_downloads(), handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+        except IOError as inst:
+            log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
+
+        except Exception as inst:
+            log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})

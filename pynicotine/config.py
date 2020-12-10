@@ -34,8 +34,8 @@ import pickle
 import sys
 
 from ast import literal_eval
+from collections import defaultdict
 from gettext import gettext as _
-from os.path import exists
 
 from pynicotine.logfacility import log
 from pynicotine.utils import RestrictedUnpickler
@@ -48,9 +48,7 @@ class Config:
 
     need_config() - returns true if configuration information is incomplete
     read_config() - reads configuration information from file
-    setConfig(config_info_dict) - sets configuration information
     write_configuration - writes configuration information to file
-    write_download_queue - writes download queue to file
 
     The actual configuration information is stored as a two-level dictionary.
     First-level keys are config sections, second-level keys are config
@@ -63,6 +61,9 @@ class Config:
         self.data_dir = data_dir
         self.parser = configparser.RawConfigParser(strict=False)
 
+        self.create_config_folder()
+        self.create_data_folder()
+
         try:
             self.parse_config()
 
@@ -72,7 +73,7 @@ class Config:
 
         log_dir = os.path.join(data_dir, "logs")
 
-        self.sections = {
+        self.defaults = {
             "server": {
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
@@ -131,7 +132,6 @@ class Config:
                 "uploadallowed": 2,
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
-                "downloads": [],
                 "sharedfiles": {},
                 "sharedfilesstreams": {},
                 "uploadsinsubdirs": True,
@@ -382,37 +382,62 @@ class Config:
         }
 
         # Windows specific stuff
-        if sys.platform.startswith('win'):
-            self.sections['ui']['filemanager'] = 'explorer $'
+        if sys.platform == "win32":
+            self.defaults['ui']['filemanager'] = 'explorer $'
 
+        # Non-functional tray icon is disabled on macOS
         if sys.platform == "darwin":
-            # Non-functional tray icon is disabled on macOS
-            self.sections['ui']['exitdialog'] = 0
+            self.defaults['ui']['exitdialog'] = 0
 
-        self.defaults = {}
-        for key, value in self.sections.items():
-            if isinstance(value, dict):
-                if key not in self.defaults:
-                    self.defaults[key] = {}
+        # Clean up old config options
+        self.remove_old_options()
 
-                for key2, value2 in value.items():
-                    self.defaults[key][key2] = value2
-            else:
-                self.defaults[key] = value
+        # Initialize config with default values
+        self.sections = defaultdict(dict)
+
+        for key, value in self.defaults.items():
+            self.sections[key] = value
+
+        # Update config values from file
+        self.set_config()
 
         try:
-            f = open(filename + ".alias", 'rb')
-            self.aliases = RestrictedUnpickler(f, encoding='utf-8').load()
-            f.close()
+            with open(filename + ".alias", 'rb') as f:
+                self.aliases = RestrictedUnpickler(f, encoding='utf-8').load()
 
         except Exception:
             self.aliases = {}
+
+    def create_config_folder(self):
+        """ Create the folder for storing the config file in, if the folder
+        doesn't exist """
+
+        path, fn = os.path.split(self.filename)
+        try:
+            if not os.path.isdir(path):
+                os.makedirs(path)
+
+        except OSError as msg:
+            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
+
+    def create_data_folder(self):
+        """ Create the folder for storing data in (aliases, shared files etc.),
+        if the folder doesn't exist """
+
+        try:
+            if not os.path.isdir(self.data_dir):
+                os.makedirs(self.data_dir)
+
+        except OSError as msg:
+            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': self.data_dir, 'error': msg})
 
     def parse_config(self):
         """ Parses the config file """
 
         try:
-            self.parser.read([self.filename], encoding="utf-8")
+            with open(self.filename, 'a+', encoding="utf-8") as f:
+                f.seek(0)
+                self.parser.read_file(f)
 
         except configparser.ParsingError:
             # Ignore parsing errors, the offending lines are removed later
@@ -454,53 +479,8 @@ class Config:
 
         return False
 
-    def read_config(self):
-
-        self.sections['transfers']['downloads'] = []
-
-        if exists(os.path.join(self.data_dir, 'transfers.pickle')):
-            # <1.2.13 stored transfers inside the main config
-            try:
-                handle = open(os.path.join(self.data_dir, 'transfers.pickle'), 'rb')
-
-            except IOError as inst:
-                log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
-
-            else:
-                try:
-                    self.sections['transfers']['downloads'] = RestrictedUnpickler(handle, encoding='utf-8').load()
-
-                except Exception as inst:
-                    log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
-
-            try:
-                handle.close()
-            except Exception:
-                pass
-
-        path, fn = os.path.split(self.filename)
-        try:
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-        except OSError as msg:
-            log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
-
-        try:
-            if not os.path.isdir(self.data_dir):
-                os.makedirs(self.data_dir)
-
-        except OSError as msg:
-            log.add_warning("Can't create directory '%s', reported error: %s", (path, msg))
-
-        # Clean up old config options
-        self.remove_old_options()
-
-        # Check for unknown or invalid section/options
-        self.sanitize_config()
-
-    def sanitize_config(self):
-        """ Remove invalid values from config options """
+    def set_config(self):
+        """ Set config values parsed from file earlier """
 
         for i in self.parser.sections():
             for j, val in self.parser.items(i, raw=True):
@@ -660,45 +640,12 @@ class Config:
         if section in self.parser.sections():
             self.parser.remove_section(section)
 
-    def write_download_queue(self):
-
-        realfile = os.path.join(self.data_dir, 'transfers.pickle')
-        tmpfile = realfile + '.tmp'
-        backupfile = realfile + ' .backup'
-        try:
-            handle = open(tmpfile, 'wb')
-        except Exception as inst:
-            log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
-        else:
-            try:
-                pickle.dump(self.sections['transfers']['downloads'], handle, protocol=pickle.HIGHEST_PROTOCOL)
-                handle.close()
-                try:
-                    # Please let it be atomic...
-                    os.rename(tmpfile, realfile)
-                except Exception:
-                    # ...ugh. Okay, how about...
-                    try:
-                        os.unlink(backupfile)
-                    except Exception:
-                        pass
-                    os.rename(realfile, backupfile)
-                    os.rename(tmpfile, realfile)
-            except Exception as inst:
-                log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
-        finally:
-            try:
-                handle.close()
-            except Exception:
-                pass
-
     def write_configuration(self):
 
-        external_sections = [
-            "sharedfiles", "sharedfilesstreams", "wordindex", "fileindex",
-            "sharedmtimes", "bsharedfiles", "bsharedfilesstreams",
-            "bwordindex", "bfileindex", "bsharedmtimes", "downloads"
-        ]
+        external_sections = (
+            "sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes",
+            "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes"
+        )
 
         for i in self.sections:
             if not self.parser.has_section(i):
@@ -711,32 +658,17 @@ class Config:
                 else:
                     self.parser.remove_option(i, j)
 
-        path, fn = os.path.split(self.filename)
-        try:
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-        except OSError as msg:
-            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
+        self.create_config_folder()
 
         oldumask = os.umask(0o077)
 
         try:
-            f = open(self.filename + ".new", "w", encoding="utf-8")
+            with open(self.filename + ".new", "w", encoding="utf-8") as f:
+                self.parser.write(f)
 
         except IOError as e:
             log.add_warning(_("Can't save config file, I/O error: %s"), e)
             return
-        else:
-            try:
-                self.parser.write(f)
-
-            except IOError as e:
-                log.add_warning(_("Can't save config file, I/O error: %s"), e)
-                return
-
-            else:
-                f.close()
 
         os.umask(oldumask)
 
@@ -781,17 +713,14 @@ class Config:
                 raise FileExistsError("File %s exists", filename)
 
             import tarfile
-            tar = tarfile.open(filename, "w:bz2")
+            with tarfile.open(filename, "w:bz2") as tar:
+                if not os.path.exists(self.filename):
+                    raise FileNotFoundError("Config file missing")
 
-            if not os.path.exists(self.filename):
-                raise FileNotFoundError("Config file missing")
+                tar.add(self.filename)
 
-            tar.add(self.filename)
-
-            if os.path.exists(self.filename + ".alias"):
-                tar.add(self.filename + ".alias")
-
-            tar.close()
+                if os.path.exists(self.filename + ".alias"):
+                    tar.add(self.filename + ".alias")
 
         except Exception as e:
             print(e)
@@ -801,24 +730,17 @@ class Config:
 
     def write_aliases(self):
 
-        try:
-            f = open(self.filename + ".alias", "wb")
+        self.create_config_folder()
 
-        except Exception as e:
+        try:
+            with open(self.filename + ".alias", "wb") as f:
+                pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        except IOError as e:
             log.add_warning(_("Something went wrong while opening your alias file: %s"), e)
 
-        else:
-            try:
-                pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
-                f.close()
-
-            except Exception as e:
-                log.add_warning(_("Something went wrong while saving your alias file: %s"), e)
-        finally:
-            try:
-                f.close()
-            except Exception:
-                pass
+        except Exception as e:
+            log.add_warning(_("Something went wrong while saving your alias file: %s"), e)
 
     def add_alias(self, rest):
         if rest:
