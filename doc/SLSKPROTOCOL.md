@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on 30 October 2020
+Last updated on December 11, 2020
 
 ## Sections
 
@@ -214,13 +214,13 @@ Send your username, password, and client version.
 
 | Description | Version     | Length      | Hash                                                                                            | Minor Version |
 | ----------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
-| Human       | 157         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 19            |
-| Hex         | 9d 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 13 00 00 00   |
+| Human       | 160         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1             |
+| Hex         | a0 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00   |
 
 *Message as a Hex Stream* **48 00 00 00 01 00 00 00 08 00 00 00 75 73 65
-72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 9d 00 00 00 20 00 00
+72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00 00
 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36
-30 32 64 34 35 32 39 32 39 13 00 00 00**
+30 32 64 34 35 32 39 32 39 01 00 00 00**
 
 #### Data Order
 
@@ -229,7 +229,7 @@ Send your username, password, and client version.
     2.  **string** <ins>password</ins> **A non-empty
         string is required**
     3.  **uint32** <ins>version number</ins> *183*
-        for Museek+ *157* for Nicotine+
+        for Museek+ *160* for Nicotine+
     4.  **string** <ins>MD5 hex digest of
         concatenated username & password</ins>
     5.  **uint32** <ins>minor version</ins> Minor
