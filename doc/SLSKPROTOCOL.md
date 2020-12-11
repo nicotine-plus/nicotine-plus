@@ -2468,7 +2468,7 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 4.  User B sends a [Pierce Firewall](#peer-code-0)
     to User A with the same token (if this fails connections are doomed)
 5.  User B sends a [Cannot
-    Connect](#server-code-1001) to the Server
+    Connect](#server-code-1001) to the Server (**DEPRECATED**, see [Can't Connect To Peer](#server-code-1001))
 6.  The Server sends a [Cannot
     Connect](#server-code-1001) response to User A
 
