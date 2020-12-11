@@ -1018,12 +1018,14 @@ class NetworkEventProcessor:
 
                 # Soulseek client version; 155, 156, 157
                 # SoulseekQt seems to be using 157
-                157,
+                # We use a custom version number for Nicotine+
+                160,
 
                 # Soulseek client minor version
                 # 17 stands for 157 ns 13c, 19 for 157 ns 13e
                 # SoulseekQt seems to go higher than this
-                19,
+                # We use a custom minor version for Nicotine+
+                1,
             )
         )
         if self.waitport is not None:
