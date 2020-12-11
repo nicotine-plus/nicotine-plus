@@ -1687,15 +1687,6 @@ class NicotineFrame:
         else:
             self.show_tab(tab_box)
 
-    """ Dialogs
-    TODO: move to dialogs.py what's possible """
-
-    def popup_message(self, popup):
-        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=popup.title)
-        dialog.format_secondary_text(popup.message)
-        dialog.connect('response', lambda dialog, response: dialog.destroy())
-        dialog.show()
-
     """ Scanning """
 
     def rescan_startup(self):
@@ -2227,6 +2218,12 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
     """ Various """
+
+    def popup_message(self, popup):
+        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=popup.title)
+        dialog.format_secondary_text(popup.message)
+        dialog.connect('response', lambda dialog, response: dialog.destroy())
+        dialog.show()
 
     def buddies_combos_fill(self, nothing):
         for widget in self.buddies_combo_entries:
