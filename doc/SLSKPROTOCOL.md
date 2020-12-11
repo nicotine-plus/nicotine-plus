@@ -188,7 +188,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 152  | [Public Chat Message](#server-code-152)           |            |
 | 153  | [Related Searches](#server-code-153)              | Deprecated |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        | Deprecated |
-| 1002 | [Can't Create Room](#server-code-1002)            | Deprecated |
+| 1003 | [Can't Create Room](#server-code-1003)            |            |
 
 ### Server Code 1
 
@@ -2409,20 +2409,18 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
     1.  **int** <ins>token</ins>
     2.  **string** <ins>username</ins>
 
-### Server Code 1002
+### Server Code 1003
 
 **Can't Create Room**
 
 #### Function Names
 
 Museekd: Unimplemented  
-Nicotine: CantConnectToPeer
+Nicotine: CantCreateRoom
 
 #### Description
 
-**DEPRECATED (server sends a private message now)**
-
-Server tells us a new room cannot be created.
+Server tells us a new room cannot be created. This message only seems to be sent if you try to create a room with the same name as an existing private room. In other cases, such as using a room name with leading or trailing spaces, only a private message containing an error message is sent.
 
 #### Data Order
 

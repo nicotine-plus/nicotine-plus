@@ -1889,9 +1889,11 @@ class CantConnectToPeer(ServerMessage):
 
 
 class CantCreateRoom(ServerMessage):
-    """ Server code: 1002 """
-    """ Server tells us a new room cannot be created. """
-    """ DEPRECATED (server sends a private message now) """
+    """ Server code: 1003 """
+    """ Server tells us a new room cannot be created. This message only seems
+    to be sent if you try to create a room with the same name as an existing
+    private room. In other cases, such as using a room name with leading or
+    trailing spaces, only a private message containing an error message is sent. """
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, str)
