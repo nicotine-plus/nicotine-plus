@@ -487,7 +487,10 @@ class SayChatroom(ServerMessage):
 
 class JoinRoom(ServerMessage):
     """ Server code: 14 """
-    """ Server sends us this message when we join a room. Contains users list
+    """ We send this message to the server when we want to join a room. If the
+    room doesn't exist, it is created.
+
+    Server responds with this message when we join a room. Contains users list
     with data on everyone. """
 
     def __init__(self, room=None, private=None):

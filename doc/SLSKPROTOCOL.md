@@ -405,13 +405,15 @@ Nicotine: JoinRoom
 
 #### Description
 
-Server sends us this message when we join a room. Contains users list with data on everyone.
+We send this message to the server when we want to join a room. If the room doesn't exist, it is created.
+
+Server responds with this message when we join a room. Contains users list with data on everyone.
 
 #### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **bool** <ins>private</ins> *Should the room be private?*
+    2.  **bool** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
 
 <!-- end list -->
 
