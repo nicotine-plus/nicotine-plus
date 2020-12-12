@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on December 11, 2020
+Last updated on December 12, 2020
 
 ## Sections
 
@@ -411,6 +411,7 @@ Server sends us this message when we join a room. Contains users list with data 
 
   - Send
     1.  **string** <ins>room</ins>
+    2.  **bool** <ins>private</ins> *Should the room be private?*
 
 <!-- end list -->
 
