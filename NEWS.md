@@ -3,12 +3,13 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 2.2.1 (unstable / unreleased)
+Version 2.2.1 (December 14, 2020)
 -----------------------------
 
 Changes
 
  * Fixed an issue where the file scanner wouldn't scan a folder completely if a hidden subfolder was detected
+ * Fixed an issue where invalid audio metadata in shared files could cause stability issues while running Nicotine+
  * Fixed a crash when trying to start Nicotine+ on a non-English Windows system
  * Fixed an issue where a "File not shared" status was sent when attempting to upload certain files
  * Geo block feature is functional again
