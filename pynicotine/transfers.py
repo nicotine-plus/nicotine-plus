@@ -1691,7 +1691,8 @@ class Transfers:
             for i in list_queued:
                 if i.timequeued is not None and i.timequeued < mintimequeued:
                     transfercandidate = i
-                    break
+                    # Break loop
+                    mintimequeued = i.timequeued
 
         if transfercandidate is not None:
             log.add_transfer(
