@@ -1689,10 +1689,9 @@ class Transfers:
             # Get first transfer that was queued less than one second from now
             mintimequeued = time.time() + 1
             for i in list_queued:
-                if i.timequeued < mintimequeued:
+                if i.timequeued is not None and i.timequeued < mintimequeued:
                     transfercandidate = i
-                    # Break loop
-                    mintimequeued = i.timequeued
+                    break
 
         if transfercandidate is not None:
             log.add_transfer(
