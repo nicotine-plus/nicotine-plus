@@ -2170,11 +2170,28 @@ class FileSearchResult(PeerMessage):
                 msg.extend(self.pack_object(3))
 
                 msg.extend(self.pack_object(0))
-                msg.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
+                try:
+                    msg.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
+
+                except Exception:
+                    # Invalid bitrate
+                    msg.extend(self.pack_object(0))
+
                 msg.extend(self.pack_object(1))
-                msg.extend(self.pack_object(fileinfo[3], unsignedint=True))
+                try:
+                    msg.extend(self.pack_object(fileinfo[3], unsignedint=True))
+
+                except Exception:
+                    # Invalid duration
+                    msg.extend(self.pack_object(0))
+
                 msg.extend(self.pack_object(2))
-                msg.extend(self.pack_object(fileinfo[2][1]))
+                try:
+                    msg.extend(self.pack_object(fileinfo[2][1]))
+
+                except Exception:
+                    # Invalid VBR value
+                    msg.extend(self.pack_object(0))
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.pack_object(self.ulspeed, unsignedint=True))
