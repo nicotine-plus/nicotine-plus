@@ -677,26 +677,33 @@ class Shares:
             stream.extend(message.pack_object(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is not None and fileinfo[3] is not None:
-                try:
-                    stream.extend(message.pack_object('mp3'))
-                    stream.extend(message.pack_object(3))
+                stream.extend(message.pack_object('mp3'))
+                stream.extend(message.pack_object(3))
 
-                    stream.extend(message.pack_object(0))
+                stream.extend(message.pack_object(0))
+                try:
                     stream.extend(message.pack_object(fileinfo[2][0], unsignedint=True))
-                    stream.extend(message.pack_object(1))
+
+                except Exception:
+                    # Invalid bitrate
+                    stream.extend(message.pack_object(0))
+
+                stream.extend(message.pack_object(1))
+                try:
                     stream.extend(message.pack_object(fileinfo[3], unsignedint=True))
-                    stream.extend(message.pack_object(2))
+
+                except Exception:
+                    # Invalid length
+                    stream.extend(message.pack_object(0))
+
+                stream.extend(message.pack_object(2))
+                try:
                     stream.extend(message.pack_object(fileinfo[2][1]))
 
                 except Exception:
-                    log.add(_("Found meta data that couldn't be encoded, possible corrupt file: '%(file)s' has a bitrate of %(bitrate)s kbs, a length of %(length)s seconds and a VBR of %(vbr)s"), {
-                        'file': fileinfo[0],
-                        'bitrate': fileinfo[2][0],
-                        'length': fileinfo[3],
-                        'vbr': fileinfo[2][1]
-                    })
-                    stream.extend(message.pack_object(''))
+                    # Invalid VBR value
                     stream.extend(message.pack_object(0))
+
             else:
                 stream.extend(message.pack_object(''))
                 stream.extend(message.pack_object(0))
