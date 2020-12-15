@@ -34,7 +34,7 @@ import time
 
 from gettext import gettext as _
 
-version = "2.2.2-dev1"
+version = "2.2.2.dev1"
 
 win32 = sys.platform.startswith("win")
 
