@@ -195,7 +195,7 @@ class Transfers:
 
     def load_download_queue(self):
 
-        if not os.path.exists(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')):
+        if os.path.exists(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')):
             try:
                 with open(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle'), 'rb') as handle:
                     return RestrictedUnpickler(handle, encoding='utf-8').load()
