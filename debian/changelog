@@ -1,3 +1,9 @@
+nicotine (2.2.2-dev1) groovy; urgency=medium
+
+  * Development version.
+
+ -- Mat <mail@mathias.is>  Tue, 15 Dec 2020 05:59:56 +0300
+
 nicotine (2.2.1-1) groovy; urgency=medium
 
   * Latest upstream.
