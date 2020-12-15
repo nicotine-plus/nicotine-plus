@@ -134,13 +134,23 @@ for po_file in glob.glob(os.path.join("po", "*.po")):
 
 if __name__ == '__main__':
 
+    LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
+file sharing network.
+
+Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
+alternative to the official Soulseek client, providing additional
+functionality while keeping current with the Soulseek protocol."""
+
     setup(
-        name="nicotine",
+        name="nicotine-plus",
         version=version,
         license="GPLv3",
-        description="Nicotine+ is a graphical client for the Soulseek file sharing network",
+        description="Graphical client for the Soulseek file sharing network",
+        long_description=LONG_DESCRIPTION,
         author="Nicotine+ Team",
+        author_email="nicotine-team@lists.launchpad.net",
         url="https://nicotine-plus.org/",
+        platforms="any",
         packages=packages,
         package_data=package_data,
         scripts=["nicotine"],
