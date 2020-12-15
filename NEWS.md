@@ -3,6 +3,13 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 2.2.2 (unreleased / unstable)
+-----------------------------
+
+Changes
+
+ * Fixed an issue where the list of queued downloads would not be restored on startup
+
 Version 2.2.1 (December 14, 2020)
 -----------------------------
 
