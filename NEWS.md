@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 2.2.2 (unreleased / unstable)
+Version 2.2.2 (December 15, 2020)
 -----------------------------
 
 Changes
