@@ -1,6 +1,7 @@
 # This file is responsible for including all necessary files in the source distribution
+# https://docs.python.org/3/distutils/sourcedist.html
 
-include requirements.txt
+include *.txt
 
 recursive-include po *.in *.po *.pot
 recursive-include pynicotine *.bin *.md *.py *.ui PLUGININFO
