@@ -25,7 +25,6 @@
 import os
 import re
 from collections import deque
-from gettext import gettext as _
 from os.path import commonprefix
 
 from gi.repository import Gdk

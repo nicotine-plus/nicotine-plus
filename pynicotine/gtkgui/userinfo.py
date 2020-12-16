@@ -22,7 +22,6 @@
 
 import os
 import time
-from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf

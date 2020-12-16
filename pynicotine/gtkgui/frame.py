@@ -28,8 +28,6 @@ import signal
 import sys
 import threading
 
-from gettext import gettext as _
-
 import gi
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf

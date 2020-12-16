@@ -26,7 +26,6 @@ import os
 import random
 import re
 import sre_constants
-from gettext import gettext as _
 
 from gi.repository import Gdk
 from gi.repository import GObject

@@ -32,8 +32,6 @@ import pickle
 import sys
 import time
 
-from gettext import gettext as _
-
 version = "2.2.3.dev1"
 
 win32 = sys.platform.startswith("win")

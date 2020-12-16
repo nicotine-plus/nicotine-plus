@@ -28,7 +28,6 @@ Nicotine+ Launcher.
 
 import importlib
 import sys
-from gettext import gettext as _
 
 from pynicotine.utils import apply_translation
 from pynicotine.utils import get_user_directories

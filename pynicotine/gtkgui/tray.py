@@ -20,8 +20,6 @@ import gi
 import os
 import sys
 
-from gettext import gettext as _
-
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import PopupMenu

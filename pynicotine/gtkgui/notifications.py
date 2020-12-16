@@ -19,8 +19,6 @@
 import sys
 import _thread
 
-from gettext import gettext as _
-
 from gi.repository import Gdk
 from gi.repository import Gio
 
