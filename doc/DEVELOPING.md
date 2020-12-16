@@ -6,6 +6,7 @@ This document contains important information about Nicotine+ design decisions an
 
  * [Python Versions](#python-versions)
  * [Dependencies](#dependencies)
+ * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
  * [Translations](#translations)
  * [Releases](#releases)
@@ -25,6 +26,20 @@ Dependencies preinstalled on a majority of systems, as well as modules included 
  * Prefer pure-Python dependencies, as these can be used on any system and architecture.
 
  * Try to find small, maintainable dependencies that can be bundled with the Nicotine+ source code, and give proper attribution. External dependencies can behave surprisingly different on some systems, and be quite outdated on some older systems. Use common sense though; don't bundle security-critical dependencies, rapidly changing APIs etc.
+
+# Profiling
+
+Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and doesn't use unnecessary resources. Our goal is to develop a lightweight client than runs well on older hardware and servers, and these can be quite constrained at times.
+
+Addressing performance in Python can be a challenge at times, and there are no straightforward ways of solving all performance issues. These points generally help:
+
+ * Use better data structures and algorithms for the intended purpose.
+
+ * Use functions in the Python Standard Library when possible, instead of reimplementing algorithms yourself.
+
+ * Look for alterative ways of accomplishing a task, search engines help a lot here. Certain modules in the standard library are written in C, and tend to perform better than pure-Python counterparts.
+
+[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save you a lot of time.
 
 # Continuous Integration Testing
 
