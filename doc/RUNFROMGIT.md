@@ -3,14 +3,13 @@ For those of us who like living on the bleeding edge and want to help testing th
 This is not particularly hard, but it may come with some additional required skills, like installing dependencies and managing changes in the database and the config files.
 
 ## Clone the repository and run Nicotine+
-This is great if you're the only Nicotine+ user on your system and you want to test the latest version. Using a Python virtual environment (venv) is recommended, as this ensures you have the correct dependencies to run Nicotine+.
+This is great if you're the only Nicotine+ user on your system and you want to test the latest version. Using a Python virtual environment (venv) is recommended, as this ensures Nicotine+ will run as intended.
 
 ```console
 git clone https://github.com/Nicotine-Plus/nicotine-plus.git
 cd nicotine-plus
 python3 -m venv .env
-.env/bin/pip install -r requirements.txt
-.env/bin/python3 setup.py install
+.env/bin/pip install . -r requirements.txt
 .env/bin/nicotine
 ```
 
@@ -22,6 +21,6 @@ If you want to update to the latest version of Nicotine+, proceed like this:
 ```console
 cd nicotine-plus
 git pull
-.env/bin/python3 setup.py install
+.env/bin/pip install . -r requirements.txt
 .env/bin/nicotine
 ```
