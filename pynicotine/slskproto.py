@@ -365,7 +365,7 @@ class SlskProtoThread(threading.Thread):
         PublicRoomMessage: 152,
         RelatedSearch: 153,           # Deprecated ?
         CantConnectToPeer: 1001,      # Deprecated
-        CantCreateRoom: 1002          # Deprecated
+        CantCreateRoom: 1003
     }
 
     peercodes = {
