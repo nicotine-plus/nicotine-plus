@@ -2,9 +2,7 @@
 
 For a list of translators, see [TRANSLATORS.md](../TRANSLATORS.md). If your name is missing, please contact us.
 
-## For Translators
-
-### How to translate
+## How to translate
 
 Translations are handled on the [Launchpad translations page](https://translations.launchpad.net/nicotine+).
 
@@ -18,39 +16,7 @@ To get started:
 
 Once your translations have been approved, they will be merged into Nicotine+'s GitHub repository, at the very latest before a new Nicotine+ release.
 
-## For Developers and Maintainers
-
-### To update the translation template
-
-As strings change in the Nicotine+ source code, the translation template file should also be updated regularly.
-
-To update the template (.pot) file:
-
-- Enter the `po` folder by running `cd po`
-
-- Run the following command:
-
-```console
-intltool-update -p -g nicotine
-```
-
-A developer part of the [Nicotine+ Launchpad team](https://launchpad.net/~nicotine-team) should then [upload the updated .pot file](https://translations.launchpad.net/nicotine+/trunk/+translations-upload) to Launchpad, and [approve it](https://translations.launchpad.net/nicotine+/+imports).
-
-### To import translations to GitHub
-
-Translations should be imported to the GitHub repository regularly, at the very latest before a new Nicotine+ release is tagged.
-
-To do this:
-
-- [Export all translations](https://translations.launchpad.net/nicotine+/trunk/+export) in PO format
-
-- Add the updated files to the `po` folder
-
-- Commit the files
-
-Also remember to add new translators to the list of translators, located in TRANSLATORS.md and `pynicotine/gtkgui/ui/about/about.ui`.
-
-## More On Translation
+## More on translation
 
 Nicotine+ will try to autodetect your language based on what locale you're using.
 
@@ -76,3 +42,7 @@ If Nicotine+ doesn't find the .mo files in your project folder, it will fall bac
 * On GNU/Linux: `/usr/share/locale/$(lang)/LC_MESSAGES`.
 
 * On Windows: `%PYTHONHOME%\share\locale\$(lang)\LC_MESSAGES`.
+
+## For developers and maintainers
+
+See [DEVELOPING.md](DEVELOPING.md#translations).
