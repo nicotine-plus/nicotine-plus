@@ -12,19 +12,19 @@ This document contains important information about Nicotine+ design decisions an
 
 # Python Versions
 
-Nicotine+ aims to support Python 3 versions used by the oldest distributions that haven't reached end of life yet. Once a Python version is no longer supported and used by any distribution, support for it should be removed.
+Nicotine+ aims to support Python 3 versions used by the oldest distributions still actively maintained. Once a Python version is no longer used and supported by any distribution, the minimum supported Python version should be changed in Nicotine+.
 
-Currently, the minimum Python version is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
+Currently, the minimum Python version Nicotine+ supports is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
 
 # Dependencies
 
 Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who can't use the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software depencency can cause issues for both packagers and users.
 
-Dependencies preinstalled on a majority of systems, as well as modules included in the Python Standard Library, should be used as much as possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality in some capacity. If a new dependency needs to be introduced, think about the following points:
+Dependencies preinstalled on a majority of systems, as well as modules included in the Python Standard Library, should be used as much as possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency needs to be introduced, think about the following points:
 
  * Prefer pure-Python dependencies, as these can be used on any system and architecture.
 
- * Try to find small, maintainable dependencies that can be bundled with the Nicotine+ source code, and give attribution. External dependencies can behave surprisingly different on some systems, and be quite outdated on some older systems. Use common sense though; don't bundle security-critical dependencies, rapidly changing APIs etc.
+ * Try to find small, maintainable dependencies that can be bundled with the Nicotine+ source code, and give proper attribution. External dependencies can behave surprisingly different on some systems, and be quite outdated on some older systems. Use common sense though; don't bundle security-critical dependencies, rapidly changing APIs etc.
 
 # Continuous Integration Testing
 
@@ -107,20 +107,20 @@ Also remember to add new translators to the list of translators, located in TRAN
 Nicotine+ tries to follow [Semantic Versioning](https://semver.org/) when possible. As cited in the specification:
 
 > Given a version number MAJOR.MINOR.PATCH, increment the:
-
->    MAJOR version when you make incompatible API changes,  
-    MINOR version when you add functionality in a backwards compatible manner, and  
-    PATCH version when you make backwards compatible bug fixes.
-
+> 
+>   MAJOR version when you make incompatible API changes,  
+>   MINOR version when you add functionality in a backwards compatible manner, and  
+>   PATCH version when you make backwards compatible bug fixes.
+>
 > Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
 
 Release dates are not set in stone, as Nicotine+ development is done by volunteers in their spare time. However, keep the following points in mind:
 
- * Taking too long to release a new Nicotine+ version (e.g. years) will likely end up in Nicotine+ no longer working due to technological advancements, or being dropped from distributions. This already happened when Python 2 support ended.
+ * Taking too long to release a new Nicotine+ version (e.g. years) will likely end up in Nicotine+ no longer working due to technological advancements, or being dropped from distributions. This already happened when support for Python 2 ended in 2019.
 
- * We have no way of pushing out updates to all users at the same time. Packagers for various distributions have to package and test new Nicotine+ versions before they can be delivered to users. It would be preferable to avoid creating too many releases in a very short period of time.
+ * We have no way of delivering updates to all users at the same time. Packagers for various distributions need to package and test new Nicotine+ versions before users receive them. It would be preferable to avoid creating too many releases in a very short period of time.
 
- * Releasing large updates can make it harder to pinpoint eventual issues that have been introduced since the last release.
+ * Releasing large updates can make it harder to pinpoint eventual issues that have been introduced since the previous release.
 
 ## Creating a new Nicotine+ release
 
