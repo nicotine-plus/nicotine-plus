@@ -30,8 +30,6 @@ import string
 import sys
 import _thread
 
-from gettext import gettext as _
-
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.metadata.tinytag import TinyTag

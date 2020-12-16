@@ -30,7 +30,6 @@ import threading
 import time
 
 from errno import EINTR
-from gettext import gettext as _
 from itertools import islice
 from random import uniform
 

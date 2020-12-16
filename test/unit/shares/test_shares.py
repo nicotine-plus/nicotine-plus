@@ -17,15 +17,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import pytest
 import queue
 
 from time import sleep
 
 from pynicotine.shares import Shares
 from pynicotine.config import Config
+from pynicotine.utils import apply_translation
 
 DB_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
+
+
+@pytest.fixture(scope="module", autouse=True)
+def translation():
+    # Setting gettext and locale
+    apply_translation()
 
 
 def test_shares_scan():

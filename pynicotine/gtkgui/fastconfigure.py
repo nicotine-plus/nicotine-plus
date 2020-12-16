@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from gettext import gettext as _
+
 from os.path import getsize
 from os.path import join
 

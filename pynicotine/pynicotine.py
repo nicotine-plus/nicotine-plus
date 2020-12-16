@@ -35,8 +35,6 @@ import threading
 import time
 import _thread
 
-from gettext import gettext as _
-
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers

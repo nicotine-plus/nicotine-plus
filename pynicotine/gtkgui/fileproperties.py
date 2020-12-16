@@ -21,8 +21,6 @@
 
 import os
 
-from gettext import gettext as _
-
 from pynicotine.gtkgui.utils import load_ui_elements
 
 

@@ -23,7 +23,6 @@ import socket
 import struct
 import zlib
 
-from gettext import gettext as _
 from hashlib import md5
 from itertools import count
 from itertools import islice

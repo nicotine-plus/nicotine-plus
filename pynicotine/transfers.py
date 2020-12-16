@@ -36,7 +36,6 @@ import stat
 import threading
 import time
 
-from gettext import gettext as _
 from hashlib import md5
 from time import sleep
 

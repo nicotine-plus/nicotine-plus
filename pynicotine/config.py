@@ -35,7 +35,6 @@ import sys
 
 from ast import literal_eval
 from collections import defaultdict
-from gettext import gettext as _
 
 from pynicotine.logfacility import log
 from pynicotine.utils import RestrictedUnpickler

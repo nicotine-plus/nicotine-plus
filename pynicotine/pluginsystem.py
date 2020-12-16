@@ -25,7 +25,6 @@ import sys
 import _thread
 
 from ast import literal_eval
-from gettext import gettext as _
 from time import time
 
 from pynicotine import slskmessages

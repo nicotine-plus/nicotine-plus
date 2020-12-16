@@ -26,8 +26,6 @@ import re
 import sys
 import time
 
-from gettext import gettext as _
-
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
