@@ -11,8 +11,8 @@ Check out the [screenshots](files/screenshots/SCREENSHOTS.md) and [source code](
 # Download Nicotine+
 The current stable version of Nicotine+ is 2.2.2, released on December 15, 2020. See the [release notes](NEWS.md).
 
-## GNU/Linux
-If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution. This will save you time.
+## GNU/Linux, *BSD
+If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution/operating system. This will save you time.
 
 ### Ubuntu PPA/Debian (Stable)
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, run the following:
@@ -64,11 +64,20 @@ To install Nicotine+ on Guix, run the following:
 guix install nicotine+
 ```
 
-### Flathub (Stable)
-[Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
-
 ### Other Distributions
-Package maintainers, please insert instructions for users to install pre-compiled packages from your respective repositories here.
+If Nicotine+ isn't packaged for your distribution/operating system yet, there are other recommended ways of installing Nicotine+.
+
+#### pip (Stable)
+Nicotine+ can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [dependencies](https://github.com/Nicotine-Plus/nicotine-plus/blob/2.2.2/doc/DEPENDENCIES.md) are installed, and run the following:
+
+```sh
+pip3 install nicotine-plus
+```
+
+#### Flathub (Stable)
+If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
+
+[Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
 ## Windows
 

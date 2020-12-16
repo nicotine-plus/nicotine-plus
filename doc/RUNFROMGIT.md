@@ -9,7 +9,7 @@ This is great if you're the only Nicotine+ user on your system and you want to t
 git clone https://github.com/Nicotine-Plus/nicotine-plus.git
 cd nicotine-plus
 python3 -m venv .env
-.env/bin/pip install . -r requirements.txt
+.env/bin/pip install .
 .env/bin/nicotine
 ```
 
@@ -21,6 +21,6 @@ If you want to update to the latest version of Nicotine+, proceed like this:
 ```console
 cd nicotine-plus
 git pull
-.env/bin/pip install . -r requirements.txt
+.env/bin/pip install .
 .env/bin/nicotine
 ```

@@ -30,16 +30,16 @@ jobs:
       - name: Install build dependencies
         run: |
           export ARCH=${{ matrix.arch }}
-          files/windows/dependencies-core.sh
-          files/windows/dependencies-packaging.sh
+          packaging/windows/dependencies-core.sh
+          packaging/windows/dependencies-packaging.sh
 
       - name: Build installer
         run: |
           export ARCH=${{ matrix.arch }}
-          pyinstaller files/windows/nicotine.spec
-          makensis -DARCH=${{ matrix.arch }} files/windows/nicotine.nsi
+          pyinstaller packaging/windows/nicotine.spec
+          makensis -DARCH=${{ matrix.arch }} packaging/windows/nicotine.nsi
           mkdir installer
-          cp -r files/windows/Nicotine*.exe installer/
+          cp -r packaging/windows/Nicotine*.exe installer/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v1
@@ -63,17 +63,17 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          files/macos/dependencies-core.sh
-          files/macos/dependencies-packaging.sh
+          packaging/macos/dependencies-core.sh
+          packaging/macos/dependencies-packaging.sh
 
       - name: Freeze application
         run: |
-          pyinstaller files/macos/nicotine.spec
+          pyinstaller packaging/macos/nicotine.spec
           rm -rf dist/Nicotine+/
 
       - name: Generate .dmg
         run: |
-          files/macos/create-dmg.sh
+          packaging/macos/create-dmg.sh
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v1

@@ -79,8 +79,8 @@ Then, install dependencies:
 
 ```console
 export ARCH=x86_64
-files/windows/dependencies-core.sh
-files/windows/dependencies-packaging.sh
+packaging/windows/dependencies-core.sh
+packaging/windows/dependencies-packaging.sh
 ```
 
 Clone the Nicotine+ git repository:
@@ -94,7 +94,7 @@ cd nicotine-plus
 Run PyInstaller:
 
 ```console
-pyinstaller files/windows/nicotine.spec
+pyinstaller packaging/windows/nicotine.spec
 ```
 
 After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
@@ -106,11 +106,11 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 Run the following:
 
 ```console
-cd files/windows
+cd packaging/windows
 makensis -DARCH=x86_64 nicotine.nsi
 ```
 
-You should now find a `Nicotine+-$(version).exe` installer in the `files\windows` directory.
+You should now find a `Nicotine+-$(version).exe` installer in the `packaging/windows` directory.
 
 #### Building a 32-bit (i686) application and installer
 
