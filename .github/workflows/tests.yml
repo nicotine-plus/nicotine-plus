@@ -58,7 +58,7 @@ jobs:
       - name: Install dependencies
         run: |
           export ARCH=x86_64
-          files/windows/dependencies-core.sh
+          packaging/windows/dependencies-core.sh
 
       - name: Lint with flake8
         run: |
@@ -78,7 +78,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          files/macos/dependencies-core.sh
+          packaging/macos/dependencies-core.sh
 
       - name: Lint with flake8
         run: |

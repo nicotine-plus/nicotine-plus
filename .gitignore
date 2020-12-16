@@ -17,4 +17,4 @@ MANIFEST
 build/
 dist/
 debian/files
-nicotine.egg-info/
+nicotine_plus.egg-info/

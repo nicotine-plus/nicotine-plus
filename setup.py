@@ -154,5 +154,7 @@ functionality while keeping current with the Soulseek protocol."""
         packages=packages,
         package_data=package_data,
         scripts=["nicotine"],
-        data_files=data_files
+        data_files=data_files,
+        python_requires='>=3.5',
+        install_requires=['PyGObject>=3.18']
     )
