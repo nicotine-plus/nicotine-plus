@@ -1,3 +1,7 @@
+# This file is responsible for including all necessary files in the source distribution
+
+include requirements.txt
+
 recursive-include po *.in *.po *.pot
 recursive-include pynicotine *.bin *.md *.py *.ui PLUGININFO
 recursive-include test *
