@@ -106,7 +106,7 @@ class Downloads(TransferList):
 
     def download_large_folder(self, username, folder, numfiles, conn, file_list):
         option_dialog(
-            parent=self.MainWindow,
+            parent=self.frame.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
@@ -116,7 +116,7 @@ class Downloads(TransferList):
     def folder_download_response(self, dialog, response, data):
 
         if response == Gtk.ResponseType.OK:
-            self.np.transfers.folder_contents_response(data[0], data[1])
+            self.frame.np.transfers.folder_contents_response(data[0], data[1])
 
         dialog.destroy()
 
