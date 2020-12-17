@@ -4,18 +4,24 @@ This document contains important information about Nicotine+ design decisions an
 
 ## Sections
 
- * [Python Versions](#python-versions)
+ * [Language and Toolkit](#language-and-toolkit)
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
  * [Translations](#translations)
  * [Releases](#releases)
 
-# Python Versions
+# Language and Toolkit
 
-Nicotine+ aims to support Python 3 versions used by the oldest distributions still actively maintained. Once a Python version is no longer used and supported by any distribution, the minimum supported Python version should be changed in Nicotine+.
+## Python
 
-Currently, the minimum Python version Nicotine+ supports is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
+Nicotine+ is written in Python, and is originally based on backend code from the PySoulSeek project created in 2001. Ever since, Nicotine+ has remained a pure Python application. While one could argue that Python is a bad choice due to reason x and y, and that parts of the code could be rewritten in a more performant language, sticking with Python makes it easy to distribute and run Nicotine+ virtually anywhere. This allows us to devote more time towards actual development.
+
+We aim to support Python 3 versions used by the oldest distributions still actively maintained. Once a Python version is no longer used and supported by any distribution, the minimum supported Python version in Nicotine+ should be changed. Currently, the minimum version Nicotine+ supports is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
+
+## GTK
+
+Nicotine+ and its predecessors were originally developed with GNU/Linux in mind, at a time when the official Soulseek client only supported Windows. The Nicotine project (from which Nicotine+ was later forked) opted to use GTK as the GUI toolkit, as opposed to wxPython used by PySoulSeek. This decision was made due to various issues in wxPython at the time, such as large memory overhead and long compile/build times. We're happy with this choice today, and have no plans of switching to another toolkit.
 
 # Dependencies
 
