@@ -7,7 +7,10 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="margin">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="BuddiesLabel">
@@ -40,14 +43,16 @@
             <property name="can-focus">1</property>
             <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Add</property>
-            <property name="image">add</property>
-            <property name="always-show-image">1</property>
             <signal name="clicked" handler="on_add_user" swapped="no"/>
             <child>
-              <object class="GtkImage" id="add">
+              <object class="GtkImage">
+                <property name="visible">1</property>
                 <property name="icon-name">list-add-symbolic</property>
               </object>
             </child>
+            <style>
+                <class name="image-button"/>
+            </style>
           </object>
         </child>
         <child>
@@ -56,18 +61,18 @@
             <property name="can-focus">1</property>
             <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Configure banned users</property>
-            <property name="image">configure</property>
-            <property name="always-show-image">1</property>
             <property name="halign">end</property>
             <property name="hexpand">True</property>
             <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
             <child>
-              <object class="GtkImage" id="configure">
+              <object class="GtkImage">
+                <property name="visible">1</property>
                 <property name="icon-name">applications-system-symbolic</property>
               </object>
             </child>
             <style>
               <class name="circular"/>
+              <class name="image-button"/>
             </style>
           </object>
         </child>

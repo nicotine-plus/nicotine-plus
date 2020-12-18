@@ -17,9 +17,6 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="max-width-chars">75</property>
-                <property name="primary-icon-name">edit-find-symbolic</property>
-                <property name="primary-icon-activatable">0</property>
-                <property name="primary-icon-sensitive">0</property>
               </object>
             </child>
           </object>
@@ -51,7 +48,10 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="margin">8</property>
+        <property name="margin-start">8</property>
+        <property name="margin-end">8</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">8</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkEntry" id="ChatLine">
@@ -84,14 +84,16 @@
             <property name="can-focus">1</property>
             <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Private chat command help</property>
-            <property name="image">help</property>
-            <property name="always-show-image">1</property>
             <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
             <child>
-              <object class="GtkImage" id="help">
+              <object class="GtkImage">
+                <property name="visible">1</property>
                 <property name="icon-name">dialog-question-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>

@@ -87,7 +87,10 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="margin">10</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">10</property>
                     <property name="spacing">6</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -294,7 +297,10 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin">10</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
             <property name="spacing">6</property>
             <property name="orientation">vertical</property>
             <child>

@@ -69,7 +69,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
@@ -115,18 +118,18 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure logging</property>
-                                <property name="image">ConfigureLogImage</property>
-                                <property name="always-show-image">1</property>
                                 <property name="halign">end</property>
                                 <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_settings_logging" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureLogImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -158,7 +161,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkBox">
@@ -258,13 +264,15 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-                                <property name="image">ExpandDownloadsImage</property>
-                                <property name="always-show-image">1</property>
                                 <child>
                                   <object class="GtkImage" id="ExpandDownloadsImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">list-remove-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="image-button"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -278,16 +286,16 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure downloads</property>
-                                <property name="image">ConfigureTransfersImage</property>
-                                <property name="always-show-image">1</property>
                                 <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureTransfersImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -312,7 +320,10 @@
                         <child>
                           <object class="GtkBox" id="DownloadButtons">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkBox">
@@ -467,7 +478,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkBox">
@@ -563,13 +577,15 @@
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                 <property name="active">1</property>
-                                <property name="image">ExpandUploadsImage</property>
-                                <property name="always-show-image">1</property>
                                 <child>
                                   <object class="GtkImage" id="ExpandUploadsImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">list-remove-symbolic</property>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="image-button"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -583,16 +599,16 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure uploads</property>
-                                <property name="image">ConfigureTransfers2Image</property>
-                                <property name="always-show-image">1</property>
                                 <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureTransfers2Image">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -617,7 +633,10 @@
                         <child>
                           <object class="GtkBox" id="UploadButtons">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkBox">
@@ -772,7 +791,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkComboBox" id="SearchMethod">
@@ -805,11 +827,10 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Clear all searches attempts</property>
-                                <property name="image">ClearSearchHistoryImage</property>
-                                <property name="always-show-image">1</property>
                                 <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ClearSearchHistoryImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">edit-clear-symbolic</property>
                                   </object>
                                 </child>
@@ -871,16 +892,16 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure searches</property>
-                                <property name="image">ConfigureSearchesImage</property>
-                                <property name="always-show-image">1</property>
                                 <signal name="clicked" handler="on_settings_searches" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureSearchesImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -912,7 +933,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
@@ -958,18 +982,18 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure user info</property>
-                                <property name="image">ConfigureUserinfoImage</property>
-                                <property name="always-show-image">1</property>
                                 <property name="halign">end</property>
                                 <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureUserinfoImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -1001,7 +1025,10 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="margin">6</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkLabel">
@@ -1073,18 +1100,18 @@
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Configure shares</property>
-                                <property name="image">ConfigureSharesImage</property>
-                                <property name="always-show-image">1</property>
                                 <property name="halign">end</property>
                                 <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_configure_shares" swapped="no"/>
                                 <child>
-                                  <object class="GtkImage" id="ConfigureSharesImage">
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
                                     <property name="icon-name">applications-system-symbolic</property>
                                   </object>
                                 </child>
                                 <style>
                                   <class name="circular"/>
+                                  <class name="image-button"/>
                                 </style>
                               </object>
                             </child>
@@ -1152,7 +1179,10 @@
                 <child>
                   <object class="GtkBox" id="debugButtonsBox">
                     <property name="visible">1</property>
-                    <property name="margin">5</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkLabel" id="debugLabel">

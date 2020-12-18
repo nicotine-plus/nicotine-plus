@@ -7,7 +7,10 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="margin">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel" id="ChatroomsLabel">
@@ -32,16 +35,16 @@
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Refresh room list</property>
-            <property name="image">refresh</property>
-            <property name="always-show-image">1</property>
             <signal name="clicked" handler="on_refresh" swapped="no"/>
             <child>
-              <object class="GtkImage" id="refresh">
+              <object class="GtkImage">
+                <property name="visible">1</property>
                 <property name="icon-name">view-refresh-symbolic</property>
               </object>
             </child>
             <style>
               <class name="circular"/>
+              <class name="image-button"/>
             </style>
           </object>
         </child>
@@ -63,7 +66,10 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="margin">8</property>
+        <property name="margin-start">8</property>
+        <property name="margin-end">8</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">8</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkCheckButton" id="AcceptPrivateRoom">

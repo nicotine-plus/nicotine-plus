@@ -8,7 +8,10 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="spacing">6</property>
-        <property name="margin">7</property>
+        <property name="margin-start">7</property>
+        <property name="margin-end">7</property>
+        <property name="margin-top">7</property>
+        <property name="margin-bottom">7</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
@@ -75,13 +78,15 @@
             <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
             <property name="active">1</property>
-            <property name="image">expand</property>
-            <property name="always-show-image">1</property>
             <child>
               <object class="GtkImage" id="expand">
+                <property name="visible">1</property>
                 <property name="icon-name">list-remove-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
         <child>
@@ -287,16 +292,16 @@
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
                     <property name="tooltip-text" translatable="yes">Search filter help</property>
-                    <property name="image">help</property>
-                    <property name="always-show-image">1</property>
                     <signal name="clicked" handler="on_about_filters" swapped="no"/>
                     <child>
-                      <object class="GtkImage" id="help">
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
                         <property name="icon-name">dialog-question-symbolic</property>
                       </object>
                     </child>
                     <style>
                       <class name="circular"/>
+                      <class name="image-button"/>
                     </style>
                   </object>
                 </child>

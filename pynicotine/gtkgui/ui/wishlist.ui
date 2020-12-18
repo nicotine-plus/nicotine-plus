@@ -15,8 +15,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="xpad">13</property>
-            <property name="ypad">10</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">13</property>
+            <property name="margin-bottom">13</property>
             <property name="label" translatable="yes">The search wishlist can be useful when you are looking for rare content. Search terms in the wishlist are automatically requested at regular intervals.</property>
             <property name="justify">fill</property>
             <property name="wrap">1</property>
@@ -40,7 +42,10 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin">10</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkBox">

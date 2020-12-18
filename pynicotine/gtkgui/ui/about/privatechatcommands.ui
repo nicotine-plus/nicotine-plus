@@ -18,7 +18,10 @@
             <child>
               <object class="GtkGrid">
                 <property name="visible">1</property>
-                <property name="margin">10</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
                 <property name="row-spacing">10</property>
                 <property name="column-homogeneous">1</property>
                 <property name="column-spacing">5</property>

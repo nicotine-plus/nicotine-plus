@@ -109,7 +109,10 @@
                 <child>
                   <object class="GtkBox" id="ChatEntryBox">
                     <property name="visible">1</property>
-                    <property name="margin">8</property>
+                    <property name="margin-start">8</property>
+                    <property name="margin-end">8</property>
+                    <property name="margin-top">8</property>
+                    <property name="margin-bottom">8</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="ChatEntry">
@@ -136,14 +139,16 @@
                         <property name="can-focus">1</property>
                         <property name="receives-default">1</property>
                         <property name="tooltip-text" translatable="yes">Toggle Text-To-Speech</property>
-                        <property name="image">speech</property>
-                        <property name="always-show-image">1</property>
                         <property name="active">1</property>
                         <child>
-                          <object class="GtkImage" id="speech">
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
                             <property name="icon-name">multimedia-volume-control-symbolic</property>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -152,14 +157,16 @@
                         <property name="can-focus">1</property>
                         <property name="receives-default">1</property>
                         <property name="tooltip-text" translatable="yes">Room wall</property>
-                        <property name="image">list</property>
-                        <property name="always-show-image">1</property>
                         <signal name="clicked" handler="on_show_room_wall" swapped="no"/>
                         <child>
-                          <object class="GtkImage" id="list">
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
                             <property name="icon-name">view-list-symbolic</property>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -168,14 +175,16 @@
                         <property name="can-focus">1</property>
                         <property name="receives-default">1</property>
                         <property name="tooltip-text" translatable="yes">Chat room command help</property>
-                        <property name="image">help</property>
-                        <property name="always-show-image">1</property>
                         <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
                         <child>
-                          <object class="GtkImage" id="help">
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
                             <property name="icon-name">dialog-question-symbolic</property>
                           </object>
                         </child>
+                        <style>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -197,7 +206,10 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="margin">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
                 <property name="spacing">10</property>
                 <child>
                   <object class="GtkBox">
@@ -246,7 +258,7 @@
                     <property name="can-focus">1</property>
                     <property name="use-underline">1</property>
                     <property name="halign">end</property>
-                    <property name="hexpand">True</property>
+                    <property name="hexpand">1</property>
                     <signal name="toggled" handler="on_autojoin" swapped="no"/>
                   </object>
                 </child>
