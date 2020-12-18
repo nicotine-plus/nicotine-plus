@@ -18,24 +18,21 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="spacing">3</property>
-                <property name="border_width">2</property>
+                <property name="spacing">6</property>
+                <property name="border_width">6</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="spacing">6</property>
+                    <property name="margin_start">10</property>
+                    <property name="margin_end">5</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Folders</property>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton">
@@ -56,13 +53,9 @@
                                 <property name="can-focus">False</property>
                                 <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
+                                <property name="margin_start">5</property>
+                                <property name="margin_end">5</property>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">5</property>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -70,36 +63,22 @@
                           <class name="circular"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="padding">10</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="spacing">6</property>
+                    <property name="margin_start">5</property>
+                    <property name="margin_end">5</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Shared</property>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton">
@@ -120,13 +99,9 @@
                                 <property name="can-focus">False</property>
                                 <property name="label">&lt;b&gt;0 B&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
+                                <property name="margin_start">5</property>
+                                <property name="margin_end">5</property>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">5</property>
-                                <property name="position">0</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -134,26 +109,10 @@
                           <class name="circular"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-                <property name="padding">5</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -167,14 +126,10 @@
                   <object class="GtkSearchEntry" id="SearchEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="tooltip_text" translatable="yes">Search files and folders (exact match)</property>
                     <signal name="activate" handler="on_search" swapped="no"/>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="RefreshButton">
@@ -192,11 +147,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkToggleButton" id="ExpandButton">
@@ -214,26 +164,15 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="width_request">350</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkTreeView" id="FolderTreeView">
                     <property name="visible">True</property>
@@ -243,11 +182,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkProgressBar" id="progressbar1">
@@ -257,13 +191,9 @@
                 <property name="pulse_step">0.10000000149</property>
                 <property name="margin_start">5</property>
                 <property name="margin_end">5</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="padding">5</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
           <packing>
@@ -292,11 +222,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
               </object>
             </child>
@@ -304,8 +229,7 @@
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkTreeView" id="FileTreeView">
                     <property name="visible">True</property>
@@ -314,11 +238,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
           <packing>
@@ -327,11 +246,6 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

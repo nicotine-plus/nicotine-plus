@@ -2,123 +2,91 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="RoomWallDialog">
-    <property name="can_focus">False</property>
     <property name="title" translatable="yes">Room Wall</property>
-    <property name="modal">True</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="default_width">900</property>
-    <property name="default_height">600</property>
+    <property name="modal">1</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="default-width">900</property>
+    <property name="default-height">600</property>
     <child internal-child="vbox">
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="halign">start</property>
             <property name="xpad">13</property>
             <property name="ypad">10</property>
             <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others.</property>
             <property name="justify">fill</property>
-            <property name="wrap">True</property>
+            <property name="wrap">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkScrolledWindow" id="RoomWallListWindow">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">10</property>
-            <property name="shadow_type">in</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="vexpand">1</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTextView" id="RoomWallList">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="editable">False</property>
-                <property name="wrap_mode">word-char</property>
-                <property name="cursor_visible">False</property>
-                <property name="pixels_above_lines">4</property>
-                <property name="pixels_below_lines">4</property>
-                <property name="left_margin">10</property>
-                <property name="right_margin">10</property>
-                <property name="top_margin">5</property>
-                <property name="bottom_margin">5</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="editable">0</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="cursor-visible">0</property>
+                <property name="pixels-above-lines">4</property>
+                <property name="pixels-below-lines">4</property>
+                <property name="left-margin">10</property>
+                <property name="right-margin">10</property>
+                <property name="top-margin">5</property>
+                <property name="bottom-margin">5</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">10</property>
+            <property name="visible">1</property>
+            <property name="border-width">10</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkEntry" id="RoomWallEntry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
                 <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_set_room_wall_message" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">list-add-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-add-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Set Message</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-          </packing>
         </child>
       </object>
     </child>
