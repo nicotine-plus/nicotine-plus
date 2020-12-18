@@ -53,9 +53,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="ChatTabLabel">
+                      <object class="GtkBox" id="ChatTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -145,9 +144,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="PrivateChatTabLabel">
+                      <object class="GtkBox" id="PrivateChatTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -462,9 +460,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="DownloadsTabLabel">
+                      <object class="GtkBox" id="DownloadsTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -775,9 +772,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="UploadsTabLabel">
+                      <object class="GtkBox" id="UploadsTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -917,9 +913,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="SearchTabLabel">
+                      <object class="GtkBox" id="SearchTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -1009,9 +1004,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="UserInfoTabLabel">
+                      <object class="GtkBox" id="UserInfoTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -1127,9 +1121,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="UserBrowseTabLabel">
+                      <object class="GtkBox" id="UserBrowseTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>
@@ -1144,9 +1137,8 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkEventBox" id="InterestsTabLabel">
+                      <object class="GtkBox" id="InterestsTabLabel">
                         <property name="visible">1</property>
-                        <property name="visible-window">0</property>
                       </object>
                       <packing>
                         <property name="tab-fill">0</property>

@@ -595,11 +595,11 @@ class BuddiesComboBox:
             del self.items[item]
 
 
-class ImageLabel(Gtk.Box):
+class ImageLabel(Gtk.EventBox):
 
     def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
-        Gtk.Box.__init__(self)
+        Gtk.EventBox.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -630,8 +630,6 @@ class ImageLabel(Gtk.Box):
         self._order_children()
 
     def _pack_children(self):
-        self.set_spacing(0)
-
         if "box" in self.__dict__:
             for widget in self.box.get_children():
                 self.box.remove(widget)
@@ -827,7 +825,7 @@ class IconNotebook:
         self.angle = angle
 
     def get_labels(self, page):
-        tab_label = self.notebook.get_tab_label(page).get_child()
+        tab_label = self.notebook.get_tab_label(page)
         menu_label = self.notebook.get_menu_label(page)
 
         return tab_label, menu_label
@@ -836,14 +834,16 @@ class IconNotebook:
 
         self.reorderable = reorderable
 
-        for page in self.notebook.get_children():
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             self.notebook.set_tab_reorderable(page, self.reorderable)
 
     def set_tab_closers(self, closers):
 
         self.tabclosers = closers
 
-        for page in self.notebook.get_children():
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             tab_label, menu_label = self.get_labels(page)
 
             tab_label.set_onclose(self.tabclosers)
@@ -852,7 +852,8 @@ class IconNotebook:
 
         self._show_hilite_image = show_image
 
-        for page in self.notebook.get_children():
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             tab_label, menu_label = self.get_labels(page)
 
             tab_label.show_hilite_image(self._show_hilite_image)
@@ -868,7 +869,8 @@ class IconNotebook:
 
         self.angle = angle
 
-        for page in self.notebook.get_children():
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             tab_label, menu_label = self.get_labels(page)
 
             tab_label.set_angle(angle)
@@ -895,18 +897,10 @@ class IconNotebook:
 
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
-
-        eventbox = Gtk.EventBox()
-        eventbox.set_visible_window(False)
-
+        label_tab.connect('button_press_event', self.on_tab_click, page)
         label_tab.show()
 
-        eventbox.add(label_tab)
-        eventbox.show()
-        eventbox.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
-        eventbox.connect('button_press_event', self.on_tab_click, page)
-
-        Gtk.Notebook.append_page_menu(self.notebook, page, eventbox, label_tab_menu)
+        Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
         self.notebook.set_tab_reorderable(page, self.reorderable)
         self.notebook.set_show_tabs(True)
@@ -954,7 +948,8 @@ class IconNotebook:
 
     def set_text_colors(self, status):
 
-        for page in self.notebook.get_children():
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             self.set_text_color(page, status)
 
     def set_text_color(self, page, status):
