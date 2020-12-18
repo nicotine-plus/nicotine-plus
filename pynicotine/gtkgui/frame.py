@@ -667,6 +667,9 @@ class NicotineFrame:
 
     def on_network_event(self, msgs):
 
+        if self.shutdown:
+            return
+
         for i in msgs:
             if i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
@@ -675,7 +678,7 @@ class NicotineFrame:
 
     def network_callback(self, msgs):
 
-        if not self.shutdown and len(msgs) > 0:
+        if len(msgs) > 0:
             GLib.idle_add(self.on_network_event, msgs)
 
     def conn_close(self, conn, addr):
