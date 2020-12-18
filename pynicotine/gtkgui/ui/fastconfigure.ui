@@ -302,7 +302,6 @@ Please keep in mind that more common usernames may be taken. If you&apos;re unab
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="halign">center</property>
-                <property name="draw-indicator">1</property>
               </object>
             </child>
           </object>
