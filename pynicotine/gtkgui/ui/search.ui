@@ -8,7 +8,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="spacing">6</property>
-        <property name="border-width">7</property>
+        <property name="margin">7</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>

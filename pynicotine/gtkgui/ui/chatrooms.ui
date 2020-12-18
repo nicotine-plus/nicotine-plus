@@ -109,7 +109,7 @@
                 <child>
                   <object class="GtkBox" id="ChatEntryBox">
                     <property name="visible">1</property>
-                    <property name="border-width">8</property>
+                    <property name="margin">8</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="ChatEntry">
@@ -198,7 +198,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="border-width">6</property>
+                <property name="margin">6</property>
                 <property name="spacing">10</property>
                 <child>
                   <object class="GtkBox">

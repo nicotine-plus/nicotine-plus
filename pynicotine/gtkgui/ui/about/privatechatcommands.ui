@@ -17,8 +17,8 @@
             <property name="vexpand">1</property>
             <child>
               <object class="GtkGrid">
-                <property name="border-width">10</property>
                 <property name="visible">1</property>
+                <property name="margin">10</property>
                 <property name="row-spacing">10</property>
                 <property name="column-homogeneous">1</property>
                 <property name="column-spacing">5</property>

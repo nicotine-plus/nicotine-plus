@@ -50,7 +50,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="border-width">10</property>
+            <property name="margin">10</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkEntry" id="RoomWallEntry">

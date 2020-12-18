@@ -8,9 +8,9 @@
     <property name="window-position">center-on-parent</property>
     <child internal-child="vbox">
       <object class="GtkBox">
-        <property name="border-width">18</property>
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
+        <property name="margin">18</property>
         <child>
           <object class="GtkGrid">
             <property name="visible">1</property>
