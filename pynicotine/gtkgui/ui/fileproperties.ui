@@ -369,6 +369,8 @@
             <child>
               <object class="GtkBox" id="navigation_buttons">
                 <property name="visible">1</property>
+                <property name="halign">end</property>
+                <property name="hexpand">True</property>
                 <child>
                   <object class="GtkButton" id="previous">
                     <property name="visible">1</property>
@@ -403,9 +405,6 @@
                   <class name="linked"/>
                 </style>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
           </object>
         </child>

@@ -117,6 +117,8 @@
                                 <property name="tooltip-text" translatable="yes">Configure logging</property>
                                 <property name="image">ConfigureLogImage</property>
                                 <property name="always-show-image">1</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_settings_logging" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureLogImage">
@@ -127,9 +129,6 @@
                                   <class name="circular"/>
                                 </style>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -317,7 +316,64 @@
                             <property name="border-width">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="clearFinishedAbortedButton">
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkButton" id="clearFinishedAbortedButton">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">1</property>
+                                        <property name="spacing">5</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">1</property>
+                                            <property name="icon-name">edit-clear-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Clear Finished / Aborted</property>
+                                            <property name="use-underline">1</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="clearQueuedButton">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">1</property>
+                                        <property name="spacing">5</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">1</property>
+                                            <property name="icon-name">edit-clear-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Clear Queued</property>
+                                            <property name="use-underline">1</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="retryTransferButton">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <child>
@@ -327,13 +383,13 @@
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">edit-clear-symbolic</property>
+                                        <property name="icon-name">edit-redo-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Clear Finished / Aborted</property>
+                                        <property name="label" translatable="yes">Retry</property>
                                         <property name="use-underline">1</property>
                                       </object>
                                     </child>
@@ -342,7 +398,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton" id="clearQueuedButton">
+                              <object class="GtkButton" id="abortTransferButton">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <child>
@@ -352,13 +408,13 @@
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">edit-clear-symbolic</property>
+                                        <property name="icon-name">system-shutdown-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Clear Queued</property>
+                                        <property name="label" translatable="yes">Abort</property>
                                         <property name="use-underline">1</property>
                                       </object>
                                     </child>
@@ -390,65 +446,6 @@
                                   </object>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="abortTransferButton">
-                                <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">1</property>
-                                        <property name="icon-name">system-shutdown-symbolic</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Abort</property>
-                                        <property name="use-underline">1</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="retryTransferButton">
-                                <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">1</property>
-                                        <property name="icon-name">edit-redo-symbolic</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Retry</property>
-                                        <property name="use-underline">1</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -625,24 +622,56 @@
                             <property name="border-width">6</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkButton" id="clearUploadFinishedErredButton">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="spacing">6</property>
                                 <child>
-                                  <object class="GtkBox">
+                                  <object class="GtkButton" id="clearUploadFinishedErredButton">
                                     <property name="visible">1</property>
-                                    <property name="spacing">6</property>
+                                    <property name="can-focus">1</property>
                                     <child>
-                                      <object class="GtkImage">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">edit-clear-symbolic</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">1</property>
+                                            <property name="icon-name">edit-clear-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Clear Finished / Failed</property>
+                                            <property name="use-underline">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="clearUploadQueueButton">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Clear Finished / Failed</property>
-                                        <property name="use-underline">1</property>
+                                        <property name="spacing">5</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">1</property>
+                                            <property name="icon-name">edit-clear-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Clear Queued</property>
+                                            <property name="use-underline">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -650,7 +679,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton" id="clearUploadQueueButton">
+                              <object class="GtkButton" id="abortUploadButton">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <child>
@@ -660,13 +689,38 @@
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">edit-clear-symbolic</property>
+                                        <property name="icon-name">system-shutdown-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Clear Queued</property>
+                                        <property name="label" translatable="yes">Abort</property>
+                                        <property name="use-underline">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="abortUserUploadButton">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">1</property>
+                                        <property name="icon-name">system-shutdown-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Abort User&apos;s Uploads</property>
                                         <property name="use-underline">1</property>
                                       </object>
                                     </child>
@@ -698,65 +752,6 @@
                                   </object>
                                 </child>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="abortUserUploadButton">
-                                <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">1</property>
-                                        <property name="icon-name">system-shutdown-symbolic</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Abort User&apos;s Uploads</property>
-                                        <property name="use-underline">1</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="abortUploadButton">
-                                <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">1</property>
-                                        <property name="icon-name">system-shutdown-symbolic</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Abort</property>
-                                        <property name="use-underline">1</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -890,9 +885,6 @@
                                   <class name="circular"/>
                                 </style>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -970,6 +962,8 @@
                                 <property name="tooltip-text" translatable="yes">Configure user info</property>
                                 <property name="image">ConfigureUserinfoImage</property>
                                 <property name="always-show-image">1</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureUserinfoImage">
@@ -980,9 +974,6 @@
                                   <class name="circular"/>
                                 </style>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -1086,6 +1077,8 @@
                                 <property name="tooltip-text" translatable="yes">Configure shares</property>
                                 <property name="image">ConfigureSharesImage</property>
                                 <property name="always-show-image">1</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
                                 <signal name="clicked" handler="on_configure_shares" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="ConfigureSharesImage">
@@ -1096,9 +1089,6 @@
                                   <class name="circular"/>
                                 </style>
                               </object>
-                              <packing>
-                                <property name="pack-type">end</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
@@ -1286,59 +1276,12 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <child>
-              <object class="GtkStatusbar" id="UpStatus">
-                <property name="width-request">200</property>
+              <object class="GtkStatusbar" id="Statusbar">
                 <property name="visible">1</property>
+                <property name="hexpand">1</property>
                 <property name="margin-top">3</property>
                 <property name="margin-bottom">3</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStatusbar" id="DownStatus">
-                <property name="width-request">200</property>
-                <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
-              </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStatusbar" id="SocketStatus">
-                <property name="width-request">150</property>
-                <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
-              </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStatusbar" id="UserStatus">
-                <property name="width-request">80</property>
-                <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
-              </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkProgressBar" id="BuddySharesProgress">
-                <property name="valign">center</property>
-                <property name="pulse-step">0.10000000149</property>
-                <property name="text" translatable="yes">Scanning Buddy Shares</property>
-                <property name="show-text">1</property>
-              </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
             <child>
               <object class="GtkProgressBar" id="SharesProgress">
@@ -1347,19 +1290,46 @@
                 <property name="text" translatable="yes">Scanning Shares</property>
                 <property name="show-text">1</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkStatusbar" id="Statusbar">
+              <object class="GtkProgressBar" id="BuddySharesProgress">
+                <property name="valign">center</property>
+                <property name="pulse-step">0.10000000149</property>
+                <property name="text" translatable="yes">Scanning Buddy Shares</property>
+                <property name="show-text">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="UserStatus">
+                <property name="width-request">80</property>
                 <property name="visible">1</property>
                 <property name="margin-top">3</property>
                 <property name="margin-bottom">3</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="SocketStatus">
+                <property name="width-request">150</property>
+                <property name="visible">1</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="DownStatus">
+                <property name="width-request">200</property>
+                <property name="visible">1</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="UpStatus">
+                <property name="width-request">200</property>
+                <property name="visible">1</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+              </object>
             </child>
           </object>
         </child>

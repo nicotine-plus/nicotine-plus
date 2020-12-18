@@ -161,9 +161,36 @@
                           <object class="GtkLabel">
                             <property name="visible">1</property>
                             <property name="halign">start</property>
+                            <property name="hexpand">1</property>
                             <property name="margin-start">5</property>
                             <property name="label" translatable="yes">&lt;b&gt;Recommendations&lt;/b&gt;</property>
                             <property name="use-markup">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="GlobalRecommendationsButton">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="clicked" handler="on_global_recommendations_clicked" swapped="no"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">view-refresh-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Global</property>
+                                    <property name="use-underline">1</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child>
@@ -191,38 +218,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="pack-type">end</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="GlobalRecommendationsButton">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <signal name="clicked" handler="on_global_recommendations_clicked" swapped="no"/>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">1</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">view-refresh-symbolic</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">1</property>
-                                    <property name="label" translatable="yes">Global</property>
-                                    <property name="use-underline">1</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="pack-type">end</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -298,6 +293,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="halign">start</property>
+                        <property name="hexpand">1</property>
                         <property name="margin-start">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Similar Users&lt;/b&gt;</property>
                         <property name="use-markup">1</property>
@@ -328,9 +324,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="pack-type">end</property>
-                      </packing>
                     </child>
                   </object>
                 </child>

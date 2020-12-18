@@ -247,11 +247,10 @@
                     <property name="can-focus">1</property>
                     <property name="use-underline">1</property>
                     <property name="draw-indicator">1</property>
+                    <property name="halign">end</property>
+                    <property name="hexpand">True</property>
                     <signal name="toggled" handler="on_autojoin" swapped="no"/>
                   </object>
-                  <packing>
-                    <property name="pack-type">end</property>
-                  </packing>
                 </child>
               </object>
             </child>

@@ -43,18 +43,51 @@
             <property name="border-width">10</property>
             <property name="spacing">10</property>
             <child>
-              <object class="GtkEntry" id="AddWishEntry">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="activate" handler="on_add_wish" swapped="no"/>
+                <property name="hexpand">1</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkEntry" id="AddWishEntry">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="activate" handler="on_add_wish" swapped="no"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="margin-end">30</property>
+                    <signal name="clicked" handler="on_add_wish" swapped="no"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">list-add-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Add...</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="margin-end">30</property>
-                <signal name="clicked" handler="on_add_wish" swapped="no"/>
+                <signal name="clicked" handler="on_select_all_wishes" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
@@ -62,13 +95,13 @@
                     <child>
                       <object class="GtkImage">
                         <property name="visible">1</property>
-                        <property name="icon-name">list-add-symbolic</property>
+                        <property name="icon-name">object-select-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add...</property>
+                        <property name="label" translatable="yes">Select All</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -101,38 +134,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_select_all_wishes" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">object-select-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Select All</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
           </object>
         </child>

@@ -58,6 +58,8 @@
             <property name="tooltip-text" translatable="yes">Configure banned users</property>
             <property name="image">configure</property>
             <property name="always-show-image">1</property>
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
             <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
             <child>
               <object class="GtkImage" id="configure">
@@ -68,9 +70,6 @@
               <class name="circular"/>
             </style>
           </object>
-          <packing>
-            <property name="pack-type">end</property>
-          </packing>
         </child>
       </object>
     </child>
