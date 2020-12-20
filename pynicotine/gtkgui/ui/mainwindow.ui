@@ -134,7 +134,7 @@
               <object class="GtkButton" id="ClearSearchHistory">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Clear all searches attempts</property>
+                <property name="tooltip-text" translatable="yes">Clear all previous searches</property>
                 <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
                 <child>
                   <object class="GtkImage">
@@ -330,6 +330,7 @@
             <child>
               <object class="GtkToggleButton" id="ToggleAutoclearDownloads">
                 <property name="label" translatable="yes">Autoclear Finished</property>
+                <property name="tooltip-text" translatable="yes">Finished and filtered downloads will be cleared from the list</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
               </object>
@@ -488,6 +489,7 @@
             <child>
               <object class="GtkToggleButton" id="ToggleAutoclearUploads">
                 <property name="label" translatable="yes">Autoclear Finished</property>
+                <property name="tooltip-text" translatable="yes">Finished and cancelled uploads will be cleared from the list</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
               </object>

@@ -144,8 +144,8 @@ class NicotineFrame:
         builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "mainmenu.ui"))
         menu = builder.get_object("mainmenu")
 
-        for i in (self.MenuPopover, self.MenuPopoverSearch, self.MenuPopoverDownloads, self.MenuPopoverUploads, self.MenuPopoverPrivateChat,
-                self.MenuPopoverUserInfo, self.MenuPopoverUserBrowse, self.MenuPopoverUserList):
+        for i in (self.MenuPopover, self.MenuPopoverSearch, self.MenuPopoverDownloads, self.MenuPopoverUploads,
+                  self.MenuPopoverPrivateChat, self.MenuPopoverUserInfo, self.MenuPopoverUserBrowse, self.MenuPopoverUserList):
             i.bind_model(menu)
 
         """ Icons """
