@@ -363,8 +363,8 @@ class Interests:
 
         if event.button != 3:
             if event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.privatechats.send_message(user)
-                self.change_main_page("private")
+                self.frame.privatechats.send_message(user)
+                self.frame.change_main_page("private")
             return
 
         self.ru_popup_menu.set_user(user)

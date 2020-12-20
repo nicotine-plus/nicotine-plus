@@ -891,9 +891,11 @@ class Recommendations(ServerMessage):
         self.unpack_recommendations(message)
 
     def unpack_recommendations(self, message, pos=0):
+        self.recommendations = {}
+        self.unrecommendations = {}
+
         pos, num = self.get_object(message, int, pos)
 
-        self.recommendations = {}
         for i in range(num):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
@@ -907,7 +909,6 @@ class Recommendations(ServerMessage):
 
         pos, num2 = self.get_object(message, int, pos)
 
-        self.unrecommendations = {}
         for i in range(num2):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
