@@ -58,31 +58,6 @@
       <object class="GtkHeaderBar" id="HeaderSearch">
         <property name="visible">1</property>
         <property name="show-close-button">1</property>
-        <child>
-          <object class="GtkButton" id="WishList">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">text-editor-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Wishlist</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
         <child type="title">
           <object class="GtkBox">
             <property name="visible">1</property>
@@ -131,20 +106,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="ClearSearchHistory">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Clear all previous searches</property>
-                <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">edit-clear-symbolic</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="SearchButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
@@ -176,6 +137,31 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
+            <child>
+              <object class="GtkButton" id="WishList">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">text-editor-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Wishlist</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
             <child>
               <object class="GtkButton" id="configureSearches">
                 <property name="visible">1</property>

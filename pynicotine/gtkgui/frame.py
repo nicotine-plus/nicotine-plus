@@ -1853,9 +1853,6 @@ class NicotineFrame:
     def on_search(self, widget):
         self.searches.on_search()
 
-    def on_clear_search_history(self, widget):
-        self.searches.on_clear_search_history()
-
     """ User Info """
 
     def on_settings_userinfo(self, widget):
