@@ -204,13 +204,13 @@ class NicotineFrame:
 
         # Translation for the labels of tabs
         translated_tablabels = {
-            self.SearchTabLabel: _("Search files"),
+            self.SearchTabLabel: _("Search Files"),
             self.DownloadsTabLabel: _("Downloads"),
             self.UploadsTabLabel: _("Uploads"),
-            self.UserBrowseTabLabel: _("User browse"),
-            self.UserInfoTabLabel: _("User info"),
-            self.PrivateChatTabLabel: _("Private chat"),
-            self.ChatTabLabel: _("Chat rooms"),
+            self.UserBrowseTabLabel: _("User Browse"),
+            self.UserInfoTabLabel: _("User Info"),
+            self.PrivateChatTabLabel: _("Private Chat"),
+            self.ChatTabLabel: _("Chat Rooms"),
             self.InterestsTabLabel: _("Interests")
         }
 
