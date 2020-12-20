@@ -1320,13 +1320,12 @@
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox" id="debugButtonsBox">
+                  <object class="GtkFlowBox" id="debugButtonsBox">
                     <property name="visible">1</property>
-                    <property name="margin-start">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="spacing">5</property>
+                    <property name="margin-top">3</property>
+                    <property name="margin-bottom">3</property>
+                    <property name="column-spacing">5</property>
+                    <property name="selection-mode">none</property>
                     <child>
                       <object class="GtkLabel" id="debugLabel">
                         <property name="visible">1</property>

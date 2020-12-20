@@ -1132,8 +1132,7 @@ class NicotineFrame:
                 self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
 
             if self.userlist.userlistvbox in self.MainNotebook.get_children():
-                self.MainNotebook.child_set_property(self.userlist.userlistvbox, "tab-expand", True)
-                self.MainNotebook.child_set_property(self.userlist.userlistvbox, "tab-fill", False)
+                self.set_tab_expand(self.userlist.userlistvbox)
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
 
             self.userlist.BuddiesToolbar.hide()
@@ -1465,7 +1464,7 @@ class NicotineFrame:
 
         self.np.config.sections["ui"]["modes_order"] = tab_names
 
-        if main_notebook.get_n_pages() == 0:
+        if main_notebook.get_n_pages() <= 1:
             main_notebook.set_show_tabs(False)
         else:
             main_notebook.set_show_tabs(True)
@@ -1530,7 +1529,7 @@ class NicotineFrame:
                 num = self.MainNotebook.page_num(tab_box)
                 self.MainNotebook.remove_page(num)
 
-        if self.MainNotebook.get_n_pages() == 0:
+        if self.MainNotebook.get_n_pages() <= 1:
             self.MainNotebook.set_show_tabs(False)
 
     def set_last_session_tab(self):
@@ -1552,7 +1551,9 @@ class NicotineFrame:
         self.MainNotebook.set_current_page(0)
 
         page = self.MainNotebook.get_nth_page(0)
-        self.current_tab_label = self.MainNotebook.get_tab_label(page)
+
+        if page is not None:
+            self.current_tab_label = self.MainNotebook.get_tab_label(page)
 
     def hide_tab(self, widget, lista):
 
@@ -1580,6 +1581,7 @@ class NicotineFrame:
         event_box = self.hidden_tabs[tab_box]
 
         self.MainNotebook.append_page(tab_box, event_box)
+        self.set_tab_expand(tab_box)
         self.MainNotebook.set_tab_reorderable(tab_box, self.np.config.sections["ui"]["tab_reorderable"])
 
         del self.hidden_tabs[tab_box]
@@ -1588,6 +1590,19 @@ class NicotineFrame:
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[popup_id].popup(None, None, None, None, event.button, event.time)
+
+    def set_tab_expand(self, tab_box):
+
+        tab_position = self.np.config.sections["ui"]["tabmain"]
+
+        if tab_position in ("Left", "left", _("Left")) or \
+                tab_position in ("Right", "right", _("Right")):
+            expand = False
+        else:
+            expand = True
+
+        self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
+        self.MainNotebook.child_set_property(tab_box, "tab-fill", False)
 
     def get_tab_position(self, string):
 
@@ -1620,13 +1635,7 @@ class NicotineFrame:
             tab_box = self.MainNotebook.get_nth_page(i)
             tab_label = self.MainNotebook.get_tab_label(tab_box)
 
-            if tab_position in ("Left", "left", _("Left")) or \
-                    tab_position in ("Right", "right", _("Right")):
-                expand = False
-            else:
-                expand = True
-
-            self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
+            self.set_tab_expand(tab_box)
             tab_label.set_angle(ui["labelmain"])
 
         # Other notebooks
