@@ -5,7 +5,7 @@
     <property name="visible">1</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="BuddiesToolbar">
         <property name="visible">1</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
@@ -13,7 +13,7 @@
         <property name="margin-bottom">6</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkLabel" id="BuddiesLabel">
+          <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Buddy List</property>
             <property name="use-markup">1</property>
@@ -33,7 +33,6 @@
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="invisible-char">•</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
           </object>
         </child>
@@ -42,7 +41,7 @@
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="receives-default">1</property>
-            <property name="tooltip-text" translatable="yes">Add</property>
+            <property name="tooltip-text" translatable="yes">Add User</property>
             <signal name="clicked" handler="on_add_user" swapped="no"/>
             <child>
               <object class="GtkImage">

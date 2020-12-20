@@ -682,6 +682,77 @@
         </child>
       </object>
     </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="HeaderUserList">
+        <property name="visible">1</property>
+        <property name="show-close-button">1</property>
+        <child type="title">
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkEntry" id="AddUserEntry">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-request">300</property>
+                <signal name="activate" handler="on_add_user" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="receives-default">1</property>
+                <signal name="clicked" handler="on_add_user" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-add-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Add User</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="receives-default">1</property>
+            <property name="tooltip-text" translatable="yes">Configure banned users</property>
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
+            <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">1</property>
+                <property name="icon-name">applications-system-symbolic</property>
+              </object>
+            </child>
+            <style>
+              <class name="circular"/>
+              <class name="image-button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+          </packing>
+        </child>
+      </object>
+    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
