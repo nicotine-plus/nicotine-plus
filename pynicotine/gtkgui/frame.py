@@ -137,11 +137,12 @@ class NicotineFrame:
         """ Menu Bar """
 
         self.set_up_actions()
+        self.MainWindow.set_titlebar(self.HeaderDefault)
 
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
-        #self.application.set_menubar(builder.get_object("menubar"))
+        self.application.set_app_menu(builder.get_object("menubar"))
 
         """ Icons """
 
@@ -1401,23 +1402,39 @@ class NicotineFrame:
             tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderDefault)
+
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
             self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderPrivateChat)
+
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
             self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderUploads)
             self.uploads.update(forceupdate=True)
 
         elif tab_label == self.DownloadsTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderDownloads)
             self.downloads.update(forceupdate=True)
 
         elif tab_label == self.SearchTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderSearch)
             GLib.idle_add(self.search_entry.grab_focus)
+
+        elif tab_label == self.UserInfoTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderUserInfo)
+
+        elif tab_label == self.UserBrowseTabLabel:
+            self.MainWindow.set_titlebar(self.HeaderUserBrowse)
+
+        else:
+            self.MainWindow.set_titlebar(self.HeaderDefault)
 
     def on_page_removed(self, main_notebook, child, page_num):
 

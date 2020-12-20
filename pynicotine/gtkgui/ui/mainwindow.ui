@@ -4,6 +4,33 @@
   <object class="GtkApplicationWindow" id="MainWindow">
     <property name="title" translatable="yes">Nicotine+</property>
     <child type="titlebar">
+      <object class="GtkHeaderBar" id="HeaderDefault">
+        <property name="visible">1</property>
+        <property name="show-close-button">1</property>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Preferences</property>
+            <signal name="clicked" handler="on_settings" swapped="no"/>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">1</property>
+                <property name="icon-name">applications-system-symbolic</property>
+              </object>
+            </child>
+            <style>
+              <class name="circular"/>
+              <class name="image-button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
       <object class="GtkHeaderBar" id="HeaderSearch">
         <property name="visible">1</property>
         <property name="show-close-button">1</property>
@@ -433,7 +460,7 @@
       <object class="GtkHeaderBar" id="HeaderPrivateChat">
         <property name="visible">1</property>
         <property name="show-close-button">1</property>
-        <child>
+        <child type="title">
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
@@ -441,6 +468,12 @@
               <object class="GtkComboBox" id="UserPrivateCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
+                <property name="width-request">300</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry" id="UserPrivateEntry">
+                    <property name="can-focus">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -497,7 +530,7 @@
       <object class="GtkHeaderBar" id="HeaderUserInfo">
         <property name="visible">1</property>
         <property name="show-close-button">1</property>
-        <child>
+        <child type="title">
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
@@ -505,6 +538,7 @@
               <object class="GtkComboBox" id="UserInfoCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
+                <property name="width-request">300</property>
               </object>
             </child>
             <child>
@@ -562,6 +596,32 @@
         <property name="visible">1</property>
         <property name="show-close-button">1</property>
         <child>
+          <object class="GtkButton" id="LoadFromDisk">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">folder-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Load from Disk</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="title">
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
@@ -569,6 +629,7 @@
               <object class="GtkComboBox" id="UserBrowseCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
+                <property name="width-request">300</property>
               </object>
             </child>
             <child>
@@ -588,7 +649,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Browse Shares</property>
+                        <property name="label" translatable="yes">Browse User Shares</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -599,53 +660,21 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkButton" id="configureShares">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
+            <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Configure shares</property>
+            <signal name="clicked" handler="on_configure_shares" swapped="no"/>
             <child>
-              <object class="GtkButton" id="LoadFromDisk">
+              <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">folder-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Load from Disk</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="icon-name">applications-system-symbolic</property>
               </object>
             </child>
-            <child>
-              <object class="GtkButton" id="configureShares">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Configure shares</property>
-                <signal name="clicked" handler="on_configure_shares" swapped="no"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">applications-system-symbolic</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="image-button"/>
-                </style>
-              </object>
-            </child>
+            <style>
+              <class name="circular"/>
+              <class name="image-button"/>
+            </style>
           </object>
           <packing>
             <property name="pack-type">end</property>
