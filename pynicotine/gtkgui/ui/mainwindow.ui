@@ -1156,6 +1156,10 @@
                     <property name="can-focus">1</property>
                     <property name="orientation">vertical</property>
                   </object>
+                  <packing>
+                    <property name="resize">0</property>
+                    <property name="shrink">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>

@@ -608,6 +608,7 @@ class ImageLabel(Gtk.EventBox):
 
         self.label = Gtk.Label()
         self.label.set_angle(angle)
+        self.label.set_halign(Gtk.Align.START)
         self.label.show()
 
         self.text = label

@@ -40,6 +40,7 @@
                   <object class="GtkScrolledWindow" id="RoomLogWindow">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="vexpand">1</property>
                     <child>
                       <object class="GtkTextView" id="RoomLog">
                         <property name="visible">1</property>
