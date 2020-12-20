@@ -798,21 +798,7 @@ class IconNotebook:
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
-
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(
-            b"""
-            .notebook {
-                border-left: none;
-                border-right: none;
-                border-bottom: none
-            }
-
-            """
-        )
-        context = self.notebook.get_style_context()
-        context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        context.add_class("notebook")
+        self.notebook.set_show_border(False)
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable

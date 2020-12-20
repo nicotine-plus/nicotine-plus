@@ -141,7 +141,7 @@ class NicotineFrame:
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
-        self.application.set_menubar(builder.get_object("menubar"))
+        #self.application.set_menubar(builder.get_object("menubar"))
 
         """ Icons """
 
