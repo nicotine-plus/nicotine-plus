@@ -62,9 +62,7 @@
         <child type="title">
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="halign">center</property>
             <property name="spacing">6</property>
-            <property name="width-request">1000</property>
             <child>
               <object class="GtkComboBox" id="SearchMethod">
                 <property name="visible">1</property>
@@ -75,20 +73,37 @@
               <object class="GtkComboBox" id="RoomSearchCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">20</property>
+                    <property name="placeholder-text" translatable="yes">Room...</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkComboBox" id="UserSearchCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">20</property>
+                    <property name="placeholder-text" translatable="yes">Username...</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkComboBox" id="SearchEntryCombo">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
                 <property name="has-entry">1</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">75</property>
+                    <property name="placeholder-text" translatable="yes">Search term...</property>
+                    <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -468,10 +483,11 @@
               <object class="GtkComboBox" id="UserPrivateCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
-                <property name="width-request">300</property>
                 <child internal-child="entry">
-                  <object class="GtkEntry" id="UserPrivateEntry">
-                    <property name="can-focus">1</property>
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">60</property>
+                    <property name="placeholder-text" translatable="yes">Username...</property>
+                    <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
                   </object>
                 </child>
               </object>
@@ -493,7 +509,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Message User</property>
+                        <property name="label" translatable="yes">Message</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -538,7 +554,13 @@
               <object class="GtkComboBox" id="UserInfoCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
-                <property name="width-request">300</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">60</property>
+                    <property name="placeholder-text" translatable="yes">Username...</property>
+                    <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -558,7 +580,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Show User Info</property>
+                        <property name="label" translatable="yes">Show Info</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -629,7 +651,13 @@
               <object class="GtkComboBox" id="UserBrowseCombo">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
-                <property name="width-request">300</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="max-width-chars">60</property>
+                    <property name="placeholder-text" translatable="yes">Username...</property>
+                    <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -649,7 +677,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Browse User Shares</property>
+                        <property name="label" translatable="yes">Browse Shares</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -694,7 +722,9 @@
               <object class="GtkEntry" id="AddUserEntry">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="width-request">300</property>
+                <property name="max-width-chars">60</property>
+                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
                 <signal name="activate" handler="on_add_user" swapped="no"/>
               </object>
             </child>
@@ -717,7 +747,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add User</property>
+                        <property name="label" translatable="yes">Add Buddy</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
