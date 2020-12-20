@@ -254,7 +254,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkBox">
                         <property name="width-request">24</property>
@@ -296,7 +295,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkBox">
                         <property name="width-request">24</property>
@@ -413,7 +411,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkBox">
                         <property name="width-request">24</property>
@@ -455,7 +452,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkBox">
                         <property name="width-request">24</property>
