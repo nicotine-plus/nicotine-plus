@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="mainmenu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Connect</attribute>
+        <attribute name="action">app.connect</attribute>
+        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;c</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Disconnect</attribute>
+        <attribute name="action">app.disconnect</attribute>
+        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;d</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Away</attribute>
+        <attribute name="action">app.away</attribute>
+        <attribute name="accel">&lt;Primary&gt;h</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Check _Privileges</attribute>
+        <attribute name="action">app.checkprivileges</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Get _Privileges</attribute>
+        <attribute name="action">app.getprivileges</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">_View</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Show _log window</attribute>
+            <attribute name="action">win.showlog</attribute>
+            <attribute name="accel">&lt;Primary&gt;l</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Show _debug output controls</attribute>
+            <attribute name="action">win.showdebug</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Show _room list</attribute>
+            <attribute name="action">win.showroomlist</attribute>
+            <attribute name="accel">&lt;Primary&gt;r</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Show _flag columns in user lists</attribute>
+            <attribute name="action">win.showflags</attribute>
+            <attribute name="accel">&lt;Primary&gt;u</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Show _buttons in transfer tabs</attribute>
+            <attribute name="action">win.showtransferbuttons</attribute>
+            <attribute name="accel">&lt;Primary&gt;b</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
+            <attribute name="action">win.togglebuddylist</attribute>
+            <attribute name="target">0</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
+            <attribute name="action">win.togglebuddylist</attribute>
+            <attribute name="target">1</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Buddylist always visible</attribute>
+            <attribute name="action">win.togglebuddylist</attribute>
+            <attribute name="target">2</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Buddylist hidden</attribute>
+            <attribute name="action">win.togglebuddylist</attribute>
+            <attribute name="target">3</attribute>
+          </item>
+        </section>
+      </submenu>
+      <submenu>
+        <attribute name="label" translatable="yes">_Modes</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">_Search Files</attribute>
+            <attribute name="action">win.searchfiles</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Downloads</attribute>
+            <attribute name="action">win.downloads</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Uploads</attribute>
+            <attribute name="action">win.uploads</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">User _Browse</attribute>
+            <attribute name="action">win.userbrowse</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">User I_nfo</attribute>
+            <attribute name="action">win.userinfo</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Private Chat</attribute>
+            <attribute name="action">win.privatechat</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Buddy _List</attribute>
+            <attribute name="action">win.buddylist</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Chat Rooms</attribute>
+            <attribute name="action">win.chatrooms</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Interests</attribute>
+            <attribute name="action">win.interests</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Rescan Public Shares</attribute>
+        <attribute name="action">app.publicrescan</attribute>
+        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;p</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Rescan B_uddy Shares</attribute>
+        <attribute name="action">app.buddyrescan</attribute>
+        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;b</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Browse Public Shares</attribute>
+        <attribute name="action">app.browsepublicshares</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Bro_wse Buddy Shares</attribute>
+        <attribute name="action">app.browsebuddyshares</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Fast Configure</attribute>
+        <attribute name="action">app.fastconfigure</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.settings</attribute>
+        <attribute name="accel">&lt;Primary&gt;p</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">_Help</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">About _chat room commands</attribute>
+            <attribute name="action">app.aboutchatroomcommands</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">About _private chat commands</attribute>
+            <attribute name="action">app.aboutprivatechatcommands</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">About _search filters</attribute>
+            <attribute name="action">app.aboutfilters</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Check _latest version</attribute>
+            <attribute name="action">app.checklatest</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Report a _bug</attribute>
+            <attribute name="action">app.reportbug</attribute>
+          </item>
+        </section>
+      </submenu>
+      <item>
+        <attribute name="label" translatable="yes">About _Nicotine+</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+        <attribute name="accel">&lt;Primary&gt;q</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

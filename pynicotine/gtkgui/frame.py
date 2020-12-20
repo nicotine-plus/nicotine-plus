@@ -141,8 +141,12 @@ class NicotineFrame:
 
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
-        self.application.set_app_menu(builder.get_object("menubar"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "mainmenu.ui"))
+        menu = builder.get_object("mainmenu")
+
+        for i in (self.MenuPopover, self.MenuPopoverSearch, self.MenuPopoverDownloads, self.MenuPopoverUploads, self.MenuPopoverPrivateChat,
+                self.MenuPopoverUserInfo, self.MenuPopoverUserBrowse, self.MenuPopoverUserList):
+            i.bind_model(menu)
 
         """ Icons """
 

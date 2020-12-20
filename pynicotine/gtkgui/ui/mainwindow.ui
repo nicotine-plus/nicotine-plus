@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
+  <object class="GtkPopoverMenu" id="MenuPopover"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverSearch"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverDownloads"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverUploads"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverPrivateChat"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverUserInfo"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverUserBrowse"/>
+  <object class="GtkPopoverMenu" id="MenuPopoverUserList"/>
   <object class="GtkApplicationWindow" id="MainWindow">
     <property name="title" translatable="yes">Nicotine+</property>
     <child type="titlebar">
@@ -9,21 +17,36 @@
         <property name="show-close-button">1</property>
         <property name="title" translatable="yes">Nicotine+</property>
         <child>
-          <object class="GtkButton">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Preferences</property>
-            <signal name="clicked" handler="on_settings" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Preferences</property>
+                <signal name="clicked" handler="on_settings" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopover</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -150,21 +173,36 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureSearches">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Configure searches</property>
-            <signal name="clicked" handler="on_settings_searches" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton" id="configureSearches">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Configure searches</property>
+                <signal name="clicked" handler="on_settings_searches" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverSearch</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -311,10 +349,19 @@
                     <property name="icon-name">applications-system-symbolic</property>
                   </object>
                 </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="image-button"/>
-                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverDownloads</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -463,10 +510,19 @@
                     <property name="icon-name">applications-system-symbolic</property>
                   </object>
                 </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="image-button"/>
-                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverUploads</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -525,21 +581,36 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureLog">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Configure logging</property>
-            <signal name="clicked" handler="on_settings_logging" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton" id="configureLog">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Configure logging</property>
+                <signal name="clicked" handler="on_settings_logging" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverPrivateChat</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -596,21 +667,36 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureUserinfo">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Configure user info</property>
-            <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton" id="configureUserinfo">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Configure user info</property>
+                <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverUserInfo</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -693,21 +779,36 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureShares">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Configure shares</property>
-            <signal name="clicked" handler="on_configure_shares" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton" id="configureShares">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Configure shares</property>
+                <signal name="clicked" handler="on_configure_shares" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverUserBrowse</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
@@ -763,24 +864,37 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
-            <property name="tooltip-text" translatable="yes">Configure banned users</property>
-            <property name="halign">end</property>
-            <property name="hexpand">True</property>
-            <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="receives-default">1</property>
+                <property name="tooltip-text" translatable="yes">Configure banned users</property>
+                <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">applications-system-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Menu</property>
+                <property name="popover">MenuPopoverUserList</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>
