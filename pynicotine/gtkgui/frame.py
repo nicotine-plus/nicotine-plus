@@ -1132,6 +1132,8 @@ class NicotineFrame:
                 self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
 
             if self.userlist.userlistvbox in self.MainNotebook.get_children():
+                self.MainNotebook.child_set_property(self.userlist.userlistvbox, "tab-expand", True)
+                self.MainNotebook.child_set_property(self.userlist.userlistvbox, "tab-fill", False)
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
 
             self.userlist.BuddiesLabel.hide()
@@ -1608,12 +1610,20 @@ class NicotineFrame:
         ui = self.np.config.sections["ui"]
 
         # Main notebook
-        self.MainNotebook.set_tab_pos(self.get_tab_position(ui["tabmain"]))
+        tab_position = ui["tabmain"]
+        self.MainNotebook.set_tab_pos(self.get_tab_position(tab_position))
 
         for i in range(self.MainNotebook.get_n_pages()):
             tab_box = self.MainNotebook.get_nth_page(i)
             tab_label = self.MainNotebook.get_tab_label(tab_box)
 
+            if tab_position in ("Left", "left", _("Left")) or \
+                    tab_position in ("Right", "right", _("Right")):
+                expand = False
+            else:
+                expand = True
+
+            self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
             tab_label.set_angle(ui["labelmain"])
 
         # Other notebooks
