@@ -2,909 +2,893 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="AboutPrivateChatCommands">
-    <property name="can_focus">False</property>
     <property name="title" translatable="yes">About private chat commands</property>
-    <property name="modal">True</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="default_width">650</property>
-    <property name="default_height">500</property>
+    <property name="modal">1</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="default-width">650</property>
+    <property name="default-height">500</property>
     <child internal-child="vbox">
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
+            <property name="vexpand">1</property>
             <child>
               <object class="GtkGrid">
-                <property name="border_width">10</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="row_spacing">10</property>
-                <property name="column_homogeneous">True</property>
-                <property name="column_spacing">5</property>
+                <property name="visible">1</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
+                <property name="row-spacing">10</property>
+                <property name="column-homogeneous">1</property>
+                <property name="column-spacing">5</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/close /c</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Close the current private chat</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/clear /cl</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Clear the chat window</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/clear /cl</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">2</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">2</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Clear the chat window</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">2</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">3</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">3</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/me 'message'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/me &apos;message&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">4</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">4</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Say something in the third-person</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">4</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">4</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/now</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">5</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">5</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Display the Now Playing script's output</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Display the Now Playing script&apos;s output</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">5</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">5</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">6</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">6</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/toggle 'plugin'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/toggle &apos;plugin&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">7</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">7</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Toggle plugin on/off state</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">7</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">7</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">8</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">8</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Users</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">9</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">9</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/add /ad 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/add /ad &apos;user&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">10</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">10</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Add user 'user' to your user list</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Add user &apos;user&apos; to your user list</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">10</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">10</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/rem /unbuddy 'user'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">11</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Remove user 'user' from your user list</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">11</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/ban 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/rem /unbuddy &apos;user&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">12</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">11</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Add user 'user' to your ban list</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Remove user &apos;user&apos; from your user list</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">12</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">11</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/unban 'user'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">13</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Remove user 'user' from your ban list</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">13</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/ignore 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/ban &apos;user&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">14</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">12</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Add user 'user' to your ignore list</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Add user &apos;user&apos; to your ban list</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">14</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">12</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/unignore 'user'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">15</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Remove user 'user' from your ignore list</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">15</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">16</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/browse /b 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/unban &apos;user&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">17</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">13</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Browse files of user 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Remove user &apos;user&apos; from your ban list</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">17</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">13</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/whois /w 'user'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">18</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Request user info for user 'user'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">18</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/ip 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/ignore &apos;user&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">19</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">14</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Show IP for user 'user'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Add user &apos;user&apos; to your ignore list</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">19</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">14</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/unignore &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">20</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">15</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Remove user &apos;user&apos; from your ignore list</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">15</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">16</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/browse /b &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">17</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Browse files of user &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">17</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/whois /w &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">18</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Request user info for user &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">18</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/ip &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">19</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Show IP for user &apos;user&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">19</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">20</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Aliases</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">21</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">21</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/alias /al 'command' 'definition'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/alias /al &apos;command&apos; &apos;definition&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">22</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">22</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Add a new alias</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">22</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">22</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/unalias /un 'command'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/unalias /un &apos;command&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">23</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">23</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Remove an alias</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">23</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">23</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">24</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">24</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Search</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">25</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">25</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/search /s 'query'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/search /s &apos;query&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">26</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">26</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Start a new search for 'query'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Start a new search for &apos;query&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">26</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">26</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/rsearch /rs 'query'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="style" value="italic"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">27</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Search the joined rooms for 'query'</property>
-                    <property name="selectable">True</property>
-                    <property name="xalign">0</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">27</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/bsearch /bs '%s'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/rsearch /rs &apos;query&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">28</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">27</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Search the buddy list for 'query'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Search the joined rooms for &apos;query&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">28</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">27</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/usearch /us 'user' 'query'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/bsearch /bs &apos;%s&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">29</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">28</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Search a user's shares for 'query'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Search the buddy list for &apos;query&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">29</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">28</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/usearch /us &apos;user&apos; &apos;query&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="style" value="italic"/>
+                    </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">30</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">29</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Search a user&apos;s shares for &apos;query&apos;</property>
+                    <property name="selectable">1</property>
+                    <property name="xalign">0</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">29</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">30</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Chat Rooms</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">31</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">31</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">/join /j 'room'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">/join /j &apos;room&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">32</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">32</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Join room 'room'</property>
-                    <property name="selectable">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="label" translatable="yes">Join room &apos;room&apos;</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">32</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">32</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">33</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">33</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/away /a</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">34</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">34</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Toggles your away status</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">34</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">34</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/rescan</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">35</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">35</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Rescan shares</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">35</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">35</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">/quit /q /exit</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">36</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">36</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <property name="label" translatable="yes">Quit Nicotine+</property>
-                    <property name="selectable">True</property>
+                    <property name="selectable">1</property>
                     <property name="xalign">0</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">36</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">36</property>
                   </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-          </packing>
         </child>
       </object>
     </child>

@@ -221,43 +221,45 @@ class NicotineFrame:
         hide_tab_template = _("Hide %(tab)s")
 
         # Initialize tabs labels
-        for tab_box in self.MainNotebook.get_children():
-            tab_label = self.MainNotebook.get_tab_label(tab_box)
+        for i in range(self.MainNotebook.get_n_pages()):
+            tab_box = self.MainNotebook.get_nth_page(i)
+            placehold_tab_label = self.MainNotebook.get_tab_label(tab_box)
+            eventbox_name = Gtk.Buildable.get_name(placehold_tab_label)
 
             # Initialize the image label
-            img_label = ImageLabel(
-                translated_tablabels[tab_label], angle=config["ui"]["labelmain"],
+            tab_label = ImageLabel(
+                translated_tablabels[placehold_tab_label], angle=config["ui"]["labelmain"],
                 show_hilite_image=config["notifications"]["notification_tab_icons"],
                 show_status_image=True
             )
 
             # Set tab text color
-            img_label.set_text_color(0)
-            img_label.show()
+            tab_label.set_text_color(0)
+            tab_label.show()
+
+            self.__dict__[eventbox_name] = tab_label
 
             # Add it to the eventbox
-            tab_label.add(img_label)
+            self.MainNotebook.set_tab_label(tab_box, tab_label)
 
             # Set the menu to hide the tab
-            eventbox_name = Gtk.Buildable.get_name(tab_label)
-
             tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
 
             self.__dict__[eventbox_name + "Menu"] = PopupMenu(self).setup(
                 (
-                    "#" + hide_tab_template % {"tab": translated_tablabels[tab_label]}, self.hide_tab, [tab_label, tab_box]
+                    "#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box]
                 )
             )
 
         # Tab icons
-        self.SearchTabLabel.get_child().set_icon("system-search-symbolic")
-        self.DownloadsTabLabel.get_child().set_icon("document-save-symbolic")
-        self.UploadsTabLabel.get_child().set_icon("emblem-shared-symbolic")
-        self.UserBrowseTabLabel.get_child().set_icon("folder-symbolic")
-        self.UserInfoTabLabel.get_child().set_icon("avatar-default-symbolic")
-        self.PrivateChatTabLabel.get_child().set_icon("mail-send-symbolic")
-        self.ChatTabLabel.get_child().set_icon("user-available-symbolic")
-        self.InterestsTabLabel.get_child().set_icon("emblem-default-symbolic")
+        self.SearchTabLabel.set_icon("system-search-symbolic")
+        self.DownloadsTabLabel.set_icon("document-save-symbolic")
+        self.UploadsTabLabel.set_icon("emblem-shared-symbolic")
+        self.UserBrowseTabLabel.set_icon("folder-symbolic")
+        self.UserInfoTabLabel.set_icon("avatar-default-symbolic")
+        self.PrivateChatTabLabel.set_icon("mail-send-symbolic")
+        self.ChatTabLabel.set_icon("user-available-symbolic")
+        self.InterestsTabLabel.set_icon("emblem-default-symbolic")
 
         # Create Search combo ListStores
         self.search_entry_combo_model = Gtk.ListStore(str)
@@ -1370,21 +1372,12 @@ class NicotineFrame:
 
     """ Main Notebook """
 
-    def get_tab_label(self, tab_label):
-
-        try:
-            return tab_label.get_child()
-        except AttributeError:
-            return tab_label
-
     def request_tab_icon(self, tab_label, status=1):
 
         if self.current_tab_label == tab_label:
             return
 
-        icon_tab_label = self.get_tab_label(tab_label)
-
-        if not icon_tab_label:
+        if not tab_label:
             return
 
         if status == 1:
@@ -1392,26 +1385,25 @@ class NicotineFrame:
         else:
             hilite_icon = self.images["hilite3"]
 
-            if icon_tab_label.get_hilite_image() == self.images["hilite"]:
+            if tab_label.get_hilite_image() == self.images["hilite"]:
                 # Chat mentions have priority over normal notifications
                 return
 
-        if hilite_icon == icon_tab_label.get_hilite_image():
+        if hilite_icon == tab_label.get_hilite_image():
             return
 
-        icon_tab_label.set_hilite_image(hilite_icon)
-        icon_tab_label.set_text_color(status + 1)
+        tab_label.set_hilite_image(hilite_icon)
+        tab_label.set_text_color(status + 1)
 
     def on_switch_page(self, notebook, page, page_num):
 
         tab_label = self.MainNotebook.get_tab_label(page)
-        icon_tab_label = self.get_tab_label(tab_label)
         self.current_tab_label = tab_label
 
-        if icon_tab_label is not None:
+        if tab_label is not None:
             # Defaults
-            icon_tab_label.set_hilite_image(None)
-            icon_tab_label.set_text_color(0)
+            tab_label.set_hilite_image(None)
+            tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
             curr_page_num = self.chatrooms.get_current_page()
@@ -1450,8 +1442,9 @@ class NicotineFrame:
 
         tab_names = []
 
-        for children in self.MainNotebook.get_children():
-            tab_names.append(self.match_main_notebox(children))
+        for i in range(self.MainNotebook.get_n_pages()):
+            tab_box = self.MainNotebook.get_nth_page(i)
+            tab_names.append(self.match_main_notebox(tab_box))
 
         self.np.config.sections["ui"]["modes_order"] = tab_names
 
@@ -1479,7 +1472,8 @@ class NicotineFrame:
 
         reorderable = self.np.config.sections["ui"]["tab_reorderable"]
 
-        for tab_box in self.MainNotebook.get_children():
+        for i in range(self.MainNotebook.get_n_pages()):
+            tab_box = self.MainNotebook.get_nth_page(i)
             self.MainNotebook.set_tab_reorderable(tab_box, reorderable)
 
     def set_main_tabs_order(self):
@@ -1508,7 +1502,7 @@ class NicotineFrame:
                 continue
 
             if not tab_names[name]:
-                if tab_box not in self.MainNotebook.get_children():
+                if tab_box not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
                     continue
 
                 if tab_box in self.hidden_tabs:
@@ -1547,7 +1541,7 @@ class NicotineFrame:
 
         event_box, tab_box = lista
 
-        if tab_box not in self.MainNotebook.get_children():
+        if tab_box not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
             return
 
         if tab_box in self.hidden_tabs:
@@ -1560,7 +1554,7 @@ class NicotineFrame:
 
     def show_tab(self, tab_box):
 
-        if tab_box in self.MainNotebook.get_children():
+        if tab_box in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
             return
 
         if tab_box not in self.hidden_tabs:
@@ -1604,9 +1598,9 @@ class NicotineFrame:
         # Main notebook
         self.MainNotebook.set_tab_pos(self.get_tab_position(ui["tabmain"]))
 
-        for page in self.MainNotebook.get_children():
-            tab_label = self.MainNotebook.get_tab_label(page)
-            tab_label = self.get_tab_label(tab_label)
+        for i in range(self.MainNotebook.get_n_pages()):
+            tab_box = self.MainNotebook.get_nth_page(i)
+            tab_label = self.MainNotebook.get_tab_label(tab_box)
 
             tab_label.set_angle(ui["labelmain"])
 
@@ -1682,7 +1676,7 @@ class NicotineFrame:
 
         tab_box = self.match_main_name_page(tab_name)
 
-        if tab_box in self.MainNotebook.get_children():
+        if tab_box in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
             page_num = self.MainNotebook.page_num
             self.MainNotebook.set_current_page(page_num(tab_box))
         else:
@@ -2538,14 +2532,14 @@ class NicotineFrame:
             w.show_status_images(config["ui"]["tab_status_icons"])
 
         # Main notebook
-        for page in self.MainNotebook.get_children():
-            tab_label = self.MainNotebook.get_tab_label(page)
-            icon_tab_label = self.get_tab_label(tab_label)
+        for i in range(self.MainNotebook.get_n_pages()):
+            tab_box = self.MainNotebook.get_nth_page(i)
+            tab_label = self.MainNotebook.get_tab_label(tab_box)
 
-            icon_tab_label.show_hilite_image(config["notifications"]["notification_tab_icons"])
-            icon_tab_label.set_text_color(0)
+            tab_label.show_hilite_image(config["notifications"]["notification_tab_icons"])
+            tab_label.set_text_color(0)
 
-            self.MainNotebook.set_tab_reorderable(page, config["ui"]["tab_reorderable"])
+            self.MainNotebook.set_tab_reorderable(tab_box, config["ui"]["tab_reorderable"])
 
         self.set_tab_positions()
 
