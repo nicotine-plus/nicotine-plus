@@ -989,12 +989,8 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkBox" id="DownloadButtons">
+                          <object class="GtkActionBar" id="DownloadButtons">
                             <property name="visible">1</property>
-                            <property name="margin-start">6</property>
-                            <property name="margin-end">6</property>
-                            <property name="margin-top">6</property>
-                            <property name="margin-bottom">6</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">1</property>
@@ -1133,6 +1129,9 @@
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="actionbar"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -1164,12 +1163,8 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkBox" id="UploadButtons">
+                          <object class="GtkActionBar" id="UploadButtons">
                             <property name="visible">1</property>
-                            <property name="margin-start">6</property>
-                            <property name="margin-end">6</property>
-                            <property name="margin-top">6</property>
-                            <property name="margin-bottom">6</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">1</property>
@@ -1422,8 +1417,8 @@
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Debug output:</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
                       </object>
                     </child>
                     <child>
@@ -1530,10 +1525,10 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin-start">1</property>
-            <property name="margin-end">1</property>
-            <property name="margin-top">1</property>
-            <property name="margin-bottom">1</property>
+            <property name="margin-start">2</property>
+            <property name="margin-end">2</property>
+            <property name="margin-top">2</property>
+            <property name="margin-bottom">2</property>
             <child>
               <object class="GtkButton">
                 <property name="visible">1</property>
@@ -1543,7 +1538,7 @@
                 <child>
                   <object class="GtkImage">
                     <property name="visible">1</property>
-                    <property name="icon-name">document-open-recent-symbolic</property>
+                    <property name="icon-name">view-more-symbolic</property>
                   </object>
                 </child>
                 <style>
@@ -1555,7 +1550,7 @@
               <object class="GtkStatusbar" id="Statusbar">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="margin-start">0</property>
+                <property name="margin-start">4</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
               </object>
@@ -1597,7 +1592,7 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">network-receive-symbolic</property>
-                <property name="margin-start">6</property>
+                <property name="margin-start">8</property>
               </object>
             </child>
             <child>
@@ -1613,7 +1608,7 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">network-transmit-symbolic</property>
-                <property name="margin-start">6</property>
+                <property name="margin-start">8</property>
               </object>
             </child>
             <child>
