@@ -1099,6 +1099,7 @@ class NicotineFrame:
 
     def set_toggle_buddy_list(self, state):
 
+        self.buddies_tab_label = None
         tab = always = chatrooms = False
 
         if state == 0:
@@ -1128,7 +1129,7 @@ class NicotineFrame:
                 self.vpaned3.hide()
 
         if tab:
-            self.buddies_tab_label = ImageLabel(_("Buddy list"), show_status_image=True)
+            self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
             self.buddies_tab_label.set_icon("system-users-symbolic")
             self.buddies_tab_label.show()
 
