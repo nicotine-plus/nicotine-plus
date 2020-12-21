@@ -189,11 +189,6 @@ class NicotineFrame:
 
         """ Status Bar """
 
-        # Commonly accessed strings
-        self.down_template = _("Down: %(num)i users, %(speed)s")
-        self.up_template = _("Up: %(num)i users, %(speed)s")
-        self.socket_template = _("%(current)s/%(limit)s Connections")
-
         self.status_context_id = self.Statusbar.get_context_id("")
         self.socket_context_id = self.SocketStatus.get_context_id("")
         self.user_context_id = self.UserStatus.get_context_id("")
@@ -2392,7 +2387,7 @@ class NicotineFrame:
 
     def set_socket_status(self, status):
         self.SocketStatus.pop(self.socket_context_id)
-        self.SocketStatus.push(self.socket_context_id, self.socket_template % {'current': status, 'limit': slskproto.MAXSOCKETS})
+        self.SocketStatus.push(self.socket_context_id, "%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
     def show_scan_progress(self, sharestype):
         if sharestype == "normal":
@@ -2443,8 +2438,8 @@ class NicotineFrame:
 
         self.DownStatus.pop(self.down_context_id)
         self.UpStatus.pop(self.up_context_id)
-        self.DownStatus.push(self.down_context_id, self.down_template % {'num': total_usersdown, 'speed': down})
-        self.UpStatus.push(self.up_context_id, self.up_template % {'num': total_usersup, 'speed': up})
+        self.DownStatus.push(self.down_context_id, "%(speed)s (%(num)i)" % {'num': total_usersdown, 'speed': down})
+        self.UpStatus.push(self.up_context_id, "%(speed)s (%(num)i)" % {'num': total_usersup, 'speed': up})
 
         self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 

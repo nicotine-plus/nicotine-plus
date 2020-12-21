@@ -1293,12 +1293,34 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
+            <property name="margin-start">1</property>
+            <property name="margin-end">1</property>
+            <property name="margin-top">1</property>
+            <property name="margin-bottom">1</property>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Show log history</property>
+                <property name="action-name">win.showlog</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">document-open-recent-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
             <child>
               <object class="GtkStatusbar" id="Statusbar">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
+                <property name="margin-start">0</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
               </object>
             </child>
             <child>
@@ -1313,40 +1335,66 @@
               <object class="GtkProgressBar" id="BuddySharesProgress">
                 <property name="valign">center</property>
                 <property name="pulse-step">0.10000000149</property>
+                <property name="margin-start">18</property>
                 <property name="text" translatable="yes">Scanning Buddy Shares</property>
                 <property name="show-text">1</property>
               </object>
             </child>
             <child>
-              <object class="GtkStatusbar" id="UserStatus">
-                <property name="width-request">80</property>
+              <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
+                <property name="icon-name">network-wired-symbolic</property>
+                <property name="margin-start">18</property>
               </object>
             </child>
             <child>
               <object class="GtkStatusbar" id="SocketStatus">
-                <property name="width-request">150</property>
                 <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
+                <property name="margin-start">5</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
+                <property name="tooltip-text" translatable="yes">Connections</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">1</property>
+                <property name="icon-name">network-receive-symbolic</property>
+                <property name="margin-start">6</property>
               </object>
             </child>
             <child>
               <object class="GtkStatusbar" id="DownStatus">
-                <property name="width-request">200</property>
                 <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
+                <property name="margin-start">5</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
+                <property name="tooltip-text" translatable="yes">Downloading (speed / users)</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">1</property>
+                <property name="icon-name">network-transmit-symbolic</property>
+                <property name="margin-start">6</property>
               </object>
             </child>
             <child>
               <object class="GtkStatusbar" id="UpStatus">
-                <property name="width-request">200</property>
                 <property name="visible">1</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
+                <property name="margin-start">5</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
+                <property name="tooltip-text" translatable="yes">Uploading (speed / users)</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="UserStatus">
+                <property name="visible">1</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">6</property>
+                <property name="margin-top">0</property>
+                <property name="margin-bottom">0</property>
               </object>
             </child>
           </object>

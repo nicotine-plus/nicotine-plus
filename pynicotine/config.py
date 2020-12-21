@@ -193,7 +193,7 @@ class Config:
                 "debug": False,
                 "debugmodes": [0, 1],
                 "debuglogsdir": os.path.join(log_dir, "debug"),
-                "logcollapsed": False,
+                "logcollapsed": True,
                 "transferslogsdir": os.path.join(log_dir, "transfers"),
                 "rooms_timestamp": "%H:%M:%S",
                 "private_timestamp": "%Y-%m-%d %H:%M:%S",
