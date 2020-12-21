@@ -57,7 +57,7 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="SearchMethod">
@@ -528,7 +528,7 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserPrivateCombo">
@@ -539,6 +539,7 @@
                 <property name="max-width-chars">60</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
+                <property name="primary-icon-name">avatar-default-symbolic</property>
               </object>
             </child>
           </object>
@@ -614,7 +615,7 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserInfoCombo">
@@ -625,6 +626,7 @@
                 <property name="max-width-chars">60</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
+                <property name="primary-icon-name">avatar-default-symbolic</property>
               </object>
             </child>
           </object>
@@ -727,7 +729,7 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserBrowseCombo">
@@ -738,6 +740,7 @@
                 <property name="max-width-chars">60</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
+                <property name="primary-icon-name">avatar-default-symbolic</property>
               </object>
             </child>
           </object>
@@ -813,7 +816,7 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkEntry" id="AddUserEntry">
@@ -822,6 +825,7 @@
             <property name="max-width-chars">60</property>
             <property name="placeholder-text" translatable="yes">Username...</property>
             <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
           </object>
         </child>
@@ -1129,9 +1133,6 @@
                                 </child>
                               </object>
                             </child>
-                            <style>
-                              <class name="actionbar"/>
-                            </style>
                           </object>
                         </child>
                       </object>
