@@ -1597,6 +1597,7 @@ class NicotineFrame:
 
     def set_tab_expand(self, tab_box):
 
+        tab_label = self.MainNotebook.get_tab_label(tab_box)
         tab_position = self.np.config.sections["ui"]["tabmain"]
 
         if tab_position in ("Left", "left", _("Left")) or \
@@ -1606,7 +1607,7 @@ class NicotineFrame:
             expand = True
 
         self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
-        self.MainNotebook.child_set_property(tab_box, "tab-fill", False)
+        tab_label.set_centered(expand)
 
     def get_tab_position(self, string):
 

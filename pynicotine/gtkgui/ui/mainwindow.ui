@@ -927,10 +927,6 @@
                           </packing>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="ChatTabLabel">
@@ -949,10 +945,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="PrivateChatTabLabel">
@@ -1128,10 +1120,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="DownloadsTabLabel">
@@ -1307,10 +1295,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="UploadsTabLabel">
@@ -1329,10 +1313,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="SearchTabLabel">
@@ -1351,10 +1331,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="UserInfoTabLabel">
@@ -1373,10 +1349,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="UserBrowseTabLabel">
@@ -1388,10 +1360,6 @@
                       <object class="GtkBox" id="interestsvbox">
                         <property name="visible">1</property>
                       </object>
-                      <packing>
-                        <property name="tab-expand">1</property>
-                        <property name="tab-fill">0</property>
-                      </packing>
                     </child>
                     <child type="tab">
                       <object class="GtkBox" id="InterestsTabLabel">
