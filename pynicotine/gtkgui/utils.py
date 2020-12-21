@@ -738,6 +738,9 @@ class ImageLabel(Gtk.EventBox):
     def set_centered(self, centered):
         self.centered = centered
 
+        self._pack_children()
+        self._order_children()
+
     def set_text_color(self, notify=None, text=None):
 
         color = NICOTINE.np.config.sections["ui"]["tab_default"]
