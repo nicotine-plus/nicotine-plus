@@ -603,6 +603,7 @@ class ImageLabel(Gtk.EventBox):
 
         self.closebutton = closebutton
         self.angle = angle
+        self.centered = False
 
         self.onclose = onclose
 
@@ -646,6 +647,11 @@ class ImageLabel(Gtk.EventBox):
         else:
             self.angle = 0
 
+        if self.centered:
+            self.box.set_halign(Gtk.Align.CENTER)
+        else:
+            self.box.set_halign(Gtk.Align.FILL)
+
         self.box.set_spacing(2)
         self.add(self.box)
         self.box.show()
@@ -679,30 +685,6 @@ class ImageLabel(Gtk.EventBox):
             if "button" in self.__dict__ and self.closebutton != 0:
                 self.box.reorder_child(self.button, 3)
 
-    def set_onclose(self, closebutton):
-        self.closebutton = closebutton
-
-        if self.closebutton:
-            self._add_close_button()
-        else:
-            self._remove_close_button()
-
-        self._order_children()
-
-    def show_hilite_image(self, show=True):
-        if show and self.get_hilite_image() is not None:
-            self.hilite_image.show()
-        else:
-            self.hilite_image.hide()
-
-    def set_angle(self, angle):
-        self.angle = angle
-        self.label.set_angle(self.angle)
-        self._remove_close_button()
-
-        self._pack_children()
-        self._order_children()
-
     def _add_close_button(self):
         if "button" in self.__dict__:
             return
@@ -728,6 +710,36 @@ class ImageLabel(Gtk.EventBox):
         self.box.remove(self.button)
         self.button.destroy()
         del self.button
+
+    def set_onclose(self, closebutton):
+        self.closebutton = closebutton
+
+        if self.closebutton:
+            self._add_close_button()
+        else:
+            self._remove_close_button()
+
+        self._order_children()
+
+    def show_hilite_image(self, show=True):
+        if show and self.get_hilite_image() is not None:
+            self.hilite_image.show()
+        else:
+            self.hilite_image.hide()
+
+    def set_angle(self, angle):
+        self.angle = angle
+        self.label.set_angle(self.angle)
+        self._remove_close_button()
+
+        self._pack_children()
+        self._order_children()
+
+    def set_centered(self, centered):
+        self.centered = centered
+
+        self._pack_children()
+        self._order_children()
 
     def set_text_color(self, notify=None, text=None):
 
@@ -798,21 +810,7 @@ class IconNotebook:
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
-
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(
-            b"""
-            .notebook {
-                border-left: none;
-                border-right: none;
-                border-bottom: none
-            }
-
-            """
-        )
-        context = self.notebook.get_style_context()
-        context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        context.add_class("notebook")
+        self.notebook.set_show_border(False)
 
         self.tabclosers = tabclosers
         self.reorderable = reorderable

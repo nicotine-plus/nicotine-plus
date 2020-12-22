@@ -2323,6 +2323,9 @@ class SearchFrame(BuildFrame):
             }
         }
 
+    def on_clear_search_history(self, widget):
+        self.frame.searches.on_clear_search_history()
+
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
         for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterFree:

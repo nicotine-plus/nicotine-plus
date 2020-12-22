@@ -133,15 +133,12 @@ class NicotineFrame:
         """ Main Window UI """
 
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
+        self.current_header_bar_id = "HeaderDefault"
 
-        """ Menu Bar """
+        """ Menu """
 
         self.set_up_actions()
-
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
-        self.application.set_menubar(builder.get_object("menubar"))
+        self.set_up_menu()
 
         """ Icons """
 
@@ -203,13 +200,13 @@ class NicotineFrame:
 
         # Translation for the labels of tabs
         translated_tablabels = {
-            self.SearchTabLabel: _("Search files"),
+            self.SearchTabLabel: _("Search Files"),
             self.DownloadsTabLabel: _("Downloads"),
             self.UploadsTabLabel: _("Uploads"),
-            self.UserBrowseTabLabel: _("User browse"),
-            self.UserInfoTabLabel: _("User info"),
-            self.PrivateChatTabLabel: _("Private chat"),
-            self.ChatTabLabel: _("Chat rooms"),
+            self.UserBrowseTabLabel: _("User Browse"),
+            self.UserInfoTabLabel: _("User Info"),
+            self.PrivateChatTabLabel: _("Private Chat"),
+            self.ChatTabLabel: _("Chat Rooms"),
             self.InterestsTabLabel: _("Interests")
         }
 
@@ -323,6 +320,7 @@ class NicotineFrame:
 
         """ Element Visibility """
 
+        self.set_show_header_bar(config["ui"]["header_bar"])
         self.set_show_log(not config["logging"]["logcollapsed"])
         self.set_show_debug(config["logging"]["debug"])
         self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
@@ -760,7 +758,7 @@ class NicotineFrame:
         self.uploads.conn_close()
         self.downloads.conn_close()
 
-    """ Menu Bar """
+    """ Menu """
 
     def set_up_actions(self):
 
@@ -799,6 +797,11 @@ class NicotineFrame:
         self.application.add_action(action)
 
         # View
+
+        state = self.np.config.sections["ui"]["header_bar"]
+        action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_header_bar)
+        self.MainWindow.add_action(action)
 
         state = not self.np.config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
@@ -916,6 +919,14 @@ class NicotineFrame:
         action.connect("activate", self.on_about)
         self.application.add_action(action)
 
+    def set_up_menu(self):
+
+        builder = Gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "mainmenu.ui"))
+
+        self.MenuPopover.bind_model(builder.get_object("mainmenu"))
+
     # File
 
     def on_connect(self, *args):
@@ -1004,6 +1015,30 @@ class NicotineFrame:
         self.MainWindow.destroy()
 
     # View
+
+    def set_show_header_bar(self, show):
+
+        header_bar = self.__dict__[self.current_header_bar_id]
+        self.set_header_bar_main_menu(self.current_header_bar_id)
+
+        if show:
+            self.remove_header_bar_no_csd()
+            self.set_header_bar_csd(header_bar)
+
+        else:
+            self.remove_header_bar_csd()
+            self.set_header_bar_no_csd(header_bar)
+
+        Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", show)
+
+    def on_show_header_bar(self, action, *args):
+
+        state = self.np.config.sections["ui"]["header_bar"]
+        self.set_show_header_bar(not state)
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        self.np.config.sections["ui"]["header_bar"] = not state
+        self.np.config.write_configuration()
 
     def set_show_log(self, show):
         if show:
@@ -1094,6 +1129,7 @@ class NicotineFrame:
 
     def set_toggle_buddy_list(self, state):
 
+        self.buddies_tab_label = None
         tab = always = chatrooms = False
 
         if state == 0:
@@ -1123,7 +1159,7 @@ class NicotineFrame:
                 self.vpaned3.hide()
 
         if tab:
-            self.buddies_tab_label = ImageLabel(_("Buddy list"), show_status_image=True)
+            self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
             self.buddies_tab_label.set_icon("system-users-symbolic")
             self.buddies_tab_label.show()
 
@@ -1131,9 +1167,10 @@ class NicotineFrame:
                 self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
 
             if self.userlist.userlistvbox in self.MainNotebook.get_children():
+                self.set_tab_expand(self.userlist.userlistvbox)
                 self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
 
-            self.userlist.BuddiesLabel.hide()
+            self.userlist.BuddiesToolbar.hide()
             self.userlist.UserLabel.show()
 
         if chatrooms:
@@ -1141,7 +1178,7 @@ class NicotineFrame:
             if self.userlist.userlistvbox not in self.vpaned3.get_children():
                 self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
 
-            self.userlist.BuddiesLabel.show()
+            self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
         if always:
@@ -1149,7 +1186,7 @@ class NicotineFrame:
             if self.userlist.userlistvbox not in self.vpanedm.get_children():
                 self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
 
-            self.userlist.BuddiesLabel.show()
+            self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
         else:
@@ -1365,6 +1402,71 @@ class NicotineFrame:
         open_uri(uri, self.MainWindow)
         return True
 
+    """ Headerbar """
+
+    def set_header_bar_csd(self, header_bar):
+
+        """ Set a 'normal' headerbar for the main window (client side decorations
+        enabled) """
+
+        header_bar.set_title("Nicotine+")
+        header_bar.set_property("show-close-button", True)
+
+        self.MainWindow.set_titlebar(header_bar)
+
+    def set_header_bar_no_csd(self, header_bar):
+
+        """ Set a headerbar as a toolbar for the main window, and show the regular
+        title bar (client side decorations disabled) """
+
+        header_bar.set_title(None)
+        header_bar.set_property("show-close-button", False)
+
+        self.MainContent.pack_start(header_bar, False, False, 0)
+        self.MainContent.reorder_child(header_bar, 0)
+
+    def remove_header_bar_csd(self):
+
+        """ Remove the current CSD headerbar, and show the regular titlebar """
+
+        self.MainWindow.set_titlebar(None)
+        self.MainWindow.set_title("Nicotine+")
+
+    def remove_header_bar_no_csd(self):
+
+        """ Remove the current headerbar 'toolbar' from the UI """
+
+        header_bar = self.__dict__[self.current_header_bar_id]
+        self.MainContent.remove(header_bar)
+
+    def set_header_bar_main_menu(self, header_bar_id):
+
+        """ Add the main menu popover to a new header bar """
+
+        if self.current_header_bar_id != header_bar_id:
+            old_menu_button = self.__dict__[self.current_header_bar_id + "Menu"]
+            old_menu_button.set_popover(None)
+
+        new_menu_button = self.__dict__[header_bar_id + "Menu"]
+        new_menu_button.set_popover(self.MenuPopover)
+
+    def set_active_header_bar(self, header_bar_id):
+
+        """ Switch out the active headerbar for another one. This is used when
+        changing the active notebook tab. """
+
+        header_bar = self.__dict__[header_bar_id]
+        self.set_header_bar_main_menu(header_bar_id)
+
+        if self.np.config.sections["ui"]["header_bar"]:
+            self.set_header_bar_csd(header_bar)
+
+        else:
+            self.remove_header_bar_no_csd()
+            self.set_header_bar_no_csd(header_bar)
+
+        self.current_header_bar_id = header_bar_id
+
     """ Main Notebook """
 
     def request_tab_icon(self, tab_label, status=1):
@@ -1401,23 +1503,42 @@ class NicotineFrame:
             tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
+            self.set_active_header_bar("HeaderDefault")
+
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
             self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
+            self.set_active_header_bar("HeaderPrivateChat")
+
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
             self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
+            self.set_active_header_bar("HeaderUploads")
             self.uploads.update(forceupdate=True)
 
         elif tab_label == self.DownloadsTabLabel:
+            self.set_active_header_bar("HeaderDownloads")
             self.downloads.update(forceupdate=True)
 
         elif tab_label == self.SearchTabLabel:
+            self.set_active_header_bar("HeaderSearch")
             GLib.idle_add(self.search_entry.grab_focus)
+
+        elif tab_label == self.UserInfoTabLabel:
+            self.set_active_header_bar("HeaderUserInfo")
+
+        elif tab_label == self.UserBrowseTabLabel:
+            self.set_active_header_bar("HeaderUserBrowse")
+
+        elif tab_label == self.buddies_tab_label:
+            self.set_active_header_bar("HeaderUserList")
+
+        else:
+            self.set_active_header_bar("HeaderDefault")
 
     def on_page_removed(self, main_notebook, child, page_num):
 
@@ -1443,7 +1564,7 @@ class NicotineFrame:
 
         self.np.config.sections["ui"]["modes_order"] = tab_names
 
-        if main_notebook.get_n_pages() == 0:
+        if main_notebook.get_n_pages() <= 1:
             main_notebook.set_show_tabs(False)
         else:
             main_notebook.set_show_tabs(True)
@@ -1508,7 +1629,7 @@ class NicotineFrame:
                 num = self.MainNotebook.page_num(tab_box)
                 self.MainNotebook.remove_page(num)
 
-        if self.MainNotebook.get_n_pages() == 0:
+        if self.MainNotebook.get_n_pages() <= 1:
             self.MainNotebook.set_show_tabs(False)
 
     def set_last_session_tab(self):
@@ -1530,7 +1651,9 @@ class NicotineFrame:
         self.MainNotebook.set_current_page(0)
 
         page = self.MainNotebook.get_nth_page(0)
-        self.current_tab_label = self.MainNotebook.get_tab_label(page)
+
+        if page is not None:
+            self.current_tab_label = self.MainNotebook.get_tab_label(page)
 
     def hide_tab(self, widget, lista):
 
@@ -1558,6 +1681,7 @@ class NicotineFrame:
         event_box = self.hidden_tabs[tab_box]
 
         self.MainNotebook.append_page(tab_box, event_box)
+        self.set_tab_expand(tab_box)
         self.MainNotebook.set_tab_reorderable(tab_box, self.np.config.sections["ui"]["tab_reorderable"])
 
         del self.hidden_tabs[tab_box]
@@ -1566,6 +1690,20 @@ class NicotineFrame:
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.__dict__[popup_id].popup(None, None, None, None, event.button, event.time)
+
+    def set_tab_expand(self, tab_box):
+
+        tab_label = self.MainNotebook.get_tab_label(tab_box)
+        tab_position = self.np.config.sections["ui"]["tabmain"]
+
+        if tab_position in ("Left", "left", _("Left")) or \
+                tab_position in ("Right", "right", _("Right")):
+            expand = False
+        else:
+            expand = True
+
+        self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
+        tab_label.set_centered(expand)
 
     def get_tab_position(self, string):
 
@@ -1591,12 +1729,14 @@ class NicotineFrame:
         ui = self.np.config.sections["ui"]
 
         # Main notebook
-        self.MainNotebook.set_tab_pos(self.get_tab_position(ui["tabmain"]))
+        tab_position = ui["tabmain"]
+        self.MainNotebook.set_tab_pos(self.get_tab_position(tab_position))
 
         for i in range(self.MainNotebook.get_n_pages()):
             tab_box = self.MainNotebook.get_nth_page(i)
             tab_label = self.MainNotebook.get_tab_label(tab_box)
 
+            self.set_tab_expand(tab_box)
             tab_label.set_angle(ui["labelmain"])
 
         # Other notebooks
@@ -1809,9 +1949,6 @@ class NicotineFrame:
 
     def on_search(self, widget):
         self.searches.on_search()
-
-    def on_clear_search_history(self, widget):
-        self.searches.on_clear_search_history()
 
     """ User Info """
 
@@ -2052,6 +2189,9 @@ class NicotineFrame:
                 self.awaytimerid = None
 
     """ User Actions """
+
+    def on_add_user(self, widget):
+        self.userlist.on_add_user(widget, headerbar=True)
 
     def on_settings_ban_ignore(self, widget):
         self.on_settings(page='Ban List')
