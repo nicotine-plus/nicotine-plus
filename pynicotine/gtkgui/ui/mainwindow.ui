@@ -502,7 +502,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry">
-                <property name="max-width-chars">60</property>
+                <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
@@ -564,7 +564,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry">
-                <property name="max-width-chars">60</property>
+                <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
@@ -653,7 +653,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry">
-                <property name="max-width-chars">60</property>
+                <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
@@ -713,7 +713,7 @@
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="max-width-chars">60</property>
+            <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
             <property name="placeholder-text" translatable="yes">Add buddy...</property>
             <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
