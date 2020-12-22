@@ -1517,13 +1517,10 @@ class NetworkEventProcessor:
         if self.config.sections["transfers"]["friendsonly"]:
             return 0, "Sorry, friends only"
 
-        if not self.config.sections["transfers"]["geoblock"]:
+        if ip is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
 
-        cc = "-"
-
-        if ip is not None:
-            cc = self.geoip.get_all(ip).country_short
+        cc = self.geoip.get_all(ip).country_short
 
         if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
