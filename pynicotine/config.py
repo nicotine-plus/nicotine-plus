@@ -255,6 +255,7 @@ class Config:
 
             "ui": {
                 "dark_mode": False,
+                "header_bar": True,
                 "icontheme": "",
                 "chatme": "FOREST GREEN",
                 "chatremote": "",

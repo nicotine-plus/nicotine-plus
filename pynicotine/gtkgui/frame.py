@@ -133,11 +133,11 @@ class NicotineFrame:
         """ Main Window UI """
 
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
+        self.current_header_bar = self.HeaderDefault
 
-        """ Menu Bar """
+        """ Menu """
 
         self.set_up_actions()
-        self.MainWindow.set_titlebar(self.HeaderDefault)
 
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
@@ -328,6 +328,7 @@ class NicotineFrame:
 
         """ Element Visibility """
 
+        self.set_show_header_bar(config["ui"]["header_bar"])
         self.set_show_log(not config["logging"]["logcollapsed"])
         self.set_show_debug(config["logging"]["debug"])
         self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
@@ -805,6 +806,11 @@ class NicotineFrame:
 
         # View
 
+        state = self.np.config.sections["ui"]["header_bar"]
+        action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_header_bar)
+        self.MainWindow.add_action(action)
+
         state = not self.np.config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_log)
@@ -1009,6 +1015,25 @@ class NicotineFrame:
         self.MainWindow.destroy()
 
     # View
+
+    def set_show_header_bar(self, show):
+
+        if show:
+            self.remove_header_bar_no_csd()
+            self.set_header_bar_csd(self.current_header_bar)
+
+        else:
+            self.remove_header_bar_csd()
+            self.set_header_bar_no_csd(self.current_header_bar)
+
+    def on_show_header_bar(self, action, *args):
+
+        state = self.np.config.sections["ui"]["header_bar"]
+        self.set_show_header_bar(not state)
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        self.np.config.sections["ui"]["header_bar"] = not state
+        self.np.config.write_configuration()
 
     def set_show_log(self, show):
         if show:
@@ -1372,6 +1397,56 @@ class NicotineFrame:
         open_uri(uri, self.MainWindow)
         return True
 
+    """ Headerbar """
+
+    def set_header_bar_csd(self, header_bar):
+
+        """ Set a 'normal' headerbar for the main window (client side decorations
+        enabled) """
+
+        header_bar.set_title("Nicotine+")
+        header_bar.set_property("show-close-button", True)
+
+        self.MainWindow.set_titlebar(header_bar)
+
+    def set_header_bar_no_csd(self, header_bar):
+
+        """ Set a headerbar as a toolbar for the main window, and show the regular
+        title bar (client side decorations disabled) """
+
+        header_bar.set_title(None)
+        header_bar.set_property("show-close-button", False)
+
+        self.MainContent.pack_start(header_bar, False, False, 0)
+        self.MainContent.reorder_child(header_bar, 0)
+
+    def remove_header_bar_csd(self):
+
+        """ Remove the current CSD headerbar, and show the regular titlebar """
+
+        self.MainWindow.set_titlebar(None)
+        self.MainWindow.set_title("Nicotine+")
+
+    def remove_header_bar_no_csd(self):
+
+        """ Remove the current headerbar 'toolbar' from the UI """
+
+        self.MainContent.remove(self.current_header_bar)
+
+    def set_active_header_bar(self, header_bar):
+
+        """ Switch out the active headerbar for another one. This is used when
+        changing the active notebook tab. """
+
+        if self.np.config.sections["ui"]["header_bar"]:
+            self.set_header_bar_csd(header_bar)
+
+        else:
+            self.remove_header_bar_no_csd()
+            self.set_header_bar_no_csd(header_bar)
+
+        self.current_header_bar = header_bar
+
     """ Main Notebook """
 
     def request_tab_icon(self, tab_label, status=1):
@@ -1408,42 +1483,42 @@ class NicotineFrame:
             tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderDefault)
+            self.set_active_header_bar(self.HeaderDefault)
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
             self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderPrivateChat)
+            self.set_active_header_bar(self.HeaderPrivateChat)
 
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
             self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderUploads)
+            self.set_active_header_bar(self.HeaderUploads)
             self.uploads.update(forceupdate=True)
 
         elif tab_label == self.DownloadsTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderDownloads)
+            self.set_active_header_bar(self.HeaderDownloads)
             self.downloads.update(forceupdate=True)
 
         elif tab_label == self.SearchTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderSearch)
+            self.set_active_header_bar(self.HeaderSearch)
             GLib.idle_add(self.search_entry.grab_focus)
 
         elif tab_label == self.UserInfoTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderUserInfo)
+            self.set_active_header_bar(self.HeaderUserInfo)
 
         elif tab_label == self.UserBrowseTabLabel:
-            self.MainWindow.set_titlebar(self.HeaderUserBrowse)
+            self.set_active_header_bar(self.HeaderUserBrowse)
 
         elif tab_label == self.buddies_tab_label:
-            self.MainWindow.set_titlebar(self.HeaderUserList)
+            self.set_active_header_bar(self.HeaderUserList)
 
         else:
-            self.MainWindow.set_titlebar(self.HeaderDefault)
+            self.set_active_header_bar(self.HeaderDefault)
 
     def on_page_removed(self, main_notebook, child, page_num):
 

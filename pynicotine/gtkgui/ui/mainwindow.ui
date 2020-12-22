@@ -12,7 +12,6 @@
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
     <property name="show-close-button">1</property>
-    <property name="title" translatable="yes">Nicotine+</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
@@ -898,9 +897,8 @@
     </child>
   </object>
   <object class="GtkApplicationWindow" id="MainWindow">
-    <property name="title" translatable="yes">Nicotine+</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>

@@ -35,6 +35,10 @@
         <attribute name="label" translatable="yes">_View</attribute>
         <section>
           <item>
+            <attribute name="label" translatable="yes">Use _header bar</attribute>
+            <attribute name="action">win.showheaderbar</attribute>
+          </item>
+          <item>
             <attribute name="label" translatable="yes">Show _log window</attribute>
             <attribute name="action">win.showlog</attribute>
             <attribute name="accel">&lt;Primary&gt;l</attribute>
