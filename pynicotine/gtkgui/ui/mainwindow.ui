@@ -170,22 +170,11 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="ToggleTreeDownloads">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">File grouping mode</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkToggleButton" id="ExpandDownloads">
+          <object class="GtkToggleButton" id="ToggleAutoclearDownloads">
+            <property name="label" translatable="yes">Autoclear Finished</property>
+            <property name="tooltip-text" translatable="yes">Finished and filtered downloads will be cleared from the list</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-            <child>
-              <object class="GtkImage" id="ExpandDownloadsImage">
-                <property name="visible">1</property>
-                <property name="icon-name">list-remove-symbolic</property>
-              </object>
-            </child>
           </object>
         </child>
       </object>
@@ -285,11 +274,22 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkToggleButton" id="ToggleAutoclearDownloads">
-            <property name="label" translatable="yes">Autoclear Finished</property>
-            <property name="tooltip-text" translatable="yes">Finished and filtered downloads will be cleared from the list</property>
+          <object class="GtkToggleButton" id="ExpandDownloads">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+            <child>
+              <object class="GtkImage" id="ExpandDownloadsImage">
+                <property name="visible">1</property>
+                <property name="icon-name">go-down-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkComboBox" id="ToggleTreeDownloads">
+            <property name="visible">1</property>
+            <property name="tooltip-text" translatable="yes">File grouping mode</property>
           </object>
         </child>
         <child>
@@ -333,23 +333,11 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="ToggleTreeUploads">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">File grouping mode</property>
-            <property name="valign">center</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkToggleButton" id="ExpandUploads">
+          <object class="GtkToggleButton" id="ToggleAutoclearUploads">
+            <property name="label" translatable="yes">Autoclear Finished</property>
+            <property name="tooltip-text" translatable="yes">Finished and cancelled uploads will be cleared from the list</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-            <child>
-              <object class="GtkImage" id="ExpandUploadsImage">
-                <property name="visible">1</property>
-                <property name="icon-name">list-remove-symbolic</property>
-              </object>
-            </child>
           </object>
         </child>
       </object>
@@ -449,11 +437,23 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkToggleButton" id="ToggleAutoclearUploads">
-            <property name="label" translatable="yes">Autoclear Finished</property>
-            <property name="tooltip-text" translatable="yes">Finished and cancelled uploads will be cleared from the list</property>
+          <object class="GtkToggleButton" id="ExpandUploads">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+            <child>
+              <object class="GtkImage" id="ExpandUploadsImage">
+                <property name="visible">1</property>
+                <property name="icon-name">go-down-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkComboBox" id="ToggleTreeUploads">
+            <property name="visible">1</property>
+            <property name="tooltip-text" translatable="yes">File grouping mode</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>

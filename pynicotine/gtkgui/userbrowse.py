@@ -248,10 +248,10 @@ class UserBrowse:
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
-            self.expand.set_from_icon_name("list-remove-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
         else:
             self.FolderTreeView.collapse_all()
-            self.expand.set_from_icon_name("list-add-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
             dirs = sorted(self.directories.keys())
 
