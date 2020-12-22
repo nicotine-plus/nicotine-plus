@@ -130,9 +130,11 @@
         <property name="margin-start">5</property>
         <property name="margin-end">5</property>
         <property name="max-children-per-line">5</property>
+        <property name="selection-mode">none</property>
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -164,6 +166,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -194,6 +197,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -224,6 +228,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -254,6 +259,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>

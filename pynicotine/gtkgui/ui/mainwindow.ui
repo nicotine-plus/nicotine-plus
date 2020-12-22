@@ -1397,60 +1397,101 @@
                     <property name="column-spacing">5</property>
                     <property name="selection-mode">none</property>
                     <child>
-                      <object class="GtkLabel" id="debugLabel">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Debug output:</property>
-                        <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
-                        <property name="margin-end">10</property>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkLabel" id="debugLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Debug output:</property>
+                            <property name="xalign">0</property>
+                            <property name="margin-start">10</property>
+                            <property name="margin-end">10</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugWarnings">
-                        <property name="label" translatable="yes">Warnings</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_warnings" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugWarnings">
+                            <property name="label" translatable="yes">Warnings</property>
+                            <property name="visible">1</property>
+                            <signal name="toggled" handler="on_debug_warnings" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugSearches">
-                        <property name="label" translatable="yes">Search results</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_searches" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugSearches">
+                            <property name="label" translatable="yes">Search results</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="toggled" handler="on_debug_searches" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugConnections">
-                        <property name="label" translatable="yes">Connections</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_connections" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugConnections">
+                            <property name="label" translatable="yes">Connections</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="toggled" handler="on_debug_connections" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugMessages">
-                        <property name="label" translatable="yes">Messages</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_messages" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugMessages">
+                            <property name="label" translatable="yes">Messages</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="toggled" handler="on_debug_messages" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugTransfers">
-                        <property name="label" translatable="yes">Transfers</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_transfers" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugTransfers">
+                            <property name="label" translatable="yes">Transfers</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="toggled" handler="on_debug_transfers" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="debugStatistics">
-                        <property name="label" translatable="yes">Statistics</property>
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="toggled" handler="on_debug_statistics" swapped="no"/>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="debugStatistics">
+                            <property name="label" translatable="yes">Statistics</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <signal name="toggled" handler="on_debug_statistics" swapped="no"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
