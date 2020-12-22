@@ -2,13 +2,6 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkPopoverMenu" id="MenuPopover"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverSearch"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverDownloads"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverUploads"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverPrivateChat"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverUserInfo"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverUserBrowse"/>
-  <object class="GtkPopoverMenu" id="MenuPopoverUserList"/>
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
     <property name="show-close-button">1</property>
@@ -32,10 +25,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderDefaultMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopover</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -174,10 +166,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderSearchMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverSearch</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -338,10 +329,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderDownloadsMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverDownloads</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -503,10 +493,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderUploadsMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverUploads</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -590,10 +579,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderPrivateChatMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverPrivateChat</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -677,10 +665,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderUserInfoMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverUserInfo</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -791,10 +778,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderUserBrowseMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverUserBrowse</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -878,10 +864,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="HeaderUserListMenu">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Menu</property>
-            <property name="popover">MenuPopoverUserList</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
