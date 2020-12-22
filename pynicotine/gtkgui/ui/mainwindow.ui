@@ -274,22 +274,30 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkToggleButton" id="ExpandDownloads">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
             <child>
-              <object class="GtkImage" id="ExpandDownloadsImage">
+              <object class="GtkToggleButton" id="ExpandDownloads">
                 <property name="visible">1</property>
-                <property name="icon-name">go-down-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                <child>
+                  <object class="GtkImage" id="ExpandDownloadsImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">go-down-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="ToggleTreeDownloads">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">File grouping mode</property>
+            <child>
+              <object class="GtkComboBox" id="ToggleTreeDownloads">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">File grouping mode</property>
+              </object>
+            </child>
+            <style>
+              <class name="linked"/>
+            </style>
           </object>
         </child>
         <child>
@@ -437,23 +445,31 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkToggleButton" id="ExpandUploads">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
             <child>
-              <object class="GtkImage" id="ExpandUploadsImage">
+              <object class="GtkToggleButton" id="ExpandUploads">
                 <property name="visible">1</property>
-                <property name="icon-name">go-down-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                <child>
+                  <object class="GtkImage" id="ExpandUploadsImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">go-down-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkComboBox" id="ToggleTreeUploads">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">File grouping mode</property>
-            <property name="valign">center</property>
+            <child>
+              <object class="GtkComboBox" id="ToggleTreeUploads">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+            <style>
+              <class name="linked"/>
+            </style>
           </object>
         </child>
         <child>
