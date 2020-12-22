@@ -133,7 +133,7 @@ class NicotineFrame:
         """ Main Window UI """
 
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
-        self.current_header_bar_id = "HeaderDefault"
+        self.current_header_bar_id = "Default"
 
         """ Menu """
 
@@ -1019,7 +1019,7 @@ class NicotineFrame:
 
     def set_show_header_bar(self, show):
 
-        header_bar = self.__dict__[self.current_header_bar_id]
+        header_bar = self.__dict__["Header" + self.current_header_bar_id]
         self.set_header_bar_main_menu(self.current_header_bar_id)
 
         if show:
@@ -1421,16 +1421,20 @@ class NicotineFrame:
         """ Set a headerbar as a toolbar for the main window, and show the regular
         title bar (client side decorations disabled) """
 
-        header_bar = self.__dict__[header_bar_id]
+        header_bar = self.__dict__["Header" + header_bar_id]
 
-        self.__dict__[header_bar_id + "Menu"].hide()
+        self.__dict__["Header" + header_bar_id + "Menu"].hide()
         self.MainWindow.set_show_menubar(True)
 
         header_bar.set_title(None)
         header_bar.set_property("show-close-button", False)
 
-        self.MainContent.pack_start(header_bar, False, False, 0)
-        self.MainContent.reorder_child(header_bar, 0)
+        if header_bar_id == "Default":
+            return
+
+        # Pack the headerbar into the main notebook
+        self.__dict__[header_bar_id.lower() + "vbox"].add(header_bar)
+        self.__dict__[header_bar_id.lower() + "vbox"].reorder_child(header_bar, 0)
 
     def remove_header_bar_csd(self):
 
@@ -1442,18 +1446,21 @@ class NicotineFrame:
 
         """ Remove the current headerbar 'toolbar' from the UI """
 
-        header_bar = self.__dict__[self.current_header_bar_id]
-        self.MainContent.remove(header_bar)
+        if self.current_header_bar_id == "Default":
+            return
+
+        header_bar = self.__dict__["Header" + self.current_header_bar_id]
+        self.__dict__[self.current_header_bar_id.lower() + "vbox"].remove(header_bar)
 
     def set_header_bar_main_menu(self, header_bar_id):
 
         """ Add the main menu popover to a new header bar """
 
         if self.current_header_bar_id != header_bar_id:
-            old_menu_button = self.__dict__[self.current_header_bar_id + "Menu"]
+            old_menu_button = self.__dict__["Header" + self.current_header_bar_id + "Menu"]
             old_menu_button.set_popover(None)
 
-        new_menu_button = self.__dict__[header_bar_id + "Menu"]
+        new_menu_button = self.__dict__["Header" + header_bar_id + "Menu"]
         new_menu_button.set_popover(self.MenuPopover)
         new_menu_button.show()
 
@@ -1462,7 +1469,7 @@ class NicotineFrame:
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
-        header_bar = self.__dict__[header_bar_id]
+        header_bar = self.__dict__["Header" + header_bar_id]
 
         if self.np.config.sections["ui"]["header_bar"]:
             self.set_header_bar_csd(header_bar)
@@ -1510,42 +1517,42 @@ class NicotineFrame:
             tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
-            self.set_active_header_bar("HeaderDefault")
+            self.set_active_header_bar("Default")
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
             self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
-            self.set_active_header_bar("HeaderPrivateChat")
+            self.set_active_header_bar("PrivateChat")
 
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
             self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
-            self.set_active_header_bar("HeaderUploads")
+            self.set_active_header_bar("Uploads")
             self.uploads.update(forceupdate=True)
 
         elif tab_label == self.DownloadsTabLabel:
-            self.set_active_header_bar("HeaderDownloads")
+            self.set_active_header_bar("Downloads")
             self.downloads.update(forceupdate=True)
 
         elif tab_label == self.SearchTabLabel:
-            self.set_active_header_bar("HeaderSearch")
+            self.set_active_header_bar("Search")
             GLib.idle_add(self.search_entry.grab_focus)
 
         elif tab_label == self.UserInfoTabLabel:
-            self.set_active_header_bar("HeaderUserInfo")
+            self.set_active_header_bar("UserInfo")
 
         elif tab_label == self.UserBrowseTabLabel:
-            self.set_active_header_bar("HeaderUserBrowse")
+            self.set_active_header_bar("UserBrowse")
 
         elif tab_label == self.buddies_tab_label:
-            self.set_active_header_bar("HeaderUserList")
+            self.set_active_header_bar("UserList")
 
         else:
-            self.set_active_header_bar("HeaderDefault")
+            self.set_active_header_bar("Default")
 
     def on_page_removed(self, main_notebook, child, page_num):
 
@@ -1766,7 +1773,7 @@ class NicotineFrame:
 
         if tab == self.chathbox:
             name = "chatrooms"   # Chatrooms
-        elif tab == self.privatevbox:
+        elif tab == self.privatechatvbox:
             name = "private"     # Private rooms
         elif tab == self.downloadsvbox:
             name = "downloads"   # Downloads
@@ -1793,7 +1800,7 @@ class NicotineFrame:
         if tab == "chatrooms":
             child = self.chathbox               # Chatrooms
         elif tab == "private":
-            child = self.privatevbox            # Private rooms
+            child = self.privatechatvbox        # Private rooms
         elif tab == "downloads":
             child = self.downloadsvbox          # Downloads
         elif tab == "uploads":
