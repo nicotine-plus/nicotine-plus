@@ -284,15 +284,12 @@ class NicotineFrame:
         self.userlist = UserList(self)
 
         self.privatechats = PrivateChats(self)
-        self.sPrivateChatButton.connect("clicked", self.on_get_private_chat)
         self.UserPrivateCombo.get_child().connect("activate", self.on_get_private_chat)
 
         self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
-        self.sUserinfoButton.connect("clicked", self.on_get_user_info)
         self.UserInfoCombo.get_child().connect("activate", self.on_get_user_info)
 
         self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
-        self.sSharesButton.connect("clicked", self.on_get_shares)
         self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
 
         self.tag_log = self.LogWindow.get_buffer().create_tag()
@@ -717,24 +714,20 @@ class NicotineFrame:
         self.roomlist.AcceptPrivateRoom.set_sensitive(status)
 
         self.UserPrivateCombo.set_sensitive(status)
-        self.sPrivateChatButton.set_sensitive(status)
 
         self.UserBrowseCombo.set_sensitive(status)
-        self.sSharesButton.set_sensitive(status)
         self.LoadFromDisk.set_sensitive(status)
 
         if self.current_tab_label == self.UserBrowseTabLabel:
             GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
 
         self.UserInfoCombo.set_sensitive(status)
-        self.sUserinfoButton.set_sensitive(status)
 
         if self.current_tab_label == self.UserInfoTabLabel:
             GLib.idle_add(self.UserInfoCombo.get_child().grab_focus)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchEntryCombo.set_sensitive(status)
-        self.SearchButton.set_sensitive(status)
 
         if self.current_tab_label == self.SearchTabLabel:
             GLib.idle_add(self.search_entry.grab_focus)

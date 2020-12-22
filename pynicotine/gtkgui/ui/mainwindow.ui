@@ -92,32 +92,7 @@
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Search term...</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="SearchButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_search" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">system-search-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Search</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
+                <property name="primary-icon-name">system-search-symbolic</property>
               </object>
             </child>
           </object>
@@ -536,31 +511,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkButton" id="sPrivateChatButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">mail-send-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Message</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
     <child>
@@ -619,31 +569,6 @@
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="sUserinfoButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">avatar-default-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Show Info</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
@@ -737,31 +662,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkButton" id="sSharesButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">system-file-manager-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Browse Shares</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
     <child>
@@ -815,37 +715,10 @@
             <property name="can-focus">1</property>
             <property name="max-width-chars">60</property>
             <property name="width-chars">5</property>
-            <property name="placeholder-text" translatable="yes">Username...</property>
+            <property name="placeholder-text" translatable="yes">Add buddy...</property>
             <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
-            <signal name="clicked" handler="on_add_user" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">list-add-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Add Buddy</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
           </object>
         </child>
       </object>
