@@ -922,6 +922,12 @@ class NicotineFrame:
 
         self.MenuPopover.bind_model(builder.get_object("mainmenu"))
 
+        builder = Gtk.Builder()
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
+
+        self.application.set_menubar(builder.get_object("menubar"))
+
     # File
 
     def on_connect(self, *args):
@@ -1022,7 +1028,7 @@ class NicotineFrame:
 
         else:
             self.remove_header_bar_csd()
-            self.set_header_bar_no_csd(header_bar)
+            self.set_header_bar_no_csd(self.current_header_bar_id)
 
         Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", show)
 
@@ -1406,13 +1412,19 @@ class NicotineFrame:
 
         header_bar.set_title(GLib.get_application_name())
         header_bar.set_property("show-close-button", True)
+        self.MainWindow.set_show_menubar(False)
 
         self.MainWindow.set_titlebar(header_bar)
 
-    def set_header_bar_no_csd(self, header_bar):
+    def set_header_bar_no_csd(self, header_bar_id):
 
         """ Set a headerbar as a toolbar for the main window, and show the regular
         title bar (client side decorations disabled) """
+
+        header_bar = self.__dict__[header_bar_id]
+
+        self.__dict__[header_bar_id + "Menu"].hide()
+        self.MainWindow.set_show_menubar(True)
 
         header_bar.set_title(None)
         header_bar.set_property("show-close-button", False)
@@ -1443,6 +1455,7 @@ class NicotineFrame:
 
         new_menu_button = self.__dict__[header_bar_id + "Menu"]
         new_menu_button.set_popover(self.MenuPopover)
+        new_menu_button.show()
 
     def set_active_header_bar(self, header_bar_id):
 
@@ -1450,14 +1463,14 @@ class NicotineFrame:
         changing the active notebook tab. """
 
         header_bar = self.__dict__[header_bar_id]
-        self.set_header_bar_main_menu(header_bar_id)
 
         if self.np.config.sections["ui"]["header_bar"]:
             self.set_header_bar_csd(header_bar)
+            self.set_header_bar_main_menu(header_bar_id)
 
         else:
             self.remove_header_bar_no_csd()
-            self.set_header_bar_no_csd(header_bar)
+            self.set_header_bar_no_csd(header_bar_id)
 
         self.current_header_bar_id = header_bar_id
 
