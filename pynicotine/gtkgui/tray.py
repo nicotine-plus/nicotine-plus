@@ -20,6 +20,8 @@ import gi
 import os
 import sys
 
+from gi.repository import GLib
+
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.utils import PopupMenu
@@ -109,7 +111,7 @@ class Tray:
         users.sort()
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
-            title="Nicotine+" + ": " + _("Start Messaging"),
+            title=GLib.get_application_name() + ": " + _("Start Messaging"),
             message=_('Enter the User who you wish to send a private message:'),
             droplist=users
         )
@@ -130,7 +132,7 @@ class Tray:
 
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
-            title="Nicotine+" + ": " + _("Get User Info"),
+            title=GLib.get_application_name() + ": " + _("Get User Info"),
             message=_('Enter the User whose User Info you wish to receive:'),
             droplist=users
         )
@@ -148,7 +150,7 @@ class Tray:
 
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
-            title="Nicotine+" + ": " + _("Get A User's IP"),
+            title=GLib.get_application_name() + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
         )
@@ -167,7 +169,7 @@ class Tray:
 
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
-            title="Nicotine+" + ": " + _("Get A User's Shares List"),
+            title=GLib.get_application_name() + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
         )
@@ -190,7 +192,7 @@ class Tray:
         """
 
         if icon_type == "local":
-            icon_scheme = "org.nicotine_plus.Nicotine-" + icon_name + "."
+            icon_scheme = GLib.get_prgname() + "-" + icon_name + "."
         else:
             icon_scheme = "trayicon_" + icon_name + "."
 
@@ -247,7 +249,7 @@ class Tray:
         if self.trayicon is None:
             if self.appindicator is not None:
                 trayicon = self.appindicator.Indicator.new(
-                    "Nicotine+",
+                    GLib.get_application_name(),
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 trayicon.set_menu(self.tray_popup_menu)
@@ -259,7 +261,7 @@ class Tray:
             else:
                 # GtkStatusIcon fallback
                 trayicon = self.gtk.StatusIcon()
-                trayicon.set_tooltip_text("Nicotine+")
+                trayicon.set_tooltip_text(GLib.get_application_name())
                 trayicon.connect("activate", self.on_hide_unhide_window)
                 trayicon.connect("popup-menu", self.on_status_icon_popup)
 
@@ -334,9 +336,9 @@ class Tray:
                 if self.custom_icons:
                     icon_name = "trayicon_" + icon_name
                 else:
-                    icon_name = "org.nicotine_plus.Nicotine-" + icon_name
+                    icon_name = GLib.get_prgname() + "-" + icon_name
 
-                self.trayicon.set_icon_full(icon_name, "Nicotine+")
+                self.trayicon.set_icon_full(icon_name, GLib.get_application_name())
 
             else:
                 # GtkStatusIcon fallback
@@ -346,7 +348,7 @@ class Tray:
                     )
 
                 else:
-                    self.trayicon.set_from_icon_name("org.nicotine_plus.Nicotine-" + icon_name)
+                    self.trayicon.set_from_icon_name(GLib.get_prgname() + "-" + icon_name)
 
         except Exception as e:
             log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})

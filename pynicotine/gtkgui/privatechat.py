@@ -271,7 +271,7 @@ class PrivateChats(IconNotebook):
         self.users[msg.user].show_message(text, newmessage, msg.timestamp)
 
         if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
-            self.send_message(msg.user, "Nicotine+ %s" % version)
+            self.send_message(msg.user, GLib.get_application_name() + " " + version)
 
         self.frame.np.pluginhandler.incoming_private_chat_notification(msg.user, text)
 

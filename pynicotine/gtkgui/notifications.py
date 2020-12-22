@@ -21,6 +21,7 @@ import _thread
 
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GLib
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
@@ -87,27 +88,29 @@ class Notifications:
 
     def set_title(self, user=None):
 
+        app_name = GLib.get_application_name()
+
         if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
             # Reset Title
-            self.frame.MainWindow.set_title("Nicotine+")
+            self.frame.MainWindow.set_title(app_name)
 
         elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
             # Private Chats have a higher priority
             if len(self.frame.hilites["private"]) > 0:
                 user = self.frame.hilites["private"][-1]
                 self.frame.MainWindow.set_title(
-                    "Nicotine+ - " + _("Private Message from %(user)s") % {'user': user}
+                    app_name + " - " + _("Private Message from %(user)s") % {'user': user}
                 )
             # Allow for the possibility the username is not available
             elif len(self.frame.hilites["rooms"]) > 0:
                 room = self.frame.hilites["rooms"][-1]
                 if user is None:
                     self.frame.MainWindow.set_title(
-                        "Nicotine+ - " + _("You've been mentioned in the %(room)s room") % {'room': room}
+                        app_name + " - " + _("You've been mentioned in the %(room)s room") % {'room': room}
                     )
                 else:
                     self.frame.MainWindow.set_title(
-                        "Nicotine+ - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
+                        app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                     )
 
     def new_tts(self, message):
@@ -148,7 +151,10 @@ class Notifications:
 
         execute_command(self.frame.np.config.sections["ui"]["speechcommand"], message)
 
-    def new_notification(self, message, title="Nicotine+", priority=Gio.NotificationPriority.NORMAL):
+    def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
+
+        if title is None:
+            title = GLib.get_application_name()
 
         try:
             if sys.platform == "win32":
@@ -159,7 +165,7 @@ class Notifications:
                 from plyer import notification
 
                 notification.notify(
-                    app_name="Nicotine+",
+                    app_name=GLib.get_application_name(),
                     title=title,
                     message=message
                 )

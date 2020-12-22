@@ -147,7 +147,7 @@ class NicotineFrame:
         if self.images["n"]:
             self.MainWindow.set_default_icon(self.images["n"])
         else:
-            self.MainWindow.set_default_icon_name("org.nicotine_plus.Nicotine")
+            self.MainWindow.set_default_icon_name(GLib.get_prgname())
 
         """ Window Properties """
 
@@ -563,6 +563,8 @@ class NicotineFrame:
         """ Attempt to load local window, notification and tray icons.
         If not found, system-wide icons will be used instead. """
 
+        app_id = GLib.get_prgname()
+
         if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
             # Virtual environment
             icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
@@ -577,7 +579,7 @@ class NicotineFrame:
             scandir = os.scandir(icon_path)
 
             for entry in scandir:
-                if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine.svg":
+                if entry.is_file() and entry.name == app_id + ".svg":
                     log.add_debug("Detected Nicotine+ icon: %s", entry.name)
 
                     try:
@@ -601,7 +603,7 @@ class NicotineFrame:
                 scandir = os.scandir(icon_path)
 
                 for entry in scandir:
-                    if entry.is_file() and entry.name == "org.nicotine_plus.Nicotine-" + name + ".svg":
+                    if entry.is_file() and entry.name == app_id + "-" + name + ".svg":
                         log.add_debug("Detected tray icon: %s", entry.name)
 
                         try:
@@ -1402,7 +1404,7 @@ class NicotineFrame:
         """ Set a 'normal' headerbar for the main window (client side decorations
         enabled) """
 
-        header_bar.set_title("Nicotine+")
+        header_bar.set_title(GLib.get_application_name())
         header_bar.set_property("show-close-button", True)
 
         self.MainWindow.set_titlebar(header_bar)
@@ -1423,7 +1425,6 @@ class NicotineFrame:
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
         self.MainWindow.set_titlebar(None)
-        self.MainWindow.set_title("Nicotine+")
 
     def remove_header_bar_no_csd(self):
 
@@ -2791,8 +2792,12 @@ class NicotineFrame:
 class MainApp(Gtk.Application):
 
     def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
-        Gtk.Application.__init__(self, application_id="org.nicotine_plus.Nicotine",
-                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+
+        application_id = "org.nicotine_plus.Nicotine"
+
+        super().__init__(application_id=application_id)
+        GLib.set_application_name("Nicotine+")
+        GLib.set_prgname(application_id)
 
         self.data_dir = data_dir
         self.config = config
