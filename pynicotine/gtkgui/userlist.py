@@ -203,19 +203,14 @@ class UserList:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 14, 'flag_')
 
-    def on_add_user(self, widget, headerbar=False):
+    def on_add_user(self, widget):
 
-        if headerbar:
-            entry = self.frame.AddUserEntry
-        else:
-            entry = self.AddUserEntry
-
-        text = entry.get_text()
+        text = widget.get_text()
 
         if not text:
             return
 
-        entry.set_text("")
+        widget.set_text("")
         self.add_to_list(text)
 
     def update_visuals(self):

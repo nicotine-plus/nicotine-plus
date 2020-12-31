@@ -2197,7 +2197,7 @@ class NicotineFrame:
     """ User Actions """
 
     def on_add_user(self, widget):
-        self.userlist.on_add_user(widget, headerbar=True)
+        self.userlist.on_add_user(widget)
 
     def on_settings_ban_ignore(self, widget):
         self.on_settings(page='Ban List')
@@ -2527,7 +2527,7 @@ class NicotineFrame:
             log.add(orig_msg, msg_args)
 
     def set_user_status(self, status):
-        self.UserStatus.set_text(status)
+        self.UserStatus.set_markup("<b>%s</b>" % status)
 
     def set_socket_status(self, status):
         self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})

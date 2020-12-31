@@ -15,7 +15,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Buddy List</property>
+            <property name="label" translatable="yes">&lt;b&gt;Buddy List&lt;/b&gt;</property>
             <property name="use-markup">1</property>
             <property name="margin-start">5</property>
             <property name="margin-end">10</property>
@@ -33,25 +33,12 @@
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <property name="hexpand">1</property>
+            <property name="width-chars">15</property>
+            <property name="placeholder-text" translatable="yes">Add buddy...</property>
+            <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
-            <property name="tooltip-text" translatable="yes">Add Buddy</property>
-            <signal name="clicked" handler="on_add_user" swapped="no"/>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">list-add-symbolic</property>
-              </object>
-            </child>
-            <style>
-                <class name="image-button"/>
-            </style>
           </object>
         </child>
         <child>
@@ -61,7 +48,6 @@
             <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Configure banned users</property>
             <property name="halign">end</property>
-            <property name="hexpand">True</property>
             <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
             <child>
               <object class="GtkImage">

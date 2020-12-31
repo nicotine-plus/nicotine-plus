@@ -16,7 +16,7 @@
           <object class="GtkLabel" id="ChatroomsLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Chat Rooms</property>
+            <property name="label" translatable="yes">&lt;b&gt;Chat Rooms&lt;/b&gt;</property>
             <property name="use-markup">1</property>
             <property name="margin-start">5</property>
             <property name="margin-end">10</property>
@@ -27,6 +27,7 @@
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="hexpand">1</property>
+            <property name="width-chars">15</property>
             <signal name="activate" handler="on_search_room" swapped="no"/>
           </object>
         </child>

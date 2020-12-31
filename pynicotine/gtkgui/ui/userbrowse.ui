@@ -29,7 +29,8 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Folders</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Folders&lt;/b&gt;</property>
+                        <property name="use-markup">1</property>
                       </object>
                     </child>
                     <child>
@@ -69,7 +70,8 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Shared</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Shared&lt;/b&gt;</property>
+                        <property name="use-markup">1</property>
                       </object>
                     </child>
                     <child>
