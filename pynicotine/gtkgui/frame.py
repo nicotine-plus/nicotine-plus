@@ -184,14 +184,6 @@ class NicotineFrame:
         if not start_hidden and not config["ui"]["startup_hidden"]:
             self.MainWindow.show()
 
-        """ Status Bar """
-
-        self.status_context_id = self.Statusbar.get_context_id("")
-        self.socket_context_id = self.SocketStatus.get_context_id("")
-        self.user_context_id = self.UserStatus.get_context_id("")
-        self.down_context_id = self.DownStatus.get_context_id("")
-        self.up_context_id = self.UpStatus.get_context_id("")
-
         """ Notebooks """
 
         # Initialise main notebook
@@ -2528,20 +2520,17 @@ class NicotineFrame:
         if msg_args:
             msg = msg % msg_args
 
-        self.Statusbar.pop(self.status_context_id)
-        self.Statusbar.push(self.status_context_id, msg)
+        self.Statusbar.set_text(msg)
         self.Statusbar.set_tooltip_text(msg)
 
         if orig_msg and should_log:
             log.add(orig_msg, msg_args)
 
     def set_user_status(self, status):
-        self.UserStatus.pop(self.user_context_id)
-        self.UserStatus.push(self.user_context_id, status)
+        self.UserStatus.set_text(status)
 
     def set_socket_status(self, status):
-        self.SocketStatus.pop(self.socket_context_id)
-        self.SocketStatus.push(self.socket_context_id, "%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
+        self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
     def show_scan_progress(self, sharestype):
         if sharestype == "normal":
@@ -2590,10 +2579,8 @@ class NicotineFrame:
         self.DownloadFiles.set_markup("<b>%d</b>" % filesdown)
         self.UploadFiles.set_markup("<b>%d</b>" % filesup)
 
-        self.DownStatus.pop(self.down_context_id)
-        self.UpStatus.pop(self.up_context_id)
-        self.DownStatus.push(self.down_context_id, "%(speed)s (%(num)i)" % {'num': total_usersdown, 'speed': down})
-        self.UpStatus.push(self.up_context_id, "%(speed)s (%(num)i)" % {'num': total_usersup, 'speed': up})
+        self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersdown, 'speed': down})
+        self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersup, 'speed': up})
 
         self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
