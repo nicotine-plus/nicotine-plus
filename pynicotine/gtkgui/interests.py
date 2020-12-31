@@ -194,8 +194,8 @@ class Interests:
         self.update_visuals()
 
     def on_add_thing_i_like(self, widget):
-        thing = self.AddLikeEntry.get_text()
-        self.AddLikeEntry.set_text("")
+        thing = widget.get_text()
+        widget.set_text("")
 
         if thing and thing.lower() not in self.np.config.sections["interests"]["likes"]:
             thing = thing.lower()
@@ -205,8 +205,8 @@ class Interests:
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget):
-        thing = self.AddDislikeEntry.get_text()
-        self.AddDislikeEntry.set_text("")
+        thing = widget.get_text()
+        widget.set_text("")
 
         if thing and thing.lower() not in self.np.config.sections["interests"]["dislikes"]:
             thing = thing.lower()

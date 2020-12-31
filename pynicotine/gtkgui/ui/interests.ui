@@ -22,14 +22,13 @@
                 <property name="margin-end">10</property>
                 <property name="margin-top">13</property>
                 <property name="margin-bottom">13</property>
-                <property name="label" translatable="yes">&lt;b&gt;Your Interests&lt;/b&gt;</property>
+                <property name="label" translatable="yes">&lt;b&gt;My Interests&lt;/b&gt;</property>
                 <property name="use-markup">1</property>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">6</property>
                 <property name="orientation">vertical</property>
                 <property name="vexpand">1</property>
                 <child>
@@ -50,34 +49,19 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <property name="margin-start">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="AddLikeEntry">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
+                        <property name="width-chars">15</property>
+                        <property name="placeholder-text" translatable="yes">Add something you like...</property>
+                        <property name="primary-icon-name">non-starred-symbolic</property>
                         <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="clicked" handler="on_add_thing_i_like" swapped="no"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">1</property>
-                            <property name="icon-name">list-add-symbolic</property>
-                          </object>
-                        </child>
                         <style>
-                          <class name="image-button"/>
+                          <class name="flat"/>
                         </style>
                       </object>
                     </child>
@@ -88,7 +72,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">6</property>
+                <property name="margin-top">6</property>
                 <property name="orientation">vertical</property>
                 <property name="vexpand">1</property>
                 <child>
@@ -109,34 +93,19 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <property name="margin-start">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkEntry" id="AddDislikeEntry">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
+                        <property name="width-chars">15</property>
+                        <property name="placeholder-text" translatable="yes">Add something you dislike...</property>
+                        <property name="primary-icon-name">action-unavailable-symbolic</property>
                         <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <signal name="clicked" handler="on_add_thing_i_dislike" swapped="no"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">1</property>
-                            <property name="icon-name">list-add-symbolic</property>
-                          </object>
-                        </child>
                         <style>
-                          <class name="image-button"/>
+                          <class name="flat"/>
                         </style>
                       </object>
                     </child>
