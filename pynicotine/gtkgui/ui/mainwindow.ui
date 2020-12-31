@@ -164,21 +164,6 @@
   <object class="GtkHeaderBar" id="HeaderDownloads">
     <property name="visible">1</property>
     <property name="show-close-button">1</property>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">6</property>
-        <property name="valign">center</property>
-        <child>
-          <object class="GtkToggleButton" id="ToggleAutoclearDownloads">
-            <property name="label" translatable="yes">Autoclear Finished</property>
-            <property name="tooltip-text" translatable="yes">Finished and filtered downloads will be cleared from the list</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-          </object>
-        </child>
-      </object>
-    </child>
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
@@ -335,21 +320,6 @@
   <object class="GtkHeaderBar" id="HeaderUploads">
     <property name="visible">1</property>
     <property name="show-close-button">1</property>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">6</property>
-        <property name="valign">center</property>
-        <child>
-          <object class="GtkToggleButton" id="ToggleAutoclearUploads">
-            <property name="label" translatable="yes">Autoclear Finished</property>
-            <property name="tooltip-text" translatable="yes">Finished and cancelled uploads will be cleared from the list</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-          </object>
-        </child>
-      </object>
-    </child>
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>

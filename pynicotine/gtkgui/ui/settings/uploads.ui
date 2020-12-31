@@ -43,6 +43,33 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
+            <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="AutoclearFinished">
+            <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">start</property>
             <property name="label" translatable="yes">&lt;b&gt;Upload Queue&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
@@ -360,33 +387,6 @@
             <property name="position">1</property>
           </packing>
         </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">&lt;b&gt;Privileges&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkCheckButton" id="PreferFriends">
             <property name="label" translatable="yes">Privilege all my friends</property>
@@ -400,15 +400,10 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

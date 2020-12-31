@@ -84,9 +84,6 @@ class Downloads(TransferList):
         frame.deleteTransferButton.connect("clicked", self.on_clear_transfer)
         frame.DownloadList.expand_all()
 
-        self.frame.ToggleAutoclearDownloads.set_active(self.frame.np.config.sections["transfers"]["autoclear_downloads"])
-        frame.ToggleAutoclearDownloads.connect("toggled", self.on_toggle_autoclear)
-
         fill_file_grouping_combobox(frame.ToggleTreeDownloads)
         frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
         frame.ToggleTreeDownloads.connect("changed", self.on_toggle_tree)
@@ -142,9 +139,6 @@ class Downloads(TransferList):
 
         self.frame.np.config.sections["transfers"]["downloadsexpanded"] = expanded
         self.frame.np.config.write_configuration()
-
-    def on_toggle_autoclear(self, widget):
-        self.frame.np.config.sections["transfers"]["autoclear_downloads"] = self.frame.ToggleAutoclearDownloads.get_active()
 
     def on_toggle_tree(self, widget):
         self.tree_users = self.frame.ToggleTreeDownloads.get_active()

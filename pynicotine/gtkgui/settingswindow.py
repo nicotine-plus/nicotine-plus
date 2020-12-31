@@ -206,6 +206,7 @@ class DownloadsFrame(BuildFrame):
 
         self.options = {
             "transfers": {
+                "autoclear_downloads": self.AutoclearFinished,
                 "lock": self.LockIncoming,
                 "reverseorder": self.DownloadReverseOrder,
                 "prioritize": self.DownloadChecksumsFirst,
@@ -319,6 +320,7 @@ class DownloadsFrame(BuildFrame):
 
         return {
             "transfers": {
+                "autoclear_downloads": self.AutoclearFinished.get_active(),
                 "lock": self.LockIncoming.get_active(),
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "prioritize": self.DownloadChecksumsFirst.get_active(),
@@ -1006,6 +1008,7 @@ class UploadsFrame(BuildFrame):
 
         self.options = {
             "transfers": {
+                "autoclear_uploads": self.AutoclearFinished,
                 "uploadbandwidth": self.QueueBandwidth,
                 "useupslots": self.QueueUseSlots,
                 "uploadslots": self.QueueSlots,
@@ -1032,6 +1035,7 @@ class UploadsFrame(BuildFrame):
 
         return {
             "transfers": {
+                "autoclear_uploads": self.AutoclearFinished.get_active(),
                 "uploadbandwidth": self.QueueBandwidth.get_value_as_int(),
                 "useupslots": self.QueueUseSlots.get_active(),
                 "uploadslots": self.QueueSlots.get_value_as_int(),
