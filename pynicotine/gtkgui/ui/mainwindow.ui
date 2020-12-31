@@ -480,7 +480,6 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserPrivateCombo">
@@ -542,7 +541,6 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserInfoCombo">
@@ -631,7 +629,6 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBox" id="UserBrowseCombo">
@@ -693,7 +690,6 @@
     <child type="title">
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkEntry" id="AddUserEntry">
