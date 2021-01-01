@@ -48,6 +48,7 @@
     <child type="title">
       <object class="GtkBox" id="SearchTitle">
         <property name="visible">1</property>
+        <property name="hexpand">0</property>
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
@@ -88,6 +89,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry">
+                <property name="hexpand">1</property>
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Search term...</property>
