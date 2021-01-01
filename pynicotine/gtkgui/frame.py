@@ -1533,7 +1533,9 @@ class NicotineFrame:
 
     def on_switch_page(self, notebook, page, page_num):
 
-        tab_label = self.MainNotebook.get_tab_label(page)
+        GLib.idle_add(notebook.grab_focus)
+
+        tab_label = notebook.get_tab_label(page)
         self.current_tab_label = tab_label
 
         if tab_label is not None:
