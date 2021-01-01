@@ -133,7 +133,7 @@ class NicotineFrame:
         """ Main Window UI """
 
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
-        self.current_header_bar_id = "Default"
+        self.current_page_id = "Default"
 
         """ Menu """
 
@@ -1011,16 +1011,15 @@ class NicotineFrame:
 
     def set_show_header_bar(self, show):
 
-        header_bar = self.__dict__["Header" + self.current_header_bar_id]
-        self.set_header_bar_main_menu(self.current_header_bar_id)
+        self.set_header_bar_main_menu(self.current_page_id)
 
         if show:
-            self.remove_header_bar_no_csd()
-            self.set_header_bar_csd(header_bar)
+            self.remove_toolbar()
+            self.set_header_bar(self.current_page_id)
 
         else:
-            self.remove_header_bar_csd()
-            self.set_header_bar_no_csd(self.current_header_bar_id)
+            self.remove_header_bar()
+            self.set_toolbar(self.current_page_id)
 
         Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", show)
 
@@ -1395,83 +1394,117 @@ class NicotineFrame:
         open_uri(uri, self.MainWindow)
         return True
 
-    """ Headerbar """
+    """ Headerbar/toolbar """
 
-    def set_header_bar_csd(self, header_bar):
+    def set_header_bar(self, page_id):
 
         """ Set a 'normal' headerbar for the main window (client side decorations
         enabled) """
 
-        header_bar.set_title(GLib.get_application_name())
-        header_bar.set_property("show-close-button", True)
         self.MainWindow.set_show_menubar(False)
 
+        header_bar = self.__dict__["Header" + page_id]
+        header_bar.set_title(GLib.get_application_name())
         self.MainWindow.set_titlebar(header_bar)
 
-    def set_header_bar_no_csd(self, header_bar_id):
+    def set_toolbar(self, page_id):
 
-        """ Set a headerbar as a toolbar for the main window, and show the regular
+        """ Move the headerbar widgets to a GtkBox "toolbar", and show the regular
         title bar (client side decorations disabled) """
 
-        header_bar = self.__dict__["Header" + header_bar_id]
-
-        self.__dict__["Header" + header_bar_id + "Menu"].hide()
         self.MainWindow.set_show_menubar(True)
 
-        header_bar.set_title(None)
-        header_bar.set_property("show-close-button", False)
-
-        if header_bar_id == "Default":
+        if page_id == "Default":
+            # No toolbar needed for this page
             return
 
-        # Pack the headerbar into the main notebook
-        self.__dict__[header_bar_id.lower() + "vbox"].add(header_bar)
-        self.__dict__[header_bar_id.lower() + "vbox"].reorder_child(header_bar, 0)
+        header_bar = self.__dict__["Header" + page_id]
+        toolbar = self.__dict__[page_id + "Toolbar"]
 
-    def remove_header_bar_csd(self):
+        self.__dict__["Header" + page_id + "Menu"].hide()
+
+        title_widget = self.__dict__[page_id + "Title"]
+        header_bar.set_custom_title(None)
+        toolbar.pack_start(title_widget, True, True, 0)
+
+        end_widget = self.__dict__[page_id + "End"]
+        header_bar.remove(end_widget)
+        toolbar.pack_end(end_widget, False, False, 0)
+
+        try:
+            start_widget = self.__dict__[page_id + "Start"]
+            header_bar.remove(start_widget)
+            toolbar.add(start_widget)
+
+        except KeyError:
+            # No start widget
+            pass
+
+        toolbar.show()
+
+    def remove_header_bar(self):
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
         self.MainWindow.set_titlebar(None)
 
-    def remove_header_bar_no_csd(self):
+    def remove_toolbar(self):
 
-        """ Remove the current headerbar 'toolbar' from the UI """
+        """ Move the GtkBox toolbar widgets back to the headerbar, and hide
+        the toolbar """
 
-        if self.current_header_bar_id == "Default":
+        if self.current_page_id == "Default":
+            # No toolbar on this page
             return
 
-        header_bar = self.__dict__["Header" + self.current_header_bar_id]
-        self.__dict__[self.current_header_bar_id.lower() + "vbox"].remove(header_bar)
+        header_bar = self.__dict__["Header" + self.current_page_id]
+        toolbar = self.__dict__[self.current_page_id + "Toolbar"]
 
-    def set_header_bar_main_menu(self, header_bar_id):
+        title_widget = self.__dict__[self.current_page_id + "Title"]
+        toolbar.remove(title_widget)
+        header_bar.set_custom_title(title_widget)
+
+        end_widget = self.__dict__[self.current_page_id + "End"]
+        toolbar.remove(end_widget)
+        header_bar.pack_end(end_widget)
+
+        try:
+            start_widget = self.__dict__[self.current_page_id + "Start"]
+            toolbar.remove(start_widget)
+            header_bar.add(start_widget)
+
+        except KeyError:
+            # No start widget
+            pass
+
+        toolbar.hide()
+
+    def set_header_bar_main_menu(self, page_id):
 
         """ Add the main menu popover to a new header bar """
 
-        if self.current_header_bar_id != header_bar_id:
-            old_menu_button = self.__dict__["Header" + self.current_header_bar_id + "Menu"]
+        if self.current_page_id != page_id:
+            old_menu_button = self.__dict__["Header" + self.current_page_id + "Menu"]
             old_menu_button.set_popover(None)
 
-        new_menu_button = self.__dict__["Header" + header_bar_id + "Menu"]
+        new_menu_button = self.__dict__["Header" + page_id + "Menu"]
         new_menu_button.set_popover(self.MenuPopover)
         new_menu_button.show()
 
-    def set_active_header_bar(self, header_bar_id):
+    def set_active_header_bar(self, page_id):
 
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
-        header_bar = self.__dict__["Header" + header_bar_id]
-
         if self.np.config.sections["ui"]["header_bar"]:
-            self.set_header_bar_csd(header_bar)
-            self.set_header_bar_main_menu(header_bar_id)
+            self.set_header_bar(page_id)
+            self.set_header_bar_main_menu(page_id)
 
         else:
-            self.remove_header_bar_no_csd()
-            self.set_header_bar_no_csd(header_bar_id)
+            self.remove_toolbar()
+            self.set_toolbar(page_id)
 
-        self.current_header_bar_id = header_bar_id
+        self.current_page_id = page_id
 
     """ Main Notebook """
 

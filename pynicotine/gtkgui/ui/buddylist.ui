@@ -5,6 +5,16 @@
     <property name="visible">1</property>
     <property name="orientation">vertical</property>
     <child>
+      <object class="GtkBox" id="UserListToolbar">
+        <property name="visible">1</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="spacing">6</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkBox" id="BuddiesToolbar">
         <property name="visible">1</property>
         <property name="margin-start">6</property>
