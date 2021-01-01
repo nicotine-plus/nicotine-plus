@@ -1447,7 +1447,9 @@ class NicotineFrame:
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
+        self.MainWindow.unrealize()
         self.MainWindow.set_titlebar(None)
+        self.MainWindow.map()
 
     def remove_toolbar(self):
 
