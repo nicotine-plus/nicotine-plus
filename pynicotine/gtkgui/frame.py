@@ -135,6 +135,8 @@ class NicotineFrame:
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
         self.current_page_id = "Default"
 
+        Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", config["ui"]["header_bar"])
+
         """ Menu """
 
         self.set_up_actions()
@@ -309,7 +311,6 @@ class NicotineFrame:
 
         """ Element Visibility """
 
-        self.set_show_header_bar(config["ui"]["header_bar"])
         self.set_show_log(not config["logging"]["logcollapsed"])
         self.set_show_debug(config["logging"]["debug"])
         self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
