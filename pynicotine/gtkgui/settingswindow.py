@@ -2597,7 +2597,7 @@ class CensorFrame(BuildFrame):
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
         store = treeview.get_model()
-        iterator = store.get_iterator(index)
+        iterator = store.get_iter(index)
 
         if value != "" and not value.isspace() and len(value) > 2:
             store.set(iterator, pos, value)
