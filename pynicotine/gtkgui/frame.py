@@ -182,10 +182,6 @@ class NicotineFrame:
         if config["ui"]["maximized"]:
             self.MainWindow.maximize()
 
-        # Check command line option and config option
-        if not start_hidden and not config["ui"]["startup_hidden"]:
-            self.MainWindow.show()
-
         """ Notebooks """
 
         # Initialise main notebook
@@ -419,6 +415,10 @@ class NicotineFrame:
         self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
         self.MainNotebook.connect("page-reordered", self.on_page_reordered)
         self.MainNotebook.connect("page-added", self.on_page_added)
+
+        # Check command line option and config option
+        if not start_hidden and not config["ui"]["startup_hidden"]:
+            self.MainWindow.show()
 
     """ Window """
 
@@ -1660,6 +1660,10 @@ class NicotineFrame:
             self.MainNotebook.set_show_tabs(False)
 
     def set_last_session_tab(self):
+
+        # Small hack to trigger "switch-page" signal for default page (0), so the header
+        # bar is updated
+        self.MainNotebook.set_current_page(-1)
 
         try:
             if self.np.config.sections["ui"]["tab_select_previous"]:
