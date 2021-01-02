@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-18 23:57+0200\n"
-"PO-Revision-Date: 2020-11-20 19:44+0100\n"
+"PO-Revision-Date: 2021-01-01 17:44+0100\n"
 "Last-Translator: mariachini <Unknown>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -749,7 +749,7 @@ msgstr "Otrzymano żądanie transferu %s ale nie ustalono żądającego"
 #: ../pynicotine/transfers.py:543
 #, python-format
 msgid "Denied file request: User %(user)s, %(msg)s"
-msgstr ""
+msgstr "Zablokowane żądanie pliku: Użytkownik %(user)s, %(msg)s"
 
 #: ../pynicotine/transfers.py:556
 #, python-format
@@ -1347,7 +1347,7 @@ msgstr ""
 #: ../pynicotine/gtkgui/settingswindow.py:592
 #: ../pynicotine/gtkgui/settingswindow.py:602
 msgid "Virtual Directory"
-msgstr "Wirtualny Katalog"
+msgstr "Wirtualny katalog"
 
 #: ../pynicotine/gtkgui/fastconfigure.py:98 ../pynicotine/gtkgui/search.py:493
 #: ../pynicotine/gtkgui/settingswindow.py:593
@@ -1449,12 +1449,12 @@ msgstr "Szukaj plików"
 #: ../pynicotine/gtkgui/frame.py:203
 #: ../pynicotine/gtkgui/settingswindow.py:3471 ../pynicotine/gtkgui/tray.py:75
 msgid "Downloads"
-msgstr "Pobierane"
+msgstr "Pobieranie"
 
 #: ../pynicotine/gtkgui/frame.py:204
 #: ../pynicotine/gtkgui/settingswindow.py:3472 ../pynicotine/gtkgui/tray.py:76
 msgid "Uploads"
-msgstr "Wysyłane"
+msgstr "Wysyłanie"
 
 #: ../pynicotine/gtkgui/frame.py:205
 #: ../pynicotine/gtkgui/ui/settings/notebook.ui.h:13
@@ -1474,7 +1474,7 @@ msgstr "Czat prywatny"
 #: ../pynicotine/gtkgui/frame.py:208
 #: ../pynicotine/gtkgui/ui/settings/notebook.ui.h:9
 msgid "Chat rooms"
-msgstr "Lista pokojów"
+msgstr "Pokoje rozmów"
 
 #: ../pynicotine/gtkgui/frame.py:209
 msgid "Interests"
@@ -2141,7 +2141,7 @@ msgstr "Informacje o użytkowniku"
 
 #: ../pynicotine/gtkgui/settingswindow.py:3467
 msgid "Logging"
-msgstr ""
+msgstr "Logowanie zdarzeń"
 
 #: ../pynicotine/gtkgui/settingswindow.py:3469
 #: ../pynicotine/gtkgui/ui/mainwindow.ui.h:37
@@ -2817,7 +2817,7 @@ msgstr "Lista komend w pokojach rozmów"
 
 #: ../pynicotine/gtkgui/ui/chatrooms.ui.h:5
 msgid "User List"
-msgstr "Lista użytkowników"
+msgstr "Liczba użytkowników"
 
 #: ../pynicotine/gtkgui/ui/chatrooms.ui.h:6
 msgid "Auto-join Room"
@@ -3171,11 +3171,11 @@ msgstr "Wyniki"
 
 #: ../pynicotine/gtkgui/ui/search.ui.h:2
 msgid "Filter results"
-msgstr "Filtrowane wyniki"
+msgstr "Filtruj wyniki"
 
 #: ../pynicotine/gtkgui/ui/search.ui.h:3
 msgid "Add wish"
-msgstr "Dodaj życzenie"
+msgstr "Dodaj do listy życzeń"
 
 #: ../pynicotine/gtkgui/ui/search.ui.h:4
 msgid "This search term will be requested at regular intervals"
@@ -3187,7 +3187,7 @@ msgstr "Zatrzymaj dalsze wyświetlanie znalezionych wyników"
 
 #: ../pynicotine/gtkgui/ui/search.ui.h:7
 msgid "Ignore"
-msgstr "Ignoruj"
+msgstr "Zatrzymaj"
 
 #: ../pynicotine/gtkgui/ui/search.ui.h:8
 msgid "Result grouping mode"
@@ -3622,7 +3622,7 @@ msgstr "Zamknij Nicotine+"
 
 #: ../pynicotine/gtkgui/ui/about/privatechatcommands.ui.h:1
 msgid "About private chat commands"
-msgstr "Lista komend prywatnych rozmów"
+msgstr "Lista komend w prywatnych rozmowach"
 
 #: ../pynicotine/gtkgui/ui/about/privatechatcommands.ui.h:2
 msgid "/close /c"
@@ -3730,7 +3730,7 @@ msgstr "Pokaż okno _logów"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:12
 msgid "Show _debug output controls"
-msgstr ""
+msgstr "Pokaż opcje debuggera"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:13
 msgid "Show _room list"
@@ -3750,7 +3750,7 @@ msgstr "Lista znajomych w oddzielnej zakładce"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:17
 msgid "Buddylist in Chatrooms"
-msgstr "Lista znajomych w Pokojach rozmów"
+msgstr "Lista znajomych w pokojach rozmów"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:18
 msgid "Buddylist always visible"
@@ -3786,7 +3786,7 @@ msgstr "Prze_glądaj udostępnienia zasobów znajomych"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:26
 msgid "_Modes"
-msgstr "_Tryby"
+msgstr "_Sekcje"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:27
 msgid "_Search Files"
@@ -3802,7 +3802,7 @@ msgstr "_Wysyłane"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:30
 msgid "User _Browse"
-msgstr "Przeglądaj użytkownika"
+msgstr "Przeglądanie użytkownika"
 
 #: ../pynicotine/gtkgui/ui/menus/menubar.ui.h:31
 msgid "User I_nfo"
@@ -3950,7 +3950,7 @@ msgstr "Styl czcionki użytkownika:"
 
 #: ../pynicotine/gtkgui/ui/settings/colours.ui.h:10
 msgid "Username Colors and Hotspots"
-msgstr ""
+msgstr "Koloruj nazwy użytkowników"
 
 #: ../pynicotine/gtkgui/ui/settings/colours.ui.h:11
 msgid "Display away colors"
@@ -3974,7 +3974,7 @@ msgstr "Tekst zdalny"
 
 #: ../pynicotine/gtkgui/ui/settings/colours.ui.h:16
 msgid "<b>List and Search Colors</b>"
-msgstr "<b>Kolory listy i wyszukiwań<b>"
+msgstr "<b>Kolory listy i wyszukiwań</b>"
 
 #: ../pynicotine/gtkgui/ui/settings/colours.ui.h:17
 msgid "With Queue"
@@ -4066,7 +4066,7 @@ msgstr "Schowaj listę rozwijaną jeśli jest jedno dopasowanie"
 
 #: ../pynicotine/gtkgui/ui/settings/downloads.ui.h:2
 msgid "Lock incoming files (turn off for NFS)"
-msgstr ""
+msgstr "Zablokuj przychodzące pliki (wyłącz gdy używasz NFS)"
 
 #: ../pynicotine/gtkgui/ui/settings/downloads.ui.h:3
 msgid "Download folders in reverse alphanumerical order"
@@ -4369,6 +4369,7 @@ msgstr "<b>Historia czatów</b>"
 #: ../pynicotine/gtkgui/ui/settings/log.ui.h:13
 msgid "Display logged chat room messages when a room is rejoined"
 msgstr ""
+"Wyświetlaj zalogowane wiadomości czatu gdy dołączasz ponownie do pokoju"
 
 #: ../pynicotine/gtkgui/ui/settings/log.ui.h:14
 msgid "Read"
@@ -4563,7 +4564,7 @@ msgstr "znaków lub więcej"
 
 #: ../pynicotine/gtkgui/ui/settings/search.ui.h:5
 msgid "Send out a max of"
-msgstr ""
+msgstr "Wyślij maksymalnie"
 
 #: ../pynicotine/gtkgui/ui/settings/search.ui.h:6
 msgid "results per search request"
@@ -4618,7 +4619,7 @@ msgstr "Filtr wejścia:"
 
 #: ../pynicotine/gtkgui/ui/settings/server.ui.h:1
 msgid "<b>Login Details</b>"
-msgstr ""
+msgstr "<b>Konto użytkownika</b>"
 
 #: ../pynicotine/gtkgui/ui/settings/server.ui.h:2
 msgid ""
@@ -4806,7 +4807,7 @@ msgstr ""
 
 #: ../pynicotine/gtkgui/ui/settings/uploads.ui.h:15
 msgid "Megabytes"
-msgstr ""
+msgstr "megabajtów"
 
 #: ../pynicotine/gtkgui/ui/settings/uploads.ui.h:17
 msgid "Queue size limit does not apply to friends"
