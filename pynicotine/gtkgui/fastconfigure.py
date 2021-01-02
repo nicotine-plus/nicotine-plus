@@ -20,17 +20,10 @@
 
 import os
 
-from os.path import getsize
-from os.path import join
-
-from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
-import _thread
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
-from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
