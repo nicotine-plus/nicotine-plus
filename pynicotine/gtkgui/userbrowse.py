@@ -33,6 +33,7 @@ from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import InfoBar
@@ -196,7 +197,9 @@ class UserBrowse:
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("#" + _("Send to _Player"), self.on_play_files),
-                ("#" + _("Open in File Manager"), self.on_file_manager)
+                ("#" + _("Open in File Manager"), self.on_file_manager),
+                ("", None),
+                ("#" + _("File Properties"), self.on_file_properties)
             )
         else:
             self.file_popup_menu.setup(
@@ -204,7 +207,9 @@ class UserBrowse:
                 ("", None),
                 (1, _("Download"), self.popup_menu_downloads_files, None),
                 ("", None),
-                ("#" + _("Copy _URL"), self.on_copy_url)
+                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("", None),
+                ("#" + _("File Properties"), self.on_file_properties)
             )
 
         self.FileTreeView.connect("button_press_event", self.on_file_clicked)
@@ -642,6 +647,35 @@ class UserBrowse:
 
         self.on_resort(column, column_id)
 
+    def selected_results_all_data(self, model, path, iterator, data):
+
+        filename = model.get_value(iterator, 0)
+        fn = "\\".join([self.selected_folder, filename])
+        size = model.get_value(iterator, 1)
+        bitratestr = model.get_value(iterator, 2)
+        length = model.get_value(iterator, 3)
+
+        data.append({
+            "user": self.user,
+            "fn": fn,
+            "filename": filename,
+            "directory": self.selected_folder,
+            "size": size,
+            "bitrate": bitratestr,
+            "length": length,
+            "immediate": None,
+            "speed": None,
+            "country": None
+        })
+
+    def on_file_properties(self, widget):
+
+        data = []
+        self.FileTreeView.get_selection().selected_foreach(self.selected_results_all_data, data)
+
+        if data:
+            FileProperties(self.frame, data).show()
+
     def on_download_directory(self, widget):
 
         if self.selected_folder is not None:
@@ -677,7 +711,7 @@ class UserBrowse:
 
     def download_directory(self, folder, prefix="", recurse=0):
 
-        if folder is None:
+        if self.frame.np.transfers is None or folder is None:
             return
 
         ldir = prefix + folder.split("\\")[-1]
@@ -736,6 +770,9 @@ class UserBrowse:
                 self.download_directory(subdir, os.path.join(ldir, ""))
 
     def on_download_files(self, widget, prefix=""):
+
+        if not self.frame.np.transfers:
+            return
 
         folder = self.selected_folder
 
@@ -814,6 +851,9 @@ class UserBrowse:
 
     def upload_directory_to(self, user, folder, recurse=0):
 
+        if not self.frame.np.transfers:
+            return
+
         if folder == "" or folder is None or user is None or user == "":
             return
 
@@ -841,6 +881,9 @@ class UserBrowse:
                 self.upload_directory_to(user, subdir, recurse)
 
     def on_upload_files(self, widget, prefix=""):
+
+        if not self.frame.np.transfers:
+            return
 
         folder = self.selected_folder
         realpath = self.frame.np.shares.virtual2real(folder)

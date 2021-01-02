@@ -54,6 +54,9 @@ class FileProperties:
         self.update_current_file()
 
     def on_download_item(self, widget):
+        if not self.frame.np.transfers:
+            return
+
         properties = self.properties[self.current_index]
         self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
 

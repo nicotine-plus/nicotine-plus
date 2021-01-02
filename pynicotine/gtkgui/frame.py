@@ -711,7 +711,6 @@ class NicotineFrame:
         self.UserPrivateCombo.set_sensitive(status)
 
         self.UserBrowseCombo.set_sensitive(status)
-        self.LoadFromDisk.set_sensitive(status)
 
         if self.current_tab_label == self.UserBrowseTabLabel:
             GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
