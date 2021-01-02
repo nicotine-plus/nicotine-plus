@@ -65,9 +65,9 @@ class Uploads(TransferList):
             ("#" + _("Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
+            ("#" + _("_Retry"), self.on_upload_transfer),
             ("#" + _("Abor_t"), self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
-            ("#" + _("_Retry"), self.on_upload_transfer),
             ("", None),
             (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
@@ -224,6 +224,8 @@ class Uploads(TransferList):
         if users and files:
             act = True
         else:
+            # Disable options
+            # Retry, Abort, Clear
             act = False
 
         for i in range(7, 10):

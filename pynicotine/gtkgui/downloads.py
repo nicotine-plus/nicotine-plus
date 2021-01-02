@@ -70,7 +70,6 @@ class Downloads(TransferList):
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
             ("#" + _("_Retry"), self.on_retry_transfer),
-            ("", None),
             ("#" + _("Abor_t"), self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
@@ -334,12 +333,12 @@ class Downloads(TransferList):
 
         if not users or not files:
             # Disable options
-            # Abort, Abort and Remove, retry, clear
+            # Retry, Abort, Clear
             act = False
         else:
             act = True
 
-        for i in range(8, 13):
+        for i in range(8, 11):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)
