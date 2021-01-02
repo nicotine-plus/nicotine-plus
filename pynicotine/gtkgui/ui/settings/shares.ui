@@ -7,19 +7,35 @@
     <property name="spacing">15</property>
     <property name="orientation">vertical</property>
     <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+        <property name="use_markup">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access your buddy shares in addition to public shares.</property>
+        <property name="use_markup">True</property>
+        <property name="justify">fill</property>
+        <property name="wrap">True</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkCheckButton" id="RescanOnStartup">
         <property name="label" translatable="yes">Rescan shares on startup</property>
+        <property name="tooltip_text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
         <property name="use_underline">True</property>
         <property name="draw_indicator">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
@@ -29,16 +45,12 @@
         <property name="label" translatable="yes">&lt;b&gt;Public Shares&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="vexpand">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkScrolledWindow">
@@ -181,36 +193,27 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="spacing">15</property>
         <child>
           <object class="GtkCheckButton" id="enableBuddyShares">
-            <property name="label" translatable="yes">Enable Buddy-Only shares</property>
+            <property name="label" translatable="yes">Buddy Shares</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">If buddy shares are enabled, they will be shared. Otherwise normal shares will be used.</property>
+            <property name="tooltip_text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
             <property name="use_underline">True</property>
             <property name="draw_indicator">True</property>
             <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="FriendsOnly">
-            <property name="label" translatable="yes">Share only to buddies</property>
+            <property name="label" translatable="yes">Make public shares buddy-only</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -220,37 +223,16 @@
             <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="pack_type">end</property>
-            <property name="position">1</property>
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="halign">start</property>
-        <property name="label" translatable="yes">&lt;b&gt;Buddies-Only Shares&lt;/b&gt;</property>
-        <property name="use_markup">True</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="vexpand">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkScrolledWindow">
@@ -393,11 +375,6 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">True</property>
-        <property name="fill">True</property>
-        <property name="position">5</property>
-      </packing>
     </child>
   </object>
 </interface>

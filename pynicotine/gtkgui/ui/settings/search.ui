@@ -60,7 +60,8 @@
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkCheckButton" id="ToggleResults">
-                <property name="label" translatable="yes">Enable sending search results to other users</property>
+                <property name="label" translatable="yes">Respond to search requests from other users</property>
+                <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -83,7 +84,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">1</property>
-                    <property name="label" translatable="yes">Only send search results if search terms contain</property>
+                    <property name="label" translatable="yes">Only respond to search requests if search term contains</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

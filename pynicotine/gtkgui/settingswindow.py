@@ -715,12 +715,6 @@ class SharesFrame(BuildFrame):
             self.FriendsOnly.set_active(False)
             self.FriendsOnly.set_sensitive(False)
 
-        # Public shares are deactivated if we only share with friends
-        self.Shares.set_sensitive(not (friendsonly and buddies))
-        self.addSharesButton.set_sensitive(not (friendsonly and buddies))
-        self.removeSharesButton.set_sensitive(not (friendsonly and buddies))
-        self.renameVirtualsButton.set_sensitive(not (friendsonly and buddies))
-
         # Buddy shares are activated only if needed
         self.BuddyShares.set_sensitive(buddies)
         self.addBuddySharesButton.set_sensitive(buddies)
@@ -3261,8 +3255,8 @@ class PluginFrame(BuildFrame):
         }
 
         self.plugins_model = Gtk.ListStore(
-            GObject.TYPE_STRING,
             GObject.TYPE_BOOLEAN,
+            GObject.TYPE_STRING,
             GObject.TYPE_STRING
         )
 
@@ -3272,14 +3266,14 @@ class PluginFrame(BuildFrame):
 
         cols = initialise_columns(
             self.PluginTreeView,
-            [_("Plugins"), 380, "text"],
-            [_("Enabled"), -1, "toggle"]
+            [_("Enabled"), 0, "toggle"],
+            [_("Plugins"), 380, "text"]
         )
 
         cols[0].set_sort_column_id(0)
         cols[1].set_sort_column_id(1)
 
-        renderers = cols[1].get_cells()
+        renderers = cols[0].get_cells()
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 
@@ -3320,7 +3314,7 @@ class PluginFrame(BuildFrame):
 
         iterator = self.plugins_model.get_iter(index)
         plugin = self.plugins_model.get_value(iterator, 2)
-        value = self.plugins_model.get_value(iterator, 1)
+        value = self.plugins_model.get_value(iterator, 0)
         self.plugins_model.set(iterator, pos, not value)
 
         if not value:
@@ -3356,7 +3350,7 @@ class PluginFrame(BuildFrame):
             except IOError:
                 continue
             enabled = (plugin in self.frame.np.pluginhandler.enabled_plugins)
-            self.pluginsiters[filter] = self.plugins_model.append([info['Name'], enabled, plugin])
+            self.pluginsiters[filter] = self.plugins_model.append([enabled, info['Name'], plugin])
 
         return {}
 
@@ -3370,7 +3364,7 @@ class PluginFrame(BuildFrame):
 
             # Uncheck all checkboxes in GUI
             for plugin in self.plugins_model:
-                self.plugins_model.set(plugin.iter, 1, False)
+                self.plugins_model.set(plugin.iter, 0, False)
 
     def get_settings(self):
         return {
@@ -3418,7 +3412,6 @@ class Settings:
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
         self.tree["User Info"] = model.append(row, [_("User Info"), "User Info"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
 
@@ -3444,13 +3437,13 @@ class Settings:
         self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
         self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
+        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
 
         # Build individual categories
         p["Server"] = ServerFrame(self)
         p["Searches"] = SearchFrame(self)
         p["Notifications"] = NotificationsFrame(self)
         p["Plugins"] = PluginFrame(self)
-        p["Text To Speech"] = TTSFrame(self)
         p["User Info"] = UserinfoFrame(self)
         p["Logging"] = LogFrame(self)
 
@@ -3473,6 +3466,7 @@ class Settings:
         p["Auto-Replace List"] = AutoReplaceFrame(self)
         p["URL Catching"] = UrlCatchFrame(self)
         p["Completion"] = CompletionFrame(self)
+        p["Text To Speech"] = TTSFrame(self)
 
         # Title of the treeview
         column = Gtk.TreeViewColumn(_("Categories"), Gtk.CellRendererText(), text=0)

@@ -142,7 +142,7 @@ class Config:
                 "bwordindex": {},
                 "bfileindex": {},
                 "bsharedmtimes": {},
-                "rescanonstartup": False,
+                "rescanonstartup": True,
                 "enablefilters": True,
                 "downloadregexp": "",
                 "downloadfilters": [
