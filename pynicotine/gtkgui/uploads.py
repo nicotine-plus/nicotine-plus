@@ -32,7 +32,6 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
-from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
@@ -45,8 +44,8 @@ class Uploads(TransferList):
         TransferList.__init__(self, frame, frame.UploadList, type='upload')
         self.tab_label = tab_label
 
-        self.popup_menu_users = PopupMenu(self.frame, False)
-        self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
+        self.popup_menu_users = PopupMenu(frame, False)
+        self.popup_menu_clear = popup2 = PopupMenu(frame, False)
         popup2.setup(
             ("#" + _("Clear finished/erred"), self.on_clear_finished_erred),
             ("#" + _("Clear finished/aborted"), self.on_clear_finished_aborted),
@@ -77,17 +76,12 @@ class Uploads(TransferList):
         frame.abortUploadButton.connect("clicked", self.on_abort_transfer)
         frame.abortUserUploadButton.connect("clicked", self.on_abort_user)
         frame.banUploadButton.connect("clicked", self.on_ban)
-        frame.UploadList.expand_all()
 
-        fill_file_grouping_combobox(frame.ToggleTreeUploads)
-        frame.ToggleTreeUploads.set_active(self.frame.np.config.sections["transfers"]["groupuploads"])
         frame.ToggleTreeUploads.connect("changed", self.on_toggle_tree)
-        self.on_toggle_tree(None)
+        frame.ToggleTreeUploads.set_active(frame.np.config.sections["transfers"]["groupuploads"])
 
-        self.frame.ExpandUploads.set_active(self.frame.np.config.sections["transfers"]["uploadsexpanded"])
         frame.ExpandUploads.connect("toggled", self.on_expand_uploads)
-
-        self.on_expand_uploads(None)
+        frame.ExpandUploads.set_active(frame.np.config.sections["transfers"]["uploadsexpanded"])
 
     def on_try_clear_queued(self, widget):
         option_dialog(
@@ -120,7 +114,7 @@ class Uploads(TransferList):
         if self.frame.ExpandUploads.get_active():
             self.frame.UploadList.expand_to_path(transfer_path)
 
-        elif user_path and self.tree_users == 1:
+        elif user_path and self.tree_users == "folder_grouping":
             # Group by folder, show user folders in collapsed mode
 
             self.frame.UploadList.expand_to_path(user_path)
@@ -141,15 +135,17 @@ class Uploads(TransferList):
 
     def on_toggle_tree(self, widget):
 
-        self.tree_users = self.frame.ToggleTreeUploads.get_active()
-        self.frame.np.config.sections["transfers"]["groupuploads"] = self.tree_users
+        pos = self.frame.ToggleTreeUploads.get_active()
+        self.frame.np.config.sections["transfers"]["groupuploads"] = pos
 
-        self.rebuild_transfers()
+        self.tree_users = self.frame.ToggleTreeUploads.get_active_id()
 
-        if self.tree_users == 0:
+        if self.tree_users == "ungrouped":
             self.frame.ExpandUploads.hide()
         else:
             self.frame.ExpandUploads.show()
+
+        self.rebuild_transfers()
 
     def on_key_press_event(self, widget, event):
 

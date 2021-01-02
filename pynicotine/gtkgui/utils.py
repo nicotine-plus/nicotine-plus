@@ -120,23 +120,6 @@ def load_ui_elements(ui_class, filename):
     builder.connect_signals(ui_class)
 
 
-def fill_file_grouping_combobox(combobox):
-    grouplist = Gtk.ListStore(str)
-    groups = [
-        "No grouping",
-        "Group by folder",
-        "Group by user",
-    ]
-
-    for group in groups:
-        grouplist.append([group])
-
-    combobox.set_model(grouplist)
-    renderer_text = Gtk.CellRendererText()
-    combobox.pack_start(renderer_text, True)
-    combobox.add_attribute(renderer_text, "text", 0)
-
-
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
     while iterator is not None:
         user = fmodel.get_value(iterator, user_index)
@@ -151,10 +134,10 @@ def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
         iterator = fmodel.iter_next(iterator)
 
 
-def collapse_treeview(treeview, groupingmode):
+def collapse_treeview(treeview, grouping_mode):
     treeview.collapse_all()
 
-    if groupingmode == 1:
+    if grouping_mode == "folder_grouping":
         # Group by folder
 
         model = treeview.get_model()
@@ -1130,7 +1113,7 @@ class PopupMenu(Gtk.Menu):
         return self.user
 
     def on_search_user(self, widget):
-        self.frame.SearchMethod.set_active_iter(self.frame.searchmethods[_("User")])
+        self.frame.SearchMethod.set_active_id("user")
         self.frame.UserSearchCombo.get_child().set_text(self.user)
         self.frame.change_main_page("search")
 

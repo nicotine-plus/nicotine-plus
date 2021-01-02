@@ -33,7 +33,6 @@ from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
-from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import open_file_path
@@ -48,8 +47,8 @@ class Downloads(TransferList):
         TransferList.__init__(self, frame, frame.DownloadList, type='download')
         self.tab_label = tab_label
 
-        self.popup_menu_users = PopupMenu(self.frame, False)
-        self.popup_menu_clear = popup2 = PopupMenu(self.frame, False)
+        self.popup_menu_users = PopupMenu(frame, False)
+        self.popup_menu_clear = popup2 = PopupMenu(frame, False)
         popup2.setup(
             ("#" + _("Clear finished/aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear finished"), self.on_clear_finished),
@@ -81,16 +80,12 @@ class Downloads(TransferList):
         frame.retryTransferButton.connect("clicked", self.on_retry_transfer)
         frame.abortTransferButton.connect("clicked", self.on_abort_transfer)
         frame.deleteTransferButton.connect("clicked", self.on_clear_transfer)
-        frame.DownloadList.expand_all()
 
-        fill_file_grouping_combobox(frame.ToggleTreeDownloads)
-        frame.ToggleTreeDownloads.set_active(self.frame.np.config.sections["transfers"]["groupdownloads"])
         frame.ToggleTreeDownloads.connect("changed", self.on_toggle_tree)
-        self.on_toggle_tree(None)
+        frame.ToggleTreeDownloads.set_active(frame.np.config.sections["transfers"]["groupdownloads"])
 
-        self.frame.ExpandDownloads.set_active(self.frame.np.config.sections["transfers"]["downloadsexpanded"])
         frame.ExpandDownloads.connect("toggled", self.on_expand_downloads)
-        self.on_expand_downloads(None)
+        frame.ExpandDownloads.set_active(frame.np.config.sections["transfers"]["downloadsexpanded"])
 
     def on_try_clear_queued(self, widget):
         option_dialog(
@@ -120,7 +115,7 @@ class Downloads(TransferList):
         if self.frame.ExpandDownloads.get_active():
             self.frame.DownloadList.expand_to_path(transfer_path)
 
-        elif user_path and self.tree_users == 1:
+        elif user_path and self.tree_users == "folder_grouping":
             # Group by folder, show user folders in collapsed mode
 
             self.frame.DownloadList.expand_to_path(user_path)
@@ -140,10 +135,13 @@ class Downloads(TransferList):
         self.frame.np.config.write_configuration()
 
     def on_toggle_tree(self, widget):
-        self.tree_users = self.frame.ToggleTreeDownloads.get_active()
-        self.frame.np.config.sections["transfers"]["groupdownloads"] = self.tree_users
 
-        if self.tree_users == 0:
+        pos = self.frame.ToggleTreeDownloads.get_active()
+        self.frame.np.config.sections["transfers"]["groupdownloads"] = pos
+
+        self.tree_users = self.frame.ToggleTreeDownloads.get_active_id()
+
+        if self.tree_users == "ungrouped":
             self.frame.ExpandDownloads.hide()
         else:
             self.frame.ExpandDownloads.show()

@@ -52,9 +52,17 @@
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="SearchMethod">
+          <object class="GtkComboBoxText" id="SearchMethod">
             <property name="visible">1</property>
             <property name="tooltip-text" translatable="yes">Search scope</property>
+            <property name="active-id">global</property>
+            <signal name="changed" handler="on_search_method" swapped="no"/>
+            <items>
+              <item translatable="yes" id="global">Global</item>
+              <item translatable="yes" id="buddies">Buddies</item>
+              <item translatable="yes" id="rooms">Rooms</item>
+              <item translatable="yes" id="user">User</item>
+            </items>
           </object>
         </child>
         <child>
@@ -277,9 +285,14 @@
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="ToggleTreeDownloads">
+              <object class="GtkComboBoxText" id="ToggleTreeDownloads">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                <items>
+                  <item translatable="yes" id="ungrouped">Ungrouped</item>
+                  <item translatable="yes" id="folder_grouping">Group by Folder</item>
+                  <item translatable="yes" id="user_grouping">Group by User</item>
+                </items>
               </object>
             </child>
             <style>
@@ -433,10 +446,14 @@
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="ToggleTreeUploads">
+              <object class="GtkComboBoxText" id="ToggleTreeUploads">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
-                <property name="valign">center</property>
+                <items>
+                  <item translatable="yes" id="ungrouped">Ungrouped</item>
+                  <item translatable="yes" id="folder_grouping">Group by Folder</item>
+                  <item translatable="yes" id="user_grouping">Group by User</item>
+                </items>
               </object>
             </child>
             <style>

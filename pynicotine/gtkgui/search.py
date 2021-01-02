@@ -36,7 +36,6 @@ from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
-from pynicotine.gtkgui.utils import fill_file_grouping_combobox
 from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_size
@@ -111,7 +110,9 @@ class Searches(IconNotebook):
         self.frame.search_entry_combo_model.append([""])
 
     def on_search(self):
+
         self.save_columns()
+
         text = self.frame.search_entry.get_text().strip()
 
         if not text:
@@ -119,53 +120,52 @@ class Searches(IconNotebook):
 
         users = []
         room = None
-        search_mode = self.frame.SearchMethod.get_model().get(self.frame.SearchMethod.get_active_iter(), 0)[0]
+        search_mode = self.frame.SearchMethod.get_active_id()
+        feedback = None
 
-        if search_mode == _("Global"):
-            mode = 0
-        elif search_mode == _("Rooms"):
-            mode = 1
+        if search_mode == "global":
+            feedback = self.frame.np.pluginhandler.outgoing_global_search_event(text)
+
+            if feedback is not None:
+                text = feedback[0]
+
+        elif search_mode == "rooms":
             name = self.frame.RoomSearchCombo.get_child().get_text()
             # Space after Joined Rooms is important, so it doesn't conflict
             # with any possible real room
             if name != _("Joined Rooms ") and not name.isspace():
                 room = name
-        elif search_mode == _("Buddies"):
-            mode = 2
-        elif search_mode == _("User"):
-            mode = 3
+
+            feedback = self.frame.np.pluginhandler.outgoing_room_search_event(room, text)
+
+            if feedback is not None:
+                (room, text) = feedback
+
+        elif search_mode == "buddies":
+            feedback = self.frame.np.pluginhandler.outgoing_buddy_search_event(text)
+
+            if feedback is not None:
+                text = feedback[0]
+
+        elif search_mode == "user":
             user = self.frame.UserSearchCombo.get_child().get_text().strip()
-            if user != "" and not user.isspace():
+
+            if user:
                 users = [user]
             else:
                 return
-        else:
-            mode = 0
 
-        feedback = None
-
-        if mode == 0:
-            feedback = self.frame.np.pluginhandler.outgoing_global_search_event(text)
-            if feedback is not None:
-                text = feedback[0]
-        elif mode == 1:
-            feedback = self.frame.np.pluginhandler.outgoing_room_search_event(room, text)
-            if feedback is not None:
-                (room, text) = feedback
-        elif mode == 2:
-            feedback = self.frame.np.pluginhandler.outgoing_buddy_search_event(text)
-            if feedback is not None:
-                text = feedback[0]
-        elif mode == 3:
             feedback = self.frame.np.pluginhandler.outgoing_user_search_event(users, text)
+
             if feedback is not None:
                 (users, text) = feedback
+
         else:
             log.add_warning(_("Unknown search mode, not using plugin system. Fix me!"))
             feedback = True
 
         if feedback is not None:
-            self.do_search(text, mode, users, room)
+            self.do_search(text, search_mode, users, room)
             self.frame.search_entry.set_text("")
 
     def do_search(self, text, mode, users=[], room=None):
@@ -215,20 +215,23 @@ class Searches(IconNotebook):
         for i in templist:
             self.frame.search_entry_combo_model.append([i])
 
-        if mode == 3 and users != [] and users[0] != '':
+        if mode == "user" and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
 
         search = self.create_tab(self.searchid, searchterm_with_excluded, mode, showtab=True)
         if search[2] is not None:
             self.set_current_page(self.page_num(search[2].Main))
 
-        if mode == 0:
+        if mode == "global":
             self.do_global_search(self.searchid, searchterm_without_excluded)
-        elif mode == 1:
+
+        elif mode == "rooms":
             self.do_rooms_search(self.searchid, searchterm_without_excluded, room)
-        elif mode == 2:
+
+        elif mode == "buddies":
             self.do_buddies_search(self.searchid, searchterm_without_excluded)
-        elif mode == 3 and users != [] and users[0] != '':
+
+        elif mode == "user" and users != [] and users[0] != '':
             self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
         self.searchid += 1
@@ -283,13 +286,23 @@ class Searches(IconNotebook):
         return search
 
     def show_tab(self, tab, id, text, mode):
-        if mode:
-            fulltext = "(" + ("", _("Rooms"), _("Buddies"), self.get_user_search_name(id))[mode] + ") " + text
-            label = fulltext[:15]
+
+        length = 15
+
+        if mode == "rooms":
+            fulltext = "(" + _("Rooms") + ") " + text
+
+        elif mode == "buddies":
+            fulltext = "(" + _("Buddies") + ") " + text
+
+        elif mode == "user":
+            fulltext = "(" + self.get_user_search_name(id) + ") " + text
+
         else:
             fulltext = text
-            label = fulltext[:20]
+            length = 20
 
+        label = fulltext[:length]
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
 
     def show_result(self, msg, username, country):
@@ -359,10 +372,10 @@ class Searches(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Copy search term"), self.searches[search_id][2].on_copy_search_term),
+            ("#" + _("Copy Search Term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
-            ("#" + _("Clear all results"), self.searches[search_id][2].on_clear),
-            ("#" + _("Close this tab"), self.searches[search_id][2].on_close)
+            ("#" + _("Clear All Results"), self.searches[search_id][2].on_clear),
+            ("#" + _("Close This Tab"), self.searches[search_id][2].on_close)
         )
 
         return popup
@@ -434,14 +447,7 @@ class Search:
             '>': operator.gt
         }
 
-        fill_file_grouping_combobox(self.ResultGrouping)
-        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
-        self.ResultGrouping.connect("changed", self.on_group)
-
-        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
-        self.ExpandButton.connect("toggled", self.on_toggle_expand_all)
-
-        if mode > 0:
+        if mode != "global":
             self.RememberCheckButton.set_sensitive(False)
 
         self.RememberCheckButton.set_active(remember)
@@ -452,13 +458,6 @@ class Search:
         self.ResultsList.set_enable_tree_lines(True)
         self.ResultsList.set_headers_clickable(True)
         self.ResultsList.set_rubber_banding(True)
-
-        if self.ResultGrouping.get_active() > 0:
-            # Group by folder or user
-
-            self.ResultsList.set_show_expanders(True)
-        else:
-            self.ResultsList.set_show_expanders(False)
 
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
@@ -497,12 +496,6 @@ class Search:
         )
 
         self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
-
-        if self.ResultGrouping.get_active() > 0:
-            # Group by folder or user
-
-            self.ResultsList.get_columns()[0].set_visible(False)
-            self.ExpandButton.show()
 
         hide_columns(cols, self.frame.np.config.sections["columns"]["filesearch_columns"])
 
@@ -590,6 +583,11 @@ class Search:
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users)
         )
+
+        """ Grouping """
+
+        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
+        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
@@ -755,7 +753,7 @@ class Search:
 
         iterator = self.add_row_to_model(row)
 
-        if self.ResultGrouping.get_active() > 0:
+        if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
 
             if self.ExpandButton.get_active():
@@ -767,12 +765,12 @@ class Search:
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
             else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
     def add_row_to_model(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue = row
 
-        if self.ResultGrouping.get_active() > 0:
+        if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
 
             if user not in self.usersiters:
@@ -783,7 +781,7 @@ class Search:
 
             parent = self.usersiters[user]
 
-            if self.ResultGrouping.get_active() == 1:
+            if self.ResultGrouping.get_active_id() == "folder_grouping":
                 # Group by folder
 
                 if directory not in self.directoryiters:
@@ -1254,7 +1252,7 @@ class Search:
 
         self.ResultsList.set_show_expanders(widget.get_active())
 
-        self.frame.np.config.sections["searches"]["group_searches"] = self.ResultGrouping.get_active()
+        self.frame.np.config.sections["searches"]["group_searches"] = widget.get_active()
 
         if widget.get_active():
             self.ResultsList.get_columns()[0].set_visible(False)
@@ -1271,7 +1269,7 @@ class Search:
             self.ResultsList.expand_all()
             self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
         else:
-            collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
+            collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
             self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
         self.frame.np.config.sections["searches"]["expand_searches"] = active
@@ -1287,13 +1285,13 @@ class Search:
             self.set_filters(0, None, None, None, None, None, "")
             self.ResultsList.set_model(self.resultsmodel)
 
-        if self.ResultGrouping.get_active() > 0:
+        if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
 
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
     def on_ignore(self, widget):
 
@@ -1368,13 +1366,13 @@ class Search:
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
         self.ResultsList.set_model(self.resultsmodel)
 
-        if self.ResultGrouping.get_active() > 0:
+        if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
 
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active())
+                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
     def on_about_filters(self, widget):
         self.frame.on_about_filters(widget)

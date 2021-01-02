@@ -131,7 +131,7 @@
                 <property name="can-focus">1</property>
                 <property name="receives-default">1</property>
                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-                <property name="active">1</property>
+                <signal name="toggled" handler="on_toggle_expand_all" swapped="no"/>
                 <child>
                   <object class="GtkImage" id="expand">
                     <property name="visible">1</property>
@@ -144,9 +144,15 @@
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="ResultGrouping">
+              <object class="GtkComboBoxText" id="ResultGrouping">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">Result grouping mode</property>
+                <signal name="changed" handler="on_group" swapped="no"/>
+                <items>
+                  <item translatable="yes" id="ungrouped">Ungrouped</item>
+                  <item translatable="yes" id="folder_grouping">Group by Folder</item>
+                  <item translatable="yes" id="user_grouping">Group by User</item>
+                </items>
               </object>
             </child>
             <style>

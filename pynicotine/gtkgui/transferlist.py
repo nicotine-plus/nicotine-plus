@@ -453,7 +453,7 @@ class TransferList:
             shortfn = fn.split("\\")[-1]
             filecount = 1
 
-            if self.tree_users > 0:
+            if self.tree_users != "ungrouped":
                 # Group by folder or user
 
                 if user not in self.users:
@@ -466,7 +466,7 @@ class TransferList:
 
                 parent = self.users[user]
 
-                if self.tree_users == 1:
+                if self.tree_users == "folder_grouping":
                     # Group by folder
 
                     """ Paths can be empty if files are downloaded individually, make sure we
@@ -492,7 +492,7 @@ class TransferList:
                 parent = None
 
             # Add a new transfer
-            if self.tree_users == 1:
+            if self.tree_users == "folder_grouping":
                 # Group by folder, path not visible
                 path = None
             else:
@@ -508,7 +508,7 @@ class TransferList:
             if parent is not None:
                 transfer_path = self.transfersmodel.get_path(iterator)
 
-                if self.tree_users == 1:
+                if self.tree_users == "folder_grouping":
                     # Group by folder, we need the user path to expand it
 
                     user_path = self.transfersmodel.get_path(self.users[user])

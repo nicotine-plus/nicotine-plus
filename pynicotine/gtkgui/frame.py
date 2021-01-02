@@ -259,13 +259,6 @@ class NicotineFrame:
         self.RoomSearchCombo.set_model(self.room_search_combo_model)
         self.RoomSearchCombo.set_entry_text_column(0)
 
-        self.search_method_model = Gtk.ListStore(str)
-        self.SearchMethod.set_model(self.search_method_model)
-
-        renderer_text = Gtk.CellRendererText()
-        self.SearchMethod.pack_start(renderer_text, True)
-        self.SearchMethod.add_attribute(renderer_text, "text", 0)
-
         # Initialise other notebooks
         self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
@@ -394,7 +387,6 @@ class NicotineFrame:
 
         # Search Methods
         self.searchroomslist = {}
-        self.searchmethods = {}
 
         # Create a list of objects of the BuddiesComboBox class
         # This add a few methods to add/remove entries on all combobox at once
@@ -408,8 +400,6 @@ class NicotineFrame:
         # Initial filling of the buddies combobox
         _thread.start_new_thread(self.buddies_combos_fill, ("",))
 
-        self.search_method_model.clear()
-
         # Space after Joined Rooms is important, so it doesn't conflict
         # with any possible real room, but if it's not translated with the space
         # nothing awful will happen
@@ -418,12 +408,6 @@ class NicotineFrame:
         self.RoomSearchCombo.set_active_iter(self.searchroomslist[joined_rooms])
 
         """ Search """
-
-        for method in [_("Global"), _("Buddies"), _("Rooms"), _("User")]:
-            self.searchmethods[method] = self.search_method_model.append([method])
-
-        self.SearchMethod.set_active_iter(self.searchmethods[_("Global")])
-        self.SearchMethod.connect("changed", self.on_search_method)
 
         self.UserSearchCombo.hide()
         self.RoomSearchCombo.hide()
@@ -1922,9 +1906,9 @@ class NicotineFrame:
     def on_search_method(self, widget):
 
         act = False
-        search_mode = self.SearchMethod.get_model().get(self.SearchMethod.get_active_iter(), 0)[0]
+        search_mode = self.SearchMethod.get_active_id()
 
-        if search_mode == _("User"):
+        if search_mode == "user":
             self.UserSearchCombo.show()
             act = True
         else:
@@ -1933,7 +1917,7 @@ class NicotineFrame:
         self.UserSearchCombo.set_sensitive(act)
 
         act = False
-        if search_mode == _("Rooms"):
+        if search_mode == "rooms":
             act = True
             self.RoomSearchCombo.show()
         else:
