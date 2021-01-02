@@ -91,18 +91,22 @@ class UserBrowse:
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_users2 = PopupMenu(self.frame, False)
-        for menu in [self.popup_menu_users, self.popup_menu_users2]:
+        self.popup_menu_users_tab = PopupMenu(self.frame)
+        for menu in (self.popup_menu_users, self.popup_menu_users2, self.popup_menu_users_tab):
             menu.setup(
                 ("#" + _("Send _message"), menu.on_send_message),
                 ("#" + _("Show IP a_ddress"), menu.on_show_ip_address),
                 ("#" + _("Get user i_nfo"), menu.on_get_user_info),
                 ("#" + _("Gi_ve privileges"), menu.on_give_privileges),
+                ("#" + _("Client Version"), menu.on_version),
                 ("", None),
                 ("#" + _("_Save shares list to disk"), self.on_save),
                 ("", None),
                 ("$" + _("_Add user to list"), menu.on_add_to_list),
                 ("$" + _("_Ban this user"), menu.on_ban_user),
-                ("$" + _("_Ignore this user"), menu.on_ignore_user)
+                ("$" + _("_Ignore this user"), menu.on_ignore_user),
+                ("", None),
+                ("#" + _("_Close this tab"), self.on_close)
             )
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
@@ -138,7 +142,6 @@ class UserBrowse:
         )
 
         self.folder_popup_menu = PopupMenu(self.frame)
-        self.folder_popup_menu.set_user(user)
 
         if user == self.frame.np.config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
@@ -230,17 +233,9 @@ class UserBrowse:
 
         items = menu.get_children()
 
-        act = True
-        items[0].set_sensitive(act)
-        items[1].set_sensitive(act)
-        items[2].set_sensitive(act)
-
-        items[7].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[8].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-        items[9].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-
-        for i in range(3, 10):
-            items[i].set_sensitive(act)
+        items[8].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
+        items[9].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+        items[10].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
 
         return True
 
@@ -606,6 +601,16 @@ class UserBrowse:
             fraction = float(msg.bytes) / msg.total
 
         self.progressbar1.set_fraction(fraction)
+
+    def tab_popup(self, user):
+
+        items = self.popup_menu_users_tab.get_children()
+
+        items[8].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
+        items[9].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+        items[10].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+
+        return self.popup_menu_users_tab
 
     def on_select_dir(self, selection):
 

@@ -145,31 +145,8 @@ class UserTabs(IconNotebook):
 
     def tab_popup(self, user):
 
-        popup = PopupMenu(self.frame)
-        popup.setup(
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("#" + _("Client Version"), popup.on_version),
-            ("", None),
-            ("$" + _("Add user to list"), popup.on_add_to_list),
-            ("$" + _("Ban this user"), popup.on_ban_user),
-            ("$" + _("Ignore this user"), popup.on_ignore_user),
-            ("", None),
-            ("#" + _("Close this tab"), self.users[user].on_close)
-        )
-
-        popup.set_user(user)
-
-        items = popup.get_children()
-
-        items[7].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[8].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[9].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
-        return popup
+        if user in self.users:
+            return self.users[user].tab_popup(user)
 
     def on_tab_click(self, widget, event, child):
 
@@ -185,7 +162,10 @@ class UserTabs(IconNotebook):
 
             if event.button == 3:
                 menu = self.tab_popup(username)
-                menu.popup(None, None, None, None, event.button, event.time)
+
+                if menu is not None:
+                    menu.popup(None, None, None, None, event.button, event.time)
+
                 return True
 
             return False
@@ -247,6 +227,23 @@ class UserInfo:
         self.tag_local = self.descr.get_buffer().create_tag()
 
         self.update_visuals()
+
+        self.user_popup = popup = PopupMenu(self.frame)
+        popup.setup(
+            ("#" + _("Send _message"), popup.on_send_message),
+            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
+            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
+            ("#" + _("Brow_se files"), popup.on_browse_user),
+            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
+            ("#" + _("Client Version"), popup.on_version),
+            ("", None),
+            ("$" + _("_Add user to list"), popup.on_add_to_list),
+            ("$" + _("_Ban this user"), popup.on_ban_user),
+            ("$" + _("_Ignore this user"), popup.on_ignore_user),
+            ("", None),
+            ("#" + _("_Close this tab"), self.on_close)
+        )
+        popup.set_user(user)
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -422,6 +419,16 @@ class UserInfo:
             fraction = float(msg.bytes) / msg.total
 
         self.progressbar.set_fraction(fraction)
+
+    def tab_popup(self, user):
+
+        items = self.user_popup.get_children()
+
+        items[7].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
+        items[8].set_active(user in self.frame.np.config.sections["server"]["banlist"])
+        items[9].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
+
+        return self.user_popup
 
     """ Events """
 
