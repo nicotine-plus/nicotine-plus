@@ -252,10 +252,10 @@
         <col id="0" translatable="yes">Nothing</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Send to player</col>
+        <col id="0" translatable="yes">Send to Player</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Open Directory</col>
+        <col id="0" translatable="yes">Open Folder</col>
       </row>
       <row>
         <col id="0" translatable="yes">Search</col>
@@ -281,10 +281,10 @@
         <col id="0" translatable="yes">Nothing</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Send to player</col>
+        <col id="0" translatable="yes">Send to Player</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Open Directory</col>
+        <col id="0" translatable="yes">Open Folder</col>
       </row>
       <row>
         <col id="0" translatable="yes">Search</col>

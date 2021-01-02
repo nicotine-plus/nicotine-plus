@@ -102,7 +102,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subdirectory in your Download directory</property>
+                <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
@@ -209,7 +209,7 @@
                 <property name="tooltip_text" translatable="yes">Where buddies' uploads will be stored (with a subfolder for each buddy)</property>
                 <property name="action">select-folder</property>
                 <property name="show_hidden">True</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

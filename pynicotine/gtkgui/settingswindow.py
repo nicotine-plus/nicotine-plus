@@ -304,7 +304,7 @@ class DownloadsFrame(BuildFrame):
                 buttons=Gtk.ButtonsType.OK,
                 text=_("Warning")
             )
-            dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
+            dlg.format_secondary_text(_("Security Risk: you should not share your %s folder!") % place)
             dlg.run()
             dlg.destroy()
 
@@ -591,8 +591,8 @@ class SharesFrame(BuildFrame):
 
         initialise_columns(
             self.Shares,
-            [_("Virtual Directory"), 0, "text"],
-            [_("Directory"), 0, "text"],
+            [_("Virtual Folder"), 0, "text"],
+            [_("Folder"), 0, "text"],
             [_("Size"), 0, "text"]
         )
 
@@ -601,8 +601,8 @@ class SharesFrame(BuildFrame):
 
         initialise_columns(
             self.BuddyShares,
-            [_("Virtual Directory"), 0, "text"],
-            [_("Directory"), 0, "text"],
+            [_("Virtual Folder"), 0, "text"],
+            [_("Folder"), 0, "text"],
             [_("Size"), 0, "text"]
         )
 
@@ -679,7 +679,7 @@ class SharesFrame(BuildFrame):
                     buttons=Gtk.ButtonsType.OK,
                     text=_("Warning")
                 )
-                dlg.format_secondary_text(_("Security Risk: you should not share your %s directory!") % place)
+                dlg.format_secondary_text(_("Security Risk: you should not share your %s folder!") % place)
                 dlg.run()
                 dlg.destroy()
                 raise UserWarning
@@ -751,7 +751,7 @@ class SharesFrame(BuildFrame):
 
         dir1 = choose_dir(
             self.Main.get_toplevel(),
-            title=_("Add a shared directory")
+            title=_("Add a Shared Folder")
         )
 
         if dir1 is not None:
@@ -768,7 +768,7 @@ class SharesFrame(BuildFrame):
                         buttons=Gtk.ButtonsType.OK,
                         text=_("Warning")
                     )
-                    dlg.format_secondary_text(_("The chosen directory is already shared"))
+                    dlg.format_secondary_text(_("The chosen folder is already shared"))
                     dlg.run()
                     dlg.destroy()
 
@@ -776,7 +776,7 @@ class SharesFrame(BuildFrame):
 
                     virtual = combo_box_dialog(
                         parent=self.p.SettingsWindow,
-                        title=_("Virtual name"),
+                        title=_("Virtual Name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
@@ -818,7 +818,7 @@ class SharesFrame(BuildFrame):
 
         dir1 = choose_dir(
             self.Main.get_toplevel(),
-            title=_("Add a shared buddy directory")
+            title=_("Add a Shared Buddy Folder")
         )
 
         if dir1 is not None:
@@ -835,7 +835,7 @@ class SharesFrame(BuildFrame):
                         buttons=Gtk.ButtonsType.OK,
                         text=_("Warning")
                     )
-                    dlg.format_secondary_text(_("The chosen directory is already shared"))
+                    dlg.format_secondary_text(_("The chosen folder is already shared"))
                     dlg.run()
                     dlg.destroy()
 
@@ -896,7 +896,7 @@ class SharesFrame(BuildFrame):
 
             virtual = combo_box_dialog(
                 parent=self.p.SettingsWindow,
-                title=_("Virtual name"),
+                title=_("Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
@@ -922,7 +922,7 @@ class SharesFrame(BuildFrame):
 
             virtual = combo_box_dialog(
                 parent=self.p.SettingsWindow,
-                title=_("Virtual name"),
+                title=_("Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
 
@@ -1248,7 +1248,7 @@ class IgnoreFrame(BuildFrame):
 
         user = entry_dialog(
             self.Main.get_toplevel(),
-            _("Ignore user..."),
+            _("Ignore User..."),
             _("User:")
         )
 
@@ -1384,7 +1384,7 @@ class BanFrame(BuildFrame):
 
         user = entry_dialog(
             self.Main.get_toplevel(),
-            _("Ban user..."),
+            _("Ban User..."),
             _("User:")
         )
 
@@ -3768,7 +3768,7 @@ class Settings:
             self.SettingsWindow.get_toplevel(),
             os.path.dirname(self.frame.np.config.filename),
             "config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Pick a filename for config backup")
+            title=_("Pick a File Name for Config Backup")
         )
 
         if not response:

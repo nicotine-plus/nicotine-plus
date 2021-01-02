@@ -106,34 +106,34 @@ class UserBrowse:
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
         self.popup_menu_downloads_folders.setup(
-            ("#" + _("_Download directory"), self.on_download_directory),
-            ("#" + _("Download directory _to..."), self.on_download_directory_to),
-            ("#" + _("Download _recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download r_ecursive to..."), self.on_download_directory_recursive_to)
+            ("#" + _("_Download Folder"), self.on_download_directory),
+            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
+            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_downloads_files = PopupMenu(self.frame, False)
         self.popup_menu_downloads_files.setup(
-            ("#" + _("_Download file(s)"), self.on_download_files),
-            ("#" + _("Download _to..."), self.on_download_files_to),
+            ("#" + _("_Download File(s)"), self.on_download_files),
+            ("#" + _("Download _To..."), self.on_download_files_to),
             ("", None),
-            ("#" + _("_Download directory"), self.on_download_directory),
-            ("#" + _("Download directory _to..."), self.on_download_directory_to),
-            ("#" + _("Download _recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download r_ecursive to..."), self.on_download_directory_recursive_to)
+            ("#" + _("_Download Folder"), self.on_download_directory),
+            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
+            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_uploads_folders = PopupMenu(self.frame, False)
         self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Directory to..."), self.on_upload_directory_to),
-            ("#" + _("Upload Directory recursive to..."), self.on_upload_directory_recursive_to)
+            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to)
         )
 
         self.popup_menu_uploads_files = PopupMenu(self.frame, False)
         self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Directory to..."), self.on_upload_directory_to),
-            ("#" + _("Upload Directory recursive to..."), self.on_upload_directory_recursive_to),
-            ("#" + _("Up_load file(s)"), self.on_upload_files)
+            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
+            ("#" + _("Up_load File(s)"), self.on_upload_files)
         )
 
         self.folder_popup_menu = PopupMenu(self.frame)
@@ -195,7 +195,7 @@ class UserBrowse:
                 (1, _("Upload"), self.popup_menu_uploads_files, None),
                 ("", None),
                 ("#" + _("Copy _URL"), self.on_copy_url),
-                ("#" + _("Send to _player"), self.on_play_files),
+                ("#" + _("Send to _Player"), self.on_play_files),
                 ("#" + _("Open in File Manager"), self.on_file_manager)
             )
         else:
@@ -797,7 +797,7 @@ class UserBrowse:
         users.sort()
         user = combo_box_dialog(
             parent=self.frame.MainWindow,
-            title=_("Upload Directory's Contents"),
+            title=_("Upload Folder's Contents"),
             message=_('Enter the User you wish to upload to:'),
             droplist=users
         )

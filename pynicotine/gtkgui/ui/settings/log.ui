@@ -134,7 +134,7 @@
               <object class="GtkLabel" id="RoomLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Chatroom Logs directory:</property>
+                <property name="label" translatable="yes">Chatroom Logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -146,7 +146,7 @@
               <object class="GtkLabel" id="PrivateLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Private Chat Logs directory:</property>
+                <property name="label" translatable="yes">Private Chat Logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -158,7 +158,7 @@
               <object class="GtkLabel" id="TransfersLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Transfer Logs directory:</property>
+                <property name="label" translatable="yes">Transfer Logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -170,7 +170,7 @@
               <object class="GtkLabel" id="DebugLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Debug Logs directory:</property>
+                <property name="label" translatable="yes">Debug Logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -183,7 +183,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -195,7 +195,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -207,7 +207,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -219,7 +219,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

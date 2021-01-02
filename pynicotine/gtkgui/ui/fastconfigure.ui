@@ -229,7 +229,7 @@ Please keep in mind that more common usernames may be taken. If you&apos;re unab
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">Download files to the following directory:</property>
+            <property name="label" translatable="yes">Download files to the following folder:</property>
           </object>
         </child>
         <child>
@@ -244,7 +244,7 @@ Please keep in mind that more common usernames may be taken. If you&apos;re unab
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">Share the following directories:</property>
+            <property name="label" translatable="yes">Share the following folders:</property>
             <property name="width-chars">0</property>
           </object>
         </child>

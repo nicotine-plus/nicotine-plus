@@ -35,39 +35,39 @@
         <attribute name="label" translatable="yes">_View</attribute>
         <section>
           <item>
-            <attribute name="label" translatable="yes">Use _header bar</attribute>
+            <attribute name="label" translatable="yes">Use _Header Bar</attribute>
             <attribute name="action">win.showheaderbar</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Show _log window</attribute>
+            <attribute name="label" translatable="yes">Show _Log Window</attribute>
             <attribute name="action">win.showlog</attribute>
             <attribute name="accel">&lt;Primary&gt;l</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Show _debug output controls</attribute>
+            <attribute name="label" translatable="yes">Show _Debug Log Controls</attribute>
             <attribute name="action">win.showdebug</attribute>
           </item>
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">Show _room list</attribute>
+            <attribute name="label" translatable="yes">Show _Room List</attribute>
             <attribute name="action">win.showroomlist</attribute>
             <attribute name="accel">&lt;Primary&gt;r</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Show _flag columns in user lists</attribute>
+            <attribute name="label" translatable="yes">Show _Flag Columns in User Lists</attribute>
             <attribute name="action">win.showflags</attribute>
             <attribute name="accel">&lt;Primary&gt;u</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Show _buttons in transfer tabs</attribute>
+            <attribute name="label" translatable="yes">Show _Buttons in Transfer Tabs</attribute>
             <attribute name="action">win.showtransferbuttons</attribute>
             <attribute name="accel">&lt;Primary&gt;b</attribute>
           </item>
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">Buddylist in separate tab</attribute>
+            <attribute name="label" translatable="yes">Buddylist in Separate Tab</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
             <attribute name="target">0</attribute>
           </item>
@@ -77,12 +77,12 @@
             <attribute name="target">1</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Buddylist always visible</attribute>
+            <attribute name="label" translatable="yes">Buddylist Always Visible</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
             <attribute name="target">2</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Buddylist hidden</attribute>
+            <attribute name="label" translatable="yes">Buddylist Hidden</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
             <attribute name="target">3</attribute>
           </item>
@@ -166,27 +166,27 @@
         <attribute name="label" translatable="yes">_Help</attribute>
         <section>
           <item>
-            <attribute name="label" translatable="yes">About _chat room commands</attribute>
+            <attribute name="label" translatable="yes">About _Chat Room Commands</attribute>
             <attribute name="action">app.aboutchatroomcommands</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">About _private chat commands</attribute>
+            <attribute name="label" translatable="yes">About _Private Chat Commands</attribute>
             <attribute name="action">app.aboutprivatechatcommands</attribute>
           </item>
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">About _search filters</attribute>
+            <attribute name="label" translatable="yes">About _Search Filters</attribute>
             <attribute name="action">app.aboutfilters</attribute>
           </item>
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">Check _latest version</attribute>
+            <attribute name="label" translatable="yes">Check _Latest Version</attribute>
             <attribute name="action">app.checklatest</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">Report a _bug</attribute>
+            <attribute name="label" translatable="yes">Report a _Bug</attribute>
             <attribute name="action">app.reportbug</attribute>
           </item>
         </section>

@@ -94,12 +94,12 @@ class FastConfigureAssistant(object):
 
         initialise_columns(
             self.shareddirectoriestree,
-            [_("Virtual Directory"), 0, "text"],
-            [_("Directory"), 0, "text"],
+            [_("Virtual Folder"), 0, "text"],
+            [_("Folder"), 0, "text"],
             [_("Size"), 0, "text"],
             [_("Files"), 0, "text"],
-            [_("Dirs"), 0, "text"],
-            [_("File types"), 0, "text"]
+            [_("Folders"), 0, "text"],
+            [_("File Types"), 0, "text"]
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)
@@ -372,7 +372,7 @@ class FastConfigureAssistant(object):
 
             selected = choose_dir(
                 self.FastConfigureDialog.get_toplevel(),
-                title=_("Add a shared directory")
+                title=_("Add a Shared Folder")
             )
 
             if selected:
@@ -381,7 +381,7 @@ class FastConfigureAssistant(object):
 
                     virtual = combo_box_dialog(
                         parent=self.FastConfigureDialog,
-                        title=_("Virtual name"),
+                        title=_("Virtual Name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
@@ -435,7 +435,7 @@ class FastConfigureAssistant(object):
                                     buttons=Gtk.ButtonsType.OK,
                                     text=_("Warning")
                                 )
-                                dlg.format_secondary_text(_("The chosen directory is already shared"))
+                                dlg.format_secondary_text(_("The chosen folder is already shared"))
                                 dlg.run()
                                 dlg.destroy()
                                 return

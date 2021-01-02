@@ -59,9 +59,9 @@ class Uploads(TransferList):
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
             ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy folder URL"), self.on_copy_dir_url),
-            ("#" + _("Send to _player"), self.on_play_files),
-            ("#" + _("Open folder"), self.on_open_directory),
+            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
+            ("#" + _("Send to _Player"), self.on_play_files),
+            ("#" + _("Open Folder"), self.on_open_directory),
             ("#" + _("Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),

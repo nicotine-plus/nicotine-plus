@@ -162,7 +162,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a directory</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="expand">True</property>

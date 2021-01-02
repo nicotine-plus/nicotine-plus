@@ -488,8 +488,8 @@ class Search:
             [_("Country"), widths[2], "pixbuf"],
             [_("Immediate Download"), widths[3], "center", self.cell_data_func],
             [_("Speed"), widths[4], "number", self.cell_data_func],
-            [_("In queue"), widths[5], "center", self.cell_data_func],
-            [_("Directory"), widths[6], "text", self.cell_data_func],
+            [_("In Queue"), widths[5], "center", self.cell_data_func],
+            [_("Folder"), widths[6], "text", self.cell_data_func],
             [_("Filename"), widths[7], "text", self.cell_data_func],
             [_("Size"), widths[8], "number", self.cell_data_func],
             [_("Bitrate"), widths[9], "number", self.cell_data_func],
@@ -579,14 +579,14 @@ class Search:
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("_Download file(s)"), self.on_download_files),
-            ("#" + _("Download file(s) _to..."), self.on_download_files_to),
-            ("#" + _("Download _folder(s)"), self.on_download_folders),
-            ("#" + _("Download f_older(s) to..."), self.on_download_folders_to),
+            ("#" + _("_Download File(s)"), self.on_download_files),
+            ("#" + _("Download File(s) _To..."), self.on_download_files_to),
+            ("#" + _("Download _Folder(s)"), self.on_download_folders),
+            ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
             ("#" + _("File _Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy folder U_RL"), self.on_copy_dir_url),
+            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url),
             ("", None),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users)
         )
