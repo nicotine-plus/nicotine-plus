@@ -573,18 +573,16 @@ class SharesFrame(BuildFrame):
 
         self.needrescan = False
 
-        # last column is the raw byte/unicode object for the folder (not shown)
         self.shareslist = Gtk.ListStore(
-            GObject.TYPE_STRING, GObject.TYPE_STRING,
-            GObject.TYPE_STRING, GObject.TYPE_STRING
+            str,
+            str
         )
 
         self.shareddirs = []
 
-        # last column is the raw byte/unicode object for the folder (not shown)
         self.bshareslist = Gtk.ListStore(
-            GObject.TYPE_STRING, GObject.TYPE_STRING,
-            GObject.TYPE_STRING, GObject.TYPE_STRING
+            str,
+            str
         )
 
         self.bshareddirs = []
@@ -592,8 +590,7 @@ class SharesFrame(BuildFrame):
         initialise_columns(
             self.Shares,
             [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"],
-            [_("Size"), 0, "text"]
+            [_("Folder"), 0, "text"]
         )
 
         self.Shares.set_model(self.shareslist)
@@ -602,8 +599,7 @@ class SharesFrame(BuildFrame):
         initialise_columns(
             self.BuddyShares,
             [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"],
-            [_("Size"), 0, "text"]
+            [_("Folder"), 0, "text"]
         )
 
         self.BuddyShares.set_model(self.bshareslist)
@@ -635,14 +631,9 @@ class SharesFrame(BuildFrame):
                 self.shareslist.append(
                     [
                         virtual,
-                        actual,
-                        "",
                         actual
                     ]
                 )
-
-                # Compute the directory size in the background
-                _thread.start_new_thread(self.get_directory_size, (actual, self.shareslist))
 
             self.shareddirs = transfers["shared"][:]
 
@@ -652,14 +643,9 @@ class SharesFrame(BuildFrame):
                 self.bshareslist.append(
                     [
                         virtual,
-                        actual,
-                        "",
                         actual
                     ]
                 )
-
-                # Compute the directory size in the background
-                _thread.start_new_thread(self.get_directory_size, (actual, self.shareslist))
 
             self.bshareddirs = transfers["buddyshared"][:]
 
@@ -802,17 +788,12 @@ class SharesFrame(BuildFrame):
                         self.shareslist.append(
                             [
                                 virtual,
-                                directory,
-                                "",
                                 directory
                             ]
                         )
 
                         self.shareddirs.append((virtual, directory))
                         self.needrescan = True
-
-                        # Compute the directory size in the background
-                        _thread.start_new_thread(self.get_directory_size, (directory, self.shareslist))
 
     def on_add_shared_buddy_dir(self, widget):
 
@@ -869,17 +850,12 @@ class SharesFrame(BuildFrame):
                         self.bshareslist.append(
                             [
                                 virtual,
-                                directory,
-                                "",
                                 directory
                             ]
                         )
 
                         self.bshareddirs.append((virtual, directory))
                         self.needrescan = True
-
-                        # Compute the directory size in the background
-                        _thread.start_new_thread(self.get_directory_size, (directory, self.bshareslist))
 
     def _remove_shared_dir(self, model, path, iterator, list):
         list.append(iterator)
@@ -891,7 +867,7 @@ class SharesFrame(BuildFrame):
 
         for iterator in iters:
             oldvirtual = self.shareslist.get_value(iterator, 0)
-            directory = self.shareslist.get_value(iterator, 3)
+            directory = self.shareslist.get_value(iterator, 1)
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
@@ -917,7 +893,7 @@ class SharesFrame(BuildFrame):
 
         for iterator in iters:
             oldvirtual = self.bshareslist.get_value(iterator, 0)
-            directory = self.bshareslist.get_value(iterator, 3)
+            directory = self.bshareslist.get_value(iterator, 1)
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
@@ -942,7 +918,7 @@ class SharesFrame(BuildFrame):
 
         for iterator in iters:
             virtual = self.shareslist.get_value(iterator, 0)
-            actual = self.shareslist.get_value(iterator, 3)
+            actual = self.shareslist.get_value(iterator, 1)
             mapping = (virtual, actual)
             self.shareddirs.remove(mapping)
             self.shareslist.remove(iterator)
@@ -956,46 +932,13 @@ class SharesFrame(BuildFrame):
 
         for iterator in iters:
             virtual = self.bshareslist.get_value(iterator, 0)
-            actual = self.bshareslist.get_value(iterator, 3)
+            actual = self.bshareslist.get_value(iterator, 1)
             mapping = (virtual, actual)
             self.bshareddirs.remove(mapping)
             self.bshareslist.remove(iterator)
 
         if iters:
             self.needrescan = True
-
-    def get_directory_size(self, directory, liststore):
-
-        total_size = 0
-
-        for dirpath, dirnames, filenames in os.walk(directory):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                try:
-                    total_size += os.path.getsize(fp)
-                except FileNotFoundError:
-                    pass
-
-        GLib.idle_add(
-            self._updatedirstats,
-            directory,
-            human_size(total_size),
-            liststore
-        )
-
-    def _updatedirstats(self, directory, human_size, liststore):
-
-        iterator = liststore.get_iter_first()
-
-        while iterator is not None:
-
-            if directory == liststore.get_value(iterator, 3):
-
-                liststore.set(iterator, 2, human_size)
-
-                return
-
-            iterator = liststore.iter_next(iterator)
 
 
 class UploadsFrame(BuildFrame):

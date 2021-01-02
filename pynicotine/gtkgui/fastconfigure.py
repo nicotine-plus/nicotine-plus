@@ -36,37 +36,6 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 
 
-def dirstats(directory):
-
-    totaldirs = 0
-    totalfiles = 0
-    totalsize = 0
-    extensions = {}
-
-    for root, dirs, files in os.walk(directory):
-
-        totaldirs += len(dirs)
-        totalfiles += len(files)
-
-        for f in files:
-
-            try:
-                totalsize += getsize(join(root, f))
-            except OSError:
-                pass
-
-            parts = f.rsplit('.', 1)
-
-            if len(parts) == 2 and len(parts[1]) < 5:
-
-                try:
-                    extensions[parts[1]] += 1
-                except KeyError:
-                    extensions[parts[1]] = 1
-
-    return totaldirs, totalfiles, totalsize, extensions
-
-
 class FastConfigureAssistant(object):
 
     def __init__(self, frame):
@@ -83,23 +52,14 @@ class FastConfigureAssistant(object):
         # The last column is the raw byte/unicode object
         # for the folder (not shown)
         self.sharelist = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING
+            str,
+            str
         )
 
         initialise_columns(
             self.shareddirectoriestree,
             [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"],
-            [_("Size"), 0, "text"],
-            [_("Files"), 0, "text"],
-            [_("Folders"), 0, "text"],
-            [_("File Types"), 0, "text"]
+            [_("Folder"), 0, "text"]
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)
@@ -274,7 +234,7 @@ class FastConfigureAssistant(object):
             dirs.append(
                 (
                     self.sharelist.get_value(iterator, 0),
-                    self.sharelist.get_value(iterator, 6)
+                    self.sharelist.get_value(iterator, 1)
                 )
             )
             iterator = self.sharelist.iter_next(iterator)
@@ -287,70 +247,15 @@ class FastConfigureAssistant(object):
 
         while iterator is not None:
 
-            if directory[1] == self.sharelist.get_value(iterator, 6):
+            if directory[1] == self.sharelist.get_value(iterator, 1):
                 return
 
             iterator = self.sharelist.iter_next(iterator)
 
         self.sharelist.append([
             directory[0],
-            directory[1],
-            "",
-            "",
-            "",
-            _("Counting files..."),
             directory[1]
         ])
-
-        _thread.start_new_thread(self._addsharedir, (directory,))
-
-    def _addsharedir(self, directory):
-
-        subdirs, files, size, extensions = dirstats(directory[1])
-        exts = []
-
-        for ext, count in extensions.items():
-            exts.append((count, ext))
-
-        exts.sort(reverse=True)
-        extstring = ", ".join(
-            ["%s %s" % (count, ext) for count, ext in exts[:5]]
-        )
-
-        if len(exts) > 5:
-            extstring += ", ..."
-
-        GLib.idle_add(
-            self._updatedirstats,
-            directory,
-            human_size(size),
-            files,
-            subdirs,
-            extstring
-        )
-
-    def _updatedirstats(self, directory, size, files, subdirs, extensions):
-
-        iterator = self.sharelist.get_iter_first()
-
-        while iterator is not None:
-
-            if directory[1] == self.sharelist.get_value(iterator, 6):
-
-                self.sharelist.insert(0, [
-                    directory[0],
-                    directory[1],
-                    human_size(size),
-                    str(files),
-                    str(subdirs),
-                    extensions,
-                    directory[1]
-                ])
-
-                self.sharelist.remove(iterator)
-                return
-
-            iterator = self.sharelist.iter_next(iterator)
 
     def on_button_pressed(self, widget):
 
@@ -426,7 +331,7 @@ class FastConfigureAssistant(object):
                                 return
 
                             # We also reject the share if the directory is already used
-                            elif directory == model.get_value(iterator, 6):
+                            elif directory == model.get_value(iterator, 1):
 
                                 dlg = Gtk.MessageDialog(
                                     transient_for=self.FastConfigureDialog,
