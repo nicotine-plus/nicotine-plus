@@ -60,12 +60,15 @@ class Downloads(TransferList):
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
+            ("#" + _("Send to _Player"), self.on_play_files),
+            ("#" + _("_Open Folder"), self.on_open_directory),
+            ("#" + _("File P_roperties"), self.on_file_properties),
+            ("", None),
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
-            ("#" + _("Send to _player"), self.on_play_files),
-            ("#" + _("File Properties"), self.on_file_properties),
-            ("#" + _("Open Folder"), self.on_open_directory),
-            ("#" + _("Search"), self.on_file_search),
+            ("", None),
+            ("#" + _("_Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
             ("#" + _("_Retry"), self.on_retry_transfer),
@@ -238,6 +241,8 @@ class Downloads(TransferList):
                 self.on_abort_transfer(widget)
             elif key in ("R", "r"):
                 self.on_retry_transfer(widget)
+            elif key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+                self.on_copy_file_path(widget)
             elif key == "Delete":
                 self.on_abort_transfer(widget, clear=True)
             else:
@@ -314,19 +319,16 @@ class Downloads(TransferList):
         files = len(self.selected_transfers) > 0
 
         items = self.popup_menu.get_children()
-        if users:
-            items[6].set_sensitive(True)  # Users Menu
-        else:
-            items[6].set_sensitive(False)  # Users Menu
+        items[9].set_sensitive(users)  # Users Menu
 
         if files:
             act = True
         else:
             # Disable options
-            # Copy URL, Copy Folder URL, Send to player, File Properties, File manager, Search filename
+            # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
             act = False
 
-        for i in range(0, 6):
+        for i in range(0, 7):
             items[i].set_sensitive(act)
 
         if not users or not files:
@@ -336,7 +338,7 @@ class Downloads(TransferList):
         else:
             act = True
 
-        for i in range(8, 11):
+        for i in range(11, 14):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)

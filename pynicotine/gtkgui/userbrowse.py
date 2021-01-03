@@ -150,8 +150,10 @@ class UserBrowse:
                 (1, _("Download"), self.popup_menu_downloads_folders, None),
                 (1, _("Upload"), self.popup_menu_uploads_folders, None),
                 ("", None),
+                ("#" + _("Open in File _Manager"), self.on_file_manager),
+                ("", None),
+                ("#" + _("Copy _Folder Path"), self.on_copy_file_path, False),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
-                ("#" + _("Open in File Manager"), self.on_file_manager)
             )
         else:
             self.folder_popup_menu.setup(
@@ -159,6 +161,7 @@ class UserBrowse:
                 ("", None),
                 (1, _("Download"), self.popup_menu_downloads_folders, None),
                 ("", None),
+                ("#" + _("Copy _Folder Path"), self.on_copy_file_path, False),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url)
             )
 
@@ -198,11 +201,12 @@ class UserBrowse:
                 (1, _("Download"), self.popup_menu_downloads_files, None),
                 (1, _("Upload"), self.popup_menu_uploads_files, None),
                 ("", None),
-                ("#" + _("Copy _URL"), self.on_copy_url),
                 ("#" + _("Send to _Player"), self.on_play_files),
-                ("#" + _("Open in File Manager"), self.on_file_manager),
+                ("#" + _("Open in File _Manager"), self.on_file_manager),
+                ("#" + _("File _Properties"), self.on_file_properties),
                 ("", None),
-                ("#" + _("File Properties"), self.on_file_properties)
+                ("#" + _("Copy _File Path"), self.on_copy_file_path, True),
+                ("#" + _("Copy _URL"), self.on_copy_url)
             )
         else:
             self.file_popup_menu.setup(
@@ -210,12 +214,15 @@ class UserBrowse:
                 ("", None),
                 (1, _("Download"), self.popup_menu_downloads_files, None),
                 ("", None),
-                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("#" + _("File _Properties"), self.on_file_properties),
                 ("", None),
-                ("#" + _("File Properties"), self.on_file_properties)
+                ("#" + _("Copy _File Path"), self.on_copy_file_path, True),
+                ("#" + _("Copy _URL"), self.on_copy_url)
             )
 
+        self.FolderTreeView.connect("key-press-event", self.on_key_press_event)
         self.FileTreeView.connect("button_press_event", self.on_file_clicked)
+        self.FileTreeView.connect("key-press-event", self.on_key_press_event)
 
         self.update_visuals()
 
@@ -287,6 +294,10 @@ class UserBrowse:
 
         self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
 
+    def select_files(self):
+        self.selected_files = []
+        self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
+
     def selected_files_callback(self, model, path, iterator):
         rawfilename = self.file_store.get_value(iterator, 6)
         self.selected_files.append(rawfilename)
@@ -303,8 +314,7 @@ class UserBrowse:
                 widget.get_selection().unselect_all()
 
             elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.selected_files = []
-                self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
+                self.select_files()
                 self.on_download_files(widget)
                 self.FileTreeView.get_selection().unselect_all()
                 return True
@@ -314,15 +324,7 @@ class UserBrowse:
     def on_file_popup_menu(self, widget, event):
 
         set_treeview_selected_row(widget, event)
-
-        self.selected_files = []
-        self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
-
-        files = True
-        multiple = False
-
-        if len(self.selected_files) > 1:
-            multiple = True
+        self.select_files()
 
         if len(self.selected_files) >= 1:
             files = True
@@ -334,11 +336,15 @@ class UserBrowse:
         if self.user == self.frame.np.config.sections["server"]["login"]:
             items[2].set_sensitive(files)  # Downloads
             items[3].set_sensitive(files)  # Uploads
-            items[5].set_sensitive(not multiple and files)  # Copy URL
-            items[6].set_sensitive(files)  # Send to player
+            items[5].set_sensitive(files)  # Send to player
+            items[7].set_sensitive(files)  # File Properties
+            items[9].set_sensitive(files)  # Copy File Path
+            items[10].set_sensitive(files)  # Copy URL
         else:
             items[2].set_sensitive(files)  # Downloads
-            items[4].set_sensitive(not multiple and files)  # Copy URL
+            items[4].set_sensitive(files)  # File Properties
+            items[6].set_sensitive(files)  # Copy File Path
+            items[7].set_sensitive(files)  # Copy URL
 
         self.FileTreeView.stop_emission_by_name("button_press_event")
         self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
@@ -915,6 +921,21 @@ class UserBrowse:
             self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
             self.frame.np.transfers.check_upload_queue()
 
+    def on_key_press_event(self, widget, event):
+
+        key = Gdk.keyval_name(event.keyval)
+        self.select_files()
+
+        if key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+            files = (widget == self.FileTreeView)
+            self.on_copy_file_path(widget, files)
+        else:
+            # No key match, continue event
+            return False
+
+        widget.stop_emission_by_name("key_press_event")
+        return True
+
     def on_play_files(self, widget, prefix=""):
         start_new_thread(self._on_play_files, (widget, prefix))
 
@@ -1005,6 +1026,15 @@ class UserBrowse:
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
         self.frame.browse_user(self.user)
+
+    def on_copy_file_path(self, widget, files=False):
+
+        text = self.selected_folder
+
+        if files and self.selected_files:
+            text = "\\".join([self.selected_folder, self.selected_files[0]])
+
+        self.frame.clip.set_text(text, -1)
 
     def on_copy_url(self, widget):
 

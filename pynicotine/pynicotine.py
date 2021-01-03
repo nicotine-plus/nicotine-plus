@@ -1312,6 +1312,7 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+
             if event is not None:
                 (r, n, msg.msg) = event
                 self.chatrooms.roomsctrl.say_chat_room(msg, msg.msg)

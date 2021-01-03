@@ -516,6 +516,7 @@ class Search:
         self.ResultsList.set_model(self.resultsmodel)
 
         self.ResultsList.connect("button_press_event", self.on_list_clicked)
+        self.ResultsList.connect("key-press-event", self.on_key_press_event)
 
         self.update_visuals()
 
@@ -578,6 +579,7 @@ class Search:
             ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
             ("#" + _("File _Properties"), self.on_file_properties),
             ("", None),
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url),
             ("", None),
@@ -1075,6 +1077,20 @@ class Search:
 
         return False
 
+    def on_key_press_event(self, widget, event):
+
+        key = Gdk.keyval_name(event.keyval)
+        self.select_results()
+
+        if key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+            self.on_copy_file_path(widget)
+        else:
+            # No key match, continue event
+            return False
+
+        widget.stop_emission_by_name("key_press_event")
+        return True
+
     def on_popup_menu(self, widget, event):
 
         if event.button != 3:
@@ -1087,15 +1103,13 @@ class Search:
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        for i in range(0, 5):
-            items[i].set_sensitive(files)
-
         items[0].set_sensitive(False)
         items[1].set_sensitive(False)
         items[4].set_sensitive(False)
-        items[6].set_sensitive(False)
-        items[7].set_sensitive(files)
-        items[8].set_sensitive(users)
+        items[6].set_sensitive(files)
+        items[7].set_sensitive(False)
+        items[8].set_sensitive(files)
+        items[10].set_sensitive(users)
 
         for result in self.selected_results:
             if not result[1].endswith('\\'):
@@ -1103,7 +1117,7 @@ class Search:
                 items[0].set_sensitive(True)
                 items[1].set_sensitive(True)
                 items[4].set_sensitive(True)
-                items[6].set_sensitive(True)
+                items[7].set_sensitive(True)
                 break
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
@@ -1231,6 +1245,14 @@ class Search:
 
                 self.frame.np.requested_folders[user][folder] = destination
                 self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+
+    def on_copy_file_path(self, widget):
+
+        if not self.selected_results:
+            return
+
+        user, path = next(iter(self.selected_results))[:2]
+        self.frame.clip.set_text(path, -1)
 
     def on_copy_url(self, widget):
         user, path = next(iter(self.selected_results))[:2]

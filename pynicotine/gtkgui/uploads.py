@@ -57,11 +57,14 @@ class Uploads(TransferList):
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
+            ("#" + _("Send to _Player"), self.on_play_files),
+            ("#" + _("_Open Folder"), self.on_open_directory),
+            ("", None),
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
-            ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("Open Folder"), self.on_open_directory),
-            ("#" + _("Search"), self.on_file_search),
+            ("", None),
+            ("#" + _("_Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
             ("#" + _("_Retry"), self.on_upload_transfer),
@@ -158,6 +161,8 @@ class Uploads(TransferList):
 
             if key in ("T", "t"):
                 self.on_abort_transfer(widget)
+            elif key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+                self.on_copy_file_path(widget)
             elif key == "Delete":
                 self.on_abort_transfer(widget, clear=True)
             else:
@@ -202,19 +207,16 @@ class Uploads(TransferList):
         files = len(self.selected_transfers) > 0
 
         items = self.popup_menu.get_children()
-        if users:
-            items[5].set_sensitive(True)  # Users Menu
-        else:
-            items[5].set_sensitive(False)  # Users Menu
+        items[8].set_sensitive(users)  # Users Menu
 
         if files:
             act = True
         else:
             # Disable options
-            # Copy URL, Copy Folder URL, Send to player, File manager, Search filename
+            # Send to player, File manager, Copy File Path, Copy URL, Copy Folder URL, Search filename
             act = False
 
-        for i in range(0, 5):
+        for i in range(0, 6):
             items[i].set_sensitive(act)
 
         if users and files:
@@ -224,7 +226,7 @@ class Uploads(TransferList):
             # Retry, Abort, Clear
             act = False
 
-        for i in range(7, 10):
+        for i in range(10, 13):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)

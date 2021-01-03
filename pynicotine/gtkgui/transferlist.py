@@ -639,6 +639,16 @@ class TransferList:
 
         self.select_transfers()
 
+    def on_copy_file_path(self, widget):
+
+        if not self.selected_transfers:
+            return
+
+        i = next(iter(self.selected_transfers))
+        text = self.transfersmodel.get_value(i.iter, 10)
+
+        self.frame.clip.set_text(text, -1)
+
     def on_copy_url(self, widget):
         i = next(iter(self.selected_transfers))
         self.frame.set_clipboard_url(i.user, i.filename)
