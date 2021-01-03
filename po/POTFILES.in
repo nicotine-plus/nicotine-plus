@@ -47,6 +47,7 @@ pynicotine/upnp/portmapper.py
 [type: gettext/glade] pynicotine/gtkgui/ui/about/chatroomcommands.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/about/privatechatcommands.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/about/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/menus/mainmenu.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/menus/menubar.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/autoreplace.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/away.ui
