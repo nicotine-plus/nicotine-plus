@@ -181,3 +181,22 @@ Alexey Vyskubov
 Jason Green
 - Ignore list and auto-join checkbox, wishlists
 - [smacklefunky(at)optusnet(dot)com(dot)au]
+
+---
+
+# Attributions
+
+- This product includes IP2Location LITE data, available from:  
+  https://www.ip2location.com
+
+- Country flags licensed under the MIT License.  
+  Copyright (c) 2013 Panayiotis Lipiridis  
+  https://github.com/lipis/flag-icon-css
+
+- tinytag licensed under the MIT License.  
+  Copyright (c) 2014-2018 Tom Wallroth  
+  https://github.com/devsnd/tinytag/
+
+- UPnP code adapted from the pyupnp project. pyupnp is licensed under the MIT License.  
+  Copyright (c) 2019 Dave Mulford  
+  https://github.com/davemulford/pyupnp

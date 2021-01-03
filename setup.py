@@ -23,8 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-    To install Nicotine+ on a GNU/Linux distribution run:
-    sudo python setup.py install
+    To install Nicotine+ on a GNU/Linux distribution, run:
+    pip3 install .
 """
 
 import glob
@@ -42,32 +42,6 @@ package_data = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGIN
 
 data_files = []
 
-# Program icon
-data_files.append(
-    (
-        "share/icons/hicolor/scalable/apps",
-        ["files/org.nicotine_plus.Nicotine.svg"]
-    )
-)
-
-data_files.append(
-    (
-        "share/icons/hicolor/symbolic/apps",
-        ["files/org.nicotine_plus.Nicotine-symbolic.svg"]
-    )
-)
-
-# Tray icons
-tray_icons = glob.glob(os.path.join("files", "icons", "tray", "*"))
-
-for icon_name in tray_icons:
-    data_files.append(
-        (
-            "share/icons/hicolor/scalable/apps",
-            [icon_name]
-        )
-    )
-
 # Desktop file
 data_files.append(
     (
@@ -84,8 +58,35 @@ data_files.append(
     )
 )
 
+# Icons
+data_files.append(
+    (
+        "share/icons/hicolor/scalable/apps",
+        ["files/org.nicotine_plus.Nicotine.svg"]
+    )
+)
+
+data_files.append(
+    (
+        "share/icons/hicolor/symbolic/apps",
+        ["files/org.nicotine_plus.Nicotine-symbolic.svg"]
+    )
+)
+
+tray_icons = glob.glob(os.path.join("files", "icons", "tray", "*"))
+
+for icon_name in tray_icons:
+    data_files.append(
+        (
+            "share/icons/hicolor/scalable/apps",
+            [icon_name]
+        )
+    )
+
 # Documentation
-doc_files = glob.glob("[!404.md]*.md") + glob.glob(os.path.join("doc", "*.md"))
+doc_files = glob.glob("[!404.md]*.md") + \
+    glob.glob(os.path.join("doc", "*.md")) + \
+    ["COPYING"]
 
 for doc in doc_files:
     data_files.append(
@@ -94,13 +95,6 @@ for doc in doc_files:
             [doc]
         )
     )
-
-data_files.append(
-    (
-        "share/doc/nicotine",
-        ["files/icons/CREDITS.md"]
-    )
-)
 
 manpages = glob.glob(os.path.join("files", "*.1"))
 
