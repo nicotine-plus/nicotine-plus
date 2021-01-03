@@ -109,9 +109,9 @@ A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Cata
 
 - [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/macos-installer.zip)
 
-### Stable (High Sierra/10.13 and Mojave/10.14)
+### Stable (Mojave/10.14)
 
-On macOS version 10.13 (High Sierra) and 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
+On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
 
 Once Homebrew is set up, run the following:
 
