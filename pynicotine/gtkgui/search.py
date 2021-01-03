@@ -577,6 +577,7 @@ class Search:
             ("#" + _("Download File(s) _To..."), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
+            ("#" + _("_Browse Folder"), self.on_browse_folder),
             ("#" + _("File _Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
@@ -1103,21 +1104,22 @@ class Search:
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        items[0].set_sensitive(False)
-        items[1].set_sensitive(False)
-        items[4].set_sensitive(False)
-        items[6].set_sensitive(files)
-        items[7].set_sensitive(False)
-        items[8].set_sensitive(files)
-        items[10].set_sensitive(users)
+        items[0].set_sensitive(False)   # Download File
+        items[1].set_sensitive(False)   # Download File To
+        items[4].set_sensitive(files)   # Browse Folder
+        items[5].set_sensitive(False)   # File Properties
+        items[7].set_sensitive(files)   # Copy File Path
+        items[8].set_sensitive(False)   # Copy URL
+        items[9].set_sensitive(files)   # Copy Folder URL
+        items[11].set_sensitive(users)  # Users
 
         for result in self.selected_results:
             if not result[1].endswith('\\'):
                 # At least one selected result is a file, activate file-related items
-                items[0].set_sensitive(True)
-                items[1].set_sensitive(True)
-                items[4].set_sensitive(True)
-                items[7].set_sensitive(True)
+                items[0].set_sensitive(True)  # Download File
+                items[1].set_sensitive(True)  # Download File To
+                items[5].set_sensitive(True)  # File Properties
+                items[8].set_sensitive(True)  # Copy URL
                 break
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
@@ -1136,6 +1138,18 @@ class Search:
             cellrenderer.set_property("foreground", color)
         else:
             cellrenderer.set_property("foreground-set", False)
+
+    def on_browse_folder(self, widget):
+
+        requested_folders = set()
+
+        for file in self.selected_results:
+            user = file[0]
+            folder = file[1].rsplit('\\', 1)[0]
+
+            if folder not in requested_folders:
+                self.frame.browse_user(user, folder)
+                requested_folders.add(folder)
 
     def selected_results_all_data(self, model, path, iterator, data):
 

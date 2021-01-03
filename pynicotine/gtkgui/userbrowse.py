@@ -61,9 +61,14 @@ class UserBrowse:
 
         self.user = user
         self.conn = None
+        self.finished = False
 
         # selected_folder is the current selected folder
         self.selected_folder = None
+
+        # queued_folder is a folder that should be opened once the share has loaded
+        self.queued_folder = None
+
         self.search_list = []
         self.query = None
         self.search_position = 0
@@ -474,6 +479,26 @@ class UserBrowse:
 
         return directory
 
+    def browse_folder(self, folder):
+        """ Browse a specific folder in the share """
+
+        try:
+            iterator = self.directories[folder]
+        except KeyError:
+            # Folder not found
+            pass
+
+        if folder:
+            sel = self.FolderTreeView.get_selection()
+            sel.unselect_all()
+
+            path = self.dir_store.get_path(iterator)
+            self.FolderTreeView.expand_to_path(path)
+            sel.select_path(path)
+            self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+
+            self.queued_folder = None
+
     def set_directory(self, directory):
 
         self.selected_folder = directory
@@ -548,23 +573,28 @@ class UserBrowse:
         self.frame.np.config.sections["columns"]["userbrowse"] = columns
         self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
 
-    def show_user(self, msg, indeterminate_progress=False):
+    def show_user(self, msg, folder=None, indeterminate_progress=False):
 
         self.set_in_progress(indeterminate_progress)
 
-        if msg is None:
-            return
+        if folder:
+            self.queued_folder = folder
 
-        self.conn = None
-        self.make_new_model(msg.list)
+        if not self.finished:
+            if msg is None:
+                return
 
-        if len(msg.list) == 0:
+            self.conn = None
+            self.make_new_model(msg.list)
+
+        if msg and len(msg.list) == 0:
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, or they are sharing files privately.")
             )
 
         else:
             self.info_bar.set_visible(False)
+            self.browse_folder(self.queued_folder)
 
         self.set_finished()
 
@@ -596,6 +626,7 @@ class UserBrowse:
 
         self.progressbar1.set_fraction(1.0)
         self.RefreshButton.set_sensitive(True)
+        self.finished = True
 
     def update_gauge(self, msg):
 

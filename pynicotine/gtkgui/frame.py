@@ -1213,7 +1213,7 @@ class NicotineFrame:
 
         _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
 
-    def on_browse_public_shares(self, *args):
+    def on_browse_public_shares(self, *args, folder=None):
         """ Browse your own public shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1224,8 +1224,10 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_normal
 
-        _thread.start_new_thread(self.parse_local_shares, (login, msg))
-        self.userbrowse.show_user(login, indeterminate_progress=True)
+        if login not in self.userbrowse.users:
+            _thread.start_new_thread(self.parse_local_shares, (login, msg))
+
+        self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
 
     def on_browse_buddy_shares(self, *args):
         """ Browse your own buddy shares """
@@ -2035,19 +2037,21 @@ class NicotineFrame:
 
     """ User Browse """
 
-    def browse_user(self, user):
+    def browse_user(self, user, folder=None):
         """ Browse a user shares """
 
         login = self.np.config.sections["server"]["login"]
 
         if user is not None:
             if user == login:
-                self.on_browse_public_shares(None)
+                self.on_browse_public_shares(folder=folder)
             else:
-                self.userbrowse.show_user(user)
-                self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
+                if user not in self.userbrowse.users:
+                    self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
 
-    def parse_local_shares(self, username, msg):
+                self.userbrowse.show_user(user, folder=folder)
+
+    def parse_local_shares(self, username, msg, folder=None):
         """ Parse our local shares list and show it in the UI """
 
         built = msg.make_network_message(nozlib=0)

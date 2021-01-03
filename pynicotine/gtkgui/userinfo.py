@@ -81,14 +81,14 @@ class UserTabs(IconNotebook):
         self.append_page(w.Main, userlabel, w.on_close)
         self.frame.np.queue.put(slskmessages.AddUser(user))
 
-    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True):
+    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None):
 
         if user in self.users:
             self.users[user].conn = conn
         else:
             self.init_window(user)
 
-        self.users[user].show_user(msg, indeterminate_progress)
+        self.users[user].show_user(msg, folder, indeterminate_progress)
 
         if change_page:
             self.set_current_page(self.page_num(self.users[user].Main))
@@ -334,7 +334,7 @@ class UserInfo:
         for hate in hates:
             self.hates_store.append([hate])
 
-    def show_user(self, msg, indeterminate_progress=False):
+    def show_user(self, msg, folder=None, indeterminate_progress=False):
 
         if msg is None:
             return
