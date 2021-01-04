@@ -22,7 +22,7 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="DarkMode">
-        <property name="label" translatable="yes">Prefer dark mode</property>
+        <property name="label" translatable="yes">Enable Dark Mode</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
@@ -179,7 +179,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Username Font Style:</property>
+                <property name="label" translatable="yes">Username font style:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -732,10 +732,11 @@
             <property name="spacing">5</property>
             <child>
               <object class="GtkCheckButton" id="UsernameHotspots">
-                <property name="label" translatable="yes">Username Colors and Hotspots</property>
+                <property name="label" translatable="yes">Enable colored and clickable usernames</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the same user context menu accessed via the User List.</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
@@ -748,7 +749,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="DisplayAwayColours">
-                <property name="label" translatable="yes">Display away colors</property>
+                <property name="label" translatable="yes">Usernames display Away colors</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -2006,7 +2007,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Clear</property>
+                    <property name="label" translatable="yes">Clear Colors</property>
                     <property name="use_underline">True</property>
                   </object>
                   <packing>
