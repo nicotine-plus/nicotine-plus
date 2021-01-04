@@ -461,7 +461,7 @@
               <object class="GtkButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_clear_statistics" swapped="no"/>
+                <signal name="clicked" handler="on_reset_statistics" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
@@ -475,7 +475,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear Statistics</property>
+                        <property name="label" translatable="yes">Reset Statistics</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>

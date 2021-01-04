@@ -2235,7 +2235,7 @@ class Statistics:
             stat_value = self.__dict__[stat_id]
             self.ui_callback.update_stat_value(stat_id, stat_value)
 
-    def clear_stats(self):
+    def reset_stats(self):
 
         for stat_id in self.config.defaults["statistics"]:
             self.__dict__[stat_id] = 0

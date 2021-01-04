@@ -18,6 +18,9 @@
 
 import os
 
+from gi.repository import Gtk
+
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import load_ui_elements
 
@@ -56,8 +59,20 @@ class Statistics:
         self.__dict__[stat_id + "_session"].set_text(session_value)
         self.__dict__[stat_id + "_total"].set_text(total_value)
 
-    def on_clear_statistics(self, *args):
-        self.frame.np.statistics.clear_stats()
+    def reset_stats_response(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            self.frame.np.statistics.reset_stats()
+
+        dialog.destroy()
+
+    def on_reset_statistics(self, *args):
+        option_dialog(
+            parent=self.StatisticsDialog,
+            title=_('Reset Transfer Statistics?'),
+            message=_('Are you sure you wish to reset transfer statistics?'),
+            callback=self.reset_stats_response
+        )
 
     def hide(self, w=None, event=None):
         self.StatisticsDialog.hide()
