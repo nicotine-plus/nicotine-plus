@@ -100,7 +100,7 @@ class Shares:
     def real2virtual(self, path):
         path = os.path.normpath(path)
 
-        for (virtual, real) in self._virtualmapping():
+        for (virtual, real, *unused) in self._virtualmapping():
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -118,7 +118,7 @@ class Shares:
     def virtual2real(self, path):
         path = os.path.normpath(path)
 
-        for (virtual, real) in self._virtualmapping():
+        for (virtual, real, *unused) in self._virtualmapping():
             # Remove slashes from share name to avoid path conflicts
             virtual = os.path.normpath(virtual.replace('/', '_').replace('\\', '_'))
 

@@ -217,18 +217,12 @@ class Config:
             },
 
             "columns": {
-                "userbrowse": [1, 1, 1, 1],
-                "userbrowse_widths": [600, 100, 70, 0],
-                "userlist": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "userlist_widths": [25, 25, 180, 0, 0, 0, 0, 0, 160, 0],
-                "chatrooms": {},
-                "chatrooms_widths": {},
-                "download_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "download_widths": [200, 250, 250, 140, 50, 70, 170, 90, 140, 0],
-                "upload_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "upload_widths": [200, 250, 250, 140, 50, 70, 170, 90, 140, 0],
-                "filesearch_columns": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                "filesearch_widths": [50, 200, 25, 50, 90, 90, 400, 400, 100, 100, 0],
+                "file_search": {},
+                "download": {},
+                "upload": {},
+                "user_browse": {},
+                "buddy_list": {},
+                "chat_room": {},
                 "hideflags": False
             },
 
@@ -630,6 +624,20 @@ class Config:
 
         # Remove "I can receive direct connections"-option, it's redundant now
         self.remove_old_option("server", "firewalled")
+
+        # Remove old column options
+        self.remove_old_option("columns", "userbrowse")
+        self.remove_old_option("columns", "userbrowse_widths")
+        self.remove_old_option("columns", "userlist")
+        self.remove_old_option("columns", "userlist_widths")
+        self.remove_old_option("columns", "chatrooms")
+        self.remove_old_option("columns", "chatrooms_widths")
+        self.remove_old_option("columns", "download_columns")
+        self.remove_old_option("columns", "download_widths")
+        self.remove_old_option("columns", "upload_columns")
+        self.remove_old_option("columns", "upload_widths")
+        self.remove_old_option("columns", "filesearch_columns")
+        self.remove_old_option("columns", "filesearch_widths")
 
     def remove_old_option(self, section, option):
 

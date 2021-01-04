@@ -36,7 +36,6 @@ from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
-from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
@@ -44,6 +43,7 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import select_user_row_iter
 from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import set_treeview_selected_row
@@ -212,6 +212,9 @@ class Searches(IconNotebook):
         templist = []
 
         for i in items:
+            if not isinstance(i, str):
+                continue
+
             if i not in templist:
                 templist.append(i)
 
@@ -360,13 +363,12 @@ class Searches(IconNotebook):
         page_num = self.get_current_page()
 
         if page_num is not None:
-
             page = self.get_nth_page(page_num)
 
             for name, search in self.searches.items():
-
                 if search[2] is None:
                     continue
+
                 if search[2].Main == page:
                     search[2].save_columns()
                     break
@@ -482,39 +484,35 @@ class Search:
             GObject.TYPE_UINT64   # (16) queue
         )
 
-        widths = self.frame.np.config.sections["columns"]["filesearch_widths"]
-        cols = initialise_columns(
+        self.cols = cols = initialise_columns(
+            "file_search",
             self.ResultsList,
-            [_("ID"), widths[0], "text", self.cell_data_func],
-            [_("User"), widths[1], "text", self.cell_data_func],
-            [_("Country"), widths[2], "pixbuf"],
-            [_("Immediate Download"), widths[3], "center", self.cell_data_func],
-            [_("Speed"), widths[4], "number", self.cell_data_func],
-            [_("In Queue"), widths[5], "center", self.cell_data_func],
-            [_("Folder"), widths[6], "text", self.cell_data_func],
-            [_("Filename"), widths[7], "text", self.cell_data_func],
-            [_("Size"), widths[8], "number", self.cell_data_func],
-            [_("Bitrate"), widths[9], "number", self.cell_data_func],
-            [_("Length"), widths[10], "number", self.cell_data_func]
+            ["id", _("ID"), 50, "text", self.cell_data_func, None],
+            ["user", _("User"), 200, "text", self.cell_data_func, None],
+            ["country", _("Country"), 25, "pixbuf", None, None],
+            ["immediate_download", _("Immediate Download"), 50, "center", self.cell_data_func, None],
+            ["speed", _("Speed"), 90, "number", self.cell_data_func, None],
+            ["in_queue", _("In Queue"), 90, "center", self.cell_data_func, None],
+            ["folder", _("Folder"), 400, "text", self.cell_data_func, None],
+            ["filename", _("Filename"), 400, "text", self.cell_data_func, None],
+            ["size", _("Size"), 100, "number", self.cell_data_func, None],
+            ["bitrate", _("Bitrate"), 100, "number", self.cell_data_func, None],
+            ["length", _("Length"), 0, "number", self.cell_data_func, None]
         )
 
-        self.col_num, self.col_user, self.col_country, self.col_immediate, self.col_speed, self.col_queue, self.col_directory, self.col_file, self.col_size, self.col_bitrate, self.col_length = cols
+        cols["id"].set_sort_column_id(0)
+        cols["user"].set_sort_column_id(1)
+        cols["country"].set_sort_column_id(13)
+        cols["immediate_download"].set_sort_column_id(3)
+        cols["speed"].set_sort_column_id(15)
+        cols["in_queue"].set_sort_column_id(16)
+        cols["folder"].set_sort_column_id(6)
+        cols["filename"].set_sort_column_id(7)
+        cols["size"].set_sort_column_id(14)
+        cols["bitrate"].set_sort_column_id(11)
+        cols["length"].set_sort_column_id(10)
 
-        hide_columns(cols, self.frame.np.config.sections["columns"]["filesearch_columns"])
-
-        self.col_num.set_sort_column_id(0)
-        self.col_user.set_sort_column_id(1)
-        self.col_country.set_sort_column_id(13)
-        self.col_immediate.set_sort_column_id(3)
-        self.col_speed.set_sort_column_id(15)
-        self.col_queue.set_sort_column_id(16)
-        self.col_directory.set_sort_column_id(6)
-        self.col_file.set_sort_column_id(7)
-        self.col_size.set_sort_column_id(14)
-        self.col_bitrate.set_sort_column_id(11)
-        self.col_length.set_sort_column_id(10)
-
-        self.col_country.get_widget().hide()
+        cols["country"].get_widget().hide()
 
         self.ResultsList.set_model(self.resultsmodel)
 
@@ -1030,16 +1028,7 @@ class Search:
             update_widget_visuals(widget, list_font_target="searchfont")
 
     def save_columns(self):
-
-        columns = []
-        widths = []
-
-        for column in self.ResultsList.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"]["filesearch_columns"] = columns
-        self.frame.np.config.sections["columns"]["filesearch_widths"] = widths
+        save_columns("file_search", self.ResultsList.get_columns())
 
     def selected_results_callback(self, model, path, iterator):
 
@@ -1294,10 +1283,10 @@ class Search:
         self.frame.np.config.sections["searches"]["group_searches"] = widget.get_active()
 
         if widget.get_active():
-            self.ResultsList.get_columns()[0].set_visible(False)
+            self.cols["id"].set_visible(False)
             self.ExpandButton.show()
         else:
-            self.ResultsList.get_columns()[0].set_visible(True)
+            self.cols["id"].set_visible(True)
             self.ExpandButton.hide()
 
     def on_toggle_expand_all(self, widget):

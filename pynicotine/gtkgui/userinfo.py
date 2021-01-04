@@ -95,12 +95,10 @@ class UserTabs(IconNotebook):
             self.frame.change_main_page(self.tab_name)
 
     def show_connection_error(self, user):
-
         if user in self.users:
             self.users[user].show_connection_error()
 
     def save_columns(self):
-
         for user in self.users:
             self.users[user].save_columns()
 
@@ -211,16 +209,24 @@ class UserInfo:
         self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
 
-        cols = initialise_columns(self.Hates, [_("Hates"), 0, "text"])
-        cols[0].set_sort_column_id(0)
+        cols = initialise_columns(
+            None,
+            self.Hates,
+            ["hates", _("Hates"), 0, "text", None, None]
+        )
+        cols["hates"].set_sort_column_id(0)
 
         self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.likes_store = Gtk.ListStore(str)
         self.Likes.set_model(self.likes_store)
 
-        cols = initialise_columns(self.Likes, [_("Likes"), 0, "text"])
-        cols[0].set_sort_column_id(0)
+        cols = initialise_columns(
+            None,
+            self.Likes,
+            ["likes", _("Likes"), 0, "text", None, None]
+        )
+        cols["likes"].set_sort_column_id(0)
 
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
