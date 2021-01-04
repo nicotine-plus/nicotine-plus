@@ -31,7 +31,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after download finishes ($ for folder path):</property>
+            <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -61,7 +61,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after folder finishes ($ for folder path):</property>
+            <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -90,7 +90,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">File Manager command ($ for folder path):</property>
+            <property name="label" translatable="yes">File Manager command ($ for file path):</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -114,7 +114,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Audio Player Command ($ for folder path):</property>
+            <property name="label" translatable="yes">Audio Player Command ($ for file path):</property>
             <property name="xalign">0</property>
           </object>
           <packing>
