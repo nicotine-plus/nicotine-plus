@@ -442,16 +442,25 @@ class PrivateChat:
             numlines = 15
 
         try:
-            with open(log, 'r', encoding='utf-8') as lines:
-                # Only show as many log lines as specified in config
-                lines = deque(lines, numlines)
+            try:
+                self.append_log_lines(log, numlines, 'utf-8')
 
-                for line in lines:
-                    append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
+            except UnicodeDecodeError:
+                self.append_log_lines(log, numlines, 'latin-1')
+
         except IOError:
             pass
 
         GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
+
+    def append_log_lines(self, log, numlines, encoding='utf-8'):
+
+        with open(log, 'r', encoding=encoding) as lines:
+            # Only show as many log lines as specified in config
+            lines = deque(lines, numlines)
+
+            for line in lines:
+                append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
 
     def login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]

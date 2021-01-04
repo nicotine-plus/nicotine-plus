@@ -962,51 +962,61 @@ class ChatRoom:
             numlines = 15
 
         try:
-            with open(log, 'r', encoding='utf-8') as lines:
-                # Only show as many log lines as specified in config
-                lines = deque(lines, numlines)
+            try:
+                self.append_log_lines(log, numlines, 'utf-8')
 
-                for line in lines:
-
-                    # Try to parse line for username
-                    if len(line) > 20 and line[10].isspace() and line[11].isdigit() and line[20] in ("[", "*"):
-
-                        if line[20] == "[" and line[20:].find("] ") != -1:
-                            namepos = line[20:].find("] ")
-                            user = line[21:20 + namepos].strip()
-                            self.get_user_tag(user)
-                            usertag = self.tag_users[user]
-                        else:
-                            user = None
-                            usertag = None
-
-                        if user == config["server"]["login"]:
-                            tag = self.tag_local
-                        elif line[20] == "*":
-                            tag = self.tag_me
-                        elif line[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
-                            tag = self.tag_hilite
-                        else:
-                            tag = self.tag_remote
-                    else:
-                        user = None
-                        tag = None
-                        usertag = None
-
-                    line = re.sub(r"\\s\\s+", "  ", line)
-
-                    if user != config["server"]["login"]:
-                        append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="")
-                    else:
-                        append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
-
-                if len(lines) > 0:
-                    append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
+            except UnicodeDecodeError:
+                self.append_log_lines(log, numlines, 'latin-1')
 
         except IOError:
             pass
 
         GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
+
+    def append_log_lines(self, log, numlines, encoding='utf-8'):
+
+        config = self.frame.np.config.sections
+
+        with open(log, 'r', encoding=encoding) as lines:
+            # Only show as many log lines as specified in config
+            lines = deque(lines, numlines)
+
+            for line in lines:
+
+                # Try to parse line for username
+                if len(line) > 20 and line[10].isspace() and line[11].isdigit() and line[20] in ("[", "*"):
+
+                    if line[20] == "[" and line[20:].find("] ") != -1:
+                        namepos = line[20:].find("] ")
+                        user = line[21:20 + namepos].strip()
+                        self.get_user_tag(user)
+                        usertag = self.tag_users[user]
+                    else:
+                        user = None
+                        usertag = None
+
+                    if user == config["server"]["login"]:
+                        tag = self.tag_local
+                    elif line[20] == "*":
+                        tag = self.tag_me
+                    elif line[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                        tag = self.tag_hilite
+                    else:
+                        tag = self.tag_remote
+                else:
+                    user = None
+                    tag = None
+                    usertag = None
+
+                line = re.sub(r"\\s\\s+", "  ", line)
+
+                if user != config["server"]["login"]:
+                    append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="")
+                else:
+                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
+
+            if len(lines) > 0:
+                append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
     def on_find_log_window(self, widget):
         self.LogSearchBar.set_search_mode(True)
