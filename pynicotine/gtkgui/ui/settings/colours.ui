@@ -736,7 +736,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the same user context menu accessed via the User List.</property>
+                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
