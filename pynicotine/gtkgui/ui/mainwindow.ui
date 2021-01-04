@@ -4,6 +4,8 @@
   <object class="GtkPopoverMenu" id="MenuPopover"/>
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
+    <property name="has-subtitle">False</property>
     <property name="show-close-button">1</property>
     <child>
       <object class="GtkBox">
@@ -44,6 +46,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderSearch">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="SearchTitle">
@@ -173,6 +176,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderDownloads">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="DownloadsTitle">
@@ -285,14 +289,31 @@
               </object>
             </child>
             <child>
+              <object class="GtkImage" id="DownloadGroupingIcon">
+                <property name="visible">1</property>
+                <property name="icon-name">view-list-symbolic</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkComboBoxText" id="ToggleTreeDownloads">
                 <property name="visible">1</property>
+                <property name="has-entry">1</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
                 <items>
                   <item translatable="yes" id="ungrouped">Ungrouped</item>
                   <item translatable="yes" id="folder_grouping">Group by Folder</item>
                   <item translatable="yes" id="user_grouping">Group by User</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="visible">0</property>
+                  </object>
+                </child>
+                <child internal-child="button">
+                  <object class="GtkButton">
+                    <property name="image">DownloadGroupingIcon</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
@@ -334,6 +355,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderUploads">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UploadsTitle">
@@ -446,14 +468,31 @@
               </object>
             </child>
             <child>
+              <object class="GtkImage" id="UploadGroupingIcon">
+                <property name="visible">1</property>
+                <property name="icon-name">view-list-symbolic</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkComboBoxText" id="ToggleTreeUploads">
                 <property name="visible">1</property>
+                <property name="has-entry">1</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
                 <items>
                   <item translatable="yes" id="ungrouped">Ungrouped</item>
                   <item translatable="yes" id="folder_grouping">Group by Folder</item>
                   <item translatable="yes" id="user_grouping">Group by User</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="visible">0</property>
+                  </object>
+                </child>
+                <child internal-child="button">
+                  <object class="GtkButton">
+                    <property name="image">UploadGroupingIcon</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
@@ -495,6 +534,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderPrivateChat">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="PrivateChatTitle">
@@ -556,6 +596,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderUserInfo">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UserInfoTitle">
@@ -617,6 +658,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderUserBrowse">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child>
       <object class="GtkBox" id="UserBrowseStart">
@@ -710,6 +752,7 @@
   </object>
   <object class="GtkHeaderBar" id="HeaderUserList">
     <property name="visible">1</property>
+    <property name="height-request">42</property>
     <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UserListTitle">

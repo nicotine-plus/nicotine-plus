@@ -144,8 +144,15 @@
               </object>
             </child>
             <child>
+              <object class="GtkImage" id="GroupingIcon">
+                <property name="visible">1</property>
+                <property name="icon-name">view-list-symbolic</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkComboBoxText" id="ResultGrouping">
                 <property name="visible">1</property>
+                <property name="has-entry">1</property>
                 <property name="tooltip-text" translatable="yes">Result grouping mode</property>
                 <signal name="changed" handler="on_group" swapped="no"/>
                 <items>
@@ -153,6 +160,16 @@
                   <item translatable="yes" id="folder_grouping">Group by Folder</item>
                   <item translatable="yes" id="user_grouping">Group by User</item>
                 </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="visible">0</property>
+                  </object>
+                </child>
+                <child internal-child="button">
+                  <object class="GtkButton">
+                    <property name="image">GroupingIcon</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
