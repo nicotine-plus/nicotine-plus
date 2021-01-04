@@ -355,6 +355,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">Sent when banning a user via command or context menu, not when appending to the preference's banned users list.</property>
             <property name="use_underline">True</property>
             <property name="draw_indicator">True</property>
             <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
