@@ -128,7 +128,11 @@ class UserList:
         """ Buddy list """
 
         for user in self.frame.np.config.sections["server"]["userlist"]:
-            username, comment, notify, privileged, trusted, last_seen, country = user
+            try:
+                username, comment, notify, privileged, trusted, last_seen, country = user
+            except ValueError:
+                # Invalid user row
+                continue
 
             try:
                 time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
