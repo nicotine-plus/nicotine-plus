@@ -22,7 +22,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">Banned Users:</property>
+                <property name="label" translatable="yes">Banned users:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -148,7 +148,7 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Clear</property>
+                            <property name="label" translatable="yes">Clear All</property>
                             <property name="use_underline">True</property>
                           </object>
                         </child>
@@ -186,7 +186,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">Blocked IP Addresses:</property>
+                <property name="label" translatable="yes">Blocked IP addresses:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -311,7 +311,7 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Clear</property>
+                            <property name="label" translatable="yes">Clear All</property>
                             <property name="use_underline">True</property>
                           </object>
                         </child>
