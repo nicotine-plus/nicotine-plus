@@ -192,11 +192,28 @@ class Transfers:
         # Check for failed downloads if option is enabled (1 min delay)
         self.start_check_download_queue_timer()
 
+    def move_downloads_file(self):
+        """ Move downloads file from pre-2.0.0 location to new one, if necessary """
+
+        old_downloads_file = os.path.join(
+            self.eventprocessor.config.data_dir, 'config.transfers.pickle'
+        )
+
+        current_downloads_file = os.path.join(
+            self.eventprocessor.config.data_dir, 'transfers.pickle'
+        )
+
+        if os.path.exists(old_downloads_file) and not os.path.exists(current_downloads_file):
+            os.rename(old_downloads_file, current_downloads_file)
+
     def load_download_queue(self):
 
-        if os.path.exists(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')):
+        self.move_downloads_file()
+        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')
+
+        if os.path.exists(downloads_file):
             try:
-                with open(os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle'), 'rb') as handle:
+                with open(downloads_file, 'rb') as handle:
                     return RestrictedUnpickler(handle, encoding='utf-8').load()
 
             except IOError as inst:
