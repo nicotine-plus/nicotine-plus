@@ -145,7 +145,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Clear</property>
+                        <property name="label" translatable="yes">Clear All</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
