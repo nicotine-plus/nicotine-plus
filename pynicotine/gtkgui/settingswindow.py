@@ -623,7 +623,7 @@ class SharesFrame(BuildFrame):
 
         if transfers["shared"] is not None:
 
-            for (virtual, actual) in transfers["shared"]:
+            for (virtual, actual, *unused) in transfers["shared"]:
 
                 self.shareslist.append(
                     [
@@ -636,7 +636,7 @@ class SharesFrame(BuildFrame):
 
         if transfers["buddyshared"] is not None:
 
-            for (virtual, actual) in transfers["buddyshared"]:
+            for (virtual, actual, *unused) in transfers["buddyshared"]:
                 self.bshareslist.append(
                     [
                         virtual,
@@ -2711,7 +2711,11 @@ class AutoReplaceFrame(BuildFrame):
         words = config["words"]
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
-                self.replacelist.append([word, replacement])
+                try:
+                    self.replacelist.append([word, replacement])
+                except TypeError:
+                    # Invalid entry
+                    continue
 
         self.on_replace_check(self.ReplaceCheck)
 
@@ -3653,7 +3657,11 @@ class Settings:
 
         elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
             for item in value:
-                widget.get_model().append([item])
+                try:
+                    widget.get_model().append([item])
+                except TypeError:
+                    # Invalid input
+                    continue
 
     def invalid_settings(self, domain, key):
 

@@ -95,6 +95,9 @@ class Searches(IconNotebook):
         templist = []
 
         for i in items:
+            if not isinstance(i, str):
+                continue
+
             if i not in templist:
                 templist.append(i)
 
