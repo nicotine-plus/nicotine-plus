@@ -102,7 +102,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder</property>
+                <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder.</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
@@ -206,7 +206,7 @@
               <object class="GtkFileChooserButton" id="UploadDir">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Where buddies' uploads will be stored (with a subfolder for each buddy)</property>
+                <property name="tooltip_text" translatable="yes">Where buddies' uploads will be stored (with a subfolder for each buddy).</property>
                 <property name="action">select-folder</property>
                 <property name="show_hidden">True</property>
                 <property name="title" translatable="yes">Select a Folder</property>
@@ -234,7 +234,7 @@
               <object class="GtkFileChooserButton" id="IncompleteDir">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Where incomplete downloads are stored temporarily</property>
+                <property name="tooltip_text" translatable="yes">Where incomplete downloads are stored temporarily.</property>
                 <property name="action">select-folder</property>
                 <property name="show_hidden">True</property>
                 <property name="title" translatable="yes">Select a folder</property>
@@ -297,7 +297,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="DownloadFilter">
-            <property name="label" translatable="yes">Enable Filters</property>
+            <property name="label" translatable="yes">Enable filters</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -316,7 +316,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled.</property>
+            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are case insensitive. All Python regular expressions are supported if escaping is disabled. For simple filters, keeping escaping enabled is recommended.</property>
             <property name="use_markup">True</property>
             <property name="wrap">True</property>
           </object>
