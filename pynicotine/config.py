@@ -378,6 +378,15 @@ class Config:
             "plugins": {
                 "enable": True,
                 "enabled": []
+            },
+
+            "statistics": {
+                "started_downloads": 0,
+                "completed_downloads": 0,
+                "downloaded_size": 0,
+                "started_uploads": 0,
+                "completed_uploads": 0,
+                "uploaded_size": 0
             }
         }
 

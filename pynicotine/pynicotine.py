@@ -44,6 +44,7 @@ from pynicotine.logfacility import log
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
+from pynicotine.transfers import Statistics
 from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
@@ -130,6 +131,7 @@ class NetworkEventProcessor:
         self.users = {}
 
         self.queue = queue.Queue(0)
+        self.statistics = Statistics(self.config, self.ui_callback)
         self.shares = Shares(self, self.config, self.queue, self.ui_callback)
         self.pluginhandler = PluginHandler(self.ui_callback, plugins, self.config)
 

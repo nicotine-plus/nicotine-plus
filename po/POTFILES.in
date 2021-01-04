@@ -21,6 +21,7 @@ pynicotine/gtkgui/roomlist.py
 pynicotine/gtkgui/roomwall.py
 pynicotine/gtkgui/search.py
 pynicotine/gtkgui/settingswindow.py
+pynicotine/gtkgui/statistics.py
 pynicotine/gtkgui/transferlist.py
 pynicotine/gtkgui/tray.py
 pynicotine/gtkgui/uploads.py
@@ -32,21 +33,21 @@ pynicotine/gtkgui/wishlist.py
 pynicotine/upnp/portmapper.py
 [type: gettext/glade] pynicotine/gtkgui/ui/buddylist.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/chatrooms.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/fastconfigure.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/fileproperties.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/interests.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/mainwindow.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/privatechat.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/roomlist.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/roomwall.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/search.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/userbrowse.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/userinfo.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/wishlist.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/about/about.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/about/chatroomcommands.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/about/privatechatcommands.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/about/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/about.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/chatroomcommands.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/fastconfigure.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/fileproperties.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/privatechatcommands.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/roomwall.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/wishlist.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/menus/mainmenu.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/menus/menubar.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/autoreplace.ui

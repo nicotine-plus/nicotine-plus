@@ -1242,6 +1242,8 @@ class Transfers:
                     i.offset = size
                     i.starttime = time.time()
 
+                    self.eventprocessor.statistics.append_stat_value("started_downloads", 1)
+
                     if i.size > size:
                         i.status = "Transferring"
                         self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
@@ -1289,6 +1291,8 @@ class Transfers:
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
                 i.status = "Initializing transfer"
                 i.file = f
+
+                self.eventprocessor.statistics.append_stat_value("started_uploads", 1)
 
                 self.log_transfer(_("Upload started: user %(user)s, file %(file)s") % {
                     'user': i.user,
@@ -1352,8 +1356,11 @@ class Transfers:
                 if curtime > i.starttime and \
                         i.currentbytes > i.lastbytes:
 
+                    bytesdifference = (i.currentbytes - i.lastbytes)
+                    self.eventprocessor.statistics.append_stat_value("downloaded_size", bytesdifference)
+
                     try:
-                        i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime))
+                        i.speed = max(0, bytesdifference / (curtime - i.lasttime))
                     except ZeroDivisionError:
                         i.speed = 0
                     if i.speed <= 0.0:
@@ -1441,6 +1448,8 @@ class Transfers:
         self.add_to_shared(newname)
         self.eventprocessor.shares.send_num_shared_folders_files()
 
+        self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
+
         if self.notifications and config["notifications"]["notification_popup_file"]:
             self.notifications.new_notification(
                 _("%(file)s downloaded from %(user)s") % {
@@ -1517,8 +1526,11 @@ class Transfers:
             if curtime > i.starttime and \
                     i.currentbytes > i.lastbytes:
 
+                bytesdifference = (i.currentbytes - i.lastbytes)
+                self.eventprocessor.statistics.append_stat_value("uploaded_size", bytesdifference)
+
                 try:
-                    i.speed = max(0, (i.currentbytes - i.lastbytes) / (curtime - i.lasttime))
+                    i.speed = max(0, bytesdifference / (curtime - i.lasttime))
                 except ZeroDivisionError:
                     i.speed = lastspeed  # too fast!
 
@@ -1581,6 +1593,8 @@ class Transfers:
                 'file': i.filename
             }
         )
+
+        self.eventprocessor.statistics.append_stat_value("completed_uploads", 1)
 
         self.check_upload_queue()
         self.uploadsview.update(i)
@@ -2177,3 +2191,37 @@ class Transfers:
 
         except Exception as inst:
             log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
+
+
+class Statistics:
+
+    def __init__(self, config, ui_callback=None):
+
+        self.config = config
+        self.ui_callback = ui_callback
+
+        self.init_stats()
+
+    def init_stats(self):
+        for stat_id in self.config.defaults["statistics"]:
+            self.__dict__[stat_id] = 0
+
+    def append_stat_value(self, stat_id, stat_value):
+
+        self.__dict__[stat_id] += stat_value
+        self.config.sections["statistics"][stat_id] += stat_value
+        self.update_ui(stat_id)
+
+    def update_ui(self, stat_id):
+
+        if self.ui_callback:
+            stat_value = self.__dict__[stat_id]
+            self.ui_callback.update_stat_value(stat_id, stat_value)
+
+    def clear_stats(self):
+
+        for stat_id in self.config.defaults["statistics"]:
+            self.__dict__[stat_id] = 0
+            self.config.sections["statistics"][stat_id] = 0
+
+            self.update_ui(stat_id)

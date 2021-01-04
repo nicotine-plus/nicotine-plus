@@ -31,7 +31,7 @@ class FileProperties:
         self.frame = frame
         self.properties = properties
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "fileproperties.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fileproperties.ui"))
 
         self.FilePropertiesDialog.set_transient_for(self.frame.MainWindow)
 

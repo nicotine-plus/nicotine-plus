@@ -51,6 +51,7 @@ from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import Settings
+from pynicotine.gtkgui.statistics import Statistics
 from pynicotine.gtkgui.tray import Tray
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
@@ -360,6 +361,10 @@ class NicotineFrame:
         if not config["transfers"]["enablebuddyshares"]:
             self.rescan_buddy_action.set_enabled(False)
             self.browse_buddy_shares_action.set_enabled(False)
+
+        """ Transfer Statistics """
+
+        self.statistics = Statistics(self, self.np.config)
 
         """ Now Playing """
 
@@ -878,6 +883,10 @@ class NicotineFrame:
         action.connect("activate", self.on_about_filters)
         self.application.add_action(action)
 
+        action = Gio.SimpleAction.new("transferstatistics", None)
+        action.connect("activate", self.on_transfer_statistics)
+        self.application.add_action(action)
+
         action = Gio.SimpleAction.new("checklatest", None)
         action.connect("activate", self.on_check_latest)
         self.application.add_action(action)
@@ -1278,7 +1287,7 @@ class NicotineFrame:
     def on_about_chatroom_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "chatroomcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "chatroomcommands.ui"))
 
         self.about_chatroom_commands = builder.get_object("AboutChatRoomCommands")
         self.about_chatroom_commands.set_transient_for(self.MainWindow)
@@ -1287,7 +1296,7 @@ class NicotineFrame:
     def on_about_private_chat_commands(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "privatechatcommands.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "privatechatcommands.ui"))
 
         self.about_private_chat_commands = builder.get_object("AboutPrivateChatCommands")
         self.about_private_chat_commands.set_transient_for(self.MainWindow)
@@ -1296,11 +1305,14 @@ class NicotineFrame:
     def on_about_filters(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "searchfilters.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "searchfilters.ui"))
 
         self.about_search_filters = builder.get_object("AboutSearchFilters")
         self.about_search_filters.set_transient_for(self.MainWindow)
         self.about_search_filters.show()
+
+    def on_transfer_statistics(self, *args):
+        self.statistics.show()
 
     def on_check_latest(self, *args):
 
@@ -1357,7 +1369,7 @@ class NicotineFrame:
     def on_about(self, *args):
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "about", "about.ui"))
+        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
 
         self.about = builder.get_object("About")
 
@@ -1903,6 +1915,11 @@ class NicotineFrame:
         log.add(_("Rescanning finished"))
 
         self.SharesProgress.hide()
+
+    """ Transfer Statistics """
+
+    def update_stat_value(self, stat_id, stat_value):
+        self.statistics.update_stat_value(stat_id, stat_value)
 
     """ Search """
 
