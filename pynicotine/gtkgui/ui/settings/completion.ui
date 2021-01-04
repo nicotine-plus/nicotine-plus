@@ -63,7 +63,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionCycleCheck">
-            <property name="label" translatable="yes">Cycle completions instead of showing a dropdown</property>
+            <property name="label" translatable="yes">Cycle completions instead of showing a drop-down</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -103,8 +103,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
-            <property name="label" translatable="yes">Complete room names in chat rooms</property>
+          <object class="GtkCheckButton" id="CompleteBuddiesCheck">
+            <property name="label" translatable="yes">Complete buddy names</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -114,20 +114,6 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="CompleteBuddiesCheck">
-            <property name="label" translatable="yes">Complete Buddy Names</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -141,12 +127,26 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
+            <property name="label" translatable="yes">Complete room names in chat rooms</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteCommandsCheck">
-            <property name="label" translatable="yes">Complete built-in /Commands</property>
+            <property name="label" translatable="yes">Complete built-in /commands</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -160,7 +160,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteAliasesCheck">
-            <property name="label" translatable="yes">Complete alias /Commands</property>
+            <property name="label" translatable="yes">Complete alias /commands</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
