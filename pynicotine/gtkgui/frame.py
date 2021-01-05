@@ -1736,7 +1736,7 @@ class NicotineFrame:
     def on_tab_click(self, widget, event, popup_id):
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.__dict__[popup_id].popup(None, None, None, None, event.button, event.time)
+            self.__dict__[popup_id].popup()
 
     def set_tab_expand(self, tab_box):
 
@@ -2489,7 +2489,7 @@ class NicotineFrame:
             return False
 
         widget.stop_emission_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
+        self.logpopupmenu.popup()
         return True
 
     def on_find_log_window(self, widget):

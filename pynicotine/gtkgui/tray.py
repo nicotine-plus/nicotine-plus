@@ -180,7 +180,7 @@ class Tray:
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):
         if button == 3:
-            self.tray_popup_menu.popup(None, None, None, None, button, activate_time)
+            self.tray_popup_menu.popup()
 
     def check_icon_path(self, icon_name, icon_path, icon_type="local"):
 

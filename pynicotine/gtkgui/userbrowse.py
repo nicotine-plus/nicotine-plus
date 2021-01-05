@@ -276,7 +276,7 @@ class UserBrowse:
         return False
 
     def on_folder_popup_menu(self, widget, event):
-        self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.folder_popup_menu.popup()
 
     def select_files(self):
         self.selected_files = []
@@ -326,7 +326,7 @@ class UserBrowse:
                 items[i].set_sensitive(files)
 
         self.FileTreeView.stop_emission_by_name("button_press_event")
-        self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.file_popup_menu.popup()
 
         return True
 

@@ -162,7 +162,7 @@ class UserTabs(IconNotebook):
                 menu = self.tab_popup(username)
 
                 if menu is not None:
-                    menu.popup(None, None, None, None, event.button, event.time)
+                    menu.popup()
 
                 return True
 
@@ -297,7 +297,7 @@ class UserInfo:
         items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.likes_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.likes_popup_menu.popup()
 
     def on_popup_hates_menu(self, widget, event):
 
@@ -317,7 +317,7 @@ class UserInfo:
         items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
         items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
-        self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.hates_popup_menu.popup()
 
     def update_visuals(self):
 
@@ -497,7 +497,7 @@ class UserInfo:
         for (item_id, item) in items.items():
             item.set_sensitive(act)
 
-        self.image_menu.popup(None, None, None, None, event.button, event.time)
+        self.image_menu.popup()
 
         return True  # Don't scroll the Gtk.ScrolledWindow
 

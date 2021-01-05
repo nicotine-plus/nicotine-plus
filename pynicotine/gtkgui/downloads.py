@@ -342,7 +342,7 @@ class Downloads(TransferList):
         for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
             items[i].set_sensitive(act)
 
-        self.popup_menu.popup(None, None, None, None, 3, event.time)
+        self.popup_menu.popup()
 
         if kind == "keyboard":
             widget.stop_emission_by_name("key_press_event")

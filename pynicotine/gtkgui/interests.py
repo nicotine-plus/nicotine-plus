@@ -366,7 +366,7 @@ class Interests:
         self.ru_popup_menu.set_user(user)
         self.ru_popup_menu.toggle_user_items()
 
-        self.ru_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.ru_popup_menu.popup()
 
     def on_popup_til_menu(self, widget, event):
         if event.button != 3:
@@ -382,7 +382,7 @@ class Interests:
         thing = self.likes_model.get_value(iterator, 0)
 
         self.til_popup_menu.set_user(thing)
-        self.til_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.til_popup_menu.popup()
 
     def on_popup_tidl_menu(self, widget, event):
         if event.button != 3:
@@ -398,7 +398,7 @@ class Interests:
         thing = self.dislikes_model.get_value(iterator, 0)
 
         self.tidl_popup_menu.set_user(thing)
-        self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.tidl_popup_menu.popup()
 
     def on_popup_r_menu(self, widget, event):
 
@@ -419,7 +419,7 @@ class Interests:
         items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 
-        self.r_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.r_popup_menu.popup()
 
     def on_popup_un_rec_menu(self, widget, event):
 
@@ -440,7 +440,7 @@ class Interests:
         items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
         items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 
-        self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.ur_popup_menu.popup()
 
     def update_visuals(self):
 

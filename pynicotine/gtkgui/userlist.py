@@ -295,7 +295,7 @@ class UserList:
             items[_("_Privileged")].set_active(model.get_value(iterator, 7))
             items[_("_Trusted")].set_active(model.get_value(iterator, 5))
 
-            self.popup_menu.popup(None, None, None, None, event.button, event.time)
+            self.popup_menu.popup()
 
     def get_iter(self, user):
 

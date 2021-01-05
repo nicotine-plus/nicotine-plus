@@ -307,7 +307,7 @@ class RoomsControl:
         items[_("Disown Private Room")].set_sensitive(self.is_private_room_owned(self.popup_room))
         items[_("Cancel Room Membership")].set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))
 
-        self.popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.popup_menu.popup()
 
     def on_popup_join(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
@@ -1013,7 +1013,7 @@ class ChatRoom:
         me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
         self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
 
-        self.popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.popup_menu.popup()
 
     def on_show_room_wall(self, widget):
         self.room_wall.show()
@@ -1562,7 +1562,7 @@ class ChatRoom:
             me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
             self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
 
-            self.popup_menu.popup(None, None, None, None, event.button.button, event.button.time)
+            self.popup_menu.popup(button=event.button.button)
 
         return True
 
@@ -1881,7 +1881,7 @@ class ChatRoom:
             return False
 
         widget.stop_emission_by_name("button-press-event")
-        self.roomlogpopmenu.popup(None, None, None, None, event.button, event.time)
+        self.roomlogpopmenu.popup()
 
         return True
 
@@ -1891,7 +1891,7 @@ class ChatRoom:
             return False
 
         widget.stop_emission_by_name("button-press-event")
-        self.activitylogpopupmenu.popup(None, None, None, None, event.button, event.time)
+        self.activitylogpopupmenu.popup()
 
         return True
 
@@ -2013,7 +2013,7 @@ class ChatRooms(IconNotebook):
 
             if event.button == 3:
                 menu = self.tab_popup(room)
-                menu.popup(None, None, None, None, event.button, event.time)
+                menu.popup()
                 return True
 
             return False

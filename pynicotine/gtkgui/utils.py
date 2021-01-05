@@ -339,7 +339,7 @@ def press_header(widget, event):
     columns = widget.get_parent().get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     one_visible_column = len(visible_columns) == 1
-    menu = Gtk.Menu()
+    menu = PopupMenu(widget.get_toplevel())
     pos = 1
 
     for column in columns:
@@ -348,7 +348,7 @@ def press_header(widget, event):
         if title == "":
             title = _("Column #%i") % pos
 
-        item = Gtk.CheckMenuItem(title)
+        item = menu.append_item(("$" + title, None))
 
         if column in visible_columns:
             item.set_active(True)
@@ -358,17 +358,14 @@ def press_header(widget, event):
             item.set_active(False)
 
         item.connect('activate', header_toggle, columns, pos - 1)
-        menu.append(item)
         pos += 1
 
-    menu.show_all()
-    menu.attach_to_widget(widget.get_toplevel(), None)
-    menu.popup(None, None, None, None, event.button, event.time)
-
+    menu.popup()
     return True
 
 
 def header_toggle(menuitem, columns, index):
+
     column = columns[index]
     column.set_visible(not column.get_visible())
 
@@ -1162,6 +1159,8 @@ class PopupMenu(Gtk.Menu):
         menuitem = self.create_item(item)
         self.append(menuitem)
 
+        return menuitem
+
     def get_items(self):
         return self.items
 
@@ -1218,6 +1217,15 @@ class PopupMenu(Gtk.Menu):
         if self.useritem is not None:
             self.useritem.destroy()
             self.useritem = None
+
+    def popup(self, button=3):
+
+        try:
+            self.popup_at_pointer()
+
+        except AttributeError:
+            time = Gtk.get_current_event_time()
+            self.popup_at_device(None, None, None, None, button, time)
 
     def set_user(self, user):
 

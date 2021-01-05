@@ -412,7 +412,7 @@ class Searches(IconNotebook):
 
             if event.button == 3:
                 menu = self.tab_popup(search_id)
-                menu.popup(None, None, None, None, event.button, event.time)
+                menu.popup()
                 return True
 
         return False
@@ -1099,7 +1099,7 @@ class Search:
 
                 break
 
-        self.popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.popup_menu.popup()
         widget.stop_emission_by_name("button_press_event")
 
         return True
