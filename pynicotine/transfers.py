@@ -1311,8 +1311,13 @@ class Transfers:
 
                 self.eventprocessor.statistics.append_stat_value("started_uploads", 1)
 
-                self.log_transfer(_("Upload started: user %(user)s, file %(file)s") % {
+                ip_address = None
+                if i.conn is not None:
+                    ip_address = i.conn.getpeername()
+
+                self.log_transfer(_("Upload started: user %(user)s, IP address %(ip)s, file %(file)s") % {
                     'user': i.user,
+                    'ip': ip_address,
                     'file': i.filename
                 })
             except IOError as strerror:
@@ -1595,6 +1600,10 @@ class Transfers:
         if file is not None:
             file.close()
 
+        ip_address = None
+        if i.conn is not None:
+            ip_address = i.conn.getpeername()
+
         i.status = "Finished"
         i.currentbytes = i.size
         i.speed = 0
@@ -1605,8 +1614,9 @@ class Transfers:
                 j.timequeued = i.lasttime
 
         self.log_transfer(
-            _("Upload finished: %(user)s, file %(file)s") % {
+            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s") % {
                 'user': i.user,
+                'ip': ip_address,
                 'file': i.filename
             }
         )
