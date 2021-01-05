@@ -50,9 +50,10 @@ class FastConfigureAssistant(object):
         )
 
         initialise_columns(
+            None,
             self.shareddirectoriestree,
-            [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"]
+            ["virtual_folder", _("Virtual Folder"), 0, "text", None, None],
+            ["folder", _("Folder"), 0, "text", None, None]
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)

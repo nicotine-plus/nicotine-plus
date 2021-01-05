@@ -99,23 +99,15 @@ class UserBrowse:
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_users2 = PopupMenu(self.frame, False)
         self.popup_menu_users_tab = PopupMenu(self.frame)
+
         for menu in (self.popup_menu_users, self.popup_menu_users2, self.popup_menu_users_tab):
-            menu.setup(
-                ("#" + _("Send _message"), menu.on_send_message),
-                ("#" + _("Show IP a_ddress"), menu.on_show_ip_address),
-                ("#" + _("Get user i_nfo"), menu.on_get_user_info),
-                ("#" + _("Gi_ve privileges"), menu.on_give_privileges),
-                ("#" + _("Client Version"), menu.on_version),
-                ("", None),
-                ("#" + _("_Save shares list to disk"), self.on_save),
-                ("", None),
-                ("$" + _("_Add user to list"), menu.on_add_to_list),
-                ("$" + _("_Ban this user"), menu.on_ban_user),
-                ("$" + _("_Ignore this user"), menu.on_ignore_user),
-                ("", None),
-                ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self.userbrowses),
-                ("#" + _("_Close This Tab"), self.on_close)
-            )
+            menu.setup_user_menu(user)
+            menu.get_items()[_("Brow_se Files")].set_visible(False)
+
+            menu.append_item(("", None))
+            menu.append_item(("#" + _("_Save Shares List To Disk"), self.on_save))
+            menu.append_item(("#" + _("Close All Tabs"), menu.on_close_all_tabs, self.userbrowses))
+            menu.append_item(("#" + _("_Close Tab"), self.on_close))
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
         self.popup_menu_downloads_folders.setup(
@@ -244,13 +236,7 @@ class UserBrowse:
         self.on_popup_menu_users(self.popup_menu_users)
 
     def on_popup_menu_users(self, menu):
-
-        items = menu.get_children()
-
-        items[8].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[9].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-        items[10].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-
+        menu.toggle_user_items()
         return True
 
     def update_visuals(self):
@@ -290,16 +276,7 @@ class UserBrowse:
         return False
 
     def on_folder_popup_menu(self, widget, event):
-
-        act = True
-        if self.selected_folder is None:
-            act = False
-
-        items = self.folder_popup_menu.get_children()
-        for item in items[1:]:
-            item.set_sensitive(act)
-
-        self.folder_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.folder_popup_menu.popup()
 
     def select_files(self):
         self.selected_files = []
@@ -338,23 +315,18 @@ class UserBrowse:
         else:
             files = False
 
-        items = self.file_popup_menu.get_children()
+        items = self.file_popup_menu.get_items()
 
         if self.user == self.frame.np.config.sections["server"]["login"]:
-            items[2].set_sensitive(files)  # Downloads
-            items[3].set_sensitive(files)  # Uploads
-            items[5].set_sensitive(files)  # Send to player
-            items[7].set_sensitive(files)  # File Properties
-            items[9].set_sensitive(files)  # Copy File Path
-            items[10].set_sensitive(files)  # Copy URL
+            for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
+                      _("Copy _File Path"), _("Copy _URL")):
+                items[i].set_sensitive(files)
         else:
-            items[2].set_sensitive(files)  # Downloads
-            items[4].set_sensitive(files)  # File Properties
-            items[6].set_sensitive(files)  # Copy File Path
-            items[7].set_sensitive(files)  # Copy URL
+            for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
+                items[i].set_sensitive(files)
 
         self.FileTreeView.stop_emission_by_name("button_press_event")
-        self.file_popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.file_popup_menu.popup()
 
         return True
 
@@ -633,13 +605,7 @@ class UserBrowse:
         self.progressbar1.set_fraction(fraction)
 
     def tab_popup(self, user):
-
-        items = self.popup_menu_users_tab.get_children()
-
-        items[8].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[9].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[10].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
+        self.popup_menu_users_tab.toggle_user_items()
         return self.popup_menu_users_tab
 
     def on_select_dir(self, selection):

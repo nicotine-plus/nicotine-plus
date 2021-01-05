@@ -228,7 +228,8 @@ class NicotineFrame:
             # Set the menu to hide the tab
             tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
 
-            self.__dict__[eventbox_name + "Menu"] = PopupMenu(self).setup(
+            self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
+            popup.setup(
                 (
                     "#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box]
                 )
@@ -324,7 +325,8 @@ class NicotineFrame:
         """ Log """
 
         # Popup menu on the log windows
-        self.logpopupmenu = PopupMenu(self).setup(
+        self.logpopupmenu = PopupMenu(self)
+        self.logpopupmenu.setup(
             ("#" + _("Find"), self.on_find_log_window),
             ("", None),
             ("#" + _("Copy"), self.on_copy_log_window),
@@ -1734,7 +1736,7 @@ class NicotineFrame:
     def on_tab_click(self, widget, event, popup_id):
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.__dict__[popup_id].popup(None, None, None, None, event.button, event.time)
+            self.__dict__[popup_id].popup()
 
     def set_tab_expand(self, tab_box):
 
@@ -2487,7 +2489,7 @@ class NicotineFrame:
             return False
 
         widget.stop_emission_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
+        self.logpopupmenu.popup()
         return True
 
     def on_find_log_window(self, widget):

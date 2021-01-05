@@ -169,35 +169,13 @@ class PrivateChats(IconNotebook):
             return
 
         popup = PopupMenu(self.frame)
-        popup.setup(
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("#" + _("Client Version"), popup.on_version),
-            ("", None),
-            ("$" + _("Add user to list"), popup.on_add_to_list),
-            ("$" + _("Ban this user"), popup.on_ban_user),
-            ("$" + _("Ignore this user"), popup.on_ignore_user),
-            ("$" + _("B_lock this user's IP Address"), popup.on_block_user),
-            ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip),
-            ("", None),
-            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self),
-            ("#" + _("_Close Tab"), self.users[user].on_close)
-        )
+        popup.setup_user_menu(user)
+        popup.get_items()[_("Send _Message")].set_visible(False)
 
-        popup.set_user(user)
-
-        me = (popup.user is None or popup.user == self.frame.np.config.sections["server"]["login"])
-        items = popup.get_children()
-
-        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-        items[9].set_active(self.frame.user_ip_is_blocked(user))
-        items[9].set_sensitive(not me)
-        items[10].set_active(self.frame.user_ip_is_ignored(user))
-        items[10].set_sensitive(not me)
+        popup.append_item(("", None))
+        popup.append_item(("#" + _("Close All Tabs"), popup.on_close_all_tabs, self))
+        popup.append_item(("#" + _("_Close Tab"), self.users[user].on_close))
+        popup.toggle_user_items()
 
         return popup
 
@@ -215,7 +193,7 @@ class PrivateChats(IconNotebook):
 
             if event.button == 3:
                 menu = self.tab_popup(username)
-                menu.popup(None, None, None, None, event.button, event.time)
+                menu.popup()
                 return True
 
             return False
@@ -398,21 +376,8 @@ class PrivateChat:
         self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
         self.popup_menu_user = popup = PopupMenu(self.frame, False)
-        popup.setup(
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("#" + _("Client Version"), popup.on_version),
-            ("", None),
-            ("$" + _("Add user to list"), popup.on_add_to_list),
-            ("$" + _("Ban this user"), popup.on_ban_user),
-            ("$" + _("Ignore this user"), popup.on_ignore_user),
-            ("$" + _("B_lock this user's IP Address"), popup.on_block_user),
-            ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip)
-        )
-
-        popup.set_user(user)
+        popup.setup_user_menu(user)
+        popup.get_items()[_("Send _Message")].set_visible(False)
 
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -489,7 +454,7 @@ class PrivateChat:
 
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
 
-            self.popup_menu.popup(None, None, None, None, event.button, event.time)
+            self.popup_menu.popup()
             self.ChatScroll.stop_emission_by_name("button_press_event")
             return True
 
@@ -497,25 +462,14 @@ class PrivateChat:
 
             if event.keyval == Gdk.keyval_from_name("Menu"):
 
-                self.popup_menu.popup(None, None, None, None, 0, 0)
+                self.popup_menu.popup(button=0)
                 self.ChatScroll.stop_emission_by_name("key_press_event")
                 return True
 
         return False
 
     def on_popup_menu_user(self, widget):
-
-        items = self.popup_menu_user.get_children()
-        me = (self.popup_menu_user.user is None or self.popup_menu_user.user == self.frame.np.config.sections["server"]["login"])
-
-        items[6].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[7].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-        items[8].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-        items[9].set_active(self.frame.user_ip_is_blocked(self.user))
-        items[9].set_sensitive(not me)
-        items[10].set_active(self.frame.user_ip_is_ignored(self.user))
-        items[10].set_sensitive(not me)
-
+        self.popup_menu_user.toggle_user_items()
         return True
 
     def on_find_chat_log(self, widget):

@@ -412,7 +412,7 @@ class Searches(IconNotebook):
 
             if event.button == 3:
                 menu = self.tab_popup(search_id)
-                menu.popup(None, None, None, None, event.button, event.time)
+                menu.popup()
                 return True
 
         return False
@@ -957,19 +957,9 @@ class Search:
 
             for user in self.selected_users:
                 popup = PopupMenu(self.frame, False)
-                popup.setup(
-                    ("#" + _("Send _message"), popup.on_send_message),
-                    ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-                    ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-                    ("#" + _("Brow_se files"), popup.on_browse_user),
-                    ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-                    ("", None),
-                    ("$" + _("_Add user to list"), popup.on_add_to_list),
-                    ("$" + _("_Ban this user"), popup.on_ban_user),
-                    ("$" + _("_Ignore this user"), popup.on_ignore_user),
-                    ("#" + _("Select User's Results"), self.on_select_user_results)
-                )
-                popup.set_user(user)
+                popup.setup_user_menu(user)
+                popup.append_item(("", None))
+                popup.append_item(("#" + _("Select User's Transfers"), self.on_select_user_results))
 
                 items.append((1, user, popup, self.on_popup_menu_user, popup))
 
@@ -982,26 +972,7 @@ class Search:
         if popup is None:
             return
 
-        menu = popup
-        user = menu.user
-        items = menu.get_children()
-
-        act = False
-        if len(self.selected_users) >= 1:
-            act = True
-
-        items[0].set_sensitive(act)
-        items[1].set_sensitive(act)
-        items[2].set_sensitive(act)
-        items[3].set_sensitive(act)
-
-        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
-        for i in range(4, 9):
-            items[i].set_sensitive(act)
-
+        popup.toggle_user_items()
         return True
 
     def on_select_user_results(self, widget):
@@ -1104,29 +1075,31 @@ class Search:
         set_treeview_selected_row(widget, event)
         self.select_results()
 
-        items = self.popup_menu.get_children()
+        items = self.popup_menu.get_items()
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        items[0].set_sensitive(False)   # Download File
-        items[1].set_sensitive(False)   # Download File To
-        items[4].set_sensitive(files)   # Browse Folder
-        items[5].set_sensitive(False)   # File Properties
-        items[7].set_sensitive(files)   # Copy File Path
-        items[8].set_sensitive(False)   # Copy URL
-        items[9].set_sensitive(files)   # Copy Folder URL
-        items[11].set_sensitive(users)  # Users
+        for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
+                  _("Copy _URL")):
+            items[i].set_sensitive(False)
+
+        for i in (_("Download _Folder(s)"), _("Download F_older(s) To..."), _("_Browse Folder"),
+                  _("Copy _File Path"), _("Copy Folder U_RL")):
+            items[i].set_sensitive(files)
+
+        items[_("User(s)")].set_sensitive(users)
 
         for result in self.selected_results:
             if not result[1].endswith('\\'):
                 # At least one selected result is a file, activate file-related items
-                items[0].set_sensitive(True)  # Download File
-                items[1].set_sensitive(True)  # Download File To
-                items[5].set_sensitive(True)  # File Properties
-                items[8].set_sensitive(True)  # Copy URL
+
+                for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
+                          _("Copy _URL")):
+                    items[i].set_sensitive(True)
+
                 break
 
-        self.popup_menu.popup(None, None, None, None, event.button, event.time)
+        self.popup_menu.popup()
         widget.stop_emission_by_name("button_press_event")
 
         return True
