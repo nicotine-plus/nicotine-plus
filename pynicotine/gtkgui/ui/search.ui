@@ -393,6 +393,9 @@
             <property name="can-focus">1</property>
             <property name="has-tooltip">1</property>
             <property name="enable-search">0</property>
+            <signal name="button-press-event" handler="on_list_clicked" swapped="no"/>
+            <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+            <signal name="touch-event" handler="on_list_clicked" swapped="no"/>
             <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
           </object>
         </child>

@@ -38,6 +38,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
@@ -180,8 +181,6 @@ class UserList:
         popup.append_item(("#" + _("Edit _Comments"), self.on_edit_comments))
         popup.append_item(("#" + _("_Remove"), self.on_remove_user))
 
-        self.UserListTree.connect("button_press_event", self.on_popup_menu)
-
         self.update_visuals()
 
     def buddies_combos_fill(self):
@@ -290,7 +289,7 @@ class UserList:
             user = model.get_value(iterator, 2)
             status = model.get_value(iterator, 10)
 
-            if event.button != 3:
+            if not triggers_context_menu(event):
                 if event.type == Gdk.EventType._2BUTTON_PRESS:
                     self.frame.privatechats.send_message(user, show_user=True)
                     self.frame.change_main_page("private")

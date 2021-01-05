@@ -65,6 +65,7 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.pynicotine import NetworkEventProcessor
@@ -217,6 +218,7 @@ class NicotineFrame:
 
             # Set the menu to hide the tab
             tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
+            tab_label.connect('touch_event', self.on_tab_click, eventbox_name + "Menu")
 
             self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
             popup.setup(
@@ -1665,8 +1667,10 @@ class NicotineFrame:
 
     def on_tab_click(self, widget, event, popup_id):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.__dict__[popup_id].popup()
+        if not triggers_context_menu(event):
+            return
+
+        self.__dict__[popup_id].popup(event)
 
     def set_tab_expand(self, tab_box):
 
@@ -2369,10 +2373,10 @@ class NicotineFrame:
         return False
 
     def on_popup_log_menu(self, widget, event):
-        if event.button != 3:
+
+        if not triggers_context_menu(event):
             return False
 
-        widget.stop_emission_by_name("button-press-event")
         self.logpopupmenu.popup()
         return True
 

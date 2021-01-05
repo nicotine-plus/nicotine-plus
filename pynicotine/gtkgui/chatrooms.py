@@ -55,6 +55,7 @@ from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.utils import set_widget_color
 from pynicotine.gtkgui.utils import set_widget_font
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -137,6 +138,7 @@ class RoomsControl:
         )
 
         self.frame.roomlist.RoomsList.connect("button_press_event", self.on_list_clicked)
+        self.frame.roomlist.RoomsList.connect("touch_event", self.on_list_clicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
         self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
@@ -272,14 +274,15 @@ class RoomsControl:
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
             return True
-        elif event.button == 3:
+
+        elif triggers_context_menu(event):
             return self.on_popup_menu(widget, event)
 
         return False
 
     def on_popup_menu(self, widget, event):
 
-        if event.button != 3 or self.roomsmodel is None:
+        if self.roomsmodel is None:
             return
 
         d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
@@ -869,8 +872,6 @@ class ChatRoom:
         popup.append_item(("#" + _("Sear_ch User's Files"), popup.on_search_user))
         popup.append_item((1, _("Private Rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms))
 
-        self.UserList.connect("button_press_event", self.on_popup_menu)
-
         self.ChatEntry.grab_focus()
 
         self.activitylogpopupmenu = PopupMenu(self.frame)
@@ -885,8 +886,6 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.RoomLog.connect("button-press-event", self.on_popup_activity_log_menu)
-
         self.roomlogpopmenu = PopupMenu(self.frame)
         self.roomlogpopmenu.setup(
             ("#" + _("Find"), self.on_find_room_log),
@@ -899,8 +898,6 @@ class ChatRoom:
             ("", None),
             ("#" + _("_Leave Room"), self.on_leave)
         )
-
-        self.ChatScroll.connect("button-press-event", self.on_popup_room_log_menu)
 
         self.buildingcompletion = False
 
@@ -1005,7 +1002,7 @@ class ChatRoom:
         user = self.usersmodel.get_value(self.usersmodel.get_iter(path), 2)
 
         # Double click starts a private message
-        if event.button != 3:
+        if not triggers_context_menu(event):
             if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.frame.privatechats.send_message(user, show_user=True)
                 self.frame.change_main_page("private")
@@ -1881,22 +1878,18 @@ class ChatRoom:
 
     def on_popup_room_log_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return False
 
-        widget.stop_emission_by_name("button-press-event")
         self.roomlogpopmenu.popup()
-
         return True
 
     def on_popup_activity_log_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return False
 
-        widget.stop_emission_by_name("button-press-event")
         self.activitylogpopupmenu.popup()
-
         return True
 
     def on_copy_all_activity_log(self, widget):
@@ -2005,22 +1998,18 @@ class ChatRooms(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        n = self.page_num(child)
+        page = self.get_nth_page(n)
+        room = next(room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page)
 
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
-            room = next(room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page)
+        if event.button == 2:
+            self.roomsctrl.joinedrooms[room].on_leave(widget)
+            return True
 
-            if event.button == 2:
-                self.roomsctrl.joinedrooms[room].on_leave(widget)
-                return True
-
-            if event.button == 3:
-                menu = self.tab_popup(room)
-                menu.popup()
-                return True
-
-            return False
+        if triggers_context_menu(event):
+            menu = self.tab_popup(room)
+            menu.popup()
+            return True
 
         return False
 

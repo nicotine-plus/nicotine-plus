@@ -161,6 +161,9 @@
                     <property name="sensitive">0</property>
                     <property name="can-focus">1</property>
                     <property name="headers-visible">0</property>
+                    <signal name="button-press-event" handler="on_folder_clicked" swapped="no"/>
+                    <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                    <signal name="touch-event" handler="on_folder_clicked" swapped="no"/>
                   </object>
                 </child>
               </object>
@@ -211,6 +214,9 @@
                     <property name="visible">1</property>
                     <property name="sensitive">0</property>
                     <property name="can-focus">1</property>
+                    <signal name="button-press-event" handler="on_file_clicked" swapped="no"/>
+                    <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                    <signal name="touch-event" handler="on_file_clicked" swapped="no"/>
                   </object>
                 </child>
               </object>

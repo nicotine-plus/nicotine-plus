@@ -23,7 +23,6 @@
 import os
 import time
 
-from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 
@@ -37,6 +36,7 @@ from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
@@ -148,25 +148,21 @@ class UserTabs(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        n = self.page_num(child)
+        page = self.get_nth_page(n)
+        username = next(user for user, tab in self.users.items() if tab.Main is page)
 
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
-            username = next(user for user, tab in self.users.items() if tab.Main is page)
+        if event.button == 2:
+            self.users[username].on_close(widget)
+            return True
 
-            if event.button == 2:
-                self.users[username].on_close(widget)
-                return True
+        if triggers_context_menu(event):
+            menu = self.tab_popup(username)
 
-            if event.button == 3:
-                menu = self.tab_popup(username)
+            if menu is not None:
+                menu.popup()
 
-                if menu is not None:
-                    menu.popup()
-
-                return True
-
-            return False
+            return True
 
         return False
 
@@ -258,8 +254,6 @@ class UserInfo:
             ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
 
-        self.Likes.connect("button_press_event", self.on_popup_likes_menu)
-
         self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
@@ -267,8 +261,6 @@ class UserInfo:
             ("", None),
             ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
-
-        self.Hates.connect("button_press_event", self.on_popup_hates_menu)
 
         self.image_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -281,7 +273,7 @@ class UserInfo:
 
     def on_popup_likes_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return
 
         d = self.Likes.get_path_at_pos(int(event.x), int(event.y))
@@ -301,7 +293,7 @@ class UserInfo:
 
     def on_popup_hates_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return
 
         d = self.Hates.get_path_at_pos(int(event.x), int(event.y))
@@ -484,9 +476,9 @@ class UserInfo:
             log.add(_("Picture not saved, %s already exists."), pathname)
 
     def on_image_click(self, widget, event):
-
-        if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 3:
-            return False
+        print(event)
+        if not triggers_context_menu(event):
+            return
 
         act = True
 

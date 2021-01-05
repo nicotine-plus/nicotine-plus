@@ -47,6 +47,7 @@ from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import set_widget_color
 from pynicotine.gtkgui.utils import set_widget_font
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -181,22 +182,18 @@ class PrivateChats(IconNotebook):
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        n = self.page_num(child)
+        page = self.get_nth_page(n)
+        username = next(user for user, tab in list(self.users.items()) if tab.Main is page)
 
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
-            username = next(user for user, tab in list(self.users.items()) if tab.Main is page)
+        if event.button == 2:
+            self.users[username].on_close(widget)
+            return True
 
-            if event.button == 2:
-                self.users[username].on_close(widget)
-                return True
-
-            if event.button == 3:
-                menu = self.tab_popup(username)
-                menu.popup()
-                return True
-
-            return False
+        if triggers_context_menu(event):
+            menu = self.tab_popup(username)
+            menu.popup()
+            return True
 
         return False
 
@@ -396,9 +393,6 @@ class PrivateChat:
 
         popup.set_user(user)
 
-        self.ChatScroll.connect("button_press_event", self.on_popup_menu)
-        self.ChatScroll.connect("key_press_event", self.on_popup_menu)
-
         self.create_tags()
         self.update_visuals()
 
@@ -452,10 +446,8 @@ class PrivateChat:
 
     def on_popup_menu(self, widget, event):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-
+        if triggers_context_menu(event):
             self.popup_menu.popup()
-            self.ChatScroll.stop_emission_by_name("button_press_event")
             return True
 
         elif event.type == Gdk.EventType.KEY_PRESS:

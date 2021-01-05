@@ -294,6 +294,7 @@ def hide_columns(treeview, cols, config):
         parent = column.get_widget().get_ancestor(Gtk.Button)
         if parent:
             parent.connect('button_press_event', press_header)
+            parent.connect('touch_event', press_header)
 
         # Read Show / Hide column settings from last session
         if config:
@@ -333,7 +334,8 @@ def save_columns(treeview_name, columns, subpage=None):
 
 
 def press_header(widget, event):
-    if event.button != 3:
+
+    if not triggers_context_menu(event):
         return False
 
     columns = widget.get_parent().get_columns()
@@ -898,6 +900,7 @@ class IconNotebook:
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
         label_tab.connect('button_press_event', self.on_tab_click, page)
+        label_tab.connect('touch_event', self.on_tab_click, page)
         label_tab.show()
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
@@ -1668,3 +1671,38 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
     elif isinstance(widget, Gtk.TreeView):
         set_list_color(widget, NICOTINE.np.config.sections["ui"]["search"])
         set_list_font(widget, NICOTINE.np.config.sections["ui"][list_font_target])
+
+
+""" Events """
+
+
+event_touch_started = False
+event_time_prev = 0
+
+
+def triggers_context_menu(event):
+    """ Check if a context menu should be allowed to appear """
+
+    global event_touch_started
+    global event_time_prev
+
+    if event.type in (Gdk.EventType.KEY_PRESS, Gdk.EventType.KEY_RELEASE):
+        return True
+
+    elif event.type in (Gdk.EventType.BUTTON_PRESS, Gdk.EventType._2BUTTON_PRESS,
+                        Gdk.EventType._3BUTTON_PRESS, Gdk.EventType.BUTTON_RELEASE):
+        return event.triggers_context_menu()
+
+    elif event.type == Gdk.EventType.TOUCH_BEGIN:
+        event_touch_started = True
+        event_time_prev = event.time
+        return False
+
+    elif not event_touch_started and event.type == Gdk.EventType.TOUCH_END or \
+            event_touch_started and (event.time - event_time_prev) < 300:
+        # Require a 300 ms press before context menu can be revealed
+        event_time_prev = event.time
+        return False
+
+    event_touch_started = False
+    return True

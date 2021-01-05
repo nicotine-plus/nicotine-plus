@@ -30,6 +30,7 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
 
@@ -65,8 +66,6 @@ class Interests:
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
-        self.LikesList.connect("button_press_event", self.on_popup_til_menu)
-
         self.dislikes = {}
         self.dislikes_model = Gtk.ListStore(str)
         self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -87,8 +86,6 @@ class Interests:
             ("", None),
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
-
-        self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
 
         cols = initialise_columns(
             None,
@@ -117,8 +114,6 @@ class Interests:
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
-        self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
-
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
@@ -145,8 +140,6 @@ class Interests:
             ("", None),
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
-
-        self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
         cols = initialise_columns(
             None,
@@ -179,8 +172,6 @@ class Interests:
 
         self.ru_popup_menu = popup = PopupMenu(self.frame)
         popup.setup_user_menu()
-
-        self.RecommendationUsersList.connect("button_press_event", self.on_popup_ru_menu)
 
         for thing in self.np.config.sections["interests"]["likes"]:
             self.likes[thing] = self.likes_model.append([thing])
@@ -358,7 +349,7 @@ class Interests:
         path, column, x, y = d
         user = self.recommendation_users_model.get_value(self.recommendation_users_model.get_iter(path), 1)
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             if event.type == Gdk.EventType._2BUTTON_PRESS:
                 self.frame.privatechats.send_message(user)
                 self.frame.change_main_page("private")
@@ -370,7 +361,8 @@ class Interests:
         self.ru_popup_menu.popup()
 
     def on_popup_til_menu(self, widget, event):
-        if event.button != 3:
+
+        if not triggers_context_menu(event):
             return
 
         d = self.LikesList.get_path_at_pos(int(event.x), int(event.y))
@@ -386,7 +378,8 @@ class Interests:
         self.til_popup_menu.popup()
 
     def on_popup_tidl_menu(self, widget, event):
-        if event.button != 3:
+
+        if not triggers_context_menu(event):
             return
 
         d = self.DislikesList.get_path_at_pos(int(event.x), int(event.y))
@@ -403,7 +396,7 @@ class Interests:
 
     def on_popup_r_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return
 
         d = self.RecommendationsList.get_path_at_pos(int(event.x), int(event.y))
@@ -424,7 +417,7 @@ class Interests:
 
     def on_popup_un_rec_menu(self, widget, event):
 
-        if event.button != 3:
+        if not triggers_context_menu(event):
             return
 
         d = self.UnrecommendationsList.get_path_at_pos(int(event.x), int(event.y))

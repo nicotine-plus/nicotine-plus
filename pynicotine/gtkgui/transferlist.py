@@ -132,7 +132,8 @@ class TransferList:
 
         widget.set_model(self.transfersmodel)
 
-        widget.connect("button_press_event", self.on_popup_menu, "mouse")
+        widget.connect("button_press_event", self.on_popup_menu)
+        widget.connect("touch_event", self.on_popup_menu)
         widget.connect("key-press-event", self.on_key_press_event)
 
         self.update_visuals()

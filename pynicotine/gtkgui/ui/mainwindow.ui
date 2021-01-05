@@ -1579,6 +1579,7 @@
                         <property name="top-margin">5</property>
                         <property name="bottom-margin">5</property>
                         <signal name="button-press-event" handler="on_popup_log_menu" swapped="no"/>
+                        <signal name="touch-event" handler="on_popup_log_menu" swapped="no"/>
                       </object>
                     </child>
                   </object>

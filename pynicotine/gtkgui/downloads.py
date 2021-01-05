@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.logfacility import log
 
 
@@ -287,7 +288,7 @@ class Downloads(TransferList):
         key = Gdk.keyval_name(event.keyval)
 
         if key in ("P", "p"):
-            self.on_popup_menu(widget, event, "keyboard")
+            self.on_popup_menu(widget, event)
         else:
             self.select_transfers()
 
@@ -350,10 +351,10 @@ class Downloads(TransferList):
         elif dc == 6:  # Retry
             self.on_retry_transfer(None)
 
-    def on_popup_menu(self, widget, event, kind):
+    def on_popup_menu(self, widget, event):
 
-        if kind == "mouse":
-            if event.button == 3:
+        if event.type != Gdk.EventType.KEY_PRESS:
+            if triggers_context_menu(event):
                 set_treeview_selected_row(widget, event)
 
             else:
@@ -397,12 +398,6 @@ class Downloads(TransferList):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup()
-
-        if kind == "keyboard":
-            widget.stop_emission_by_name("key_press_event")
-        elif kind == "mouse":
-            widget.stop_emission_by_name("button_press_event")
-
         return True
 
     def on_abort_transfer(self, widget, remove_file=False, clear=False):
