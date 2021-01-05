@@ -72,6 +72,7 @@
           <object class="GtkComboBox" id="RoomSearchCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="max-width-chars">20</property>
@@ -85,6 +86,7 @@
           <object class="GtkComboBox" id="UserSearchCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="max-width-chars">20</property>
@@ -98,6 +100,7 @@
           <object class="GtkComboBox" id="SearchEntryCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="hexpand">1</property>
@@ -544,6 +547,7 @@
           <object class="GtkComboBox" id="UserPrivateCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="max-width-chars">45</property>
@@ -606,6 +610,7 @@
           <object class="GtkComboBox" id="UserInfoCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="max-width-chars">45</property>
@@ -700,6 +705,7 @@
           <object class="GtkComboBox" id="UserBrowseCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
+            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="max-width-chars">45</property>

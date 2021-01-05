@@ -1062,6 +1062,9 @@ class Search:
 
         self.selected_results.add((user, filepath, size, bitrate, length))
 
+    def focus_combobox(self, widget):
+        self.frame.focus_combobox(widget)
+
     def on_list_clicked(self, widget, event):
 
         if event.button == 3:

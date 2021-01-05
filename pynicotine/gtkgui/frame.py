@@ -2407,6 +2407,13 @@ class NicotineFrame:
         dialog.connect('response', lambda dialog, response: dialog.destroy())
         dialog.show()
 
+    def focus_combobox(self, widget):
+
+        entry = widget.get_child()
+        entry.grab_focus()
+        text_length = len(entry.get_text())
+        entry.set_position(text_length)
+
     def buddies_combos_fill(self, nothing):
         for widget in self.buddies_combo_entries:
             GLib.idle_add(widget.fill)
