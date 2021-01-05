@@ -330,7 +330,7 @@ class NicotineFrame:
             ("#" + _("Copy"), self.on_copy_log_window),
             ("#" + _("Copy All"), self.on_copy_all_log_window),
             ("", None),
-            ("#" + _("Clear log"), self.on_clear_log_window)
+            ("#" + _("Clear Log View"), self.on_clear_log_window)
         )
 
         # Debug

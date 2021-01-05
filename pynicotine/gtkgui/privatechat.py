@@ -36,6 +36,7 @@ from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.chatrooms import get_completion
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import IconNotebook
@@ -182,7 +183,7 @@ class PrivateChats(IconNotebook):
             ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip),
             ("", None),
             ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self),
-            ("#" + _("_Close This Tab"), self.users[user].on_close)
+            ("#" + _("_Close Tab"), self.users[user].on_close)
         )
 
         popup.set_user(user)
@@ -422,9 +423,10 @@ class PrivateChat:
             ("#" + _("Copy"), self.on_copy_chat_log),
             ("#" + _("Copy All"), self.on_copy_all_chat_log),
             ("", None),
-            ("#" + _("Clear log"), self.on_clear_chat_log),
+            ("#" + _("Delete Chat Log"), self.on_delete_chat_log),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("", None),
-            ("#" + _("Close"), self.on_close)
+            ("#" + _("_Close Tab"), self.on_close)
         )
 
         popup.set_user(user)
@@ -532,7 +534,37 @@ class PrivateChat:
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_clear_chat_log(self, widget):
+    def delete_chat_log_response(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            log_path = os.path.join(
+                self.frame.np.config.sections["logging"]["privatelogsdir"],
+                clean_file(self.user.replace(os.sep, "-")) + ".log"
+            )
+
+            try:
+                if os.path.exists(log_path):
+                    os.remove(log_path)
+
+            except Exception as e:
+                log.add(_("Failed to remove logged chat messages for user '%(user)s'. Error: %(error)s"), {
+                    "user": self.user,
+                    "error": e
+                })
+
+        self.on_clear_messages(dialog)
+        dialog.destroy()
+
+    def on_delete_chat_log(self, widget):
+
+        option_dialog(
+            parent=self.frame.MainWindow,
+            title=_('Delete Logged Messages?'),
+            message=_('Are you sure you wish to permanently delete all logged messages for this user?'),
+            callback=self.delete_chat_log_response
+        )
+
+    def on_clear_messages(self, widget):
         self.ChatScroll.get_buffer().set_text("")
 
     def on_show_chat_help(self, widget):

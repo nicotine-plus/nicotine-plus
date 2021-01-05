@@ -36,6 +36,7 @@ from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
@@ -913,27 +914,32 @@ class ChatRoom:
 
         self.ChatEntry.grab_focus()
 
-        self.logpopupmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.on_find_log_window),
+        self.activitylogpopupmenu = PopupMenu(self.frame).setup(
+            ("#" + _("Find"), self.on_find_activity_log),
+            ("", None),
+            ("#" + _("Copy"), self.on_copy_activity_log),
+            ("#" + _("Copy All"), self.on_copy_all_activity_log),
+            ("", None),
+            ("#" + _("Clear Activity View"), self.on_clear_activity_log),
+            ("", None),
+            ("#" + _("_Leave Room"), self.on_leave)
+        )
+
+        self.RoomLog.connect("button-press-event", self.on_popup_activity_log_menu)
+
+        self.roomlogpopmenu = PopupMenu(self.frame).setup(
+            ("#" + _("Find"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_room_log),
             ("#" + _("Copy All"), self.on_copy_all_room_log),
             ("", None),
-            ("#" + _("Clear log"), self.on_clear_room_log)
+            ("#" + _("Delete Room Log"), self.on_delete_room_log),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
+            ("", None),
+            ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.RoomLog.connect("button-press-event", self.on_popup_room_log_menu)
-
-        self.chatpopmenu = PopupMenu(self.frame).setup(
-            ("#" + _("Find"), self.on_find_chat_log),
-            ("", None),
-            ("#" + _("Copy"), self.on_copy_chat_log),
-            ("#" + _("Copy All"), self.on_copy_all_chat_log),
-            ("", None),
-            ("#" + _("Clear log"), self.on_clear_chat_log)
-        )
-
-        self.ChatScroll.connect("button-press-event", self.on_popup_chat_room_menu)
+        self.ChatScroll.connect("button-press-event", self.on_popup_room_log_menu)
 
         self.buildingcompletion = False
 
@@ -1018,10 +1024,10 @@ class ChatRoom:
             if len(lines) > 0:
                 append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
-    def on_find_log_window(self, widget):
+    def on_find_activity_log(self, widget):
         self.LogSearchBar.set_search_mode(True)
 
-    def on_find_chat_log(self, widget):
+    def on_find_room_log(self, widget):
         self.ChatSearchBar.set_search_mode(True)
 
     def destroy(self):
@@ -1943,33 +1949,33 @@ class ChatRoom:
             if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].append(self.room)
 
-    def on_popup_chat_room_menu(self, widget, event):
-
-        if event.button != 3:
-            return False
-
-        widget.stop_emission_by_name("button-press-event")
-        self.chatpopmenu.popup(None, None, None, None, event.button, event.time)
-
-        return True
-
     def on_popup_room_log_menu(self, widget, event):
 
         if event.button != 3:
             return False
 
         widget.stop_emission_by_name("button-press-event")
-        self.logpopupmenu.popup(None, None, None, None, event.button, event.time)
+        self.roomlogpopmenu.popup(None, None, None, None, event.button, event.time)
 
         return True
 
-    def on_copy_all_room_log(self, widget):
+    def on_popup_activity_log_menu(self, widget, event):
+
+        if event.button != 3:
+            return False
+
+        widget.stop_emission_by_name("button-press-event")
+        self.activitylogpopupmenu.popup(None, None, None, None, event.button, event.time)
+
+        return True
+
+    def on_copy_all_activity_log(self, widget):
 
         start, end = self.RoomLog.get_buffer().get_bounds()
         log = self.RoomLog.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_copy_room_log(self, widget):
+    def on_copy_activity_log(self, widget):
 
         bound = self.RoomLog.get_buffer().get_selection_bounds()
 
@@ -1978,7 +1984,7 @@ class ChatRoom:
             log = self.RoomLog.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def on_copy_chat_log(self, widget):
+    def on_copy_room_log(self, widget):
 
         bound = self.ChatScroll.get_buffer().get_selection_bounds()
 
@@ -1987,16 +1993,47 @@ class ChatRoom:
             log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def on_copy_all_chat_log(self, widget):
+    def on_copy_all_room_log(self, widget):
 
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_clear_chat_log(self, widget):
+    def delete_room_log_response(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            log_path = os.path.join(
+                self.frame.np.config.sections["logging"]["roomlogsdir"],
+                clean_file(self.room.replace(os.sep, "-")) + ".log"
+            )
+
+            try:
+                if os.path.exists(log_path):
+                    os.remove(log_path)
+
+            except Exception as e:
+                log.add(_("Failed to remove logged room messages for room '%(room)s'. Error: %(error)s"), {
+                    "room": self.room,
+                    "error": e
+                })
+
+        self.on_clear_messages(dialog)
+        self.on_clear_activity_log(dialog)
+        dialog.destroy()
+
+    def on_delete_room_log(self, widget):
+
+        option_dialog(
+            parent=self.frame.MainWindow,
+            title=_('Delete Logged Messages?'),
+            message=_('Are you sure you wish to permanently delete all logged messages for this room?'),
+            callback=self.delete_room_log_response
+        )
+
+    def on_clear_messages(self, widget):
         self.ChatScroll.get_buffer().set_text("")
 
-    def on_clear_room_log(self, widget):
+    def on_clear_activity_log(self, widget):
         self.RoomLog.get_buffer().set_text("")
 
 
