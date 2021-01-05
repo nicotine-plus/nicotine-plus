@@ -3295,7 +3295,8 @@ class PluginFrame(BuildFrame):
 
         renderers = cols["enabled"].get_cells()
         for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
+            column_pos = 0
+            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
         self.PluginTreeView.get_selection().connect("changed", self.on_select_plugin)
