@@ -50,12 +50,12 @@ class Downloads(TransferList):
         self.popup_menu_users = PopupMenu(frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(frame, False)
         popup2.setup(
-            ("#" + _("Clear finished/aborted"), self.on_clear_finished_aborted),
-            ("#" + _("Clear finished"), self.on_clear_finished),
-            ("#" + _("Clear aborted"), self.on_clear_aborted),
-            ("#" + _("Clear paused"), self.on_clear_paused),
-            ("#" + _("Clear filtered"), self.on_clear_filtered),
-            ("#" + _("Clear queued"), self.on_clear_queued)
+            ("#" + _("Clear Finished/Aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Clear Finished"), self.on_clear_finished),
+            ("#" + _("Clear Aborted"), self.on_clear_aborted),
+            ("#" + _("Clear Paused"), self.on_clear_paused),
+            ("#" + _("Clear Filtered"), self.on_clear_filtered),
+            ("#" + _("Clear Queued"), self.on_clear_queued)
         )
 
         self.popup_menu = popup = PopupMenu(frame)
@@ -318,8 +318,8 @@ class Downloads(TransferList):
         users = len(self.selected_users) > 0
         files = len(self.selected_transfers) > 0
 
-        items = self.popup_menu.get_children()
-        items[9].set_sensitive(users)  # Users Menu
+        items = self.popup_menu.get_items()
+        items[_("User(s)")].set_sensitive(users)  # Users Menu
 
         if files:
             act = True
@@ -328,7 +328,8 @@ class Downloads(TransferList):
             # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
             act = False
 
-        for i in range(0, 7):
+        for i in (_("Send to _Player"), _("_Open Folder"), _("File P_roperties"),
+                  _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
             items[i].set_sensitive(act)
 
         if not users or not files:
@@ -338,7 +339,7 @@ class Downloads(TransferList):
         else:
             act = True
 
-        for i in range(11, 14):
+        for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
             items[i].set_sensitive(act)
 
         self.popup_menu.popup(None, None, None, None, 3, event.time)

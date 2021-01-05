@@ -255,7 +255,7 @@ class Tray:
                 trayicon.set_menu(self.tray_popup_menu)
 
                 # Action to hide/unhide main window when middle clicking the tray icon
-                hide_unhide_item = self.tray_popup_menu.get_children()[0]
+                hide_unhide_item = self.tray_popup_menu.get_items()[_("Hide / Show Nicotine+")]
                 trayicon.set_secondary_activate_target(hide_unhide_item)
 
             else:
@@ -363,7 +363,7 @@ class Tray:
         self.set_image()
 
         # Toggle away checkbox in tray menu
-        away_item = self.tray_popup_menu.get_children()[8]
+        away_item = self.tray_popup_menu.get_items()[_("Away")]
         handler_id = self.tray_popup_menu.handlers[away_item]
 
         with away_item.handler_block(handler_id):
@@ -381,21 +381,25 @@ class Tray:
 
     def set_server_actions_sensitive(self, status):
 
-        items = self.tray_popup_menu.get_children()
+        items = self.tray_popup_menu.get_items()
 
-        for i in range(4, 9):
-            """ Disable Send Message, IP lookup, info lookup, shares lookup and away toggle
-            when disconnected from server """
+        for i in (_("Send Message"), _("Lookup a User's IP"), _("Lookup a User's Info"),
+                  _("Lookup a User's Shares"), _("Away")):
 
+            """ Disable menu items when disconnected from server """
             items[i].set_sensitive(status)
 
-        items = self.tray_popup_menu_server.get_children()
+        items = self.tray_popup_menu_server.get_items()
 
-        items[0].set_sensitive(not status)  # Connect
-        items[1].set_sensitive(status)      # Disconnect
+        items[_("Connect")].set_sensitive(not status)
+        items[_("Disconnect")].set_sensitive(status)
 
     def set_transfer_status(self, download, upload):
 
-        if self.trayicon is not None:
-            self.tray_popup_menu.get_children()[2].set_label(download)
-            self.tray_popup_menu.get_children()[3].set_label(upload)
+        if self.trayicon is None:
+            return
+
+        items = self.tray_popup_menu.get_items()
+
+        items[_("Downloads")].set_label(download)
+        items[_("Uploads")].set_label(upload)

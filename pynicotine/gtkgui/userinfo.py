@@ -243,39 +243,29 @@ class UserInfo:
         self.update_visuals()
 
         self.user_popup = popup = PopupMenu(self.frame)
-        popup.setup(
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("#" + _("Client Version"), popup.on_version),
-            ("", None),
-            ("$" + _("_Add user to list"), popup.on_add_to_list),
-            ("$" + _("_Ban this user"), popup.on_ban_user),
-            ("$" + _("_Ignore this user"), popup.on_ignore_user),
-            ("", None),
-            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self.userinfos),
-            ("#" + _("_Close This Tab"), self.on_close)
-        )
-        popup.set_user(user)
+        popup.setup_user_menu(user)
+        popup.get_items()[_("Show User I_nfo")].set_visible(False)
+
+        popup.append_item(("", None))
+        popup.append_item(("#" + _("Close All Tabs"), popup.on_close_all_tabs, self.userinfos))
+        popup.append_item(("#" + _("_Close Tab"), self.on_close))
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.interests.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.frame.interests.on_dislike_recommendation),
+            ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.interests.on_recommend_search)
+            ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
 
         self.Likes.connect("button_press_event", self.on_popup_likes_menu)
 
         self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _like this"), self.frame.interests.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.frame.interests.on_dislike_recommendation),
+            ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.frame.interests.on_recommend_search)
+            ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
 
         self.Hates.connect("button_press_event", self.on_popup_hates_menu)
@@ -302,12 +292,10 @@ class UserInfo:
 
         iterator = self.likes_store.get_iter(path)
         thing = self.likes_store.get_value(iterator, 0)
-        items = self.likes_popup_menu.get_children()
+        items = self.likes_popup_menu.get_items()
 
-        self.likes_popup_menu.set_user(thing)
-
-        items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.likes_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -324,12 +312,10 @@ class UserInfo:
 
         iterator = self.hates_store.get_iter(path)
         thing = self.hates_store.get_value(iterator, 0)
-        items = self.hates_popup_menu.get_children()
+        items = self.hates_popup_menu.get_items()
 
-        self.hates_popup_menu.set_user(thing)
-
-        items[0].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.hates_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -436,13 +422,7 @@ class UserInfo:
         self.progressbar.set_fraction(fraction)
 
     def tab_popup(self, user):
-
-        items = self.user_popup.get_children()
-
-        items[7].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[8].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[9].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
+        self.user_popup.toggle_user_items()
         return self.user_popup
 
     """ Events """
@@ -513,8 +493,8 @@ class UserInfo:
         if self.image is None or self.image_pixbuf is None:
             act = False
 
-        items = self.image_menu.get_children()
-        for item in items:
+        items = self.image_menu.get_items()
+        for (item_id, item) in items.items():
             item.set_sensitive(act)
 
         self.image_menu.popup(None, None, None, None, event.button, event.time)

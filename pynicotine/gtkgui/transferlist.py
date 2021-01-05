@@ -563,19 +563,9 @@ class TransferList:
             for user in self.selected_users:
 
                 popup = PopupMenu(self.frame, False)
-                popup.setup(
-                    ("#" + _("Send _message"), popup.on_send_message),
-                    ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-                    ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-                    ("#" + _("Brow_se files"), popup.on_browse_user),
-                    ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-                    ("", None),
-                    ("$" + _("_Add user to list"), popup.on_add_to_list),
-                    ("$" + _("_Ban this user"), popup.on_ban_user),
-                    ("$" + _("_Ignore this user"), popup.on_ignore_user),
-                    ("#" + _("Select User's Transfers"), self.on_select_user_transfers)
-                )
-                popup.set_user(user)
+                popup.setup_user_menu(user)
+                popup.append_item(("", None))
+                popup.append_item(("#" + _("Select User's Transfers"), self.on_select_user_transfers))
 
                 items.append((1, user, popup, self.on_popup_menu_user, popup))
 
@@ -588,26 +578,7 @@ class TransferList:
         if popup is None:
             return
 
-        menu = popup
-        user = menu.user
-        items = menu.get_children()
-
-        act = False
-        if len(self.selected_users) >= 1:
-            act = True
-
-        items[0].set_sensitive(act)
-        items[1].set_sensitive(act)
-        items[2].set_sensitive(act)
-        items[3].set_sensitive(act)
-
-        items[6].set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        items[7].set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        items[8].set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-
-        for i in range(4, 9):
-            items[i].set_sensitive(act)
-
+        popup.toggle_user_items()
         return True
 
     def on_select_user_transfers(self, widget):

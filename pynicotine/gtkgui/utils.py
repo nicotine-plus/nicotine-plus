@@ -1083,6 +1083,7 @@ class PopupMenu(Gtk.Menu):
         self.user = None
         self.useritem = None
         self.handlers = {}
+        self.items = {}
         self.editing = False
 
         # If the menu is not a submenu, it needs to be attached
@@ -1090,65 +1091,118 @@ class PopupMenu(Gtk.Menu):
         if shouldattach and hasattr(self.frame, 'MainWindow'):
             self.attach_to_widget(self.frame.MainWindow, None)
 
-    def setup(self, *items):
+    def create_item(self, item):
 
-        for item in items:
+        if item[0] == "":
+            label = "separator"
+            menuitem = Gtk.SeparatorMenuItem()
 
-            if item[0] == "":
-                menuitem = Gtk.SeparatorMenuItem()
+        elif item[0] == "USER":
 
-            elif item[0] == "USER":
+            label = item[1]
+            menuitem = Gtk.MenuItem.new_with_label(label)
+            self.useritem = menuitem
 
-                menuitem = Gtk.MenuItem.new_with_label(item[1])
-                self.useritem = menuitem
+            if len(item) >= 3:
+                self.handlers[menuitem] = menuitem.connect("activate", item[2])
+            else:
+                menuitem.set_sensitive(False)
 
-                if len(item) >= 3:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[2])
-                else:
-                    menuitem.set_sensitive(False)
+        elif item[0] == 1:
 
-            elif item[0] == 1:
+            label = item[1]
+            menuitem = Gtk.MenuItem.new_with_label(label)
+            menuitem.set_submenu(item[2])
 
-                menuitem = Gtk.MenuItem.new_with_label(item[1])
-                menuitem.set_submenu(item[2])
+            if len(item) == 5 and item[4] is not None and item[3] is not None:
+                self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
+            elif item[3] is not None:
+                self.handlers[menuitem] = menuitem.connect("activate", item[3])
 
-                if len(item) == 5 and item[4] is not None and item[3] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
-                elif item[3] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[3])
+        elif item[0] == "USERMENU":
 
-            elif item[0] == "USERMENU":
+            label = item[1]
+            menuitem = Gtk.MenuItem.new_with_label(label)
+            menuitem.set_submenu(item[2])
 
-                menuitem = Gtk.MenuItem.new_with_label(item[1])
-                menuitem.set_submenu(item[2])
+            if item[3] is not None:
+                self.handlers[menuitem] = menuitem.connect("activate", item[3])
 
-                if item[3] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[3])
+            self.useritem = menuitem
 
-                self.useritem = menuitem
+        else:
+
+            if item[0][0] == "$":
+                label = item[0][1:]
+                menuitem = Gtk.CheckMenuItem.new_with_label(label)
+
+            elif item[0][0] == "#":
+                label = item[0][1:]
+                menuitem = Gtk.MenuItem.new_with_label(label)
 
             else:
+                label = item[0]
+                menuitem = Gtk.MenuItem.new_with_label(label)
 
-                if item[0][0] == "$":
-                    menuitem = Gtk.CheckMenuItem.new_with_label(item[0][1:])
-                elif item[0][0] == "#":
-                    menuitem = Gtk.MenuItem.new_with_label(item[0][1:])
-                else:
-                    menuitem = Gtk.MenuItem.new_with_label(item[0])
+            if len(item) >= 3 and item[2] is not None and item[1] is not None:
+                self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])
+            elif item[1] is not None:
+                self.handlers[menuitem] = menuitem.connect("activate", item[1])
 
-                if len(item) >= 3 and item[2] is not None and item[1] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])
-                elif item[1] is not None:
-                    self.handlers[menuitem] = menuitem.connect("activate", item[1])
+        if item[0] != "":
+            menuitem.set_use_underline(True)
 
-            self.append(menuitem)
+        menuitem.show()
 
-            if item[0] != "":
-                menuitem.set_use_underline(True)
+        self.items[label] = menuitem
+        return menuitem
 
-            menuitem.show()
+    def append_item(self, item):
 
-        return self
+        menuitem = self.create_item(item)
+        self.append(menuitem)
+
+    def get_items(self):
+        return self.items
+
+    def setup(self, *items):
+        for item in items:
+            self.append_item(item)
+
+    def setup_user_menu(self, user=None):
+
+        self.setup(
+            ("USER", "", self.on_copy_user),
+            ("", None),
+            ("#" + _("Send _Message"), self.on_send_message),
+            ("#" + _("Show User I_nfo"), self.on_get_user_info),
+            ("#" + _("Brow_se Files"), self.on_browse_user),
+            ("#" + _("Gi_ve Privileges"), self.on_give_privileges),
+            ("", None),
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
+            ("#" + _("Client Version"), self.on_version),
+            ("", None),
+            ("$" + _("_Add User To List"), self.on_add_to_list),
+            ("$" + _("_Ban User"), self.on_ban_user),
+            ("$" + _("_Ignore User"), self.on_ignore_user),
+            ("$" + _("B_lock User's IP Address"), self.on_block_user),
+            ("$" + _("Ignore User's IP Address"), self.on_ignore_ip),
+        )
+
+        if user is not None:
+            self.set_user(user)
+
+    def toggle_user_items(self):
+
+        self.editing = True
+
+        self.items[_("_Add User To List")].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
+        self.items[_("_Ban User")].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
+        self.items[_("_Ignore User")].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
+        self.items[_("B_lock User's IP Address")].set_active(self.frame.user_ip_is_blocked(self.user))
+        self.items[_("Ignore User's IP Address")].set_active(self.frame.user_ip_is_ignored(self.user))
+
+        self.editing = False
 
     def clear(self):
 
@@ -1166,7 +1220,9 @@ class PopupMenu(Gtk.Menu):
             self.useritem = None
 
     def set_user(self, user):
+
         self.user = user
+
         if self.useritem:
             self.useritem.get_child().set_text(user)
 

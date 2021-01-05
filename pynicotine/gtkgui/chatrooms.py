@@ -47,7 +47,6 @@ from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import press_header
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import expand_alias
@@ -121,13 +120,9 @@ class RoomsControl:
 
         self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
 
-        for i in ("room", "users"):
-            parent = self.cols[i].get_widget().get_ancestor(Gtk.Button)
-            if parent:
-                parent.connect('button_press_event', press_header)
-
         self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame).setup(
+        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu.setup(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
             ("#" + _("Create Room"), self.on_popup_create_public_room),
@@ -140,9 +135,6 @@ class RoomsControl:
             ("", None),
             ("#" + _("Refresh"), self.on_popup_refresh)
         )
-
-        items = self.popup_menu.get_children()
-        self.menu_join, self.menu_leave, self.menu_create_room, self.menu_empty1, self.menu_private_room_create, self.menu_private_room_disown, self.menu_private_room_dismember, self.menu_empty2, self.menu_join_public_room, self.menu_empty3, self.menu_refresh = items
 
         self.frame.roomlist.RoomsList.connect("button_press_event", self.on_list_clicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
@@ -307,11 +299,13 @@ class RoomsControl:
         self.popup_room = room
         prooms_enabled = True
 
-        self.menu_join.set_sensitive(act[0])
-        self.menu_leave.set_sensitive(act[1])
+        items = self.popup_menu.get_items()
 
-        self.menu_private_room_disown.set_sensitive(self.is_private_room_owned(self.popup_room))  # Disown
-        self.menu_private_room_dismember.set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))  # Dismember
+        items[_("Join Room")].set_sensitive(act[0])
+        items[_("Leave Room")].set_sensitive(act[1])
+
+        items[_("Disown Private Room")].set_sensitive(self.is_private_room_owned(self.popup_room))
+        items[_("Cancel Room Membership")].set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))
 
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -866,46 +860,17 @@ class ChatRoom:
         self.popup_menu_private_rooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
 
-        popup.setup(
-            ("USER", "", popup.on_copy_user),
-            ("", None),
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("", None),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("", None),
-            ("$" + _("_Add user to list"), popup.on_add_to_list),
-            ("$" + _("_Ban this user"), popup.on_ban_user),
-            ("$" + _("_Ignore this user"), popup.on_ignore_user),
-            ("$" + _("B_lock this user's IP Address"), popup.on_block_user),
-            ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip),
-            ("", None),
-            ("#" + _("Sear_ch this user's files"), popup.on_search_user),
-            (1, _("Private rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms)
-        )
-
-        items = self.popup_menu.get_children()
-
-        self.menu_send_message = items[2]
-        self.menu_show_ip_address = items[4]
-        self.menu_get_user_info = items[5]
-        self.menu_browse_user = items[6]
-        self.menu_give_privileges = items[7]
-        self.menu_add_to_list = items[9]
-        self.menu_ban_user = items[10]
-        self.menu_ignore_user = items[11]
-        self.menu_block_user = items[12]
-        self.menu_ignore_ip = items[13]
-        self.menu_search_user = items[15]
-        self.menu_private_rooms = items[16]
+        popup.setup_user_menu()
+        popup.append_item(("", None))
+        popup.append_item(("#" + _("Sear_ch User's Files"), popup.on_search_user))
+        popup.append_item((1, _("Private Rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms))
 
         self.UserList.connect("button_press_event", self.on_popup_menu)
 
         self.ChatEntry.grab_focus()
 
-        self.activitylogpopupmenu = PopupMenu(self.frame).setup(
+        self.activitylogpopupmenu = PopupMenu(self.frame)
+        self.activitylogpopupmenu.setup(
             ("#" + _("Find"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_activity_log),
@@ -918,7 +883,8 @@ class ChatRoom:
 
         self.RoomLog.connect("button-press-event", self.on_popup_activity_log_menu)
 
-        self.roomlogpopmenu = PopupMenu(self.frame).setup(
+        self.roomlogpopmenu = PopupMenu(self.frame)
+        self.roomlogpopmenu.setup(
             ("#" + _("Find"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_room_log),
@@ -1041,21 +1007,12 @@ class ChatRoom:
                 self.frame.change_main_page("private")
             return
 
-        self.popup_menu.editing = True
         self.popup_menu.set_user(user)
+        self.popup_menu.toggle_user_items()
 
         me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+        self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
 
-        self.menu_add_to_list.set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-        self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-        self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
-        self.menu_block_user.set_sensitive(not me)
-        self.menu_ignore_ip.set_active(self.frame.user_ip_is_ignored(user))
-        self.menu_ignore_ip.set_sensitive(not me)
-        self.menu_private_rooms.set_sensitive(not me)
-
-        self.popup_menu.editing = False
         self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def on_show_room_wall(self, widget):
@@ -1599,20 +1556,12 @@ class ChatRoom:
         if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button in (1, 2, 3):
 
             # Chat, Userlists use the normal popup system
-            self.popup_menu.editing = True
             self.popup_menu.set_user(user)
+            self.popup_menu.toggle_user_items()
+
             me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+            self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
 
-            self.menu_add_to_list.set_active(user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-            self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-            self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-            self.menu_block_user.set_active(self.frame.user_ip_is_blocked(user))
-            self.menu_block_user.set_sensitive(not me)
-            self.menu_ignore_ip.set_active(self.frame.user_ip_is_ignored(user))
-            self.menu_ignore_ip.set_sensitive(not me)
-            self.menu_private_rooms.set_sensitive(not me)
-
-            self.popup_menu.editing = False
             self.popup_menu.popup(None, None, None, None, event.button.button, event.button.time)
 
         return True
@@ -2047,7 +1996,6 @@ class ChatRooms(IconNotebook):
         popup.setup(
             ("#" + _("_Leave Room"), self.roomsctrl.joinedrooms[room].on_leave)
         )
-        popup.set_user(room)
 
         return popup
 

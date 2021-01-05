@@ -49,7 +49,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.LikesList,
-            ["i_like", _("I like") + ":", 0, "text", None, None]
+            ["i_like", _("I Like") + ":", 0, "text", None, None]
         )
 
         cols["i_like"].set_sort_column_id(0)
@@ -58,10 +58,10 @@ class Interests:
         self.til_popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.on_remove_thing_i_like),
-            ("#" + _("Re_commendations for this item"), self.on_recommend_item),
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
+            ("#" + _("Re_commendations For Item"), self.on_recommend_item),
             ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
+            ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
         self.LikesList.connect("button_press_event", self.on_popup_til_menu)
@@ -73,7 +73,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.DislikesList,
-            ["i_dislike", _("I dislike") + ":", 0, "text", None, None]
+            ["i_dislike", _("I Dislike") + ":", 0, "text", None, None]
         )
 
         cols["i_dislike"].set_sort_column_id(0)
@@ -82,9 +82,9 @@ class Interests:
         self.tidl_popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
-            ("#" + _("_Remove this item"), self.on_remove_thing_i_dislike),
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
             ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
+            ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
         self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
@@ -109,11 +109,11 @@ class Interests:
         self.r_popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
-            ("$" + _("I _like this"), self.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
+            ("$" + _("I _Like This"), self.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
+            ("#" + _("_Recommendations For Item"), self.on_recommend_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
+            ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
         self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
@@ -138,11 +138,11 @@ class Interests:
         self.ur_popup_menu = popup = PopupMenu(self.frame)
 
         popup.setup(
-            ("$" + _("I _like this"), self.on_like_recommendation),
-            ("$" + _("I _don't like this"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations for this item"), self.on_recommend_recommendation),
+            ("$" + _("I _Like This"), self.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
+            ("#" + _("_Recommendations For Item"), self.on_recommend_recommendation),
             ("", None),
-            ("#" + _("_Search for this item"), self.on_recommend_search)
+            ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
         self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
@@ -177,18 +177,7 @@ class Interests:
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         self.ru_popup_menu = popup = PopupMenu(self.frame)
-        popup.setup(
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("", None),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("", None),
-            ("$" + _("_Add user to list"), popup.on_add_to_list),
-            ("$" + _("_Ban this user"), popup.on_ban_user),
-            ("$" + _("_Ignore this user"), popup.on_ignore_user)
-        )
+        popup.setup_user_menu()
 
         self.RecommendationUsersList.connect("button_press_event", self.on_popup_ru_menu)
 
@@ -359,7 +348,7 @@ class Interests:
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
     def on_popup_ru_menu(self, widget, event):
-        items = self.ru_popup_menu.get_children()
+
         d = self.RecommendationUsersList.get_path_at_pos(int(event.x), int(event.y))
 
         if not d:
@@ -375,9 +364,7 @@ class Interests:
             return
 
         self.ru_popup_menu.set_user(user)
-        items[7].set_active(user in (i[0] for i in self.np.config.sections["server"]["userlist"]))
-        items[8].set_active(user in self.np.config.sections["server"]["banlist"])
-        items[9].set_active(user in self.np.config.sections["server"]["ignorelist"])
+        self.ru_popup_menu.toggle_user_items()
 
         self.ru_popup_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -414,6 +401,7 @@ class Interests:
         self.tidl_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def on_popup_r_menu(self, widget, event):
+
         if event.button != 3:
             return
 
@@ -424,16 +412,17 @@ class Interests:
 
         path, column, x, y = d
         iterator = self.recommendations_model.get_iter(path)
-        thing = self.recommendations_model.get_value(iterator, 0)
-        items = self.r_popup_menu.get_children()
+        thing = self.recommendations_model.get_value(iterator, 1)
+        items = self.r_popup_menu.get_items()
 
         self.r_popup_menu.set_user(thing)
-        items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 
         self.r_popup_menu.popup(None, None, None, None, event.button, event.time)
 
     def on_popup_un_rec_menu(self, widget, event):
+
         if event.button != 3:
             return
 
@@ -444,12 +433,12 @@ class Interests:
 
         path, column, x, y = d
         iterator = self.unrecommendations_model.get_iter(path)
-        thing = self.unrecommendations_model.get_value(iterator, 0)
-        items = self.ur_popup_menu.get_children()
+        thing = self.unrecommendations_model.get_value(iterator, 1)
+        items = self.ur_popup_menu.get_items()
 
         self.ur_popup_menu.set_user(thing)
-        items[0].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[1].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
 
         self.ur_popup_menu.popup(None, None, None, None, event.button, event.time)
 

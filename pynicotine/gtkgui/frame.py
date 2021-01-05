@@ -228,7 +228,8 @@ class NicotineFrame:
             # Set the menu to hide the tab
             tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
 
-            self.__dict__[eventbox_name + "Menu"] = PopupMenu(self).setup(
+            self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
+            popup.setup(
                 (
                     "#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box]
                 )
@@ -324,7 +325,8 @@ class NicotineFrame:
         """ Log """
 
         # Popup menu on the log windows
-        self.logpopupmenu = PopupMenu(self).setup(
+        self.logpopupmenu = PopupMenu(self)
+        self.logpopupmenu.setup(
             ("#" + _("Find"), self.on_find_log_window),
             ("", None),
             ("#" + _("Copy"), self.on_copy_log_window),

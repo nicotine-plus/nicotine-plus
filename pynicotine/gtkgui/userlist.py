@@ -162,40 +162,17 @@ class UserList:
 
         self.popup_menu_private_rooms = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(frame)
+        popup.setup_user_menu()
+        popup.get_items()[_("_Add User To List")].set_visible(False)
 
-        popup.setup(
-            ("#" + _("Send _message"), popup.on_send_message),
-            ("", None),
-            ("#" + _("Show IP a_ddress"), popup.on_show_ip_address),
-            ("#" + _("Get user i_nfo"), popup.on_get_user_info),
-            ("#" + _("Brow_se files"), popup.on_browse_user),
-            ("#" + _("Gi_ve privileges"), popup.on_give_privileges),
-            ("$" + _("_Ban this user"), popup.on_ban_user),
-            ("$" + _("_Ignore this user"), popup.on_ignore_user),
-            ("", None),
-            ("$" + _("_Online notify"), self.on_notify),
-            ("$" + _("_Privileged"), self.on_privileged),
-            ("$" + _("_Trusted"), self.on_trusted),
-            ("", None),
-            ("#" + _("Edit _comments"), self.on_edit_comments),
-            ("#" + _("_Remove"), self.on_remove_user),
-            (1, _("Private rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms)
-        )
-
-        items = self.popup_menu.get_children()
-        self.menu_send_message = items[0]
-        self.menu_show_ip_address = items[2]
-        self.menu_get_user_info = items[3]
-        self.menu_browse_user = items[4]
-        self.menu_give_privileges = items[5]
-        self.menu_ban_user = items[6]
-        self.menu_ignore_user = items[7]
-        self.menu_on_notify = items[9]
-        self.menu_on_privileged = items[10]
-        self.menu_on_trusted = items[11]
-        self.menu_edit_comments = items[13]
-        self.menu_remove_user = items[14]
-        self.menu_private_rooms = items[15]
+        popup.append_item(("", None))
+        popup.append_item(("$" + _("_Online Notify"), self.on_notify))
+        popup.append_item(("$" + _("_Privileged"), self.on_privileged))
+        popup.append_item(("$" + _("_Trusted"), self.on_trusted))
+        popup.append_item(("", None))
+        popup.append_item((1, _("Private Rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms))
+        popup.append_item(("#" + _("Edit _Comments"), self.on_edit_comments))
+        popup.append_item(("#" + _("_Remove"), self.on_remove_user))
 
         self.UserListTree.connect("button_press_event", self.on_popup_menu)
 
@@ -305,22 +282,18 @@ class UserList:
                 return
 
             self.popup_menu.set_user(user)
+            self.popup_menu.toggle_user_items()
 
-            self.menu_send_message.set_sensitive(status)
-            self.menu_show_ip_address.set_sensitive(status)
-            self.menu_get_user_info.set_sensitive(status)
-            self.menu_browse_user.set_sensitive(status)
-            self.menu_give_privileges.set_sensitive(status)
-            self.menu_private_rooms.set_sensitive(
+            items = self.popup_menu.get_items()
+
+            items[_("Private Rooms")].set_sensitive(
                 status or
                 self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
             )
 
-            self.menu_ban_user.set_active(user in self.frame.np.config.sections["server"]["banlist"])
-            self.menu_ignore_user.set_active(user in self.frame.np.config.sections["server"]["ignorelist"])
-            self.menu_on_notify.set_active(model.get_value(iterator, 6))
-            self.menu_on_privileged.set_active(model.get_value(iterator, 7))
-            self.menu_on_trusted.set_active(model.get_value(iterator, 5))
+            items[_("_Online Notify")].set_active(model.get_value(iterator, 6))
+            items[_("_Privileged")].set_active(model.get_value(iterator, 7))
+            items[_("_Trusted")].set_active(model.get_value(iterator, 5))
 
             self.popup_menu.popup(None, None, None, None, event.button, event.time)
 
