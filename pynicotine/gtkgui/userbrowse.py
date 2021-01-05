@@ -111,7 +111,8 @@ class UserBrowse:
                 ("$" + _("_Ban this user"), menu.on_ban_user),
                 ("$" + _("_Ignore this user"), menu.on_ignore_user),
                 ("", None),
-                ("#" + _("_Close this tab"), self.on_close)
+                ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self.userbrowses),
+                ("#" + _("_Close This Tab"), self.on_close)
             )
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)

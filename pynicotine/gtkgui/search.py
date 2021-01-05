@@ -378,7 +378,8 @@ class Searches(IconNotebook):
             ("#" + _("Copy Search Term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.searches[search_id][2].on_clear),
-            ("#" + _("Close This Tab"), self.searches[search_id][2].on_close)
+            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self),
+            ("#" + _("_Close This Tab"), self.searches[search_id][2].on_close)
         )
 
         return popup
@@ -413,6 +414,14 @@ class Searches(IconNotebook):
                 return True
 
         return False
+
+    def close_all_tabs(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            for search_id in self.searches.copy():
+                self.searches[search_id][2].on_close(dialog)
+
+        dialog.destroy()
 
 
 class Search:

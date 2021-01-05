@@ -181,7 +181,8 @@ class PrivateChats(IconNotebook):
             ("$" + _("B_lock this user's IP Address"), popup.on_block_user),
             ("$" + _("Ignore this user's IP Address"), popup.on_ignore_ip),
             ("", None),
-            ("#" + _("Close this tab"), self.users[user].on_close)
+            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self),
+            ("#" + _("_Close This Tab"), self.users[user].on_close)
         )
 
         popup.set_user(user)
@@ -219,6 +220,14 @@ class PrivateChats(IconNotebook):
             return False
 
         return False
+
+    def close_all_tabs(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            for user in self.users.copy():
+                self.users[user].on_close(dialog)
+
+        dialog.destroy()
 
     def show_message(self, msg, text, newmessage=True):
 

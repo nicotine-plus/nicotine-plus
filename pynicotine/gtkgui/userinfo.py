@@ -172,6 +172,14 @@ class UserTabs(IconNotebook):
 
         return False
 
+    def close_all_tabs(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            for user in self.users.copy():
+                self.users[user].on_close(dialog)
+
+        dialog.destroy()
+
     def conn_close(self):
 
         self.connected = 0
@@ -241,7 +249,8 @@ class UserInfo:
             ("$" + _("_Ban this user"), popup.on_ban_user),
             ("$" + _("_Ignore this user"), popup.on_ignore_user),
             ("", None),
-            ("#" + _("_Close this tab"), self.on_close)
+            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self.userinfos),
+            ("#" + _("_Close This Tab"), self.on_close)
         )
         popup.set_user(user)
 

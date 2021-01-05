@@ -35,6 +35,7 @@ from gi.repository import Pango
 from pynicotine import slskmessages
 from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dialogs import entry_dialog
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
@@ -1257,6 +1258,15 @@ class PopupMenu(Gtk.Menu):
         popup.setup(*items)
 
         return True
+
+    def on_close_all_tabs(self, widget, caller):
+
+        option_dialog(
+            parent=self.frame.MainWindow,
+            title=_('Close All Tabs?'),
+            message=_('Are you sure you wish to close all tabs?'),
+            callback=caller.close_all_tabs
+        )
 
 
 class TextSearchBar:

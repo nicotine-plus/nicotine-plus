@@ -2031,7 +2031,7 @@ class ChatRooms(IconNotebook):
 
         popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Leave this room"), self.roomsctrl.joinedrooms[room].on_leave)
+            ("#" + _("_Leave Room"), self.roomsctrl.joinedrooms[room].on_leave)
         )
         popup.set_user(room)
 
