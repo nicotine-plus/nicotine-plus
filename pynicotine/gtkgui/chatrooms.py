@@ -24,6 +24,7 @@
 
 import os
 import re
+
 from collections import deque
 from os.path import commonprefix
 
@@ -40,7 +41,6 @@ from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -52,6 +52,7 @@ from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
+from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.utils import set_widget_color
 from pynicotine.gtkgui.utils import set_widget_font
@@ -110,16 +111,17 @@ class RoomsControl:
         self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
 
         self.cols = initialise_columns(
+            None,
             self.frame.roomlist.RoomsList,
-            [_("Room"), 180, "text", self.room_status],
-            [_("Users"), 0, "number", self.room_status]
+            ["room", _("Room"), 180, "text", self.room_status, None],
+            ["users", _("Users"), 0, "number", self.room_status, None]
         )
-        self.cols[0].set_sort_column_id(0)
-        self.cols[1].set_sort_column_id(1)
+        self.cols["room"].set_sort_column_id(0)
+        self.cols["users"].set_sort_column_id(1)
 
         self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
 
-        for i in range(2):
+        for i in ("room", "users"):
             parent = self.cols[i].get_widget().get_ancestor(Gtk.Button)
             if parent:
                 parent.connect('button_press_event', press_header)
@@ -683,13 +685,9 @@ class RoomsControl:
 
     def save_columns(self):
 
-        for room in list(self.frame.np.config.sections["columns"]["chatrooms"].keys())[:]:
+        for room in list(self.frame.np.config.sections["columns"]["chat_room"].keys())[:]:
             if room not in self.joinedrooms:
-                del self.frame.np.config.sections["columns"]["chatrooms"][room]
-
-        for room in list(self.frame.np.config.sections["columns"]["chatrooms_widths"].keys())[:]:
-            if room not in self.joinedrooms:
-                del self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
+                del self.frame.np.config.sections["columns"]["chat_room"][room]
 
         for room in self.joinedrooms.values():
             room.save_columns()
@@ -799,38 +797,31 @@ class ChatRoom:
         if room in config["server"]["autojoin"]:
             self.AutoJoin.set_active(True)
 
-        if room not in config["columns"]["chatrooms_widths"]:
-            config["columns"]["chatrooms_widths"][room] = [25, 25, 100, 0, 0]
+        if room not in config["columns"]["chat_room"]:
+            config["columns"]["chat_room"][room] = {}
 
-        widths = self.frame.np.config.sections["columns"]["chatrooms_widths"][room]
         self.cols = cols = initialise_columns(
+            ("chat_room", room),
             self.UserList,
-            [_("Status"), widths[0], "pixbuf"],
-            [_("Country"), widths[1], "pixbuf"],
-            [_("User"), widths[2], "text", self.user_column_draw],
-            [_("Speed"), widths[3], "number"],
-            [_("Files"), widths[4], "number"]
+            ["status", _("Status"), 25, "pixbuf", None, None],
+            ["country", _("Country"), 25, "pixbuf", None, None],
+            ["user", _("User"), 100, "text", self.user_column_draw, None],
+            ["speed", _("Speed"), 0, "number", None, None],
+            ["files", _("Files"), 0, "number", None, None]
         )
 
-        cols[0].set_sort_column_id(5)
-        cols[1].set_sort_column_id(8)
-        cols[2].set_sort_column_id(2)
-        cols[3].set_sort_column_id(6)
-        cols[4].set_sort_column_id(7)
-        cols[0].get_widget().hide()
-        cols[1].get_widget().hide()
+        cols["status"].set_sort_column_id(5)
+        cols["country"].set_sort_column_id(8)
+        cols["user"].set_sort_column_id(2)
+        cols["speed"].set_sort_column_id(6)
+        cols["files"].set_sort_column_id(7)
 
-        if room not in config["columns"]["chatrooms"]:
-            config["columns"]["chatrooms"][room] = [1, 1, 1, 1, 1]
-
-        if len(config["columns"]["chatrooms"][room]) != 5:  # Insert new column to old settings.
-            config["columns"]["chatrooms"][room].insert(1, 1)
-
-        hide_columns(cols, config["columns"]["chatrooms"][room])
+        cols["status"].get_widget().hide()
+        cols["country"].get_widget().hide()
 
         if config["columns"]["hideflags"]:
-            cols[1].set_visible(0)
-            config["columns"]["chatrooms"][room][1] = 0
+            cols["country"].set_visible(0)
+            config["columns"]["chat_room"][room]["country"]["visible"] = False
 
         self.users = {}
 
@@ -1708,11 +1699,8 @@ class ChatRoom:
 
         config = self.frame.np.config.sections
 
-        if self.room in config["columns"]["chatrooms"]:
-            del config["columns"]["chatrooms"][self.room]
-
-        if self.room in config["columns"]["chatrooms_widths"]:
-            del config["columns"]["chatrooms_widths"][self.room]
+        if self.room in config["columns"]["chat_room"]:
+            del config["columns"]["chat_room"][self.room]
 
         if not self.meta:
             self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
@@ -1726,15 +1714,7 @@ class ChatRoom:
         self.frame.np.pluginhandler.leave_chatroom_notification(self.room)
 
     def save_columns(self):
-
-        columns = []
-        widths = []
-        for column in self.UserList.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"]["chatrooms"][self.room] = columns
-        self.frame.np.config.sections["columns"]["chatrooms_widths"][self.room] = widths
+        save_columns("chat_room", self.UserList.get_columns(), subpage=self.room)
 
     def conn_close(self):
 
@@ -1745,11 +1725,8 @@ class ChatRoom:
         self.count_users()
 
         config = self.frame.np.config.sections
-        if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms"]:
-            del config["columns"]["chatrooms"][self.room]
-
-        if not self.AutoJoin.get_active() and self.room in config["columns"]["chatrooms_widths"]:
-            del config["columns"]["chatrooms_widths"][self.room]
+        if not self.AutoJoin.get_active() and self.room in config["columns"]["chat_room"]:
+            del config["columns"]["chat_room"][self.room]
 
         for tag in self.tag_users.values():
             self.update_tag_visuals(tag, "useroffline")

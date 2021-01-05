@@ -240,14 +240,15 @@ class DownloadsFrame(BuildFrame):
         self.downloadfilters = []
 
         cols = initialise_columns(
+            None,
             self.FilterView,
-            [_("Filter"), 250, "text"],
-            [_("Escaped"), 40, "toggle"]
+            ["filter", _("Filter"), 250, "text", None, None],
+            ["escaped", _("Escaped"), 40, "toggle", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
-        renderers = cols[1].get_cells()
+        cols["filter"].set_sort_column_id(0)
+        cols["escaped"].set_sort_column_id(1)
+        renderers = cols["escaped"].get_cells()
 
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
@@ -585,18 +586,20 @@ class SharesFrame(BuildFrame):
         self.bshareddirs = []
 
         initialise_columns(
+            None,
             self.Shares,
-            [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"]
+            ["virtual_folder", _("Virtual Folder"), 0, "text", None, None],
+            ["folder", _("Folder"), 0, "text", None, None]
         )
 
         self.Shares.set_model(self.shareslist)
         self.Shares.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         initialise_columns(
+            None,
             self.BuddyShares,
-            [_("Virtual Folder"), 0, "text"],
-            [_("Folder"), 0, "text"]
+            ["virtual_folder", _("Virtual Folder"), 0, "text", None, None],
+            ["folder", _("Folder"), 0, "text", None, None]
         )
 
         self.BuddyShares.set_model(self.bshareslist)
@@ -1140,12 +1143,13 @@ class IgnoreFrame(BuildFrame):
         self.ignored_ips = {}
         self.ignored_ips_list = Gtk.ListStore(str, str)
         cols = initialise_columns(
+            None,
             self.IgnoredIPs,
-            [_("Addresses"), -1, "text"],
-            [_("Users"), -1, "text"]
+            ["addresses", _("Addresses"), -1, "text", None, None],
+            ["users", _("Users"), -1, "text", None, None]
         )
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
+        cols["addresses"].set_sort_column_id(0)
+        cols["users"].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
         self.IgnoredIPs.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -1270,12 +1274,13 @@ class BanFrame(BuildFrame):
         self.blocked_list = {}
         self.blocked_list_model = Gtk.ListStore(str, str)
         cols = initialise_columns(
+            None,
             self.BlockedList,
-            [_("Addresses"), -1, "text"],
-            [_("Users"), -1, "text"]
+            ["addresses", _("Addresses"), -1, "text", None, None],
+            ["users", _("Users"), -1, "text", None, None]
         )
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
+        cols["addresses"].set_sort_column_id(0)
+        cols["users"].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
         self.BlockedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -2406,18 +2411,19 @@ class UrlCatchFrame(BuildFrame):
         self.protocols = {}
 
         cols = initialise_columns(
+            None,
             self.ProtocolHandlers,
-            [_("Protocol"), -1, "text"],
-            [_("Handler"), -1, "combo"]
+            ["protocol", _("Protocol"), -1, "text", None, None],
+            ["handler", _("Handler"), -1, "combo", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
+        cols["protocol"].set_sort_column_id(0)
+        cols["handler"].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
         self.ProtocolHandlers.get_selection().connect("changed", self.on_select)
 
-        renderers = cols[1].get_cells()
+        renderers = cols["handler"].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
@@ -2438,7 +2444,7 @@ class UrlCatchFrame(BuildFrame):
         self.Handler.set_model(self.handlermodel)
         self.Handler.set_entry_text_column(0)
 
-        renderers = cols[1].get_cells()
+        renderers = cols["handler"].get_cells()
         for render in renderers:
             render.set_property("model", self.handlermodel)
 
@@ -2571,11 +2577,12 @@ class CensorFrame(BuildFrame):
         self.censor_list_model = Gtk.ListStore(GObject.TYPE_STRING)
 
         cols = initialise_columns(
+            None,
             self.CensorList,
-            [_("Pattern"), -1, "edit"]
+            ["pattern", _("Pattern"), -1, "edit", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
+        cols["pattern"].set_sort_column_id(0)
 
         self.CensorList.set_model(self.censor_list_model)
 
@@ -2590,7 +2597,7 @@ class CensorFrame(BuildFrame):
         self.CensorReplaceCombo.pack_start(cell, True)
         self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
 
-        renderers = cols[0].get_cells()
+        renderers = cols["pattern"].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.CensorList, 0)
 
@@ -2685,19 +2692,23 @@ class AutoReplaceFrame(BuildFrame):
         )
 
         cols = initialise_columns(
+            None,
             self.ReplacementList,
-            [_("Pattern"), 150, "edit"],
-            [_("Replacement"), -1, "edit"]
+            ["pattern", _("Pattern"), 150, "edit", None, None],
+            ["replacement", _("Replacement"), -1, "edit", None, None]
         )
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
+        cols["pattern"].set_sort_column_id(0)
+        cols["replacement"].set_sort_column_id(1)
 
         self.ReplacementList.set_model(self.replacelist)
 
-        for column in cols:
+        pos = 0
+        for (column_id, column) in cols.items():
             renderers = column.get_cells()
             for render in renderers:
-                render.connect('edited', self.cell_edited_callback, self.ReplacementList, cols.index(column))
+                render.connect('edited', self.cell_edited_callback, self.ReplacementList, pos)
+
+            pos += 1
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
@@ -3067,7 +3078,11 @@ class BuildDialog(Gtk.Dialog):
 
         self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
 
-        cols = initialise_columns(self.tw[name], [description, 150, "edit"])
+        cols = initialise_columns(
+            None,
+            self.tw[name],
+            [description, description, 150, "edit", None, None]
+        )
 
         try:
             self.settings.set_widget(self.tw[name], value)
@@ -3084,7 +3099,7 @@ class BuildDialog(Gtk.Dialog):
         self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
         self.Main.pack_start(self.tw["vbox%d" % c], False, False, 0)
 
-        renderers = cols[0].get_cells()
+        renderers = cols[description].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.tw[name])
 
@@ -3269,15 +3284,16 @@ class PluginFrame(BuildFrame):
         self.selected_plugin = None
 
         cols = initialise_columns(
+            None,
             self.PluginTreeView,
-            [_("Enabled"), 0, "toggle"],
-            [_("Plugins"), 380, "text"]
+            ["enabled", _("Enabled"), 0, "toggle", None, None],
+            ["plugins", _("Plugins"), 380, "text", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(1)
+        cols["enabled"].set_sort_column_id(0)
+        cols["plugins"].set_sort_column_id(1)
 
-        renderers = cols[0].get_cells()
+        renderers = cols["enabled"].get_cells()
         for render in renderers:
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, 1)
 

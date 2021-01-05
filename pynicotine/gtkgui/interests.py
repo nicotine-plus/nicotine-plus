@@ -47,11 +47,12 @@ class Interests:
         self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         cols = initialise_columns(
+            None,
             self.LikesList,
-            [_("I like") + ":", 0, "text"]
+            ["i_like", _("I like") + ":", 0, "text", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
+        cols["i_like"].set_sort_column_id(0)
         self.LikesList.set_model(self.likes_model)
 
         self.til_popup_menu = popup = PopupMenu(self.frame)
@@ -70,11 +71,12 @@ class Interests:
         self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         cols = initialise_columns(
+            None,
             self.DislikesList,
-            [_("I dislike") + ":", 0, "text"]
+            ["i_dislike", _("I dislike") + ":", 0, "text", None, None]
         )
 
-        cols[0].set_sort_column_id(0)
+        cols["i_dislike"].set_sort_column_id(0)
         self.DislikesList.set_model(self.dislikes_model)
 
         self.tidl_popup_menu = popup = PopupMenu(self.frame)
@@ -88,13 +90,14 @@ class Interests:
         self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
 
         cols = initialise_columns(
+            None,
             self.RecommendationsList,
-            [_("Rating"), 0, "text"],
-            [_("Item"), -1, "text"]
+            ["rating", _("Rating"), 0, "text", None, None],
+            ["item", _("Item"), -1, "text", None, None]
         )
 
-        cols[0].set_sort_column_id(2)
-        cols[1].set_sort_column_id(1)
+        cols["rating"].set_sort_column_id(2)
+        cols["item"].set_sort_column_id(1)
 
         self.recommendations_model = Gtk.ListStore(
             str,  # (0) hrating
@@ -116,13 +119,14 @@ class Interests:
         self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
 
         cols = initialise_columns(
+            None,
             self.UnrecommendationsList,
-            [_("Rating"), 0, "text"],
-            [_("Item"), -1, "text"]
+            ["rating", _("Rating"), 0, "text", None, None],
+            ["item", _("Item"), -1, "text", None, None]
         )
 
-        cols[0].set_sort_column_id(2)
-        cols[1].set_sort_column_id(1)
+        cols["rating"].set_sort_column_id(2)
+        cols["item"].set_sort_column_id(1)
 
         self.unrecommendations_model = Gtk.ListStore(
             str,  # (0) hrating
@@ -144,17 +148,20 @@ class Interests:
         self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
         cols = initialise_columns(
+            None,
             self.RecommendationUsersList,
-            ["", 25, "pixbuf"],
-            [_("User"), 100, "text"],
-            [_("Speed"), 0, "text"],
-            [_("Files"), 0, "text"],
+            ["country", _("Country"), 25, "pixbuf", None, None],
+            ["user", _("User"), 100, "text", None, None],
+            ["speed", _("Speed"), 0, "text", None, None],
+            ["files", _("Files"), 0, "text", None, None],
         )
 
-        cols[0].set_sort_column_id(4)
-        cols[1].set_sort_column_id(1)
-        cols[2].set_sort_column_id(5)
-        cols[3].set_sort_column_id(6)
+        cols["country"].set_sort_column_id(4)
+        cols["user"].set_sort_column_id(1)
+        cols["speed"].set_sort_column_id(5)
+        cols["files"].set_sort_column_id(6)
+
+        cols["country"].get_widget().hide()
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(

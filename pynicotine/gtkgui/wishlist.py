@@ -57,8 +57,9 @@ class WishList:
         self.store = Gtk.ListStore(GObject.TYPE_STRING)
 
         cols = initialise_columns(
+            None,
             self.WishlistView,
-            [_("Wishes"), -1, "text"]
+            ["wishes", _("Wishes"), -1, "text", None, None]
         )
 
         self.WishlistView.set_model(self.store)
@@ -69,7 +70,7 @@ class WishList:
         for wish in self.frame.np.config.sections["server"]["autosearch"]:
             self.wishes[wish] = self.store.append([wish])
 
-        renderers = cols[0].get_cells()
+        renderers = cols["wishes"].get_cells()
         for render in renderers:
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)

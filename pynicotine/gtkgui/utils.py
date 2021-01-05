@@ -150,77 +150,92 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(treeview, *args):
+def initialise_columns(treeview_name, treeview, *args):
 
     i = 0
-    cols = []
+    cols = {}
+    column_config = None
 
-    for c in args:
+    for (id, title, width, type, function, colors) in args:
+        if treeview_name:
+            try:
+                column_config = NICOTINE.np.config.sections["columns"][treeview_name[0]][treeview_name[1]]
+            except KeyError:
+                column_config = NICOTINE.np.config.sections["columns"][treeview_name]
 
-        if c[2] == "text":
+            try:
+                width = column_config[id]["width"]
+            except Exception:
+                # Invalid value
+                pass
+
+        if not isinstance(width, int):
+            width = 0
+
+        if type == "text":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, 3)
 
-            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(id, renderer, text=i)
 
-        elif c[2] == "center":
+        elif type == "center":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.5)
 
-            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(id, renderer, text=i)
 
-        elif c[2] == "number":
+        elif type == "number":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.9)
 
-            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(id, renderer, text=i)
             column.set_alignment(0.9)
 
-        elif c[2] == "edit":
+        elif type == "edit":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, 3)
             renderer.set_property('editable', True)
-            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(id, renderer, text=i)
 
-        elif c[2] == "combo":
+        elif type == "combo":
             renderer = Gtk.CellRendererCombo()
             renderer.set_padding(10, 3)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
-            column = Gtk.TreeViewColumn(c[0], renderer, text=i)
+            column = Gtk.TreeViewColumn(id, renderer, text=i)
 
-        elif c[2] == "progress":
+        elif type == "progress":
             renderer = Gtk.CellRendererProgress()
-            column = Gtk.TreeViewColumn(c[0], renderer, value=i)
+            column = Gtk.TreeViewColumn(id, renderer, value=i)
 
-        elif c[2] == "toggle":
+        elif type == "toggle":
             renderer = Gtk.CellRendererToggle()
-            column = Gtk.TreeViewColumn(c[0], renderer, active=i)
+            column = Gtk.TreeViewColumn(id, renderer, active=i)
             renderer.set_property("xalign", 0.5)
 
         else:
             renderer = Gtk.CellRendererPixbuf()
-            column = Gtk.TreeViewColumn(c[0], renderer, pixbuf=i)
+            column = Gtk.TreeViewColumn(id, renderer, pixbuf=i)
 
-        if c[1] == -1:
+        if width == -1:
             column.set_resizable(False)
             column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
 
         else:
             column.set_resizable(True)
-            if c[1] == 0:
+            if width == 0:
                 column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
             else:
                 column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
-                column.set_fixed_width(c[1])
+                column.set_fixed_width(width)
             column.set_min_width(0)
 
-        if len(c) > 3 and not isinstance(c[3], list):
-            column.set_cell_data_func(renderer, c[3])
+        if function:
+            column.set_cell_data_func(renderer, function)
 
-        if len(c) > 4:
-            foreground = c[4][0]
-            background = c[4][1]
+        if colors:
+            foreground = colors[0]
+            background = colors[1]
 
             if foreground:
                 renderer.set_property("foreground", foreground)
@@ -232,44 +247,89 @@ def initialise_columns(treeview, *args):
             else:
                 renderer.set_property("background-set", False)
 
-        column.set_reorderable(False)
-        column.set_widget(Gtk.Label.new(c[0]))
+        column.set_reorderable(True)
+        column.set_widget(Gtk.Label.new(title))
         column.get_widget().set_margin_start(6)
         column.get_widget().show()
 
-        treeview.append_column(column)
-
-        cols.append(column)
+        cols[id] = column
 
         i += 1
+
+    append_columns(treeview, cols, column_config)
+    hide_columns(treeview, cols, column_config)
 
     return cols
 
 
-def hide_columns(cols, visibility_list):
-    try:
-        for i in range(len(cols)):
+def append_columns(treeview, cols, config):
 
-            parent = cols[i].get_widget().get_ancestor(Gtk.Button)
-            if parent:
-                parent.connect('button_press_event', press_header)
+    if not config:
+        for (column_id, column) in cols.items():
+            treeview.append_column(column)
+        return
 
-            # Read Show / Hide column settings from last session
-            cols[i].set_visible(visibility_list[i])
+    # Restore column order from config
+    for column_id in config:
+        try:
+            treeview.append_column(cols[column_id])
+        except Exception:
+            # Invalid column
+            continue
 
-        # Make sure the width of the last visible column isn't fixed
-        for i in reversed(range(len(cols))):
+    added_columns = treeview.get_columns()
 
-            if cols[i].get_visible():
-                column = cols[i]
-                column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-                column.set_resizable(False)
-                column.set_fixed_width(-1)
-                break
+    # If any columns were missing in the config, append them
+    pos = 0
+    for (column_id, column) in cols.items():
+        if column not in added_columns:
+            treeview.insert_column(column, pos)
 
-    except IndexError:
-        # Column count in config is probably incorrect (outdated?), don't crash
-        pass
+        pos += 1
+
+
+def hide_columns(treeview, cols, config):
+
+    for (column_id, column) in cols.items():
+        parent = column.get_widget().get_ancestor(Gtk.Button)
+        if parent:
+            parent.connect('button_press_event', press_header)
+
+        # Read Show / Hide column settings from last session
+        if config:
+            try:
+                column.set_visible(config[column_id]["visible"])
+            except Exception:
+                # Invalid value
+                pass
+
+    # Make sure the width of the last visible column isn't fixed
+    for (id, column) in reversed(cols.items()):
+        if column.get_visible():
+            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
+            column.set_resizable(False)
+            column.set_fixed_width(-1)
+            break
+
+
+def save_columns(treeview_name, columns, subpage=None):
+
+    saved_columns = {}
+    column_config = NICOTINE.np.config.sections["columns"]
+
+    for column in columns:
+        title = column.get_title()
+        saved_columns[title] = {"visible": column.get_visible(), "width": column.get_width()}
+
+    if subpage is not None:
+        try:
+            column_config[treeview_name]
+        except KeyError:
+            column_config[treeview_name] = {}
+
+        column_config[treeview_name][subpage] = saved_columns
+    else:
+        column_config[treeview_name] = saved_columns
 
 
 def press_header(widget, event):
@@ -283,7 +343,7 @@ def press_header(widget, event):
     pos = 1
 
     for column in columns:
-        title = column.get_title()
+        title = column.get_widget().get_text()
 
         if title == "":
             title = _("Column #%i") % pos

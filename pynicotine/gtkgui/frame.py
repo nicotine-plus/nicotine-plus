@@ -1079,11 +1079,11 @@ class NicotineFrame:
 
     def set_show_flags(self, state):
         for room in self.chatrooms.roomsctrl.joinedrooms:
-            self.chatrooms.roomsctrl.joinedrooms[room].cols[1].set_visible(state)
-            self.np.config.sections["columns"]["chatrooms"][room][1] = int(state)
+            self.chatrooms.roomsctrl.joinedrooms[room].cols["country"].set_visible(state)
+            self.np.config.sections["columns"]["chat_room"][room][1] = int(state)
 
-        self.userlist.cols[1].set_visible(state)
-        self.np.config.sections["columns"]["userlist"][1] = int(state)
+        self.userlist.cols["country"].set_visible(state)
+        self.np.config.sections["columns"]["buddy_list"][1] = int(state)
         self.np.config.write_configuration()
 
     def on_show_flags(self, action, *args):
@@ -2836,6 +2836,8 @@ class NicotineFrame:
 
         self.save_columns()
 
+        self.np.config.write_configuration()
+
         if self.np.transfers is not None:
             self.np.transfers.save_downloads()
 
@@ -2843,10 +2845,8 @@ class NicotineFrame:
         self.np.shares.close_shares()
 
     def save_columns(self):
-        for i in [self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches]:
+        for i in (self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches):
             i.save_columns()
-
-        self.np.config.write_configuration()
 
 
 class MainApp(Gtk.Application):

@@ -28,11 +28,11 @@ from time import time
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import select_user_row_iter
 from pynicotine.gtkgui.utils import update_widget_visuals
 
@@ -104,35 +104,31 @@ class TransferList:
 
         text_color = self.frame.np.config.sections["ui"]["search"]
 
-        widths = self.frame.np.config.sections["columns"]["{}_widths".format(type)]
         self.cols = cols = initialise_columns(
+            type,
             widget,
-            [_("User"), widths[0], "text", None, (text_color, None)],
-            [_("Path"), widths[1], "text", None, (text_color, None)],
-            [_("Filename"), widths[2], "text", None, (text_color, None)],
-            [_("Status"), widths[3], "text", None, (text_color, None)],
-            [_("Queue Position"), widths[4], "number", None, (text_color, None)],
-            [_("Percent"), widths[5], "progress"],
-            [_("Size"), widths[6], "number", None, (text_color, None)],
-            [_("Speed"), widths[7], "number", None, (text_color, None)],
-            [_("Time elapsed"), widths[8], "number", None, (text_color, None)],
-            [_("Time left"), widths[9], "number", None, (text_color, None)],
+            ["user", _("User"), 200, "text", None, (text_color, None)],
+            ["path", _("Path"), 400, "text", None, (text_color, None)],
+            ["filename", _("Filename"), 400, "text", None, (text_color, None)],
+            ["status", _("Status"), 140, "text", None, (text_color, None)],
+            ["queue_position", _("Queue Position"), 50, "number", None, (text_color, None)],
+            ["percent", _("Percent"), 70, "progress", None, None],
+            ["size", _("Size"), 170, "number", None, (text_color, None)],
+            ["speed", _("Speed"), 90, "number", None, (text_color, None)],
+            ["time_elapsed", _("Time Elapsed"), 140, "number", None, (text_color, None)],
+            ["time_left", _("Time Left"), 0, "number", None, (text_color, None)],
         )
 
-        self.col_user, self.col_path, self.col_filename, self.col_status, self.col_position, self.col_percent, self.col_human_size, self.col_human_speed, self.col_time_elapsed, self.col_time_left = cols
-
-        hide_columns(cols, self.frame.np.config.sections["columns"][self.type + "_columns"])
-
-        self.col_user.set_sort_column_id(0)
-        self.col_path.set_sort_column_id(1)
-        self.col_filename.set_sort_column_id(2)
-        self.col_status.set_sort_column_id(11)
-        self.col_position.set_sort_column_id(17)
-        self.col_percent.set_sort_column_id(5)
-        self.col_human_size.set_sort_column_id(12)
-        self.col_human_speed.set_sort_column_id(14)
-        self.col_time_elapsed.set_sort_column_id(8)
-        self.col_time_left.set_sort_column_id(9)
+        cols["user"].set_sort_column_id(0)
+        cols["path"].set_sort_column_id(1)
+        cols["filename"].set_sort_column_id(2)
+        cols["status"].set_sort_column_id(11)
+        cols["queue_position"].set_sort_column_id(17)
+        cols["percent"].set_sort_column_id(5)
+        cols["size"].set_sort_column_id(12)
+        cols["speed"].set_sort_column_id(14)
+        cols["time_elapsed"].set_sort_column_id(8)
+        cols["time_left"].set_sort_column_id(9)
 
         widget.set_model(self.transfersmodel)
 
@@ -142,15 +138,7 @@ class TransferList:
         self.update_visuals()
 
     def save_columns(self):
-        columns = []
-        widths = []
-
-        for column in self.widget.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"][self.type + "_columns"] = columns
-        self.frame.np.config.sections["columns"][self.type + "_widths"] = widths
+        save_columns(self.type, self.widget.get_columns())
 
     def update_visuals(self):
 

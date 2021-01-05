@@ -31,12 +31,12 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
@@ -74,53 +74,49 @@ class UserList:
             str                   # (14) country
         )
 
-        widths = self.frame.np.config.sections["columns"]["userlist_widths"]
         self.cols = cols = initialise_columns(
+            "buddy_list",
             self.UserListTree,
-            [_("Status"), widths[0], "pixbuf"],
-            [_("Country"), widths[1], "pixbuf"],
-            [_("User"), widths[2], "text"],
-            [_("Speed"), widths[3], "number"],
-            [_("Files"), widths[4], "number"],
-            [_("Trusted"), widths[5], "toggle"],
-            [_("Notify"), widths[6], "toggle"],
-            [_("Privileged"), widths[7], "toggle"],
-            [_("Last seen"), widths[8], "text"],
-            [_("Comments"), widths[9], "edit"]
+            ["status", _("Status"), 25, "pixbuf", None, None],
+            ["country", _("Country"), 25, "pixbuf", None, None],
+            ["user", _("User"), 180, "text", None, None],
+            ["speed", _("Speed"), 0, "number", None, None],
+            ["files", _("Files"), 0, "number", None, None],
+            ["trusted", _("Trusted"), 0, "toggle", None, None],
+            ["notify", _("Notify"), 0, "toggle", None, None],
+            ["privileged", _("Privileged"), 0, "toggle", None, None],
+            ["last_seen", _("Last seen"), 160, "text", None, None],
+            ["comments", _("Comments"), 0, "edit", None, None]
         )
 
-        self.col_status, self.col_country, self.col_user, self.col_speed, self.col_files, self.col_trusted, self.col_notify, self.col_privileged, self.col_last_seen, self.col_comments = cols
+        cols["status"].set_sort_column_id(10)
+        cols["country"].set_sort_column_id(14)
+        cols["user"].set_sort_column_id(2)
+        cols["speed"].set_sort_column_id(11)
+        cols["files"].set_sort_column_id(12)
+        cols["trusted"].set_sort_column_id(5)
+        cols["notify"].set_sort_column_id(6)
+        cols["privileged"].set_sort_column_id(7)
+        cols["last_seen"].set_sort_column_id(13)
+        cols["comments"].set_sort_column_id(9)
 
-        hide_columns(cols, config["columns"]["userlist"])
-
-        self.col_status.set_sort_column_id(10)
-        self.col_country.set_sort_column_id(14)
-        self.col_user.set_sort_column_id(2)
-        self.col_speed.set_sort_column_id(11)
-        self.col_files.set_sort_column_id(12)
-        self.col_trusted.set_sort_column_id(5)
-        self.col_notify.set_sort_column_id(6)
-        self.col_privileged.set_sort_column_id(7)
-        self.col_last_seen.set_sort_column_id(13)
-        self.col_comments.set_sort_column_id(9)
-
-        self.col_status.get_widget().hide()
-        self.col_country.get_widget().hide()
+        cols["status"].get_widget().hide()
+        cols["country"].get_widget().hide()
 
         if config["columns"]["hideflags"]:
-            cols[1].set_visible(0)
-            config["columns"]["userlist"][1] = 0
+            cols["country"].set_visible(0)
+            config["columns"]["buddy_list"]["country"]["visible"] = 0
 
-        for render in self.col_trusted.get_cells():
+        for render in cols["trusted"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
 
-        for render in self.col_notify.get_cells():
+        for render in cols["notify"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 6)
 
-        for render in self.col_privileged.get_cells():
+        for render in cols["privileged"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 7)
 
-        for render in self.col_comments.get_cells():
+        for render in cols["comments"].get_cells():
             render.connect('edited', self.cell_edited_callback, self.UserListTree, 9)
 
         self.UserListTree.set_model(self.usersmodel)
@@ -460,16 +456,7 @@ class UserList:
         self.frame.np.config.write_configuration()
 
     def save_columns(self):
-
-        columns = []
-        widths = []
-
-        for column in self.UserListTree.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"]["userlist"] = columns
-        self.frame.np.config.sections["columns"]["userlist_widths"] = widths
+        save_columns("buddy_list", self.UserListTree.get_columns())
 
     def remove_from_list(self, user):
 

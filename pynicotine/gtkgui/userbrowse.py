@@ -34,13 +34,13 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import hide_columns
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
@@ -89,10 +89,12 @@ class UserBrowse:
         self.FolderTreeView.set_enable_tree_lines(True)
 
         cols = initialise_columns(
+            None,
             self.FolderTreeView,
-            [_("Directories"), -1, "text"]  # 0
+            ["folders", _("Folders"), -1, "text", None, None]  # 0
         )
-        cols[0].set_sort_column_id(0)
+
+        cols["folders"].set_sort_column_id(0)
 
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu_users2 = PopupMenu(self.frame, False)
@@ -178,21 +180,20 @@ class UserBrowse:
         self.file_store = Gtk.ListStore(str, str, str, str, GObject.TYPE_INT64, int, str)
 
         self.FileTreeView.set_model(self.file_store)
-        widths = self.frame.np.config.sections["columns"]["userbrowse_widths"]
-        cols = initialise_columns(
-            self.FileTreeView,
-            [_("Filename"), widths[0], "text"],
-            [_("Size"), widths[1], "number"],
-            [_("Bitrate"), widths[2], "number"],
-            [_("Length"), widths[3], "number"]
-        )
-        cols[0].set_sort_column_id(0)
-        cols[1].set_sort_column_id(4)
-        cols[2].set_sort_column_id(2)
-        cols[3].set_sort_column_id(5)
-        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        hide_columns(cols, self.frame.np.config.sections["columns"]["userbrowse"])
+        cols = initialise_columns(
+            "user_browse",
+            self.FileTreeView,
+            ["filename", _("Filename"), 600, "text", None, None],
+            ["size", _("Size"), 100, "number", None, None],
+            ["bitrate", _("Bitrate"), 70, "number", None, None],
+            ["length", _("Length"), 0, "number", None, None]
+        )
+        cols["filename"].set_sort_column_id(0)
+        cols["size"].set_sort_column_id(4)
+        cols["bitrate"].set_sort_column_id(2)
+        cols["length"].set_sort_column_id(5)
+        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.FileTreeView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         self.FileTreeView.set_headers_clickable(True)
@@ -563,16 +564,7 @@ class UserBrowse:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
 
     def save_columns(self):
-
-        columns = []
-        widths = []
-
-        for column in self.FileTreeView.get_columns():
-            columns.append(column.get_visible())
-            widths.append(column.get_width())
-
-        self.frame.np.config.sections["columns"]["userbrowse"] = columns
-        self.frame.np.config.sections["columns"]["userbrowse_widths"] = widths
+        save_columns("user_browse", self.FileTreeView.get_columns())
 
     def show_user(self, msg, folder=None, indeterminate_progress=False):
 
