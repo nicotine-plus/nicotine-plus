@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="AboutSearchFilters">
+  <object class="GtkDialog" id="AboutSearchFiltersDialog">
     <property name="title" translatable="yes">About Search Filters</property>
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
+    <signal name="delete-event" handler="on_hide" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="visible">1</property>

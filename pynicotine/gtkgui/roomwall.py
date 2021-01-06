@@ -32,13 +32,7 @@ class RoomWall:
         self.room = room
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
-
         self.RoomWallDialog.set_transient_for(frame.MainWindow)
-
-        self.RoomWallDialog.connect("destroy", self.hide)
-        self.RoomWallDialog.connect("destroy-event", self.hide)
-        self.RoomWallDialog.connect("delete-event", self.hide)
-        self.RoomWallDialog.connect("delete_event", self.hide)
 
     def on_set_room_wall_message(self, widget):
 
@@ -65,7 +59,7 @@ class RoomWall:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def hide(self, w=None, event=None):
+    def hide(self, widget=None, event=None):
 
         self.RoomWallList.get_buffer().set_text("")
         self.RoomWallDialog.hide()

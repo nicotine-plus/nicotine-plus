@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkAboutDialog" id="About">
+  <object class="GtkAboutDialog" id="AboutDialog">
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
     <property name="comments" translatable="yes">Graphical client for the Soulseek file sharing network</property>
@@ -266,5 +266,6 @@ Finnish
 Euskara
  * The Librezale.org Team
    [librezale(at)librezale(dot)org]</property>
+    <signal name="delete-event" handler="on_hide" swapped="no"/>
   </object>
 </interface>

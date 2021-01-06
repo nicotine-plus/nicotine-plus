@@ -33,13 +33,7 @@ class Statistics:
         self.config = config
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "statistics.ui"))
-
         self.StatisticsDialog.set_transient_for(frame.MainWindow)
-
-        self.StatisticsDialog.connect("destroy", self.hide)
-        self.StatisticsDialog.connect("destroy-event", self.hide)
-        self.StatisticsDialog.connect("delete-event", self.hide)
-        self.StatisticsDialog.connect("delete_event", self.hide)
 
         # Initialize stats
         for stat_id in self.config.defaults["statistics"]:
@@ -74,7 +68,7 @@ class Statistics:
             callback=self.reset_stats_response
         )
 
-    def hide(self, w=None, event=None):
+    def hide(self, widget=None, event=None):
         self.StatisticsDialog.hide()
         return True
 
