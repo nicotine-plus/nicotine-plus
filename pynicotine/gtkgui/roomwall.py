@@ -36,8 +36,8 @@ class RoomWall:
 
     def on_set_room_wall_message(self, widget):
 
-        result = self.RoomWallEntry.get_text()
-        self.RoomWallEntry.set_text("")
+        result = widget.get_text()
+        widget.set_text("")
 
         config = self.frame.np.config.sections
         room_name = self.room.room

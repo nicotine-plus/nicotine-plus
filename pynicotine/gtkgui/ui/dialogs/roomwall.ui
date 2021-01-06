@@ -5,7 +5,7 @@
     <property name="title" translatable="yes">Room Wall</property>
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
-    <property name="default-width">900</property>
+    <property name="default-width">800</property>
     <property name="default-height">600</property>
     <signal name="delete-event" handler="hide" swapped="no"/>
     <child internal-child="vbox">
@@ -63,33 +63,9 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
+                <property name="placeholder-text" translatable="yes">Set wall message...</property>
+                <property name="primary-icon-name">user-available-symbolic</property>
                 <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_set_room_wall_message" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-add-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Set Message</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
               </object>
             </child>
           </object>

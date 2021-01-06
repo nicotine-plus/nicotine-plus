@@ -82,8 +82,8 @@ class WishList:
 
     def on_add_wish(self, widget):
 
-        wish = self.AddWishEntry.get_text()
-        self.AddWishEntry.set_text("")
+        wish = widget.get_text()
+        widget.set_text("")
 
         if self.add_wish(wish):
             self.do_wishlist_search(self.searches.searchid, wish)
