@@ -17,7 +17,7 @@
           <object class="GtkLabel" id="chatfontlabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Chat Font:</property>
+            <property name="label" translatable="yes">Chat font:</property>
             <property name="width_chars">15</property>
             <property name="xalign">0</property>
           </object>
@@ -100,7 +100,7 @@
           <object class="GtkLabel" id="listfontlabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">List Font:</property>
+            <property name="label" translatable="yes">List font:</property>
             <property name="width_chars">15</property>
             <property name="xalign">0</property>
           </object>
@@ -182,7 +182,7 @@
           <object class="GtkLabel" id="transfersfontlabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Transfers Font:</property>
+            <property name="label" translatable="yes">Transfers font:</property>
             <property name="width_chars">15</property>
             <property name="xalign">0</property>
           </object>
@@ -264,7 +264,7 @@
           <object class="GtkLabel" id="searchfontlabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Search Font:</property>
+            <property name="label" translatable="yes">Search font:</property>
             <property name="width_chars">15</property>
             <property name="xalign">0</property>
           </object>
@@ -346,7 +346,7 @@
           <object class="GtkLabel" id="browsefontlabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Browse Font:</property>
+            <property name="label" translatable="yes">Browse font:</property>
             <property name="width_chars">15</property>
             <property name="xalign">0</property>
           </object>
