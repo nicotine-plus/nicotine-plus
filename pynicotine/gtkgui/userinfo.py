@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
@@ -146,22 +147,25 @@ class UserTabs(IconNotebook):
         if user in self.users:
             return self.users[user].tab_popup(user)
 
-    def on_tab_click(self, widget, event, child):
+    def on_tab_popup(self, widget, page):
 
-        n = self.page_num(child)
-        page = self.get_nth_page(n)
-        username = next(user for user, tab in self.users.items() if tab.Main is page)
+        username = self.get_page_owner(page, self.users)
+        menu = self.tab_popup(username)
 
-        if event.button == 2:
-            self.users[username].on_close(widget)
-            return True
+        if menu is None:
+            return False
+
+        menu.popup()
+        return True
+
+    def on_tab_click(self, widget, event, page):
 
         if triggers_context_menu(event):
-            menu = self.tab_popup(username)
+            return self.on_tab_popup(widget, page)
 
-            if menu is not None:
-                menu.popup()
-
+        if event.button == 2:
+            username = self.get_page_owner(page, self.users)
+            self.users[username].on_close(widget)
             return True
 
         return False
@@ -271,45 +275,56 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
-    def on_popup_likes_menu(self, widget, event):
+    def get_selected_like_item(self, treeview):
+
+        model, iterator = treeview.get_selection().get_selected()
+
+        if iterator is None:
+            return None
+
+        return model.get_value(iterator, 0)
+
+    def on_likes_list_clicked(self, widget, event):
 
         if not triggers_context_menu(event):
-            return
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_likes_menu(widget)
 
-        d = self.Likes.get_path_at_pos(int(event.x), int(event.y))
-        if not d:
-            return
+        return False
 
-        path, column, x, y = d
+    def on_popup_likes_menu(self, widget, event=None):
 
-        iterator = self.likes_store.get_iter(path)
-        thing = self.likes_store.get_value(iterator, 0)
+        item = self.get_selected_like_item(widget)
+        if item is None:
+            return False
+
         items = self.likes_popup_menu.get_items()
-
-        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.likes_popup_menu.popup()
+        return True
 
-    def on_popup_hates_menu(self, widget, event):
+    def on_hates_list_clicked(self, widget, event):
 
         if not triggers_context_menu(event):
-            return
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_hates_menu(widget)
 
-        d = self.Hates.get_path_at_pos(int(event.x), int(event.y))
-        if not d:
-            return
+        return False
 
-        path, column, x, y = d
+    def on_popup_hates_menu(self, widget, event=None):
 
-        iterator = self.hates_store.get_iter(path)
-        thing = self.hates_store.get_value(iterator, 0)
+        item = self.get_selected_like_item(widget)
+        if item is None:
+            return False
+
         items = self.hates_popup_menu.get_items()
-
-        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.hates_popup_menu.popup()
+        return True
 
     def update_visuals(self):
 
@@ -476,9 +491,9 @@ class UserInfo:
             log.add(_("Picture not saved, %s already exists."), pathname)
 
     def on_image_click(self, widget, event):
-        print(event)
+
         if not triggers_context_menu(event):
-            return
+            return False
 
         act = True
 
@@ -490,8 +505,7 @@ class UserInfo:
             item.set_sensitive(act)
 
         self.image_menu.popup()
-
-        return True  # Don't scroll the Gtk.ScrolledWindow
+        return True
 
     def on_scroll_event(self, widget, event):
 

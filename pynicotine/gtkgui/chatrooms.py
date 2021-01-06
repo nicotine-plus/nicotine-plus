@@ -53,6 +53,7 @@ from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import set_widget_color
 from pynicotine.gtkgui.utils import set_widget_font
 from pynicotine.gtkgui.utils import triggers_context_menu
@@ -138,6 +139,7 @@ class RoomsControl:
         )
 
         self.frame.roomlist.RoomsList.connect("button_press_event", self.on_list_clicked)
+        self.frame.roomlist.RoomsList.connect("popup-menu", self.on_popup_menu)
         self.frame.roomlist.RoomsList.connect("touch_event", self.on_list_clicked)
         self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
@@ -262,41 +264,44 @@ class RoomsControl:
             if room.Main == page:
                 self.frame.notifications.clear("rooms", name)
 
+    def get_selected_room(self, treeview):
+
+        model, iterator = treeview.get_selection().get_selected()
+
+        if iterator is None:
+            return None
+
+        return model.get_value(iterator, 0)
+
     def on_list_clicked(self, widget, event):
 
+        set_treeview_selected_row(widget, event)
+
+        if triggers_context_menu(event):
+            return self.on_popup_menu(widget)
+
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            room = self.get_selected_room(widget)
 
-            d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
-            if d:
-                path, column, x, y = d
-                room = self.roomsmodel.get_value(self.roomsmodel.get_iter(path), 0)
-                if room not in self.joinedrooms:
-                    self.frame.np.queue.put(slskmessages.JoinRoom(room))
-
-            return True
-
-        elif triggers_context_menu(event):
-            return self.on_popup_menu(widget, event)
+            if room is not None and room not in self.joinedrooms:
+                self.frame.np.queue.put(slskmessages.JoinRoom(room))
+                return True
 
         return False
 
-    def on_popup_menu(self, widget, event):
+    def on_popup_menu(self, widget):
 
         if self.roomsmodel is None:
-            return
+            return False
 
-        d = self.frame.roomlist.RoomsList.get_path_at_pos(int(event.x), int(event.y))
+        room = self.get_selected_room(widget)
 
-        if d:
-            path, column, x, y = d
-            room = self.roomsmodel.get_value(self.roomsmodel.get_iter(path), 0)
-
+        if room is not None:
             if room in self.joinedrooms:
                 act = (False, True)
             else:
                 act = (True, False)
         else:
-            room = None
             act = (False, False)
 
         self.popup_room = room
@@ -311,6 +316,7 @@ class RoomsControl:
         items[_("Cancel Room Membership")].set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))
 
         self.popup_menu.popup()
+        return True
 
     def on_popup_join(self, widget):
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
@@ -991,22 +997,36 @@ class ChatRoom:
     def destroy(self):
         self.Main.destroy()
 
-    def on_popup_menu(self, widget, event):
+    def get_selected_username(self, treeview):
 
-        d = self.UserList.get_path_at_pos(int(event.x), int(event.y))
+        model, iterator = treeview.get_selection().get_selected()
 
-        if not d:
-            return
+        if iterator is None:
+            return None
 
-        path, column, x, y = d
-        user = self.usersmodel.get_value(self.usersmodel.get_iter(path), 2)
+        return model.get_value(iterator, 2)
 
-        # Double click starts a private message
-        if not triggers_context_menu(event):
-            if event.type == Gdk.EventType._2BUTTON_PRESS:
+    def on_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_menu(widget)
+
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            user = self.get_selected_username(widget)
+
+            if user is not None:
                 self.frame.privatechats.send_message(user, show_user=True)
                 self.frame.change_main_page("private")
-            return
+                return True
+
+        return False
+
+    def on_popup_menu(self, widget):
+
+        user = self.get_selected_username(widget)
+        if user is None:
+            return False
 
         self.popup_menu.set_user(user)
         self.popup_menu.toggle_user_items()
@@ -1015,6 +1035,7 @@ class ChatRoom:
         self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
 
         self.popup_menu.popup()
+        return True
 
     def on_show_room_wall(self, widget):
         self.room_wall.show()
@@ -1876,19 +1897,25 @@ class ChatRoom:
             if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].append(self.room)
 
-    def on_popup_room_log_menu(self, widget, event):
+    def on_room_log_clicked(self, widget, event):
 
-        if not triggers_context_menu(event):
-            return False
+        if triggers_context_menu(event):
+            return self.on_popup_room_log_menu(widget)
 
+        return False
+
+    def on_popup_room_log_menu(self, widget):
         self.roomlogpopmenu.popup()
         return True
 
-    def on_popup_activity_log_menu(self, widget, event):
+    def on_activity_log_clicked(self, widget, event):
 
-        if not triggers_context_menu(event):
-            return False
+        if triggers_context_menu(event):
+            return self.on_popup_activity_log_menu(widget)
 
+        return False
+
+    def on_popup_activity_log_menu(self, widget):
         self.activitylogpopupmenu.popup()
         return True
 
@@ -1984,31 +2011,29 @@ class ChatRooms(IconNotebook):
 
         self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
 
-    def tab_popup(self, room):
+    def on_tab_popup(self, widget, page):
+
+        room = self.get_page_owner(page, self.roomsctrl.joinedrooms)
 
         if room not in self.roomsctrl.joinedrooms:
-            return
+            return False
 
-        popup = PopupMenu(self.frame)
-        popup.setup(
+        menu = PopupMenu(self.frame)
+        menu.setup(
             ("#" + _("_Leave Room"), self.roomsctrl.joinedrooms[room].on_leave)
         )
 
-        return popup
+        menu.popup()
+        return True
 
-    def on_tab_click(self, widget, event, child):
-
-        n = self.page_num(child)
-        page = self.get_nth_page(n)
-        room = next(room for room, tab in self.roomsctrl.joinedrooms.items() if tab.Main is page)
-
-        if event.button == 2:
-            self.roomsctrl.joinedrooms[room].on_leave(widget)
-            return True
+    def on_tab_click(self, widget, event, page):
 
         if triggers_context_menu(event):
-            menu = self.tab_popup(room)
-            menu.popup()
+            return self.on_tab_popup(widget, page)
+
+        if event.button == 2:
+            room = self.get_page_owner(page, self.roomsctrl.joinedrooms)
+            self.roomsctrl.joinedrooms[room].on_leave(widget)
             return True
 
         return False

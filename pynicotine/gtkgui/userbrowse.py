@@ -258,21 +258,19 @@ class UserBrowse:
 
     def on_folder_clicked(self, widget, event):
 
-        pathinfo = widget.get_path_at_pos(event.x, event.y)
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_folder_popup_menu(widget)
 
-        if pathinfo is not None:
-
-            if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.on_download_directory(widget)
-                return True
-
-            elif triggers_context_menu(event):
-                return self.on_folder_popup_menu(widget, event)
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.on_download_directory(widget)
+            return True
 
         return False
 
-    def on_folder_popup_menu(self, widget, event):
+    def on_folder_popup_menu(self, widget):
         self.folder_popup_menu.popup()
+        return True
 
     def select_files(self):
         self.selected_files = []
@@ -285,25 +283,19 @@ class UserBrowse:
     def on_file_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_file_popup_menu(widget, event)
+            set_treeview_selected_row(widget, event)
+            return self.on_file_popup_menu(widget)
 
-        else:
-            pathinfo = widget.get_path_at_pos(event.x, event.y)
-
-            if pathinfo is None:
-                widget.get_selection().unselect_all()
-
-            elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.select_files()
-                self.on_download_files(widget)
-                self.FileTreeView.get_selection().unselect_all()
-                return True
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.select_files()
+            self.on_download_files(widget)
+            self.FileTreeView.get_selection().unselect_all()
+            return True
 
         return False
 
-    def on_file_popup_menu(self, widget, event):
+    def on_file_popup_menu(self, widget):
 
-        set_treeview_selected_row(widget, event)
         self.select_files()
 
         if len(self.selected_files) >= 1:

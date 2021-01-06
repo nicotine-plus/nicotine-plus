@@ -34,8 +34,6 @@ from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import triggers_context_menu
 
 
 class Uploads(TransferList):
@@ -155,20 +153,17 @@ class Uploads(TransferList):
 
         key = Gdk.keyval_name(event.keyval)
 
-        if key in ("P", "p"):
-            self.on_popup_menu(widget, event)
-        else:
-            self.select_transfers()
+        self.select_transfers()
 
-            if key in ("T", "t"):
-                self.on_abort_transfer(widget)
-            elif key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
-                self.on_copy_file_path(widget)
-            elif key == "Delete":
-                self.on_abort_transfer(widget, clear=True)
-            else:
-                # No key match, continue event
-                return False
+        if key in ("T", "t"):
+            self.on_abort_transfer(widget)
+        elif key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+            self.on_copy_file_path(widget)
+        elif key == "Delete":
+            self.on_abort_transfer(widget, clear=True)
+        else:
+            # No key match, continue event
+            return False
 
         widget.stop_emission_by_name("key_press_event")
         return True
@@ -186,21 +181,6 @@ class Uploads(TransferList):
                 open_file_path(playfile, command)
 
     def on_popup_menu(self, widget, event):
-
-        if event.type != Gdk.EventType.KEY_PRESS:
-            if triggers_context_menu(event):
-                set_treeview_selected_row(widget, event)
-
-            else:
-                pathinfo = widget.get_path_at_pos(event.x, event.y)
-
-                if pathinfo is None:
-                    widget.get_selection().unselect_all()
-
-                elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                    self.double_click(event)
-
-                return False
 
         self.select_transfers()
 

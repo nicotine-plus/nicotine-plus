@@ -53,8 +53,9 @@
                         <property name="right-margin">10</property>
                         <property name="top-margin">5</property>
                         <property name="bottom-margin">5</property>
-                        <signal name="button-press-event" handler="on_popup_activity_log_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_popup_activity_log_menu" swapped="no"/>
+                        <signal name="button-press-event" handler="on_activity_log_clicked" swapped="no"/>
+                        <signal name="popup-menu" handler="on_popup_activity_log_menu" swapped="no"/>
+                        <signal name="touch-event" handler="on_activity_log_clicked" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -105,8 +106,9 @@
                         <property name="right-margin">10</property>
                         <property name="top-margin">5</property>
                         <property name="bottom-margin">5</property>
-                        <signal name="button-press-event" handler="on_popup_room_log_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_popup_room_log_menu" swapped="no"/>
+                        <signal name="button-press-event" handler="on_room_log_clicked" swapped="no"/>
+                        <signal name="popup-menu" handler="on_popup_room_log_menu" swapped="no"/>
+                        <signal name="touch-event" handler="on_room_log_clicked" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -281,8 +283,9 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="has-tooltip">1</property>
-                    <signal name="button-press-event" handler="on_popup_menu" swapped="no"/>
-                    <signal name="touch-event" handler="on_popup_menu" swapped="no"/>
+                    <signal name="button-press-event" handler="on_list_clicked" swapped="no"/>
+                    <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
+                    <signal name="touch-event" handler="on_list_clicked" swapped="no"/>
                     <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
                   </object>
                 </child>

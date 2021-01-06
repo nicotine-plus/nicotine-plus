@@ -164,35 +164,33 @@ class PrivateChats(IconNotebook):
         if text is not None:
             self.users[user].send_message(text, bytestring=bytestring)
 
-    def tab_popup(self, user):
+    def on_tab_popup(self, widget, page):
 
-        if user not in self.users:
-            return
+        username = self.get_page_owner(page, self.users)
 
-        popup = PopupMenu(self.frame)
-        popup.setup_user_menu(user)
-        popup.get_items()[_("Send _Message")].set_visible(False)
+        if username not in self.users:
+            return False
 
-        popup.append_item(("", None))
-        popup.append_item(("#" + _("Close All Tabs"), popup.on_close_all_tabs, self))
-        popup.append_item(("#" + _("_Close Tab"), self.users[user].on_close))
-        popup.toggle_user_items()
+        menu = PopupMenu(self.frame)
+        menu.setup_user_menu(username)
+        menu.get_items()[_("Send _Message")].set_visible(False)
 
-        return popup
+        menu.append_item(("", None))
+        menu.append_item(("#" + _("Close All Tabs"), menu.on_close_all_tabs, self))
+        menu.append_item(("#" + _("_Close Tab"), self.users[username].on_close))
+        menu.toggle_user_items()
 
-    def on_tab_click(self, widget, event, child):
+        menu.popup()
+        return True
 
-        n = self.page_num(child)
-        page = self.get_nth_page(n)
-        username = next(user for user, tab in list(self.users.items()) if tab.Main is page)
-
-        if event.button == 2:
-            self.users[username].on_close(widget)
-            return True
+    def on_tab_click(self, widget, event, page):
 
         if triggers_context_menu(event):
-            menu = self.tab_popup(username)
-            menu.popup()
+            return self.on_tab_popup(widget, page)
+
+        if event.button == 2:
+            username = self.get_page_owner(page, self.users)
+            self.users[username].on_close(widget)
             return True
 
         return False
@@ -444,21 +442,16 @@ class PrivateChat:
         self.offlinemessage = 0
         self.update_tags()
 
-    def on_popup_menu(self, widget, event):
+    def on_message_view_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            self.popup_menu.popup()
-            return True
-
-        elif event.type == Gdk.EventType.KEY_PRESS:
-
-            if event.keyval == Gdk.keyval_from_name("Menu"):
-
-                self.popup_menu.popup(button=0)
-                self.ChatScroll.stop_emission_by_name("key_press_event")
-                return True
+            return self.on_popup_menu(widget)
 
         return False
+
+    def on_popup_menu(self, widget):
+        self.popup_menu.popup()
+        return True
 
     def on_popup_menu_user(self, widget):
         self.popup_menu_user.toggle_user_items()

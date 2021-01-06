@@ -37,6 +37,7 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
+from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
@@ -278,38 +279,69 @@ class UserList:
                 user = i[2]
                 self.set_last_seen(user)
 
-    def on_popup_menu(self, widget, event):
+    def get_selected_username(self, treeview):
 
-        d = self.UserListTree.get_path_at_pos(int(event.x), int(event.y))
+        model, iterator = treeview.get_selection().get_selected()
 
-        if d:
-            path, column, x, y = d
-            model = self.UserListTree.get_model()
-            iterator = model.get_iter(path)
-            user = model.get_value(iterator, 2)
+        if iterator is None:
+            return None
+
+        return model.get_value(iterator, 2)
+
+    def get_selected_username_details(self, treeview):
+
+        model, iterator = treeview.get_selection().get_selected()
+
+        if iterator is not None:
+            username = model.get_value(iterator, 2)
+            trusted = model.get_value(iterator, 5)
+            notify = model.get_value(iterator, 6)
+            privileged = model.get_value(iterator, 7)
             status = model.get_value(iterator, 10)
 
-            if not triggers_context_menu(event):
-                if event.type == Gdk.EventType._2BUTTON_PRESS:
-                    self.frame.privatechats.send_message(user, show_user=True)
-                    self.frame.change_main_page("private")
-                return
+        else:
+            username = trusted = notify = privileged = status = None
 
-            self.popup_menu.set_user(user)
-            self.popup_menu.toggle_user_items()
+        return username, trusted, notify, privileged, status
 
-            items = self.popup_menu.get_items()
+    def on_list_clicked(self, widget, event):
 
-            items[_("Private Rooms")].set_sensitive(
-                status or
-                self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
-            )
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_menu(widget)
 
-            items[_("_Online Notify")].set_active(model.get_value(iterator, 6))
-            items[_("_Privileged")].set_active(model.get_value(iterator, 7))
-            items[_("_Trusted")].set_active(model.get_value(iterator, 5))
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            user = self.get_selected_username(widget)
 
-            self.popup_menu.popup()
+            if user is not None:
+                self.frame.privatechats.send_message(user, show_user=True)
+                self.frame.change_main_page("private")
+                return True
+
+        return False
+
+    def on_popup_menu(self, widget):
+
+        username, trusted, notify, privileged, status = self.get_selected_username_details(widget)
+        if username is None:
+            return False
+
+        self.popup_menu.set_user(username)
+        self.popup_menu.toggle_user_items()
+
+        items = self.popup_menu.get_items()
+
+        items[_("Private Rooms")].set_sensitive(
+            status or
+            self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
+        )
+
+        items[_("_Online Notify")].set_active(notify)
+        items[_("_Privileged")].set_active(privileged)
+        items[_("_Trusted")].set_active(trusted)
+
+        self.popup_menu.popup()
+        return True
 
     def get_iter(self, user):
 

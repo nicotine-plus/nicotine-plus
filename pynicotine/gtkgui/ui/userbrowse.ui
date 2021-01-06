@@ -163,6 +163,7 @@
                     <property name="headers-visible">0</property>
                     <signal name="button-press-event" handler="on_folder_clicked" swapped="no"/>
                     <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                    <signal name="popup-menu" handler="on_folder_popup_menu" swapped="no"/>
                     <signal name="touch-event" handler="on_folder_clicked" swapped="no"/>
                   </object>
                 </child>
@@ -216,6 +217,7 @@
                     <property name="can-focus">1</property>
                     <signal name="button-press-event" handler="on_file_clicked" swapped="no"/>
                     <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                    <signal name="popup-menu" handler="on_file_popup_menu" swapped="no"/>
                     <signal name="touch-event" handler="on_file_clicked" swapped="no"/>
                   </object>
                 </child>

@@ -217,8 +217,10 @@ class NicotineFrame:
             self.MainNotebook.set_tab_label(tab_box, tab_label)
 
             # Set the menu to hide the tab
-            tab_label.connect('button_press_event', self.on_tab_click, eventbox_name + "Menu")
-            tab_label.connect('touch_event', self.on_tab_click, eventbox_name + "Menu")
+            popup_id = eventbox_name + "Menu"
+            tab_label.connect('button_press_event', self.on_tab_click, popup_id)
+            tab_label.connect('popup_menu', self.on_tab_popup, popup_id)
+            tab_label.connect('touch_event', self.on_tab_click, popup_id)
 
             self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
             popup.setup(
@@ -1665,12 +1667,16 @@ class NicotineFrame:
 
         del self.hidden_tabs[tab_box]
 
+    def on_tab_popup(self, widget, popup_id):
+        self.__dict__[popup_id].popup()
+
     def on_tab_click(self, widget, event, popup_id):
 
         if not triggers_context_menu(event):
-            return
+            return False
 
-        self.__dict__[popup_id].popup(event)
+        self.on_tab_popup(widget, popup_id)
+        return True
 
     def set_tab_expand(self, tab_box):
 
@@ -2372,11 +2378,14 @@ class NicotineFrame:
 
         return False
 
-    def on_popup_log_menu(self, widget, event):
+    def on_log_window_clicked(self, widget, event):
 
-        if not triggers_context_menu(event):
-            return False
+        if triggers_context_menu(event):
+            return self.on_popup_log_menu(widget)
 
+        return False
+
+    def on_popup_log_menu(self, widget):
         self.logpopupmenu.popup()
         return True
 

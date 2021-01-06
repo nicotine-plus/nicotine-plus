@@ -25,6 +25,7 @@
 from sys import maxsize
 from time import time
 
+from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -34,6 +35,8 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import select_user_row_iter
+from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
 
@@ -132,8 +135,9 @@ class TransferList:
 
         widget.set_model(self.transfersmodel)
 
-        widget.connect("button_press_event", self.on_popup_menu)
-        widget.connect("touch_event", self.on_popup_menu)
+        widget.connect("button_press_event", self.on_list_clicked)
+        widget.connect("popup_menu", self.on_popup_menu)
+        widget.connect("touch_event", self.on_list_clicked)
         widget.connect("key-press-event", self.on_key_press_event)
 
         self.update_visuals()
@@ -552,6 +556,18 @@ class TransferList:
         if self.list is not None:
             for i in self.list:
                 i.iter = None
+
+    def on_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_menu(widget)
+
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.double_click(event)
+            return True
+
+        return False
 
     def on_popup_menu_users(self, widget):
 

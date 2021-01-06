@@ -396,6 +396,9 @@ def header_toggle(menuitem, columns, index):
 def set_treeview_selected_row(treeview, event):
     """Handles row selection when right-clicking in a treeview"""
 
+    if event is None:
+        return
+
     pathinfo = treeview.get_path_at_pos(event.x, event.y)
     selection = treeview.get_selection()
 
@@ -900,6 +903,7 @@ class IconNotebook:
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
         label_tab.connect('button_press_event', self.on_tab_click, page)
+        label_tab.connect('popup_menu', self.on_tab_popup, page)
         label_tab.connect('touch_event', self.on_tab_click, page)
         label_tab.show()
 
@@ -914,6 +918,17 @@ class IconNotebook:
 
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
+
+    def get_page_owner(self, page, items):
+
+        n = self.page_num(page)
+        page = self.get_nth_page(n)
+
+        return next(owner for owner, tab in items.items() if tab.Main is page)
+
+    def on_tab_popup(self, widget):
+        # Dummy implementation
+        pass
 
     def on_tab_click(self, widget, event, child):
         # Dummy implementation
