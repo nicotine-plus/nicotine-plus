@@ -42,6 +42,7 @@ from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -165,7 +166,6 @@ class UserBrowse:
                 ("#" + _("Copy _URL"), self.on_copy_dir_url)
             )
 
-        self.FolderTreeView.connect("button_press_event", self.on_folder_clicked)
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
 
         # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
@@ -219,10 +219,6 @@ class UserBrowse:
                 ("#" + _("Copy _URL"), self.on_copy_url)
             )
 
-        self.FolderTreeView.connect("key-press-event", self.on_key_press_event)
-        self.FileTreeView.connect("button_press_event", self.on_file_clicked)
-        self.FileTreeView.connect("key-press-event", self.on_key_press_event)
-
         self.update_visuals()
 
         for name, object in self.__dict__.items():
@@ -262,21 +258,19 @@ class UserBrowse:
 
     def on_folder_clicked(self, widget, event):
 
-        pathinfo = widget.get_path_at_pos(event.x, event.y)
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_folder_popup_menu(widget)
 
-        if pathinfo is not None:
-
-            if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.on_download_directory(widget)
-                return True
-
-            elif event.button == 3:
-                return self.on_folder_popup_menu(widget, event)
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.on_download_directory(widget)
+            return True
 
         return False
 
-    def on_folder_popup_menu(self, widget, event):
+    def on_folder_popup_menu(self, widget):
         self.folder_popup_menu.popup()
+        return True
 
     def select_files(self):
         self.selected_files = []
@@ -288,26 +282,20 @@ class UserBrowse:
 
     def on_file_clicked(self, widget, event):
 
-        if event.button == 3:
-            return self.on_file_popup_menu(widget, event)
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_file_popup_menu(widget)
 
-        else:
-            pathinfo = widget.get_path_at_pos(event.x, event.y)
-
-            if pathinfo is None:
-                widget.get_selection().unselect_all()
-
-            elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.select_files()
-                self.on_download_files(widget)
-                self.FileTreeView.get_selection().unselect_all()
-                return True
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.select_files()
+            self.on_download_files(widget)
+            self.FileTreeView.get_selection().unselect_all()
+            return True
 
         return False
 
-    def on_file_popup_menu(self, widget, event):
+    def on_file_popup_menu(self, widget):
 
-        set_treeview_selected_row(widget, event)
         self.select_files()
 
         if len(self.selected_files) >= 1:
@@ -325,9 +313,7 @@ class UserBrowse:
             for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
                 items[i].set_sensitive(files)
 
-        self.FileTreeView.stop_emission_by_name("button_press_event")
         self.file_popup_menu.popup()
-
         return True
 
     def make_new_model(self, list):

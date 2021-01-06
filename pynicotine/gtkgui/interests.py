@@ -30,6 +30,8 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
 
@@ -65,8 +67,6 @@ class Interests:
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
-        self.LikesList.connect("button_press_event", self.on_popup_til_menu)
-
         self.dislikes = {}
         self.dislikes_model = Gtk.ListStore(str)
         self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -87,8 +87,6 @@ class Interests:
             ("", None),
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
-
-        self.DislikesList.connect("button_press_event", self.on_popup_tidl_menu)
 
         cols = initialise_columns(
             None,
@@ -117,8 +115,6 @@ class Interests:
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
 
-        self.RecommendationsList.connect("button_press_event", self.on_popup_r_menu)
-
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
@@ -145,8 +141,6 @@ class Interests:
             ("", None),
             ("#" + _("_Search For Item"), self.on_recommend_search)
         )
-
-        self.UnrecommendationsList.connect("button_press_event", self.on_popup_un_rec_menu)
 
         cols = initialise_columns(
             None,
@@ -179,8 +173,6 @@ class Interests:
 
         self.ru_popup_menu = popup = PopupMenu(self.frame)
         popup.setup_user_menu()
-
-        self.RecommendationUsersList.connect("button_press_event", self.on_popup_ru_menu)
 
         for thing in self.np.config.sections["interests"]["likes"]:
             self.likes[thing] = self.likes_model.append([thing])
@@ -348,100 +340,135 @@ class Interests:
 
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
-    def on_popup_ru_menu(self, widget, event):
+    def get_selected_username(self, treeview):
 
-        d = self.RecommendationUsersList.get_path_at_pos(int(event.x), int(event.y))
+        model, iterator = treeview.get_selection().get_selected()
 
-        if not d:
-            return
+        if iterator is None:
+            return None
 
-        path, column, x, y = d
-        user = self.recommendation_users_model.get_value(self.recommendation_users_model.get_iter(path), 1)
+        return model.get_value(iterator, 1)
 
-        if event.button != 3:
-            if event.type == Gdk.EventType._2BUTTON_PRESS:
+    def get_selected_item(self, treeview):
+
+        model, iterator = treeview.get_selection().get_selected()
+
+        if iterator is None:
+            return None
+
+        return model.get_value(iterator, 0)
+
+    def on_ru_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_ru_menu(widget)
+
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            user = self.get_selected_username(widget)
+
+            if user is not None:
                 self.frame.privatechats.send_message(user)
                 self.frame.change_main_page("private")
-            return
+                return True
+
+        return False
+
+    def on_popup_ru_menu(self, widget):
+
+        user = self.get_selected_username(widget)
+        if user is None:
+            return False
 
         self.ru_popup_menu.set_user(user)
         self.ru_popup_menu.toggle_user_items()
 
         self.ru_popup_menu.popup()
+        return True
 
-    def on_popup_til_menu(self, widget, event):
-        if event.button != 3:
-            return
+    def on_til_list_clicked(self, widget, event):
 
-        d = self.LikesList.get_path_at_pos(int(event.x), int(event.y))
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_til_menu(widget)
 
-        if not d:
-            return
+        return False
 
-        path, column, x, y = d
-        iterator = self.likes_model.get_iter(path)
-        thing = self.likes_model.get_value(iterator, 0)
+    def on_popup_til_menu(self, widget):
 
-        self.til_popup_menu.set_user(thing)
+        item = self.get_selected_item(widget)
+        if item is None:
+            return False
+
+        self.til_popup_menu.set_user(item)
+
         self.til_popup_menu.popup()
+        return True
 
-    def on_popup_tidl_menu(self, widget, event):
-        if event.button != 3:
-            return
+    def on_tidl_list_clicked(self, widget, event):
 
-        d = self.DislikesList.get_path_at_pos(int(event.x), int(event.y))
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_tidl_menu(widget)
 
-        if not d:
-            return
+        return False
 
-        path, column, x, y = d
-        iterator = self.dislikes_model.get_iter(path)
-        thing = self.dislikes_model.get_value(iterator, 0)
+    def on_popup_tidl_menu(self, widget):
 
-        self.tidl_popup_menu.set_user(thing)
+        item = self.get_selected_item(widget)
+        if item is None:
+            return False
+
+        self.tidl_popup_menu.set_user(item)
+
         self.tidl_popup_menu.popup()
+        return True
 
-    def on_popup_r_menu(self, widget, event):
+    def on_r_list_clicked(self, widget, event):
 
-        if event.button != 3:
-            return
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_r_menu(widget)
 
-        d = self.RecommendationsList.get_path_at_pos(int(event.x), int(event.y))
+        return False
 
-        if not d:
-            return
+    def on_popup_r_menu(self, widget):
 
-        path, column, x, y = d
-        iterator = self.recommendations_model.get_iter(path)
-        thing = self.recommendations_model.get_value(iterator, 1)
+        item = self.get_selected_item(widget)
+        if item is None:
+            return False
+
+        self.r_popup_menu.set_user(item)
+
         items = self.r_popup_menu.get_items()
-
-        self.r_popup_menu.set_user(thing)
-        items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.np.config.sections["interests"]["dislikes"])
 
         self.r_popup_menu.popup()
+        return True
 
-    def on_popup_un_rec_menu(self, widget, event):
+    def on_un_rec_list_clicked(self, widget, event):
 
-        if event.button != 3:
-            return
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_un_rec_menu(widget)
 
-        d = self.UnrecommendationsList.get_path_at_pos(int(event.x), int(event.y))
+        return False
 
-        if not d:
-            return
+    def on_popup_un_rec_menu(self, widget):
 
-        path, column, x, y = d
-        iterator = self.unrecommendations_model.get_iter(path)
-        thing = self.unrecommendations_model.get_value(iterator, 1)
+        item = self.get_selected_item(widget)
+        if item is None:
+            return False
+
+        self.ur_popup_menu.set_user(item)
+
         items = self.ur_popup_menu.get_items()
-
-        self.ur_popup_menu.set_user(thing)
-        items[_("I _Like This")].set_active(thing in self.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.np.config.sections["interests"]["dislikes"])
 
         self.ur_popup_menu.popup()
+        return True
 
     def update_visuals(self):
 

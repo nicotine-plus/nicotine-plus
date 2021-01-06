@@ -294,6 +294,7 @@ def hide_columns(treeview, cols, config):
         parent = column.get_widget().get_ancestor(Gtk.Button)
         if parent:
             parent.connect('button_press_event', press_header)
+            parent.connect('touch_event', press_header)
 
         # Read Show / Hide column settings from last session
         if config:
@@ -333,7 +334,8 @@ def save_columns(treeview_name, columns, subpage=None):
 
 
 def press_header(widget, event):
-    if event.button != 3:
+
+    if not triggers_context_menu(event):
         return False
 
     columns = widget.get_parent().get_columns()
@@ -393,6 +395,9 @@ def header_toggle(menuitem, columns, index):
 
 def set_treeview_selected_row(treeview, event):
     """Handles row selection when right-clicking in a treeview"""
+
+    if event is None:
+        return
 
     pathinfo = treeview.get_path_at_pos(event.x, event.y)
     selection = treeview.get_selection()
@@ -596,11 +601,11 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     return linenr
 
 
-class ImageLabel(Gtk.EventBox):
+class ImageLabel(Gtk.Box):
 
     def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -633,35 +638,38 @@ class ImageLabel(Gtk.EventBox):
         self._order_children()
 
     def _pack_children(self):
-        if "box" in self.__dict__:
+
+        if hasattr(self, "box"):
             for widget in self.box.get_children():
                 self.box.remove(widget)
 
-            self.remove(self.box)
-            self.box.destroy()
-            del self.box
+            self.eventbox.remove(self.box)
+
+        self.eventbox = Gtk.EventBox()
+        self.eventbox.show()
+        self.add(self.eventbox)
 
         self.box = Gtk.Box()
+        self.box.set_spacing(2)
+        self.eventbox.add(self.box)
 
         if self.angle in (90, -90):
-            self.box.set_orientation(Gtk.Orientation.VERTICAL)
+            self.set_orientation(Gtk.Orientation.VERTICAL)
         else:
-            self.angle = 0
+            self.set_orientation(Gtk.Orientation.HORIZONTAL)
 
         if self.centered:
-            self.box.set_halign(Gtk.Align.CENTER)
+            self.set_halign(Gtk.Align.CENTER)
         else:
-            self.box.set_halign(Gtk.Align.FILL)
+            self.set_halign(Gtk.Align.FILL)
 
-        self.box.set_spacing(2)
-        self.add(self.box)
-        self.box.show()
         self.status_image.set_margin_end(5)
         self.hilite_image.set_margin_start(5)
 
-        self.box.pack_start(self.status_image, False, False, 0)
+        self.box.add(self.status_image)
         self.box.pack_start(self.label, True, True, 0)
-        self.box.pack_start(self.hilite_image, False, False, 0)
+        self.box.add(self.hilite_image)
+        self.box.show()
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
@@ -669,25 +677,24 @@ class ImageLabel(Gtk.EventBox):
     def _order_children(self):
 
         if self.angle == 90:
-            if "button" in self.__dict__ and self.closebutton != 0:
-                self.box.reorder_child(self.button, 0)
-                self.box.reorder_child(self.hilite_image, 1)
-                self.box.reorder_child(self.label, 2)
-                self.box.reorder_child(self.status_image, 3)
-            else:
-                self.box.reorder_child(self.hilite_image, 0)
-                self.box.reorder_child(self.label, 1)
-                self.box.reorder_child(self.status_image, 2)
+            self.box.reorder_child(self.hilite_image, 0)
+            self.box.reorder_child(self.label, 1)
+            self.box.reorder_child(self.status_image, 2)
+
+            if hasattr(self, "button"):
+                self.reorder_child(self.button, 0)
+
         else:
             self.box.reorder_child(self.status_image, 0)
             self.box.reorder_child(self.label, 1)
             self.box.reorder_child(self.hilite_image, 2)
 
-            if "button" in self.__dict__ and self.closebutton != 0:
-                self.box.reorder_child(self.button, 3)
+            if hasattr(self, "button"):
+                self.reorder_child(self.button, 1)
 
     def _add_close_button(self):
-        if "button" in self.__dict__:
+
+        if hasattr(self, "button"):
             return
 
         close_image = Gtk.Image()
@@ -695,21 +702,20 @@ class ImageLabel(Gtk.EventBox):
 
         self.button = Gtk.Button()
         self.button.add(close_image)
+        self.button.set_relief(Gtk.ReliefStyle.NONE)
+        self.button.show_all()
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
 
-        self.button.set_relief(Gtk.ReliefStyle.NONE)
-
-        self.button.show_all()
-        self.box.pack_start(self.button, False, False, 0)
+        self.add(self.button)
 
     def _remove_close_button(self):
-        if "button" not in self.__dict__:
+
+        if not hasattr(self, "button"):
             return
 
-        self.box.remove(self.button)
-        self.button.destroy()
+        self.remove(self.button)
         del self.button
 
     def set_onclose(self, closebutton):
@@ -898,6 +904,8 @@ class IconNotebook:
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
         label_tab.connect('button_press_event', self.on_tab_click, page)
+        label_tab.connect('popup_menu', self.on_tab_popup, page)
+        label_tab.connect('touch_event', self.on_tab_click, page)
         label_tab.show()
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
@@ -911,6 +919,17 @@ class IconNotebook:
 
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
+
+    def get_page_owner(self, page, items):
+
+        n = self.page_num(page)
+        page = self.get_nth_page(n)
+
+        return next(owner for owner, tab in items.items() if tab.Main is page)
+
+    def on_tab_popup(self, widget):
+        # Dummy implementation
+        pass
 
     def on_tab_click(self, widget, event, child):
         # Dummy implementation
@@ -1668,3 +1687,38 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
     elif isinstance(widget, Gtk.TreeView):
         set_list_color(widget, NICOTINE.np.config.sections["ui"]["search"])
         set_list_font(widget, NICOTINE.np.config.sections["ui"][list_font_target])
+
+
+""" Events """
+
+
+event_touch_started = False
+event_time_prev = 0
+
+
+def triggers_context_menu(event):
+    """ Check if a context menu should be allowed to appear """
+
+    global event_touch_started
+    global event_time_prev
+
+    if event.type in (Gdk.EventType.KEY_PRESS, Gdk.EventType.KEY_RELEASE):
+        return True
+
+    elif event.type in (Gdk.EventType.BUTTON_PRESS, Gdk.EventType._2BUTTON_PRESS,
+                        Gdk.EventType._3BUTTON_PRESS, Gdk.EventType.BUTTON_RELEASE):
+        return event.triggers_context_menu()
+
+    elif event.type == Gdk.EventType.TOUCH_BEGIN:
+        event_touch_started = True
+        event_time_prev = event.time
+        return False
+
+    elif not event_touch_started and event.type == Gdk.EventType.TOUCH_END or \
+            event_touch_started and (event.time - event_time_prev) < 300:
+        # Require a 300 ms press before context menu can be revealed
+        event_time_prev = event.time
+        return False
+
+    event_touch_started = False
+    return True

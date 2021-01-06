@@ -48,6 +48,7 @@ from pynicotine.gtkgui.utils import select_user_row_iter
 from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
@@ -368,47 +369,56 @@ class Searches(IconNotebook):
                     search[2].save_columns()
                     break
 
-    def tab_popup(self, search_id):
+    def get_search_id(self, child):
 
-        popup = PopupMenu(self.frame)
-        popup.setup(
+        search_id = None
+        n = self.page_num(child)
+        page = self.get_nth_page(n)
+
+        for search, data in self.searches.items():
+
+            if data[2] is None:
+                continue
+            if data[2].Main is page:
+                search_id = search
+                break
+
+        return search_id
+
+    def on_tab_popup(self, widget, child):
+
+        search_id = self.get_search_id(child)
+
+        if search_id is None:
+            log.add_warning(_("Search ID was none when clicking tab"))
+            return False
+
+        menu = PopupMenu(self.frame)
+        menu.setup(
             ("#" + _("Copy Search Term"), self.searches[search_id][2].on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.searches[search_id][2].on_clear),
-            ("#" + _("Close All Tabs"), popup.on_close_all_tabs, self),
+            ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self),
             ("#" + _("_Close This Tab"), self.searches[search_id][2].on_close)
         )
 
-        return popup
+        menu.popup()
+        return True
 
     def on_tab_click(self, widget, event, child):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        search_id = self.get_search_id(child)
 
-            search_id = None
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
+        if search_id is None:
+            log.add_warning(_("Search ID was none when clicking tab"))
+            return False
 
-            for search, data in self.searches.items():
+        if triggers_context_menu(event):
+            return self.on_tab_popup(widget, child)
 
-                if data[2] is None:
-                    continue
-                if data[2].Main is page:
-                    search_id = search
-                    break
-
-            if search_id is None:
-                log.add_warning(_("Search ID was none when clicking tab"))
-                return
-
-            if event.button == 2:
-                self.searches[search_id][2].on_close(widget)
-                return True
-
-            if event.button == 3:
-                menu = self.tab_popup(search_id)
-                menu.popup()
-                return True
+        if event.button == 2:
+            self.searches[search_id][2].on_close(widget)
+            return True
 
         return False
 
@@ -519,9 +529,6 @@ class Search:
         cols["country"].get_widget().hide()
 
         self.ResultsList.set_model(self.resultsmodel)
-
-        self.ResultsList.connect("button_press_event", self.on_list_clicked)
-        self.ResultsList.connect("key-press-event", self.on_key_press_event)
 
         self.update_visuals()
 
@@ -986,20 +993,20 @@ class Search:
 
     def on_list_clicked(self, widget, event):
 
-        if event.button == 3:
-            return self.on_popup_menu(widget, event)
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_menu(widget)
 
-        else:
-            pathinfo = widget.get_path_at_pos(event.x, event.y)
+        pathinfo = widget.get_path_at_pos(event.x, event.y)
 
-            if pathinfo is None:
-                widget.get_selection().unselect_all()
+        if pathinfo is None:
+            widget.get_selection().unselect_all()
 
-            elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.select_results()
-                self.on_download_files(widget)
-                self.ResultsList.get_selection().unselect_all()
-                return True
+        elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.select_results()
+            self.on_download_files(widget)
+            self.ResultsList.get_selection().unselect_all()
+            return True
 
         return False
 
@@ -1017,12 +1024,8 @@ class Search:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_popup_menu(self, widget, event):
+    def on_popup_menu(self, widget):
 
-        if event.button != 3:
-            return False
-
-        set_treeview_selected_row(widget, event)
         self.select_results()
 
         items = self.popup_menu.get_items()
@@ -1050,8 +1053,6 @@ class Search:
                 break
 
         self.popup_menu.popup()
-        widget.stop_emission_by_name("button_press_event")
-
         return True
 
     def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):

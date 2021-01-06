@@ -23,7 +23,6 @@
 import os
 import time
 
-from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 
@@ -37,6 +36,8 @@ from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 
@@ -146,27 +147,26 @@ class UserTabs(IconNotebook):
         if user in self.users:
             return self.users[user].tab_popup(user)
 
-    def on_tab_click(self, widget, event, child):
+    def on_tab_popup(self, widget, page):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        username = self.get_page_owner(page, self.users)
+        menu = self.tab_popup(username)
 
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
-            username = next(user for user, tab in self.users.items() if tab.Main is page)
-
-            if event.button == 2:
-                self.users[username].on_close(widget)
-                return True
-
-            if event.button == 3:
-                menu = self.tab_popup(username)
-
-                if menu is not None:
-                    menu.popup()
-
-                return True
-
+        if menu is None:
             return False
+
+        menu.popup()
+        return True
+
+    def on_tab_click(self, widget, event, page):
+
+        if triggers_context_menu(event):
+            return self.on_tab_popup(widget, page)
+
+        if event.button == 2:
+            username = self.get_page_owner(page, self.users)
+            self.users[username].on_close(widget)
+            return True
 
         return False
 
@@ -258,8 +258,6 @@ class UserInfo:
             ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
 
-        self.Likes.connect("button_press_event", self.on_popup_likes_menu)
-
         self.hates_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
@@ -267,8 +265,6 @@ class UserInfo:
             ("", None),
             ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
         )
-
-        self.Hates.connect("button_press_event", self.on_popup_hates_menu)
 
         self.image_menu = popup = PopupMenu(self.frame)
         popup.setup(
@@ -279,45 +275,56 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
-    def on_popup_likes_menu(self, widget, event):
+    def get_selected_like_item(self, treeview):
 
-        if event.button != 3:
-            return
+        model, iterator = treeview.get_selection().get_selected()
 
-        d = self.Likes.get_path_at_pos(int(event.x), int(event.y))
-        if not d:
-            return
+        if iterator is None:
+            return None
 
-        path, column, x, y = d
+        return model.get_value(iterator, 0)
 
-        iterator = self.likes_store.get_iter(path)
-        thing = self.likes_store.get_value(iterator, 0)
+    def on_likes_list_clicked(self, widget, event):
+
+        if not triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_likes_menu(widget)
+
+        return False
+
+    def on_popup_likes_menu(self, widget, event=None):
+
+        item = self.get_selected_like_item(widget)
+        if item is None:
+            return False
+
         items = self.likes_popup_menu.get_items()
-
-        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.likes_popup_menu.popup()
+        return True
 
-    def on_popup_hates_menu(self, widget, event):
+    def on_hates_list_clicked(self, widget, event):
 
-        if event.button != 3:
-            return
+        if not triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_hates_menu(widget)
 
-        d = self.Hates.get_path_at_pos(int(event.x), int(event.y))
-        if not d:
-            return
+        return False
 
-        path, column, x, y = d
+    def on_popup_hates_menu(self, widget, event=None):
 
-        iterator = self.hates_store.get_iter(path)
-        thing = self.hates_store.get_value(iterator, 0)
+        item = self.get_selected_like_item(widget)
+        if item is None:
+            return False
+
         items = self.hates_popup_menu.get_items()
-
-        items[_("I _Like This")].set_active(thing in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(thing in self.frame.np.config.sections["interests"]["dislikes"])
+        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
+        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
 
         self.hates_popup_menu.popup()
+        return True
 
     def update_visuals(self):
 
@@ -485,8 +492,12 @@ class UserInfo:
 
     def on_image_click(self, widget, event):
 
-        if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 3:
-            return False
+        if triggers_context_menu(event):
+            return self.on_image_popup_menu(widget)
+
+        return False
+
+    def on_image_popup_menu(self, widget):
 
         act = True
 
@@ -498,8 +509,7 @@ class UserInfo:
             item.set_sensitive(act)
 
         self.image_menu.popup()
-
-        return True  # Don't scroll the Gtk.ScrolledWindow
+        return True
 
     def on_scroll_event(self, widget, event):
 

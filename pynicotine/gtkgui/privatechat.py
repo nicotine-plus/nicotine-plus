@@ -47,6 +47,7 @@ from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import set_widget_color
 from pynicotine.gtkgui.utils import set_widget_font
+from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -163,40 +164,34 @@ class PrivateChats(IconNotebook):
         if text is not None:
             self.users[user].send_message(text, bytestring=bytestring)
 
-    def tab_popup(self, user):
+    def on_tab_popup(self, widget, page):
 
-        if user not in self.users:
-            return
+        username = self.get_page_owner(page, self.users)
 
-        popup = PopupMenu(self.frame)
-        popup.setup_user_menu(user)
-        popup.get_items()[_("Send _Message")].set_visible(False)
-
-        popup.append_item(("", None))
-        popup.append_item(("#" + _("Close All Tabs"), popup.on_close_all_tabs, self))
-        popup.append_item(("#" + _("_Close Tab"), self.users[user].on_close))
-        popup.toggle_user_items()
-
-        return popup
-
-    def on_tab_click(self, widget, event, child):
-
-        if event.type == Gdk.EventType.BUTTON_PRESS:
-
-            n = self.page_num(child)
-            page = self.get_nth_page(n)
-            username = next(user for user, tab in list(self.users.items()) if tab.Main is page)
-
-            if event.button == 2:
-                self.users[username].on_close(widget)
-                return True
-
-            if event.button == 3:
-                menu = self.tab_popup(username)
-                menu.popup()
-                return True
-
+        if username not in self.users:
             return False
+
+        menu = PopupMenu(self.frame)
+        menu.setup_user_menu(username)
+        menu.get_items()[_("Send _Message")].set_visible(False)
+
+        menu.append_item(("", None))
+        menu.append_item(("#" + _("Close All Tabs"), menu.on_close_all_tabs, self))
+        menu.append_item(("#" + _("_Close Tab"), self.users[username].on_close))
+        menu.toggle_user_items()
+
+        menu.popup()
+        return True
+
+    def on_tab_click(self, widget, event, page):
+
+        if triggers_context_menu(event):
+            return self.on_tab_popup(widget, page)
+
+        if event.button == 2:
+            username = self.get_page_owner(page, self.users)
+            self.users[username].on_close(widget)
+            return True
 
         return False
 
@@ -396,9 +391,6 @@ class PrivateChat:
 
         popup.set_user(user)
 
-        self.ChatScroll.connect("button_press_event", self.on_popup_menu)
-        self.ChatScroll.connect("key_press_event", self.on_popup_menu)
-
         self.create_tags()
         self.update_visuals()
 
@@ -450,23 +442,16 @@ class PrivateChat:
         self.offlinemessage = 0
         self.update_tags()
 
-    def on_popup_menu(self, widget, event):
+    def on_message_view_clicked(self, widget, event):
 
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-
-            self.popup_menu.popup()
-            self.ChatScroll.stop_emission_by_name("button_press_event")
-            return True
-
-        elif event.type == Gdk.EventType.KEY_PRESS:
-
-            if event.keyval == Gdk.keyval_from_name("Menu"):
-
-                self.popup_menu.popup(button=0)
-                self.ChatScroll.stop_emission_by_name("key_press_event")
-                return True
+        if triggers_context_menu(event):
+            return self.on_popup_menu(widget)
 
         return False
+
+    def on_popup_menu(self, widget):
+        self.popup_menu.popup()
+        return True
 
     def on_popup_menu_user(self, widget):
         self.popup_menu_user.toggle_user_items()
