@@ -134,7 +134,7 @@
               <object class="GtkLabel" id="RoomLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Chatroom Logs folder:</property>
+                <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -146,7 +146,7 @@
               <object class="GtkLabel" id="PrivateLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Private Chat Logs folder:</property>
+                <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -158,7 +158,7 @@
               <object class="GtkLabel" id="TransfersLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Transfer Logs folder:</property>
+                <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -170,7 +170,7 @@
               <object class="GtkLabel" id="DebugLogDirLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Debug Logs folder:</property>
+                <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -283,7 +283,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Read</property>
+                <property name="label" translatable="yes">Show the last</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -325,7 +325,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="ReopenPrivateChats">
-            <property name="label" translatable="yes">Reopen last Private Chat messages</property>
+            <property name="label" translatable="yes">Display logged private chat messages when starting a chat</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -347,7 +347,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Read</property>
+                <property name="label" translatable="yes">Show the last</property>
               </object>
               <packing>
                 <property name="expand">False</property>
