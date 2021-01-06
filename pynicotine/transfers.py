@@ -903,10 +903,14 @@ class Transfers:
 
     def queue_failed(self, msg):
 
+        user = None
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
                 break
+
+        if user is None:
+            return
 
         for i in self.downloads:
             if i.user == user and i.filename == msg.file and i.status not in ["Aborted", "Paused"]:
