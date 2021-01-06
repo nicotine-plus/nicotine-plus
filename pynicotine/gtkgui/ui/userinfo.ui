@@ -271,7 +271,6 @@
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <signal name="scroll-event" handler="on_scroll_event" swapped="no"/>
                         <child>
@@ -281,7 +280,9 @@
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">1</property>
+                                <property name="can-focus">1</property>
                                 <signal name="button-press-event" handler="on_image_click" swapped="no"/>
+                                <signal name="popup-menu" handler="on_image_popup_menu" swapped="no"/>
                                 <signal name="touch-event" handler="on_image_click" swapped="no"/>
                                 <child>
                                   <object class="GtkImage" id="image">

@@ -601,11 +601,11 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     return linenr
 
 
-class ImageLabel(Gtk.EventBox):
+class ImageLabel(Gtk.Box):
 
     def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -638,35 +638,38 @@ class ImageLabel(Gtk.EventBox):
         self._order_children()
 
     def _pack_children(self):
-        if "box" in self.__dict__:
+
+        if hasattr(self, "box"):
             for widget in self.box.get_children():
                 self.box.remove(widget)
 
-            self.remove(self.box)
-            self.box.destroy()
-            del self.box
+            self.eventbox.remove(self.box)
+
+        self.eventbox = Gtk.EventBox()
+        self.eventbox.show()
+        self.add(self.eventbox)
 
         self.box = Gtk.Box()
+        self.box.set_spacing(2)
+        self.eventbox.add(self.box)
 
         if self.angle in (90, -90):
-            self.box.set_orientation(Gtk.Orientation.VERTICAL)
+            self.set_orientation(Gtk.Orientation.VERTICAL)
         else:
-            self.angle = 0
+            self.set_orientation(Gtk.Orientation.HORIZONTAL)
 
         if self.centered:
-            self.box.set_halign(Gtk.Align.CENTER)
+            self.set_halign(Gtk.Align.CENTER)
         else:
-            self.box.set_halign(Gtk.Align.FILL)
+            self.set_halign(Gtk.Align.FILL)
 
-        self.box.set_spacing(2)
-        self.add(self.box)
-        self.box.show()
         self.status_image.set_margin_end(5)
         self.hilite_image.set_margin_start(5)
 
-        self.box.pack_start(self.status_image, False, False, 0)
+        self.box.add(self.status_image)
         self.box.pack_start(self.label, True, True, 0)
-        self.box.pack_start(self.hilite_image, False, False, 0)
+        self.box.add(self.hilite_image)
+        self.box.show()
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
@@ -674,25 +677,24 @@ class ImageLabel(Gtk.EventBox):
     def _order_children(self):
 
         if self.angle == 90:
-            if "button" in self.__dict__ and self.closebutton != 0:
-                self.box.reorder_child(self.button, 0)
-                self.box.reorder_child(self.hilite_image, 1)
-                self.box.reorder_child(self.label, 2)
-                self.box.reorder_child(self.status_image, 3)
-            else:
-                self.box.reorder_child(self.hilite_image, 0)
-                self.box.reorder_child(self.label, 1)
-                self.box.reorder_child(self.status_image, 2)
+            self.box.reorder_child(self.hilite_image, 0)
+            self.box.reorder_child(self.label, 1)
+            self.box.reorder_child(self.status_image, 2)
+
+            if hasattr(self, "button"):
+                self.reorder_child(self.button, 0)
+
         else:
             self.box.reorder_child(self.status_image, 0)
             self.box.reorder_child(self.label, 1)
             self.box.reorder_child(self.hilite_image, 2)
 
-            if "button" in self.__dict__ and self.closebutton != 0:
-                self.box.reorder_child(self.button, 3)
+            if hasattr(self, "button"):
+                self.reorder_child(self.button, 1)
 
     def _add_close_button(self):
-        if "button" in self.__dict__:
+
+        if hasattr(self, "button"):
             return
 
         close_image = Gtk.Image()
@@ -700,21 +702,20 @@ class ImageLabel(Gtk.EventBox):
 
         self.button = Gtk.Button()
         self.button.add(close_image)
+        self.button.set_relief(Gtk.ReliefStyle.NONE)
+        self.button.show_all()
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
 
-        self.button.set_relief(Gtk.ReliefStyle.NONE)
-
-        self.button.show_all()
-        self.box.pack_start(self.button, False, False, 0)
+        self.add(self.button)
 
     def _remove_close_button(self):
-        if "button" not in self.__dict__:
+
+        if not hasattr(self, "button"):
             return
 
-        self.box.remove(self.button)
-        self.button.destroy()
+        self.remove(self.button)
         del self.button
 
     def set_onclose(self, closebutton):

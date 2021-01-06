@@ -492,8 +492,12 @@ class UserInfo:
 
     def on_image_click(self, widget, event):
 
-        if not triggers_context_menu(event):
-            return False
+        if triggers_context_menu(event):
+            return self.on_image_popup_menu(widget)
+
+        return False
+
+    def on_image_popup_menu(self, widget):
 
         act = True
 

@@ -38,8 +38,6 @@ from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.logfacility import log
 
 
