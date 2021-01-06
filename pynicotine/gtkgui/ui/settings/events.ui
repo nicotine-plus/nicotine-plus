@@ -99,7 +99,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBox" id="FileManagerCombo">
+          <object class="GtkComboBoxText" id="FileManagerCombo">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="has_entry">True</property>
@@ -124,7 +124,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBox" id="audioPlayerCombo">
+          <object class="GtkComboBoxText" id="audioPlayerCombo">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="has_entry">True</property>
@@ -194,16 +194,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="DownloadDoubleClick">
+              <object class="GtkComboBoxText" id="DownloadDoubleClick">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="model">liststore_DownloadDoubleClick</property>
-                <child>
-                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -211,16 +205,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="UploadDoubleClick">
+              <object class="GtkComboBoxText" id="UploadDoubleClick">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="model">liststore_UploadDoubleClick</property>
-                <child>
-                  <object class="GtkCellRendererText" id="cellrenderertext2"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>

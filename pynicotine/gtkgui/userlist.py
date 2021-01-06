@@ -158,6 +158,12 @@ class UserList:
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
+        self.buddies_combo_entries = (
+            self.frame.UserSearchCombo, self.frame.UserPrivateCombo, self.frame.UserInfoCombo, self.frame.UserBrowseCombo
+        )
+
+        self.buddies_combos_fill()
+
         """ Popup """
 
         self.popup_menu_private_rooms = PopupMenu(self.frame, False)
@@ -177,6 +183,15 @@ class UserList:
         self.UserListTree.connect("button_press_event", self.on_popup_menu)
 
         self.update_visuals()
+
+    def buddies_combos_fill(self):
+
+        for widget in self.buddies_combo_entries:
+            widget.remove_all()
+            widget.append_text("")
+
+            for user in self.frame.np.config.sections["server"]["userlist"]:
+                widget.append_text(user[0])
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 14, 'flag_')
@@ -388,8 +403,8 @@ class UserList:
         self.frame.np.queue.put(slskmessages.AddUser(user))
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
-        for widget in self.frame.buddies_combo_entries:
-            GLib.idle_add(widget.append, user)
+        for widget in self.buddies_combo_entries:
+            widget.append_text(user)
 
         if self.frame.np.config.sections["words"]["buddies"]:
             GLib.idle_add(self.frame.chatrooms.roomsctrl.update_completions)
@@ -440,8 +455,7 @@ class UserList:
 
         self.save_user_list()
 
-        for widget in self.frame.buddies_combo_entries:
-            GLib.idle_add(widget.remove, user)
+        self.buddies_combos_fill()
 
         if self.frame.np.config.sections["words"]["buddies"]:
             GLib.idle_add(self.frame.chatrooms.roomsctrl.update_completions)

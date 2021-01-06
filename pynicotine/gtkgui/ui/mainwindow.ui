@@ -69,10 +69,14 @@
           </object>
         </child>
         <child>
-          <object class="GtkComboBox" id="RoomSearchCombo">
-            <property name="visible">1</property>
+          <object class="GtkComboBoxText" id="RoomSearchCombo">
+            <property name="visible">0</property>
             <property name="has-entry">1</property>
+            <property name="active-id">joined</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
+            <items>
+              <item translatable="yes" id="joined">Joined Rooms </item>
+            </items>
             <child internal-child="entry">
               <object class="GtkEntry" id="RoomSearchEntry">
                 <property name="max-width-chars">20</property>
@@ -83,8 +87,8 @@
           </object>
         </child>
         <child>
-          <object class="GtkComboBox" id="UserSearchCombo">
-            <property name="visible">1</property>
+          <object class="GtkComboBoxText" id="UserSearchCombo">
+            <property name="visible">0</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
@@ -97,7 +101,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkComboBox" id="SearchEntryCombo">
+          <object class="GtkComboBoxText" id="SearchEntryCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
@@ -545,7 +549,7 @@
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="UserPrivateCombo">
+          <object class="GtkComboBoxText" id="UserPrivateCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
@@ -609,7 +613,7 @@
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="UserInfoCombo">
+          <object class="GtkComboBoxText" id="UserInfoCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
@@ -705,7 +709,7 @@
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBox" id="UserBrowseCombo">
+          <object class="GtkComboBoxText" id="UserBrowseCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>

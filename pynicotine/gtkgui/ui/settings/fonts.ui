@@ -437,7 +437,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBox" id="DecimalSep">
+          <object class="GtkComboBoxText" id="DecimalSep">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>

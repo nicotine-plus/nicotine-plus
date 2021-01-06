@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import re
 import signal
 import sys
 import threading
@@ -59,7 +58,6 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import BuddiesComboBox
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -69,7 +67,6 @@ from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
-from pynicotine.nowplaying import NowPlaying
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import make_version
@@ -238,15 +235,6 @@ class NicotineFrame:
         self.ChatTabLabel.set_icon("user-available-symbolic")
         self.InterestsTabLabel.set_icon("emblem-default-symbolic")
 
-        # Create Search combo ListStores
-        self.search_entry_combo_model = Gtk.ListStore(str)
-        self.SearchEntryCombo.set_model(self.search_entry_combo_model)
-        self.SearchEntryCombo.set_entry_text_column(0)
-
-        self.room_search_combo_model = Gtk.ListStore(str)
-        self.RoomSearchCombo.set_model(self.room_search_combo_model)
-        self.RoomSearchCombo.set_entry_text_column(0)
-
         # Initialise other notebooks
         self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
@@ -350,10 +338,6 @@ class NicotineFrame:
 
         self.statistics = Statistics(self, self.np.config)
 
-        """ Now Playing """
-
-        self.now_playing = NowPlaying(self.np.config)
-
         """ Connect """
 
         if self.np.config.need_config():
@@ -367,37 +351,6 @@ class NicotineFrame:
             self.on_connect()
 
         self.update_bandwidth()
-
-        """ Combo Boxes """
-
-        # Search Methods
-        self.searchroomslist = {}
-
-        # Create a list of objects of the BuddiesComboBox class
-        # This add a few methods to add/remove entries on all combobox at once
-        self.buddies_combo_entries = [
-            BuddiesComboBox(self, self.UserSearchCombo),
-            BuddiesComboBox(self, self.UserPrivateCombo),
-            BuddiesComboBox(self, self.UserInfoCombo),
-            BuddiesComboBox(self, self.UserBrowseCombo)
-        ]
-
-        # Initial filling of the buddies combobox
-        _thread.start_new_thread(self.buddies_combos_fill, ("",))
-
-        # Space after Joined Rooms is important, so it doesn't conflict
-        # with any possible real room, but if it's not translated with the space
-        # nothing awful will happen
-        joined_rooms = _("Joined Rooms ")
-        self.searchroomslist[joined_rooms] = self.room_search_combo_model.append([joined_rooms])
-        self.RoomSearchCombo.set_active_iter(self.searchroomslist[joined_rooms])
-
-        """ Search """
-
-        self.UserSearchCombo.hide()
-        self.RoomSearchCombo.hide()
-
-        self.update_download_filters()
 
         """ Tab Signals """
 
@@ -1927,55 +1880,6 @@ class NicotineFrame:
 
         self.RoomSearchCombo.set_sensitive(act)
 
-    def update_download_filters(self):
-        proccessedfilters = []
-        outfilter = "(\\\\("
-        failed = {}
-        df = sorted(self.np.config.sections["transfers"]["downloadfilters"])
-        # Get Filters from config file and check their escaped status
-        # Test if they are valid regular expressions and save error messages
-
-        for item in df:
-            dfilter, escaped = item
-            if escaped:
-                dfilter = re.escape(dfilter)
-                dfilter = dfilter.replace("\\*", ".*")
-
-            try:
-                re.compile("(" + dfilter + ")")
-                outfilter += dfilter
-                proccessedfilters.append(dfilter)
-            except Exception as e:
-                failed[dfilter] = e
-
-            proccessedfilters.append(dfilter)
-
-            if item is not df[-1]:
-                outfilter += "|"
-
-        # Crop trailing pipes
-        while outfilter[-1] == "|":
-            outfilter = outfilter[:-1]
-
-        outfilter += ")$)"
-        try:
-            re.compile(outfilter)
-            self.np.config.sections["transfers"]["downloadregexp"] = outfilter
-            # Send error messages for each failed filter to log window
-            if len(failed) >= 1:
-                errors = ""
-
-                for dfilter, error in failed.items():
-                    errors += "Filter: %s Error: %s " % (dfilter, error)
-
-                error = _("Error: %(num)d Download filters failed! %(error)s ", {'num': len(failed), 'error': errors})
-                log.add(error)
-
-        except Exception as e:
-            # Strange that individual filters _and_ the composite filter both fail
-            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s", e))
-            self.np.config.sections["transfers"]["downloadregexp"] = ""
-
     def on_search(self, widget):
         self.searches.on_search()
 
@@ -2400,10 +2304,6 @@ class NicotineFrame:
         text_length = len(entry.get_text())
         entry.set_position(text_length)
 
-    def buddies_combos_fill(self, nothing):
-        for widget in self.buddies_combo_entries:
-            GLib.idle_add(widget.fill)
-
     def get_status_image(self, status):
         if status == 1:
             return self.images["away"]
@@ -2662,7 +2562,7 @@ class NicotineFrame:
             self.searches.maxstoredresults = config["searches"]["max_stored_results"]
 
         # Modify GUI
-        self.update_download_filters()
+        self.downloads.update_download_filters()
         self.np.config.write_configuration()
 
         if not config["ui"]["trayicon"] and self.tray.is_tray_icon_visible():

@@ -113,15 +113,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="UploadsAllowed">
+              <object class="GtkComboBoxText" id="UploadsAllowed">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                  <attributes>
-                    <attribute name="text">0</attribute>
-                  </attributes>
-                </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>

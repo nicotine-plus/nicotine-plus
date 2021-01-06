@@ -596,46 +596,6 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     return linenr
 
 
-class BuddiesComboBox:
-
-    def __init__(self, frame, combo_box):
-
-        self.frame = frame
-
-        self.items = {}
-
-        self.combobox = combo_box
-
-        self.store = Gtk.ListStore(str)
-        self.combobox.set_model(self.store)
-        self.combobox.set_entry_text_column(0)
-
-        self.combobox.show()
-
-    def fill(self):
-
-        self.items.clear()
-        self.store.clear()
-
-        self.items[""] = self.store.append([""])
-
-        for user in self.frame.np.config.sections["server"]["userlist"]:
-            self.items[user[0]] = self.store.append([user[0]])
-
-    def append(self, item):
-
-        if item in self.items:
-            return
-
-        self.items[item] = self.combobox.get_model().append([item])
-
-    def remove(self, item):
-
-        if item in self.items:
-            self.combobox.get_model().remove(self.items[item])
-            del self.items[item]
-
-
 class ImageLabel(Gtk.EventBox):
 
     def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):

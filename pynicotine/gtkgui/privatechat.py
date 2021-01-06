@@ -795,7 +795,7 @@ class PrivateChat:
         widget.set_text("")
 
     def display_now_playing(self):
-        self.frame.now_playing.display_now_playing(callback=self.send_message)
+        self.frame.np.now_playing.display_now_playing(callback=self.send_message)
 
     def update_visuals(self):
 

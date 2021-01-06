@@ -202,7 +202,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="FilterIn">
+                  <object class="GtkComboBoxText" id="FilterIn">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
@@ -235,7 +235,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="FilterOut">
+                  <object class="GtkComboBoxText" id="FilterOut">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
@@ -268,7 +268,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="FilterSize">
+                  <object class="GtkComboBoxText" id="FilterSize">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
@@ -301,7 +301,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="FilterBitrate">
+                  <object class="GtkComboBoxText" id="FilterBitrate">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
@@ -334,7 +334,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="FilterCountry">
+                  <object class="GtkComboBoxText" id="FilterCountry">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>

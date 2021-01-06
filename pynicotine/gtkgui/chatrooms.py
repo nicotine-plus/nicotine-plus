@@ -397,7 +397,7 @@ class RoomsControl:
 
         self.chat_notebook.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
-        self.frame.searchroomslist[msg.room] = self.frame.room_search_combo_model.append([(msg.room)])
+        self.frame.RoomSearchCombo.append_text(msg.room)
 
         tab.count_users()
 
@@ -695,7 +695,11 @@ class RoomsControl:
         del self.joinedrooms[msg.room]
 
         if msg.room[-1:] != ' ':  # meta rooms
-            self.frame.room_search_combo_model.remove(self.frame.searchroomslist[msg.room])
+            self.frame.RoomSearchCombo.remove_all()
+            self.frame.RoomSearchCombo.append_text("Joined Rooms ")
+
+            for room in self.joinedrooms:
+                self.frame.RoomSearchCombo.append_text(room)
 
     def conn_close(self):
 
@@ -1377,7 +1381,7 @@ class ChatRoom:
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
     def display_now_playing(self):
-        self.frame.now_playing.display_now_playing(callback=self.say)
+        self.frame.np.now_playing.display_now_playing(callback=self.say)
 
     def user_joined_room(self, username, userdata):
 

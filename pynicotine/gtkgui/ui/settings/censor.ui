@@ -54,7 +54,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBox" id="CensorReplaceCombo">
+          <object class="GtkComboBoxText" id="CensorReplaceCombo">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
