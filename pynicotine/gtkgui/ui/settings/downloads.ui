@@ -218,9 +218,10 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="ShareDownloadDir">
-                <property name="label" translatable="yes">Share download folder</property>
+                <property name="label" translatable="yes">Share Download folder</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">The equivalent of adding your Download folder as a public share.</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
