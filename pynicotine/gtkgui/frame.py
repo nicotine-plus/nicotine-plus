@@ -156,13 +156,6 @@ class NicotineFrame:
 
         self.application.add_window(self.MainWindow)
 
-        self.MainWindow.connect("focus_in_event", self.on_focus_in)
-        self.MainWindow.connect("configure_event", self.on_window_change)
-        self.MainWindow.connect("delete-event", self.on_delete_event)
-        self.MainWindow.connect("destroy", self.on_destroy)
-        self.MainWindow.connect("key_press_event", self.on_key_press)
-        self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
-
         # Handle Ctrl+C exit gracefully
         signal.signal(signal.SIGINT, self.on_quit)
 
@@ -250,9 +243,6 @@ class NicotineFrame:
         self.SearchEntryCombo.set_model(self.search_entry_combo_model)
         self.SearchEntryCombo.set_entry_text_column(0)
 
-        self.search_entry = self.SearchEntryCombo.get_child()
-        self.search_entry.connect("activate", self.on_search)
-
         self.room_search_combo_model = Gtk.ListStore(str)
         self.RoomSearchCombo.set_model(self.room_search_combo_model)
         self.RoomSearchCombo.set_entry_text_column(0)
@@ -260,22 +250,14 @@ class NicotineFrame:
         # Initialise other notebooks
         self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
-        self.interestsvbox.pack_start(self.interests.Main, True, True, 0)
-
         self.chatrooms = ChatRooms(self)
         self.searches = Searches(self)
         self.downloads = Downloads(self, self.DownloadsTabLabel)
         self.uploads = Uploads(self, self.UploadsTabLabel)
         self.userlist = UserList(self)
-
         self.privatechats = PrivateChats(self)
-        self.UserPrivateCombo.get_child().connect("activate", self.on_get_private_chat)
-
         self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
-        self.UserInfoCombo.get_child().connect("activate", self.on_get_user_info)
-
         self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
-        self.UserBrowseCombo.get_child().connect("activate", self.on_get_shares)
 
         self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.update_visuals()
@@ -704,18 +686,18 @@ class NicotineFrame:
         self.UserBrowseCombo.set_sensitive(status)
 
         if self.current_tab_label == self.UserBrowseTabLabel:
-            GLib.idle_add(self.UserBrowseCombo.get_child().grab_focus)
+            GLib.idle_add(self.UserBrowseEntry.grab_focus)
 
         self.UserInfoCombo.set_sensitive(status)
 
         if self.current_tab_label == self.UserInfoTabLabel:
-            GLib.idle_add(self.UserInfoCombo.get_child().grab_focus)
+            GLib.idle_add(self.UserInfoEntry.grab_focus)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchEntryCombo.set_sensitive(status)
 
         if self.current_tab_label == self.SearchTabLabel:
-            GLib.idle_add(self.search_entry.grab_focus)
+            GLib.idle_add(self.SearchEntry.grab_focus)
 
         self.interests.SimilarUsersButton.set_sensitive(status)
         self.interests.GlobalRecommendationsButton.set_sensitive(status)
@@ -985,7 +967,6 @@ class NicotineFrame:
     def on_settings(self, *args, page=None):
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
-            self.settingswindow.SettingsWindow.connect("settings-updated", self.on_settings_updated)
 
         if self.fastconfigure is not None and \
                 self.fastconfigure.FastConfigureDialog.get_property("visible"):
@@ -1569,7 +1550,7 @@ class NicotineFrame:
 
         elif tab_label == self.SearchTabLabel:
             self.set_active_header_bar("Search")
-            GLib.idle_add(self.search_entry.grab_focus)
+            GLib.idle_add(self.SearchEntry.grab_focus)
 
         elif tab_label == self.UserInfoTabLabel:
             self.set_active_header_bar("UserInfo")
@@ -2008,11 +1989,14 @@ class NicotineFrame:
         self.on_settings(page='User Info')
 
     def on_get_user_info(self, widget):
-        text = self.UserInfoCombo.get_child().get_text()
+
+        text = widget.get_text()
+
         if not text:
             return
+
         self.local_user_info_request(text)
-        self.UserInfoCombo.get_child().set_text("")
+        widget.set_text("")
 
     def local_user_info_request(self, user):
         msg = slskmessages.UserInfoRequest(None)
@@ -2080,11 +2064,14 @@ class NicotineFrame:
         GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page)
 
     def on_get_shares(self, widget):
-        text = self.UserBrowseCombo.get_child().get_text()
+
+        text = widget.get_text()
+
         if not text:
             return
+
         self.browse_user(text)
-        self.UserBrowseCombo.get_child().set_text("")
+        widget.set_text("")
 
     def on_load_from_disk(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
@@ -2123,13 +2110,14 @@ class NicotineFrame:
         self.on_settings(page='Logging')
 
     def on_get_private_chat(self, widget):
-        text = self.UserPrivateCombo.get_child().get_text()
+
+        text = widget.get_text()
 
         if not text:
             return
 
         self.privatechats.send_message(text, show_user=True)
-        self.UserPrivateCombo.get_child().set_text("")
+        widget.set_text("")
 
     """ Chat """
 

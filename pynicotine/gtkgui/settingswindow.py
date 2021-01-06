@@ -3411,6 +3411,7 @@ class Settings:
         # Connect the custom handlers
         self.SettingsWindow.set_transient_for(frame.MainWindow)
         self.SettingsWindow.connect("delete-event", self.on_delete)
+        self.SettingsWindow.connect("settings-updated", self.frame.on_settings_updated)
 
         # This is ?
         self.empty_label = Gtk.Label.new("")

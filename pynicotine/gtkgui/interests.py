@@ -41,6 +41,7 @@ class Interests:
         self.np = np
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
+        self.frame.interestsvbox.add(self.Main)
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)

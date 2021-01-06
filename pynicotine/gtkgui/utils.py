@@ -1239,7 +1239,7 @@ class PopupMenu(Gtk.Menu):
 
     def on_search_user(self, widget):
         self.frame.SearchMethod.set_active_id("user")
-        self.frame.UserSearchCombo.get_child().set_text(self.user)
+        self.frame.UserSearchEntry.set_text(self.user)
         self.frame.change_main_page("search")
 
     def on_send_message(self, widget):

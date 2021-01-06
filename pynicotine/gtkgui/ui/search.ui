@@ -206,11 +206,12 @@
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
-                    <signal name="changed" handler="focus_combobox" swapped="no"/>
+                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="FilterInEntry">
                         <property name="can-focus">1</property>
                         <property name="width-chars">10</property>
+                        <signal name="activate" handler="on_refilter" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -238,11 +239,12 @@
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
-                    <signal name="changed" handler="focus_combobox" swapped="no"/>
+                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="FilterOutEntry">
                         <property name="can-focus">1</property>
                         <property name="width-chars">10</property>
+                        <signal name="activate" handler="on_refilter" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -270,11 +272,12 @@
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
-                    <signal name="changed" handler="focus_combobox" swapped="no"/>
+                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="FilterSizeEntry">
                         <property name="can-focus">1</property>
                         <property name="width-chars">5</property>
+                        <signal name="activate" handler="on_refilter" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -302,11 +305,12 @@
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
-                    <signal name="changed" handler="focus_combobox" swapped="no"/>
+                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="FilterBitrateEntry">
                         <property name="can-focus">1</property>
                         <property name="width-chars">5</property>
+                        <signal name="activate" handler="on_refilter" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -334,11 +338,12 @@
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
                     <property name="hexpand">1</property>
-                    <signal name="changed" handler="focus_combobox" swapped="no"/>
+                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry">
+                      <object class="GtkEntry" id="FilterCountryEntry">
                         <property name="can-focus">1</property>
                         <property name="width-chars">5</property>
+                        <signal name="activate" handler="on_refilter" swapped="no"/>
                       </object>
                     </child>
                   </object>

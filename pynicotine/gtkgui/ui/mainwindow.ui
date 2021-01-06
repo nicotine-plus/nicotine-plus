@@ -74,7 +74,7 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="RoomSearchEntry">
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Room...</property>
@@ -88,7 +88,7 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="UserSearchEntry">
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
@@ -102,13 +102,14 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="SearchEntry">
                 <property name="hexpand">1</property>
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Search term...</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
+                <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
           </object>
@@ -549,12 +550,13 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="UserPrivateEntry">
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <signal name="activate" handler="on_get_private_chat" swapped="no"/>
               </object>
             </child>
           </object>
@@ -612,12 +614,13 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="UserInfoEntry">
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <signal name="activate" handler="on_get_user_info" swapped="no"/>
               </object>
             </child>
           </object>
@@ -707,12 +710,13 @@
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
-              <object class="GtkEntry">
+              <object class="GtkEntry" id="UserBrowseEntry">
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <signal name="activate" handler="on_get_shares" swapped="no"/>
               </object>
             </child>
           </object>
@@ -817,6 +821,13 @@
     </child>
   </object>
   <object class="GtkApplicationWindow" id="MainWindow">
+    <signal name="focus-in-event" handler="on_focus_in" swapped="no"/>
+    <signal name="configure-event" handler="on_window_change" swapped="no"/>
+    <signal name="delete-event" handler="on_delete_event" swapped="no"/>
+    <signal name="destroy" handler="on_destroy" swapped="no"/>
+    <signal name="focus-in-event" handler="on_focus_in" swapped="no"/>
+    <signal name="key-press-event" handler="on_key_press" swapped="no"/>
+    <signal name="motion-notify-event" handler="on_disable_auto_away" swapped="no"/>
     <child>
       <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>

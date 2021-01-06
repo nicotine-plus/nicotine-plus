@@ -24,7 +24,6 @@
 import os
 
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -46,15 +45,9 @@ class WishList:
         self.wishes = {}
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "wishlist.ui"))
-
         self.WishListDialog.set_transient_for(frame.MainWindow)
 
-        self.WishListDialog.connect("destroy", self.quit)
-        self.WishListDialog.connect("destroy-event", self.quit)
-        self.WishListDialog.connect("delete-event", self.quit)
-        self.WishListDialog.connect("delete_event", self.quit)
-
-        self.store = Gtk.ListStore(GObject.TYPE_STRING)
+        self.store = Gtk.ListStore(str)
 
         cols = initialise_columns(
             None,

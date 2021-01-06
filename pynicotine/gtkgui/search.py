@@ -106,7 +106,7 @@ class Searches(IconNotebook):
 
     def on_clear_search_history(self):
 
-        self.frame.search_entry.set_text("")
+        self.frame.SearchEntry.set_text("")
         self.frame.np.config.sections["searches"]["history"] = []
         self.frame.np.config.write_configuration()
         self.frame.SearchEntryCombo.get_model().clear()
@@ -116,7 +116,7 @@ class Searches(IconNotebook):
 
         self.save_columns()
 
-        text = self.frame.search_entry.get_text().strip()
+        text = self.frame.SearchEntry.get_text().strip()
 
         if not text:
             return
@@ -133,7 +133,7 @@ class Searches(IconNotebook):
                 text = feedback[0]
 
         elif search_mode == "rooms":
-            name = self.frame.RoomSearchCombo.get_child().get_text()
+            name = self.frame.RoomSearchEntry.get_text()
             # Space after Joined Rooms is important, so it doesn't conflict
             # with any possible real room
             if name != _("Joined Rooms ") and not name.isspace():
@@ -151,7 +151,7 @@ class Searches(IconNotebook):
                 text = feedback[0]
 
         elif search_mode == "user":
-            user = self.frame.UserSearchCombo.get_child().get_text().strip()
+            user = self.frame.UserSearchEntry.get_text().strip()
 
             if user:
                 users = [user]
@@ -169,7 +169,7 @@ class Searches(IconNotebook):
 
         if feedback is not None:
             self.do_search(text, search_mode, users, room)
-            self.frame.search_entry.set_text("")
+            self.frame.SearchEntry.set_text("")
 
     def do_search(self, text, mode, users=[], room=None):
 
@@ -566,18 +566,6 @@ class Search:
         self.FilterBitrate.pack_start(bit_cell, True)
         self.FilterBitrate.add_attribute(bit_cell, "text", 0)
 
-        self.FilterIn.connect("changed", self.on_filter_changed)
-        self.FilterOut.connect("changed", self.on_filter_changed)
-        self.FilterSize.connect("changed", self.on_filter_changed)
-        self.FilterBitrate.connect("changed", self.on_filter_changed)
-        self.FilterCountry.connect("changed", self.on_filter_changed)
-
-        self.FilterIn.get_child().connect("activate", self.on_refilter)
-        self.FilterOut.get_child().connect("activate", self.on_refilter)
-        self.FilterSize.get_child().connect("activate", self.on_refilter)
-        self.FilterBitrate.get_child().connect("activate", self.on_refilter)
-        self.FilterCountry.get_child().connect("activate", self.on_refilter)
-
         """ Popup """
 
         self.popup_menu_users = PopupMenu(self.frame, False)
@@ -607,6 +595,8 @@ class Search:
 
     def on_filter_changed(self, widget):
 
+        self.frame.focus_combobox(widget)
+
         iterator = widget.get_active_iter()
 
         if iterator:
@@ -618,14 +608,14 @@ class Search:
 
             sfilter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterIn.get_child().set_text(sfilter[0])
-            self.FilterOut.get_child().set_text(sfilter[1])
-            self.FilterSize.get_child().set_text(sfilter[2])
-            self.FilterBitrate.get_child().set_text(sfilter[3])
+            self.FilterInEntry.set_text(sfilter[0])
+            self.FilterOutEntry.set_text(sfilter[1])
+            self.FilterSizeEntry.set_text(sfilter[2])
+            self.FilterBitrateEntry.set_text(sfilter[3])
             self.FilterFreeSlot.set_active(sfilter[4])
 
             if(len(sfilter) > 5):
-                self.FilterCountry.get_child().set_text(sfilter[5])
+                self.FilterCountryEntry.set_text(sfilter[5])
 
             self.filtersCheck.set_active(1)
 
@@ -908,18 +898,18 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters[0] = f_in
             except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterIn.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterInEntry, "red", "white")
             else:
-                set_widget_fg_bg_css(self.FilterIn.get_child())
+                set_widget_fg_bg_css(self.FilterInEntry)
 
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
                 self.filters[1] = f_out
             except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterOut.get_child(), "red", "white")
+                set_widget_fg_bg_css(self.FilterOutEntry, "red", "white")
             else:
-                set_widget_fg_bg_css(self.FilterOut.get_child())
+                set_widget_fg_bg_css(self.FilterOutEntry)
 
         if size:
             self.filters[2] = size
@@ -1030,9 +1020,6 @@ class Search:
         size = model.get_value(iterator, 14)
 
         self.selected_results.add((user, filepath, size, bitrate, length))
-
-    def focus_combobox(self, widget):
-        self.frame.focus_combobox(widget)
 
     def on_list_clicked(self, widget, event):
 
