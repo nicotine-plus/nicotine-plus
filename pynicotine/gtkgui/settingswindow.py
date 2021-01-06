@@ -219,10 +219,6 @@ class DownloadsFrame(BuildFrame):
             }
         }
 
-        self.uploads_allowed__list = Gtk.ListStore(GObject.TYPE_STRING)
-        self.UploadsAllowed.set_model(self.uploads_allowed__list)
-
-        self.uploads_allowed__list.clear()
         self.alloweduserslist = [
             _("No one"),
             _("Everyone"),
@@ -231,7 +227,7 @@ class DownloadsFrame(BuildFrame):
         ]
 
         for item in self.alloweduserslist:
-            self.uploads_allowed__list.append([item])
+            self.UploadsAllowed.append_text(item)
 
         self.filterlist = Gtk.ListStore(
             GObject.TYPE_STRING,
@@ -1399,12 +1395,8 @@ class TTSFrame(BuildFrame):
         BuildFrame.__init__(self, "tts")
 
         # Combobox for text-to-speech readers
-        self.tts_command_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in ["echo $ | festival --tts", "flite -t $"]:
-            self.tts_command_store.append([executable])
-
-        self.TTSCommand.set_model(self.tts_command_store)
-        self.TTSCommand.set_entry_text_column(0)
+            self.TTSCommand.append_text(executable)
 
         self.options = {
             "ui": {
@@ -1586,15 +1578,8 @@ class ColoursFrame(BuildFrame):
         BuildFrame.__init__(self, "colours")
 
         # Combobox for user names style
-        self.username_style_store = Gtk.ListStore(GObject.TYPE_STRING)
         for item in ("bold", "italic", "underline", "normal"):
-            self.username_style_store.append([item])
-
-        self.UsernameStyle.set_model(self.username_style_store)
-
-        cell = Gtk.CellRendererText()
-        self.UsernameStyle.pack_start(cell, True)
-        self.UsernameStyle.add_attribute(cell, 'text', 0)
+            self.UsernameStyle.append_text(item)
 
         self.needcolors = 0
         self.options = {
@@ -1753,7 +1738,7 @@ class ColoursFrame(BuildFrame):
                 "useronline": self.OnlineColor.get_text(),
                 "useroffline": self.OfflineColor.get_text(),
                 "usernamehotspots": self.UsernameHotspots.get_active(),
-                "usernamestyle": self.UsernameStyle.get_model().get(self.UsernameStyle.get_active_iter(), 0)[0],
+                "usernamestyle": self.UsernameStyle.get_active_text(),
                 "tab_hilite": self.HighlightTab.get_text(),
                 "tab_default": self.DefaultTab.get_text(),
                 "tab_changed": self.ChangedTab.get_text(),
@@ -2021,15 +2006,8 @@ class FontsFrame(BuildFrame):
         BuildFrame.__init__(self, "fonts")
 
         # Combobox for the decimal separator
-        self.decimal_sep_store = Gtk.ListStore(GObject.TYPE_STRING)
-        self.DecimalSep.set_model(self.decimal_sep_store)
-
-        cell2 = Gtk.CellRendererText()
-        self.DecimalSep.pack_start(cell2, True)
-        self.DecimalSep.add_attribute(cell2, 'text', 0)
-
         for item in ["<None>", ",", ".", "<space>"]:
-            self.decimal_sep_store.append([item])
+            self.DecimalSep.append_text(item)
 
         self.options = {
             "ui": {
@@ -2069,7 +2047,7 @@ class FontsFrame(BuildFrame):
 
         return {
             "ui": {
-                "decimalsep": self.DecimalSep.get_model().get(self.DecimalSep.get_active_iter(), 0)[0],
+                "decimalsep": self.DecimalSep.get_active_text(),
                 "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
@@ -2318,7 +2296,6 @@ class EventsFrame(BuildFrame):
         BuildFrame.__init__(self, "events")
 
         # Combobox for file manager
-        self.file_manager_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in [
             "xdg-open $",
             "explorer $",
@@ -2331,13 +2308,9 @@ class EventsFrame(BuildFrame):
             "thunar $",
             "xterm -e mc $"
         ]:
-            self.file_manager_combo_store.append([executable])
-
-        self.FileManagerCombo.set_model(self.file_manager_combo_store)
-        self.FileManagerCombo.set_entry_text_column(0)
+            self.FileManagerCombo.append_text(executable)
 
         # Combobox for audio players
-        self.audio_player_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for executable in [
             "amarok -a $",
             "audacious -e $",
@@ -2345,10 +2318,7 @@ class EventsFrame(BuildFrame):
             "rhythmbox $",
             "xmms2 add -f $"
         ]:
-            self.audio_player_combo_store.append([executable])
-
-        self.audioPlayerCombo.set_model(self.audio_player_combo_store)
-        self.audioPlayerCombo.set_entry_text_column(0)
+            self.audioPlayerCombo.append_text(executable)
 
         self.options = {
             "transfers": {
@@ -2427,8 +2397,7 @@ class UrlCatchFrame(BuildFrame):
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
-        self.handlermodel = Gtk.ListStore(GObject.TYPE_STRING)
-
+        # Handler combobox
         for item in [
             "xdg-open $",
             "firefox $",
@@ -2439,21 +2408,11 @@ class UrlCatchFrame(BuildFrame):
             "konqueror $",
             "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
         ]:
-            self.handlermodel.append([item])
+            self.Handler.append_text(item)
 
-        self.Handler.set_model(self.handlermodel)
-        self.Handler.set_entry_text_column(0)
-
-        renderers = cols["handler"].get_cells()
-        for render in renderers:
-            render.set_property("model", self.handlermodel)
-
-        self.protomodel = Gtk.ListStore(GObject.TYPE_STRING)
+        # Protocol combobox
         for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
-            self.protomodel.append([item])
-
-        self.ProtocolCombo.set_model(self.protomodel)
-        self.ProtocolCombo.set_entry_text_column(0)
+            self.ProtocolCombo.append_text(item)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
         store = treeview.get_model()
@@ -2587,15 +2546,8 @@ class CensorFrame(BuildFrame):
         self.CensorList.set_model(self.censor_list_model)
 
         # Combobox for the replacement letter
-        self.censor_replace_combo_store = Gtk.ListStore(GObject.TYPE_STRING)
         for letter in ["#", "$", "!", " ", "x", "*"]:
-            self.censor_replace_combo_store.append([letter])
-
-        self.CensorReplaceCombo.set_model(self.censor_replace_combo_store)
-
-        cell = Gtk.CellRendererText()
-        self.CensorReplaceCombo.pack_start(cell, True)
-        self.CensorReplaceCombo.add_attribute(cell, 'text', 0)
+            self.CensorReplaceCombo.append_text(letter)
 
         renderers = cols["pattern"].get_cells()
         for render in renderers:
@@ -2644,7 +2596,7 @@ class CensorFrame(BuildFrame):
 
         return {
             "words": {
-                "censorfill": self.CensorReplaceCombo.get_model().get(self.CensorReplaceCombo.get_active_iter(), 0)[0],
+                "censorfill": self.CensorReplaceCombo.get_active_text(),
                 "censored": censored,
                 "censorwords": self.CensorCheck.get_active()
             }
@@ -2893,8 +2845,6 @@ class NowPlayingFrame(BuildFrame):
         self.player_replacers = []
 
         # Default format list
-        self.format_model = Gtk.ListStore(GObject.TYPE_STRING)
-
         self.default_format_list = [
             "$n",
             "$n ($f)",
@@ -2904,10 +2854,6 @@ class NowPlayingFrame(BuildFrame):
             "$a - $b - $t ($l/$r KBps) from $y $c"
         ]
         self.custom_format_list = []
-
-        # Set the NPFormat model
-        self.NPFormat.set_entry_text_column(0)
-        self.NPFormat.set_model(self.format_model)
 
         # Suppy the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
@@ -2931,21 +2877,21 @@ class NowPlayingFrame(BuildFrame):
         self.update_now_playing_info()
 
         # Add formats
-        self.format_model.clear()
+        self.NPFormat.remove_all()
 
         for item in self.default_format_list:
-            self.format_model.append([str(item)])
+            self.NPFormat.append_text(str(item))
 
         if self.custom_format_list:
             for item in self.custom_format_list:
-                self.format_model.append([str(item)])
+                self.NPFormat.append_text(str(item))
 
         if config["players"]["npformat"] == "":
             # If there's no default format in the config: set the first of the list
             self.NPFormat.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
-            for (i, v) in enumerate(self.format_model):
+            for (i, v) in enumerate(self.NPFormat.get_model()):
                 if v[0] == config["players"]["npformat"]:
                     self.NPFormat.set_active(i)
 

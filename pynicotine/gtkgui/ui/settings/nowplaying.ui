@@ -132,7 +132,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="NPFormat">
+              <object class="GtkComboBoxText" id="NPFormat">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_entry">True</property>

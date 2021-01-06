@@ -59,7 +59,6 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import BuddiesComboBox
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -238,15 +237,6 @@ class NicotineFrame:
         self.ChatTabLabel.set_icon("user-available-symbolic")
         self.InterestsTabLabel.set_icon("emblem-default-symbolic")
 
-        # Create Search combo ListStores
-        self.search_entry_combo_model = Gtk.ListStore(str)
-        self.SearchEntryCombo.set_model(self.search_entry_combo_model)
-        self.SearchEntryCombo.set_entry_text_column(0)
-
-        self.room_search_combo_model = Gtk.ListStore(str)
-        self.RoomSearchCombo.set_model(self.room_search_combo_model)
-        self.RoomSearchCombo.set_entry_text_column(0)
-
         # Initialise other notebooks
         self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
@@ -367,30 +357,6 @@ class NicotineFrame:
             self.on_connect()
 
         self.update_bandwidth()
-
-        """ Combo Boxes """
-
-        # Search Methods
-        self.searchroomslist = {}
-
-        # Create a list of objects of the BuddiesComboBox class
-        # This add a few methods to add/remove entries on all combobox at once
-        self.buddies_combo_entries = [
-            BuddiesComboBox(self, self.UserSearchCombo),
-            BuddiesComboBox(self, self.UserPrivateCombo),
-            BuddiesComboBox(self, self.UserInfoCombo),
-            BuddiesComboBox(self, self.UserBrowseCombo)
-        ]
-
-        # Initial filling of the buddies combobox
-        _thread.start_new_thread(self.buddies_combos_fill, ("",))
-
-        # Space after Joined Rooms is important, so it doesn't conflict
-        # with any possible real room, but if it's not translated with the space
-        # nothing awful will happen
-        joined_rooms = _("Joined Rooms ")
-        self.searchroomslist[joined_rooms] = self.room_search_combo_model.append([joined_rooms])
-        self.RoomSearchCombo.set_active_iter(self.searchroomslist[joined_rooms])
 
         """ Search """
 
@@ -2399,10 +2365,6 @@ class NicotineFrame:
         entry.grab_focus()
         text_length = len(entry.get_text())
         entry.set_position(text_length)
-
-    def buddies_combos_fill(self, nothing):
-        for widget in self.buddies_combo_entries:
-            GLib.idle_add(widget.fill)
 
     def get_status_image(self, status):
         if status == 1:

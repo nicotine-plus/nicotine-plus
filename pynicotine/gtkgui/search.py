@@ -102,15 +102,15 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.search_entry_combo_model.append([i])
+            self.frame.SearchEntryCombo.append_text(i)
 
     def on_clear_search_history(self):
 
         self.frame.SearchEntry.set_text("")
         self.frame.np.config.sections["searches"]["history"] = []
         self.frame.np.config.write_configuration()
-        self.frame.SearchEntryCombo.get_model().clear()
-        self.frame.search_entry_combo_model.append([""])
+        self.frame.SearchEntryCombo.remove_all()
+        self.frame.SearchEntryCombo.append_text("")
 
     def on_search(self):
 
@@ -208,18 +208,13 @@ class Searches(IconNotebook):
         self.frame.np.config.write_configuration()
 
         # Repopulate the combo list
-        self.frame.SearchEntryCombo.get_model().clear()
-        templist = []
+        self.frame.SearchEntryCombo.remove_all()
 
         for i in items:
             if not isinstance(i, str):
                 continue
 
-            if i not in templist:
-                templist.append(i)
-
-        for i in templist:
-            self.frame.search_entry_combo_model.append([i])
+            self.frame.SearchEntryCombo.append_text(i)
 
         if mode == "user" and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
@@ -532,39 +527,7 @@ class Search:
 
         """ Filters """
 
-        self.filter_bitrate_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.FilterBitrate.set_model(self.filter_bitrate_model)
-        self.FilterBitrate.set_entry_text_column(0)
-
-        self.filter_size_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.FilterSize.set_model(self.filter_size_model)
-        self.FilterSize.set_entry_text_column(0)
-
-        self.filter_country_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.FilterCountry.set_model(self.filter_country_model)
-        self.FilterCountry.set_entry_text_column(0)
-
-        self.filter_in_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.FilterIn.set_model(self.filter_in_model)
-        self.FilterIn.set_entry_text_column(0)
-
-        self.filter_out_model = Gtk.ListStore(GObject.TYPE_STRING)
-        self.FilterOut.set_model(self.filter_out_model)
-        self.FilterOut.set_entry_text_column(0)
-
         self.populate_filters()
-
-        self.FilterSize.clear()
-        sizecell = Gtk.CellRendererText()
-        sizecell.set_property("xalign", 1)
-        self.FilterSize.pack_start(sizecell, True)
-        self.FilterSize.add_attribute(sizecell, "text", 0)
-
-        self.FilterBitrate.clear()
-        bit_cell = Gtk.CellRendererText()
-        bit_cell.set_property("xalign", 1)
-        self.FilterBitrate.pack_start(bit_cell, True)
-        self.FilterBitrate.add_attribute(bit_cell, "text", 0)
 
         """ Popup """
 
@@ -620,10 +583,10 @@ class Search:
             self.filtersCheck.set_active(1)
 
         for i in ['0', '128', '160', '192', '256', '320']:
-            self.FilterBitrate.get_model().append([i])
+            self.FilterBitrate.append_text(i)
 
         for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
-            self.FilterSize.get_model().append([i])
+            self.FilterSize.append_text(i)
 
         s_config = self.frame.np.config.sections["searches"]
 
@@ -663,9 +626,9 @@ class Search:
 
         if not match:
             if list:
-                model.append([text])
+                combobox.append_text(text)
             else:
-                model.prepend([text])
+                combobox.prepend_text(text)
 
     def add_user_results(self, msg, user, country):
 

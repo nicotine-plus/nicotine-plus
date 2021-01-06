@@ -22,7 +22,6 @@
 
 import os
 
-from gi.repository import GObject
 from gi.repository import Gtk
 
 
@@ -50,12 +49,10 @@ def combo_box_dialog(parent, title, message, default_text="",
 
     self.gotoption = option
 
-    self.combo_list = Gtk.ListStore(GObject.TYPE_STRING)
-    self.combo = Gtk.ComboBox.new_with_model_and_entry(model=self.combo_list)
-    self.combo.set_entry_text_column(0)
+    self.combo = Gtk.ComboBoxText.new_with_entry()
 
     for i in droplist:
-        self.combo_list.append([i])
+        self.combo.append_text(i)
 
     self.combo.get_child().connect("activate", activate, self)
     self.combo.get_child().set_text(default_text)
