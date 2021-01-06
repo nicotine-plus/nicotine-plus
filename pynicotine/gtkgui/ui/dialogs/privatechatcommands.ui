@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="AboutPrivateChatCommands">
+  <object class="GtkDialog" id="AboutPrivateChatCommandsDialog">
     <property name="title" translatable="yes">About Private Chat Commands</property>
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
     <property name="default-width">650</property>
     <property name="default-height">500</property>
+    <signal name="delete-event" handler="on_hide" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="visible">1</property>

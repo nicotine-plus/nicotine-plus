@@ -1268,31 +1268,28 @@ class NicotineFrame:
     # Help
 
     def on_about_chatroom_commands(self, *args):
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "chatroomcommands.ui"))
 
-        self.about_chatroom_commands = builder.get_object("AboutChatRoomCommands")
-        self.about_chatroom_commands.set_transient_for(self.MainWindow)
-        self.about_chatroom_commands.show()
+        if not hasattr(self, "AboutChatRoomCommandsDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "chatroomcommands.ui"))
+            self.AboutChatRoomCommandsDialog.set_transient_for(self.MainWindow)
+
+        self.AboutChatRoomCommandsDialog.show()
 
     def on_about_private_chat_commands(self, *args):
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "privatechatcommands.ui"))
 
-        self.about_private_chat_commands = builder.get_object("AboutPrivateChatCommands")
-        self.about_private_chat_commands.set_transient_for(self.MainWindow)
-        self.about_private_chat_commands.show()
+        if not hasattr(self, "AboutPrivateChatCommandsDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "privatechatcommands.ui"))
+            self.AboutPrivateChatCommandsDialog.set_transient_for(self.MainWindow)
+
+        self.AboutPrivateChatCommandsDialog.show()
 
     def on_about_filters(self, *args):
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "searchfilters.ui"))
 
-        self.about_search_filters = builder.get_object("AboutSearchFilters")
-        self.about_search_filters.set_transient_for(self.MainWindow)
-        self.about_search_filters.show()
+        if not hasattr(self, "AboutSearchFiltersDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "searchfilters.ui"))
+            self.AboutSearchFiltersDialog.set_transient_for(self.MainWindow)
+
+        self.AboutSearchFiltersDialog.show()
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
@@ -1350,26 +1347,25 @@ class NicotineFrame:
         open_uri(url, self.MainWindow)
 
     def on_about(self, *args):
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
 
-        self.about = builder.get_object("About")
+        if not hasattr(self, "AboutDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
 
-        # Remove non-functional close button added by GTK
-        buttons = self.about.get_action_area().get_children()
-        if buttons:
-            buttons[-1].destroy()
+            # Remove non-functional close button added by GTK
+            buttons = self.AboutDialog.get_action_area().get_children()
+            if buttons:
+                buttons[-1].destroy()
 
-        # Override link handler with our own
-        self.about.connect("activate-link", self.on_about_uri)
+            # Override link handler with our own
+            self.AboutDialog.connect("activate-link", self.on_about_uri)
 
-        if self.images["n"]:
-            self.about.set_logo(self.images["n"])
+            if self.images["n"]:
+                self.AboutDialog.set_logo(self.images["n"])
 
-        self.about.set_transient_for(self.MainWindow)
-        self.about.set_version(version)
-        self.about.show()
+            self.AboutDialog.set_transient_for(self.MainWindow)
+            self.AboutDialog.set_version(version)
+
+        self.AboutDialog.show()
 
     def on_about_uri(self, widget, uri):
         open_uri(uri, self.MainWindow)
@@ -2783,6 +2779,10 @@ class NicotineFrame:
                 callback=self.on_quit_response
             )
 
+        return True
+
+    def on_hide(self, widget, event):
+        widget.hide()
         return True
 
     def on_quit_response(self, dialog, response, data):
