@@ -116,6 +116,7 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
+                    <property name="margin-end">10</property>
                     <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
                     <signal name="activate" handler="on_search" swapped="no"/>
                   </object>
@@ -138,6 +139,7 @@
                   <object class="GtkToggleButton" id="ExpandButton">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="active">1</property>
                     <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                     <signal name="clicked" handler="on_expand" swapped="no"/>
                     <child>
@@ -155,6 +157,7 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="vexpand">1</property>
+                <property name="width-request">550</property>
                 <child>
                   <object class="GtkTreeView" id="FolderTreeView">
                     <property name="visible">1</property>
