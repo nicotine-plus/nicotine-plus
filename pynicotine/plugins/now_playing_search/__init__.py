@@ -28,7 +28,7 @@ class Plugin(BasePlugin):
 
     def get_np(self, text):
         self.np_format = text
-        return self.frame.now_playing.get_np(get_format=self.get_format)
+        return self.frame.np.now_playing.get_np(get_format=self.get_format)
 
     def get_format(self):
         return self.np_format

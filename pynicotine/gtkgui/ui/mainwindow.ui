@@ -70,7 +70,7 @@
         </child>
         <child>
           <object class="GtkComboBoxText" id="RoomSearchCombo">
-            <property name="visible">1</property>
+            <property name="visible">0</property>
             <property name="has-entry">1</property>
             <property name="active-id">joined</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
@@ -88,7 +88,7 @@
         </child>
         <child>
           <object class="GtkComboBoxText" id="UserSearchCombo">
-            <property name="visible">1</property>
+            <property name="visible">0</property>
             <property name="has-entry">1</property>
             <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">

@@ -87,17 +87,7 @@ class Plugin(BasePlugin):
         """ Broadcast Now Playing in selected rooms """
 
         for room in self.settings['rooms']:
-            try:
-                playing = self.frame.now_playing.get_np()
-
-            except AttributeError:
-                # Legacy support
-
-                if not hasattr(self.frame, "NowPlaying"):
-                    from pynicotine.gtkgui.nowplaying import NowPlaying
-                    self.frame.NowPlaying = NowPlaying(self.frame)
-
-                playing = self.frame.NowPlaying.GetNP(None)
+            playing = self.frame.np.now_playing.get_np()
 
             if playing:
                 self.saypublic(room, playing)

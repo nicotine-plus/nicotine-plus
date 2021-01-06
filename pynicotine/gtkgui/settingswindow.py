@@ -2858,7 +2858,7 @@ class NowPlayingFrame(BuildFrame):
         # Suppy the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
             "clicked",
-            self.p.frame.now_playing.display_now_playing,
+            self.p.frame.np.now_playing.display_now_playing,
             self.set_now_playing_example,  # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text

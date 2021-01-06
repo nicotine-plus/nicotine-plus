@@ -1381,7 +1381,7 @@ class ChatRoom:
         self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
 
     def display_now_playing(self):
-        self.frame.now_playing.display_now_playing(callback=self.say)
+        self.frame.np.now_playing.display_now_playing(callback=self.say)
 
     def user_joined_room(self, username, userdata):
 
