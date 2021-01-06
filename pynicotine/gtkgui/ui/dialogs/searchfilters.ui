@@ -53,6 +53,11 @@ You can filter by:
             <property name="selectable">1</property>
           </object>
         </child>
+        <child internal-child="action_area">
+          <object class="GtkBox">
+            <property name="visible">0</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>

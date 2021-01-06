@@ -20,6 +20,7 @@
           <object class="GtkPaned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="width_request">250</property>
@@ -67,11 +68,6 @@
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
@@ -80,19 +76,22 @@
             <property name="spacing">5</property>
             <property name="margin_top">10</property>
             <child>
-              <object class="GtkButton" id="BackupButton">
-                <property name="label" translatable="yes">Back Up Config File</property>
+              <object class="GtkButtonBox">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="receives_default">False</property>
-                <signal name="clicked" handler="on_backup_config" swapped="no"/>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkButton" id="BackupButton">
+                    <property name="label" translatable="yes">Back Up Config File</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="receives_default">False</property>
+                    <signal name="clicked" handler="on_backup_config" swapped="no"/>
+                  </object>
+                </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButtonBox">
@@ -108,11 +107,6 @@
                     <property name="receives_default">False</property>
                     <signal name="clicked" handler="on_apply" swapped="no"/>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="CancelButton">
@@ -123,11 +117,6 @@
                     <property name="receives_default">False</property>
                     <signal name="clicked" handler="on_cancel" swapped="no"/>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="OkButton">
@@ -138,26 +127,15 @@
                     <property name="receives_default">False</property>
                     <signal name="clicked" handler="on_ok" swapped="no"/>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="pack-type">end</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkBox">
+            <property name="visible">0</property>
+          </object>
         </child>
       </object>
     </child>
