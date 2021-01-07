@@ -467,15 +467,9 @@ class DownloadsFrame(BuildFrame):
         self.filtersiters = {}
         self.filterlist.clear()
 
-        default_filters = [
-            ["desktop.ini", 1],
-            ["folder.jpg", 1],
-            ["*.url", 1],
-            ["thumbs.db", 1],
-            ["albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg", 0]
-        ]
+        defaults = self.frame.np.config.defaults
 
-        for dfilter in default_filters:
+        for dfilter in defaults["transfers"]["downloadfilters"]:
             dfilter, escaped = dfilter
             self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
@@ -1393,13 +1387,16 @@ class TTSFrame(BuildFrame):
         }
 
     def on_default_private(self, widget):
-        self.PrivateMessage.set_text("%(user)s told you.. %(message)s")
+        defaults = self.frame.np.config.defaults
+        self.PrivateMessage.set_text(defaults["ui"]["speechprivate"])
 
     def on_default_rooms(self, widget):
-        self.RoomMessage.set_text("In %(room)s, %(user)s said %(message)s")
+        defaults = self.frame.np.config.defaults
+        self.RoomMessage.set_text(defaults["ui"]["speechrooms"])
 
     def on_default_tts(self, widget):
-        self.TTSCommand.get_child().set_text("flite -t \"%s\"")
+        defaults = self.frame.np.config.defaults
+        self.TTSCommand.get_child().set_text(defaults["ui"]["speechcommand"])
 
     def on_text_to_speech_toggled(self, widget):
 
@@ -2496,17 +2493,9 @@ class AutoReplaceFrame(BuildFrame):
     def on_defaults(self, widget):
 
         self.replacelist.clear()
-        defaults = {
-            "teh ": "the ",
-            "taht ": "that ",
-            "tihng": "thing",
-            "youre": "you're",
-            "jsut": "just",
-            "thier": "their",
-            "tihs": "this"
-        }
+        defaults = self.frame.np.config.defaults
 
-        for word, replacement in defaults.items():
+        for word, replacement in defaults["words"]["autoreplaced"].items():
             self.replacelist.append([word, replacement])
 
 
