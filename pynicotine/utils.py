@@ -405,18 +405,18 @@ def cmp(a, b):
 
 def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
-    oldumask = os.umask(0o077)
-    if not os.path.exists(logsdir):
-        os.makedirs(logsdir)
-
     try:
+        oldumask = os.umask(0o077)
+        if not os.path.exists(logsdir):
+            os.makedirs(logsdir)
+
         with open(os.path.join(logsdir, clean_file(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
             os.umask(oldumask)
 
             text = "%s %s\n" % (time.strftime(timestamp_format), msg)
             logfile.write(text.encode('utf-8', 'replace'))
 
-    except IOError as error:
+    except Exception as error:
         print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
 
 
