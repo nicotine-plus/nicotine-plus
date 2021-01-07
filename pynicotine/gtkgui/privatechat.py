@@ -491,7 +491,8 @@ class PrivateChat:
                     "error": e
                 })
 
-        self.on_clear_messages(dialog)
+            self.on_clear_messages(dialog)
+
         dialog.destroy()
 
     def on_delete_chat_log(self, widget):

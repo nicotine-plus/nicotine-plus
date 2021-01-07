@@ -1967,8 +1967,9 @@ class ChatRoom:
                     "error": e
                 })
 
-        self.on_clear_messages(dialog)
-        self.on_clear_activity_log(dialog)
+            self.on_clear_messages(dialog)
+            self.on_clear_activity_log(dialog)
+
         dialog.destroy()
 
     def on_delete_room_log(self, widget):
