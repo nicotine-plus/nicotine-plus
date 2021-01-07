@@ -116,6 +116,12 @@
               <object class="GtkComboBoxText" id="UploadsAllowed">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <items>
+                  <item translatable="yes">No one</item>
+                  <item translatable="yes">Everyone</item>
+                  <item translatable="yes">Users in list</item>
+                  <item translatable="yes">Trusted Users</item>
+                </items>
               </object>
               <packing>
                 <property name="left_attach">1</property>

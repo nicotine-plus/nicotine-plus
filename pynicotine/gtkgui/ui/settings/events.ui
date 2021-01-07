@@ -103,6 +103,18 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="has_entry">True</property>
+            <items>
+              <item>xdg-open $</item>
+              <item>explorer $</item>
+              <item>emelfm2 -1 $</item>
+              <item>gentoo -1 $</item>
+              <item>konqueror $</item>
+              <item>krusader --left $</item>
+              <item>nautilus --no-desktop $</item>
+              <item>rox $</item>
+              <item>thunar $</item>
+              <item>xterm -e mc $</item>
+            </items>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -128,6 +140,14 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="has_entry">True</property>
+            <items>
+              <item>xdg-open $</item>
+              <item>amarok -a $</item>
+              <item>audacious -e $</item>
+              <item>exaile $</item>
+              <item>rhythmbox $</item>
+              <item>xmms2 add -f $</item>
+            </items>
           </object>
           <packing>
             <property name="expand">False</property>

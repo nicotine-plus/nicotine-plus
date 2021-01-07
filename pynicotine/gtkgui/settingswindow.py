@@ -218,16 +218,6 @@ class DownloadsFrame(BuildFrame):
             }
         }
 
-        self.alloweduserslist = [
-            _("No one"),
-            _("Everyone"),
-            _("Users in list"),
-            _("Trusted Users")
-        ]
-
-        for item in self.alloweduserslist:
-            self.UploadsAllowed.append_text(item)
-
         self.filterlist = Gtk.ListStore(
             GObject.TYPE_STRING,
             GObject.TYPE_BOOLEAN
@@ -1053,28 +1043,8 @@ class UserinfoFrame(BuildFrame):
             }
         }
 
-        def update_image_preview(chooser):
-            path = chooser.get_preview_filename()
-
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
-
-                maxwidth, maxheight = 300.0, 700.0
-                width, height = pixbuf.get_width(), pixbuf.get_height()
-                scale = min(maxwidth / width, maxheight / height)
-
-                if scale < 1:
-                    width, height = int(width * scale), int(height * scale)
-                    pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
-
-                preview.set_from_pixbuf(pixbuf)
-                chooser.set_preview_widget_active(True)
-            except Exception:
-                chooser.set_preview_widget_active(False)
-
-        preview = Gtk.Image()
-        self.ImageChooser.set_preview_widget(preview)
-        self.ImageChooser.connect('update-preview', update_image_preview)
+        self.preview = Gtk.Image()
+        self.ImageChooser.set_preview_widget(self.preview)
 
     def set_settings(self, config):
 
@@ -1109,6 +1079,26 @@ class UserinfoFrame(BuildFrame):
                 "pic": pic
             }
         }
+
+    def on_update_image_preview(self, chooser):
+        path = chooser.get_preview_filename()
+
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+
+            maxwidth, maxheight = 300.0, 700.0
+            width, height = pixbuf.get_width(), pixbuf.get_height()
+            scale = min(maxwidth / width, maxheight / height)
+
+            if scale < 1:
+                width, height = int(width * scale), int(height * scale)
+                pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
+
+            self.preview.set_from_pixbuf(pixbuf)
+            chooser.set_preview_widget_active(True)
+
+        except Exception:
+            chooser.set_preview_widget_active(False)
 
     def on_default_image(self, widget):
         self.ImageChooser.unselect_all()
@@ -1392,10 +1382,6 @@ class TTSFrame(BuildFrame):
         self.p = parent
 
         BuildFrame.__init__(self, "tts")
-
-        # Combobox for text-to-speech readers
-        for executable in ["echo $ | festival --tts", "flite -t $"]:
-            self.TTSCommand.append_text(executable)
 
         self.options = {
             "ui": {
@@ -2121,31 +2107,6 @@ class EventsFrame(BuildFrame):
 
         BuildFrame.__init__(self, "events")
 
-        # Combobox for file manager
-        for executable in [
-            "xdg-open $",
-            "explorer $",
-            "emelfm2 -1 $",
-            "gentoo -1 $",
-            "konqueror $",
-            "krusader --left $",
-            "nautilus --no-desktop $",
-            "rox $",
-            "thunar $",
-            "xterm -e mc $"
-        ]:
-            self.FileManagerCombo.append_text(executable)
-
-        # Combobox for audio players
-        for executable in [
-            "amarok -a $",
-            "audacious -e $",
-            "exaile $",
-            "rhythmbox $",
-            "xmms2 add -f $"
-        ]:
-            self.audioPlayerCombo.append_text(executable)
-
         self.options = {
             "transfers": {
                 "afterfinish": self.AfterDownload,
@@ -2222,23 +2183,6 @@ class UrlCatchFrame(BuildFrame):
         renderers = cols["handler"].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
-
-        # Handler combobox
-        for item in [
-            "xdg-open $",
-            "firefox $",
-            "firefox -a firefox --remote \"openURL($,new-tab)\"",
-            "opera $",
-            "links -g $",
-            "dillo $",
-            "konqueror $",
-            "\"c:\\Program Files\\Mozilla Firefox\\Firefox.exe\" $"
-        ]:
-            self.Handler.append_text(item)
-
-        # Protocol combobox
-        for item in ["http", "https", "ftp", "sftp", "news", "irc"]:
-            self.ProtocolCombo.append_text(item)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
         store = treeview.get_model()
@@ -2370,10 +2314,6 @@ class CensorFrame(BuildFrame):
         cols["pattern"].set_sort_column_id(0)
 
         self.CensorList.set_model(self.censor_list_model)
-
-        # Combobox for the replacement letter
-        for letter in ["#", "$", "!", " ", "x", "*"]:
-            self.CensorReplaceCombo.append_text(letter)
 
         renderers = cols["pattern"].get_cells()
         for render in renderers:
@@ -2594,16 +2534,6 @@ class CompletionFrame(BuildFrame):
                 "spellcheck": self.SpellCheck
             }
         }
-
-        self.CompletionTabCheck.connect("toggled", self.on_completion_dropdown_check)
-        self.CompletionCycleCheck.connect("toggled", self.on_completion_cycle_check)
-        self.CompletionDropdownCheck.connect("toggled", self.on_completion_dropdown_check)
-        self.CharactersCompletion.connect("changed", self.on_completion_changed)
-        self.CompleteAliasesCheck.connect("toggled", self.on_completion_changed)
-        self.CompleteCommandsCheck.connect("toggled", self.on_completion_changed)
-        self.CompleteUsersInRoomsCheck.connect("toggled", self.on_completion_changed)
-        self.CompleteBuddiesCheck.connect("toggled", self.on_completion_changed)
-        self.CompleteRoomNamesCheck.connect("toggled", self.on_completion_changed)
 
     def set_settings(self, config):
         self.needcompletion = 0

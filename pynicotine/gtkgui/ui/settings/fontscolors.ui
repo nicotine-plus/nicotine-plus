@@ -97,8 +97,8 @@
             <property name="width_request">200</property>
             <items>
               <item translatable="yes">&lt;None&gt;</item>
-              <item translatable="yes">,</item>
-              <item translatable="yes">.</item>
+              <item>,</item>
+              <item>.</item>
               <item translatable="yes">&lt;space&gt;</item>
             </items>
           </object>

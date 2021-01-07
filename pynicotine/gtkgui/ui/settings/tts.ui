@@ -50,6 +50,10 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="has_entry">True</property>
+                <items>
+                  <item>echo $ | festival --tts</item>
+                  <item>flite -t $</item>
+                </items>
                 <child internal-child="entry">
                   <object class="GtkEntry">
                     <property name="can_focus">True</property>

@@ -54,6 +54,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_dropdown_check"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -68,6 +69,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_cycle_check"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -109,6 +111,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -123,6 +126,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -137,6 +141,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -151,6 +156,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -165,6 +171,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -206,6 +213,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="on_completion_dropdown_check"/>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -235,6 +243,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_CharactersCompletion</property>
+                <signal name="changed" handler="on_completion_changed"/>
               </object>
               <packing>
                 <property name="expand">False</property>

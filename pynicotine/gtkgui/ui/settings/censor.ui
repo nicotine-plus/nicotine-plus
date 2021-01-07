@@ -57,6 +57,14 @@
           <object class="GtkComboBoxText" id="CensorReplaceCombo">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <items>
+              <item>#</item>
+              <item>$</item>
+              <item>!</item>
+              <item> </item>
+              <item>x</item>
+              <item>*</item>
+            </items>
           </object>
           <packing>
             <property name="expand">False</property>

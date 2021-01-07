@@ -213,6 +213,14 @@ Protocols handlers: </property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="has_entry">True</property>
+            <items>
+              <item>http</item>
+              <item>https</item>
+              <item>ftp</item>
+              <item>sftp</item>
+              <item>news</item>
+              <item>irc</item>
+            </items>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="can_focus">True</property>
@@ -230,6 +238,16 @@ Protocols handlers: </property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="has_entry">True</property>
+            <items>
+              <item>xdg-open $</item>
+              <item>firefox $</item>
+              <item>firefox -a firefox --remote "openURL($,new-tab)"</item>
+              <item>opera $</item>
+              <item>links -g $</item>
+              <item>dillo $</item>
+              <item>konqueror $</item>
+              <item>"c:\Program Files\Mozilla Firefox\Firefox.exe" $</item>
+            </items>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="can_focus">True</property>
