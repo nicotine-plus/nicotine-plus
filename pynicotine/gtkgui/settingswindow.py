@@ -1568,13 +1568,17 @@ class IconsFrame(BuildFrame):
         }
 
 
-class ColoursFrame(BuildFrame):
+class FontsColorsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        BuildFrame.__init__(self, "colours")
+        BuildFrame.__init__(self, "fontscolors")
+
+        # Combobox for the decimal separator
+        for item in ["<None>", ",", ".", "<space>"]:
+            self.DecimalSep.append_text(item)
 
         # Combobox for user names style
         for item in ("bold", "italic", "underline", "normal"):
@@ -1583,6 +1587,13 @@ class ColoursFrame(BuildFrame):
         self.needcolors = 0
         self.options = {
             "ui": {
+                "chatfont": self.SelectChatFont,
+                "listfont": self.SelectListFont,
+                "searchfont": self.SelectSearchFont,
+                "transfersfont": self.SelectTransfersFont,
+                "browserfont": self.SelectBrowserFont,
+                "decimalsep": self.DecimalSep,
+
                 "chatlocal": self.Local,
                 "chatremote": self.Remote,
                 "chatme": self.Me,
@@ -1596,7 +1607,7 @@ class ColoursFrame(BuildFrame):
                 "useroffline": self.OfflineColor,
                 "usernamehotspots": self.UsernameHotspots,
                 "usernamestyle": self.UsernameStyle,
-                "showaway": self.DisplayAwayColours,
+                "showaway": self.DisplayAwayColors,
                 "urlcolor": self.URL,
                 "tab_default": self.DefaultTab,
                 "tab_hilite": self.HighlightTab,
@@ -1624,6 +1635,19 @@ class ColoursFrame(BuildFrame):
                 "tab_changed": self.PickChangedTab
             }
         }
+
+        # Fonts
+        self.SelectChatFont.connect("font-set", self.on_fonts_changed)
+        self.SelectListFont.connect("font-set", self.on_fonts_changed)
+        self.SelectSearchFont.connect("font-set", self.on_fonts_changed)
+        self.SelectTransfersFont.connect("font-set", self.on_fonts_changed)
+        self.SelectBrowserFont.connect("font-set", self.on_fonts_changed)
+
+        self.DefaultFont.connect("clicked", self.on_default_font)
+        self.DefaultListFont.connect("clicked", self.on_default_list_font)
+        self.DefaultSearchFont.connect("clicked", self.on_default_search_font)
+        self.DefaultTransfersFont.connect("clicked", self.on_default_transfers_font)
+        self.DefaultBrowserFont.connect("clicked", self.on_default_browser_font)
 
         # Color Buttons
         self.PickRemote.connect("color-set", self.on_color_set, self.Remote)
@@ -1687,22 +1711,29 @@ class ColoursFrame(BuildFrame):
         self.DefaultChangedTab.connect("clicked", self.on_default_color, self.ChangedTab)
         self.ClearDefaultTab.connect("clicked", self.on_default_color, self.DefaultTab)
 
-        self.DefaultColours.connect("clicked", self.on_default_colors)
-        self.ClearAllColours.connect("clicked", self.on_clear_colors)
-        self.DisplayAwayColours.connect("toggled", self.on_toggled_away_colors)
+        self.DefaultColors.connect("clicked", self.on_default_colors)
+        self.ClearAllColors.connect("clicked", self.on_clear_colors)
+        self.DisplayAwayColors.connect("toggled", self.on_toggled_away_colors)
 
     def set_settings(self, config):
 
         self.p.set_widgets_data(config, self.options)
 
         self.update_color_buttons(config)
-        self.on_toggled_away_colors(self.DisplayAwayColours)
+        self.on_toggled_away_colors(self.DisplayAwayColors)
         self.needcolors = 0
 
     def get_settings(self):
 
         return {
             "ui": {
+                "decimalsep": self.DecimalSep.get_active_text(),
+                "chatfont": self.SelectChatFont.get_font(),
+                "listfont": self.SelectListFont.get_font(),
+                "searchfont": self.SelectSearchFont.get_font(),
+                "transfersfont": self.SelectTransfersFont.get_font(),
+                "browserfont": self.SelectBrowserFont.get_font(),
+
                 "chatlocal": self.Local.get_text(),
                 "chatremote": self.Remote.get_text(),
                 "chatme": self.Me.get_text(),
@@ -1712,7 +1743,7 @@ class ColoursFrame(BuildFrame):
                 "inputcolor": self.InputColor.get_text(),
                 "search": self.Immediate.get_text(),
                 "searchq": self.Queue.get_text(),
-                "showaway": self.DisplayAwayColours.get_active(),
+                "showaway": self.DisplayAwayColors.get_active(),
                 "useraway": self.AwayColor.get_text(),
                 "useronline": self.OnlineColor.get_text(),
                 "useroffline": self.OfflineColor.get_text(),
@@ -1724,6 +1755,33 @@ class ColoursFrame(BuildFrame):
                 "dark_mode": self.DarkMode.get_active()
             }
         }
+
+    """ Fonts """
+
+    def on_default_font(self, widget):
+        self.SelectChatFont.set_font_name("")
+        self.needcolors = 1
+
+    def on_default_browser_font(self, widget):
+        self.SelectBrowserFont.set_font_name("")
+        self.needcolors = 1
+
+    def on_default_list_font(self, widget):
+        self.SelectListFont.set_font_name("")
+        self.needcolors = 1
+
+    def on_default_search_font(self, widget):
+        self.SelectSearchFont.set_font_name("")
+        self.needcolors = 1
+
+    def on_default_transfers_font(self, widget):
+        self.SelectTransfersFont.set_font_name("")
+        self.needcolors = 1
+
+    def on_fonts_changed(self, widget):
+        self.needcolors = 1
+
+    """ Colors """
 
     def update_color_button(self, config, color_id):
 
@@ -1790,7 +1848,7 @@ class ColoursFrame(BuildFrame):
 
         sensitive = widget.get_active()
 
-        self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColours.get_active())
+        self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColors.get_active())
         self.OnlineColor.set_sensitive(sensitive)
         self.OfflineColor.set_sensitive(sensitive)
 
@@ -1941,89 +1999,6 @@ class NotebookFrame(BuildFrame):
                 "tab_status_icons": self.TabStatusIcons.get_active()
             }
         }
-
-
-class FontsFrame(BuildFrame):
-
-    def __init__(self, parent):
-
-        self.p = parent
-
-        BuildFrame.__init__(self, "fonts")
-
-        # Combobox for the decimal separator
-        for item in ["<None>", ",", ".", "<space>"]:
-            self.DecimalSep.append_text(item)
-
-        self.options = {
-            "ui": {
-                "chatfont": self.SelectChatFont,
-                "listfont": self.SelectListFont,
-                "searchfont": self.SelectSearchFont,
-                "transfersfont": self.SelectTransfersFont,
-                "browserfont": self.SelectBrowserFont,
-                "decimalsep": self.DecimalSep
-            }
-        }
-
-        self.DefaultFont.connect("clicked", self.on_default_font)
-        self.SelectChatFont.connect("font-set", self.fonts_colors_changed)
-
-        self.DefaultListFont.connect("clicked", self.on_default_list_font)
-        self.SelectListFont.connect("font-set", self.fonts_colors_changed)
-
-        self.DefaultSearchFont.connect("clicked", self.on_default_search_font)
-        self.SelectSearchFont.connect("font-set", self.fonts_colors_changed)
-
-        self.DefaultTransfersFont.connect("clicked", self.on_default_transfers_font)
-        self.SelectTransfersFont.connect("font-set", self.fonts_colors_changed)
-
-        self.DefaultBrowserFont.connect("clicked", self.on_default_browser_font)
-        self.SelectBrowserFont.connect("font-set", self.fonts_colors_changed)
-
-        self.needcolors = 0
-
-    def set_settings(self, config):
-
-        self.needcolors = 0
-
-        self.p.set_widgets_data(config, self.options)
-
-    def get_settings(self):
-
-        return {
-            "ui": {
-                "decimalsep": self.DecimalSep.get_active_text(),
-                "chatfont": self.SelectChatFont.get_font(),
-                "listfont": self.SelectListFont.get_font(),
-                "searchfont": self.SelectSearchFont.get_font(),
-                "transfersfont": self.SelectTransfersFont.get_font(),
-                "browserfont": self.SelectBrowserFont.get_font()
-            }
-        }
-
-    def on_default_font(self, widget):
-        self.SelectChatFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_browser_font(self, widget):
-        self.SelectBrowserFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_list_font(self, widget):
-        self.SelectListFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_search_font(self, widget):
-        self.SelectSearchFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_transfers_font(self, widget):
-        self.SelectTransfersFont.set_font_name("")
-        self.needcolors = 1
-
-    def fonts_colors_changed(self, widget):
-        self.needcolors = 1
 
 
 class LogFrame(BuildFrame):
@@ -3120,7 +3095,7 @@ class NotificationsFrame(BuildFrame):
         self.options = {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle,
-                "notification_tab_colors": self.NotificationTabColours,
+                "notification_tab_colors": self.NotificationTabColors,
                 "notification_tab_icons": self.NotificationTabIcons,
                 "notification_popup_sound": self.NotificationPopupSound,
                 "notification_popup_file": self.NotificationPopupFile,
@@ -3140,7 +3115,7 @@ class NotificationsFrame(BuildFrame):
         return {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_tab_colors": self.NotificationTabColours.get_active(),
+                "notification_tab_colors": self.NotificationTabColors.get_active(),
                 "notification_tab_icons": self.NotificationTabIcons.get_active(),
                 "notification_popup_sound": self.NotificationPopupSound.get_active(),
                 "notification_popup_file": self.NotificationPopupFile.get_active(),
@@ -3338,8 +3313,7 @@ class Settings:
         self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
 
         self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
-        self.tree["Fonts"] = model.append(row, [_("Fonts"), "Fonts"])
-        self.tree["Colours"] = model.append(row, [_("Colors"), "Colours"])
+        self.tree["Fonts & Colors"] = model.append(row, [_("Fonts & Colors"), "Fonts & Colors"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
         self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
 
@@ -3368,8 +3342,7 @@ class Settings:
         p["Events"] = EventsFrame(self)
         p["Geo Block"] = GeoBlockFrame(self)
 
-        p["Fonts"] = FontsFrame(self)
-        p["Colours"] = ColoursFrame(self)
+        p["Fonts & Colors"] = FontsColorsFrame(self)
         p["Icons"] = IconsFrame(self)
         p["Notebook Tabs"] = NotebookFrame(self)
 
@@ -3610,7 +3583,7 @@ class Settings:
                     config[key].update(data)
 
             return self.pages["Server"].get_need_portmap(), self.pages["Shares"].get_need_rescan(), \
-                (self.pages["Colours"].needcolors or self.pages["Fonts"].needcolors), self.pages["Completion"].needcompletion, config
+                self.pages["Fonts & Colors"].needcolors, self.pages["Completion"].needcompletion, config
         except UserWarning:
             return None
 

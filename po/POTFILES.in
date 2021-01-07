@@ -47,6 +47,7 @@ pynicotine/upnp/portmapper.py
 [type: gettext/glade] pynicotine/gtkgui/ui/dialogs/privatechatcommands.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/dialogs/roomwall.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/dialogs/searchfilters.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/dialogs/statistics.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/dialogs/wishlist.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/menus/mainmenu.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/menus/menubar.ui
@@ -54,11 +55,10 @@ pynicotine/upnp/portmapper.py
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/away.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/ban.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/censor.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/settings/colours.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/completion.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/downloads.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/events.ui
-[type: gettext/glade] pynicotine/gtkgui/ui/settings/fonts.ui
+[type: gettext/glade] pynicotine/gtkgui/ui/settings/fontscolors.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/geoblock.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/icons.ui
 [type: gettext/glade] pynicotine/gtkgui/ui/settings/ignore.ui

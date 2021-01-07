@@ -55,7 +55,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkCheckButton" id="NotificationTabColours">
+          <object class="GtkCheckButton" id="NotificationTabColors">
             <property name="label" translatable="yes">Notification changes the tab's text color</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
