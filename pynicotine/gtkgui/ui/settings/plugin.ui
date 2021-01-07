@@ -236,7 +236,7 @@
                               <object class="GtkImage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="icon_name">applications-system-symbolic</property>
+                                <property name="icon_name">emblem-system-symbolic</property>
                               </object>
                             </child>
                             <child>

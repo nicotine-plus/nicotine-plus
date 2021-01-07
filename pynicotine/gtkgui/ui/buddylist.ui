@@ -62,7 +62,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
             <style>

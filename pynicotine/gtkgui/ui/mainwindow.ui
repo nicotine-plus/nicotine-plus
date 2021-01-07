@@ -21,7 +21,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -136,7 +136,7 @@
                 <child>
                   <object class="GtkImage">
                     <property name="visible">1</property>
-                    <property name="icon-name">text-editor-symbolic</property>
+                    <property name="icon-name">document-edit-symbolic</property>
                   </object>
                 </child>
                 <child>
@@ -159,7 +159,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -338,7 +338,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -517,7 +517,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -581,7 +581,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -645,7 +645,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -741,7 +741,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -801,7 +801,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">applications-system-symbolic</property>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
           </object>
@@ -1633,7 +1633,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">network-wired-symbolic</property>
+                <property name="icon-name">network-wireless-symbolic</property>
                 <property name="margin-start">20</property>
               </object>
             </child>
@@ -1650,7 +1650,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">network-receive-symbolic</property>
+                <property name="icon-name">go-down-symbolic</property>
                 <property name="margin-start">20</property>
               </object>
             </child>
@@ -1666,7 +1666,7 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="icon-name">network-transmit-symbolic</property>
+                <property name="icon-name">go-up-symbolic</property>
                 <property name="margin-start">20</property>
               </object>
             </child>
