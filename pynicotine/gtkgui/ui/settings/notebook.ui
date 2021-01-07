@@ -92,10 +92,11 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="TabReorderable">
-            <property name="label" translatable="yes">Tabs can be repositioned</property>
+            <property name="label" translatable="yes">Tabs can be reordered</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">When disabled, tabs are locked in their current order.</property>
             <property name="draw_indicator">True</property>
           </object>
           <packing>
@@ -106,7 +107,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="TabStatusIcons">
-            <property name="label" translatable="yes">Show user status icons instead of status text</property>
+            <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -135,7 +136,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">&lt;b&gt;Tab Positioning&lt;/b&gt;</property>
+            <property name="label" translatable="yes">&lt;b&gt;Tab Bar Positioning&lt;/b&gt;</property>
             <property name="halign">start</property>
             <property name="use_markup">True</property>
           </object>
@@ -155,7 +156,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Main</property>
+                <property name="label" translatable="yes">Main:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -179,7 +180,7 @@
               <object class="GtkLabel" id="MainAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
@@ -219,7 +220,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Chat rooms</property>
+                <property name="label" translatable="yes">Chat rooms:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -243,7 +244,7 @@
               <object class="GtkLabel" id="ChatRoomsAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
@@ -282,7 +283,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Private chat</property>
+                <property name="label" translatable="yes">Private chat:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -306,7 +307,7 @@
               <object class="GtkLabel" id="PrivateChatAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
@@ -345,7 +346,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Search</property>
+                <property name="label" translatable="yes">Search:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -369,7 +370,7 @@
               <object class="GtkLabel" id="SearchAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
@@ -409,7 +410,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">User info</property>
+                <property name="label" translatable="yes">User info:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -433,7 +434,7 @@
               <object class="GtkLabel" id="UserInfoAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
@@ -472,7 +473,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">User browse</property>
+                <property name="label" translatable="yes">User browse:</property>
                 <property name="width_chars">20</property>
               </object>
               <packing>
@@ -496,7 +497,7 @@
               <object class="GtkLabel" id="UserBrowseAngleLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Label Angle:</property>
+                <property name="label" translatable="yes">Label angle:</property>
                 <property name="width_chars">12</property>
               </object>
               <packing>
