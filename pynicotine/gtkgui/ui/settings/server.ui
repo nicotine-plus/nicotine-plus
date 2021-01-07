@@ -43,7 +43,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="xalign">0</property>
-        <property name="label" translatable="yes">You can create a new account by entering the desired details below. Please keep in mind that some usernames may already be taken. If you're unable to connect with your selected username, choose another one.</property>
+        <property name="label" translatable="yes">You can create a new account by entering your desired details below. Please keep in mind that some usernames may already be taken. If you're unable to connect with your selected username, try choosing another one. If connecting remains a problem, verify the settings below and those of your internet connection.</property>
         <property name="wrap">True</property>
       </object>
       <packing>
@@ -135,7 +135,7 @@
             </child>
             <child>
               <object class="GtkButton" id="ChangePassword">
-                <property name="label">Change password</property>
+                <property name="label">Change Password</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -263,7 +263,7 @@
         </child>
         <child>
           <object class="GtkButton" id="CheckPortButton">
-            <property name="label" translatable="yes">Check port status</property>
+            <property name="label" translatable="yes">Check Port Status</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="can_default">True</property>
@@ -310,7 +310,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="xalign">1</property>
-            <property name="label" translatable="yes">Automatically renew port mappings every</property>
+            <property name="label" translatable="yes">Automatically renew port mappings every:</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -368,7 +368,7 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="ctcptogglebutton">
-        <property name="label" translatable="yes">Enable CTCP-like PM responses (Client Version)</property>
+        <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
