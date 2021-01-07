@@ -1989,7 +1989,7 @@ msgid "Completion"
 msgstr ""
 
 #: ../pynicotine/gtkgui/settingswindow.py:3440
-msgid "Text To Speech"
+msgid "Text-to-Speech"
 msgstr ""
 
 #. Title of the treeview
