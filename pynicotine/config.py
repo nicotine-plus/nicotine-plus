@@ -400,7 +400,7 @@ class Config:
         self.sections = defaultdict(dict)
 
         for key, value in self.defaults.items():
-            self.sections[key] = value
+            self.sections[key] = value.copy()
 
         # Update config values from file
         self.set_config()

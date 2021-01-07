@@ -14,11 +14,6 @@
         <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkCheckButton" id="DarkMode">
@@ -28,11 +23,6 @@
         <property name="receives_default">False</property>
         <property name="draw_indicator">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
@@ -42,11 +32,6 @@
         <property name="label" translatable="yes">&lt;b&gt;Chat Colors&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkGrid">
@@ -55,42 +40,16 @@
         <property name="row_spacing">10</property>
         <property name="column_spacing">10</property>
         <child>
-          <object class="GtkButton" id="PickURL">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">URL Link Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">URL Link Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <property name="width-chars">15</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -102,8 +61,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -117,8 +75,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -209,8 +166,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -224,8 +180,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -239,8 +194,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -254,8 +208,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -269,8 +222,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -585,8 +537,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -596,42 +547,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickAway">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Away</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Away</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -639,42 +563,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickOffline">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Offline</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Offline</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -682,42 +579,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickOnline">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Online</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Online</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -767,42 +637,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickHighlight">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Highlight Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Highlight Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -810,42 +653,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickMe">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">/me Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">/me Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -853,42 +669,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickLocal">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Local Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Local Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -896,42 +685,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickRemote">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Remote Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Remote Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -939,9 +701,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Remote">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickRemote">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -951,9 +711,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Local">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickLocal">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -963,9 +721,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Me">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickMe">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -975,9 +731,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Highlight">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickHighlight">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -987,9 +741,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_URL">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickURL">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -999,9 +751,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_OfflineColor">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickOfflineColor">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1011,9 +761,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_OnlineColor">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickOnlineColor">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1023,9 +771,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_AwayColor">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickAwayColor">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1034,30 +780,7 @@
             <property name="top_attach">8</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
@@ -1067,11 +790,6 @@
         <property name="label" translatable="yes">&lt;b&gt;List and Search Colors&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkGrid">
@@ -1080,9 +798,7 @@
         <property name="row_spacing">10</property>
         <property name="column_spacing">10</property>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Queue">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickQueue">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1092,9 +808,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_Immediate">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickImmediate">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1151,8 +865,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1162,42 +875,16 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickQueue">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">With Queue</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">With Queue</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <property name="width-chars">15</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1252,8 +939,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1263,42 +949,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickImmediate">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">List Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">List Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1306,11 +965,6 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
@@ -1320,11 +974,6 @@
         <property name="label" translatable="yes">&lt;b&gt;Text Entry Colors&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkGrid">
@@ -1333,9 +982,7 @@
         <property name="row_spacing">10</property>
         <property name="column_spacing">10</property>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_InputColor">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickInputColor">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1345,9 +992,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_BackgroundColor">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickBackgroundColor">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1447,8 +1092,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1462,8 +1106,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1473,42 +1116,16 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickInput">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Text</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Text</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <property name="width-chars">15</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1516,42 +1133,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickBackground">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Background</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Background</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1559,11 +1149,6 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
@@ -1573,11 +1158,6 @@
         <property name="label" translatable="yes">&lt;b&gt;Tab Label Colors&lt;/b&gt;</property>
         <property name="use_markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkGrid">
@@ -1586,9 +1166,7 @@
         <property name="row_spacing">10</property>
         <property name="column_spacing">10</property>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_HighlightTab">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickHighlightTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1598,9 +1176,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_ChangedTab">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickChangedTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1610,9 +1186,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkDrawingArea" id="Drawing_DefaultTab">
-            <property name="width_request">16</property>
-            <property name="height_request">16</property>
+          <object class="GtkColorButton" id="PickDefaultTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
           </object>
@@ -1712,8 +1286,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1723,42 +1296,16 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickDefaultTab">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Default</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <property name="width-chars">15</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1770,8 +1317,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1781,42 +1327,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickChangedTab">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Changed</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Changed</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1871,8 +1390,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
-            <property name="editable">False</property>
-            <property name="width_chars">20</property>
+            <property name="width_chars">6</property>
             <property name="primary_icon_activatable">False</property>
             <property name="secondary_icon_activatable">False</property>
           </object>
@@ -1882,42 +1400,15 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="PickHighlightTab">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">color-select-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Highlight</property>
-                    <property name="use_underline">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Highlight</property>
+            <property name="selectable">True</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -1925,11 +1416,6 @@
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
@@ -1974,11 +1460,6 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="ClearAllColours">
@@ -2006,7 +1487,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Clear</property>
+                    <property name="label" translatable="yes">Clear Colors</property>
                     <property name="use_underline">True</property>
                   </object>
                   <packing>
@@ -2018,18 +1499,8 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">10</property>
-      </packing>
     </child>
   </object>
 </interface>
