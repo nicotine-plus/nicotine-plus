@@ -86,8 +86,6 @@ class ServerFrame(BuildFrame):
 
         if server["server"] is not None:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
-        else:
-            self.Server.set_text("server.slsknet.org:2242")
 
         if self.frame.np.waitport is None:
             self.CurrentPort.set_markup(_("Client port is not set"))
@@ -98,12 +96,6 @@ class ServerFrame(BuildFrame):
             self.YourIP.set_markup(_("Your IP address has not been retrieved from the server"))
         else:
             self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
-
-        if server["login"] is not None:
-            self.Login.set_text(server["login"])
-
-        if server["passw"] is not None:
-            self.Password.set_text(server["passw"])
 
         if server["portrange"] is not None:
             self.FirstPort.set_value(server["portrange"][0])
@@ -120,39 +112,13 @@ class ServerFrame(BuildFrame):
             server = self.Server.get_text().split(":")
             server[1] = int(server[1])
             server = tuple(server)
-        except Exception:
-            server = None
 
-        if str(self.Login.get_text()) == "None":
-            dlg = Gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
-                flags=0,
-                type=Gtk.MessageType.WARNING,
-                buttons=Gtk.ButtonsType.OK,
-                text=_("Warning: Bad Username")
-            )
-            dlg.format_secondary_text(_("Username 'None' is not a good one, please pick another."))
-            dlg.run()
-            dlg.destroy()
-            raise UserWarning
-
-        try:
-            firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
-            lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
-            portrange = (firstport, lastport)
         except Exception:
-            portrange = None
-            dlg = Gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
-                flags=0,
-                type=Gtk.MessageType.WARNING,
-                buttons=Gtk.ButtonsType.OK,
-                text=_("Warning: Invalid ports")
-            )
-            dlg.format_secondary_text(_("Client ports are invalid."))
-            dlg.run()
-            dlg.destroy()
-            raise UserWarning
+            server = self.frame.np.config.defaults["server"]["server"]
+
+        firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
+        lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
+        portrange = (firstport, lastport)
 
         return {
             "server": {
@@ -179,6 +145,7 @@ class ServerFrame(BuildFrame):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
 
     def on_toggle_upnp(self, widget, *args):
+
         active = widget.get_active()
         self.needportmap = active
 
