@@ -75,7 +75,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Limit total download speeds to (KBytes/sec):</property>
+                <property name="label" translatable="yes">Limit total download speeds to (kB/s):</property>
                 <property name="single_line_mode">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -88,6 +88,7 @@
               <object class="GtkSpinButton" id="DownloadSpeed">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text">Kilobytes per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">True</property>
               </object>
