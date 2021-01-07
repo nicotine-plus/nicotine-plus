@@ -1230,6 +1230,8 @@ class NicotineFrame:
             load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "chatroomcommands.ui"))
             self.AboutChatRoomCommandsDialog.set_transient_for(self.MainWindow)
 
+        # Scroll to the top
+        self.AboutChatRoomCommandsView.get_vadjustment().set_value(0)
         self.AboutChatRoomCommandsDialog.show()
 
     def on_about_private_chat_commands(self, *args):
@@ -1238,6 +1240,8 @@ class NicotineFrame:
             load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "privatechatcommands.ui"))
             self.AboutPrivateChatCommandsDialog.set_transient_for(self.MainWindow)
 
+        # Scroll to the top
+        self.AboutPrivateChatCommandsView.get_vadjustment().set_value(0)
         self.AboutPrivateChatCommandsDialog.show()
 
     def on_about_filters(self, *args):
@@ -1305,22 +1309,21 @@ class NicotineFrame:
 
     def on_about(self, *args):
 
-        if not hasattr(self, "AboutDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
+        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
 
-            # Remove non-functional close button added by GTK
-            buttons = self.AboutDialog.get_action_area().get_children()
-            if buttons:
-                buttons[-1].destroy()
+        # Remove non-functional close button added by GTK
+        buttons = self.AboutDialog.get_action_area().get_children()
+        if buttons:
+            buttons[-1].destroy()
 
-            # Override link handler with our own
-            self.AboutDialog.connect("activate-link", self.on_about_uri)
+        # Override link handler with our own
+        self.AboutDialog.connect("activate-link", self.on_about_uri)
 
-            if self.images["n"]:
-                self.AboutDialog.set_logo(self.images["n"])
+        if self.images["n"]:
+            self.AboutDialog.set_logo(self.images["n"])
 
-            self.AboutDialog.set_transient_for(self.MainWindow)
-            self.AboutDialog.set_version(version)
+        self.AboutDialog.set_transient_for(self.MainWindow)
+        self.AboutDialog.set_version(version)
 
         self.AboutDialog.show()
 

@@ -13,7 +13,7 @@
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="AboutPrivateChatCommandsView">
             <property name="visible">1</property>
             <property name="vexpand">1</property>
             <child>
