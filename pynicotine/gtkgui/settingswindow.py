@@ -1576,14 +1576,6 @@ class FontsColorsFrame(BuildFrame):
 
         BuildFrame.__init__(self, "fontscolors")
 
-        # Combobox for the decimal separator
-        for item in ["<None>", ",", ".", "<space>"]:
-            self.DecimalSep.append_text(item)
-
-        # Combobox for user names style
-        for item in ("bold", "italic", "underline", "normal"):
-            self.UsernameStyle.append_text(item)
-
         self.needcolors = 0
         self.options = {
             "ui": {
@@ -1592,26 +1584,26 @@ class FontsColorsFrame(BuildFrame):
                 "searchfont": self.SelectSearchFont,
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
+                "usernamestyle": self.UsernameStyle,
                 "decimalsep": self.DecimalSep,
 
-                "chatlocal": self.Local,
-                "chatremote": self.Remote,
-                "chatme": self.Me,
-                "chathilite": self.Highlight,
-                "textbg": self.BackgroundColor,
-                "inputcolor": self.InputColor,
-                "search": self.Immediate,
-                "searchq": self.Queue,
-                "useraway": self.AwayColor,
-                "useronline": self.OnlineColor,
-                "useroffline": self.OfflineColor,
+                "chatlocal": self.EntryLocal,
+                "chatremote": self.EntryRemote,
+                "chatme": self.EntryMe,
+                "chathilite": self.EntryHighlight,
+                "textbg": self.EntryBackground,
+                "inputcolor": self.EntryInput,
+                "search": self.EntryImmediate,
+                "searchq": self.EntryQueue,
+                "useraway": self.EntryAway,
+                "useronline": self.EntryOnline,
+                "useroffline": self.EntryOffline,
                 "usernamehotspots": self.UsernameHotspots,
-                "usernamestyle": self.UsernameStyle,
                 "showaway": self.DisplayAwayColors,
-                "urlcolor": self.URL,
-                "tab_default": self.DefaultTab,
-                "tab_hilite": self.HighlightTab,
-                "tab_changed": self.ChangedTab,
+                "urlcolor": self.EntryURL,
+                "tab_default": self.EntryRegularTab,
+                "tab_hilite": self.EntryHighlightTab,
+                "tab_changed": self.EntryChangedTab,
                 "dark_mode": self.DarkMode
             }
         }
@@ -1622,98 +1614,19 @@ class FontsColorsFrame(BuildFrame):
                 "chatremote": self.PickRemote,
                 "chatme": self.PickMe,
                 "chathilite": self.PickHighlight,
-                "textbg": self.PickBackgroundColor,
-                "inputcolor": self.PickInputColor,
+                "textbg": self.PickBackground,
+                "inputcolor": self.PickInput,
                 "search": self.PickImmediate,
                 "searchq": self.PickQueue,
-                "useraway": self.PickAwayColor,
-                "useronline": self.PickOnlineColor,
-                "useroffline": self.PickOfflineColor,
+                "useraway": self.PickAway,
+                "useronline": self.PickOnline,
+                "useroffline": self.PickOffline,
                 "urlcolor": self.PickURL,
-                "tab_default": self.PickDefaultTab,
+                "tab_default": self.PickRegularTab,
                 "tab_hilite": self.PickHighlightTab,
                 "tab_changed": self.PickChangedTab
             }
         }
-
-        # Fonts
-        self.SelectChatFont.connect("font-set", self.on_fonts_changed)
-        self.SelectListFont.connect("font-set", self.on_fonts_changed)
-        self.SelectSearchFont.connect("font-set", self.on_fonts_changed)
-        self.SelectTransfersFont.connect("font-set", self.on_fonts_changed)
-        self.SelectBrowserFont.connect("font-set", self.on_fonts_changed)
-
-        self.DefaultFont.connect("clicked", self.on_default_font)
-        self.DefaultListFont.connect("clicked", self.on_default_list_font)
-        self.DefaultSearchFont.connect("clicked", self.on_default_search_font)
-        self.DefaultTransfersFont.connect("clicked", self.on_default_transfers_font)
-        self.DefaultBrowserFont.connect("clicked", self.on_default_browser_font)
-
-        # Color Buttons
-        self.PickRemote.connect("color-set", self.on_color_set, self.Remote)
-        self.PickLocal.connect("color-set", self.on_color_set, self.Local)
-        self.PickMe.connect("color-set", self.on_color_set, self.Me)
-        self.PickHighlight.connect("color-set", self.on_color_set, self.Highlight)
-        self.PickURL.connect("color-set", self.on_color_set, self.URL)
-        self.PickOfflineColor.connect("color-set", self.on_color_set, self.OfflineColor)
-        self.PickOnlineColor.connect("color-set", self.on_color_set, self.OnlineColor)
-        self.PickAwayColor.connect("color-set", self.on_color_set, self.AwayColor)
-
-        self.PickQueue.connect("color-set", self.on_color_set, self.Queue)
-        self.PickImmediate.connect("color-set", self.on_color_set, self.Immediate)
-
-        self.PickInputColor.connect("color-set", self.on_color_set, self.InputColor)
-        self.PickBackgroundColor.connect("color-set", self.on_color_set, self.BackgroundColor)
-
-        self.PickHighlightTab.connect("color-set", self.on_color_set, self.HighlightTab)
-        self.PickChangedTab.connect("color-set", self.on_color_set, self.ChangedTab)
-        self.PickDefaultTab.connect("color-set", self.on_color_set, self.DefaultTab)
-
-        # Text Entries
-        self.Remote.connect("changed", self.on_colors_changed, self.PickRemote)
-        self.Local.connect("changed", self.on_colors_changed, self.PickLocal)
-        self.Me.connect("changed", self.on_colors_changed, self.PickMe)
-        self.Highlight.connect("changed", self.on_colors_changed, self.PickHighlight)
-        self.URL.connect("changed", self.on_colors_changed, self.PickURL)
-        self.AwayColor.connect("changed", self.on_colors_changed, self.PickAwayColor)
-        self.OnlineColor.connect("changed", self.on_colors_changed, self.PickOnlineColor)
-        self.OfflineColor.connect("changed", self.on_colors_changed, self.PickOfflineColor)
-
-        self.Immediate.connect("changed", self.on_colors_changed, self.PickImmediate)
-        self.Queue.connect("changed", self.on_colors_changed, self.PickQueue)
-
-        self.InputColor.connect("changed", self.on_colors_changed, self.PickInputColor)
-        self.BackgroundColor.connect("changed", self.on_colors_changed, self.PickBackgroundColor)
-
-        self.HighlightTab.connect("changed", self.on_colors_changed, self.PickHighlightTab)
-        self.ChangedTab.connect("changed", self.on_colors_changed, self.PickChangedTab)
-        self.DefaultTab.connect("changed", self.on_colors_changed, self.PickDefaultTab)
-
-        self.UsernameStyle.connect("changed", self.on_colors_changed, None)
-
-        # Default Buttons
-        self.DefaultRemote.connect("clicked", self.on_default_color, self.Remote)
-        self.DefaultLocal.connect("clicked", self.on_default_color, self.Local)
-        self.DefaultMe.connect("clicked", self.on_default_color, self.Me)
-        self.DefaultHighlight.connect("clicked", self.on_default_color, self.Highlight)
-        self.DefaultURL.connect("clicked", self.on_default_color, self.URL)
-        self.DefaultAway.connect("clicked", self.on_default_color, self.AwayColor)
-        self.DefaultOnline.connect("clicked", self.on_default_color, self.OnlineColor)
-        self.DefaultOffline.connect("clicked", self.on_default_color, self.OfflineColor)
-
-        self.DefaultImmediate.connect("clicked", self.on_default_color, self.Immediate)
-        self.DefaultQueue.connect("clicked", self.on_default_color, self.Queue)
-
-        self.DefaultBackground.connect("clicked", self.on_default_color, self.BackgroundColor)
-        self.DefaultInput.connect("clicked", self.on_default_color, self.InputColor)
-
-        self.DefaultHighlightTab.connect("clicked", self.on_default_color, self.HighlightTab)
-        self.DefaultChangedTab.connect("clicked", self.on_default_color, self.ChangedTab)
-        self.ClearDefaultTab.connect("clicked", self.on_default_color, self.DefaultTab)
-
-        self.DefaultColors.connect("clicked", self.on_default_colors)
-        self.ClearAllColors.connect("clicked", self.on_clear_colors)
-        self.DisplayAwayColors.connect("toggled", self.on_toggled_away_colors)
 
     def set_settings(self, config):
 
@@ -1727,31 +1640,31 @@ class FontsColorsFrame(BuildFrame):
 
         return {
             "ui": {
-                "decimalsep": self.DecimalSep.get_active_text(),
                 "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font(),
-
-                "chatlocal": self.Local.get_text(),
-                "chatremote": self.Remote.get_text(),
-                "chatme": self.Me.get_text(),
-                "chathilite": self.Highlight.get_text(),
-                "urlcolor": self.URL.get_text(),
-                "textbg": self.BackgroundColor.get_text(),
-                "inputcolor": self.InputColor.get_text(),
-                "search": self.Immediate.get_text(),
-                "searchq": self.Queue.get_text(),
-                "showaway": self.DisplayAwayColors.get_active(),
-                "useraway": self.AwayColor.get_text(),
-                "useronline": self.OnlineColor.get_text(),
-                "useroffline": self.OfflineColor.get_text(),
-                "usernamehotspots": self.UsernameHotspots.get_active(),
                 "usernamestyle": self.UsernameStyle.get_active_text(),
-                "tab_hilite": self.HighlightTab.get_text(),
-                "tab_default": self.DefaultTab.get_text(),
-                "tab_changed": self.ChangedTab.get_text(),
+                "decimalsep": self.DecimalSep.get_active_text(),
+
+                "chatlocal": self.EntryLocal.get_text(),
+                "chatremote": self.EntryRemote.get_text(),
+                "chatme": self.EntryMe.get_text(),
+                "chathilite": self.EntryHighlight.get_text(),
+                "urlcolor": self.EntryURL.get_text(),
+                "textbg": self.EntryBackground.get_text(),
+                "inputcolor": self.EntryInput.get_text(),
+                "search": self.EntryImmediate.get_text(),
+                "searchq": self.EntryQueue.get_text(),
+                "showaway": self.DisplayAwayColors.get_active(),
+                "useraway": self.EntryAway.get_text(),
+                "useronline": self.EntryOnline.get_text(),
+                "useroffline": self.EntryOffline.get_text(),
+                "usernamehotspots": self.UsernameHotspots.get_active(),
+                "tab_hilite": self.EntryHighlightTab.get_text(),
+                "tab_default": self.EntryRegularTab.get_text(),
+                "tab_changed": self.EntryChangedTab.get_text(),
                 "dark_mode": self.DarkMode.get_active()
             }
         }
@@ -1759,23 +1672,10 @@ class FontsColorsFrame(BuildFrame):
     """ Fonts """
 
     def on_default_font(self, widget):
-        self.SelectChatFont.set_font_name("")
-        self.needcolors = 1
 
-    def on_default_browser_font(self, widget):
-        self.SelectBrowserFont.set_font_name("")
-        self.needcolors = 1
+        font_button = self.__dict__[Gtk.Buildable.get_name(widget).replace("Default", "Select")]
+        font_button.set_font_name("")
 
-    def on_default_list_font(self, widget):
-        self.SelectListFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_search_font(self, widget):
-        self.SelectSearchFont.set_font_name("")
-        self.needcolors = 1
-
-    def on_default_transfers_font(self, widget):
-        self.SelectTransfersFont.set_font_name("")
         self.needcolors = 1
 
     def on_fonts_changed(self, widget):
@@ -1820,13 +1720,16 @@ class FontsColorsFrame(BuildFrame):
         color_button = self.colorsd[section][color_id]
         color_button.set_rgba(Gdk.RGBA())
 
-    def on_color_set(self, widget, entry):
+    def on_color_set(self, widget):
 
         rgba = widget.get_rgba()
         color = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
+        entry = self.__dict__[Gtk.Buildable.get_name(widget).replace("Pick", "Entry")]
         entry.set_text(color)
 
-    def on_default_color(self, widget, entry):
+    def on_default_color(self, widget):
+
+        entry = self.__dict__[Gtk.Buildable.get_name(widget).replace("Default", "Entry")]
 
         for section in self.options:
             for key, value in self.options[section].items():
@@ -1840,25 +1743,25 @@ class FontsColorsFrame(BuildFrame):
 
         sensitive = widget.get_active()
 
-        self.AwayColor.set_sensitive(sensitive)
-        self.PickAwayColor.set_sensitive(sensitive)
+        self.EntryAway.set_sensitive(sensitive)
+        self.PickAway.set_sensitive(sensitive)
         self.DefaultAway.set_sensitive(sensitive)
 
     def on_username_hotspots_toggled(self, widget):
 
         sensitive = widget.get_active()
 
-        self.AwayColor.set_sensitive(sensitive and self.DisplayAwayColors.get_active())
-        self.OnlineColor.set_sensitive(sensitive)
-        self.OfflineColor.set_sensitive(sensitive)
+        self.EntryAway.set_sensitive(sensitive and self.DisplayAwayColors.get_active())
+        self.EntryOnline.set_sensitive(sensitive)
+        self.EntryOffline.set_sensitive(sensitive)
 
         self.DefaultAway.set_sensitive(sensitive)
         self.DefaultOnline.set_sensitive(sensitive)
         self.DefaultOffline.set_sensitive(sensitive)
 
-        self.PickAwayColor.set_sensitive(sensitive)
-        self.PickOnlineColor.set_sensitive(sensitive)
-        self.PickOfflineColor.set_sensitive(sensitive)
+        self.PickAway.set_sensitive(sensitive)
+        self.PickOnline.set_sensitive(sensitive)
+        self.PickOffline.set_sensitive(sensitive)
 
     def on_default_colors(self, widget):
 
@@ -1872,11 +1775,13 @@ class FontsColorsFrame(BuildFrame):
             for color_id in color_ids:
                 self.clear_color(section, color_id)
 
-    def on_colors_changed(self, widget, color_button):
+    def on_colors_changed(self, widget):
 
-        if color_button:
+        if isinstance(widget, Gtk.Entry):
             rgba = Gdk.RGBA()
             rgba.parse(widget.get_text())
+
+            color_button = self.__dict__[Gtk.Buildable.get_name(widget).replace("Entry", "Pick")]
             color_button.set_rgba(rgba)
 
         self.needcolors = 1

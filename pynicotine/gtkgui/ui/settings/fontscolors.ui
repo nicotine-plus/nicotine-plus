@@ -61,6 +61,13 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="width_request">200</property>
+            <signal name="changed" handler="on_colors_changed"/>
+            <items>
+              <item translatable="yes">bold</item>
+              <item translatable="yes">italic</item>
+              <item translatable="yes">underline</item>
+              <item translatable="yes">normal</item>
+            </items>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -88,6 +95,12 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="width_request">200</property>
+            <items>
+              <item translatable="yes">&lt;None&gt;</item>
+              <item translatable="yes">,</item>
+              <item translatable="yes">.</item>
+              <item translatable="yes">&lt;space&gt;</item>
+            </items>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -140,13 +153,15 @@
                 <property name="receives_default">False</property>
                 <property name="hexpand">True</property>
                 <property name="font">Sans 12</property>
+                <signal name="font-set" handler="on_fonts_changed"/>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultFont">
+              <object class="GtkButton" id="DefaultChatFont">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <signal name="clicked" handler="on_default_font"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -205,6 +220,7 @@
                 <property name="receives_default">False</property>
                 <property name="hexpand">True</property>
                 <property name="font">Sans 12</property>
+                <signal name="font-set" handler="on_fonts_changed"/>
               </object>
             </child>
             <child>
@@ -212,6 +228,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <signal name="clicked" handler="on_default_font"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -270,6 +287,7 @@
                 <property name="receives_default">False</property>
                 <property name="hexpand">True</property>
                 <property name="font">Sans 12</property>
+                <signal name="font-set" handler="on_fonts_changed"/>
               </object>
             </child>
             <child>
@@ -277,6 +295,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <signal name="clicked" handler="on_default_font"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -335,6 +354,7 @@
                 <property name="receives_default">False</property>
                 <property name="hexpand">True</property>
                 <property name="font">Sans 12</property>
+                <signal name="font-set" handler="on_fonts_changed"/>
               </object>
             </child>
             <child>
@@ -342,6 +362,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <signal name="clicked" handler="on_default_font"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -400,6 +421,7 @@
                 <property name="receives_default">False</property>
                 <property name="hexpand">True</property>
                 <property name="font">Sans 12</property>
+                <signal name="font-set" handler="on_fonts_changed"/>
               </object>
             </child>
             <child>
@@ -407,6 +429,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
+                <signal name="clicked" handler="on_default_font"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -472,13 +495,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="URL">
+          <object class="GtkEntry" id="EntryURL">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -486,13 +508,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Highlight">
+          <object class="GtkEntry" id="EntryHighlight">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -504,6 +525,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -533,13 +555,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="AwayColor">
+          <object class="GtkEntry" id="EntryAway">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -547,13 +568,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="OfflineColor">
+          <object class="GtkEntry" id="EntryOffline">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -561,13 +581,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="OnlineColor">
+          <object class="GtkEntry" id="EntryOnline">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -575,13 +594,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Me">
+          <object class="GtkEntry" id="EntryMe">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -589,13 +607,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Local">
+          <object class="GtkEntry" id="EntryLocal">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -607,6 +624,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -640,6 +658,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -673,6 +692,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -706,6 +726,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -739,6 +760,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -772,6 +794,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -805,6 +828,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -834,13 +858,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Remote">
+          <object class="GtkEntry" id="EntryRemote">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -919,6 +942,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="on_toggled_away_colors"/>
               </object>
             </child>
           </object>
@@ -995,6 +1019,7 @@
           <object class="GtkColorButton" id="PickRemote">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1005,6 +1030,7 @@
           <object class="GtkColorButton" id="PickLocal">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1015,6 +1041,7 @@
           <object class="GtkColorButton" id="PickMe">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1025,6 +1052,7 @@
           <object class="GtkColorButton" id="PickHighlight">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1035,6 +1063,7 @@
           <object class="GtkColorButton" id="PickURL">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1042,9 +1071,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickOfflineColor">
+          <object class="GtkColorButton" id="PickOffline">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1052,9 +1082,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickOnlineColor">
+          <object class="GtkColorButton" id="PickOnline">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1062,9 +1093,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickAwayColor">
+          <object class="GtkColorButton" id="PickAway">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1092,6 +1124,7 @@
           <object class="GtkColorButton" id="PickQueue">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1102,6 +1135,7 @@
           <object class="GtkColorButton" id="PickImmediate">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1113,6 +1147,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1142,13 +1177,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Queue">
+          <object class="GtkEntry" id="EntryQueue">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1177,6 +1211,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1206,13 +1241,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="Immediate">
+          <object class="GtkEntry" id="EntryImmediate">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1253,9 +1287,10 @@
         <property name="row_spacing">10</property>
         <property name="column_spacing">10</property>
         <child>
-          <object class="GtkColorButton" id="PickInputColor">
+          <object class="GtkColorButton" id="PickInput">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1263,9 +1298,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickBackgroundColor">
+          <object class="GtkColorButton" id="PickBackground">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1277,6 +1313,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1310,6 +1347,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1339,13 +1377,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="InputColor">
+          <object class="GtkEntry" id="EntryInput">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1353,13 +1390,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="BackgroundColor">
+          <object class="GtkEntry" id="EntryBackground">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1420,6 +1456,7 @@
           <object class="GtkColorButton" id="PickHighlightTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1430,6 +1467,7 @@
           <object class="GtkColorButton" id="PickChangedTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1437,9 +1475,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickDefaultTab">
+          <object class="GtkColorButton" id="PickRegularTab">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <signal name="color-set" handler="on_color_set"/>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -1447,10 +1486,11 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="ClearDefaultTab">
+          <object class="GtkButton" id="DefaultRegularTab">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1484,6 +1524,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1513,13 +1554,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="DefaultTab">
+          <object class="GtkEntry" id="EntryRegularTab">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1530,7 +1570,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">Default</property>
+            <property name="label" translatable="yes">Regular</property>
             <property name="selectable">True</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -1544,13 +1584,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="ChangedTab">
+          <object class="GtkEntry" id="EntryChangedTab">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1578,6 +1617,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_color"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1607,13 +1647,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="HighlightTab">
+          <object class="GtkEntry" id="EntryHighlightTab">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="width_chars">6</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
+            <signal name="changed" handler="on_colors_changed"/>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -1648,6 +1687,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_default_colors"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1677,6 +1717,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <signal name="clicked" handler="on_clear_colors"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
