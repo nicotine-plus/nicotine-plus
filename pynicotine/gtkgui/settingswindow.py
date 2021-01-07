@@ -1831,7 +1831,8 @@ class ColoursFrame(BuildFrame):
 
     def pick_colour(self, widget, entry, area):
 
-        dlg = Gtk.ColorChooserDialog(_("Pick a color, any color"))
+        dlg = Gtk.ColorChooserDialog()
+        dlg.set_transient_for(self.p.SettingsWindow)
         color = entry.get_text()
 
         if color:
