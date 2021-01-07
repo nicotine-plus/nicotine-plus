@@ -8,7 +8,7 @@
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkCheckButton" id="TextToSpeech">
-        <property name="label" translatable="yes">Enable Text To Speech</property>
+        <property name="label" translatable="yes">Enable Text-to-Speech</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
@@ -33,7 +33,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Text To Speech command:</property>
+            <property name="label" translatable="yes">Text-to-Speech command:</property>
           </object>
           <packing>
             <property name="left_attach">0</property>
