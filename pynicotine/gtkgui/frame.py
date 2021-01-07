@@ -1085,7 +1085,7 @@ class NicotineFrame:
 
         if tab:
             self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
-            self.buddies_tab_label.set_icon("system-users-symbolic")
+            self.buddies_tab_label.set_icon("contact-new-symbolic")
             self.buddies_tab_label.show()
 
             if self.userlist.userlistvbox not in self.MainNotebook.get_children():
