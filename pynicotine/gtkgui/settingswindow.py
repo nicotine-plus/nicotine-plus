@@ -242,24 +242,6 @@ class DownloadsFrame(BuildFrame):
 
     def get_settings(self):
 
-        place = _("home")
-        homedir = os.path.expanduser('~')
-
-        if homedir == self.DownloadDir.get_file().get_path() and self.ShareDownloadDir.get_active():
-
-            dlg = Gtk.MessageDialog(
-                transient_for=self.p.SettingsWindow,
-                flags=0,
-                type=Gtk.MessageType.WARNING,
-                buttons=Gtk.ButtonsType.OK,
-                text=_("Warning")
-            )
-            dlg.format_secondary_text(_("Security Risk: you should not share your %s folder!") % place)
-            dlg.run()
-            dlg.destroy()
-
-            raise UserWarning
-
         try:
             uploadallowed = self.UploadsAllowed.get_active()
         except Exception:
@@ -333,8 +315,8 @@ class DownloadsFrame(BuildFrame):
     def on_add_filter(self, widget):
 
         response = combo_box_dialog(
-            parent=self.p.SettingsWindow,
-            title=_('Add a download filter'),
+            parent=self.Main.get_toplevel(),
+            title=_('Add a Download Filter'),
             message=_('Enter a new download filter:'),
             option=True,
             optionvalue=True,
@@ -378,8 +360,8 @@ class DownloadsFrame(BuildFrame):
             escapedvalue = self.filterlist.get_value(iterator, 1)
 
             response = combo_box_dialog(
-                parent=self.p.SettingsWindow,
-                title=_('Edit a download filter'),
+                parent=self.Main.get_toplevel(),
+                title=_('Edit a Download Filter'),
                 message=_('Modify this download filter:'),
                 default_text=dfilter,
                 option=True,
@@ -599,23 +581,6 @@ class SharesFrame(BuildFrame):
 
     def get_settings(self):
 
-        place = _("home")
-        homedir = os.path.expanduser('~')
-
-        for share in self.shareddirs + self.bshareddirs:
-            if homedir == share:
-                dlg = Gtk.MessageDialog(
-                    transient_for=self.p.SettingsWindow,
-                    flags=0,
-                    type=Gtk.MessageType.WARNING,
-                    buttons=Gtk.ButtonsType.OK,
-                    text=_("Warning")
-                )
-                dlg.format_secondary_text(_("Security Risk: you should not share your %s folder!") % place)
-                dlg.run()
-                dlg.destroy()
-                raise UserWarning
-
         # Buddy shares related menus are activated if needed
         buddies = self.enableBuddyShares.get_active()
 
@@ -688,7 +653,7 @@ class SharesFrame(BuildFrame):
                 if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
 
                     dlg = Gtk.MessageDialog(
-                        transient_for=self.p.SettingsWindow,
+                        transient_for=self.Main.get_toplevel(),
                         flags=0,
                         type=Gtk.MessageType.WARNING,
                         buttons=Gtk.ButtonsType.OK,
@@ -701,19 +666,20 @@ class SharesFrame(BuildFrame):
                 else:
 
                     virtual = combo_box_dialog(
-                        parent=self.p.SettingsWindow,
+                        parent=self.Main.get_toplevel(),
                         title=_("Virtual Name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
                     # Remove slashes from share name to avoid path conflicts
-                    virtual = virtual.replace('/', '_').replace('\\', '_')
+                    if virtual:
+                        virtual = virtual.replace('/', '_').replace('\\', '_')
 
                     # If the virtual share name is not already used
                     if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.p.SettingsWindow,
+                            transient_for=self.Main.get_toplevel(),
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -750,7 +716,7 @@ class SharesFrame(BuildFrame):
                 if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
 
                     dlg = Gtk.MessageDialog(
-                        transient_for=self.p.SettingsWindow,
+                        transient_for=self.Main.get_toplevel(),
                         flags=0,
                         type=Gtk.MessageType.WARNING,
                         buttons=Gtk.ButtonsType.OK,
@@ -763,19 +729,20 @@ class SharesFrame(BuildFrame):
                 else:
 
                     virtual = combo_box_dialog(
-                        parent=self.p.SettingsWindow,
-                        title=_("Virtual name"),
+                        parent=self.Main.get_toplevel(),
+                        title=_("Virtual Name"),
                         message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
                     )
 
                     # Remove slashes from share name to avoid path conflicts
-                    virtual = virtual.replace('/', '_').replace('\\', '_')
+                    if virtual:
+                        virtual = virtual.replace('/', '_').replace('\\', '_')
 
                     # If the virtual share name is not already used
                     if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
 
                         dlg = Gtk.MessageDialog(
-                            transient_for=self.p.SettingsWindow,
+                            transient_for=self.Main.get_toplevel(),
                             flags=0,
                             type=Gtk.MessageType.WARNING,
                             buttons=Gtk.ButtonsType.OK,
@@ -811,7 +778,7 @@ class SharesFrame(BuildFrame):
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
-                parent=self.p.SettingsWindow,
+                parent=self.Main.get_toplevel(),
                 title=_("Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
@@ -837,7 +804,7 @@ class SharesFrame(BuildFrame):
             oldmapping = (oldvirtual, directory)
 
             virtual = combo_box_dialog(
-                parent=self.p.SettingsWindow,
+                parent=self.Main.get_toplevel(),
                 title=_("Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
             )
