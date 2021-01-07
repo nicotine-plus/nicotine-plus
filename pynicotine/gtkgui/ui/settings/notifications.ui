@@ -28,7 +28,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationWindowTitle">
-            <property name="label" translatable="yes">Show notification for private chat and mentions in window title</property>
+            <property name="label" translatable="yes">Show notification for private chats and mentions in window title</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -70,7 +70,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupSound">
-            <property name="label" translatable="yes">Play sound for notification popups</property>
+            <property name="label" translatable="yes">Play a sound for notification popups</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -111,7 +111,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFile">
-            <property name="label" translatable="yes">When a file has finished downloading</property>
+            <property name="label" translatable="yes">when a file has finished downloading</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -125,7 +125,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFolder">
-            <property name="label" translatable="yes">When a folder has finished downloading</property>
+            <property name="label" translatable="yes">when a folder has finished downloading</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -139,7 +139,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
-            <property name="label" translatable="yes">When you receive a private message</property>
+            <property name="label" translatable="yes">when you receive a private message</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -153,7 +153,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroom">
-            <property name="label" translatable="yes">When someone sends a message in a chat room</property>
+            <property name="label" translatable="yes">when someone sends a message in a chat room</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
@@ -167,7 +167,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
-            <property name="label" translatable="yes">When you're mentioned in a chat room</property>
+            <property name="label" translatable="yes">when you're mentioned in a chat room</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
