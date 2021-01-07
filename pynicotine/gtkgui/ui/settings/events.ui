@@ -114,7 +114,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Audio Player command ($ for file path):</property>
+            <property name="label" translatable="yes">Media Player command ($ for file path):</property>
             <property name="xalign">0</property>
           </object>
           <packing>
