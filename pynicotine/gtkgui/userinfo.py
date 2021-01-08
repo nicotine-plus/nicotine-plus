@@ -292,7 +292,7 @@ class UserInfo:
 
         return False
 
-    def on_popup_likes_menu(self, widget, event=None):
+    def on_popup_likes_menu(self, widget):
 
         item = self.get_selected_like_item(widget)
         if item is None:
@@ -313,7 +313,7 @@ class UserInfo:
 
         return False
 
-    def on_popup_hates_menu(self, widget, event=None):
+    def on_popup_hates_menu(self, widget):
 
         item = self.get_selected_like_item(widget)
         if item is None:

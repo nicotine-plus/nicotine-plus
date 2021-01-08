@@ -180,7 +180,7 @@ class Uploads(TransferList):
                 command = self.frame.np.config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
-    def on_popup_menu(self, widget, event):
+    def on_popup_menu(self, widget):
 
         self.select_transfers()
 
