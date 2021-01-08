@@ -342,6 +342,18 @@ class NicotineFrame:
 
         self.statistics = Statistics(self, self.np.config)
 
+        """ Tab Signals """
+
+        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
+        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
+        self.MainNotebook.connect("page-added", self.on_page_added)
+
+        """ Show Window """
+
+        # Check command line option and config option
+        if not start_hidden and not config["ui"]["startup_hidden"]:
+            self.MainWindow.show()
+
         """ Connect """
 
         if self.np.config.need_config():
@@ -355,16 +367,6 @@ class NicotineFrame:
             self.on_connect()
 
         self.update_bandwidth()
-
-        """ Tab Signals """
-
-        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
-        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
-        self.MainNotebook.connect("page-added", self.on_page_added)
-
-        # Check command line option and config option
-        if not start_hidden and not config["ui"]["startup_hidden"]:
-            self.MainWindow.show()
 
     """ Window """
 
