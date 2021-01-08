@@ -475,7 +475,7 @@ class DownloadsFrame(BuildFrame):
 
             self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
         else:
-            self.VerifiedLabel.set_markup("<b>Filters Successful</b>")
+            self.VerifiedLabel.set_markup(_("<b>Filters Successful</b>"))
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
