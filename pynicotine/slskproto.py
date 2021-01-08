@@ -199,7 +199,7 @@ else:
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (maxfilelimit, maxfilelimit))
     except Exception as e:
-        log.add_warning(_("Failed to set RLIMIT_NOFILE: %s") % e)
+        log.add_warning("Failed to set RLIMIT_NOFILE: %s" % e)
 
     """ Set the maximum number of open sockets to a lower value than the hard limit,
     otherwise we just waste resources.
@@ -622,7 +622,7 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append(_("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown") % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
+                msgs.append("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown" % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
@@ -762,7 +762,7 @@ class SlskProtoThread(threading.Thread):
                             msg.parse_network_message(msg_buffer[8:msgsize + 4])
 
                         except Exception as error:
-                            host = port = _("unknown")
+                            host = port = "unknown"
                             msgname = str(self.peerclasses[msgtype]).split(".")[-1]
                             print("Error parsing %s:" % msgname, error)
 
@@ -774,7 +774,7 @@ class SlskProtoThread(threading.Thread):
                                 if conn.addr is not None:
                                     host = conn.addr[0]
                                     port = conn.addr[1]
-                            debugmessage = _("There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msg_buffer)s from user: %(user)s, %(host)s:%(port)s") % {'type': msgname, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user, 'host': host, 'port': port}
+                            debugmessage = "There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msg_buffer)s from user: %(user)s, %(host)s:%(port)s" % {'type': msgname, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user, 'host': host, 'port': port}
                             msgs.append(debugmessage)
 
                             del msg
@@ -787,7 +787,7 @@ class SlskProtoThread(threading.Thread):
                         msgs.append(debugmessage)
 
                 else:
-                    host = port = _("unknown")
+                    host = port = "unknown"
 
                     if conn.init.conn is not None and conn.addr is not None:
                         host = conn.addr[0]
@@ -805,12 +805,12 @@ class SlskProtoThread(threading.Thread):
                         newbuf += char
                         x += 1
 
-                    debugmessage = _("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, from user: %(user)s, %(host)s:%(port)s") % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': newbuf, 'user': conn.init.user, 'host': host, 'port': port}
+                    debugmessage = "Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, from user: %(user)s, %(host)s:%(port)s" % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': newbuf, 'user': conn.init.user, 'host': host, 'port': port}
                     msgs.append(debugmessage)
 
             else:
                 # Unknown Message type
-                msgs.append(_("Can't handle connection type %s") % (conn.init.type))
+                msgs.append("Can't handle connection type %s" % (conn.init.type))
 
             if msgsize >= 0:
                 msg_buffer = msg_buffer[msgsize + 4:]
@@ -842,7 +842,7 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append(_("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown") % {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                msgs.append("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown" % {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
                 self._ui_callback([ConnClose(conn.conn, conn.addr)])
                 conn.conn.close()
                 conn.conn = None
@@ -941,8 +941,8 @@ class SlskProtoThread(threading.Thread):
                         needsleep = True
 
                 except Exception as error:
-                    print(_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)})
-                    self._ui_callback([_("Error packaging message: %(type)s %(msg_obj)s, %(error)s") % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)}])
+                    print("Error packaging message: %(type)s %(msg_obj)s, %(error)s" % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)})
+                    self._ui_callback(["Error packaging message: %(type)s %(msg_obj)s, %(error)s" % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)}])
 
             elif issubclass(msg_obj.__class__, PeerMessage):
                 if msg_obj.conn in conns:
@@ -981,7 +981,7 @@ class SlskProtoThread(threading.Thread):
 
                 else:
                     if msg_obj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-                        log.add_conn(_("Can't send the message over the closed connection: %(type)s %(msg_obj)s"), {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj)})
+                        log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj)})
 
             elif issubclass(msg_obj.__class__, InternalMessage):
                 if msg_obj.__class__ is ServerConn:
@@ -1246,7 +1246,7 @@ class SlskProtoThread(threading.Thread):
                 print(time.strftime("%H:%M:%S"), "select OSError:", error)
                 self._want_abort = 1
 
-                log.add_warning(_("Major Socket Error: Networking terminated! %s", str(error)))
+                log.add_warning("Major Socket Error: Networking terminated! %s", str(error))
 
             except ValueError as error:
                 # Possibly opened too many sockets

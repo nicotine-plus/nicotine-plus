@@ -1281,7 +1281,7 @@ class Transfers:
                 self.downloadsview.update(i)
 
         else:
-            log.add_warning(_("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
+            log.add_warning("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename
@@ -1342,7 +1342,7 @@ class Transfers:
                 self.upload_finished(i, file=f)
 
         else:
-            log.add_warning(_("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)"), {
+            log.add_warning("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename

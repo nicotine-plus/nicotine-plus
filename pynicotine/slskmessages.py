@@ -285,20 +285,20 @@ class SlskMessage:
 
             return struct.pack("<i", len(encoded)) + encoded
 
-        log.add_warning(_("Warning: unknown object type %(obj_type)s in message %(msg_type)s"), {'obj_type': type(object), 'msg_type': self.__class__})
+        log.add_warning("Warning: unknown object type %(obj_type)s in message %(msg_type)s", {'obj_type': type(object), 'msg_type': self.__class__})
         return b""
 
     def make_network_message(self):
         """ Returns binary array, that can be sent over the network"""
 
-        log.add_warning(_("Empty message made, class %s"), self.__class__)
+        log.add_warning("Empty message made, class %s", self.__class__)
         return None
 
     def parse_network_message(self, message):
         """ Extracts information from the message and sets up fields
         in an object"""
 
-        log.add_warning(_("Can't parse incoming messages, class %s"), self.__class__)
+        log.add_warning("Can't parse incoming messages, class %s", self.__class__)
 
     def strrev(self, str):
         strlist = list(str)
