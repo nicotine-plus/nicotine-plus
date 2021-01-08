@@ -3,7 +3,7 @@
 # Basic sanity check...
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
-Restrictions: isolation-container, superficial
+Restrictions: isolation-container
 Features: test-name=test-version
 
 # Perform local in-tree unit tests...
