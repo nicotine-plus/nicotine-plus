@@ -263,8 +263,9 @@ class UserBrowse:
             return self.on_folder_popup_menu(widget)
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.on_download_directory(widget)
-            return True
+            if self.user != self.frame.np.config.sections["server"]["login"]:
+                self.on_download_directory(widget)
+                return True
 
         return False
 
@@ -288,8 +289,11 @@ class UserBrowse:
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_files()
-            self.on_download_files(widget)
-            self.FileTreeView.get_selection().unselect_all()
+
+            if self.user == self.frame.np.config.sections["server"]["login"]:
+                self.on_play_files(widget)
+            else:
+                self.on_download_files(widget)
             return True
 
         return False
