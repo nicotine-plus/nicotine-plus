@@ -56,15 +56,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DownloadChecksumsFirst">
-            <property name="label" translatable="yes">Download SFV/MD5 before anything else</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkGrid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>

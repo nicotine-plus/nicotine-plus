@@ -2064,26 +2064,12 @@ class Transfers:
             for directory in file_list[i]:
 
                 if os.path.commonprefix([i, directory]) == directory:
-                    priorityfiles = []
-                    normalfiles = []
-
-                    if self.eventprocessor.config.sections["transfers"]["prioritize"]:
-                        for file in file_list[i][directory]:
-                            parts = file[1].rsplit('.', 1)
-
-                            if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
-                                priorityfiles.append(file)
-                            else:
-                                normalfiles.append(file)
-                    else:
-                        normalfiles = file_list[i][directory][:]
+                    files = file_list[i][directory][:]
 
                     if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
-                        deco = [(x[1], x) for x in normalfiles]
-                        deco.sort(reverse=True)
-                        normalfiles = [x for junk, x in deco]
+                        files.sort(key=lambda x: x[1], reverse=True)
 
-                    for file in priorityfiles + normalfiles:
+                    for file in files:
                         size = file[2]
                         h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
 

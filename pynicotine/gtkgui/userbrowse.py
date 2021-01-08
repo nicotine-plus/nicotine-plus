@@ -706,34 +706,16 @@ class UserBrowse:
         # Check if folder already exists on system
         ldir = self.frame.np.transfers.folder_destination(self.user, ldir)
 
-        for d, f in self.shares:
+        for d, files in self.shares:
 
             # Find the wanted directory
             if d != folder:
                 continue
 
-            priorityfiles = []
-            normalfiles = []
-
-            if self.frame.np.config.sections["transfers"]["prioritize"]:
-
-                for file in f:
-
-                    parts = file[1].rsplit('.', 1)
-
-                    if len(parts) == 2 and parts[1] in ['sfv', 'md5', 'nfo']:
-                        priorityfiles.append(file)
-                    else:
-                        normalfiles.append(file)
-            else:
-                normalfiles = f
-
             if self.frame.np.config.sections["transfers"]["reverseorder"]:
-                deco = [(x[1], x) for x in normalfiles]
-                deco.sort(reverse=True)
-                normalfiles = [x for junk, x in deco]
+                files.sort(key=lambda x: x[1], reverse=True)
 
-            for file in priorityfiles + normalfiles:
+            for file in files:
 
                 path = "\\".join([folder, file[1]])
                 size = file[2]

@@ -111,7 +111,6 @@ class Config:
                 "afterfolder": "",
                 "lock": True,
                 "reverseorder": False,
-                "prioritize": False,
                 "fifoqueue": False,
                 "usecustomban": False,
                 "limitby": True,
@@ -647,6 +646,9 @@ class Config:
         self.remove_old_option("columns", "upload_widths")
         self.remove_old_option("columns", "filesearch_columns")
         self.remove_old_option("columns", "filesearch_widths")
+
+        # Remove option to prioritize sfv/md5 files when downloading
+        self.remove_old_option("transfers", "prioritize")
 
     def remove_old_option(self, section, option):
 
