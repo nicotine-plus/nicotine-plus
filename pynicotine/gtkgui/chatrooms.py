@@ -423,7 +423,8 @@ class RoomsControl:
             for room in room_list:
                 if room == 'Public ':
                     self.on_join_public_room(None)
-                else:
+
+                elif isinstance(room, str):
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
         self.roomsmodel.clear()
