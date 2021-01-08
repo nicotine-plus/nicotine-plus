@@ -63,6 +63,7 @@ class UserBrowse:
         self.user = user
         self.conn = None
         self.finished = False
+        self.refreshing = False
 
         # selected_folder is the current selected folder
         self.selected_folder = None
@@ -349,9 +350,6 @@ class UserBrowse:
             if path is not None:
                 sel.select_path(path)
 
-        self.FolderTreeView.set_sensitive(True)
-        self.FileTreeView.set_sensitive(True)
-
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
         else:
@@ -535,7 +533,7 @@ class UserBrowse:
         if folder:
             self.queued_folder = folder
 
-        if not self.finished:
+        if not self.finished or self.refreshing:
             if msg is None:
                 return
 
@@ -564,6 +562,9 @@ class UserBrowse:
     def load_shares(self, list):
         self.make_new_model(list)
 
+    def is_refreshing(self):
+        return self.refreshing
+
     def set_in_progress(self, indeterminate_progress):
 
         if not indeterminate_progress:
@@ -580,7 +581,11 @@ class UserBrowse:
         self.userbrowses.request_changed(self.Main)
 
         self.progressbar1.set_fraction(1.0)
+
+        self.FolderTreeView.set_sensitive(True)
+        self.FileTreeView.set_sensitive(True)
         self.RefreshButton.set_sensitive(True)
+
         self.finished = True
 
     def update_gauge(self, msg):
@@ -984,9 +989,13 @@ class UserBrowse:
         self.Main.destroy()
 
     def on_refresh(self, widget):
+
+        self.refreshing = True
         self.info_bar.set_visible(False)
+
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
+
         self.frame.browse_user(self.user)
 
     def on_copy_file_path(self, widget, files=False):

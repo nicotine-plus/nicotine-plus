@@ -1175,7 +1175,7 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_normal
 
-        if login not in self.userbrowse.users:
+        if self.userbrowse.is_new_request(login):
             _thread.start_new_thread(self.parse_local_shares, (login, msg))
 
         self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
@@ -1964,7 +1964,7 @@ class NicotineFrame:
             if user == login:
                 self.on_browse_public_shares(folder=folder)
             else:
-                if user not in self.userbrowse.users:
+                if self.userbrowse.is_new_request(user):
                     self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
 
                 self.userbrowse.show_user(user, folder=folder)

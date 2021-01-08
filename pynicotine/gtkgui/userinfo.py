@@ -126,6 +126,13 @@ class UserTabs(IconNotebook):
 
             self.set_status_image(tab.Main, msg.status)
 
+    def is_new_request(self, user):
+
+        if user in self.users:
+            return self.users[user].is_refreshing()
+
+        return True
+
     def show_interests(self, msg):
 
         if msg.user in self.users:
