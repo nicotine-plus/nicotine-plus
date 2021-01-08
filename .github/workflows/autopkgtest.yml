@@ -24,8 +24,10 @@ jobs:
         run: |
           set +e
 
-          # Ubuntu 16.04 uses adt-run
-          if ! sudo autopkgtest . -- null; then
+          if command -v autopkgtest &> /dev/null; then
+            sudo autopkgtest . -- null
+          else
+            # Ubuntu 16.04 uses adt-run
             sudo adt-run --unbuilt-tree . --- null
           fi
 
