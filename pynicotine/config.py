@@ -699,23 +699,17 @@ class Config:
             pass
 
         try:
-            s = os.stat(self.filename)
-            if s.st_size > 0:
-                try:
-                    if os.path.exists(self.filename + ".old"):
-                        os.remove(self.filename + ".old")
-
-                except OSError:
-                    log.add_warning(_("Can't remove %s", self.filename + ".old"))
-
-                try:
-                    os.rename(self.filename, self.filename + ".old")
-
-                except OSError as error:
-                    log.add_warning(_("Can't back config file up, error: %s"), error)
+            if os.path.exists(self.filename + ".old"):
+                os.remove(self.filename + ".old")
 
         except OSError:
-            pass
+            log.add_warning(_("Can't remove %s", self.filename + ".old"))
+
+        try:
+            os.rename(self.filename, self.filename + ".old")
+
+        except OSError as error:
+            log.add_warning(_("Can't back config file up, error: %s"), error)
 
         try:
             os.rename(self.filename + ".new", self.filename)
