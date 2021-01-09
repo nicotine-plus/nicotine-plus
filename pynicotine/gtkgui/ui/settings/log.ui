@@ -325,7 +325,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="ReopenPrivateChats">
-            <property name="label" translatable="yes">Display logged private chat messages when starting a chat</property>
+            <property name="label" translatable="yes">Restore previously open private chats on startup</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
