@@ -255,7 +255,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Max visible results per search:</property>
+                <property name="label" translatable="yes">Maximum results per search visible at a time:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -267,6 +267,7 @@
               <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text">When the maximum number of visible results is smaller than the maximum total results, use the search filters to refine the results that you see. Alternatively, use the same value for both (at the potential cost of performance).</property>
                 <property name="width_chars">6</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="secondary_icon_activatable">False</property>
@@ -297,7 +298,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Max stored results per search:</property>
+                <property name="label" translatable="yes">Maximum total results per search:</property>
               </object>
               <packing>
                 <property name="expand">False</property>
