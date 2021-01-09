@@ -828,6 +828,7 @@ class IconNotebook:
         self._show_hilite_image = show_hilite_image
         self._show_status_image = show_status_image
 
+        self.notebook.connect("key-press-event", self.on_key_press_event)
         self.notebook.connect("switch-page", self.dismiss_icon)
 
         self.angle = angle
@@ -1021,6 +1022,21 @@ class IconNotebook:
 
     def show(self):
         self.notebook.show()
+
+    def on_key_press_event(self, widget, event):
+
+        key = Gdk.keyval_name(event.keyval)
+
+        if event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+            if key in ("W", "w") or key == "F4":
+                # Ctrl+W and Ctrl+F4: close current tab
+
+                self.notebook.remove_page(self.get_current_page())
+
+                if self.notebook.get_n_pages() == 0:
+                    self.notebook.set_show_tabs(False)
+
+        return True
 
 
 class InfoBar:
