@@ -2198,6 +2198,9 @@ class UrlCatchFrame(BuildFrame):
         protocol = self.ProtocolCombo.get_child().get_text()
         command = self.Handler.get_child().get_text()
 
+        self.ProtocolCombo.get_child().set_text("")
+        self.Handler.get_child().set_text("")
+
         if protocol in self.protocols:
             iterator = self.protocols[protocol]
             if iterator is not None:
@@ -2215,6 +2218,9 @@ class UrlCatchFrame(BuildFrame):
             protocol = self.protocolmodel.get_value(iterator, 0)
             self.protocolmodel.remove(iterator)
             del self.protocols[protocol]
+
+    def on_clear(self, widget):
+        self.protocolmodel.clear()
 
 
 class CensorFrame(BuildFrame):
