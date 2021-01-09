@@ -248,6 +248,8 @@ def initialise_columns(treeview_name, treeview, *args):
                 renderer.set_property("background-set", False)
 
         column.set_reorderable(True)
+        column.set_min_width(20)
+
         column.set_widget(Gtk.Label.new(title))
         column.get_widget().set_margin_start(6)
         column.get_widget().show()
