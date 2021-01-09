@@ -22,10 +22,11 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="DarkMode">
-        <property name="label" translatable="yes">Enable Dark Mode</property>
+        <property name="label" translatable="yes">Prefer Dark Mode</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">False</property>
+        <property name="label" translatable="yes">Note that the operating system's theme may take precedence.</property>
         <property name="draw_indicator">True</property>
       </object>
       <packing>
