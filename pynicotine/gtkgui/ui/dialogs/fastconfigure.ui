@@ -74,9 +74,17 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have a Soulseek account, fill in your chosen details.
-
-Please keep in mind that more common usernames may be taken. If you&apos;re unable to connect, you can change your username in the preferences later.</property>
+            <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have a Soulseek account, fill in your chosen details.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">60</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Please keep in mind that more common usernames may be taken. If you&apos;re unable to connect, you can change your username in the preferences later.</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
             <property name="width-chars">60</property>
