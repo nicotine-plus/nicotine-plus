@@ -1990,7 +1990,7 @@ class SearchFrame(BuildFrame):
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
-        for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterFree:
+        for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterCC, self.FilterFree:
             w.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
