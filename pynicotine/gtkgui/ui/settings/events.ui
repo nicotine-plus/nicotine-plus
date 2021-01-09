@@ -44,10 +44,6 @@
             <property name="width_request">313</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">True</property>
-            <property name="secondary_icon_sensitive">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -74,10 +70,6 @@
             <property name="width_request">313</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="secondary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">True</property>
-            <property name="secondary_icon_sensitive">True</property>
           </object>
           <packing>
             <property name="expand">False</property>

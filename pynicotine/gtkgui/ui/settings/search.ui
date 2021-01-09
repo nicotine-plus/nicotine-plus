@@ -97,11 +97,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment_MinSearchChars</property>
+                    <property name="numeric">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -151,11 +148,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="width_chars">6</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">True</property>
-                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment_MaxResults</property>
+                    <property name="numeric">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -268,11 +262,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="width_chars">6</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-                <property name="primary_icon_sensitive">True</property>
-                <property name="secondary_icon_sensitive">True</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -310,11 +301,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="width_chars">6</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
-                <property name="primary_icon_sensitive">True</property>
-                <property name="secondary_icon_sensitive">True</property>
                 <property name="adjustment">adjustment_MaxStoredResults</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -429,8 +417,6 @@
                   <object class="GtkEntry" id="FilterCC">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -478,8 +464,6 @@
                   <object class="GtkEntry" id="FilterBR">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -501,8 +485,6 @@
                   <object class="GtkEntry" id="FilterSize">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="secondary_icon_activatable">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -520,8 +502,6 @@
               <object class="GtkEntry" id="FilterOut">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -532,8 +512,6 @@
               <object class="GtkEntry" id="FilterIn">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="secondary_icon_activatable">False</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

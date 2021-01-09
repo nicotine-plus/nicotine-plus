@@ -104,9 +104,6 @@ Please keep in mind that more common usernames may be taken. If you&apos;re unab
                   <object class="GtkEntry" id="username">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="invisible-char">●</property>
-                    <property name="primary-icon-activatable">0</property>
-                    <property name="secondary-icon-activatable">0</property>
                     <signal name="backspace" handler="on_entry_changed" swapped="no"/>
                     <signal name="changed" handler="on_entry_paste" swapped="no"/>
                     <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>
@@ -136,9 +133,6 @@ Please keep in mind that more common usernames may be taken. If you&apos;re unab
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="visibility">0</property>
-                    <property name="invisible-char">●</property>
-                    <property name="primary-icon-activatable">0</property>
-                    <property name="secondary-icon-activatable">0</property>
                     <signal name="backspace" handler="on_entry_changed" swapped="no"/>
                     <signal name="changed" handler="on_entry_paste" swapped="no"/>
                     <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>

@@ -297,6 +297,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">5</property>
                 <property name="adjustment">adjustment_RoomLogLines</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -361,6 +362,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">5</property>
                 <property name="adjustment">adjustment_PrivateLogLines</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>

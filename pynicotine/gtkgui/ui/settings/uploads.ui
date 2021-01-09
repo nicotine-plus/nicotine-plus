@@ -147,6 +147,7 @@
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_QueueBandwidth</property>
                 <property name="hexpand">True</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -188,6 +189,7 @@
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_QueueSlots</property>
                 <property name="hexpand">True</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -215,6 +217,7 @@
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_LimitSpeed</property>
                 <property name="hexpand">True</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -294,6 +297,7 @@
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_MaxUserQueue</property>
                 <property name="hexpand">True</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -306,6 +310,7 @@
                 <property name="can_focus">True</property>
                 <property name="adjustment">adjustment_MaxUserFiles</property>
                 <property name="hexpand">True</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

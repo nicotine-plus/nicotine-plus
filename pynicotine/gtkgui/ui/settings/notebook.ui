@@ -195,6 +195,7 @@
                 <property name="max_length">3</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_MainAngleSpin</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -258,6 +259,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_ChatRoomsAngleSpin</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -321,6 +323,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_PrivateChatAngleSpin</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -384,7 +387,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_SearchAngleSpin</property>
-                <property name="update_policy">if-valid</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -448,6 +451,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_UserInfoAngleSpin</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -511,6 +515,7 @@
                 <property name="can_focus">True</property>
                 <property name="width_chars">4</property>
                 <property name="adjustment">adjustment_UserBrowseAngleSpin</property>
+                <property name="numeric">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>

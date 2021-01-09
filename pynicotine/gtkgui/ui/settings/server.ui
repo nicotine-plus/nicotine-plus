@@ -125,7 +125,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="visibility">False</property>
-                <property name="invisible_char">•</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -214,6 +213,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">adjustment_FirstPort</property>
+            <property name="numeric">True</property>
             <signal name="value-changed" handler="on_modify_port" swapped="no"/>
           </object>
           <packing>
@@ -239,6 +239,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">adjustment_LastPort</property>
+            <property name="numeric">True</property>
             <signal name="value-changed" handler="on_modify_port" swapped="no"/>
           </object>
           <packing>
@@ -324,6 +325,7 @@
             <property name="can_focus">True</property>
             <property name="width_chars">6</property>
             <property name="adjustment">adjustment_UPnPInterval</property>
+            <property name="numeric">True</property>
             <signal name="value-changed" handler="on_modify_upnp_interval" swapped="no"/>
           </object>
           <packing>
