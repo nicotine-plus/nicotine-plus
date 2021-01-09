@@ -1666,6 +1666,7 @@ class FontsColorsFrame(BuildFrame):
 
         sensitive = widget.get_active()
 
+        self.DisplayAwayColors.set_sensitive(sensitive)
         self.EntryAway.set_sensitive(sensitive and self.DisplayAwayColors.get_active())
         self.EntryOnline.set_sensitive(sensitive)
         self.EntryOffline.set_sensitive(sensitive)
