@@ -2933,6 +2933,7 @@ class PluginFrame(BuildFrame):
         self.PluginTreeView.get_selection().connect("changed", self.on_select_plugin)
 
     def on_plugin_properties(self, widget):
+
         if self.selected_plugin is None:
             return
 
@@ -3001,28 +3002,43 @@ class PluginFrame(BuildFrame):
                 info = self.frame.np.pluginhandler.get_plugin_info(plugin)
             except IOError:
                 continue
-            enabled = (plugin in self.frame.np.pluginhandler.enabled_plugins)
+            enabled = (plugin in config["plugins"]["enabled"])
             self.pluginsiters[filter] = self.plugins_model.append([enabled, info['Name'], plugin])
 
         return {}
 
+    def get_enabled_plugins(self):
+
+        enabled_plugins = []
+
+        for plugin in self.plugins_model:
+            enabled = self.plugins_model.get(plugin.iter, 0)[0]
+
+            if enabled:
+                plugin_name = self.plugins_model.get(plugin.iter, 2)[0]
+                enabled_plugins.append(plugin_name)
+
+        return enabled_plugins
+
     def on_plugins_enable(self, widget):
         self.PluginList.set_sensitive(self.PluginsEnable.get_active())
 
-        if not self.PluginsEnable.get_active():
+        if self.PluginsEnable.get_active():
+            # Enable all selected plugins
+            for plugin in self.get_enabled_plugins():
+                self.frame.np.pluginhandler.enable_plugin(plugin)
+
+        else:
             # Disable all plugins
             for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
                 self.frame.np.pluginhandler.disable_plugin(plugin)
 
-            # Uncheck all checkboxes in GUI
-            for plugin in self.plugins_model:
-                self.plugins_model.set(plugin.iter, 0, False)
-
     def get_settings(self):
+
         return {
             "plugins": {
                 "enable": self.PluginsEnable.get_active(),
-                "enabled": list(self.frame.np.pluginhandler.enabled_plugins.keys())
+                "enabled": self.get_enabled_plugins()
             }
         }
 
