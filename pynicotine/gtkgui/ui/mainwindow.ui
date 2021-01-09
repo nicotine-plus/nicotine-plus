@@ -5,7 +5,7 @@
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="has-subtitle">False</property>
+    <property name="has-subtitle">0</property>
     <property name="show-close-button">1</property>
     <child>
       <object class="GtkBox">
@@ -1610,7 +1610,7 @@
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="ellipsize">end</property>
-                <property name="single-line-mode">True</property>
+                <property name="single-line-mode">1</property>
               </object>
             </child>
             <child>

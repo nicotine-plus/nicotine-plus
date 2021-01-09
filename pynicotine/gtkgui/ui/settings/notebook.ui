@@ -4,538 +4,317 @@
   <object class="GtkAdjustment" id="adjustment_ChatRoomsAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_MainAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_PrivateChatAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_SearchAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_UserBrowseAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_UserInfoAngleSpin">
     <property name="lower">-90</property>
     <property name="upper">90</property>
-    <property name="step_increment">90</property>
-    <property name="page_increment">90</property>
+    <property name="step-increment">90</property>
+    <property name="page-increment">90</property>
   </object>
   <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="spacing">15</property>
+    <property name="visible">1</property>
+    <property name="spacing">20</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
             <property name="halign">start</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="TabSelectPrevious">
             <property name="label" translatable="yes">Select previous tab on startup</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="TabClosers">
             <property name="label" translatable="yes">Close-buttons on tabs</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="TabReorderable">
             <property name="label" translatable="yes">Tabs can be repositioned</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="TabStatusIcons">
             <property name="label" translatable="yes">Show user status icons instead of status text</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="label" translatable="yes">&lt;b&gt;Tab Positioning&lt;/b&gt;</property>
             <property name="halign">start</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="MainTabsLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Main</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="MainPosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="MainAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="MainAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="max_length">3</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="max-length">3</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_MainAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="ChatRoomsLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Chat rooms</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="ChatRoomsPosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="ChatRoomsAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="ChatRoomsAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_ChatRoomsAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="PrivateChatLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Private chat</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="PrivateChatPosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="PrivateChatAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="PrivateChatAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_PrivateChatAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="SearchLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Search</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="SearchPosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="SearchAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="SearchAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_SearchAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="UserInfoLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">User info</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="UserInfoPosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="UserInfoAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="UserInfoAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_UserInfoAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel" id="UserBrowseLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">User browse</property>
-                <property name="width_chars">20</property>
+                <property name="width-chars">20</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="UserBrowsePosition">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="UserBrowseAngleLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Label Angle:</property>
-                <property name="width_chars">12</property>
+                <property name="width-chars">12</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="UserBrowseAngleSpin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">4</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_UserBrowseAngleSpin</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>

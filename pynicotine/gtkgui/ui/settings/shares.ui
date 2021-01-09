@@ -1,378 +1,286 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-<requires lib="gtk+" version="3.18"/>
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="visible">1</property>
     <property name="spacing">15</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
-        <property name="use_markup">True</property>
+        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access your buddy shares in addition to public shares.</property>
+        <property name="use-markup">1</property>
+        <property name="justify">fill</property>
+        <property name="wrap">1</property>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access your buddy shares in addition to public shares.</property>
-        <property name="use_markup">True</property>
-        <property name="justify">fill</property>
-        <property name="wrap">True</property>
+        <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+        <property name="use-markup">1</property>
       </object>
     </child>
     <child>
       <object class="GtkCheckButton" id="RescanOnStartup">
         <property name="label" translatable="yes">Rescan shares on startup</property>
-        <property name="tooltip_text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">False</property>
-        <property name="use_underline">True</property>
-        <property name="draw_indicator">True</property>
+        <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+        <property name="visible">1</property>
+        <property name="can-focus">1</property>
+        <property name="use-underline">1</property>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">&lt;b&gt;Public Shares&lt;/b&gt;</property>
-        <property name="use_markup">True</property>
+        <property name="use-markup">1</property>
       </object>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="vexpand">True</property>
+        <property name="visible">1</property>
+        <property name="vexpand">1</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="width_request">250</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <property name="shadow_type">in</property>
+            <property name="width-request">250</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="hexpand">1</property>
+            <property name="vexpand">1</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="Shares">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">5</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="margin-start">6</property>
+            <property name="spacing">6</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkButton" id="addSharesButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_add_shared_dir" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">list-add-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-add-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Add...</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="removeSharesButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">list-remove-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-remove-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Remove</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="renameVirtualsButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_rename_virtuals" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">document-edit-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">document-edit-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Rename</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">15</property>
         <child>
           <object class="GtkCheckButton" id="enableBuddyShares">
             <property name="label" translatable="yes">Buddy Shares</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="tooltip_text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
+            <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="FriendsOnly">
             <property name="label" translatable="yes">Make public shares buddy-only</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="has_tooltip">True</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="has-tooltip">1</property>
+            <property name="use-underline">1</property>
             <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
           </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="vexpand">True</property>
+        <property name="visible">1</property>
+        <property name="vexpand">1</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="width_request">250</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <property name="shadow_type">in</property>
+            <property name="width-request">250</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="hexpand">1</property>
+            <property name="vexpand">1</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="BuddyShares">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="border_width">5</property>
-            <property name="spacing">5</property>
+            <property name="visible">1</property>
+            <property name="margin-start">6</property>
+            <property name="spacing">6</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkButton" id="addBuddySharesButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_add_shared_buddy_dir" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">list-add-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-add-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Add...</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="removeBuddySharesButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove_shared_buddy_dir" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">list-remove-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-remove-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Remove</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="renameBuddyVirtualsButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_rename_buddy_virtuals" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">document-edit-symbolic</property>
+                        <property name="visible">1</property>
+                        <property name="icon-name">document-edit-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="label" translatable="yes">Rename</property>
-                        <property name="use_underline">True</property>
+                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>

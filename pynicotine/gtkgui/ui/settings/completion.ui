@@ -5,279 +5,155 @@
     <property name="lower">1</property>
     <property name="upper">10</property>
     <property name="value">2</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="spacing">15</property>
+    <property name="visible">1</property>
+    <property name="spacing">20</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
             <property name="halign">start</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="SpellCheck">
             <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionTabCheck">
             <property name="label" translatable="yes">Enable tab-key completion</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_tab_check"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionCycleCheck">
             <property name="label" translatable="yes">Cycle through completions when pressing tab-key</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="CompletionsLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="label" translatable="yes">&lt;b&gt;Allowed Completions&lt;/b&gt;</property>
             <property name="halign">start</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
             <property name="label" translatable="yes">Complete room names in chat rooms</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteBuddiesCheck">
             <property name="label" translatable="yes">Complete Buddy Names</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteUsersInRoomsCheck">
             <property name="label" translatable="yes">Complete usernames in chat rooms</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteCommandsCheck">
             <property name="label" translatable="yes">Complete built-in /Commands</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteAliasesCheck">
             <property name="label" translatable="yes">Complete alias /Commands</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">5</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="DropDownLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="label" translatable="yes">&lt;b&gt;Drop-down list&lt;/b&gt;</property>
             <property name="halign">start</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionDropdownCheck">
             <property name="label" translatable="yes">Enable completion drop-down list</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_dropdown_check"/>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="spacing">5</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="CharactersCompletion">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <property name="adjustment">adjustment_CharactersCompletion</property>
                 <signal name="changed" handler="on_completion_changed"/>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="OneMatchCheck">
             <property name="label" translatable="yes">Hide drop-down when only one matches</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </object>
 </interface>

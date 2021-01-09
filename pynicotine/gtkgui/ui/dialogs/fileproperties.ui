@@ -375,7 +375,7 @@
               <object class="GtkBox" id="navigation_buttons">
                 <property name="visible">1</property>
                 <property name="halign">end</property>
-                <property name="hexpand">True</property>
+                <property name="hexpand">1</property>
                 <child>
                   <object class="GtkButton" id="previous">
                     <property name="visible">1</property>

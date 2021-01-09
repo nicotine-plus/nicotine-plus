@@ -3,110 +3,96 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment_DownloadSpeed">
     <property name="upper">99999</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkBox" id="Main">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="spacing">15</property>
+    <property name="visible">1</property>
+    <property name="spacing">20</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="AutoclearFinished">
             <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="use-underline">1</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="LockIncoming">
             <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="use-underline">1</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="DownloadReverseOrder">
             <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
           <object class="GtkGrid">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="row_spacing">10</property>
-            <property name="column_spacing">10</property>
-            <property name="column_homogeneous">True</property>
+            <property name="visible">1</property>
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">10</property>
+            <property name="column-homogeneous">1</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Limit total download speeds to (KBytes/sec):</property>
-                <property name="single_line_mode">True</property>
+                <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeed">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
-                <property name="numeric">True</property>
+                <property name="numeric">1</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="RemoteDownloads">
                 <property name="label" translatable="yes">Allow these users to send you files:</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder</property>
+                <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
               </object>
               <packing>
-                <property name="top_attach">1</property>
-                <property name="left_attach">0</property>
+                <property name="top-attach">1</property>
+                <property name="left-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkComboBoxText" id="UploadsAllowed">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <items>
                   <item translatable="yes">No one</item>
                   <item translatable="yes">Everyone</item>
@@ -115,282 +101,207 @@
                 </items>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
               </packing>
             </child>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">&lt;b&gt;Folders&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="row_spacing">10</property>
-            <property name="column_spacing">10</property>
-            <property name="column_homogeneous">True</property>
+            <property name="visible">1</property>
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">10</property>
+            <property name="column-homogeneous">1</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Incomplete file folder:</property>
-                <property name="single_line_mode">True</property>
+                <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Download folder:</property>
-                <property name="single_line_mode">True</property>
+                <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Save buddies' uploads to:</property>
+                <property name="label" translatable="yes">Save buddies&apos; uploads to:</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">3</property>
               </packing>
             </child>
             <child>
               <object class="GtkFileChooserButton" id="UploadDir">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Where buddies' uploads will be stored (with a subfolder for each buddy)</property>
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder for each buddy)</property>
                 <property name="action">select-folder</property>
-                <property name="show_hidden">True</property>
+                <property name="show-hidden">1</property>
                 <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">3</property>
               </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="ShareDownloadDir">
                 <property name="label" translatable="yes">Share download folder</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_underline">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="use-underline">1</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">2</property>
               </packing>
             </child>
             <child>
               <object class="GtkFileChooserButton" id="IncompleteDir">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Where incomplete downloads are stored temporarily</property>
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Where incomplete downloads are stored temporarily</property>
                 <property name="action">select-folder</property>
-                <property name="show_hidden">True</property>
+                <property name="show-hidden">1</property>
                 <property name="title" translatable="yes">Select a folder</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkFileChooserButton" id="DownloadDir">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="action">select-folder</property>
-                <property name="show_hidden">True</property>
+                <property name="show-hidden">1</property>
                 <property name="title" translatable="yes">Select a folder</property>
                 <signal name="selection-changed" handler="on_choose_download_dir" swapped="no"/>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
               </packing>
             </child>
-            <child>
-              <placeholder/>
-            </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="visible">1</property>
         <property name="spacing">5</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">&lt;b&gt;Download Filters&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
+            <property name="use-markup">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkCheckButton" id="DownloadFilter">
             <property name="label" translatable="yes">Enable Filters</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">False</property>
-            <property name="use_underline">True</property>
-            <property name="draw_indicator">True</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enable_filters_toggle" swapped="no"/>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="visible">1</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled.</property>
-            <property name="use_markup">True</property>
-            <property name="wrap">True</property>
+            <property name="use-markup">1</property>
+            <property name="wrap">1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkGrid">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="row_spacing">5</property>
-            <property name="column_spacing">5</property>
+            <property name="visible">1</property>
+            <property name="row-spacing">5</property>
+            <property name="column-spacing">5</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="border_width">5</property>
+                <property name="visible">1</property>
+                <property name="margin-start">6</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">5</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="VerifyFilters">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_verify_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="spacing">5</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">tools-check-spelling-symbolic</property>
+                            <property name="visible">1</property>
+                            <property name="icon-name">tools-check-spelling-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="visible">1</property>
                             <property name="label" translatable="yes">Verify Filters</property>
-                            <property name="use_underline">True</property>
+                            <property name="use-underline">1</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="shadow_type">in</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="FilterView">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
@@ -398,243 +309,150 @@
                 </child>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="visible">1</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkLabel" id="VerifiedLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
                     <property name="label" translatable="yes">&lt;b&gt;Unverified&lt;/b&gt;</property>
-                    <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
+                    <property name="use-markup">1</property>
+                    <property name="wrap">1</property>
                     <property name="xalign">1</property>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="pack_type">end</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="border_width">5</property>
+                <property name="visible">1</property>
+                <property name="margin-start">6</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">5</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton" id="AddFilter">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="spacing">5</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">list-add-symbolic</property>
+                            <property name="visible">1</property>
+                            <property name="icon-name">list-add-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="visible">1</property>
                             <property name="label" translatable="yes">Add...</property>
-                            <property name="use_underline">True</property>
+                            <property name="use-underline">1</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="EditFilter">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_edit_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="spacing">5</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">document-edit-symbolic</property>
+                            <property name="visible">1</property>
+                            <property name="icon-name">document-edit-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="visible">1</property>
                             <property name="label" translatable="yes">Edit Filter</property>
-                            <property name="use_underline">True</property>
+                            <property name="use-underline">1</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="RemoveFilter">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="spacing">5</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">list-remove-symbolic</property>
+                            <property name="visible">1</property>
+                            <property name="icon-name">list-remove-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="visible">1</property>
                             <property name="label" translatable="yes">Remove</property>
-                            <property name="use_underline">True</property>
+                            <property name="use-underline">1</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="DefaultFilters">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="receives-default">1</property>
                     <signal name="clicked" handler="on_default_filters" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="visible">1</property>
                         <property name="spacing">5</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">view-refresh-symbolic</property>
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="visible">1</property>
                             <property name="label" translatable="yes">Load Defaults</property>
-                            <property name="use_underline">True</property>
+                            <property name="use-underline">1</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">3</property>
-                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">3</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </object>
 </interface>
