@@ -59,7 +59,7 @@
           <attribute name="action">win.showheaderbar</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">Show _Log Window</attribute>
+          <attribute name="label" translatable="yes">Show _Log Pane</attribute>
           <attribute name="action">win.showlog</attribute>
           <attribute name="accel">&lt;Primary&gt;l</attribute>
         </item>
@@ -184,15 +184,19 @@
       <attribute name="label" translatable="yes">_Help</attribute>
       <section>
         <item>
-          <attribute name="label" translatable="yes">About _Chat Room Commands</attribute>
+          <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+          <attribute name="action">app.keyboardshortcuts</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Chat Room Commands</attribute>
           <attribute name="action">app.aboutchatroomcommands</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">About _Private Chat Commands</attribute>
+          <attribute name="label" translatable="yes">_Private Chat Commands</attribute>
           <attribute name="action">app.aboutprivatechatcommands</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">About _Search Filters</attribute>
+          <attribute name="label" translatable="yes">_Search Filters</attribute>
           <attribute name="action">app.aboutfilters</attribute>
         </item>
       </section>

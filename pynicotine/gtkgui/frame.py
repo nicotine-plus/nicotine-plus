@@ -826,6 +826,10 @@ class NicotineFrame:
         action.connect("activate", self.on_about_filters)
         self.application.add_action(action)
 
+        action = Gio.SimpleAction.new("keyboardshortcuts", None)
+        action.connect("activate", self.on_keyboard_shortcuts)
+        self.application.add_action(action)
+
         action = Gio.SimpleAction.new("transferstatistics", None)
         action.connect("activate", self.on_transfer_statistics)
         self.application.add_action(action)
@@ -1253,6 +1257,14 @@ class NicotineFrame:
             self.AboutSearchFiltersDialog.set_transient_for(self.MainWindow)
 
         self.AboutSearchFiltersDialog.show()
+
+    def on_keyboard_shortcuts(self, *args):
+
+        if not hasattr(self, "KeyboardShortcutsDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
+            self.KeyboardShortcutsDialog.set_transient_for(self.MainWindow)
+
+        self.KeyboardShortcutsDialog.show()
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
