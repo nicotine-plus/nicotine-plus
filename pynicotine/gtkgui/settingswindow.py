@@ -2473,7 +2473,7 @@ class CompletionFrame(BuildFrame):
     def on_completion_changed(self, widget):
         self.needcompletion = 1
 
-    def on_completion_dropdown_check(self, widget):
+    def on_completion_tab_check(self, widget):
         sensitive = self.CompletionTabCheck.get_active()
         self.needcompletion = 1
 
@@ -2485,11 +2485,12 @@ class CompletionFrame(BuildFrame):
         self.CompleteAliasesCheck.set_sensitive(sensitive)
         self.CompletionDropdownCheck.set_sensitive(sensitive)
 
-        self.on_completion_cycle_check(widget)
+        self.on_completion_dropdown_check(widget)
 
-    def on_completion_cycle_check(self, widget):
-        sensitive = (self.CompletionTabCheck.get_active() and not self.CompletionCycleCheck.get_active())
-        self.CompletionDropdownCheck.set_sensitive(sensitive)
+    def on_completion_dropdown_check(self, widget):
+        sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
+        self.needcompletion = 1
+
         self.CharactersCompletion.set_sensitive(sensitive)
         self.OneMatchCheck.set_sensitive(sensitive)
 

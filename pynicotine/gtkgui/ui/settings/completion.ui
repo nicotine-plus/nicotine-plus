@@ -54,7 +54,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_completion_dropdown_check"/>
+            <signal name="toggled" handler="on_completion_tab_check"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -64,12 +64,12 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionCycleCheck">
-            <property name="label" translatable="yes">Cycle completions instead of showing a dropdown</property>
+            <property name="label" translatable="yes">Cycle through completions when pressing tab-key</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
-            <signal name="toggled" handler="on_completion_cycle_check"/>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
           <packing>
             <property name="expand">False</property>
