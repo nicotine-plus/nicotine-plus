@@ -145,7 +145,7 @@
               <object class="GtkSpinButton" id="QueueBandwidth">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip_text">Kilobytes per second.</property>
+                <property name="tooltip_text">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_QueueBandwidth</property>
                 <property name="hexpand">True</property>
               </object>
@@ -158,7 +158,7 @@
               <object class="GtkLabel" id="QueueBandwidthText2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">kB/s</property>
+                <property name="label" translatable="yes">KiB/s</property>
                 <property name="wrap">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -214,7 +214,7 @@
               <object class="GtkSpinButton" id="LimitSpeed">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip_text">Kilobytes per second.</property>
+                <property name="tooltip_text">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_LimitSpeed</property>
                 <property name="hexpand">True</property>
               </object>
@@ -227,7 +227,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">kB/s</property>
+                <property name="label" translatable="yes">KiB/s</property>
               </object>
               <packing>
                 <property name="left_attach">2</property>
@@ -294,7 +294,7 @@
               <object class="GtkSpinButton" id="MaxUserQueue">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip_text">Megabytes.</property>
+                <property name="tooltip_text">Mebibytes (2^17 bytes).</property>
                 <property name="adjustment">adjustment_MaxUserQueue</property>
                 <property name="hexpand">True</property>
               </object>
@@ -319,7 +319,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">MBs</property>
+                <property name="label" translatable="yes">MiBs</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
