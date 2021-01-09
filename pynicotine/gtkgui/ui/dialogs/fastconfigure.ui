@@ -7,9 +7,8 @@
     <property name="default-width">900</property>
     <property name="default-height">450</property>
     <property name="type-hint">dialog</property>
-    <property name="gravity">center</property>
     <signal name="apply" handler="on_apply" swapped="no"/>
-    <signal name="cancel" handler="on_cancel" swapped="no"/>
+    <signal name="cancel" handler="on_close" swapped="no"/>
     <signal name="close" handler="on_close" swapped="no"/>
     <signal name="prepare" handler="on_prepare" swapped="no"/>
     <child>
@@ -17,8 +16,8 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
         <property name="orientation">vertical</property>
@@ -39,7 +38,7 @@
             <property name="label" translatable="yes">Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing network.</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
@@ -51,12 +50,13 @@
             <property name="label" translatable="yes">Press &quot;Next&quot; to start configuring Nicotine+.</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
       </object>
       <packing>
+        <property name="complete">1</property>
         <property name="page-type">intro</property>
       </packing>
     </child>
@@ -65,8 +65,8 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
         <property name="orientation">vertical</property>
@@ -77,7 +77,7 @@
             <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have a Soulseek account, fill in your chosen details.</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
@@ -87,67 +87,74 @@
             <property name="label" translatable="yes">Please keep in mind that more common usernames may be taken. If you&apos;re unable to connect, you can change your username in the preferences later.</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="column-spacing">10</property>
+            <property name="row-spacing">10</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
-                <property name="hexpand">1</property>
+                <property name="can-focus">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Username</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="username">
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <signal name="backspace" handler="on_entry_changed" swapped="no"/>
-                    <signal name="changed" handler="on_entry_paste" swapped="no"/>
-                    <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>
-                    <signal name="delete-from-cursor" handler="on_entry_changed" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="on_entry_changed" swapped="no"/>
-                    <signal name="key-press-event" handler="on_entry_changed" swapped="no"/>
-                    <signal name="paste-clipboard" handler="on_entry_changed" swapped="no"/>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">10</property>
+                    <property name="hexpand">1</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Username&lt;/b&gt;</property>
+                        <property name="use-markup">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="username">
+                        <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="width-chars">20</property>
+                        <signal name="changed" handler="on_entry_changed" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
-                <property name="hexpand">1</property>
+                <property name="can-focus">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">Password</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="password">
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="visibility">0</property>
-                    <signal name="backspace" handler="on_entry_changed" swapped="no"/>
-                    <signal name="changed" handler="on_entry_paste" swapped="no"/>
-                    <signal name="cut-clipboard" handler="on_entry_changed" swapped="no"/>
-                    <signal name="delete-from-cursor" handler="on_entry_changed" swapped="no"/>
-                    <signal name="insert-at-cursor" handler="on_entry_changed" swapped="no"/>
-                    <signal name="key-press-event" handler="on_entry_changed" swapped="no"/>
-                    <signal name="paste-clipboard" handler="on_entry_changed" swapped="no"/>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">10</property>
+                    <property name="hexpand">1</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Password&lt;/b&gt;</property>
+                        <property name="use-markup">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="password">
+                        <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="visibility">0</property>
+                        <property name="width-chars">20</property>
+                        <signal name="changed" handler="on_entry_changed" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -161,8 +168,8 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
         <property name="orientation">vertical</property>
@@ -179,7 +186,7 @@
                 <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. An open listening port is crucial to allow users to connect to you without trouble.</property>
                 <property name="justify">center</property>
                 <property name="wrap">1</property>
-                <property name="width-chars">60</property>
+                <property name="width-chars">36</property>
                 <property name="max-width-chars">60</property>
               </object>
             </child>
@@ -189,7 +196,7 @@
                 <property name="label" translatable="yes">The default listening port should work fine in most cases. If you need to use a different port, you can change it in the preferences later.</property>
                 <property name="justify">center</property>
                 <property name="wrap">1</property>
-                <property name="width-chars">60</property>
+                <property name="width-chars">36</property>
                 <property name="max-width-chars">60</property>
               </object>
             </child>
@@ -199,18 +206,18 @@
                 <property name="label" translatable="yes">Nicotine+ will still work to some degree if your port is closed. However, do keep in mind that you won&apos;t be able to connect to users whose port is also closed.</property>
                 <property name="justify">center</property>
                 <property name="wrap">1</property>
-                <property name="width-chars">60</property>
+                <property name="width-chars">36</property>
                 <property name="max-width-chars">60</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="checkmyport">
-                <property name="label" translatable="yes">Check my port status</property>
+                <property name="label" translatable="yes">Check Port Status</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="receives-default">1</property>
                 <property name="halign">center</property>
-                <signal name="clicked" handler="on_button_pressed" swapped="no"/>
+                <signal name="clicked" handler="on_check_port_status" swapped="no"/>
               </object>
             </child>
           </object>
@@ -221,33 +228,32 @@
       <object class="GtkBox" id="sharepage">
         <property name="visible">1</property>
         <property name="valign">center</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
+        <property name="margin-start">15</property>
+        <property name="margin-end">15</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">30</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
+            <property name="orientation">vertical</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">Download files to the following folder:</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFileChooserButton" id="downloaddir">
-            <property name="visible">1</property>
-            <property name="halign">center</property>
-            <property name="margin-bottom">15</property>
-            <property name="action">select-folder</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="halign">center</property>
-            <property name="label" translatable="yes">Share the following folders:</property>
-            <property name="width-chars">0</property>
+            <property name="spacing">15</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;Download Files To Folder&lt;/b&gt;</property>
+                <property name="use-markup">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFileChooserButton" id="downloaddir">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="action">select-folder</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -255,6 +261,13 @@
             <property name="visible">1</property>
             <property name="orientation">vertical</property>
             <property name="spacing">15</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;Share Folders&lt;/b&gt;</property>
+                <property name="use-markup">1</property>
+              </object>
+            </child>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
@@ -284,7 +297,7 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
-                    <signal name="clicked" handler="on_button_pressed" swapped="no"/>
+                    <signal name="clicked" handler="on_add_share" swapped="no"/>
                   </object>
                 </child>
                 <child>
@@ -293,17 +306,9 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
-                    <signal name="clicked" handler="on_button_pressed" swapped="no"/>
+                    <signal name="clicked" handler="on_remove_share" swapped="no"/>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="onlysharewithfriends">
-                <property name="label" translatable="yes">Only share files with friends</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="halign">center</property>
               </object>
             </child>
           </object>
@@ -315,8 +320,8 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
         <property name="orientation">vertical</property>
@@ -336,7 +341,7 @@
             <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
             <property name="justify">fill</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
@@ -347,7 +352,7 @@
             <property name="label" translatable="yes">You do not publicly share any files. Sharing files is crucial for the health of the Soulseek network, and many people will ban you if you download from them without sharing anything yourself.</property>
             <property name="justify">fill</property>
             <property name="wrap">1</property>
-            <property name="width-chars">60</property>
+            <property name="width-chars">36</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
@@ -355,10 +360,6 @@
       <packing>
         <property name="page-type">confirm</property>
       </packing>
-    </child>
-    <child internal-child="action_area">
-      <object class="GtkBox">
-      </object>
     </child>
   </object>
 </interface>

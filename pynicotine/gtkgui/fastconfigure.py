@@ -34,7 +34,6 @@ class FastConfigureAssistant(object):
     def __init__(self, frame):
 
         self.frame = frame
-        self.initphase = True  # don't respond to signals unless False
         self.config = frame.np.config
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
@@ -42,8 +41,6 @@ class FastConfigureAssistant(object):
         self.FastConfigureDialog.set_transient_for(self.frame.MainWindow)
 
         # Page specific, sharepage
-        # The last column is the raw byte/unicode object
-        # for the folder (not shown)
         self.sharelist = Gtk.ListStore(
             str,
             str
@@ -57,19 +54,9 @@ class FastConfigureAssistant(object):
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)
-        self.shareddirectoriestree.get_selection().set_mode(
-            Gtk.SelectionMode.MULTIPLE
-        )
-
-        self.initphase = False
+        self.shareddirectoriestree.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def show(self):
-        self.initphase = True
-        self._populate()
-        self.initphase = False
-        self.FastConfigureDialog.show()
-
-    def _populate(self):
 
         # userpasspage
         self.username.set_text(
@@ -87,30 +74,10 @@ class FastConfigureAssistant(object):
 
         self.sharelist.clear()
 
-        if self.config.sections["transfers"]["friendsonly"] and \
-           self.config.sections["transfers"]["enablebuddyshares"]:
-            for directory in self.config.sections["transfers"]["buddyshared"]:
-                self.addshareddir(directory)
-        else:
-            for directory in self.config.sections["transfers"]["shared"]:
-                self.addshareddir(directory)
+        for directory in self.config.sections["transfers"]["shared"]:
+            self.add_shared_folder(directory)
 
-        self.onlysharewithfriends.set_active(
-            self.config.sections["transfers"]["friendsonly"]
-        )
-
-        # If the user has a public share and a buddy share
-        # we cannot update this from FastConfigure
-        # (we only have 1 list of dirs)
-        self.caneditshare = (
-            not self.config.sections["transfers"]["enablebuddyshares"] or
-            self.config.sections["transfers"]["friendsonly"]
-        )
-
-        self.onlysharewithfriends.set_sensitive(self.caneditshare)
-        self.addshare.set_sensitive(self.caneditshare)
-        self.removeshares.set_sensitive(self.caneditshare)
-        self.shareddirectoriestree.set_sensitive(self.caneditshare)
+        self.FastConfigureDialog.show()
 
     def store(self):
 
@@ -120,48 +87,17 @@ class FastConfigureAssistant(object):
 
         # sharepage
         self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_file().get_path()
+        self.config.sections["transfers"]["shared"] = self.get_shared_folders()
 
-        if self.caneditshare:
-            self.config.sections["transfers"]["friendsonly"] = self.onlysharewithfriends.get_active()
-
-            if self.config.sections["transfers"]["friendsonly"] and \
-               self.config.sections["transfers"]["enablebuddyshares"]:
-                self.config.sections["transfers"]["buddyshared"] = self.getshareddirs()
-            else:
-                self.config.sections["transfers"]["shared"] = self.getshareddirs()
-
-    def on_close(self, widget):
-        self.FastConfigureDialog.hide()
-
-    def on_apply(self, widget):
-        self.store()
-        self.FastConfigureDialog.hide()
-
-        # Rescan public shares if needed
-        if not self.config.sections["transfers"]["friendsonly"]:
-            self.frame.on_rescan()
-
-        # Rescan buddy shares if needed
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            self.frame.on_buddy_rescan()
-
-        if not self.frame.np.active_server_conn:
-            self.frame.on_connect()
-
-    def on_cancel(self, widget):
-        self.FastConfigureDialog.hide()
-
-    def resetcompleteness(self, page=None):
+    def reset_completeness(self):
         """Turns on the complete flag if everything required is filled in."""
 
-        # Never use self.config.sections here, only self.kids.
         complete = False
+        pageid = self.FastConfigureDialog.get_current_page()
+        page = self.FastConfigureDialog.get_nth_page(pageid)
 
         if not page:
-            pageid = self.FastConfigureDialog.get_current_page()
-            page = self.FastConfigureDialog.get_nth_page(pageid)
-            if not page:
-                return
+            return
 
         name = Gtk.Buildable.get_name(page)
 
@@ -180,12 +116,10 @@ class FastConfigureAssistant(object):
                 complete = True
 
         elif name == 'summarypage':
-
             complete = True
 
             shownfwarning = (
-                self.onlysharewithfriends.get_active() or
-                len(self.getshareddirs()) == 0
+                len(self.get_shared_folders()) == 0
             )
 
             if shownfwarning:
@@ -195,31 +129,7 @@ class FastConfigureAssistant(object):
 
         self.FastConfigureDialog.set_page_complete(page, complete)
 
-    def on_prepare(self, widget, page):
-        self.FastConfigureDialog.set_page_complete(page, False)
-        self.resetcompleteness(page)
-
-    def on_entry_changed(self, widget, param1=None, param2=None, param3=None):
-        self.resetcompleteness()
-
-    def on_entry_paste(self, user_data):
-        """
-            Hack to workaround if the user paste is username or password.
-            The "paste-clipboard" event of the GtkEntry doesn't seems to have a length after a text is pasted into it.
-            The "key-press-event" work though...
-            So we get the GtkEditable text via it's "changed" event and we set the GtkEntry with it's value.
-        """
-
-        # Get the name of the GtkEditable object
-        name = Gtk.Buildable.get_name(user_data)
-
-        # Set the text of the corresponding entry
-        self.__dict__[name].set_text(user_data.get_text())
-
-        # Check if the form is complete
-        self.resetcompleteness()
-
-    def getshareddirs(self):
+    def get_shared_folders(self):
 
         iterator = self.sharelist.get_iter_first()
         dirs = []
@@ -235,7 +145,7 @@ class FastConfigureAssistant(object):
 
         return dirs
 
-    def addshareddir(self, directory):
+    def add_shared_folder(self, directory):
 
         iterator = self.sharelist.get_iter_first()
 
@@ -251,113 +161,122 @@ class FastConfigureAssistant(object):
             directory[1]
         ])
 
-    def on_button_pressed(self, widget):
+    def on_prepare(self, widget, page):
+        self.reset_completeness()
 
-        if self.initphase:
-            return
+    def on_entry_changed(self, widget, *args):
+        self.reset_completeness()
 
-        name = Gtk.Buildable.get_name(widget)
+    def on_check_port_status(self, widget):
 
-        if name == "checkmyport":
-            open_uri(
-                '='.join([
-                    'http://tools.slsknet.org/porttest.php?port',
-                    str(self.frame.np.waitport)
-                ]),
-                self.FastConfigureDialog
-            )
+        open_uri(
+            '='.join([
+                'http://tools.slsknet.org/porttest.php?port',
+                str(self.frame.np.waitport)
+            ]),
+            self.FastConfigureDialog
+        )
 
-        if name == "addshare":
+    def on_add_share(self, widget):
 
-            selected = choose_dir(
-                self.FastConfigureDialog.get_toplevel(),
-                title=_("Add a Shared Folder")
-            )
+        selected = choose_dir(
+            self.FastConfigureDialog.get_toplevel(),
+            title=_("Add a Shared Folder")
+        )
 
-            if selected:
+        if selected:
 
-                for directory in selected:
+            for directory in selected:
 
-                    virtual = combo_box_dialog(
-                        parent=self.FastConfigureDialog,
-                        title=_("Virtual Name"),
-                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                virtual = combo_box_dialog(
+                    parent=self.FastConfigureDialog,
+                    title=_("Virtual Name"),
+                    message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                )
+
+                # If the virtual name is empty
+                if virtual == '' or virtual is None:
+
+                    dlg = Gtk.MessageDialog(
+                        transient_for=self.FastConfigureDialog,
+                        flags=0,
+                        type=Gtk.MessageType.WARNING,
+                        buttons=Gtk.ButtonsType.OK,
+                        text=_("Warning")
                     )
+                    dlg.format_secondary_text(_("The chosen virtual name is empty"))
+                    dlg.run()
+                    dlg.destroy()
 
-                    # If the virtual name is empty
-                    if virtual == '' or virtual is None:
+                else:
+                    # Remove slashes from share name to avoid path conflicts
+                    virtual = virtual.replace('/', '_').replace('\\', '_')
 
-                        dlg = Gtk.MessageDialog(
-                            transient_for=self.FastConfigureDialog,
-                            flags=0,
-                            type=Gtk.MessageType.WARNING,
-                            buttons=Gtk.ButtonsType.OK,
-                            text=_("Warning")
-                        )
-                        dlg.format_secondary_text(_("The chosen virtual name is empty"))
-                        dlg.run()
-                        dlg.destroy()
+                    # We get the current defined shares from the treeview
+                    model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
-                    else:
-                        # Remove slashes from share name to avoid path conflicts
-                        virtual = virtual.replace('/', '_').replace('\\', '_')
+                    iterator = model.get_iter_first()
 
-                        # We get the current defined shares from the treeview
-                        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
+                    while iterator is not None:
 
-                        iterator = model.get_iter_first()
+                        # We reject the share if the virtual share name is already used
+                        if virtual == model.get_value(iterator, 0):
 
-                        while iterator is not None:
+                            dlg = Gtk.MessageDialog(
+                                transient_for=self.FastConfigureDialog,
+                                flags=0,
+                                type=Gtk.MessageType.WARNING,
+                                buttons=Gtk.ButtonsType.OK,
+                                text=_("Warning")
+                            )
+                            dlg.format_secondary_text(_("The chosen virtual name already exists"))
+                            dlg.run()
+                            dlg.destroy()
+                            return
 
-                            # We reject the share if the virtual share name is already used
-                            if virtual == model.get_value(iterator, 0):
+                        # We also reject the share if the directory is already used
+                        elif directory == model.get_value(iterator, 1):
 
-                                dlg = Gtk.MessageDialog(
-                                    transient_for=self.FastConfigureDialog,
-                                    flags=0,
-                                    type=Gtk.MessageType.WARNING,
-                                    buttons=Gtk.ButtonsType.OK,
-                                    text=_("Warning")
-                                )
-                                dlg.format_secondary_text(_("The chosen virtual name already exists"))
-                                dlg.run()
-                                dlg.destroy()
-                                return
+                            dlg = Gtk.MessageDialog(
+                                transient_for=self.FastConfigureDialog,
+                                flags=0,
+                                type=Gtk.MessageType.WARNING,
+                                buttons=Gtk.ButtonsType.OK,
+                                text=_("Warning")
+                            )
+                            dlg.format_secondary_text(_("The chosen folder is already shared"))
+                            dlg.run()
+                            dlg.destroy()
+                            return
 
-                            # We also reject the share if the directory is already used
-                            elif directory == model.get_value(iterator, 1):
+                        else:
+                            iterator = model.iter_next(iterator)
 
-                                dlg = Gtk.MessageDialog(
-                                    transient_for=self.FastConfigureDialog,
-                                    flags=0,
-                                    type=Gtk.MessageType.WARNING,
-                                    buttons=Gtk.ButtonsType.OK,
-                                    text=_("Warning")
-                                )
-                                dlg.format_secondary_text(_("The chosen folder is already shared"))
-                                dlg.run()
-                                dlg.destroy()
-                                return
+                    # The share is unique: we can add it
+                    self.add_shared_folder((virtual, directory))
 
-                            else:
-                                iterator = model.iter_next(iterator)
+    def on_remove_share(self, widget):
 
-                        # The share is unique: we can add it
-                        self.addshareddir((virtual, directory))
+        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
-        if name == "removeshares":
+        for path in paths:
+            self.sharelist.remove(self.sharelist.get_iter(path))
 
-            model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
-            refs = [Gtk.TreeRowReference(model, x) for x in paths]
+    def on_apply(self, widget):
 
-            for i in refs:
-                self.sharelist.remove(self.sharelist.get_iter(i.get_path()))
+        self.store()
+        self.FastConfigureDialog.hide()
 
-        self.resetcompleteness()
+        # Rescan public shares if needed
+        if not self.config.sections["transfers"]["friendsonly"]:
+            self.frame.on_rescan()
 
-    def on_toggled(self, widget):
+        # Rescan buddy shares if needed
+        if self.config.sections["transfers"]["enablebuddyshares"]:
+            self.frame.on_buddy_rescan()
 
-        if self.initphase:
-            return
+        if not self.frame.np.active_server_conn:
+            self.frame.on_connect()
 
-        self.resetcompleteness()
+    def on_close(self, widget):
+        self.FastConfigureDialog.hide()
