@@ -814,6 +814,11 @@ class NicotineFrame:
 
         # Help
 
+        action = Gio.SimpleAction.new("keyboardshortcuts", None)
+        action.connect("activate", self.on_keyboard_shortcuts)
+        action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
+        self.application.add_action(action)
+
         action = Gio.SimpleAction.new("aboutchatroomcommands", None)
         action.connect("activate", self.on_about_chatroom_commands)
         self.application.add_action(action)
@@ -824,10 +829,6 @@ class NicotineFrame:
 
         action = Gio.SimpleAction.new("aboutfilters", None)
         action.connect("activate", self.on_about_filters)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("keyboardshortcuts", None)
-        action.connect("activate", self.on_keyboard_shortcuts)
         self.application.add_action(action)
 
         action = Gio.SimpleAction.new("transferstatistics", None)
@@ -1230,6 +1231,14 @@ class NicotineFrame:
 
     # Help
 
+    def on_keyboard_shortcuts(self, *args):
+
+        if not hasattr(self, "KeyboardShortcutsDialog"):
+            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
+            self.KeyboardShortcutsDialog.set_transient_for(self.MainWindow)
+
+        self.KeyboardShortcutsDialog.show()
+
     def on_about_chatroom_commands(self, *args):
 
         if not hasattr(self, "AboutChatRoomCommandsDialog"):
@@ -1257,14 +1266,6 @@ class NicotineFrame:
             self.AboutSearchFiltersDialog.set_transient_for(self.MainWindow)
 
         self.AboutSearchFiltersDialog.show()
-
-    def on_keyboard_shortcuts(self, *args):
-
-        if not hasattr(self, "KeyboardShortcutsDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
-            self.KeyboardShortcutsDialog.set_transient_for(self.MainWindow)
-
-        self.KeyboardShortcutsDialog.show()
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
