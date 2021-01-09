@@ -355,6 +355,8 @@ class UserBrowse:
         else:
             self.FolderTreeView.collapse_all()
 
+        self.set_finished()
+
     def browse_get_dirs(self):
 
         directory = ""
