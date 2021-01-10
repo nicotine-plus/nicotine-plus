@@ -1354,8 +1354,9 @@ class NicotineFrame:
         self.MainWindow.set_show_menubar(False)
         self.HeaderMenu.show()
 
-        old_end_widget = self.__dict__[self.current_page_id + "End"]
-        old_end_widget.remove(self.HeaderMenu)
+        menu_parent = self.HeaderMenu.get_parent()
+        if menu_parent is not None:
+            menu_parent.remove(self.HeaderMenu)
 
         end_widget = self.__dict__[page_id + "End"]
         end_widget.add(self.HeaderMenu)
