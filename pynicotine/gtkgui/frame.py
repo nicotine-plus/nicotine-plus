@@ -853,7 +853,7 @@ class NicotineFrame:
         builder.set_translation_domain('nicotine')
         builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "mainmenu.ui"))
 
-        self.MenuPopover.bind_model(builder.get_object("mainmenu"))
+        self.HeaderMenu.set_menu_model(builder.get_object("mainmenu"))
 
         builder = Gtk.Builder()
         builder.set_translation_domain('nicotine')
@@ -950,8 +950,6 @@ class NicotineFrame:
     # View
 
     def set_show_header_bar(self, show):
-
-        self.set_header_bar_main_menu(self.current_page_id)
 
         if show:
             self.remove_toolbar()
@@ -1354,6 +1352,13 @@ class NicotineFrame:
         enabled) """
 
         self.MainWindow.set_show_menubar(False)
+        self.HeaderMenu.show()
+
+        old_end_widget = self.__dict__[self.current_page_id + "End"]
+        old_end_widget.remove(self.HeaderMenu)
+
+        end_widget = self.__dict__[page_id + "End"]
+        end_widget.add(self.HeaderMenu)
 
         header_bar = self.__dict__["Header" + page_id]
         header_bar.set_title(GLib.get_application_name())
@@ -1365,6 +1370,7 @@ class NicotineFrame:
         title bar (client side decorations disabled) """
 
         self.MainWindow.set_show_menubar(True)
+        self.HeaderMenu.hide()
 
         if page_id == "Default":
             # No toolbar needed for this page
@@ -1372,8 +1378,6 @@ class NicotineFrame:
 
         header_bar = self.__dict__["Header" + page_id]
         toolbar = self.__dict__[page_id + "Toolbar"]
-
-        self.__dict__["Header" + page_id + "Menu"].hide()
 
         title_widget = self.__dict__[page_id + "Title"]
         header_bar.set_custom_title(None)
@@ -1433,18 +1437,6 @@ class NicotineFrame:
 
         toolbar.hide()
 
-    def set_header_bar_main_menu(self, page_id):
-
-        """ Add the main menu popover to a new header bar """
-
-        if self.current_page_id != page_id:
-            old_menu_button = self.__dict__["Header" + self.current_page_id + "Menu"]
-            old_menu_button.set_popover(None)
-
-        new_menu_button = self.__dict__["Header" + page_id + "Menu"]
-        new_menu_button.set_popover(self.MenuPopover)
-        new_menu_button.show()
-
     def set_active_header_bar(self, page_id):
 
         """ Switch out the active headerbar for another one. This is used when
@@ -1452,7 +1444,6 @@ class NicotineFrame:
 
         if self.np.config.sections["ui"]["header_bar"]:
             self.set_header_bar(page_id)
-            self.set_header_bar_main_menu(page_id)
 
         else:
             self.remove_toolbar()

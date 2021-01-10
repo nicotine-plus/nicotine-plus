@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkPopoverMenu" id="MenuPopover"/>
+  <object class="GtkMenuButton" id="HeaderMenu">
+    <property name="visible">1</property>
+    <property name="tooltip-text" translatable="yes">Menu</property>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">1</property>
+        <property name="icon-name">open-menu-symbolic</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <property name="has-subtitle">0</property>
     <property name="show-close-button">1</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="DefaultEnd">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -22,18 +31,6 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderDefaultMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
               </object>
             </child>
           </object>
@@ -160,18 +157,6 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderSearchMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
               </object>
             </child>
           </object>
@@ -343,18 +328,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderDownloadsMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="pack-type">end</property>
@@ -522,18 +495,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderUploadsMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="pack-type">end</property>
@@ -586,18 +547,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderPrivateChatMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="pack-type">end</property>
@@ -646,18 +595,6 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderUserInfoMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
               </object>
             </child>
           </object>
@@ -746,18 +683,6 @@
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderUserBrowseMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
       <packing>
         <property name="pack-type">end</property>
@@ -802,18 +727,6 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="HeaderUserListMenu">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Menu</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">open-menu-symbolic</property>
               </object>
             </child>
           </object>
