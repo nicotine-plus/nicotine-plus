@@ -1934,7 +1934,6 @@ class SearchFrame(BuildFrame):
                 "enablefilters": self.EnableFilters,
                 "re_filter": self.RegexpFilters,
                 "defilter": None,
-                "reopen_tabs": self.ReopenTabs,
                 "search_results": self.ToggleResults,
                 "max_displayed_results": self.MaxDisplayedResults,
                 "max_stored_results": self.MaxStoredResults,
@@ -1977,7 +1976,6 @@ class SearchFrame(BuildFrame):
                     self.FilterFree.get_active(),
                     self.FilterCC.get_text()
                 ],
-                "reopen_tabs": self.ReopenTabs.get_active(),
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
                 "max_stored_results": self.MaxStoredResults.get_value_as_int(),

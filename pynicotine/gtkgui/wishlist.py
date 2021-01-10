@@ -112,7 +112,15 @@ class WishList:
             self.wishes[wish] = self.store.append([wish])
 
         self.searches.searchid += 1
-        self.searches.searches[self.searches.searchid] = [self.searches.searchid, wish, None, 0, True, False]
+
+        self.searches.searches[self.searches.searchid] = {
+            "id": self.searches.searchid,
+            "term": wish,
+            "tab": None,
+            "mode": "global",
+            "remember": True,
+            "ignore": True
+        }
 
         if wish not in self.frame.np.config.sections["server"]["autosearch"]:
             self.frame.np.config.sections["server"]["autosearch"].append(wish)
@@ -131,13 +139,13 @@ class WishList:
 
             for number, search in self.searches.searches.items():
 
-                if search[1] == wish and search[4]:
+                if search["term"] == wish and search["remember"]:
 
-                    if search[2] is not None and search[2].showtab:  # Tab visible
-                        search[4] = False
+                    if search["tab"] is not None and search["tab"].showtab:  # Tab visible
+                        search["remember"] = False
                         self.searches.searches[number] = search
 
-                        search[2].RememberCheckButton.set_active(False)
+                        search["tab"].RememberCheckButton.set_active(False)
                     else:
                         del self.searches.searches[number]
 
@@ -150,8 +158,15 @@ class WishList:
         if not self.disconnected:
             # Create wishlist searches (without tabs)
             for term in self.frame.np.config.sections["server"]["autosearch"]:
-                self.searches.searches[self.searches.searchid] = [self.searches.searchid, term, None, 0, True, False]
-                self.searches.searchid = (self.searches.searchid + 1) % (2**31)
+                self.searches.searches[self.searches.searchid] = {
+                    "id": self.searches.searchid,
+                    "term": term,
+                    "tab": None,
+                    "mode": "global",
+                    "remember": True,
+                    "ignore": True
+                }
+                self.searches.searchid += 1
 
         self.on_auto_search()
         self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
@@ -176,8 +191,10 @@ class WishList:
         searches.insert(0, term)
 
         for i in self.searches.searches.values():
-            if i[1] == term and i[4]:
-                self.do_wishlist_search(i[0], term)
+            if i["term"] == term and i["remember"]:
+                i["ignore"] = False
+
+                self.do_wishlist_search(i["id"], term)
                 break
 
         return True

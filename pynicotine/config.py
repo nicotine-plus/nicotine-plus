@@ -234,7 +234,6 @@ class Config:
                 "enablefilters": False,
                 "defilter": ["", "", "", "", 0, ""],
                 "filtercc": [],
-                "reopen_tabs": False,
                 "filterin": [],
                 "filterout": [],
                 "filtersize": [],
@@ -649,6 +648,9 @@ class Config:
 
         # Remove option to prioritize sfv/md5 files when downloading
         self.remove_old_option("transfers", "prioritize")
+
+        # Remove option to reopen closed search tabs when new results come in
+        self.remove_old_option("searches", "reopen_tabs")
 
     def remove_old_option(self, section, option):
 

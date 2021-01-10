@@ -140,13 +140,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="ReopenTabs">
-            <property name="label" translatable="yes">Reopen closed search tabs that haven&apos;t been ignored when new results come in</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">10</property>

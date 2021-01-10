@@ -221,8 +221,8 @@ class Searches(IconNotebook):
             self.usersearches[self.searchid] = users
 
         search = self.create_tab(self.searchid, searchterm_with_excluded, mode, showtab=True)
-        if search[2] is not None:
-            self.set_current_page(self.page_num(search[2].Main))
+        if search["tab"] is not None:
+            self.set_current_page(self.page_num(search["tab"].Main))
 
         if mode == "global":
             self.do_global_search(self.searchid, searchterm_without_excluded)
@@ -275,14 +275,15 @@ class Searches(IconNotebook):
 
         return _("User")
 
-    def create_tab(self, id, text, mode, remember=False, showtab=True, ignored=False):
+    def create_tab(self, id, text, mode, remember=False, showtab=True):
 
         tab = Search(self, text, id, mode, remember, showtab)
 
         if showtab:
             self.show_tab(tab, id, text, mode)
 
-        search = [id, text, tab, mode, remember, ignored]
+        ignore = False
+        search = {"id": id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": ignore}
         self.searches[id] = search
 
         return search
@@ -314,33 +315,30 @@ class Searches(IconNotebook):
         except KeyError:
             return
 
-        if search[5]:
-            # Tab is ignored
+        if search["ignore"]:
             return
 
-        if search[2] is None:
-            search = self.create_tab(search[0], search[1], search[3], search[4], showtab=False)
+        if search["tab"] is None:
+            search = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
 
-        counter = len(search[2].all_data) + 1
+        counter = len(search["tab"].all_data) + 1
 
         # No more things to add because we've reached the max_stored_results limit
         if counter > self.maxstoredresults:
-            # Ignore tab
-            search[5] = True
             return
 
-        search[2].add_user_results(msg, username, country)
+        search["tab"].add_user_results(msg, username, country)
 
     def remove_tab(self, tab):
 
         if tab.id in self.searches:
             search = self.searches[tab.id]
 
-            if search[5]:
-                # Tab is ignored, delete search
+            if tab.text not in self.frame.np.config.sections["server"]["autosearch"]:
                 del self.searches[tab.id]
             else:
-                search[2] = None
+                search["tab"] = None
+                search["ignore"] = True
 
         self.remove_page(tab.Main)
         tab.Main.destroy()
@@ -348,9 +346,9 @@ class Searches(IconNotebook):
     def update_visuals(self):
 
         for id in self.searches.values():
-            if id[2] is None:
+            if id["tab"] is None:
                 continue
-            id[2].update_visuals()
+            id["tab"].update_visuals()
 
         self.wish_list.update_visuals()
 
@@ -361,12 +359,12 @@ class Searches(IconNotebook):
         if page_num is not None:
             page = self.get_nth_page(page_num)
 
-            for name, search in self.searches.items():
-                if search[2] is None:
+            for search in self.searches.values():
+                if search["tab"] is None:
                     continue
 
-                if search[2].Main == page:
-                    search[2].save_columns()
+                if search["tab"].Main == page:
+                    search["tab"].save_columns()
                     break
 
     def get_search_id(self, child):
@@ -377,9 +375,9 @@ class Searches(IconNotebook):
 
         for search, data in self.searches.items():
 
-            if data[2] is None:
+            if data["tab"] is None:
                 continue
-            if data[2].Main is page:
+            if data["tab"].Main is page:
                 search_id = search
                 break
 
@@ -395,11 +393,11 @@ class Searches(IconNotebook):
 
         menu = PopupMenu(self.frame)
         menu.setup(
-            ("#" + _("Copy Search Term"), self.searches[search_id][2].on_copy_search_term),
+            ("#" + _("Copy Search Term"), self.searches[search_id]["tab"].on_copy_search_term),
             ("", None),
-            ("#" + _("Clear All Results"), self.searches[search_id][2].on_clear),
+            ("#" + _("Clear All Results"), self.searches[search_id]["tab"].on_clear),
             ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self),
-            ("#" + _("_Close This Tab"), self.searches[search_id][2].on_close)
+            ("#" + _("_Close This Tab"), self.searches[search_id]["tab"].on_close)
         )
 
         menu.popup()
@@ -417,7 +415,7 @@ class Searches(IconNotebook):
             return self.on_tab_popup(widget, child)
 
         if event.button == 2:
-            self.searches[search_id][2].on_close(widget)
+            self.searches[search_id]["tab"].on_close(widget)
             return True
 
         return False
@@ -426,7 +424,7 @@ class Searches(IconNotebook):
 
         if response == Gtk.ResponseType.OK:
             for search_id in self.searches.copy():
-                self.searches[search_id][2].on_close(dialog)
+                self.searches[search_id]["tab"].on_close(dialog)
 
         dialog.destroy()
 
@@ -1257,13 +1255,6 @@ class Search:
             else:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
-    def on_ignore(self, widget):
-
-        self.searches.searches[self.id][5] = True  # ignored
-
-        self.searches.wish_list.remove_wish(self.text)
-        widget.set_sensitive(False)
-
     def on_clear(self, widget):
         self.all_data = []
         self.usersiters.clear()
@@ -1275,11 +1266,6 @@ class Search:
         self.update_counter()
 
     def on_close(self, widget):
-
-        if not self.frame.np.config.sections["searches"]["reopen_tabs"]:
-            if self.text not in self.frame.np.config.sections["server"]["autosearch"]:
-                self.on_ignore(widget)
-
         self.searches.remove_tab(self)
 
     def on_copy_search_term(self, widget):
@@ -1291,9 +1277,9 @@ class Search:
         search = self.searches.searches[self.id]
 
         if not self.remember:
-            self.searches.wish_list.remove_wish(search[1])
+            self.searches.wish_list.remove_wish(search["term"])
         else:
-            self.searches.wish_list.add_wish(search[1])
+            self.searches.wish_list.add_wish(search["term"])
 
     def push_history(self, widget, title):
 
