@@ -139,7 +139,7 @@
             <child>
               <object class="GtkLabel" id="QueueBandwidthText2">
                 <property name="visible">1</property>
-                <property name="label">KiB/s</property>
+                <property name="label" translatable="yes">KiB/s</property>
                 <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
@@ -205,7 +205,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label">KiB/s</property>
+                <property name="label" translatable="yes">KiB/s</property>
               </object>
               <packing>
                 <property name="left-attach">2</property>
