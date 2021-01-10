@@ -57,7 +57,7 @@
             <property name="visible">1</property>
             <property name="hexpand">1</property>
             <property name="create-folders">0</property>
-            <property name="title" translatable="yes">Select an image</property>
+            <property name="title" translatable="yes">Select an Image</property>
             <signal name="update-preview" handler="on_update_image_preview"/>
           </object>
         </child>

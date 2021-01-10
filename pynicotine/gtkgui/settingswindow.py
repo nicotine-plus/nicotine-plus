@@ -3103,7 +3103,7 @@ class Settings:
         self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
         self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
-        self.tree["Text To Speech"] = model.append(row, [_("Text To Speech"), "Text To Speech"])
+        self.tree["Text-to-Speech"] = model.append(row, [_("Text-to-Speech"), "Text-to-Speech"])
 
         # Build individual categories
         p["Server"] = ServerFrame(self)
@@ -3131,7 +3131,7 @@ class Settings:
         p["Auto-Replace List"] = AutoReplaceFrame(self)
         p["URL Catching"] = UrlCatchFrame(self)
         p["Completion"] = CompletionFrame(self)
-        p["Text To Speech"] = TTSFrame(self)
+        p["Text-to-Speech"] = TTSFrame(self)
 
         # Title of the treeview
         column = Gtk.TreeViewColumn(_("Categories"), Gtk.CellRendererText(), text=0)

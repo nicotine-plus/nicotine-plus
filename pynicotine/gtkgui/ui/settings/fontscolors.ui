@@ -18,6 +18,7 @@
         <property name="label" translatable="yes">Prefer dark mode</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
+        <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
       </object>
     </child>
     <child>
@@ -37,7 +38,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Chat Username</property>
+            <property name="label" translatable="yes">Chat username:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -71,7 +72,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Decimal Separator</property>
+            <property name="label" translatable="yes">Decimal separator:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -118,7 +119,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Chat Font</property>
+            <property name="label" translatable="yes">Chat font:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -180,7 +181,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">List Font</property>
+            <property name="label" translatable="yes">List font:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -241,7 +242,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Transfers Font</property>
+            <property name="label" translatable="yes">Transfers font:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -302,7 +303,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Search Font</property>
+            <property name="label" translatable="yes">Search font:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -363,7 +364,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Browse Font</property>
+            <property name="label" translatable="yes">Browse font:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -439,7 +440,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">URL Link Text</property>
+            <property name="label" translatable="yes">URL link text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -800,7 +801,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Away</property>
+            <property name="label" translatable="yes">Away:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -816,7 +817,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Offline</property>
+            <property name="label" translatable="yes">Offline:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -832,7 +833,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Online</property>
+            <property name="label" translatable="yes">Online:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -851,16 +852,17 @@
             <property name="spacing">5</property>
             <child>
               <object class="GtkCheckButton" id="UsernameHotspots">
-                <property name="label" translatable="yes">Username Colors and Hotspots</property>
+                <property name="label" translatable="yes">Colored and clickable usernames</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
               </object>
             </child>
             <child>
               <object class="GtkCheckButton" id="DisplayAwayColors">
-                <property name="label" translatable="yes">Display away colors</property>
+                <property name="label" translatable="yes">Usernames also indicate away status</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <signal name="toggled" handler="on_toggled_away_colors"/>
@@ -876,7 +878,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Highlight Text</property>
+            <property name="label" translatable="yes">Highlighted text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -892,7 +894,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">/me Text</property>
+            <property name="label" translatable="yes">/me text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -908,7 +910,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Local Text</property>
+            <property name="label" translatable="yes">Local text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -924,7 +926,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Remote Text</property>
+            <property name="label" translatable="yes">Remote text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -1098,7 +1100,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">With Queue</property>
+            <property name="label" translatable="yes">With queue:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -1158,7 +1160,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">List Text</property>
+            <property name="label" translatable="yes">List text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -1295,7 +1297,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Text</property>
+            <property name="label" translatable="yes">Text:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -1312,7 +1314,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Background</property>
+            <property name="label" translatable="yes">Background:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -1446,7 +1448,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Regular</property>
+            <property name="label" translatable="yes">Regular:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <property name="width-chars">15</property>
@@ -1476,7 +1478,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Changed</property>
+            <property name="label" translatable="yes">Changed:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>
@@ -1535,7 +1537,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Highlight</property>
+            <property name="label" translatable="yes">Highlighted:</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
             <style>

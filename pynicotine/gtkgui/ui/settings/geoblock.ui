@@ -24,9 +24,10 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="GeoPanic">
-        <property name="label" translatable="yes">Geographical paranoia (block unresolvable IPs)</property>
+        <property name="label" translatable="yes">Block unresolvable IPs</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
+        <property name="tooltip_text" translatable="yes">If the source country of an IP cannot be determined, it will be blocked.</property>
         <property name="use-underline">1</property>
       </object>
     </child>
@@ -41,6 +42,7 @@
       <object class="GtkEntry" id="GeoBlockCC">
         <property name="visible">1</property>
         <property name="can-focus">1</property>
+        <property name="tooltip_text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
       </object>
     </child>
   </object>
