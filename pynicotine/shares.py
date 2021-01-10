@@ -98,35 +98,35 @@ class Shares:
     """ Shares-related actions """
 
     def real2virtual(self, path):
-        path = os.path.normpath(path)
+        path = path.replace('/', '\\')
 
         for (virtual, real, *unused) in self._virtualmapping():
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
-            real = os.path.normpath(real)
+            real = real.replace('/', '\\')
 
             if path == real:
                 return virtual
 
-            if path.startswith(real + os.sep):
-                virtualpath = virtual + '\\' + path[len(real + os.sep):].replace(os.sep, '\\')
+            if path.startswith(real + '\\'):
+                virtualpath = virtual + '\\' + path[len(real + '\\'):]
                 return virtualpath
 
         return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
-        path = os.path.normpath(path)
+        path = path.replace('/', os.sep).replace('\\', os.sep)
 
         for (virtual, real, *unused) in self._virtualmapping():
             # Remove slashes from share name to avoid path conflicts
-            virtual = os.path.normpath(virtual.replace('/', '_').replace('\\', '_'))
+            virtual = virtual.replace('/', '_').replace('\\', '_')
 
             if path == virtual:
                 return real
 
-            if path.startswith(virtual + '\\'):
-                realpath = real + path[len(virtual):].replace('\\', os.sep)
+            if path.startswith(virtual + os.sep):
+                realpath = real + path[len(virtual):]
                 return realpath
 
         return "__INTERNAL_ERROR__" + path
@@ -408,7 +408,7 @@ class Shares:
 
         # If any part of the directory structure start with a dot we exclude it
         if filename is None:
-            subfolders = folder.replace('\\', os.sep).split(os.sep)
+            subfolders = folder.replace('\\', '/').split('/')
 
             for part in subfolders:
                 if part.startswith("."):

@@ -602,7 +602,7 @@ class Transfers:
             if self.can_upload(user):
                 path = ""
                 if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
-                    parentdir = msg.file.split("\\")[-2]
+                    parentdir = msg.file.replace('/', '\\').split('\\')[-2]
                     path = self.eventprocessor.config.sections["transfers"]["uploaddir"] + os.sep + user + os.sep + parentdir
 
                 transfer = Transfer(
@@ -775,7 +775,7 @@ class Transfers:
         Decode the incorrect parts as utf-8, if necessary, otherwise Nicotine+ thinks the file
         isn't shared. """
 
-        filename_parts = msg.file.split('\\')
+        filename_parts = msg.file.replace('/', '\\').split('\\')
 
         for i, part in enumerate(filename_parts):
             try:
@@ -924,8 +924,6 @@ class Transfers:
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
-        realfilename = realfilename.replace("\\", os.sep)
-
         log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
             "virtual_name": virtualfilename,
             "path": realfilename
@@ -1016,7 +1014,7 @@ class Transfers:
     def get_file_size(self, filename):
 
         try:
-            size = os.path.getsize(filename.replace("\\", os.sep))
+            size = os.path.getsize(filename)
         except Exception:
             # file doesn't exist (remote files are always this)
             size = 0
@@ -1215,7 +1213,7 @@ class Transfers:
 
             else:
                 # also check for a windows-style incomplete transfer
-                basename = clean_file(i.filename.split('\\')[-1])
+                basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
                 winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
                 pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
 
@@ -1306,9 +1304,7 @@ class Transfers:
 
             try:
                 # Open File
-                filename = i.realfilename.replace("\\", os.sep)
-
-                f = open(filename, "rb")
+                f = open(i.realfilename, "rb")
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
                 i.status = "Initializing transfer"
                 i.file = f
@@ -1423,7 +1419,7 @@ class Transfers:
         file.close()
         i.file = None
 
-        basename = clean_file(i.filename.split('\\')[-1])
+        basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
         config = self.eventprocessor.config.sections
         downloaddir = config["transfers"]["downloaddir"]
 

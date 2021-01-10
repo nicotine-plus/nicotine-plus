@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import socket
 import struct
 import zlib
@@ -2050,7 +2049,7 @@ class SharedFileList(PeerMessage):
 
         for key in self.list:
             try:
-                msg.extend(self.pack_object(key.replace(os.sep, "\\")))
+                msg.extend(self.pack_object(key.replace('/', '\\')))
                 msg.extend(self.list[key])
             except KeyError:
                 pass
@@ -2159,7 +2158,7 @@ class FileSearchResult(PeerMessage):
                 continue
 
             msg.extend(bytes([1]))
-            msg.extend(self.pack_object(fileinfo[0].replace(os.sep, "\\")))
+            msg.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
             msg.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is None:
