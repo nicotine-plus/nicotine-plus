@@ -269,6 +269,16 @@
               </object>
             </child>
             <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Users on the Soulseek network will be able to download files from folders you share.</property>
+                <property name="justify">center</property>
+                <property name="wrap">1</property>
+                <property name="width-chars">36</property>
+                <property name="max-width-chars">60</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
