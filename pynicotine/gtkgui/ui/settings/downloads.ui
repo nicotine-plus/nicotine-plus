@@ -222,7 +222,7 @@
                 <property name="label" translatable="yes">Share Download folder</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">The equivalent of adding your Download folder as a public share.</property>
+                <property name="tooltip_text" translatable="yes">The equivalent of adding your Download folder as a public share. Files downloaded to this folder will be immediately accessible to others (no rescan required).</property>
                 <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
