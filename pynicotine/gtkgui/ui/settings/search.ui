@@ -142,7 +142,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkLabel" id="MaxDisLabel">
                 <property name="visible">1</property>
@@ -165,7 +165,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkLabel" id="MaxStoredLabel">
                 <property name="visible">1</property>

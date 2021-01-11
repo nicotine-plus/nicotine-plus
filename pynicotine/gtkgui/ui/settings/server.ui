@@ -117,12 +117,11 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="ChangePassword">
-                    <property name="label">Change password</property>
+                    <property name="label">Change Password</property>
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
                     <property name="has-tooltip">1</property>
-                    <property name="tooltip-text" translatable="yes">Change Password</property>
                     <signal name="clicked" handler="on_change_password" swapped="no"/>
                   </object>
                 </child>
@@ -229,7 +228,7 @@
               <object class="GtkLabel" id="UPnPIntervalL1">
                 <property name="visible">1</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">Automatically renew port mappings every:</property>
+                <property name="label" translatable="yes">Automatically renew port mappings every</property>
               </object>
             </child>
             <child>

@@ -94,32 +94,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="removeSharesButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-remove-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="renameVirtualsButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
@@ -138,6 +112,32 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Rename</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="removeSharesButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-remove-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Remove</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -229,32 +229,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="removeBuddySharesButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_remove_shared_buddy_dir" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-remove-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkButton" id="renameBuddyVirtualsButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
@@ -273,6 +247,32 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Rename</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="removeBuddySharesButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_remove_shared_buddy_dir" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-remove-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Remove</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
