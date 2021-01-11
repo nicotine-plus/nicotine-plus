@@ -1183,7 +1183,7 @@ class NicotineFrame:
 
         self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
 
-    def on_browse_buddy_shares(self, *args):
+    def on_browse_buddy_shares(self, *args, folder=None):
         """ Browse your own buddy shares """
 
         login = self.np.config.sections["server"]["login"]
@@ -1194,8 +1194,10 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_buddy
 
-        _thread.start_new_thread(self.parse_local_shares, (login, msg))
-        self.userbrowse.show_user(login, indeterminate_progress=True)
+        if self.userbrowse.is_new_request(login):
+            _thread.start_new_thread(self.parse_local_shares, (login, msg))
+
+        self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
 
     # Modes
 
@@ -1967,7 +1969,10 @@ class NicotineFrame:
 
         if user is not None:
             if user == login:
-                self.on_browse_public_shares(folder=folder)
+                if not self.np.config.sections["transfers"]["friendsonly"]:
+                    self.on_browse_public_shares(folder=folder)
+                else:
+                    self.on_browse_buddy_shares(folder=folder)
             else:
                 if self.userbrowse.is_new_request(user):
                     self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
