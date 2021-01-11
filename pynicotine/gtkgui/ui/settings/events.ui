@@ -75,7 +75,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Audio Player Command ($ for file path):</property>
+            <property name="label" translatable="yes">Media Player command ($ for file path):</property>
             <property name="xalign">0</property>
           </object>
         </child>
@@ -103,7 +103,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Double-clicking on...&lt;/b&gt;</property>
+            <property name="label" translatable="yes">&lt;b&gt;When double-clicking on...&lt;/b&gt;</property>
             <property name="halign">start</property>
             <property name="use-markup">1</property>
           </object>
@@ -117,7 +117,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Download transfers</property>
+                <property name="label" translatable="yes">Download transfers:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -128,7 +128,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Upload transfers</property>
+                <property name="label" translatable="yes">Upload transfers:</property>
                 <property name="xalign">0</property>
               </object>
               <packing>

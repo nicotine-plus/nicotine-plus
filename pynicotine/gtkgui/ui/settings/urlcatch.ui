@@ -16,7 +16,7 @@
     </child>
     <child>
       <object class="GtkCheckButton" id="HumanizeURLs">
-        <property name="label" translatable="yes">Humanize slsk:// urls</property>
+        <property name="label" translatable="yes">Humanize slsk:// URLs</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
         <property name="use-underline">1</property>
