@@ -1031,10 +1031,9 @@ class IconNotebook:
             if key in ("W", "w") or key == "F4":
                 # Ctrl+W and Ctrl+F4: close current tab
 
-                self.notebook.remove_page(self.get_current_page())
-
-                if self.notebook.get_n_pages() == 0:
-                    self.notebook.set_show_tabs(False)
+                page = self.get_nth_page(self.get_current_page())
+                tab_label, menu_label = self.get_labels(page)
+                tab_label.onclose(widget)
 
         return True
 
