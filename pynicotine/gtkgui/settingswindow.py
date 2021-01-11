@@ -1665,17 +1665,19 @@ class FontsColorsFrame(BuildFrame):
     def on_username_hotspots_toggled(self, widget):
 
         sensitive = widget.get_active()
+        display_away = self.DisplayAwayColors.get_active()
 
         self.DisplayAwayColors.set_sensitive(sensitive)
-        self.EntryAway.set_sensitive(sensitive and self.DisplayAwayColors.get_active())
+
+        self.EntryAway.set_sensitive(sensitive and display_away)
         self.EntryOnline.set_sensitive(sensitive)
         self.EntryOffline.set_sensitive(sensitive)
 
-        self.DefaultAway.set_sensitive(sensitive)
+        self.DefaultAway.set_sensitive(sensitive and display_away)
         self.DefaultOnline.set_sensitive(sensitive)
         self.DefaultOffline.set_sensitive(sensitive)
 
-        self.PickAway.set_sensitive(sensitive)
+        self.PickAway.set_sensitive(sensitive and display_away)
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
