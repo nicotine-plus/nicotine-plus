@@ -1057,7 +1057,13 @@ class InfoBar:
     def set_visible(self, visible):
 
         self.info_bar.set_visible(visible)
-        self.info_bar.set_revealed(visible)
+
+        try:
+            self.info_bar.set_revealed(visible)
+
+        except AttributeError:
+            # Old GTK version
+            pass
 
     def show_message(self, message):
 
