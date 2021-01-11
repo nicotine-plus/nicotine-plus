@@ -7,7 +7,7 @@
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkCheckButton" id="CensorCheck">
-        <property name="label" translatable="yes">Enable Censorship</property>
+        <property name="label" translatable="yes">Enable censoring</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
         <signal name="toggled" handler="on_censor_check" swapped="no"/>
@@ -17,7 +17,7 @@
       <object class="GtkLabel" id="InstructionsLabel">
         <property name="visible">1</property>
         <property name="xalign">0</property>
-        <property name="label" translatable="yes">Add spaces around words if you don&apos;t wish to match strings inside words (may fail at beginning and end of lines)</property>
+        <property name="label" translatable="yes">Add spaces around patterns if you don&apos;t wish to match strings inside words (may fail at the beginning and end of lines).</property>
         <property name="wrap">1</property>
       </object>
     </child>
@@ -142,7 +142,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear</property>
+                        <property name="label" translatable="yes">Clear All</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>

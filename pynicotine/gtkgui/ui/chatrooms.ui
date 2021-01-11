@@ -145,7 +145,7 @@
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="receives-default">1</property>
-                        <property name="tooltip-text" translatable="yes">Toggle Text-To-Speech</property>
+                        <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
                         <property name="active">1</property>
                         <child>
                           <object class="GtkImage">

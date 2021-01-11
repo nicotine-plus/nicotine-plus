@@ -18,7 +18,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Toggle away after </property>
+            <property name="label" translatable="yes">Toggle away status after</property>
           </object>
         </child>
         <child>
@@ -33,7 +33,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes"> minutes of inactivity</property>
+            <property name="label" translatable="yes">minutes of inactivity</property>
           </object>
         </child>
       </object>
@@ -44,7 +44,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Auto-reply when away:  </property>
+            <property name="label" translatable="yes">Auto-reply when away:</property>
           </object>
         </child>
         <child>

@@ -55,7 +55,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Limit total download speeds to (KBytes/sec):</property>
+                <property name="label" translatable="yes">Limit total download speeds to (KiB/s):</property>
                 <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
@@ -68,6 +68,7 @@
               <object class="GtkSpinButton" id="DownloadSpeed">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">1</property>
               </object>
@@ -81,7 +82,7 @@
                 <property name="label" translatable="yes">Allow these users to send you files:</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">The users will be able to send you files. These files will be downloaded into the Buddy Uploads subfolder in your Download folder</property>
+                <property name="tooltip_text" translatable="yes">By default, files sent by these users will be saved into a subfolder within your Download folder.</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
               </object>
@@ -166,7 +167,7 @@
             <child>
               <object class="GtkFileChooserButton" id="UploadDir">
                 <property name="visible">1</property>
-                <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder for each buddy)</property>
+                <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder created for each buddy).</property>
                 <property name="action">select-folder</property>
                 <property name="show-hidden">1</property>
                 <property name="title" translatable="yes">Select a Folder</property>
@@ -178,9 +179,10 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="ShareDownloadDir">
-                <property name="label" translatable="yes">Share download folder</property>
+                <property name="label" translatable="yes">Automatically share downloads</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">The equivalent of adding your download folder as a public share, however files downloaded to this folder will be automatically accessible to others (no rescan required).</property>
                 <property name="use-underline">1</property>
               </object>
               <packing>
@@ -191,10 +193,10 @@
             <child>
               <object class="GtkFileChooserButton" id="IncompleteDir">
                 <property name="visible">1</property>
-                <property name="tooltip-text" translatable="yes">Where incomplete downloads are stored temporarily</property>
+                <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
                 <property name="action">select-folder</property>
                 <property name="show-hidden">1</property>
-                <property name="title" translatable="yes">Select a folder</property>
+                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -206,7 +208,7 @@
                 <property name="visible">1</property>
                 <property name="action">select-folder</property>
                 <property name="show-hidden">1</property>
-                <property name="title" translatable="yes">Select a folder</property>
+                <property name="title" translatable="yes">Select a Folder</property>
                 <signal name="selection-changed" handler="on_choose_download_dir" swapped="no"/>
               </object>
               <packing>
@@ -233,7 +235,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="DownloadFilter">
-            <property name="label" translatable="yes">Enable Filters</property>
+            <property name="label" translatable="yes">Enable filters</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="use-underline">1</property>
@@ -244,7 +246,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are Case Insensitive, All Python Regular Expressions are supported if escaping is disabled. For simple filters, keep escaping enabled.</property>
+            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are case-insensitive. All Python regular expressions are supported if escaping is disabled. For simple filters, keeping escaping enabled is recommended.</property>
             <property name="use-markup">1</property>
             <property name="wrap">1</property>
           </object>

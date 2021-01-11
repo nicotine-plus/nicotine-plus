@@ -40,7 +40,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">You can create a new account by entering the desired details below. Please keep in mind that some usernames may already be taken. If you&apos;re unable to connect with your selected username, choose another one.</property>
+            <property name="label" translatable="yes">You can create a new account by entering your desired details below. Please keep in mind that some usernames may already be taken. If you&apos;re unable to connect with your selected username, try choosing another one. If connecting remains a problem, verify the settings below and those of your internet connection.</property>
             <property name="wrap">1</property>
           </object>
         </child>
@@ -122,7 +122,7 @@
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
                     <property name="has-tooltip">1</property>
-                    <property name="tooltip-text" translatable="yes">Change password</property>
+                    <property name="tooltip-text" translatable="yes">Change Password</property>
                     <signal name="clicked" handler="on_change_password" swapped="no"/>
                   </object>
                 </child>
@@ -203,7 +203,7 @@
             </child>
             <child>
               <object class="GtkButton" id="CheckPortButton">
-                <property name="label" translatable="yes">Check port status</property>
+                <property name="label" translatable="yes">Check Port Status</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="can-default">1</property>
@@ -229,7 +229,7 @@
               <object class="GtkLabel" id="UPnPIntervalL1">
                 <property name="visible">1</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">Automatically renew port mappings every</property>
+                <property name="label" translatable="yes">Automatically renew port mappings every:</property>
               </object>
             </child>
             <child>
@@ -268,7 +268,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="ctcptogglebutton">
-            <property name="label" translatable="yes">Enable CTCP-like PM responses (Client Version)</property>
+            <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="use-underline">1</property>

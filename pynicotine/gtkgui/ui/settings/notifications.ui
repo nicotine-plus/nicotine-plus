@@ -20,7 +20,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationWindowTitle">
-            <property name="label" translatable="yes">Show notification for private chat and mentions in window title</property>
+            <property name="label" translatable="yes">Show a notification for private chats and mentions in the window title</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
           </object>
@@ -41,7 +41,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupSound">
-            <property name="label" translatable="yes">Play sound for notification popups</property>
+            <property name="label" translatable="yes">Play a sound for notification popups</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
           </object>
