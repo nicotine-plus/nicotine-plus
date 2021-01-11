@@ -721,7 +721,7 @@ class Config:
 
     def write_config_backup(self, filename):
 
-        if filename[-8:-1] != ".tar.bz2":
+        if not filename.endswith(".tar.bz2"):
             filename += ".tar.bz2"
 
         try:
