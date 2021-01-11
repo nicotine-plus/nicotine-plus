@@ -1703,13 +1703,13 @@ class FontsColorsFrame(BuildFrame):
         self.needcolors = 1
 
 
-class NotebookFrame(BuildFrame):
+class TabsFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        BuildFrame.__init__(self, "notebook")
+        BuildFrame.__init__(self, "tabs")
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
@@ -3093,7 +3093,7 @@ class Settings:
         self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
         self.tree["Fonts & Colors"] = model.append(row, [_("Fonts & Colors"), "Fonts & Colors"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
-        self.tree["Notebook Tabs"] = model.append(row, [_("Notebook Tabs"), "Notebook Tabs"])
+        self.tree["Tabs"] = model.append(row, [_("Tabs"), "Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
         self.tree["Now Playing"] = model.append(row, [_("Now Playing"), "Now Playing"])
@@ -3122,7 +3122,7 @@ class Settings:
 
         p["Fonts & Colors"] = FontsColorsFrame(self)
         p["Icons"] = IconsFrame(self)
-        p["Notebook Tabs"] = NotebookFrame(self)
+        p["Tabs"] = TabsFrame(self)
 
         p["Now Playing"] = NowPlayingFrame(self)
         p["Away Mode"] = AwayFrame(self)
