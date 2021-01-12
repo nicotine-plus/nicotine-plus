@@ -197,7 +197,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -232,7 +232,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">5</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>

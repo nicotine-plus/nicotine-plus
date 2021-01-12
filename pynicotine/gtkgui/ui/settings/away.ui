@@ -41,10 +41,11 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
+        <property name="spacing">5</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Auto-reply when away:</property>
+            <property name="label" translatable="yes">Auto-reply message when away:</property>
           </object>
         </child>
         <child>
