@@ -46,13 +46,13 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
-    <release version="2.2.2" date="2020-12-15" />
-    <release version="2.2.1" date="2020-12-14" />
-    <release version="2.2.0" date="2020-12-04" />
-    <release version="2.1.2" date="2020-10-12" />
-    <release version="2.1.1" date="2020-09-26" />
-    <release version="2.1.0" date="2020-09-12" />
-    <release version="2.0.1" date="2020-07-16" />
-    <release version="2.0.0" date="2020-07-14" />
+    <release version="2.2.2" date="2020-12-15"/>
+    <release version="2.2.1" date="2020-12-14"/>
+    <release version="2.2.0" date="2020-12-04"/>
+    <release version="2.1.2" date="2020-10-12"/>
+    <release version="2.1.1" date="2020-09-26"/>
+    <release version="2.1.0" date="2020-09-12"/>
+    <release version="2.0.1" date="2020-07-16"/>
+    <release version="2.0.0" date="2020-07-14"/>
   </releases>
 </component>
