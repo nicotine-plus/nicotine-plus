@@ -175,10 +175,12 @@ class Interests:
         popup.setup_user_menu()
 
         for thing in self.np.config.sections["interests"]["likes"]:
-            self.likes[thing] = self.likes_model.append([thing])
+            if thing and isinstance(thing, str):
+                self.likes[thing] = self.likes_model.append([thing.lower()])
 
         for thing in self.np.config.sections["interests"]["dislikes"]:
-            self.dislikes[thing] = self.dislikes_model.append([thing])
+            if thing and isinstance(thing, str):
+                self.dislikes[thing] = self.dislikes_model.append([thing.lower()])
 
         self.update_visuals()
 
@@ -233,14 +235,16 @@ class Interests:
     def on_like_recommendation(self, widget):
         thing = widget.get_parent().get_user()
 
-        if widget.get_active() and thing not in self.np.config.sections["interests"]["likes"]:
+        if widget.get_active() and \
+                thing and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
 
             self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
-        elif not widget.get_active() and thing in self.np.config.sections["interests"]["likes"]:
+        elif not widget.get_active() and \
+                thing and thing in self.np.config.sections["interests"]["likes"]:
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
             self.np.config.sections["interests"]["likes"].remove(thing)
@@ -251,14 +255,16 @@ class Interests:
     def on_dislike_recommendation(self, widget):
         thing = widget.get_parent().get_user()
 
-        if widget.get_active() and thing not in self.np.config.sections["interests"]["dislikes"]:
+        if widget.get_active() and \
+                thing and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
 
             self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingIHate(thing))
 
-        elif not widget.get_active() and thing in self.np.config.sections["interests"]["dislikes"]:
+        elif not widget.get_active() and \
+                thing and thing in self.np.config.sections["interests"]["dislikes"]:
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
             self.np.config.sections["interests"]["dislikes"].remove(thing)
@@ -278,7 +284,7 @@ class Interests:
 
     def on_recommend_search(self, widget):
         thing = widget.get_parent().get_user()
-        self.frame.search_entry.set_text(thing)
+        self.frame.SearchEntry.set_text(thing)
         self.frame.change_main_page("search")
 
     def on_global_recommendations_clicked(self, widget):
@@ -340,7 +346,7 @@ class Interests:
 
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
-    def get_selected_username(self, treeview):
+    def get_selected_item(self, treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -349,15 +355,6 @@ class Interests:
 
         return model.get_value(iterator, 1)
 
-    def get_selected_item(self, treeview):
-
-        model, iterator = treeview.get_selection().get_selected()
-
-        if iterator is None:
-            return None
-
-        return model.get_value(iterator, 0)
-
     def on_ru_list_clicked(self, widget, event):
 
         if triggers_context_menu(event):
@@ -365,7 +362,7 @@ class Interests:
             return self.on_popup_ru_menu(widget)
 
         if event.type == Gdk.EventType._2BUTTON_PRESS:
-            user = self.get_selected_username(widget)
+            user = self.get_selected_item(widget)
 
             if user is not None:
                 self.frame.privatechats.send_message(user)
@@ -376,7 +373,7 @@ class Interests:
 
     def on_popup_ru_menu(self, widget):
 
-        user = self.get_selected_username(widget)
+        user = self.get_selected_item(widget)
         if user is None:
             return False
 

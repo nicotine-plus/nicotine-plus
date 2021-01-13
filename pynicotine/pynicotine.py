@@ -1053,9 +1053,12 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
-                self.queue.put(slskmessages.AddThingILike(thing))
+                if thing and isinstance(thing, str):
+                    self.queue.put(slskmessages.AddThingILike(thing.lower()))
+
             for thing in self.config.sections["interests"]["dislikes"]:
-                self.queue.put(slskmessages.AddThingIHate(thing))
+                if thing and isinstance(thing, str):
+                    self.queue.put(slskmessages.AddThingIHate(thing.lower()))
 
             self.queue.put(slskmessages.HaveNoParent(1))
 
