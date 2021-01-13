@@ -1054,11 +1054,11 @@ class NetworkEventProcessor:
 
             for thing in self.config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
-                    self.queue.put(slskmessages.AddThingILike(thing.lower()))
+                    self.queue.put(slskmessages.AddThingILike(thing))
 
             for thing in self.config.sections["interests"]["dislikes"]:
                 if thing and isinstance(thing, str):
-                    self.queue.put(slskmessages.AddThingIHate(thing.lower()))
+                    self.queue.put(slskmessages.AddThingIHate(thing))
 
             self.queue.put(slskmessages.HaveNoParent(1))
 

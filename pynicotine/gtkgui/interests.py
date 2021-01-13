@@ -176,11 +176,11 @@ class Interests:
 
         for thing in self.np.config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
-                self.likes[thing] = self.likes_model.append([thing.lower()])
+                self.likes[thing] = self.likes_model.append([thing])
 
         for thing in self.np.config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
-                self.dislikes[thing] = self.dislikes_model.append([thing.lower()])
+                self.dislikes[thing] = self.dislikes_model.append([thing])
 
         self.update_visuals()
 
