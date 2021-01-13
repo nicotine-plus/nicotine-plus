@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="AboutSearchFiltersDialog">
-    <property name="title" translatable="yes">Search Filters</property>
+    <property name="title" translatable="yes">Result Filters</property>
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
     <signal name="delete-event" handler="on_hide" swapped="no"/>
@@ -17,8 +17,9 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">You can use this to refine which results are displayed. The full results
-from the server are always available if you clear all the search terms.
+            <property name="label" translatable="yes">Result filters are used to refine which search results are displayed.
+
+To set the filter, press Enter after typing or clearing your terms. The filter applies immediately to the already received results, and to any more that are returned thereafer. The full results from the server are always available if you clear the filter of all terms. You do not need to perform another search to apply a different filter.
 
 You can filter by:
 
@@ -45,11 +46,7 @@ You can filter by:
 
 - Free slot:
       Show only those results from users which have at least
-      one upload slot free.
-
-- To set the filter, press Enter. This will apply to any existing results, and any more that are returned.
-- To filter in a different way, just set the relevant terms.
-- You do not need to do another search to apply a different filter.</property>
+      one upload slot free.</property>
             <property name="selectable">1</property>
           </object>
         </child>
