@@ -73,7 +73,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Filter Results</property>
-                    <property name="tooltip-text" translatable="yes">Toggle the search result filter's visibility and effect.</property>
+                    <property name="tooltip-text" translatable="yes">Toggle the search result filter&apos;s visibility and effect.</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
