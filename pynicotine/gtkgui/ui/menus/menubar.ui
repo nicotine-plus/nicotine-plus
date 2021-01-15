@@ -34,10 +34,6 @@
       </section>
       <section>
         <item>
-          <attribute name="label" translatable="yes">_Fast Configure</attribute>
-          <attribute name="action">app.fastconfigure</attribute>
-        </item>
-        <item>
           <attribute name="label" translatable="yes">_Preferences</attribute>
           <attribute name="action">app.settings</attribute>
           <attribute name="accel">&lt;Primary&gt;p</attribute>
@@ -179,6 +175,16 @@
           <attribute name="action">win.interests</attribute>
         </item>
       </section>
+      <section>
+        <item>
+          <attribute name="label" translatable="yes">_Fast Configure</attribute>
+          <attribute name="action">app.fastconfigure</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">_Transfer Statistics</attribute>
+          <attribute name="action">app.transferstatistics</attribute>
+        </item>
+      </section>
     </submenu>
     <submenu>
       <attribute name="label" translatable="yes">_Help</attribute>
@@ -198,12 +204,6 @@
         <item>
           <attribute name="label" translatable="yes">_Search Result Filters</attribute>
           <attribute name="action">app.aboutfilters</attribute>
-        </item>
-      </section>
-      <section>
-        <item>
-          <attribute name="label" translatable="yes">_Transfer Statistics</attribute>
-          <attribute name="action">app.transferstatistics</attribute>
         </item>
       </section>
       <section>

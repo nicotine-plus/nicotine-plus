@@ -128,6 +128,16 @@
             <attribute name="action">win.interests</attribute>
           </item>
         </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">_Fast Configure</attribute>
+            <attribute name="action">app.fastconfigure</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">_Transfer Statistics</attribute>
+            <attribute name="action">app.transferstatistics</attribute>
+          </item>
+        </section>
       </submenu>
     </section>
     <section>
@@ -148,17 +158,6 @@
       <item>
         <attribute name="label" translatable="yes">Bro_wse Buddy Shares</attribute>
         <attribute name="action">app.browsebuddyshares</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Fast Configure</attribute>
-        <attribute name="action">app.fastconfigure</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.settings</attribute>
-        <attribute name="accel">&lt;Primary&gt;p</attribute>
       </item>
     </section>
     <section>
@@ -184,12 +183,6 @@
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">_Transfer Statistics</attribute>
-            <attribute name="action">app.transferstatistics</attribute>
-          </item>
-        </section>
-        <section>
-          <item>
             <attribute name="label" translatable="yes">Check _Latest Version</attribute>
             <attribute name="action">app.checklatest</attribute>
           </item>
@@ -199,6 +192,11 @@
           </item>
         </section>
       </submenu>
+      <item>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+        <attribute name="action">app.settings</attribute>
+        <attribute name="accel">&lt;Primary&gt;p</attribute>
+      </item>
       <item>
         <attribute name="label" translatable="yes">About _Nicotine+</attribute>
         <attribute name="action">app.about</attribute>
