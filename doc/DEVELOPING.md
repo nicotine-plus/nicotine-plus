@@ -97,14 +97,10 @@ Tests are defined in the *test/* folder, and should be expanded to cover larger 
 
 As strings change in the Nicotine+ source code, the translation template file should also be updated regularly.
 
-To update the template (.pot) file:
-
- * Enter the `po` folder by running `cd po`
-
- * Run the following command:
+To update the template (.pot) file, run the following command:
 
 ```console
-intltool-update -p -g nicotine
+python3 setup.py update_pot
 ```
 
 A developer part of the [Nicotine+ Launchpad team](https://launchpad.net/~nicotine-team) should then [upload the updated .pot file](https://translations.launchpad.net/nicotine+/trunk/+translations-upload) to Launchpad, and [approve it](https://translations.launchpad.net/nicotine+/+imports).
