@@ -178,7 +178,7 @@
             <attribute name="action">app.aboutprivatechatcommands</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">_Search Filters</attribute>
+            <attribute name="label" translatable="yes">_Search Result Filters</attribute>
             <attribute name="action">app.aboutfilters</attribute>
           </item>
         </section>

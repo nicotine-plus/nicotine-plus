@@ -73,6 +73,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Filter Results</property>
+                    <property name="tooltip-text" translatable="yes">Toggle the search result filter&apos;s visibility and effect.</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -332,7 +333,7 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
-                    <property name="tooltip-text" translatable="yes">Search filter help</property>
+                    <property name="tooltip-text" translatable="yes">Search result filter help.</property>
                     <signal name="clicked" handler="on_about_filters" swapped="no"/>
                     <child>
                       <object class="GtkImage">

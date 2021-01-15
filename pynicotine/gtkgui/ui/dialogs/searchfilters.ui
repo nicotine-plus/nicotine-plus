@@ -2,7 +2,7 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="AboutSearchFiltersDialog">
-    <property name="title" translatable="yes">Search Filters</property>
+    <property name="title" translatable="yes">Search Result Filters</property>
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
     <signal name="delete-event" handler="on_hide" swapped="no"/>
@@ -17,39 +17,53 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">You can use this to refine which results are displayed. The full results
-from the server are always available if you clear all the search terms.
+            <property name="label" translatable="yes">Search result filters are used to refine which search results are displayed.
+
+Each list of search results has its own filter which can be revealed by toggling
+the Filter Results button. A filter is made up of multiple fields, all of which
+are applied when pressing Enter in any one of its fields. Filtering is applied
+immediately to results already received, and also to those yet to arrive. To
+view the full results again, simply clear the filter of all terms and re-apply
+it. As the name suggests, a search result filter cannot expand your original
+search, it can only narrow it down. To broaden or change your search terms,
+perform a new search.
 
 You can filter by:
 
 - Included text:
-      Files are shown if they contain this text.
-      Case is insensitive, but word order is important.
-      &apos;Spears Brittany&apos; will not show any &apos;Brittany Spears&apos;
+      - Files and folders containing this text will be shown.
+      - Case is insensitive, but word order is important:
+        &apos;Spears Brittany&apos; will not show any &apos;Brittany Spears&apos;
 
 - Excluded text:
-      As above, but files will not be displayed if the text matches
+      - As above, but files and folders are filtered out if the text matches.
 
 - Size:
-      Shows results based on size. use &gt; and &lt; to find files larger or smaller.
-      Files exactly the same as this term will always match.
-      Use = to specify an exact match. Use k or m to specify kilo or megabytes.
-      &gt;10M will find files larger than 10 megabytes.
-      &lt;4000k will find files smaller than 4000k.
+      - Filters results based upon their file size.
+      - By default, the unit used is bytes and files greater than or equal to
+        the value will be matched.
+      - Prepend = to a value to specify an exact match:
+        =1024 only matches files that are 1024 bytes in size (i.e. 1 kibibyte).
+      - Prepend &lt; or &gt; to find files less-/greater than or equal to the value.
+      - Append b, k, or m to specify byte, kibibyte, or mebibyte units:
+        &lt;128k will find files 128 kibibytes (i.e. 1 mebibyte) or smaller.
 
 - Bitrate:
-      Find files based on bitrate. Use &lt; and &gt; to find lower or higher.
-      &gt;192 finds 192 and higher, &lt;192 finds 192 or lower.
-      =192 only finds 192.
-      For VBR, the average bitrate is used.
+      - Filters files based upon their bitrate.
+      - VBR files display their average bitrate and are typically lower in
+        bitrate than a compressed 320 kbps CBR file of the same audio quality.
+      - Like Size above, =, &lt;, and &gt; can be used.
 
-- Free slot:
-      Show only those results from users which have at least
-      one upload slot free.
+- Country:
+      - Uses country codes defined by ISO 3166-2 (see Wikipedia):
+        US will only return files from users connected via the United States.
+        Similarly, GB returns files from users with IPs in the United Kingdom.
 
-- To set the filter, press Enter. This will apply to any existing results, and any more that are returned.
-- To filter in a different way, just set the relevant terms.
-- You do not need to do another search to apply a different filter.</property>
+- Free Slot:
+      - Show only those results from users which have at least one upload slot
+        free. This filter is applied immediately.
+
+See the preferences for more filter options.</property>
             <property name="selectable">1</property>
           </object>
         </child>

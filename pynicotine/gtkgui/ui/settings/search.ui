@@ -154,7 +154,7 @@
               <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">When the maximum number of visible results is smaller than the maximum total results, use the search filters to refine the results that you see.</property>
+                <property name="tooltip_text" translatable="yes">When the maximum number of visible results is smaller than the maximum total results, use the search result filters to refine what is visible.</property>
                 <property name="width-chars">6</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
                 <property name="numeric">1</property>
@@ -221,7 +221,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Search Filters&lt;/b&gt;</property>
+            <property name="label" translatable="yes">&lt;b&gt;Search Result Filters&lt;/b&gt;</property>
             <property name="halign">start</property>
             <property name="use-markup">1</property>
           </object>
