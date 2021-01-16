@@ -151,200 +151,219 @@
       </object>
     </child>
     <child>
-      <object class="GtkFlowBox" id="FiltersContainer">
-        <property name="column-spacing">10</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
-        <property name="max-children-per-line">5</property>
-        <property name="selection-mode">none</property>
+      <object class="GtkActionBar" id="FiltersContainer">
         <child>
-          <object class="GtkFlowBoxChild">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="column-spacing">10</property>
+            <property name="max-children-per-line">5</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="spacing">10</property>
+                <property name="can-focus">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="margin-start">5</property>
-                    <property name="label" translatable="yes">Include:</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="FilterIn">
-                    <property name="visible">1</property>
-                    <property name="has-entry">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="FilterInEntry">
-                        <property name="can-focus">1</property>
-                        <property name="width-chars">10</property>
-                        <signal name="activate" handler="on_refilter" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="can-focus">0</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Exclude:</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="FilterOut">
-                    <property name="visible">1</property>
-                    <property name="has-entry">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="FilterOutEntry">
-                        <property name="can-focus">1</property>
-                        <property name="width-chars">10</property>
-                        <signal name="activate" handler="on_refilter" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="can-focus">0</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Size:</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="FilterSize">
-                    <property name="visible">1</property>
-                    <property name="has-entry">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="FilterSizeEntry">
-                        <property name="can-focus">1</property>
-                        <property name="width-chars">5</property>
-                        <signal name="activate" handler="on_refilter" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="can-focus">0</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Bitrate:</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="FilterBitrate">
-                    <property name="visible">1</property>
-                    <property name="has-entry">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="FilterBitrateEntry">
-                        <property name="can-focus">1</property>
-                        <property name="width-chars">5</property>
-                        <signal name="activate" handler="on_refilter" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="can-focus">0</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Country:</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="FilterCountry">
-                    <property name="visible">1</property>
-                    <property name="has-entry">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="changed" handler="on_filter_changed" swapped="no"/>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="FilterCountryEntry">
-                        <property name="can-focus">1</property>
-                        <property name="width-chars">5</property>
-                        <signal name="activate" handler="on_refilter" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="FilterFreeSlot">
-                    <property name="label" translatable="yes">Free Slot</property>
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="use-underline">1</property>
-                    <signal name="toggled" handler="on_refilter" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="ShowChatHelp">
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="receives-default">1</property>
-                    <property name="tooltip-text" translatable="yes">Search result filter help.</property>
-                    <signal name="clicked" handler="on_about_filters" swapped="no"/>
+                    <property name="spacing">10</property>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="icon-name">dialog-question-symbolic</property>
+                        <property name="margin-start">5</property>
+                        <property name="label" translatable="yes">Include:</property>
                       </object>
                     </child>
-                    <style>
-                      <class name="circular"/>
-                      <class name="image-button"/>
-                    </style>
+                    <child>
+                      <object class="GtkComboBoxText" id="FilterIn">
+                        <property name="visible">1</property>
+                        <property name="has-entry">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="changed" handler="on_filter_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="FilterInEntry">
+                            <property name="can-focus">1</property>
+                            <property name="width-chars">10</property>
+                            <signal name="activate" handler="on_refilter" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Exclude:</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="FilterOut">
+                        <property name="visible">1</property>
+                        <property name="has-entry">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="changed" handler="on_filter_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="FilterOutEntry">
+                            <property name="can-focus">1</property>
+                            <property name="width-chars">10</property>
+                            <signal name="activate" handler="on_refilter" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Size:</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="FilterSize">
+                        <property name="visible">1</property>
+                        <property name="has-entry">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="changed" handler="on_filter_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="FilterSizeEntry">
+                            <property name="can-focus">1</property>
+                            <property name="width-chars">5</property>
+                            <signal name="activate" handler="on_refilter" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Bitrate:</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="FilterBitrate">
+                        <property name="visible">1</property>
+                        <property name="has-entry">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="changed" handler="on_filter_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="FilterBitrateEntry">
+                            <property name="can-focus">1</property>
+                            <property name="width-chars">5</property>
+                            <signal name="activate" handler="on_refilter" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Country:</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="FilterCountry">
+                        <property name="visible">1</property>
+                        <property name="has-entry">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="changed" handler="on_filter_changed" swapped="no"/>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="FilterCountryEntry">
+                            <property name="can-focus">1</property>
+                            <property name="width-chars">5</property>
+                            <signal name="activate" handler="on_refilter" swapped="no"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="FilterFreeSlot">
+                        <property name="label" translatable="yes">Free Slot</property>
+                        <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="use-underline">1</property>
+                        <signal name="toggled" handler="on_refilter" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="tooltip-text" translatable="yes">Clear all active filters</property>
+                            <signal name="clicked" handler="on_clear_filters" swapped="no"/>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">edit-clear-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="ShowChatHelp">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="receives-default">1</property>
+                            <property name="tooltip-text" translatable="yes">Search result filter help</property>
+                            <signal name="clicked" handler="on_about_filters" swapped="no"/>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">dialog-question-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

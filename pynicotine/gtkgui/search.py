@@ -452,6 +452,7 @@ class Search:
         self.users = set()
         self.all_data = []
         self.filters = None
+        self.clearing_filters = False
         self.resultslimit = 2000
         self.numvisibleresults = 0
 
@@ -1305,6 +1306,9 @@ class Search:
 
     def on_refilter(self, widget):
 
+        if self.clearing_filters:
+            return
+
         f_in = self.push_history(self.FilterIn, "filterin")
         f_out = self.push_history(self.FilterOut, "filterout")
         f_size = self.push_history(self.FilterSize, "filtersize")
@@ -1323,6 +1327,21 @@ class Search:
                 self.ResultsList.expand_all()
             else:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+
+    def on_clear_filters(self, widget):
+
+        self.clearing_filters = True
+
+        self.FilterInEntry.set_text("")
+        self.FilterOutEntry.set_text("")
+        self.FilterSizeEntry.set_text("")
+        self.FilterBitrateEntry.set_text("")
+        self.FilterCountryEntry.set_text("")
+        self.FilterFreeSlot.set_active(False)
+
+        self.clearing_filters = False
+        self.FilterInEntry.grab_focus()
+        self.on_refilter(widget)
 
     def on_about_filters(self, widget):
         self.frame.on_about_filters(widget)
