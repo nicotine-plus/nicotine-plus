@@ -21,7 +21,9 @@ import os
 import sys
 
 from gi.repository import Gdk
+from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import combo_box_dialog
@@ -66,45 +68,45 @@ class Tray:
     def create_menu(self):
 
         try:
-            self.tray_popup_menu_server = popup0 = PopupMenu(self, False)
-            popup0.setup(
-                ("#" + _("Connect"), self.frame.on_connect),
-                ("#" + _("Disconnect"), self.frame.on_disconnect)
-            )
-
-            self.tray_popup_menu = popup = PopupMenu(self, False)
-            popup.setup(
+            self.tray_popup_menu = PopupMenu(self.frame)
+            self.tray_popup_menu.setup(
                 ("#" + _("Hide / Show Nicotine+"), self.on_hide_unhide_window),
-                (1, _("Server"), self.tray_popup_menu_server, None),
+                ("", None),
                 ("#" + _("Downloads"), self.on_downloads),
                 ("#" + _("Uploads"), self.on_uploads),
+                ("", None),
+                ("#" + _("Connect"), self.frame.on_connect),
+                ("#" + _("Disconnect"), self.frame.on_disconnect),
+                ("$" + _("Away"), self.frame.on_away),
+                ("", None),
                 ("#" + _("Send Message"), self.on_open_private_chat),
                 ("#" + _("Lookup a User's IP"), self.on_get_a_users_ip),
                 ("#" + _("Lookup a User's Info"), self.on_get_a_users_info),
                 ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
-                ("$" + _("Away"), self.frame.on_away),
+                ("", None),
                 ("#" + _("Preferences"), self.frame.on_settings),
                 ("#" + _("Quit"), self.frame.on_quit)
             )
+
         except Exception as e:
             log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
 
-    def on_hide_unhide_window(self, widget):
+    def on_hide_unhide_window(self, *args):
 
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
         else:
             self.show_window()
 
-    def on_downloads(self, widget):
+    def on_downloads(self, *args):
         self.frame.on_downloads()
         self.show_window()
 
-    def on_uploads(self, widget):
+    def on_uploads(self, *args):
         self.frame.on_uploads()
         self.show_window()
 
-    def on_open_private_chat(self, widget, prefix=""):
+    def on_open_private_chat(self, *args):
 
         # popup
         users = []
@@ -124,7 +126,7 @@ class Tray:
             self.frame.change_main_page("private")
             self.show_window()
 
-    def on_get_a_users_info(self, widget, prefix=""):
+    def on_get_a_users_info(self, *args):
 
         # popup
         users = []
@@ -143,7 +145,7 @@ class Tray:
         if user:
             self.frame.local_user_info_request(user)
 
-    def on_get_a_users_ip(self, widget, prefix=""):
+    def on_get_a_users_ip(self, *args):
         users = []
 
         for entry in self.frame.np.config.sections["server"]["userlist"]:
@@ -162,7 +164,7 @@ class Tray:
             self.frame.np.ip_requested.add(user)
             self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
 
-    def on_get_a_users_shares(self, widget, prefix=""):
+    def on_get_a_users_shares(self, *args):
 
         users = []
         for entry in self.frame.np.config.sections["server"]["userlist"]:
@@ -255,10 +257,12 @@ class Tray:
                     GLib.get_application_name(),
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
-                trayicon.set_menu(self.tray_popup_menu)
+                gtk_menu = Gtk.Menu.new_from_model(self.tray_popup_menu)
+                gtk_menu.attach_to_widget(self.frame.MainWindow, None)
+                trayicon.set_menu(gtk_menu)
 
                 # Action to hide/unhide main window when middle clicking the tray icon
-                hide_unhide_item = self.tray_popup_menu.get_items()[_("Hide / Show Nicotine+")]
+                hide_unhide_item = gtk_menu.get_children()[0]
                 trayicon.set_secondary_activate_target(hide_unhide_item)
 
             else:
@@ -367,12 +371,10 @@ class Tray:
         self.set_image()
 
         # Toggle away checkbox in tray menu
-        away_item = self.tray_popup_menu.get_items()[_("Away")]
-        handler_id = self.tray_popup_menu.handlers[away_item]
-
-        with away_item.handler_block(handler_id):
-            # Temporarily disable handler, we only want to change the visual checkbox appearance
-            away_item.set_active(enable)
+        away_item = self.tray_popup_menu.get_actions()[_("Away")]
+        away_item.set_enabled(False)
+        away_item.set_state(GLib.Variant.new_boolean(enable))
+        away_item.set_enabled(True)
 
     def set_connected(self, enable):
 
@@ -385,18 +387,18 @@ class Tray:
 
     def set_server_actions_sensitive(self, status):
 
-        items = self.tray_popup_menu.get_items()
+        items = self.tray_popup_menu.get_actions()
 
         for i in (_("Send Message"), _("Lookup a User's IP"), _("Lookup a User's Info"),
                   _("Lookup a User's Shares"), _("Away")):
 
             """ Disable menu items when disconnected from server """
-            items[i].set_sensitive(status)
+            items[i].set_enabled(status)
 
-        items = self.tray_popup_menu_server.get_items()
+        items = self.tray_popup_menu.get_actions()
 
-        items[_("Connect")].set_sensitive(not status)
-        items[_("Disconnect")].set_sensitive(status)
+        items[_("Connect")].set_enabled(not status)
+        items[_("Disconnect")].set_enabled(status)
 
     def set_transfer_status(self, download, upload):
 
@@ -404,6 +406,14 @@ class Tray:
             return
 
         items = self.tray_popup_menu.get_items()
+        section = self.tray_popup_menu.get_item_link(1, Gio.MENU_LINK_SECTION)
 
-        items[_("Downloads")].set_label(download)
-        items[_("Uploads")].set_label(upload)
+        if items[_("Downloads")].get_attribute_value("label").get_string() != download:
+            section.remove(0)
+            items[_("Downloads")].set_label(download)
+            section.insert_item(0, items[_("Downloads")])
+
+        if items[_("Uploads")].get_attribute_value("label").get_string() != upload:
+            section.remove(1)
+            items[_("Uploads")].set_label(upload)
+            section.insert_item(1, items[_("Uploads")])

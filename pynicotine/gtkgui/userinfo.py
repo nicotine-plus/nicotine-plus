@@ -24,6 +24,7 @@ import os
 import time
 
 from gi.repository import GdkPixbuf
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -149,19 +150,15 @@ class UserTabs(IconNotebook):
         for i in self.users.values():
             i.update_visuals()
 
-    def tab_popup(self, user):
-
-        if user in self.users:
-            return self.users[user].tab_popup(user)
-
     def on_tab_popup(self, widget, page):
 
         username = self.get_page_owner(page, self.users)
-        menu = self.tab_popup(username)
 
-        if menu is None:
+        if username not in self.users:
             return False
 
+        menu = self.users[username].user_popup
+        menu.toggle_user_items()
         menu.popup()
         return True
 
@@ -234,27 +231,19 @@ class UserInfo:
         self.update_visuals()
 
         self.user_popup = popup = PopupMenu(self.frame)
-        popup.setup_user_menu(user)
-        popup.get_items()[_("Show User I_nfo")].set_visible(False)
-
-        popup.append_item(("", None))
-        popup.append_item(("#" + _("Close All Tabs"), self.on_close_all_tabs))
-        popup.append_item(("#" + _("_Close Tab"), self.on_close))
-
-        self.likes_popup_menu = popup = PopupMenu(self.frame)
+        popup.setup_user_menu(user, page="userinfo")
         popup.setup(
-            ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
+            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.hates_popup_menu = popup = PopupMenu(self.frame)
+        self.interest_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
             ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search For Item"), self.frame.interests.on_recommend_search)
+            ("#" + _("_Search For Item"), self.frame.interests.on_r_recommend_search)
         )
 
         self.image_menu = popup = PopupMenu(self.frame)
@@ -266,7 +255,7 @@ class UserInfo:
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
-    def get_selected_like_item(self, treeview):
+    def get_selected_interest_item(self, treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -275,51 +264,32 @@ class UserInfo:
 
         return model.get_value(iterator, 0)
 
-    def on_likes_list_clicked(self, widget, event):
+    def on_popup_interest_menu(self, widget):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_likes_menu(widget)
-
-        return False
-
-    def on_popup_likes_menu(self, widget):
-
-        item = self.get_selected_like_item(widget)
+        item = self.get_selected_interest_item(widget)
         if item is None:
             return False
 
-        self.likes_popup_menu.set_user(item)
+        self.interest_popup_menu.set_user(item)
 
-        items = self.likes_popup_menu.get_items()
-        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
+        actions = self.interest_popup_menu.get_actions()
+        actions[_("I _Like This")].set_state(
+            GLib.Variant.new_boolean(item in self.frame.np.config.sections["interests"]["likes"])
+        )
+        actions[_("I _Dislike This")].set_state(
+            GLib.Variant.new_boolean(item in self.frame.np.config.sections["interests"]["dislikes"])
+        )
 
-        self.likes_popup_menu.popup()
+        self.interest_popup_menu.popup()
         return True
 
-    def on_hates_list_clicked(self, widget, event):
+    def on_interest_list_clicked(self, widget, event):
 
         if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
-            return self.on_popup_hates_menu(widget)
+            return self.on_popup_interest_menu(widget)
 
         return False
-
-    def on_popup_hates_menu(self, widget):
-
-        item = self.get_selected_like_item(widget)
-        if item is None:
-            return False
-
-        self.hates_popup_menu.set_user(item)
-
-        items = self.hates_popup_menu.get_items()
-        items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
-
-        self.hates_popup_menu.popup()
-        return True
 
     def update_visuals(self):
 
@@ -432,10 +402,6 @@ class UserInfo:
 
         self.progressbar.set_fraction(fraction)
 
-    def tab_popup(self, user):
-        self.user_popup.toggle_user_items()
-        return self.user_popup
-
     """ Events """
 
     def on_send_message(self, widget):
@@ -443,7 +409,6 @@ class UserInfo:
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, widget):
-
         self.frame.np.ip_requested.add(self.user)
         self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
@@ -464,7 +429,7 @@ class UserInfo:
     def on_ignore_user(self, widget):
         self.frame.np.network_filter.ignore_user(self.user)
 
-    def on_save_picture(self, widget):
+    def on_save_picture(self, *args):
 
         if self.image is None or self.image_pixbuf is None:
             return
@@ -501,9 +466,9 @@ class UserInfo:
         if self.image is None or self.image_pixbuf is None:
             act = False
 
-        items = self.image_menu.get_items()
-        for (item_id, item) in items.items():
-            item.set_sensitive(act)
+        actions = self.image_menu.get_actions()
+        for (action_id, action) in actions.items():
+            action.set_enabled(act)
 
         self.image_menu.popup()
         return True
@@ -517,10 +482,10 @@ class UserInfo:
 
         return True  # Don't scroll the Gtk.ScrolledWindow
 
-    def make_zoom_normal(self, widget):
+    def make_zoom_normal(self, *args):
         self.make_zoom_in(zoom=True)
 
-    def make_zoom_in(self, widget=None, zoom=None):
+    def make_zoom_in(self, *args, zoom=None):
 
         def calc_zoom_in(a):
             return a + a * self.actual_zoom / 100 + a * self.zoom_factor / 100
@@ -545,7 +510,7 @@ class UserInfo:
 
         gc.collect()
 
-    def make_zoom_out(self, widget=None):
+    def make_zoom_out(self, *args):
 
         def calc_zoom_out(a):
             return a + a * self.actual_zoom / 100 - a * self.zoom_factor / 100
@@ -571,9 +536,9 @@ class UserInfo:
 
         gc.collect()
 
-    def on_close(self, widget):
+    def on_close(self, *args):
         del self.userinfos.users[self.user]
         self.userinfos.remove_page(self.Main)
 
-    def on_close_all_tabs(self, widget):
+    def on_close_all_tabs(self, *args):
         self.userinfos.remove_all_pages()

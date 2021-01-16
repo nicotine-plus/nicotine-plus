@@ -172,15 +172,8 @@ class PrivateChats(IconNotebook):
         if username not in self.users:
             return False
 
-        menu = PopupMenu(self.frame)
-        menu.setup_user_menu(username)
-        menu.get_items()[_("Send _Message")].set_visible(False)
-
-        menu.append_item(("", None))
-        menu.append_item(("#" + _("Close All Tabs"), self.users[username].on_close_all_tabs))
-        menu.append_item(("#" + _("_Close Tab"), self.users[username].on_close))
+        menu = self.users[username].popup_menu_user
         menu.toggle_user_items()
-
         menu.popup()
         return True
 
@@ -377,14 +370,16 @@ class PrivateChat:
 
         self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame, False)
-        popup.setup_user_menu(user)
-        popup.get_items()[_("Send _Message")].set_visible(False)
+        self.popup_menu_user = popup = PopupMenu(self.frame)
+        popup.setup_user_menu(user, page="privatechat")
+        popup.setup(
+            ("", None),
+            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("_Close Tab"), self.on_close)
+        )
 
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("USERMENU", _("User"), self.popup_menu_user, self.on_popup_menu_user),
-            ("", None),
             ("#" + _("Find"), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_chat_log),
@@ -394,7 +389,8 @@ class PrivateChat:
             ("#" + _("Delete Chat Log"), self.on_delete_chat_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),
-            ("#" + _("_Close Tab"), self.on_close)
+            ("", None),
+            (">" + _("User"), self.popup_menu_user),
         )
 
         popup.set_user(user)
@@ -462,30 +458,30 @@ class PrivateChat:
         return False
 
     def on_popup_menu(self, widget):
+
+        self.popup_menu_user.toggle_user_items()
         self.popup_menu.popup()
         return True
 
-    def on_popup_menu_user(self, widget):
-        self.popup_menu_user.toggle_user_items()
-        return True
-
-    def on_find_chat_log(self, widget):
+    def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)
 
-    def on_copy_chat_log(self, widget):
+    def on_copy_chat_log(self, *args):
 
         bound = self.ChatScroll.get_buffer().get_selection_bounds()
+
         if bound is not None and len(bound) == 2:
             start, end = bound
             log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def on_copy_all_chat_log(self, widget):
+    def on_copy_all_chat_log(self, *args):
+
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_view_chat_log(self, widget):
+    def on_view_chat_log(self, *args):
         open_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user)
 
     def delete_chat_log_response(self, dialog, response, data):
@@ -496,7 +492,7 @@ class PrivateChat:
 
         dialog.destroy()
 
-    def on_delete_chat_log(self, widget):
+    def on_delete_chat_log(self, *args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -505,7 +501,7 @@ class PrivateChat:
             callback=self.delete_chat_log_response
         )
 
-    def on_clear_messages(self, widget):
+    def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
 
     def on_show_chat_help(self, widget):

@@ -21,8 +21,9 @@
 import os
 
 from gi.repository import Gdk
-from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import GObject
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import humanize
@@ -59,15 +60,6 @@ class Interests:
         cols["i_like"].set_sort_column_id(0)
         self.LikesList.set_model(self.likes_model)
 
-        self.til_popup_menu = popup = PopupMenu(self.frame)
-
-        popup.setup(
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
-            ("#" + _("Re_commendations For Item"), self.on_recommend_item),
-            ("", None),
-            ("#" + _("_Search For Item"), self.on_recommend_search)
-        )
-
         self.dislikes = {}
         self.dislikes_model = Gtk.ListStore(str)
         self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -80,14 +72,6 @@ class Interests:
 
         cols["i_dislike"].set_sort_column_id(0)
         self.DislikesList.set_model(self.dislikes_model)
-
-        self.tidl_popup_menu = popup = PopupMenu(self.frame)
-
-        popup.setup(
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
-            ("", None),
-            ("#" + _("_Search For Item"), self.on_recommend_search)
-        )
 
         cols = initialise_columns(
             None,
@@ -106,16 +90,6 @@ class Interests:
         )
         self.RecommendationsList.set_model(self.recommendations_model)
 
-        self.r_popup_menu = popup = PopupMenu(self.frame)
-
-        popup.setup(
-            ("$" + _("I _Like This"), self.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations For Item"), self.on_recommend_recommendation),
-            ("", None),
-            ("#" + _("_Search For Item"), self.on_recommend_search)
-        )
-
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
@@ -132,16 +106,6 @@ class Interests:
             int   # (2) rating
         )
         self.UnrecommendationsList.set_model(self.unrecommendations_model)
-
-        self.ur_popup_menu = popup = PopupMenu(self.frame)
-
-        popup.setup(
-            ("$" + _("I _Like This"), self.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations For Item"), self.on_recommend_recommendation),
-            ("", None),
-            ("#" + _("_Search For Item"), self.on_recommend_search)
-        )
 
         cols = initialise_columns(
             None,
@@ -172,9 +136,6 @@ class Interests:
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
-        self.ru_popup_menu = popup = PopupMenu(self.frame)
-        popup.setup_user_menu()
-
         for thing in self.np.config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
                 self.likes[thing] = self.likes_model.append([thing])
@@ -183,12 +144,43 @@ class Interests:
             if thing and isinstance(thing, str):
                 self.dislikes[thing] = self.dislikes_model.append([thing])
 
+        """ Popup """
+
+        self.til_popup_menu = popup = PopupMenu(self.frame)
+        popup.setup(
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
+            ("#" + _("Re_commendations For Item"), self.on_recommend_item),
+            ("", None),
+            ("#" + _("_Search For Item"), self.on_til_recommend_search)
+        )
+
+        self.tidl_popup_menu = popup = PopupMenu(self.frame)
+        popup.setup(
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
+            ("", None),
+            ("#" + _("_Search For Item"), self.on_tidl_recommend_search)
+        )
+
+        self.r_popup_menu = popup = PopupMenu(self.frame)
+        popup.setup(
+            ("$" + _("I _Like This"), self.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
+            ("#" + _("_Recommendations For Item"), self.on_recommend_recommendation),
+            ("", None),
+            ("#" + _("_Search For Item"), self.on_r_recommend_search)
+        )
+
+        self.ru_popup_menu = popup = PopupMenu(self.frame)
+        popup.setup_user_menu()
+
         self.update_visuals()
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_user_status_tooltip(widget, x, y, tooltip, 4)
+    def recommend_search(self, item):
+        self.frame.SearchEntry.set_text(item)
+        self.frame.change_main_page("search")
 
     def on_add_thing_i_like(self, widget, *args):
+
         thing = widget.get_text()
         widget.set_text("")
 
@@ -200,6 +192,7 @@ class Interests:
             self.np.queue.append(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget, *args):
+
         thing = widget.get_text()
         widget.set_text("")
 
@@ -210,7 +203,8 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
 
-    def on_remove_thing_i_like(self, widget):
+    def on_remove_thing_i_like(self, *args):
+
         thing = self.til_popup_menu.get_user()
 
         if thing not in self.np.config.sections["interests"]["likes"]:
@@ -223,7 +217,11 @@ class Interests:
         self.np.config.write_configuration()
         self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
-    def on_remove_thing_i_dislike(self, widget):
+    def on_til_recommend_search(self, *args):
+        self.recommend_search(self.til_popup_menu.get_user())
+
+    def on_remove_thing_i_dislike(self, *args):
+
         thing = self.tidl_popup_menu.get_user()
 
         if thing not in self.np.config.sections["interests"]["dislikes"]:
@@ -236,10 +234,14 @@ class Interests:
         self.np.config.write_configuration()
         self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
-    def on_like_recommendation(self, widget):
-        thing = widget.get_parent().get_user()
+    def on_tidl_recommend_search(self, *args):
+        self.recommend_search(self.tidl_popup_menu.get_user())
 
-        if widget.get_active() and \
+    def on_like_recommendation(self, action, state):
+
+        thing = self.r_popup_menu.get_user()
+
+        if state and \
                 thing and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
@@ -247,7 +249,7 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.append(slskmessages.AddThingILike(thing))
 
-        elif not widget.get_active() and \
+        elif not state and \
                 thing and thing in self.np.config.sections["interests"]["likes"]:
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
@@ -256,10 +258,13 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
-    def on_dislike_recommendation(self, widget):
-        thing = widget.get_parent().get_user()
+        action.set_state(state)
 
-        if widget.get_active() and \
+    def on_dislike_recommendation(self, action, state):
+
+        thing = self.r_popup_menu.get_user()
+
+        if state and \
                 thing and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
@@ -267,7 +272,7 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
 
-        elif not widget.get_active() and \
+        elif not state and \
                 thing and thing in self.np.config.sections["interests"]["dislikes"]:
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
@@ -276,20 +281,22 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
-    def on_recommend_item(self, widget):
+        action.set_state(state)
+
+    def on_recommend_item(self, *args):
+
         thing = self.til_popup_menu.get_user()
         self.np.queue.append(slskmessages.ItemRecommendations(thing))
         self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
-    def on_recommend_recommendation(self, widget):
+    def on_recommend_recommendation(self, *args):
+
         thing = self.r_popup_menu.get_user()
         self.np.queue.append(slskmessages.ItemRecommendations(thing))
         self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
-    def on_recommend_search(self, widget):
-        thing = widget.get_parent().get_user()
-        self.frame.SearchEntry.set_text(thing)
-        self.frame.change_main_page("search")
+    def on_r_recommend_search(self, *args):
+        self.recommend_search(self.r_popup_menu.get_user())
 
     def on_global_recommendations_clicked(self, widget):
         self.np.queue.append(slskmessages.GlobalRecommendations())
@@ -361,6 +368,83 @@ class Interests:
 
         return model.get_value(iterator, column)
 
+    def on_popup_til_menu(self, widget):
+
+        item = self.get_selected_item(widget, column=0)
+        if item is None:
+            return False
+
+        self.til_popup_menu.set_user(item)
+
+        self.til_popup_menu.popup()
+        return True
+
+    def on_til_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_til_menu(widget)
+
+        return False
+
+    def on_popup_tidl_menu(self, widget):
+
+        item = self.get_selected_item(widget, column=0)
+        if item is None:
+            return False
+
+        self.tidl_popup_menu.set_user(item)
+
+        self.tidl_popup_menu.popup()
+        return True
+
+    def on_tidl_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_tidl_menu(widget)
+
+        return False
+
+    def on_popup_r_menu(self, widget):
+
+        item = self.get_selected_item(widget, column=1)
+        if item is None:
+            return False
+
+        self.r_popup_menu.set_user(item)
+
+        actions = self.r_popup_menu.get_actions()
+        actions[_("I _Like This")].set_state(
+            GLib.Variant.new_boolean(item in self.np.config.sections["interests"]["likes"])
+        )
+        actions[_("I _Dislike This")].set_state(
+            GLib.Variant.new_boolean(item in self.np.config.sections["interests"]["dislikes"])
+        )
+
+        self.r_popup_menu.popup()
+        return True
+
+    def on_r_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_r_menu(widget)
+
+        return False
+
+    def on_popup_ru_menu(self, widget):
+
+        user = self.get_selected_item(widget, column=1)
+        if user is None:
+            return False
+
+        self.ru_popup_menu.set_user(user)
+        self.ru_popup_menu.toggle_user_items()
+
+        self.ru_popup_menu.popup()
+        return True
+
     def on_ru_list_clicked(self, widget, event):
 
         if triggers_context_menu(event):
@@ -377,101 +461,8 @@ class Interests:
 
         return False
 
-    def on_popup_ru_menu(self, widget):
-
-        user = self.get_selected_item(widget, column=1)
-        if user is None:
-            return False
-
-        self.ru_popup_menu.set_user(user)
-        self.ru_popup_menu.toggle_user_items()
-
-        self.ru_popup_menu.popup()
-        return True
-
-    def on_til_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_til_menu(widget)
-
-        return False
-
-    def on_popup_til_menu(self, widget):
-
-        item = self.get_selected_item(widget, column=0)
-        if item is None:
-            return False
-
-        self.til_popup_menu.set_user(item)
-
-        self.til_popup_menu.popup()
-        return True
-
-    def on_tidl_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_tidl_menu(widget)
-
-        return False
-
-    def on_popup_tidl_menu(self, widget):
-
-        item = self.get_selected_item(widget, column=0)
-        if item is None:
-            return False
-
-        self.tidl_popup_menu.set_user(item)
-
-        self.tidl_popup_menu.popup()
-        return True
-
-    def on_r_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_r_menu(widget)
-
-        return False
-
-    def on_popup_r_menu(self, widget):
-
-        item = self.get_selected_item(widget, column=1)
-        if item is None:
-            return False
-
-        self.r_popup_menu.set_user(item)
-
-        items = self.r_popup_menu.get_items()
-        items[_("I _Like This")].set_active(item in self.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(item in self.np.config.sections["interests"]["dislikes"])
-
-        self.r_popup_menu.popup()
-        return True
-
-    def on_un_rec_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_un_rec_menu(widget)
-
-        return False
-
-    def on_popup_un_rec_menu(self, widget):
-
-        item = self.get_selected_item(widget, column=1)
-        if item is None:
-            return False
-
-        self.ur_popup_menu.set_user(item)
-
-        items = self.ur_popup_menu.get_items()
-        items[_("I _Like This")].set_active(item in self.np.config.sections["interests"]["likes"])
-        items[_("I _Dislike This")].set_active(item in self.np.config.sections["interests"]["dislikes"])
-
-        self.ur_popup_menu.popup()
-        return True
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return show_user_status_tooltip(widget, x, y, tooltip, 4)
 
     def update_visuals(self):
 
