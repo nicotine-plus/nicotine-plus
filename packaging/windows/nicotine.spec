@@ -18,12 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-block_cipher = None
-
 import glob
 import os
 import sys
 
+from ctypes.util import find_library
 from pkgutil import walk_packages
 
 # Provide access to the pynicotine module
@@ -31,16 +30,24 @@ sys.path.append('.')
 
 import pynicotine.plugins
 
-# Disable unnecessary modules
-sys.modules['FixTk'] = None
-sys.modules['lib2to3'] = None
-
+binaries = []
 hiddenimports = []
+added_files = []
 
 # Include CA bundle for update checker
 hiddenimports.append('certifi')
 
 if sys.platform == 'win32':
+    # SSL support
+    for i in ("libcrypto-1_1", "libssl-1_1", "libcrypto-1_1-x64", "libssl-1_1-x64"):
+        lib = find_library(i)
+
+        if lib is not None:
+            binaries.append((lib, '.'))
+
+    if not binaries:
+        raise Exception("No SSL libraries found")
+
     # Notification support on Windows
     hiddenimports.append('plyer.platforms.win.notification')
 
@@ -49,7 +56,7 @@ hiddenimports += [name for importer, name, ispkg in walk_packages(path=pynicotin
 
 
 # Files to be added to the frozen app
-added_files = [
+added_files += [
     #
     # Application core modules
     #
@@ -88,7 +95,7 @@ for po_file in glob.glob("po/*.po"):
 
 a = Analysis(['../../nicotine'],
              pathex=['.'],
-             binaries=[],
+             binaries=binaries,
              datas=added_files,
              hiddenimports=hiddenimports,
              hookspath=[],
@@ -96,7 +103,7 @@ a = Analysis(['../../nicotine'],
              excludes=['FixTk', 'lib2to3', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher,
+             cipher=None,
              noarchive=False)
 
 # Remove unwanted files
@@ -109,7 +116,7 @@ for file in a.datas[:]:
         a.datas.remove(file)
 
 pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+             cipher=None)
 
 name = 'Nicotine+'
 icon = 'nicotine.ico'
