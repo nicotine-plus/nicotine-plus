@@ -46,7 +46,6 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
-from pynicotine.utils import RestrictedUnpickler
 from pynicotine.utils import write_log
 
 
@@ -134,27 +133,25 @@ class Transfers:
         for i in self.load_download_queue():
             size = currentbytes = bitrate = length = None
 
-            if len(i) >= 6:
-                try:
-                    size = int(i[4])
-                except Exception:
-                    pass
+            try:
+                size = int(i[4])
+            except Exception:
+                pass
 
-                try:
-                    currentbytes = int(i[5])
-                except Exception:
-                    pass
+            try:
+                currentbytes = int(i[5])
+            except Exception:
+                pass
 
-            if len(i) >= 8:
-                try:
-                    bitrate = i[6]
-                except Exception:
-                    pass
+            try:
+                bitrate = i[6]
+            except Exception:
+                pass
 
-                try:
-                    length = i[7]
-                except Exception:
-                    pass
+            try:
+                length = i[7]
+            except Exception:
+                pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
                 status = "Paused"
@@ -192,37 +189,77 @@ class Transfers:
         # Check for failed downloads if option is enabled (1 min delay)
         self.start_check_download_queue_timer()
 
-    def move_downloads_file(self):
-        """ Move downloads file from pre-2.0.0 location to new one, if necessary """
+    def get_download_queue_file_name(self):
 
-        old_downloads_file = os.path.join(
+        downloads_file_json = os.path.join(
+            self.eventprocessor.config.data_dir, 'transfers.json'
+        )
+
+        downloads_file_1_4_2 = os.path.join(
             self.eventprocessor.config.data_dir, 'config.transfers.pickle'
         )
 
-        current_downloads_file = os.path.join(
+        downloads_file_1_4_1 = os.path.join(
             self.eventprocessor.config.data_dir, 'transfers.pickle'
         )
 
-        if os.path.exists(old_downloads_file) and not os.path.exists(current_downloads_file):
-            os.rename(old_downloads_file, current_downloads_file)
+        download_queue = []
+
+        if os.path.exists(downloads_file_json):
+            # New file format
+            return downloads_file_json
+
+        elif os.path.exists(downloads_file_1_4_2):
+            # Nicotine+ 1.4.2+
+            return downloads_file_1_4_2
+
+        elif os.path.exists(downloads_file_1_4_1):
+            # Nicotine <=1.4.1
+            return downloads_file_1_4_1
+
+        return None
+
+    def load_current_queue_format(self, downloads_file):
+        """ Loads a download queue file in json format """
+
+        download_queue = []
+
+        try:
+            with open(downloads_file, encoding="utf-8") as handle:
+                import json
+                download_queue = json.load(handle)
+
+        except Exception as inst:
+            log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+
+        return download_queue
+
+    def load_legacy_queue_format(self, downloads_file):
+        """ Loads a download queue file in pickle format (legacy) """
+
+        download_queue = []
+
+        try:
+            with open(downloads_file, "rb") as handle:
+                from pynicotine.utils import RestrictedUnpickler
+                download_queue = RestrictedUnpickler(handle, encoding='utf-8').load()
+
+        except Exception as inst:
+            log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+
+        return download_queue
 
     def load_download_queue(self):
 
-        self.move_downloads_file()
-        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')
+        downloads_file = self.get_download_queue_file_name()
 
-        if os.path.exists(downloads_file):
-            try:
-                with open(downloads_file, 'rb') as handle:
-                    return RestrictedUnpickler(handle, encoding='utf-8').load()
+        if not downloads_file:
+            return []
 
-            except IOError as inst:
-                log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
+        if not downloads_file.endswith("transfers.json"):
+            return self.load_legacy_queue_format(downloads_file)
 
-            except Exception as inst:
-                log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
-
-        return []
+        return self.load_current_queue_format(downloads_file)
 
     def set_transfer_views(self, downloads, uploads):
         self.downloadsview = downloads
@@ -2192,12 +2229,14 @@ class Transfers:
     def save_downloads(self):
         """ Save list of files to be downloaded """
 
+        import json
+
         self.eventprocessor.config.create_data_folder()
-        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.pickle')
+        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.json')
 
         try:
-            with open(downloads_file, 'wb') as handle:
-                pickle.dump(self.get_downloads(), handle, protocol=pickle.HIGHEST_PROTOCOL)
+            with open(downloads_file, "w", encoding="utf-8") as handle:
+                json.dump(self.get_downloads(), handle, ensure_ascii=False)
 
         except IOError as inst:
             log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
