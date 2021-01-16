@@ -31,5 +31,6 @@ brew install \
 
 # Install dependencies with pip
 pip3 install \
+  certifi \
   pygobject \
   pyinstaller==4.2
