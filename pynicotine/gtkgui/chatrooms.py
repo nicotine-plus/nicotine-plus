@@ -36,8 +36,8 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.dialogs import option_dialog
+from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
@@ -60,7 +60,6 @@ from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
-from pynicotine.utils import cmp
 from pynicotine.utils import write_log
 
 
@@ -107,100 +106,14 @@ class RoomsControl:
             if "operator" in data:
                 del self.private_rooms[room]["operator"]
 
+        self.roomlist = RoomList(self.frame, self.joinedrooms, self.private_rooms)
+
         self.clist = []
-        self.roomsmodel = Gtk.ListStore(str, int, int)
-        self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
-
-        self.cols = initialise_columns(
-            None,
-            self.frame.roomlist.RoomsList,
-            ["room", _("Room"), 180, "text", self.room_status, None],
-            ["users", _("Users"), 0, "number", self.room_status, None]
-        )
-        self.cols["room"].set_sort_column_id(0)
-        self.cols["users"].set_sort_column_id(1)
-
-        self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
-
-        self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame)
-        self.popup_menu.setup(
-            ("#" + _("Join Room"), self.on_popup_join),
-            ("#" + _("Leave Room"), self.on_popup_leave),
-            ("#" + _("Create Room"), self.on_popup_create_public_room),
-            ("", None),
-            ("#" + _("Create Private Room"), self.on_popup_create_private_room),
-            ("#" + _("Disown Private Room"), self.on_popup_private_room_disown),
-            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember),
-            ("", None),
-            ("#" + _("Join Public Room"), self.on_join_public_room),
-            ("", None),
-            ("#" + _("Refresh"), self.on_popup_refresh)
-        )
-
-        self.frame.roomlist.RoomsList.connect("button_press_event", self.on_list_clicked)
-        self.frame.roomlist.RoomsList.connect("popup-menu", self.on_popup_menu)
-        self.frame.roomlist.RoomsList.connect("touch_event", self.on_list_clicked)
-        self.frame.roomlist.RoomsList.set_headers_clickable(True)
 
         self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
         self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
 
-        self.frame.roomlist.update_visuals()
         self.update_visuals()
-
-    def is_private_room_owned(self, room):
-
-        if room in self.private_rooms:
-            if self.private_rooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
-                return True
-
-        return False
-
-    def is_private_room_member(self, room):
-
-        if room in self.private_rooms:
-            return True
-
-        return False
-
-    def is_private_room_operator(self, room):
-
-        if room in self.private_rooms:
-            if self.frame.np.config.sections["server"]["login"] in self.private_rooms[room]["operators"]:
-                return True
-
-        return False
-
-    def private_rooms_sort(self, model, iter1, iter2, column):
-
-        try:
-            private1 = model.get_value(iter1, 2) * 10000
-            private1 += model.get_value(iter1, 1)
-        except Exception:
-            private1 = 0
-
-        try:
-            private2 = model.get_value(iter2, 2) * 10000
-            private2 += model.get_value(iter2, 1)
-        except Exception:
-            private2 = 0
-
-        return cmp(private1, private2)
-
-    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
-
-        if self.roomsmodel.get_value(iterator, 2) >= 2:
-            cellrenderer.set_property("underline", Pango.Underline.SINGLE)
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-
-        elif self.roomsmodel.get_value(iterator, 2) >= 1:
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
-
-        else:
-            cellrenderer.set_property("weight", Pango.Weight.NORMAL)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -264,127 +177,6 @@ class RoomsControl:
             if room.Main == page:
                 self.frame.notifications.clear("rooms", name)
 
-    def get_selected_room(self, treeview):
-
-        model, iterator = treeview.get_selection().get_selected()
-
-        if iterator is None:
-            return None
-
-        return model.get_value(iterator, 0)
-
-    def on_list_clicked(self, widget, event):
-
-        set_treeview_selected_row(widget, event)
-
-        if triggers_context_menu(event):
-            return self.on_popup_menu(widget)
-
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            room = self.get_selected_room(widget)
-
-            if room is not None and room not in self.joinedrooms:
-                self.frame.np.queue.put(slskmessages.JoinRoom(room))
-                return True
-
-        return False
-
-    def on_popup_menu(self, widget):
-
-        if self.roomsmodel is None:
-            return False
-
-        room = self.get_selected_room(widget)
-
-        if room is not None:
-            if room in self.joinedrooms:
-                act = (False, True)
-            else:
-                act = (True, False)
-        else:
-            act = (False, False)
-
-        self.popup_room = room
-        prooms_enabled = True
-
-        items = self.popup_menu.get_items()
-
-        items[_("Join Room")].set_sensitive(act[0])
-        items[_("Leave Room")].set_sensitive(act[1])
-
-        items[_("Disown Private Room")].set_sensitive(self.is_private_room_owned(self.popup_room))
-        items[_("Cancel Room Membership")].set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))
-
-        self.popup_menu.popup()
-        return True
-
-    def on_popup_join(self, widget):
-        self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
-
-    def on_popup_create_public_room(self, widget):
-
-        room = entry_dialog(
-            self.frame.MainWindow,
-            title=_("Create Public Room"),
-            message=_('Enter the name of the public room you wish to create')
-        )
-
-        if room:
-            self.frame.np.queue.put(slskmessages.JoinRoom(room))
-
-    def on_join_public_room(self, widget):
-
-        # Everything but queue.put shouldn't be here, but the server doesn't send a confirmation when joining
-        # public room. It would be clearer if we faked such a message ourself somewhere in the core
-        if 'Public ' in self.joinedrooms:
-            return
-
-        room = ChatRoom(self, 'Public ', {}, meta=True)
-        self.joinedrooms['Public '] = room
-        angle = 0
-
-        try:
-            angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception as e:
-            print(e)
-
-        self.chat_notebook.append_page(room.Main, 'Public ', room.on_leave, angle)
-
-        room.count_users()
-
-        self.frame.np.queue.put(slskmessages.JoinPublicRoom())
-
-    def on_popup_create_private_room(self, widget):
-
-        room = entry_dialog(
-            self.frame.MainWindow,
-            title=_("Create Private Room"),
-            message=_('Enter the name of the private room you wish to create')
-        )
-
-        if room:
-            self.frame.np.queue.put(slskmessages.JoinRoom(room, 1))
-
-    def on_popup_private_room_disown(self, widget):
-
-        if self.is_private_room_owned(self.popup_room):
-            self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
-            del self.private_rooms[self.popup_room]
-            self.set_private_rooms()
-
-    def on_popup_private_room_dismember(self, widget):
-
-        if self.is_private_room_member(self.popup_room):
-            self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
-            del self.private_rooms[self.popup_room]
-            self.set_private_rooms()
-
-    def on_popup_leave(self, widget):
-        self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
-
-    def on_popup_refresh(self, widget):
-        self.frame.np.queue.put(slskmessages.RoomList())
-
     def join_room(self, msg):
 
         if msg.room in self.joinedrooms:
@@ -406,9 +198,31 @@ class RoomsControl:
 
         self.chat_notebook.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
+        page_num = self.chat_notebook.page_num(tab.Main)
+        self.chat_notebook.set_current_page(page_num)
+
         self.frame.RoomSearchCombo.append_text(msg.room)
 
         tab.count_users()
+
+    def join_public_room(self):
+
+        if 'Public ' in self.joinedrooms:
+            return
+
+        room = ChatRoom(self, 'Public ', {}, meta=True)
+        self.joinedrooms['Public '] = room
+        angle = 0
+
+        try:
+            angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
+        except Exception as e:
+            print(e)
+
+        self.chat_notebook.append_page(room.Main, 'Public ', room.on_leave, angle)
+
+        page_num = self.chat_notebook.page_num(room.Main)
+        self.chat_notebook.set_current_page(page_num)
 
     def set_room_list(self, msg):
 
@@ -427,22 +241,11 @@ class RoomsControl:
                 elif isinstance(room, str):
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
-        self.roomsmodel.clear()
-        self.frame.roomlist.RoomsList.set_model(None)
-        self.roomsmodel.set_default_sort_func(lambda *args: -1)
-        self.roomsmodel.set_sort_func(1, lambda *args: -1)
-        self.roomsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
-
         self.rooms = []
         for room, users in msg.rooms:
-            self.roomsmodel.append([room, users, 0])
             self.rooms.append(room)
 
-        self.set_private_rooms(msg.ownedprivaterooms, msg.otherprivaterooms)
-        self.frame.roomlist.RoomsList.set_model(self.roomsmodel)
-        self.roomsmodel.set_sort_func(1, self.private_rooms_sort, 1)
-        self.roomsmodel.set_sort_column_id(1, Gtk.SortType.DESCENDING)
-        self.roomsmodel.set_default_sort_func(self.private_rooms_sort)
+        self.roomlist.set_room_list(msg.rooms)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
             self.frame.chatrooms.roomsctrl.update_completions()
@@ -477,24 +280,7 @@ class RoomsControl:
             except KeyError:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
-        iterator = self.roomsmodel.get_iter_first()
-        while iterator is not None:
-            room = self.roomsmodel.get_value(iterator, 0)
-            lastiter = iterator
-            iterator = self.roomsmodel.iter_next(iterator)
-
-            if self.is_private_room_owned(room) or self.is_private_room_member(room):
-                self.roomsmodel.remove(lastiter)
-
-        for room in self.private_rooms:
-
-            num = self.private_rooms[room]["joined"]
-
-            if self.is_private_room_owned(room):
-                self.roomsmodel.prepend([room, num, 2])
-
-            elif self.is_private_room_member(room):
-                self.roomsmodel.prepend([room, num, 1])
+        self.RoomList.update_private_rooms()
 
     def create_private_room(self, room, owner=None, operators=[]):
 
@@ -686,6 +472,8 @@ class RoomsControl:
         for room in self.joinedrooms.values():
             room.update_visuals()
             room.update_tags()
+
+        self.roomlist.update_visuals()
 
     def save_columns(self):
 
@@ -1470,20 +1258,8 @@ class ChatRoom:
         self.count_users()
 
     def count_users(self):
-
         numusers = len(self.users)
         self.LabelPeople.set_markup("<b>%d</b>" % numusers)
-
-        if self.room in self.roomsctrl.rooms:
-            iterator = self.roomsctrl.roomsmodel.get_iter_first()
-            while iterator:
-                if self.roomsctrl.roomsmodel.get_value(iterator, 0) == self.room:
-                    self.roomsctrl.roomsmodel.set(iterator, 1, numusers)
-                    break
-                iterator = self.roomsctrl.roomsmodel.iter_next(iterator)
-        else:
-            self.roomsctrl.roomsmodel.append([self.room, numusers, 0])
-            self.roomsctrl.rooms.append(self.room)
 
     def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.18"/>
+  <object class="GtkDialog" id="RoomListDialog">
+    <property name="title" translatable="yes">Room List</property>
+    <property name="modal">1</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="default-width">400</property>
+    <property name="default-height">600</property>
+    <signal name="delete-event" handler="hide" swapped="no"/>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">6</property>
+            <property name="margin-bottom">8</property>
+            <child>
+              <object class="GtkSearchEntry" id="SearchRooms">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">15</property>
+                <signal name="activate" handler="on_search_room" swapped="no"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="vexpand">1</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="shadow-type">in</property>
+            <child>
+              <object class="GtkTreeView" id="RoomsList">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="margin-start">8</property>
+            <property name="margin-end">8</property>
+            <property name="margin-top">8</property>
+            <property name="margin-bottom">8</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkCheckButton" id="AcceptPrivateRoom">
+                <property name="label" translatable="yes">Accept private room invitations</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

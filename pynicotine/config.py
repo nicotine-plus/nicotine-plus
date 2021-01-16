@@ -316,7 +316,7 @@ class Config:
                     "interests"
                 ],
                 "showaway": False,
-                "buddylistinchatrooms": 0,
+                "buddylistposition": "tab",
                 "trayicon": True,
                 "startup_hidden": False,
                 "filemanager": "",
@@ -651,6 +651,9 @@ class Config:
 
         # Remove option to reopen closed search tabs when new results come in
         self.remove_old_option("searches", "reopen_tabs")
+
+        # Remove old buddy list position option
+        self.remove_old_option("ui", "buddylistinchatrooms")
 
     def remove_old_option(self, section, option):
 

@@ -737,6 +737,91 @@
       </packing>
     </child>
   </object>
+  <object class="GtkHeaderBar" id="HeaderChatrooms">
+    <property name="visible">1</property>
+    <property name="height-request">42</property>
+    <property name="show-close-button">1</property>
+    <child type="title">
+      <object class="GtkBox" id="ChatroomsTitle">
+        <property name="visible">1</property>
+        <property name="hexpand">0</property>
+        <property name="spacing">4</property>
+        <property name="valign">center</property>
+        <child>
+          <object class="GtkComboBoxText" id="RoomType">
+            <property name="visible">1</property>
+            <property name="tooltip-text" translatable="yes">Room type</property>
+            <property name="active">0</property>
+            <items>
+              <item translatable="yes">Public</item>
+              <item translatable="yes">Private</item>
+            </items>
+          </object>
+        </child>
+        <child>
+          <object class="GtkEntry" id="JoinRoomEntry">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="max-width-chars">40</property>
+            <property name="width-chars">5</property>
+            <property name="placeholder-text" translatable="yes">Create or join room...</property>
+            <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
+            <property name="primary-icon-name">user-available-symbolic</property>
+            <signal name="activate" handler="on_create_room" swapped="no"/>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="ChatroomsEnd">
+        <property name="visible">1</property>
+        <property name="spacing">6</property>
+        <property name="valign">center</property>
+        <child>
+          <object class="GtkButton" id="RoomList">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">view-list-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Room List</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="configureLogSecond">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="tooltip-text" translatable="yes">Configure logging</property>
+            <signal name="clicked" handler="on_settings_logging" swapped="no"/>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">1</property>
+                <property name="icon-name">emblem-system-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+  </object>
   <object class="GtkApplicationWindow" id="MainWindow">
     <signal name="focus-in-event" handler="on_focus_in" swapped="no"/>
     <signal name="configure-event" handler="on_window_change" swapped="no"/>
@@ -1276,9 +1361,19 @@
                     </child>
                     <!-- Chat Rooms -->
                     <child>
-                      <object class="GtkPaned" id="chathbox">
+                      <object class="GtkBox" id="chathbox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkBox" id="ChatroomsToolbar">
+                            <property name="visible">0</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="spacing">6</property>
+                          </object>
+                        </child>
                         <child>
                           <object class="GtkNotebook" id="ChatNotebookRaw">
                             <property name="visible">1</property>
@@ -1286,19 +1381,6 @@
                             <property name="show-border">0</property>
                             <property name="scrollable">1</property>
                           </object>
-                          <packing>
-                            <property name="resize">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkPaned" id="vpaned3">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="orientation">vertical</property>
-                          </object>
-                          <packing>
-                            <property name="resize">0</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -1326,7 +1408,7 @@
                 <!-- Buddy list always visible placeholder -->
                 <child>
                   <object class="GtkPaned" id="vpanedm">
-                    <property name="visible">1</property>
+                    <property name="visible">0</property>
                     <property name="can-focus">1</property>
                     <property name="orientation">vertical</property>
                   </object>
