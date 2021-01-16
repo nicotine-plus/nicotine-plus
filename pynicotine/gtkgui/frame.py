@@ -1971,7 +1971,7 @@ class NicotineFrame:
 
         if user is not None:
             if user == login:
-                if not self.np.config.sections["transfers"]["friendsonly"]:
+                if not self.np.config.sections["transfers"]["enablebuddyshares"]:
                     self.on_browse_public_shares(folder=folder)
                 else:
                     self.on_browse_buddy_shares(folder=folder)
