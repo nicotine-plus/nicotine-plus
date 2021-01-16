@@ -1336,6 +1336,8 @@ class NicotineFrame:
 
         if self.images["n"]:
             self.AboutDialog.set_logo(self.images["n"])
+        else:
+            self.AboutDialog.set_logo_icon_name(GLib.get_prgname())
 
         self.AboutDialog.set_transient_for(self.MainWindow)
         self.AboutDialog.set_version(version)
