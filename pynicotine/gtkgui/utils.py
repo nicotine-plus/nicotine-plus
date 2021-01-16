@@ -1547,23 +1547,73 @@ def humanize(number):
     return neg + ret[:-1]
 
 
-def is_alias(aliases, cmd):
+""" Command Aliases """
+
+
+def add_alias(rest):
+
+    aliases = NICOTINE.np.config.sections["server"]["command_aliases"]
+
+    if rest:
+        args = rest.split(" ", 1)
+
+        if len(args) == 2:
+            if args[0] in ("alias", "unalias"):
+                return "I will not alias that!\n"
+
+            aliases[args[0]] = args[1]
+
+        if args[0] in aliases:
+            return "Alias %s: %s\n" % (args[0], aliases[args[0]])
+        else:
+            return _("No such alias (%s)") % rest + "\n"
+
+    else:
+        m = "\n" + _("Aliases:") + "\n"
+
+        for (key, value) in aliases.items():
+            m = m + "%s: %s\n" % (key, value)
+
+        return m + "\n"
+
+
+def unalias(rest):
+
+    aliases = NICOTINE.np.config.sections["server"]["command_aliases"]
+
+    if rest and rest in aliases:
+        x = aliases[rest]
+        del aliases[rest]
+
+        return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
+
+    else:
+        return _("No such alias (%(alias)s)\n") % {'alias': rest}
+
+
+def is_alias(cmd):
+
     if not cmd:
         return False
+
     if cmd[0] != "/":
         return False
+
     cmd = cmd[1:].split(" ")
-    if cmd[0] in aliases:
+
+    if cmd[0] in NICOTINE.np.config.sections["server"]["command_aliases"]:
         return True
+
     return False
 
 
-def expand_alias(aliases, cmd):
-    output = _expand_alias(aliases, cmd)
+def expand_alias(cmd):
+    output = _expand_alias(NICOTINE.np.config.sections["server"]["command_aliases"], cmd)
     return output
 
 
 def _expand_alias(aliases, cmd):
+
     def getpart(line):
         if line[0] != "(":
             return ""
@@ -1582,7 +1632,7 @@ def _expand_alias(aliases, cmd):
             ix = ix + 1
         return ""
 
-    if not is_alias(aliases, cmd):
+    if not is_alias(cmd):
         return None
     try:
         cmd = cmd[1:].split(" ")

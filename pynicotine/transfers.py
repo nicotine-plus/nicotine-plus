@@ -30,7 +30,6 @@ the transfer manager.
 
 import os
 import os.path
-import pickle
 import re
 import stat
 import threading
@@ -191,19 +190,10 @@ class Transfers:
 
     def get_download_queue_file_name(self):
 
-        downloads_file_json = os.path.join(
-            self.eventprocessor.config.data_dir, 'transfers.json'
-        )
-
-        downloads_file_1_4_2 = os.path.join(
-            self.eventprocessor.config.data_dir, 'config.transfers.pickle'
-        )
-
-        downloads_file_1_4_1 = os.path.join(
-            self.eventprocessor.config.data_dir, 'transfers.pickle'
-        )
-
-        download_queue = []
+        data_dir = self.eventprocessor.config.data_dir
+        downloads_file_json = os.path.join(data_dir, 'downloads.json')
+        downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
+        downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
 
         if os.path.exists(downloads_file_json):
             # New file format
@@ -256,7 +246,7 @@ class Transfers:
         if not downloads_file:
             return []
 
-        if not downloads_file.endswith("transfers.json"):
+        if not downloads_file.endswith("downloads.json"):
             return self.load_legacy_queue_format(downloads_file)
 
         return self.load_current_queue_format(downloads_file)
@@ -2229,17 +2219,13 @@ class Transfers:
     def save_downloads(self):
         """ Save list of files to be downloaded """
 
-        import json
-
         self.eventprocessor.config.create_data_folder()
-        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'transfers.json')
+        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'downloads.json')
 
         try:
             with open(downloads_file, "w", encoding="utf-8") as handle:
+                import json
                 json.dump(self.get_downloads(), handle, ensure_ascii=False)
-
-        except IOError as inst:
-            log.add_warning(_("Something went wrong while opening your transfer list: %(error)s"), {'error': str(inst)})
 
         except Exception as inst:
             log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
