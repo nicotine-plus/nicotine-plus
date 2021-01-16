@@ -79,7 +79,7 @@ def get_completions(part, list):
     return matches
 
 
-class RoomsControl:
+class ChatRooms(IconNotebook):
 
     CMDS = {
         "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ",
@@ -88,15 +88,14 @@ class RoomsControl:
         "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/toggle", "/tickers"
     }
 
-    def __init__(self, chat_notebook):
+    def __init__(self, frame):
 
-        self.frame = chat_notebook.frame
-        self.chat_notebook = chat_notebook
+        self.frame = frame
+        config = self.frame.np.config.sections
 
         self.joinedrooms = {}
         self.autojoin = 1
         self.rooms = []
-        config = self.frame.np.config.sections
         self.private_rooms = config["private_rooms"]["rooms"]
 
         # Config cleanup
@@ -110,10 +109,51 @@ class RoomsControl:
 
         self.clist = []
 
-        self.chat_notebook.notebook.connect("switch-page", self.on_switch_page)
-        self.chat_notebook.notebook.connect("page-reordered", self.on_reordered_page)
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            angle=config["ui"]["labelrooms"],
+            tabclosers=config["ui"]["tabclosers"],
+            show_hilite_image=config["notifications"]["notification_tab_icons"],
+            reorderable=config["ui"]["tab_reorderable"],
+            notebookraw=self.frame.ChatNotebookRaw
+        )
+
+        self.popup_enable()
+
+        self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
+
+        self.notebook.connect("switch-page", self.on_switch_page)
+        self.notebook.connect("page-reordered", self.on_reordered_page)
 
         self.update_visuals()
+
+    def on_tab_popup(self, widget, page):
+
+        room = self.get_page_owner(page, self.joinedrooms)
+
+        if room not in self.joinedrooms:
+            return False
+
+        menu = PopupMenu(self.frame)
+        menu.setup(
+            ("#" + _("_Leave Room"), self.joinedrooms[room].on_leave)
+        )
+
+        menu.popup()
+        return True
+
+    def on_tab_click(self, widget, event, page):
+
+        if triggers_context_menu(event):
+            return self.on_tab_popup(widget, page)
+
+        if event.button == 2:
+            room = self.get_page_owner(page, self.joinedrooms)
+            self.joinedrooms[room].on_leave(widget)
+            return True
+
+        return False
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -161,7 +201,7 @@ class RoomsControl:
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox):
             return
 
-        page = self.chat_notebook.get_nth_page(self.chat_notebook.get_current_page())
+        page = self.get_nth_page(self.get_current_page())
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
@@ -196,10 +236,10 @@ class RoomsControl:
         except Exception as e:
             print(e)
 
-        self.chat_notebook.append_page(tab.Main, msg.room, tab.on_leave, angle)
+        self.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
-        page_num = self.chat_notebook.page_num(tab.Main)
-        self.chat_notebook.set_current_page(page_num)
+        page_num = self.page_num(tab.Main)
+        self.set_current_page(page_num)
 
         self.frame.RoomSearchCombo.append_text(msg.room)
 
@@ -219,10 +259,10 @@ class RoomsControl:
         except Exception as e:
             print(e)
 
-        self.chat_notebook.append_page(room.Main, 'Public ', room.on_leave, angle)
+        self.append_page(room.Main, 'Public ', room.on_leave, angle)
 
-        page_num = self.chat_notebook.page_num(room.Main)
-        self.chat_notebook.set_current_page(page_num)
+        page_num = self.page_num(room.Main)
+        self.set_current_page(page_num)
 
     def set_room_list(self, msg):
 
@@ -248,7 +288,7 @@ class RoomsControl:
         self.roomlist.set_room_list(msg.rooms)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
-            self.frame.chatrooms.roomsctrl.update_completions()
+            self.frame.chatrooms.update_completions()
             self.frame.privatechats.update_completions()
 
     def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
@@ -488,7 +528,7 @@ class RoomsControl:
 
         room = self.joinedrooms[msg.room]
 
-        self.chat_notebook.remove_page(room.Main)
+        self.remove_page(room.Main)
         room.destroy()
         del self.joinedrooms[msg.room]
 
@@ -538,10 +578,10 @@ class RoomsControl:
 
 class ChatRoom:
 
-    def __init__(self, roomsctrl, room, users, meta=False):
+    def __init__(self, chatrooms, room, users, meta=False):
 
-        self.roomsctrl = roomsctrl
-        self.frame = roomsctrl.frame
+        self.chatrooms = chatrooms
+        self.frame = chatrooms.frame
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
@@ -650,7 +690,7 @@ class ChatRoom:
                 [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
             )
             self.users[username] = iterator
-            self.roomsctrl.get_user_address(username)
+            self.chatrooms.get_user_address(username)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -696,7 +736,7 @@ class ChatRoom:
 
         self.buildingcompletion = False
 
-        self.get_completion_list(clist=list(self.roomsctrl.clist))
+        self.get_completion_list(clist=list(self.chatrooms.clist))
 
         if config["logging"]["readroomlogs"]:
             self.read_room_logs()
@@ -897,7 +937,7 @@ class ChatRoom:
 
             if tag == self.tag_hilite:
 
-                self.roomsctrl.chat_notebook.request_hilite(self.Main)
+                self.chatrooms.request_hilite(self.Main)
                 self.frame.request_tab_icon(self.frame.ChatTabLabel, status=1)
 
                 if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
@@ -908,10 +948,10 @@ class ChatRoom:
                     )
 
             else:
-                self.roomsctrl.chat_notebook.request_changed(self.Main)
+                self.chatrooms.request_changed(self.Main)
                 self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
 
-            if self.roomsctrl.chat_notebook.get_current_page() != self.roomsctrl.chat_notebook.page_num(self.roomsctrl.joinedrooms[self.room].Main) or \
+            if self.chatrooms.get_current_page() != self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) or \
                 self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
                     not self.frame.MainWindow.get_property("visible"):
 
@@ -1027,13 +1067,13 @@ class ChatRoom:
         if cmd in ("/alias", "/al"):
             append_line(self.ChatScroll, self.frame.np.config.add_alias(args), self.tag_remote, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             append_line(self.ChatScroll, self.frame.np.config.unalias(args), self.tag_remote, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ["/w", "/whois", "/info"]:
@@ -1263,14 +1303,14 @@ class ChatRoom:
 
     def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):
 
-        if self.room in self.roomsctrl.private_rooms:
+        if self.room in self.chatrooms.private_rooms:
             user = self.usersmodel.get_value(iterator, 2)
 
-            if user == self.roomsctrl.private_rooms[self.room]["owner"]:
+            if user == self.chatrooms.private_rooms[self.room]["owner"]:
                 cellrenderer.set_property("underline", Pango.Underline.SINGLE)
                 cellrenderer.set_property("weight", Pango.Weight.BOLD)
 
-            elif user in (self.roomsctrl.private_rooms[self.room]["operators"]):
+            elif user in (self.chatrooms.private_rooms[self.room]["operators"]):
                 cellrenderer.set_property("weight", Pango.Weight.BOLD)
                 cellrenderer.set_property("underline", Pango.Underline.NONE)
 
@@ -1455,7 +1495,7 @@ class ChatRoom:
         else:
             if self.room == 'Public ':
                 self.frame.np.queue.put(slskmessages.LeavePublicRoom())
-                self.roomsctrl.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
+                self.chatrooms.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
                 log.add_warning(_("Unknown meta chatroom closed"))
 
@@ -1507,7 +1547,7 @@ class ChatRoom:
             myiter = self.usersmodel.append([img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
 
             self.users[username] = myiter
-            self.roomsctrl.get_user_address(username)
+            self.chatrooms.get_user_address(username)
 
         self.UserList.set_sensitive(True)
 
@@ -1522,7 +1562,7 @@ class ChatRoom:
         self.count_users()
 
         # Build completion list
-        self.get_completion_list(clist=self.roomsctrl.clist)
+        self.get_completion_list(clist=self.chatrooms.clist)
 
         # Update all username tags in chat log
         for user in self.tag_users:
@@ -1763,58 +1803,3 @@ class ChatRoom:
 
     def on_clear_activity_log(self, widget):
         self.RoomLog.get_buffer().set_text("")
-
-
-class ChatRooms(IconNotebook):
-
-    def __init__(self, frame):
-
-        self.frame = frame
-
-        config = self.frame.np.config.sections
-
-        IconNotebook.__init__(
-            self,
-            self.frame.images,
-            angle=config["ui"]["labelrooms"],
-            tabclosers=config["ui"]["tabclosers"],
-            show_hilite_image=config["notifications"]["notification_tab_icons"],
-            reorderable=config["ui"]["tab_reorderable"],
-            notebookraw=self.frame.ChatNotebookRaw
-        )
-
-        self.roomsctrl = RoomsControl(self)
-
-        self.popup_enable()
-
-        self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
-
-    def on_tab_popup(self, widget, page):
-
-        room = self.get_page_owner(page, self.roomsctrl.joinedrooms)
-
-        if room not in self.roomsctrl.joinedrooms:
-            return False
-
-        menu = PopupMenu(self.frame)
-        menu.setup(
-            ("#" + _("_Leave Room"), self.roomsctrl.joinedrooms[room].on_leave)
-        )
-
-        menu.popup()
-        return True
-
-    def on_tab_click(self, widget, event, page):
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, page)
-
-        if event.button == 2:
-            room = self.get_page_owner(page, self.roomsctrl.joinedrooms)
-            self.roomsctrl.joinedrooms[room].on_leave(widget)
-            return True
-
-        return False
-
-    def conn_close(self):
-        self.roomsctrl.conn_close()

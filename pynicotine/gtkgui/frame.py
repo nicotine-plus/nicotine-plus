@@ -993,8 +993,8 @@ class NicotineFrame:
         self.np.config.write_configuration()
 
     def set_show_flags(self, state):
-        for room in self.chatrooms.roomsctrl.joinedrooms:
-            self.chatrooms.roomsctrl.joinedrooms[room].cols["country"].set_visible(state)
+        for room in self.chatrooms.joinedrooms:
+            self.chatrooms.joinedrooms[room].cols["country"].set_visible(state)
             self.np.config.sections["columns"]["chat_room"][room][1] = int(state)
 
         self.userlist.cols["country"].set_visible(state)
@@ -1445,7 +1445,7 @@ class NicotineFrame:
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
-            self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+            self.chatrooms.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
             self.set_active_header_bar("PrivateChat")
@@ -2074,7 +2074,7 @@ class NicotineFrame:
             show = widget.get_active()
             self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
 
-        for room in self.chatrooms.roomsctrl.joinedrooms.values():
+        for room in self.chatrooms.joinedrooms.values():
             room.on_show_chat_buttons(not self.np.config.sections["ui"]["chat_hidebuttons"])
 
         self.np.config.write_configuration()
@@ -2302,7 +2302,7 @@ class NicotineFrame:
             return
 
         self.flag_users[user] = flag
-        self.chatrooms.roomsctrl.set_user_flag(user, flag)
+        self.chatrooms.set_user_flag(user, flag)
         self.userlist.set_user_flag(user, flag)
 
     def get_user_flag(self, user):
@@ -2557,14 +2557,14 @@ class NicotineFrame:
             self.tray.load()
 
         if needcompletion:
-            self.chatrooms.roomsctrl.update_completions()
+            self.chatrooms.update_completions()
             self.privatechats.update_completions()
 
         dark_mode_state = config["ui"]["dark_mode"]
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
-            self.chatrooms.roomsctrl.update_visuals()
+            self.chatrooms.update_visuals()
             self.privatechats.update_visuals()
             self.searches.update_visuals()
             self.downloads.update_visuals()
@@ -2718,7 +2718,7 @@ class NicotineFrame:
         self.np.shares.close_shares()
 
     def save_columns(self):
-        for i in (self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches):
+        for i in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
             i.save_columns()
 
 

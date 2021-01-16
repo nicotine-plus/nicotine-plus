@@ -250,7 +250,7 @@ class Searches(IconNotebook):
         if room is not None:
             self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
         else:
-            for room in self.frame.chatrooms.roomsctrl.joinedrooms:
+            for room in self.frame.chatrooms.joinedrooms:
                 self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
 
     def do_buddies_search(self, id, text):

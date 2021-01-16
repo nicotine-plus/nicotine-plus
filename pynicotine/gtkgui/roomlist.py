@@ -88,6 +88,15 @@ class RoomList:
 
         frame.RoomList.connect("clicked", self.show)
 
+    def get_selected_room(self, treeview):
+
+        model, iterator = treeview.get_selection().get_selected()
+
+        if iterator is None:
+            return None
+
+        return model.get_value(iterator, 0)
+
     def is_private_room_owned(self, room):
 
         if room in self.private_rooms:
@@ -111,6 +120,36 @@ class RoomList:
 
         return False
 
+    def private_rooms_sort(self, model, iter1, iter2, column):
+
+        try:
+            private1 = model.get_value(iter1, 2) * 10000
+            private1 += model.get_value(iter1, 1)
+        except Exception:
+            private1 = 0
+
+        try:
+            private2 = model.get_value(iter2, 2) * 10000
+            private2 += model.get_value(iter2, 1)
+        except Exception:
+            private2 = 0
+
+        return (private1 > private2) - (private1 < private2)
+
+    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
+
+        if self.room_model.get_value(iterator, 2) >= 2:
+            cellrenderer.set_property("underline", Pango.Underline.SINGLE)
+            cellrenderer.set_property("weight", Pango.Weight.BOLD)
+
+        elif self.room_model.get_value(iterator, 2) >= 1:
+            cellrenderer.set_property("weight", Pango.Weight.BOLD)
+            cellrenderer.set_property("underline", Pango.Underline.NONE)
+
+        else:
+            cellrenderer.set_property("weight", Pango.Weight.NORMAL)
+            cellrenderer.set_property("underline", Pango.Underline.NONE)
+
     def set_room_list(self, rooms):
 
         self.room_model.clear()
@@ -127,14 +166,27 @@ class RoomList:
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
 
-    def get_selected_room(self, treeview):
+    def update_private_rooms(self):
 
-        model, iterator = treeview.get_selection().get_selected()
+        iterator = self.room_model.get_iter_first()
 
-        if iterator is None:
-            return None
+        while iterator is not None:
+            room = self.room_model.get_value(iterator, 0)
+            lastiter = iterator
+            iterator = self.room_model.iter_next(iterator)
 
-        return model.get_value(iterator, 0)
+            if self.is_private_room_owned(room) or self.is_private_room_member(room):
+                self.room_model.remove(lastiter)
+
+        for room in self.private_rooms:
+
+            num = self.private_rooms[room]["joined"]
+
+            if self.is_private_room_owned(room):
+                self.room_model.prepend([room, num, 2])
+
+            elif self.is_private_room_member(room):
+                self.room_model.prepend([room, num, 1])
 
     def on_list_clicked(self, widget, event):
 
@@ -187,7 +239,7 @@ class RoomList:
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
 
     def on_join_public_room(self, widget):
-        self.frame.chatrooms.roomsctrl.join_public_room()
+        self.frame.chatrooms.join_public_room()
         self.frame.np.queue.put(slskmessages.JoinPublicRoom())
         self.hide()
 
@@ -207,58 +259,6 @@ class RoomList:
 
     def on_popup_leave(self, widget):
         self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
-
-    def update_private_rooms(self):
-
-        iterator = self.room_model.get_iter_first()
-
-        while iterator is not None:
-            room = self.room_model.get_value(iterator, 0)
-            lastiter = iterator
-            iterator = self.room_model.iter_next(iterator)
-
-            if self.is_private_room_owned(room) or self.is_private_room_member(room):
-                self.room_model.remove(lastiter)
-
-        for room in self.private_rooms:
-
-            num = self.private_rooms[room]["joined"]
-
-            if self.is_private_room_owned(room):
-                self.room_model.prepend([room, num, 2])
-
-            elif self.is_private_room_member(room):
-                self.room_model.prepend([room, num, 1])
-
-    def private_rooms_sort(self, model, iter1, iter2, column):
-
-        try:
-            private1 = model.get_value(iter1, 2) * 10000
-            private1 += model.get_value(iter1, 1)
-        except Exception:
-            private1 = 0
-
-        try:
-            private2 = model.get_value(iter2, 2) * 10000
-            private2 += model.get_value(iter2, 1)
-        except Exception:
-            private2 = 0
-
-        return (private1 > private2) - (private1 < private2)
-
-    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
-
-        if self.room_model.get_value(iterator, 2) >= 2:
-            cellrenderer.set_property("underline", Pango.Underline.SINGLE)
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-
-        elif self.room_model.get_value(iterator, 2) >= 1:
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
-
-        else:
-            cellrenderer.set_property("weight", Pango.Weight.NORMAL)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
 
     def on_search_room(self, widget):
 

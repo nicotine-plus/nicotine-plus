@@ -298,7 +298,7 @@ class Tray:
     def show_window(self):
         self.frame.MainWindow.show()
 
-        self.frame.chatrooms.roomsctrl.clear_notifications()
+        self.frame.chatrooms.clear_notifications()
         self.frame.privatechats.clear_notifications()
 
     def is_tray_icon_visible(self):

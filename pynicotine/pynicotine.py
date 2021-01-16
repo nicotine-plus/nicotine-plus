@@ -1153,14 +1153,14 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.user_joined_room(msg)
+            self.chatrooms.user_joined_room(msg)
 
     def public_room_message(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.public_room_message(msg, msg.msg)
+            self.chatrooms.public_room_message(msg, msg.msg)
             self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def join_room(self, msg):
@@ -1168,98 +1168,98 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.join_room(msg)
+            self.chatrooms.join_room(msg)
 
     def private_room_users(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_users(msg)
+            self.chatrooms.private_room_users(msg)
 
     def private_room_owned(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_owned(msg)
+            self.chatrooms.private_room_owned(msg)
 
     def private_room_add_user(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_add_user(msg)
+            self.chatrooms.private_room_add_user(msg)
 
     def private_room_remove_user(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_remove_user(msg)
+            self.chatrooms.private_room_remove_user(msg)
 
     def private_room_operator_added(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_operator_added(msg)
+            self.chatrooms.private_room_operator_added(msg)
 
     def private_room_operator_removed(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_operator_removed(msg)
+            self.chatrooms.private_room_operator_removed(msg)
 
     def private_room_add_operator(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_add_operator(msg)
+            self.chatrooms.private_room_add_operator(msg)
 
     def private_room_remove_operator(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_remove_operator(msg)
+            self.chatrooms.private_room_remove_operator(msg)
 
     def private_room_added(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_added(msg)
+            self.chatrooms.private_room_added(msg)
 
     def private_room_removed(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_removed(msg)
+            self.chatrooms.private_room_removed(msg)
 
     def private_room_disown(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.private_room_disown(msg)
+            self.chatrooms.private_room_disown(msg)
 
     def private_room_toggle(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.toggle_private_rooms(msg.enabled)
+            self.chatrooms.toggle_private_rooms(msg.enabled)
 
     def leave_room(self, msg):
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.leave_room(msg)
+            self.chatrooms.leave_room(msg)
 
     def private_message_queue_add(self, msg, text):
 
@@ -1322,7 +1322,7 @@ class NetworkEventProcessor:
 
             if event is not None:
                 (r, n, msg.msg) = event
-                self.chatrooms.roomsctrl.say_chat_room(msg, msg.msg)
+                self.chatrooms.say_chat_room(msg, msg.msg)
                 self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def add_user(self, msg):
@@ -1454,7 +1454,7 @@ class NetworkEventProcessor:
             self.userbrowse.get_user_status(msg)
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.get_user_status(msg)
+            self.chatrooms.get_user_status(msg)
 
     def user_interests(self, msg):
 
@@ -1474,7 +1474,7 @@ class NetworkEventProcessor:
             self.interests.get_user_stats(msg)
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.get_user_stats(msg)
+            self.chatrooms.get_user_stats(msg)
 
         if self.userinfo is not None:
             self.userinfo.get_user_stats(msg)
@@ -1496,7 +1496,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.user_left_room(msg)
+            self.chatrooms.user_left_room(msg)
 
     def relogged(self, msg):
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
@@ -1959,7 +1959,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.set_room_list(msg)
+            self.chatrooms.set_room_list(msg)
             self.set_status("")
 
     def global_user_list(self, msg):
@@ -2125,7 +2125,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.ticker_set(msg)
+            self.chatrooms.ticker_set(msg)
 
     def room_ticker_add(self, msg):
         """ Server code: 114 """
@@ -2133,7 +2133,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.ticker_add(msg)
+            self.chatrooms.ticker_add(msg)
 
     def room_ticker_remove(self, msg):
         """ Server code: 115 """
@@ -2141,7 +2141,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.chatrooms is not None:
-            self.chatrooms.roomsctrl.ticker_remove(msg)
+            self.chatrooms.ticker_remove(msg)
 
     def update_debug_log_options(self):
         """ Gives the logger updated logging settings """

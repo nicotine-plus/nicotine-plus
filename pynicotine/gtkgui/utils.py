@@ -1364,19 +1364,19 @@ class PopupMenu(Gtk.Menu):
         popup.clear()
         popup.set_user(self.user)
 
-        for room in self.frame.chatrooms.roomsctrl.private_rooms:
+        for room in self.frame.chatrooms.private_rooms:
 
-            if not (self.frame.chatrooms.roomsctrl.is_private_room_owned(room) or self.frame.chatrooms.roomsctrl.is_private_room_operator(room)):
+            if not (self.frame.chatrooms.is_private_room_owned(room) or self.frame.chatrooms.is_private_room_operator(room)):
                 continue
 
-            if self.user in self.frame.chatrooms.roomsctrl.private_rooms[room]["users"]:
+            if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
                 items.append(("#" + _("Remove from private room %s") % room, popup.on_private_room_remove_user, room))
             else:
                 items.append(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
 
-            if self.frame.chatrooms.roomsctrl.is_private_room_owned(room):
+            if self.frame.chatrooms.is_private_room_owned(room):
 
-                if self.user in self.frame.chatrooms.roomsctrl.private_rooms[room]["operators"]:
+                if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
                     items.append(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
                 else:
                     items.append(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
