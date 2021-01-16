@@ -562,15 +562,6 @@ class Search:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
 
-    def on_filter_changed(self, widget):
-
-        self.frame.focus_combobox(widget)
-
-        iterator = widget.get_active_iter()
-
-        if iterator:
-            self.on_refilter(None)
-
     def populate_filters(self):
 
         if self.frame.np.config.sections["searches"]["enablefilters"]:
@@ -610,6 +601,9 @@ class Search:
 
         for i in s_config["filtercc"]:
             self.add_combo(self.FilterCountry, i, True)
+
+    def focus_combobox(self, button):
+        self.frame.focus_combobox(button)
 
     def add_combo(self, combobox, text, list=False):
 

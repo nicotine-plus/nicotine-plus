@@ -70,7 +70,6 @@
             <property name="visible">0</property>
             <property name="has-entry">1</property>
             <property name="active-id">joined</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <items>
               <item translatable="yes" id="joined">Joined Rooms </item>
             </items>
@@ -81,18 +80,27 @@
                 <property name="placeholder-text" translatable="yes">Room...</property>
               </object>
             </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkComboBoxText" id="UserSearchCombo">
             <property name="visible">0</property>
             <property name="has-entry">1</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserSearchEntry">
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
+              </object>
+            </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
               </object>
             </child>
           </object>
@@ -101,7 +109,6 @@
           <object class="GtkComboBoxText" id="SearchEntryCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry" id="SearchEntry">
                 <property name="hexpand">1</property>
@@ -111,6 +118,11 @@
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
+              </object>
+            </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
               </object>
             </child>
           </object>
@@ -513,7 +525,6 @@
           <object class="GtkComboBoxText" id="UserPrivateCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserPrivateEntry">
                 <property name="max-width-chars">45</property>
@@ -522,6 +533,11 @@
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_private_chat" swapped="no"/>
+              </object>
+            </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
               </object>
             </child>
           </object>
@@ -565,7 +581,6 @@
           <object class="GtkComboBoxText" id="UserInfoCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserInfoEntry">
                 <property name="max-width-chars">45</property>
@@ -574,6 +589,11 @@
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_user_info" swapped="no"/>
+              </object>
+            </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
               </object>
             </child>
           </object>
@@ -649,7 +669,6 @@
           <object class="GtkComboBoxText" id="UserBrowseCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
-            <signal name="changed" handler="focus_combobox" swapped="no"/>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserBrowseEntry">
                 <property name="max-width-chars">45</property>
@@ -658,6 +677,11 @@
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_shares" swapped="no"/>
+              </object>
+            </child>
+            <child internal-child="button">
+              <object class="GtkButton">
+                <signal name="clicked" handler="focus_combobox" swapped="no"/>
               </object>
             </child>
           </object>

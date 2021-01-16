@@ -2324,12 +2324,9 @@ class NicotineFrame:
         dialog.connect('response', lambda dialog, response: dialog.destroy())
         dialog.show()
 
-    def focus_combobox(self, widget):
-
-        entry = widget.get_child()
+    def focus_combobox(self, button):
+        entry = button.get_parent().get_parent().get_child()
         entry.grab_focus()
-        text_length = len(entry.get_text())
-        entry.set_position(text_length)
 
     def get_status_image(self, status):
         if status == 1:
