@@ -37,12 +37,14 @@ class Tray:
             gi.require_version('AyatanaAppIndicator3', '0.1')
             from gi.repository import AyatanaAppIndicator3
             self.appindicator = AyatanaAppIndicator3
+
         except (ImportError, ValueError):
             try:
                 # Check if AppIndicator3 is available
                 gi.require_version('AppIndicator3', '0.1')
                 from gi.repository import AppIndicator3
                 self.appindicator = AppIndicator3
+
             except (ImportError, ValueError):
                 # No AppIndicator support, fall back to GtkStatusIcon
                 from gi.repository import Gtk
@@ -180,7 +182,7 @@ class Tray:
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):
         if button == 3:
-            self.tray_popup_menu.popup()
+            self.tray_popup_menu.popup(use_legacy=True)
 
     def check_icon_path(self, icon_name, icon_path, icon_type="local"):
 

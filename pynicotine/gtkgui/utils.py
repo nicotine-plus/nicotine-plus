@@ -1220,14 +1220,17 @@ class PopupMenu(Gtk.Menu):
             self.useritem.destroy()
             self.useritem = None
 
-    def popup(self, button=3):
+    def popup(self, button=3, use_legacy=False):
 
         try:
+            if use_legacy:
+                raise AttributeError("Falling back to legacy popup method")
+
             self.popup_at_pointer()
 
         except AttributeError:
             time = Gtk.get_current_event_time()
-            self.popup_at_device(None, None, None, None, button, time)
+            Gtk.Menu.popup(self, None, None, None, None, button, time)
 
     def set_user(self, user):
 
