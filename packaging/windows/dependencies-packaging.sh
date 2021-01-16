@@ -31,4 +31,4 @@ pacman --noconfirm -S --needed \
 # Install dependencies with pip
 pip3 install \
   plyer \
-  pyinstaller==4.1
+  pyinstaller==4.2
