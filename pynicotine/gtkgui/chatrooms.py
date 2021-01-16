@@ -24,6 +24,7 @@
 
 import os
 import re
+import threading
 
 from collections import deque
 from os.path import commonprefix
@@ -97,6 +98,7 @@ class ChatRooms(IconNotebook):
         self.autojoin = 1
         self.rooms = []
         self.private_rooms = config["private_rooms"]["rooms"]
+        self.switch_tab = True
 
         # Config cleanup
         for room, data in self.private_rooms.items():
@@ -196,6 +198,10 @@ class ChatRooms(IconNotebook):
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
 
+    def enable_tab_switch(self):
+        # Room tabs will be opened when joining rooms
+        self.switch_tab = True
+
     def clear_notifications(self):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox):
@@ -238,31 +244,14 @@ class ChatRooms(IconNotebook):
 
         self.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
-        page_num = self.page_num(tab.Main)
-        self.set_current_page(page_num)
+        if self.switch_tab:
+            page_num = self.page_num(tab.Main)
+            self.set_current_page(page_num)
 
-        self.frame.RoomSearchCombo.append_text(msg.room)
+        if msg.room != "Public ":
+            self.frame.RoomSearchCombo.append_text(msg.room)
 
         tab.count_users()
-
-    def join_public_room(self):
-
-        if 'Public ' in self.joinedrooms:
-            return
-
-        room = ChatRoom(self, 'Public ', {}, meta=True)
-        self.joinedrooms['Public '] = room
-        angle = 0
-
-        try:
-            angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception as e:
-            print(e)
-
-        self.append_page(room.Main, 'Public ', room.on_leave, angle)
-
-        page_num = self.page_num(room.Main)
-        self.set_current_page(page_num)
 
     def set_room_list(self, msg):
 
@@ -273,6 +262,14 @@ class ChatRooms(IconNotebook):
                 room_list = list(self.joinedrooms.keys())
             else:
                 room_list = self.frame.np.config.sections["server"]["autojoin"]
+                if room_list:
+                    # Disable tab focusing while joining rooms
+                    self.switch_tab = False
+
+                    timer = threading.Timer(4.0, self.enable_tab_switch)
+                    timer.setName("ChatroomTabSwitchTimer")
+                    timer.setDaemon(True)
+                    timer.start()
 
             for room in room_list:
                 if room == 'Public ':
@@ -541,7 +538,7 @@ class ChatRooms(IconNotebook):
 
     def conn_close(self):
 
-        self.roomsmodel.clear()
+        self.roomlist.clear()
 
         for room in self.joinedrooms.values():
             room.conn_close()

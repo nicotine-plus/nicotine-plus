@@ -55,7 +55,7 @@ class RoomList:
         self.cols = initialise_columns(
             None,
             self.RoomsList,
-            ["room", _("Room"), 180, "text", self.room_status, None],
+            ["room", _("Room"), 260, "text", self.room_status, None],
             ["users", _("Users"), 0, "number", self.room_status, None]
         )
         self.cols["room"].set_sort_column_id(0)
@@ -202,8 +202,6 @@ class RoomList:
                 self.on_popup_join(widget)
                 return True
 
-            self.hide()
-
         return False
 
     def on_popup_menu(self, widget):
@@ -239,9 +237,8 @@ class RoomList:
         self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
 
     def on_join_public_room(self, widget):
-        self.frame.chatrooms.join_public_room()
+        self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
         self.frame.np.queue.put(slskmessages.JoinPublicRoom())
-        self.hide()
 
     def on_popup_private_room_disown(self, widget):
 
@@ -299,6 +296,9 @@ class RoomList:
 
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
+
+    def clear(self):
+        self.room_model.clear()
 
     def hide(self, *args):
         self.SearchRooms.set_text("")
