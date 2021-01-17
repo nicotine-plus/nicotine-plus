@@ -421,6 +421,9 @@ class Config:
 
         except OSError as msg:
             log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
+            return False
+
+        return True
 
     def create_data_folder(self):
         """ Create the folder for storing data in (aliases, shared files etc.),
@@ -444,6 +447,10 @@ class Config:
         except configparser.ParsingError:
             # Ignore parsing errors, the offending lines are removed later
             pass
+
+        except Exception as e:
+            # Miscellaneous failure, default config will be used
+            log.add_warning(_("Unable to parse config file: %s"), e)
 
     def convert_config(self):
         """ Converts the config to utf-8.
@@ -680,44 +687,32 @@ class Config:
                 else:
                     self.parser.remove_option(i, j)
 
-        self.create_config_folder()
+        if not self.create_config_folder():
+            return
 
+        # Back up old config to config.old
+        try:
+            if os.path.exists(self.filename):
+                from shutil import copy2
+                copy2(self.filename, self.filename + ".old")
+
+                # A paranoid precaution since config contains the password
+                os.chmod(self.filename + ".old", 0o600)
+
+        except Exception as error:
+            log.add_warning(_("Unable to back up config file: %s"), error)
+
+        # Save new config to file
         oldumask = os.umask(0o077)
 
         try:
-            with open(self.filename + ".new", "w", encoding="utf-8") as f:
+            with open(self.filename, "w", encoding="utf-8") as f:
                 self.parser.write(f)
 
-        except IOError as e:
-            log.add_warning(_("Can't save config file, I/O error: %s"), e)
-            return
+        except Exception as e:
+            log.add_warning(_("Unable to save config file: %s"), e)
 
         os.umask(oldumask)
-
-        # A paranoid precaution since config contains the password
-        try:
-            os.chmod(self.filename, 0o600)
-        except Exception:
-            pass
-
-        try:
-            if os.path.exists(self.filename + ".old"):
-                os.remove(self.filename + ".old")
-
-        except OSError:
-            log.add_warning(_("Can't remove %s", self.filename + ".old"))
-
-        try:
-            os.rename(self.filename, self.filename + ".old")
-
-        except OSError as error:
-            log.add_warning(_("Can't back config file up, error: %s"), error)
-
-        try:
-            os.rename(self.filename + ".new", self.filename)
-
-        except OSError as error:
-            log.add_warning(_("Can't rename config file, error: %s"), error)
 
     def write_config_backup(self, filename):
 
