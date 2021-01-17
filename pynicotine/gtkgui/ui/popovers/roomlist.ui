@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="RoomListDialog">
-    <property name="title" translatable="yes">Room List</property>
+  <object class="GtkPopover" id="RoomListPopover">
     <property name="modal">1</property>
-    <property name="window-position">center-on-parent</property>
-    <property name="default-width">400</property>
-    <property name="default-height">600</property>
-    <signal name="delete-event" handler="hide" swapped="no"/>
-    <child internal-child="vbox">
+    <child>
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <property name="spacing">10</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">6</property>
-            <property name="margin-bottom">8</property>
+            <property name="spacing">8</property>
             <child>
               <object class="GtkSearchEntry" id="SearchRooms">
                 <property name="visible">1</property>
@@ -28,15 +25,32 @@
                 <signal name="activate" handler="on_search_room" swapped="no"/>
               </object>
             </child>
+            <child>
+              <object class="GtkButton" id="RefreshButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Refresh room list</property>
+                <signal name="clicked" handler="on_refresh" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">view-refresh-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="vexpand">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
+            <property name="height-request">400</property>
+            <property name="width-request">350</property>
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="RoomsList">
@@ -49,10 +63,6 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin-start">8</property>
-            <property name="margin-end">8</property>
-            <property name="margin-top">8</property>
-            <property name="margin-bottom">8</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkCheckButton" id="AcceptPrivateRoom">

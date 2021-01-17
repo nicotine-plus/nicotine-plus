@@ -48,8 +48,7 @@ class RoomList:
         self.joined_rooms = joined_rooms
         self.private_rooms = private_rooms
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomlist.ui"))
-        self.RoomListDialog.set_transient_for(frame.MainWindow)
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
         self.room_model = Gtk.ListStore(str, int, int)
         self.RoomsList.set_model(self.room_model)
@@ -89,6 +88,7 @@ class RoomList:
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
         frame.RoomList.connect("clicked", self.show)
+        self.RoomListPopover.set_relative_to(frame.RoomList)
 
     def get_selected_room(self, treeview):
 
@@ -338,6 +338,9 @@ class RoomList:
 
             self.search_iter = self.room_model.iter_next(self.search_iter)
 
+    def on_refresh(self, widget):
+        self.frame.np.queue.put(slskmessages.RoomList())
+
     def on_toggle_accept_private_room(self, widget):
 
         value = self.AcceptPrivateRoom.get_active()
@@ -351,13 +354,5 @@ class RoomList:
     def clear(self):
         self.room_model.clear()
 
-    def hide(self, *args):
-        self.SearchRooms.set_text("")
-        self.RoomListDialog.hide()
-        return True
-
     def show(self, *args):
-        # Refresh list
-        self.frame.np.queue.put(slskmessages.RoomList())
-
-        self.RoomListDialog.show()
+        self.RoomListPopover.popup()
