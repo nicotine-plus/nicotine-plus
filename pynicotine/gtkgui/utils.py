@@ -268,7 +268,8 @@ def initialise_columns(treeview_name, treeview, *args):
 
 def append_columns(treeview, cols, config):
 
-    if not config:
+    # Column order not supported in Python 3.5
+    if not config or sys.version_info[:2] <= (3, 5):
         for (column_id, column) in cols.items():
             treeview.append_column(column)
         return
