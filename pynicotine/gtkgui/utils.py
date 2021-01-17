@@ -26,6 +26,8 @@ import re
 import sys
 import time
 
+from collections import OrderedDict
+
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
@@ -153,7 +155,7 @@ def collapse_treeview(treeview, grouping_mode):
 def initialise_columns(treeview_name, treeview, *args):
 
     i = 0
-    cols = {}
+    cols = OrderedDict()
     column_config = None
 
     for (id, title, width, type, function, colors) in args:
@@ -307,12 +309,12 @@ def hide_columns(treeview, cols, config):
                 pass
 
     # Make sure the width of the last visible column isn't fixed
-    for (id, column) in reversed(cols.items()):
-        if column.get_visible():
-            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-            column.set_resizable(False)
-            column.set_fixed_width(-1)
-            break
+    col_id, last_column = next(reversed(cols.items()))
+
+    if last_column.get_visible():
+        last_column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
+        last_column.set_resizable(False)
+        last_column.set_fixed_width(-1)
 
 
 def save_columns(treeview_name, columns, subpage=None):
