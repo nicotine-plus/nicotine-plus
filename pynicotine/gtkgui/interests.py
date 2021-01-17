@@ -346,14 +346,14 @@ class Interests:
 
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
-    def get_selected_item(self, treeview):
+    def get_selected_item(self, treeview, column=0):
 
         model, iterator = treeview.get_selection().get_selected()
 
         if iterator is None:
             return None
 
-        return model.get_value(iterator, 1)
+        return model.get_value(iterator, column)
 
     def on_ru_list_clicked(self, widget, event):
 
@@ -431,7 +431,7 @@ class Interests:
 
     def on_popup_r_menu(self, widget):
 
-        item = self.get_selected_item(widget)
+        item = self.get_selected_item(widget, column=1)
         if item is None:
             return False
 
@@ -454,7 +454,7 @@ class Interests:
 
     def on_popup_un_rec_menu(self, widget):
 
-        item = self.get_selected_item(widget)
+        item = self.get_selected_item(widget, column=1)
         if item is None:
             return False
 
