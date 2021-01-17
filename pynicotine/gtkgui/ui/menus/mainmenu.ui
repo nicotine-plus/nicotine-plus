@@ -76,11 +76,6 @@
             <attribute name="action">win.togglebuddylist</attribute>
             <attribute name="target">always</attribute>
           </item>
-          <item>
-            <attribute name="label" translatable="yes">Buddylist Hidden</attribute>
-            <attribute name="action">win.togglebuddylist</attribute>
-            <attribute name="target">hidden</attribute>
-          </item>
         </section>
       </submenu>
       <submenu>

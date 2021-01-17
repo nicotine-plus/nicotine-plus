@@ -53,8 +53,6 @@ class UserList:
         config = self.frame.np.config.sections
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "buddylist.ui"))
-        self.frame.userlistvbox = self.userlistvbox
-        self.frame.UserListToolbar = self.UserListToolbar
 
         """ Columns """
 

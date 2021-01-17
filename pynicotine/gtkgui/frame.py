@@ -187,6 +187,7 @@ class NicotineFrame:
             self.UserBrowseTabLabel: _("User Browse"),
             self.UserInfoTabLabel: _("User Info"),
             self.PrivateChatTabLabel: _("Private Chat"),
+            self.UserListTabLabel: _("Buddy List"),
             self.ChatTabLabel: _("Chat Rooms"),
             self.InterestsTabLabel: _("Interests")
         }
@@ -235,6 +236,7 @@ class NicotineFrame:
         self.UserBrowseTabLabel.set_icon("folder-symbolic")
         self.UserInfoTabLabel.set_icon("avatar-default-symbolic")
         self.PrivateChatTabLabel.set_icon("mail-send-symbolic")
+        self.UserListTabLabel.set_icon("contact-new-symbolic")
         self.ChatTabLabel.set_icon("user-available-symbolic")
         self.InterestsTabLabel.set_icon("emblem-default-symbolic")
 
@@ -1030,55 +1032,46 @@ class NicotineFrame:
     def set_toggle_buddy_list(self, state):
 
         state = str(state).replace("'", "")
-        print(state)
-        self.buddies_tab_label = None
 
-        if self.userlist.userlistvbox in self.NotebooksPane.get_children():
+        if self.userlist.Main in self.NotebooksPane.get_children():
             if state == "always":
                 return
 
-            self.NotebooksPane.remove(self.userlist.userlistvbox)
+            self.NotebooksPane.remove(self.userlist.Main)
 
-        if self.userlist.userlistvbox in self.ChatroomsPane.get_children():
+        if self.userlist.Main in self.ChatroomsPane.get_children():
             if state == "chatrooms":
                 return
 
-            self.ChatroomsPane.remove(self.userlist.userlistvbox)
+            self.ChatroomsPane.remove(self.userlist.Main)
 
-        if self.userlist.userlistvbox in self.MainNotebook.get_children():
+        if self.userlist.Main in self.userlistvbox.get_children():
             if state == "tab":
                 return
 
-            self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlist.userlistvbox))
+            self.userlistvbox.remove(self.userlist.Main)
+            self.hide_tab(None, [self.UserListTabLabel, self.userlistvbox])
 
         if state == "always":
 
-            if self.userlist.userlistvbox not in self.NotebooksPane.get_children():
-                self.NotebooksPane.pack2(self.userlist.userlistvbox, False, True)
+            if self.userlist.Main not in self.NotebooksPane.get_children():
+                self.NotebooksPane.pack2(self.userlist.Main, False, True)
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
         elif state == "chatrooms":
 
-            if self.userlist.userlistvbox not in self.ChatroomsPane.get_children():
-                self.ChatroomsPane.pack2(self.userlist.userlistvbox, False, True)
+            if self.userlist.Main not in self.ChatroomsPane.get_children():
+                self.ChatroomsPane.pack2(self.userlist.Main, False, True)
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
         elif state == "tab":
 
-            self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
-            self.buddies_tab_label.set_icon("contact-new-symbolic")
-            self.buddies_tab_label.show()
-
-            if self.userlist.userlistvbox not in self.MainNotebook.get_children():
-                self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
-
-            if self.userlist.userlistvbox in self.MainNotebook.get_children():
-                self.set_tab_expand(self.userlist.userlistvbox)
-                self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
+            self.userlistvbox.add(self.userlist.Main)
+            self.show_tab(self.userlistvbox)
 
             self.userlist.BuddiesToolbar.hide()
             self.userlist.UserLabel.show()
@@ -1086,7 +1079,6 @@ class NicotineFrame:
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        print(state)
         self.set_toggle_buddy_list(state)
         action.set_state(state)
 
@@ -1185,7 +1177,7 @@ class NicotineFrame:
         self.change_main_page("interests")
 
     def on_buddy_list(self, *args):
-        self.on_toggle_buddy_list(self.toggle_buddy_list_action)
+        self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant.new_string("tab"))
         self.change_main_page("userlist")
 
     # Help
@@ -1484,7 +1476,7 @@ class NicotineFrame:
         elif tab_label == self.UserBrowseTabLabel:
             self.set_active_header_bar("UserBrowse")
 
-        elif tab_label == self.buddies_tab_label:
+        elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
 
         else:
@@ -1733,7 +1725,7 @@ class NicotineFrame:
             name = "userbrowse"  # User browse
         elif tab == self.interestsvbox:
             name = "interests"   # Interests
-        elif tab == self.userlist.userlistvbox:
+        elif tab == self.userlistvbox:
             name = "userlist"    # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
@@ -1760,7 +1752,7 @@ class NicotineFrame:
         elif tab == "interests":
             child = self.interestsvbox          # Interests
         elif tab == "userlist":
-            child = self.userlist.userlistvbox  # Buddy list
+            child = self.userlistvbox           # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
             return
