@@ -83,6 +83,11 @@
           <attribute name="target">tab</attribute>
         </item>
         <item>
+          <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
+          <attribute name="action">win.togglebuddylist</attribute>
+          <attribute name="target">chatrooms</attribute>
+        </item>
+        <item>
           <attribute name="label" translatable="yes">Buddylist Always Visible</attribute>
           <attribute name="action">win.togglebuddylist</attribute>
           <attribute name="target">always</attribute>

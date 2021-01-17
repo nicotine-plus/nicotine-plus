@@ -188,7 +188,7 @@ class ChatRooms(IconNotebook):
 
     def on_switch_page(self, notebook, page, page_num, forceupdate=False):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) and not forceupdate:
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and not forceupdate:
             return
 
         for name, room in self.joinedrooms.items():
@@ -204,7 +204,7 @@ class ChatRooms(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox):
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox):
             return
 
         page = self.get_nth_page(self.get_current_page())
@@ -949,7 +949,7 @@ class ChatRoom:
                 self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
 
             if self.chatrooms.get_current_page() != self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) or \
-                self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chathbox) or \
+                self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) or \
                     not self.frame.MainWindow.get_property("visible"):
 
                 if tag == self.tag_hilite:

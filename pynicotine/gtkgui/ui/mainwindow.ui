@@ -835,13 +835,13 @@
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkPaned" id="vpaned1">
+          <object class="GtkPaned">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="orientation">vertical</property>
             <property name="vexpand">1</property>
             <child>
-              <object class="GtkPaned">
+              <object class="GtkPaned" id="NotebooksPane">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <child>
@@ -1361,7 +1361,7 @@
                     </child>
                     <!-- Chat Rooms -->
                     <child>
-                      <object class="GtkBox" id="chathbox">
+                      <object class="GtkBox" id="chatroomsvbox">
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
@@ -1375,11 +1375,20 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkNotebook" id="ChatNotebookRaw">
+                          <object class="GtkPaned" id="ChatroomsPane">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="show-border">0</property>
-                            <property name="scrollable">1</property>
+                            <child>
+                              <object class="GtkNotebook" id="ChatNotebookRaw">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="show-border">0</property>
+                                <property name="scrollable">1</property>
+                              </object>
+                              <packing>
+                                <property name="resize">1</property>
+                              </packing>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1401,21 +1410,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="shrink">0</property>
-                  </packing>
-                </child>
-                <!-- Buddy list always visible placeholder -->
-                <child>
-                  <object class="GtkPaned" id="vpanedm">
-                    <property name="visible">0</property>
-                    <property name="can-focus">1</property>
-                    <property name="orientation">vertical</property>
-                  </object>
-                  <packing>
-                    <property name="resize">0</property>
-                    <property name="shrink">1</property>
-                  </packing>
                 </child>
               </object>
               <packing>

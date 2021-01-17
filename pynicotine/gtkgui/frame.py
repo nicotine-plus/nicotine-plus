@@ -1029,12 +1029,21 @@ class NicotineFrame:
 
     def set_toggle_buddy_list(self, state):
 
-        if isinstance(state, int):
-            state = "tab"
-
         state = str(state).replace("'", "")
         print(state)
         self.buddies_tab_label = None
+
+        if self.userlist.userlistvbox in self.NotebooksPane.get_children():
+            if state == "always":
+                return
+
+            self.NotebooksPane.remove(self.userlist.userlistvbox)
+
+        if self.userlist.userlistvbox in self.ChatroomsPane.get_children():
+            if state == "chatrooms":
+                return
+
+            self.ChatroomsPane.remove(self.userlist.userlistvbox)
 
         if self.userlist.userlistvbox in self.MainNotebook.get_children():
             if state == "tab":
@@ -1042,21 +1051,24 @@ class NicotineFrame:
 
             self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlist.userlistvbox))
 
-        if self.userlist.userlistvbox in self.vpanedm.get_children():
-            if state == "always":
-                return
-
-            self.vpanedm.remove(self.userlist.userlistvbox)
-
         if state == "always":
-            self.vpanedm.show()
-            if self.userlist.userlistvbox not in self.vpanedm.get_children():
-                self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
+
+            if self.userlist.userlistvbox not in self.NotebooksPane.get_children():
+                self.NotebooksPane.pack2(self.userlist.userlistvbox, False, True)
+
+            self.userlist.BuddiesToolbar.show()
+            self.userlist.UserLabel.hide()
+
+        elif state == "chatrooms":
+
+            if self.userlist.userlistvbox not in self.ChatroomsPane.get_children():
+                self.ChatroomsPane.pack2(self.userlist.userlistvbox, False, True)
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
         elif state == "tab":
+
             self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
             self.buddies_tab_label.set_icon("contact-new-symbolic")
             self.buddies_tab_label.show()
@@ -1705,7 +1717,7 @@ class NicotineFrame:
 
     def match_main_notebox(self, tab):
 
-        if tab == self.chathbox:
+        if tab == self.chatroomsvbox:
             name = "chatrooms"   # Chatrooms
         elif tab == self.privatechatvbox:
             name = "private"     # Private rooms
@@ -1732,7 +1744,7 @@ class NicotineFrame:
     def match_main_name_page(self, tab):
 
         if tab == "chatrooms":
-            child = self.chathbox               # Chatrooms
+            child = self.chatroomsvbox          # Chatrooms
         elif tab == "private":
             child = self.privatechatvbox        # Private rooms
         elif tab == "downloads":
