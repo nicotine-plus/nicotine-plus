@@ -316,7 +316,7 @@ class Config:
                     "interests"
                 ],
                 "showaway": False,
-                "buddylistinchatrooms": 0,
+                "buddylistinchatrooms": "tab",
                 "trayicon": True,
                 "startup_hidden": False,
                 "filemanager": "",

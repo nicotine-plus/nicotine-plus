@@ -50,11 +50,6 @@
         </section>
         <section>
           <item>
-            <attribute name="label" translatable="yes">Show _Room List</attribute>
-            <attribute name="action">win.showroomlist</attribute>
-            <attribute name="accel">&lt;Primary&gt;r</attribute>
-          </item>
-          <item>
             <attribute name="label" translatable="yes">Show _Flag Columns in User Lists</attribute>
             <attribute name="action">win.showflags</attribute>
             <attribute name="accel">&lt;Primary&gt;u</attribute>
@@ -69,22 +64,17 @@
           <item>
             <attribute name="label" translatable="yes">Buddylist in Separate Tab</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
-            <attribute name="target">0</attribute>
+            <attribute name="target">tab</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Buddylist in Chatrooms</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
-            <attribute name="target">1</attribute>
+            <attribute name="target">chatrooms</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Buddylist Always Visible</attribute>
             <attribute name="action">win.togglebuddylist</attribute>
-            <attribute name="target">2</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Buddylist Hidden</attribute>
-            <attribute name="action">win.togglebuddylist</attribute>
-            <attribute name="target">3</attribute>
+            <attribute name="target">always</attribute>
           </item>
         </section>
       </submenu>

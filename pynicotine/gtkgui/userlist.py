@@ -53,8 +53,6 @@ class UserList:
         config = self.frame.np.config.sections
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "buddylist.ui"))
-        self.frame.userlistvbox = self.userlistvbox
-        self.frame.UserListToolbar = self.UserListToolbar
 
         """ Columns """
 
@@ -438,7 +436,7 @@ class UserList:
             widget.append_text(user)
 
         if self.frame.np.config.sections["words"]["buddies"]:
-            GLib.idle_add(self.frame.chatrooms.roomsctrl.update_completions)
+            GLib.idle_add(self.frame.chatrooms.update_completions)
             GLib.idle_add(self.frame.privatechats.update_completions)
 
     def on_edit_comments(self, widget):
@@ -489,7 +487,7 @@ class UserList:
         self.buddies_combos_fill()
 
         if self.frame.np.config.sections["words"]["buddies"]:
-            GLib.idle_add(self.frame.chatrooms.roomsctrl.update_completions)
+            GLib.idle_add(self.frame.chatrooms.update_completions)
             GLib.idle_add(self.frame.privatechats.update_completions)
 
     def on_remove_user(self, widget):

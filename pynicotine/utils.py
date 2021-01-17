@@ -398,11 +398,6 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
-def cmp(a, b):
-    """Replacement for cmp() which is removed in Python 3"""
-    return (a > b) - (a < b)
-
-
 def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
     try:

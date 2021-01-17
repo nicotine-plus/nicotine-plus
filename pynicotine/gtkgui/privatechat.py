@@ -645,14 +645,14 @@ class PrivateChat:
 
             append_line(self.ChatScroll, self.frame.np.config.add_alias(realargs), None, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
 
             append_line(self.ChatScroll, self.frame.np.config.unalias(realargs), None, "")
             if self.frame.np.config.sections["words"]["aliases"]:
-                self.frame.chatrooms.roomsctrl.update_completions()
+                self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ["/join", "/j"]:

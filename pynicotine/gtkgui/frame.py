@@ -47,7 +47,6 @@ from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.privatechat import PrivateChats
-from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import Settings
 from pynicotine.gtkgui.statistics import Statistics
@@ -188,6 +187,7 @@ class NicotineFrame:
             self.UserBrowseTabLabel: _("User Browse"),
             self.UserInfoTabLabel: _("User Info"),
             self.PrivateChatTabLabel: _("Private Chat"),
+            self.UserListTabLabel: _("Buddy List"),
             self.ChatTabLabel: _("Chat Rooms"),
             self.InterestsTabLabel: _("Interests")
         }
@@ -236,11 +236,11 @@ class NicotineFrame:
         self.UserBrowseTabLabel.set_icon("folder-symbolic")
         self.UserInfoTabLabel.set_icon("avatar-default-symbolic")
         self.PrivateChatTabLabel.set_icon("mail-send-symbolic")
+        self.UserListTabLabel.set_icon("contact-new-symbolic")
         self.ChatTabLabel.set_icon("user-available-symbolic")
         self.InterestsTabLabel.set_icon("emblem-default-symbolic")
 
         # Initialise other notebooks
-        self.roomlist = RoomList(self)
         self.interests = Interests(self, self.np)
         self.chatrooms = ChatRooms(self)
         self.searches = Searches(self)
@@ -278,7 +278,6 @@ class NicotineFrame:
 
         self.set_show_log(not config["logging"]["logcollapsed"])
         self.set_show_debug(config["logging"]["debug"])
-        self.set_show_room_list(not config["ui"]["roomlistcollapsed"])
         self.set_show_flags(not config["columns"]["hideflags"])
         self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
         self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
@@ -635,11 +634,6 @@ class NicotineFrame:
         self.check_privileges_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
 
-        self.roomlist.RoomsList.set_sensitive(status)
-        self.roomlist.SearchRooms.set_sensitive(status)
-        self.roomlist.RefreshButton.set_sensitive(status)
-        self.roomlist.AcceptPrivateRoom.set_sensitive(status)
-
         self.UserPrivateCombo.set_sensitive(status)
 
         self.UserBrowseCombo.set_sensitive(status)
@@ -664,6 +658,10 @@ class NicotineFrame:
 
         self.DownloadButtons.set_sensitive(status)
         self.UploadButtons.set_sensitive(status)
+
+        self.RoomType.set_sensitive(status)
+        self.JoinRoomEntry.set_sensitive(status)
+        self.RoomList.set_sensitive(status)
 
         self.tray.set_server_actions_sensitive(status)
 
@@ -732,11 +730,6 @@ class NicotineFrame:
         action.connect("change-state", self.on_show_debug)
         self.MainWindow.add_action(action)
 
-        state = not self.np.config.sections["ui"]["roomlistcollapsed"]
-        self.show_room_list_action = Gio.SimpleAction.new_stateful("showroomlist", None, GLib.Variant.new_boolean(state))
-        self.show_room_list_action.connect("change-state", self.on_show_room_list)
-        self.MainWindow.add_action(self.show_room_list_action)
-
         state = not self.np.config.sections["columns"]["hideflags"]
         action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_flags)
@@ -747,8 +740,8 @@ class NicotineFrame:
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
 
-        state = self.np.config.sections["ui"]["buddylistinchatrooms"]
-        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(str(state)))
+        state = self.verify_buddy_list_mode(self.np.config.sections["ui"]["buddylistinchatrooms"])
+        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
 
@@ -968,7 +961,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["ui"]["header_bar"] = not state
-        self.np.config.write_configuration()
 
     def set_show_log(self, show):
         if show:
@@ -984,7 +976,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(state))
 
         self.np.config.sections["logging"]["logcollapsed"] = not state
-        self.np.config.write_configuration()
 
     def set_show_debug(self, show):
         if show:
@@ -999,37 +990,14 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["logging"]["debug"] = not state
-        self.np.config.write_configuration()
-
-    def set_show_room_list(self, show):
-        if show:
-            if self.roomlist.vbox2 not in self.vpaned3.get_children():
-                self.vpaned3.pack2(self.roomlist.vbox2, True, True)
-                self.vpaned3.show()
-        else:
-            if self.roomlist.vbox2 in self.vpaned3.get_children():
-                self.vpaned3.remove(self.roomlist.vbox2)
-
-            if self.userlist.userlistvbox not in self.vpaned3.get_children():
-                self.vpaned3.hide()
-
-    def on_show_room_list(self, action, *args):
-
-        state = self.np.config.sections["ui"]["roomlistcollapsed"]
-        self.set_show_room_list(state)
-        action.set_state(GLib.Variant.new_boolean(state))
-
-        self.np.config.sections["ui"]["roomlistcollapsed"] = not state
-        self.np.config.write_configuration()
 
     def set_show_flags(self, state):
-        for room in self.chatrooms.roomsctrl.joinedrooms:
-            self.chatrooms.roomsctrl.joinedrooms[room].cols["country"].set_visible(state)
+        for room in self.chatrooms.joinedrooms:
+            self.chatrooms.joinedrooms[room].cols["country"].set_visible(state)
             self.np.config.sections["columns"]["chat_room"][room][1] = int(state)
 
         self.userlist.cols["country"].set_visible(state)
         self.np.config.sections["columns"]["buddy_list"][1] = int(state)
-        self.np.config.write_configuration()
 
     def on_show_flags(self, action, *args):
 
@@ -1038,7 +1006,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(state))
 
         self.np.config.sections["columns"]["hideflags"] = not state
-        self.np.config.write_configuration()
 
     def set_show_transfer_buttons(self, show):
         if show:
@@ -1055,84 +1022,66 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["transfers"]["enabletransferbuttons"] = not state
-        self.np.config.write_configuration()
 
-    def set_toggle_buddy_list(self, state):
+    def set_toggle_buddy_list(self, mode):
 
-        self.buddies_tab_label = None
-        tab = always = chatrooms = False
+        mode = self.verify_buddy_list_mode(mode)
 
-        if state == 0:
-            tab = True
-        if state == 1:
-            chatrooms = True
-        if state == 2:
-            always = True
+        if self.userlist.Main in self.NotebooksPane.get_children():
 
-        if self.userlist.userlistvbox in self.MainNotebook.get_children():
-            if tab:
+            if mode == "always":
                 return
-            self.MainNotebook.remove_page(self.MainNotebook.page_num(self.userlist.userlistvbox))
 
-        if self.userlist.userlistvbox in self.vpanedm.get_children():
-            if always:
+            self.NotebooksPane.remove(self.userlist.Main)
+
+        elif self.userlist.Main in self.ChatroomsPane.get_children():
+
+            if mode == "chatrooms":
                 return
-            self.vpanedm.remove(self.userlist.userlistvbox)
 
-        if self.userlist.userlistvbox in self.vpaned3.get_children():
-            if chatrooms:
+            self.ChatroomsPane.remove(self.userlist.Main)
+
+        elif self.userlist.Main in self.userlistvbox.get_children():
+
+            if mode == "tab":
                 return
-            self.vpaned3.remove(self.userlist.userlistvbox)
 
-        if not self.show_room_list_action.get_enabled():
-            if not chatrooms:
-                self.vpaned3.hide()
+            self.userlistvbox.remove(self.userlist.Main)
+            self.hide_tab(None, [self.UserListTabLabel, self.userlistvbox])
 
-        if tab:
-            self.buddies_tab_label = ImageLabel(_("Buddy List"), show_status_image=True)
-            self.buddies_tab_label.set_icon("contact-new-symbolic")
-            self.buddies_tab_label.show()
+        if mode == "always":
 
-            if self.userlist.userlistvbox not in self.MainNotebook.get_children():
-                self.MainNotebook.append_page(self.userlist.userlistvbox, self.buddies_tab_label)
+            if self.userlist.Main not in self.NotebooksPane.get_children():
+                self.NotebooksPane.pack2(self.userlist.Main, False, True)
 
-            if self.userlist.userlistvbox in self.MainNotebook.get_children():
-                self.set_tab_expand(self.userlist.userlistvbox)
-                self.MainNotebook.set_tab_reorderable(self.userlist.userlistvbox, self.np.config.sections["ui"]["tab_reorderable"])
+            self.userlist.BuddiesToolbar.show()
+            self.userlist.UserLabel.hide()
+
+        elif mode == "chatrooms":
+
+            if self.userlist.Main not in self.ChatroomsPane.get_children():
+                self.ChatroomsPane.pack2(self.userlist.Main, False, True)
+
+            self.userlist.BuddiesToolbar.show()
+            self.userlist.UserLabel.hide()
+
+        elif mode == "tab":
+
+            self.userlistvbox.add(self.userlist.Main)
+            self.show_tab(self.userlistvbox)
 
             self.userlist.BuddiesToolbar.hide()
             self.userlist.UserLabel.show()
 
-        if chatrooms:
-            self.vpaned3.show()
-            if self.userlist.userlistvbox not in self.vpaned3.get_children():
-                self.vpaned3.pack1(self.userlist.userlistvbox, True, True)
-
-            self.userlist.BuddiesToolbar.show()
-            self.userlist.UserLabel.hide()
-
-        if always:
-            self.vpanedm.show()
-            if self.userlist.userlistvbox not in self.vpanedm.get_children():
-                self.vpanedm.pack2(self.userlist.userlistvbox, True, True)
-
-            self.userlist.BuddiesToolbar.show()
-            self.userlist.UserLabel.hide()
-
-        else:
-            self.vpanedm.hide()
-
-    def on_toggle_buddy_list(self, action, state=0):
+    def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        if not isinstance(state, int):
-            state = int(state.get_string())
+        mode = str(state).replace("'", "")
 
-        self.set_toggle_buddy_list(state)
-        action.set_state(GLib.Variant.new_string(str(state)))
+        self.set_toggle_buddy_list(mode)
+        action.set_state(state)
 
-        self.np.config.sections["ui"]["buddylistinchatrooms"] = state
-        self.np.config.write_configuration()
+        self.np.config.sections["ui"]["buddylistinchatrooms"] = mode
 
     # Shares
 
@@ -1226,7 +1175,7 @@ class NicotineFrame:
         self.change_main_page("interests")
 
     def on_buddy_list(self, *args):
-        self.on_toggle_buddy_list(self.toggle_buddy_list_action)
+        self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant.new_string("tab"))
         self.change_main_page("userlist")
 
     # Help
@@ -1494,11 +1443,11 @@ class NicotineFrame:
             tab_label.set_text_color(0)
 
         if tab_label == self.ChatTabLabel:
-            self.set_active_header_bar("Default")
+            self.set_active_header_bar("Chatrooms")
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
-            self.chatrooms.roomsctrl.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+            self.chatrooms.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
             self.set_active_header_bar("PrivateChat")
@@ -1525,7 +1474,7 @@ class NicotineFrame:
         elif tab_label == self.UserBrowseTabLabel:
             self.set_active_header_bar("UserBrowse")
 
-        elif tab_label == self.buddies_tab_label:
+        elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
 
         else:
@@ -1590,11 +1539,6 @@ class NicotineFrame:
 
         for name in tab_names:
             tab_box = self.match_main_name_page(name)
-
-            # Ensure that the tab exists (Buddy List tab may be hidden)
-            if tab_box is None or self.MainNotebook.page_num(tab_box) == -1:
-                continue
-
             self.MainNotebook.reorder_child(tab_box, order)
             order += 1
 
@@ -1603,22 +1547,15 @@ class NicotineFrame:
         tab_names = self.np.config.sections["ui"]["modes_visible"]
 
         for name in tab_names:
-            tab_box = self.match_main_name_page(name)
-
-            if tab_box is None:
+            if tab_names[name]:
+                # Tab is visible
                 continue
 
-            if not tab_names[name]:
-                if tab_box not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-                    continue
+            tab_box = self.match_main_name_page(name)
+            num = self.MainNotebook.page_num(tab_box)
 
-                if tab_box in self.hidden_tabs:
-                    continue
-
-                self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
-
-                num = self.MainNotebook.page_num(tab_box)
-                self.MainNotebook.remove_page(num)
+            self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
+            self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() <= 1:
             self.MainNotebook.set_show_tabs(False)
@@ -1629,26 +1566,14 @@ class NicotineFrame:
         # bar is updated
         self.MainNotebook.set_current_page(-1)
 
-        try:
-            if self.np.config.sections["ui"]["tab_select_previous"]:
-                lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
+        if not self.np.config.sections["ui"]["tab_select_previous"]:
+            self.MainNotebook.set_current_page(0)
+            return
 
-                if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
-                    self.MainNotebook.set_current_page(lasttabid)
+        last_tab_id = int(self.np.config.sections["ui"]["last_tab_id"])
 
-                    page = self.MainNotebook.get_nth_page(lasttabid)
-                    self.current_tab_label = self.MainNotebook.get_tab_label(page)
-                    return
-
-        except Exception:
-            pass
-
-        self.MainNotebook.set_current_page(0)
-
-        page = self.MainNotebook.get_nth_page(0)
-
-        if page is not None:
-            self.current_tab_label = self.MainNotebook.get_tab_label(page)
+        if 0 <= last_tab_id <= self.MainNotebook.get_n_pages():
+            self.MainNotebook.set_current_page(last_tab_id)
 
     def hide_tab(self, widget, lista):
 
@@ -1758,7 +1683,7 @@ class NicotineFrame:
 
     def match_main_notebox(self, tab):
 
-        if tab == self.chathbox:
+        if tab == self.chatroomsvbox:
             name = "chatrooms"   # Chatrooms
         elif tab == self.privatechatvbox:
             name = "private"     # Private rooms
@@ -1774,7 +1699,7 @@ class NicotineFrame:
             name = "userbrowse"  # User browse
         elif tab == self.interestsvbox:
             name = "interests"   # Interests
-        elif tab == self.userlist.userlistvbox:
+        elif tab == self.userlistvbox:
             name = "userlist"    # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
@@ -1785,7 +1710,7 @@ class NicotineFrame:
     def match_main_name_page(self, tab):
 
         if tab == "chatrooms":
-            child = self.chathbox               # Chatrooms
+            child = self.chatroomsvbox          # Chatrooms
         elif tab == "private":
             child = self.privatechatvbox        # Private rooms
         elif tab == "downloads":
@@ -1801,7 +1726,7 @@ class NicotineFrame:
         elif tab == "interests":
             child = self.interestsvbox          # Interests
         elif tab == "userlist":
-            child = self.userlist.userlistvbox  # Buddy list
+            child = self.userlistvbox           # Buddy list
         else:
             # this should never happen, unless you've renamed a widget
             return
@@ -2031,6 +1956,15 @@ class NicotineFrame:
             except Exception as msg:
                 log.add_warning(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
 
+    """ Buddy List """
+
+    def verify_buddy_list_mode(self, mode):
+
+        if mode not in ("always", "chatrooms", "tab"):
+            return "tab"
+
+        return mode
+
     """ Private Chat """
 
     def on_settings_logging(self, widget):
@@ -2113,16 +2047,22 @@ class NicotineFrame:
         # stop the event propagation
         return True
 
+    def on_create_room(self, widget):
+
+        room = widget.get_text()
+        private = self.RoomType.get_active()
+
+        self.np.queue.put(slskmessages.JoinRoom(room, private))
+        widget.set_text("")
+
     def on_show_chat_buttons(self, widget=None):
 
         if widget is not None:
             show = widget.get_active()
             self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
 
-        for room in self.chatrooms.roomsctrl.joinedrooms.values():
+        for room in self.chatrooms.joinedrooms.values():
             room.on_show_chat_buttons(not self.np.config.sections["ui"]["chat_hidebuttons"])
-
-        self.np.config.write_configuration()
 
     """ Away Timer """
 
@@ -2355,7 +2295,7 @@ class NicotineFrame:
             return
 
         self.flag_users[user] = flag
-        self.chatrooms.roomsctrl.set_user_flag(user, flag)
+        self.chatrooms.set_user_flag(user, flag)
         self.userlist.set_user_flag(user, flag)
 
     def get_user_flag(self, user):
@@ -2610,14 +2550,14 @@ class NicotineFrame:
             self.tray.load()
 
         if needcompletion:
-            self.chatrooms.roomsctrl.update_completions()
+            self.chatrooms.update_completions()
             self.privatechats.update_completions()
 
         dark_mode_state = config["ui"]["dark_mode"]
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
-            self.chatrooms.roomsctrl.update_visuals()
+            self.chatrooms.update_visuals()
             self.privatechats.update_visuals()
             self.searches.update_visuals()
             self.downloads.update_visuals()
@@ -2625,8 +2565,6 @@ class NicotineFrame:
             self.userinfo.update_visuals()
             self.userbrowse.update_visuals()
             self.userlist.update_visuals()
-
-            self.roomlist.update_visuals()
             self.interests.update_visuals()
 
             self.settingswindow.update_visuals()
@@ -2773,7 +2711,7 @@ class NicotineFrame:
         self.np.shares.close_shares()
 
     def save_columns(self):
-        for i in (self.userbrowse, self.userlist, self.chatrooms.roomsctrl, self.downloads, self.uploads, self.searches):
+        for i in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
             i.save_columns()
 
 

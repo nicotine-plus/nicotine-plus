@@ -495,6 +495,7 @@ class JoinRoom(ServerMessage):
         self.room = room
         self.private = private
         self.owner = None
+        self.users = {}
         self.operators = []
 
     def make_network_message(self):

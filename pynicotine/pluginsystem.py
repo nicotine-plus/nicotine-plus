@@ -501,7 +501,7 @@ class BasePlugin(object):
 
         self.init()
         for (trigger, func) in self.__publiccommands__:
-            self.frame.chatrooms.roomsctrl.CMDS.add('/' + trigger + ' ')
+            self.frame.chatrooms.CMDS.add('/' + trigger + ' ')
         for (trigger, func) in self.__privatecommands__:
             self.frame.privatechats.CMDS.add('/' + trigger + ' ')
 
@@ -599,7 +599,7 @@ class BasePlugin(object):
 
     def fakepublic(self, room, user, text):
         try:
-            room = self.frame.chatrooms.roomsctrl.joinedrooms[room]
+            room = self.frame.chatrooms.joinedrooms[room]
         except KeyError:
             return False
 
