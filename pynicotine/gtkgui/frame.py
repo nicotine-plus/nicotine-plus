@@ -280,7 +280,7 @@ class NicotineFrame:
         self.set_show_debug(config["logging"]["debug"])
         self.set_show_flags(not config["columns"]["hideflags"])
         self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
-        self.set_toggle_buddy_list(config["ui"]["buddylistposition"])
+        self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
 
         """ Tab Visibility/Order """
 
@@ -740,8 +740,8 @@ class NicotineFrame:
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
 
-        state = self.np.config.sections["ui"]["buddylistposition"]
-        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(str(state)))
+        state = self.verify_buddy_list_mode(self.np.config.sections["ui"]["buddylistinchatrooms"])
+        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
 
@@ -961,7 +961,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["ui"]["header_bar"] = not state
-        self.np.config.write_configuration()
 
     def set_show_log(self, show):
         if show:
@@ -977,7 +976,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(state))
 
         self.np.config.sections["logging"]["logcollapsed"] = not state
-        self.np.config.write_configuration()
 
     def set_show_debug(self, show):
         if show:
@@ -992,7 +990,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["logging"]["debug"] = not state
-        self.np.config.write_configuration()
 
     def set_show_flags(self, state):
         for room in self.chatrooms.joinedrooms:
@@ -1001,7 +998,6 @@ class NicotineFrame:
 
         self.userlist.cols["country"].set_visible(state)
         self.np.config.sections["columns"]["buddy_list"][1] = int(state)
-        self.np.config.write_configuration()
 
     def on_show_flags(self, action, *args):
 
@@ -1010,7 +1006,6 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(state))
 
         self.np.config.sections["columns"]["hideflags"] = not state
-        self.np.config.write_configuration()
 
     def set_show_transfer_buttons(self, show):
         if show:
@@ -1027,35 +1022,34 @@ class NicotineFrame:
         action.set_state(GLib.Variant.new_boolean(not state))
 
         self.np.config.sections["transfers"]["enabletransferbuttons"] = not state
-        self.np.config.write_configuration()
 
-    def set_toggle_buddy_list(self, state):
+    def set_toggle_buddy_list(self, mode):
 
-        state = str(state).replace("'", "")
+        mode = self.verify_buddy_list_mode(mode)
 
         if self.userlist.Main in self.NotebooksPane.get_children():
 
-            if state == "always":
+            if mode == "always":
                 return
 
             self.NotebooksPane.remove(self.userlist.Main)
 
         elif self.userlist.Main in self.ChatroomsPane.get_children():
 
-            if state == "chatrooms":
+            if mode == "chatrooms":
                 return
 
             self.ChatroomsPane.remove(self.userlist.Main)
 
         elif self.userlist.Main in self.userlistvbox.get_children():
 
-            if state == "tab":
+            if mode == "tab":
                 return
 
             self.userlistvbox.remove(self.userlist.Main)
             self.hide_tab(None, [self.UserListTabLabel, self.userlistvbox])
 
-        if state == "always":
+        if mode == "always":
 
             if self.userlist.Main not in self.NotebooksPane.get_children():
                 self.NotebooksPane.pack2(self.userlist.Main, False, True)
@@ -1063,7 +1057,7 @@ class NicotineFrame:
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
-        elif state == "chatrooms":
+        elif mode == "chatrooms":
 
             if self.userlist.Main not in self.ChatroomsPane.get_children():
                 self.ChatroomsPane.pack2(self.userlist.Main, False, True)
@@ -1071,7 +1065,7 @@ class NicotineFrame:
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
 
-        elif state == "tab":
+        elif mode == "tab":
 
             self.userlistvbox.add(self.userlist.Main)
             self.show_tab(self.userlistvbox)
@@ -1082,11 +1076,12 @@ class NicotineFrame:
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        self.set_toggle_buddy_list(state)
+        mode = str(state).replace("'", "")
+
+        self.set_toggle_buddy_list(mode)
         action.set_state(state)
 
-        self.np.config.sections["ui"]["buddylistposition"] = str(state).replace("'", "")
-        self.np.config.write_configuration()
+        self.np.config.sections["ui"]["buddylistinchatrooms"] = mode
 
     # Shares
 
@@ -1961,6 +1956,15 @@ class NicotineFrame:
             except Exception as msg:
                 log.add_warning(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
 
+    """ Buddy List """
+
+    def verify_buddy_list_mode(self, mode):
+
+        if mode not in ("always", "chatrooms", "tab"):
+            return "tab"
+
+        return mode
+
     """ Private Chat """
 
     def on_settings_logging(self, widget):
@@ -2059,8 +2063,6 @@ class NicotineFrame:
 
         for room in self.chatrooms.joinedrooms.values():
             room.on_show_chat_buttons(not self.np.config.sections["ui"]["chat_hidebuttons"])
-
-        self.np.config.write_configuration()
 
     """ Away Timer """
 
