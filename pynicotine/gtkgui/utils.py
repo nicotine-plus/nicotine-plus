@@ -346,7 +346,7 @@ def press_header(widget, event):
     columns = widget.get_parent().get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     one_visible_column = len(visible_columns) == 1
-    menu = PopupMenu(widget.get_toplevel())
+    menu = PopupMenu(NICOTINE)
     pos = 1
 
     for column in columns:
