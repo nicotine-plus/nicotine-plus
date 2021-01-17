@@ -2325,8 +2325,19 @@ class NicotineFrame:
         dialog.show()
 
     def focus_combobox(self, button):
-        entry = button.get_parent().get_parent().get_child()
-        entry.grab_focus()
+
+        # We have the button of a combobox, find the entry
+        parent = button.get_parent()
+
+        if parent is None:
+            return
+
+        if isinstance(parent, Gtk.ComboBox):
+            entry = parent.get_child()
+            entry.grab_focus()
+            return
+
+        self.focus_combobox(parent)
 
     def get_status_image(self, status):
         if status == 1:
