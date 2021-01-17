@@ -1366,7 +1366,8 @@ class PopupMenu(Gtk.Menu):
 
         for room in self.frame.chatrooms.private_rooms:
 
-            if not (self.frame.chatrooms.is_private_room_owned(room) or self.frame.chatrooms.is_private_room_operator(room)):
+            if not self.frame.chatrooms.roomlist.is_private_room_owned(room) or \
+                    self.frame.chatrooms.roomlist.is_private_room_operator(room):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
@@ -1374,7 +1375,7 @@ class PopupMenu(Gtk.Menu):
             else:
                 items.append(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
 
-            if self.frame.chatrooms.is_private_room_owned(room):
+            if self.frame.chatrooms.roomlist.is_private_room_owned(room):
 
                 if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
                     items.append(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
@@ -1382,7 +1383,6 @@ class PopupMenu(Gtk.Menu):
                     items.append(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
 
         popup.setup(*items)
-
         return True
 
     def on_close_all_tabs(self, widget, caller):

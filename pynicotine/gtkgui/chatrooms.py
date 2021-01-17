@@ -95,8 +95,7 @@ class ChatRooms(IconNotebook):
         config = self.frame.np.config.sections
 
         self.joinedrooms = {}
-        self.autojoin = 1
-        self.rooms = []
+        self.autojoin = True
         self.private_rooms = config["private_rooms"]["rooms"]
         self.switch_tab = True
 
@@ -230,17 +229,12 @@ class ChatRooms(IconNotebook):
             return
 
         tab = ChatRoom(self, msg.room, msg.users)
-
         self.joinedrooms[msg.room] = tab
 
-        if msg.private is not None:
-            self.create_private_room(msg.room, msg.owner, msg.operators)
-
-        angle = 0
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
-        except Exception as e:
-            print(e)
+        except Exception:
+            angle = 0
 
         self.append_page(tab.Main, msg.room, tab.on_leave, angle)
 
@@ -251,13 +245,14 @@ class ChatRooms(IconNotebook):
         if msg.room != "Public ":
             self.frame.RoomSearchCombo.append_text(msg.room)
 
-        tab.count_users()
+        if msg.private:
+            self.create_private_room(msg.room, msg.owner, msg.operators)
 
     def set_room_list(self, msg):
 
         if self.autojoin:
+            self.autojoin = False
 
-            self.autojoin = 0
             if self.joinedrooms:
                 room_list = list(self.joinedrooms.keys())
             else:
@@ -278,46 +273,11 @@ class ChatRooms(IconNotebook):
                 elif isinstance(room, str):
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
 
-        self.rooms = []
-        for room, users in msg.rooms:
-            self.rooms.append(room)
-
-        self.roomlist.set_room_list(msg.rooms)
+        self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
         if self.frame.np.config.sections["words"]["roomnames"]:
             self.frame.chatrooms.update_completions()
             self.frame.privatechats.update_completions()
-
-    def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
-
-        myusername = self.frame.np.config.sections["server"]["login"]
-
-        for room in ownedrooms:
-            try:
-                self.private_rooms[room[0]]['joined'] = room[1]
-                if self.private_rooms[room[0]]['owner'] != myusername:
-                    log.add_warning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s."), {
-                        'room': room[0],
-                        'previous': self.private_rooms[room[0]]['owner'],
-                        'new': myusername
-                    })
-                self.private_rooms[room[0]]['owner'] = myusername
-            except KeyError:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
-
-        for room in otherrooms:
-            try:
-                self.private_rooms[room[0]]['joined'] = room[1]
-                if self.private_rooms[room[0]]['owner'] == myusername:
-                    log.add_warning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true."), {
-                        'room': room[0],
-                        'old': self.private_rooms[room[0]]['owner'],
-                    })
-                    self.private_rooms[room[0]]['owner'] = None
-            except KeyError:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
-
-        self.RoomList.update_private_rooms()
 
     def create_private_room(self, room, owner=None, operators=[]):
 
@@ -338,13 +298,9 @@ class ChatRooms(IconNotebook):
 
         if msg.room not in rooms:
             self.create_private_room(msg.room)
-            rooms[msg.room]["users"] = msg.users
-            rooms[msg.room]["joined"] = msg.numusers
-        else:
-            rooms[msg.room]["users"] = msg.users
-            rooms[msg.room]["joined"] = msg.numusers
 
-        self.set_private_rooms()
+        rooms[msg.room]["users"] = msg.users
+        rooms[msg.room]["joined"] = msg.numusers
 
     def private_room_owned(self, msg):
 
@@ -352,11 +308,8 @@ class ChatRooms(IconNotebook):
 
         if msg.room not in rooms:
             self.create_private_room(msg.room)
-            rooms[msg.room]["operators"] = msg.operators
-        else:
-            rooms[msg.room]["operators"] = msg.operators
 
-        self.set_private_rooms()
+        rooms[msg.room]["operators"] = msg.operators
 
     def private_room_add_user(self, msg):
 
@@ -366,8 +319,6 @@ class ChatRooms(IconNotebook):
             if msg.user not in rooms[msg.room]["users"]:
                 rooms[msg.room]["users"].append(msg.user)
 
-        self.set_private_rooms()
-
     def private_room_remove_user(self, msg):
 
         rooms = self.private_rooms
@@ -375,8 +326,6 @@ class ChatRooms(IconNotebook):
         if msg.room in rooms:
             if msg.user in rooms[msg.room]["users"]:
                 rooms[msg.room]["users"].remove(msg.user)
-
-        self.set_private_rooms()
 
     def private_room_operator_added(self, msg):
 
@@ -386,8 +335,6 @@ class ChatRooms(IconNotebook):
             if self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
 
-        self.set_private_rooms()
-
     def private_room_operator_removed(self, msg):
 
         rooms = self.private_rooms
@@ -395,8 +342,6 @@ class ChatRooms(IconNotebook):
         if msg.room in rooms:
             if self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
-
-        self.set_private_rooms()
 
     def private_room_add_operator(self, msg):
 
@@ -406,8 +351,6 @@ class ChatRooms(IconNotebook):
             if msg.user not in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].append(msg.user)
 
-        self.set_private_rooms()
-
     def private_room_remove_operator(self, msg):
 
         rooms = self.private_rooms
@@ -415,8 +358,6 @@ class ChatRooms(IconNotebook):
         if msg.room in rooms:
             if msg.user in rooms[msg.room]["operators"]:
                 rooms[msg.room]["operators"].remove(msg.user)
-
-        self.set_private_rooms()
 
     def private_room_added(self, msg):
 
@@ -427,7 +368,7 @@ class ChatRooms(IconNotebook):
             self.create_private_room(room)
             log.add(_("You have been added to a private room: %(room)s"), {"room": room})
 
-        self.set_private_rooms()
+        self.roomlist.set_private_rooms()
 
     def private_room_removed(self, msg):
 
@@ -436,10 +377,9 @@ class ChatRooms(IconNotebook):
         if msg.room in rooms:
             del rooms[msg.room]
 
-        self.set_private_rooms()
+        self.roomlist.set_private_rooms()
 
     def toggle_private_rooms(self, enabled):
-
         self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
 
     def private_room_disown(self, msg):
@@ -556,7 +496,7 @@ class ChatRooms(IconNotebook):
             clist = [self.frame.np.config.sections["server"]["login"], "nicotine"]
 
             if config["roomnames"]:
-                clist += self.rooms
+                clist += self.roomlist.server_rooms
 
             if config["buddies"]:
                 clist += [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]
@@ -1259,7 +1199,6 @@ class ChatRoom:
         )
 
         self.get_user_tag(username)
-
         self.count_users()
 
     def user_left_room(self, username):
@@ -1295,8 +1234,10 @@ class ChatRoom:
         self.count_users()
 
     def count_users(self):
-        numusers = len(self.users)
-        self.LabelPeople.set_markup("<b>%d</b>" % numusers)
+
+        user_count = len(self.users)
+        self.LabelPeople.set_markup("<b>%d</b>" % user_count)
+        self.chatrooms.roomlist.update_room(self.room, user_count)
 
     def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):
 

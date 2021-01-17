@@ -35,6 +35,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.logfacility import log
 
 
 class RoomList:
@@ -43,6 +44,7 @@ class RoomList:
 
         # Build the window
         self.frame = frame
+        self.server_rooms = set()
         self.joined_rooms = joined_rooms
         self.private_rooms = private_rooms
 
@@ -150,10 +152,11 @@ class RoomList:
             cellrenderer.set_property("weight", Pango.Weight.NORMAL)
             cellrenderer.set_property("underline", Pango.Underline.NONE)
 
-    def set_room_list(self, rooms):
+    def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         self.room_model.clear()
         self.RoomsList.set_model(None)
+
         self.room_model.set_default_sort_func(lambda *args: -1)
         self.room_model.set_sort_func(1, lambda *args: -1)
         self.room_model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
@@ -161,25 +164,58 @@ class RoomList:
         for room, users in rooms:
             self.room_model.append([room, users, 0])
 
-        self.RoomsList.set_model(self.room_model)
+        self.server_rooms = set()
+        for room, users in rooms:
+            self.server_rooms.add(room)
+
+        self.set_private_rooms(owned_rooms, other_private_rooms)
+
         self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
 
-    def update_private_rooms(self):
+        self.RoomsList.set_model(self.room_model)
+
+    def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
+
+        myusername = self.frame.np.config.sections["server"]["login"]
+
+        for room in ownedrooms:
+            try:
+                self.private_rooms[room[0]]['joined'] = room[1]
+                if self.private_rooms[room[0]]['owner'] != myusername:
+                    log.add_warning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s."), {
+                        'room': room[0],
+                        'previous': self.private_rooms[room[0]]['owner'],
+                        'new': myusername
+                    })
+                self.private_rooms[room[0]]['owner'] = myusername
+            except KeyError:
+                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
+
+        for room in otherrooms:
+            try:
+                self.private_rooms[room[0]]['joined'] = room[1]
+                if self.private_rooms[room[0]]['owner'] == myusername:
+                    log.add_warning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true."), {
+                        'room': room[0],
+                        'old': self.private_rooms[room[0]]['owner'],
+                    })
+                    self.private_rooms[room[0]]['owner'] = None
+            except KeyError:
+                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
 
         iterator = self.room_model.get_iter_first()
 
-        while iterator is not None:
+        while iterator:
             room = self.room_model.get_value(iterator, 0)
-            lastiter = iterator
-            iterator = self.room_model.iter_next(iterator)
 
             if self.is_private_room_owned(room) or self.is_private_room_member(room):
-                self.room_model.remove(lastiter)
+                self.room_model.remove(iterator)
+
+            iterator = self.room_model.iter_next(iterator)
 
         for room in self.private_rooms:
-
             num = self.private_rooms[room]["joined"]
 
             if self.is_private_room_owned(room):
@@ -187,6 +223,22 @@ class RoomList:
 
             elif self.is_private_room_member(room):
                 self.room_model.prepend([room, num, 1])
+
+    def update_room(self, room, user_count):
+
+        if room in self.server_rooms:
+            iterator = self.room_model.get_iter_first()
+
+            while iterator:
+                if self.room_model.get_value(iterator, 0) == room:
+                    self.room_model.set(iterator, 1, user_count)
+                    break
+
+                iterator = self.room_model.iter_next(iterator)
+
+        else:
+            self.room_model.append([room, user_count, 0])
+            self.server_rooms.add(room)
 
     def on_list_clicked(self, widget, event):
 
@@ -199,6 +251,7 @@ class RoomList:
             room = self.get_selected_room(widget)
 
             if room is not None and room not in self.joined_rooms:
+                self.popup_room = room
                 self.on_popup_join(widget)
                 return True
 
@@ -245,14 +298,12 @@ class RoomList:
         if self.is_private_room_owned(self.popup_room):
             self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
             del self.private_rooms[self.popup_room]
-            self.update_private_rooms()
 
     def on_popup_private_room_dismember(self, widget):
 
         if self.is_private_room_member(self.popup_room):
             self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
             del self.private_rooms[self.popup_room]
-            self.update_private_rooms()
 
     def on_popup_leave(self, widget):
         self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
