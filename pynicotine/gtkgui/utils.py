@@ -46,65 +46,6 @@ URL_RE = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+
 NICOTINE = None
 
 
-# we could move this into a new class
-previouscountrypath = None
-
-
-def show_country_tooltip(widget, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
-
-    global previouscountrypath
-    try:
-        # the returned path of widget.get_path_at_pos is not correct since
-        # this function pretends there's no header!
-        # This also means we cannot look up the column for the very last user in the list
-        # since the y is too big.
-        # Therefore we'll use a y-value of 0 on all lookups
-        (incorrectpath, column, cx, cy) = widget.get_path_at_pos(x, 0)
-
-        # The return path of this func is okay, but it doesn't return the column -_-
-        (path, droppos) = widget.get_dest_row_at_pos(x, y)
-    except TypeError:
-        # Either function returned None
-        return False
-
-    # If the mouse is pointing at a new path destroy the tooltip so it can be recreated next time
-    if path != previouscountrypath:
-        previouscountrypath = path
-        return False
-
-    title = column.get_title()
-
-    if title != _("Country"):
-        return False
-
-    model = widget.get_model()
-    iterator = model.get_iter(path)
-    value = model.get_value(iterator, sourcecolumn)
-
-    # Avoid throwing an error in there's no flag
-    if value is None:
-        return False
-
-    if not value.startswith(stripprefix):
-        tooltip.set_text(_("Unknown"))
-        return True
-
-    value = value[len(stripprefix):]
-    if value:
-        countryname = code2name(value)
-    else:
-        countryname = "Earth"
-
-    if countryname:
-        countryname = _(countryname)
-    else:
-        countryname = _("Unknown (%(countrycode)s)") % {'countrycode': value}
-
-    tooltip.set_text(countryname)
-
-    return True
-
-
 def load_ui_elements(ui_class, filename):
     builder = Gtk.Builder()
 
@@ -121,6 +62,9 @@ def load_ui_elements(ui_class, filename):
             pass
 
     builder.connect_signals(ui_class)
+
+
+""" Treeview """
 
 
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
@@ -417,6 +361,43 @@ def set_treeview_selected_row(treeview, event):
             treeview.set_cursor(path, col, False)
     else:
         selection.unselect_all()
+
+
+def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
+
+    try:
+        bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(x, y)
+        path, column, cx, cy = treeview.get_path_at_pos(bin_x, bin_y)
+
+    except TypeError:
+        return False
+
+    if column.get_title() != "country":
+        return False
+
+    model = treeview.get_model()
+    iterator = model.get_iter(path)
+    value = model.get_value(iterator, sourcecolumn)
+
+    # Avoid throwing an error in there's no flag
+    if value is None:
+        return False
+
+    # Update tooltip position
+    treeview.set_tooltip_cell(tooltip, path, column, None)
+
+    if not value.startswith(stripprefix):
+        tooltip.set_text(_("Unknown"))
+        return True
+
+    value = value[len(stripprefix):]
+    if value:
+        countryname = code2name(value)
+    else:
+        countryname = _("Earth")
+
+    tooltip.set_text(countryname)
+    return True
 
 
 def open_file_path(file_path, command=None):
