@@ -105,14 +105,6 @@ class Searches(IconNotebook):
         for i in templist:
             self.frame.SearchEntryCombo.append_text(i)
 
-    def on_clear_search_history(self):
-
-        self.frame.SearchEntry.set_text("")
-        self.frame.np.config.sections["searches"]["history"] = []
-        self.frame.np.config.write_configuration()
-        self.frame.SearchEntryCombo.remove_all()
-        self.frame.SearchEntryCombo.append_text("")
-
     def on_search(self):
 
         self.save_columns()
@@ -261,6 +253,32 @@ class Searches(IconNotebook):
     def do_peer_search(self, id, text, users):
         for user in users:
             self.frame.np.send_message_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
+
+    def clear_search_history(self):
+
+        self.frame.SearchEntry.set_text("")
+
+        self.frame.np.config.sections["searches"]["history"] = []
+        self.frame.np.config.write_configuration()
+
+        self.frame.SearchEntryCombo.remove_all()
+
+    def clear_filter_history(self):
+
+        # Clear filter history in config
+        self.frame.np.config.sections["searches"]["filterin"] = []
+        self.frame.np.config.sections["searches"]["filterout"] = []
+        self.frame.np.config.sections["searches"]["filtersize"] = []
+        self.frame.np.config.sections["searches"]["filterbr"] = []
+        self.frame.np.config.sections["searches"]["filtercc"] = []
+        self.frame.np.config.write_configuration()
+
+        # Update filters in search tabs
+        for id in self.searches.values():
+            if id["tab"] is None:
+                continue
+
+            id["tab"].populate_filters(set_default_filters=False)
 
     def get_user_search_name(self, id):
 
@@ -562,9 +580,13 @@ class Search:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
 
-    def populate_filters(self):
+    def populate_filters(self, set_default_filters=True):
 
-        if self.frame.np.config.sections["searches"]["enablefilters"]:
+        for combobox in (self.FilterIn, self.FilterOut, self.FilterSize,
+                         self.FilterBitrate, self.FilterCountry):
+            combobox.remove_all()
+
+        if set_default_filters and self.frame.np.config.sections["searches"]["enablefilters"]:
 
             sfilter = self.frame.np.config.sections["searches"]["defilter"]
 

@@ -185,28 +185,39 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="ClearSearchHistory">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="halign">start</property>
-            <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
+            <property name="spacing">10</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkButton" id="ClearSearchHistory">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="halign">start</property>
+                <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">edit-clear-symbolic</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">edit-clear-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Clear Search History</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Clear Search History</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="ClearSearchHistorySuccess">
+                <property name="icon-name">object-select-symbolic</property>
               </object>
             </child>
           </object>
@@ -381,6 +392,44 @@
                 <property name="left-attach">0</property>
                 <property name="top-attach">0</property>
               </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkButton" id="ClearFilterHistory">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="halign">start</property>
+                <signal name="clicked" handler="on_clear_filter_history" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">edit-clear-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Clear Filter History</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="ClearFilterHistorySuccess">
+                <property name="icon-name">object-select-symbolic</property>
+              </object>
             </child>
           </object>
         </child>

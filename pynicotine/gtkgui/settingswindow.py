@@ -1961,6 +1961,9 @@ class SearchFrame(BuildFrame):
             if(len(searches["defilter"]) > 5):
                 self.FilterCC.set_text(searches["defilter"][5])
 
+        self.ClearSearchHistorySuccess.hide()
+        self.ClearFilterHistorySuccess.hide()
+
         self.on_enable_search_results(self.ToggleResults)
 
     def get_settings(self):
@@ -1987,7 +1990,12 @@ class SearchFrame(BuildFrame):
         }
 
     def on_clear_search_history(self, widget):
-        self.frame.searches.on_clear_search_history()
+        self.frame.searches.clear_search_history()
+        self.ClearSearchHistorySuccess.show()
+
+    def on_clear_filter_history(self, widget):
+        self.frame.searches.clear_filter_history()
+        self.ClearFilterHistorySuccess.show()
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
