@@ -1034,18 +1034,21 @@ class NicotineFrame:
         state = str(state).replace("'", "")
 
         if self.userlist.Main in self.NotebooksPane.get_children():
+
             if state == "always":
                 return
 
             self.NotebooksPane.remove(self.userlist.Main)
 
-        if self.userlist.Main in self.ChatroomsPane.get_children():
+        elif self.userlist.Main in self.ChatroomsPane.get_children():
+
             if state == "chatrooms":
                 return
 
             self.ChatroomsPane.remove(self.userlist.Main)
 
-        if self.userlist.Main in self.userlistvbox.get_children():
+        elif self.userlist.Main in self.userlistvbox.get_children():
+
             if state == "tab":
                 return
 
@@ -1541,11 +1544,6 @@ class NicotineFrame:
 
         for name in tab_names:
             tab_box = self.match_main_name_page(name)
-
-            # Ensure that the tab exists (Buddy List tab may be hidden)
-            if tab_box is None or self.MainNotebook.page_num(tab_box) == -1:
-                continue
-
             self.MainNotebook.reorder_child(tab_box, order)
             order += 1
 
@@ -1554,22 +1552,15 @@ class NicotineFrame:
         tab_names = self.np.config.sections["ui"]["modes_visible"]
 
         for name in tab_names:
-            tab_box = self.match_main_name_page(name)
-
-            if tab_box is None:
+            if tab_names[name]:
+                # Tab is visible
                 continue
 
-            if not tab_names[name]:
-                if tab_box not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-                    continue
+            tab_box = self.match_main_name_page(name)
+            num = self.MainNotebook.page_num(tab_box)
 
-                if tab_box in self.hidden_tabs:
-                    continue
-
-                self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
-
-                num = self.MainNotebook.page_num(tab_box)
-                self.MainNotebook.remove_page(num)
+            self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
+            self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() <= 1:
             self.MainNotebook.set_show_tabs(False)
@@ -1580,26 +1571,14 @@ class NicotineFrame:
         # bar is updated
         self.MainNotebook.set_current_page(-1)
 
-        try:
-            if self.np.config.sections["ui"]["tab_select_previous"]:
-                lasttabid = int(self.np.config.sections["ui"]["last_tab_id"])
+        if not self.np.config.sections["ui"]["tab_select_previous"]:
+            self.MainNotebook.set_current_page(0)
+            return
 
-                if 0 <= lasttabid <= self.MainNotebook.get_n_pages():
-                    self.MainNotebook.set_current_page(lasttabid)
+        last_tab_id = int(self.np.config.sections["ui"]["last_tab_id"])
 
-                    page = self.MainNotebook.get_nth_page(lasttabid)
-                    self.current_tab_label = self.MainNotebook.get_tab_label(page)
-                    return
-
-        except Exception:
-            pass
-
-        self.MainNotebook.set_current_page(0)
-
-        page = self.MainNotebook.get_nth_page(0)
-
-        if page is not None:
-            self.current_tab_label = self.MainNotebook.get_tab_label(page)
+        if 0 <= last_tab_id <= self.MainNotebook.get_n_pages():
+            self.MainNotebook.set_current_page(last_tab_id)
 
     def hide_tab(self, widget, lista):
 
