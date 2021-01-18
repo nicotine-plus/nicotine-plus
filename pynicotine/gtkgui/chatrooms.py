@@ -807,7 +807,12 @@ class ChatRoom:
         self.room_wall.show()
 
     def on_show_chat_help(self, widget):
-        self.frame.on_about_chatroom_commands(widget)
+
+        if not hasattr(self, "AboutChatRoomCommandsPopover"):
+            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
+            self.AboutChatRoomCommandsPopover.set_relative_to(self.ShowChatHelp)
+
+        self.AboutChatRoomCommandsPopover.popup()
 
     def on_show_chat_buttons(self, show=True):
 

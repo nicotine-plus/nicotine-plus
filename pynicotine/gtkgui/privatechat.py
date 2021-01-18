@@ -508,7 +508,12 @@ class PrivateChat:
         self.ChatScroll.get_buffer().set_text("")
 
     def on_show_chat_help(self, widget):
-        self.frame.on_about_private_chat_commands(widget)
+
+        if not hasattr(self, "AboutPrivateChatCommandsPopover"):
+            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
+            self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
+
+        self.AboutPrivateChatCommandsPopover.popup()
 
     def show_message(self, text, newmessage=True, timestamp=None):
 

@@ -1360,4 +1360,9 @@ class Search:
         self.on_refilter(widget)
 
     def on_about_filters(self, widget):
-        self.frame.on_about_filters(widget)
+
+        if not hasattr(self, "AboutSearchFiltersPopover"):
+            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
+            self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
+
+        self.AboutSearchFiltersPopover.popup()

@@ -812,18 +812,6 @@ class NicotineFrame:
         action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("aboutchatroomcommands", None)
-        action.connect("activate", self.on_about_chatroom_commands)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("aboutprivatechatcommands", None)
-        action.connect("activate", self.on_about_private_chat_commands)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("aboutfilters", None)
-        action.connect("activate", self.on_about_filters)
-        self.application.add_action(action)
-
         action = Gio.SimpleAction.new("transferstatistics", None)
         action.connect("activate", self.on_transfer_statistics)
         self.application.add_action(action)
@@ -1187,34 +1175,6 @@ class NicotineFrame:
             self.KeyboardShortcutsDialog.set_transient_for(self.MainWindow)
 
         self.KeyboardShortcutsDialog.show()
-
-    def on_about_chatroom_commands(self, *args):
-
-        if not hasattr(self, "AboutChatRoomCommandsDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "chatroomcommands.ui"))
-            self.AboutChatRoomCommandsDialog.set_transient_for(self.MainWindow)
-
-        # Scroll to the top
-        self.AboutChatRoomCommandsView.get_vadjustment().set_value(0)
-        self.AboutChatRoomCommandsDialog.show()
-
-    def on_about_private_chat_commands(self, *args):
-
-        if not hasattr(self, "AboutPrivateChatCommandsDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "privatechatcommands.ui"))
-            self.AboutPrivateChatCommandsDialog.set_transient_for(self.MainWindow)
-
-        # Scroll to the top
-        self.AboutPrivateChatCommandsView.get_vadjustment().set_value(0)
-        self.AboutPrivateChatCommandsDialog.show()
-
-    def on_about_filters(self, *args):
-
-        if not hasattr(self, "AboutSearchFiltersDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "searchfilters.ui"))
-            self.AboutSearchFiltersDialog.set_transient_for(self.MainWindow)
-
-        self.AboutSearchFiltersDialog.show()
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()

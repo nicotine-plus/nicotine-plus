@@ -184,20 +184,6 @@
           <attribute name="action">app.keyboardshortcuts</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">_Chat Room Commands</attribute>
-          <attribute name="action">app.aboutchatroomcommands</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">_Private Chat Commands</attribute>
-          <attribute name="action">app.aboutprivatechatcommands</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">_Search Result Filters</attribute>
-          <attribute name="action">app.aboutfilters</attribute>
-        </item>
-      </section>
-      <section>
-        <item>
           <attribute name="label" translatable="yes">Check _Latest Version</attribute>
           <attribute name="action">app.checklatest</attribute>
         </item>
