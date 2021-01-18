@@ -1,8 +1,8 @@
-nicotine (2.3.0-dev1) groovy; urgency=medium
+nicotine (3.0.0-dev1) groovy; urgency=medium
 
   * Development version.
 
- -- Mat <mail@mathias.is>  Fri, 01 Jan 2021 10:33:12 +0300
+ -- Mat <mail@mathias.is>  Mon, 18 Jan 2021 18:45:34 +0300
 
 nicotine (2.2.2-1) groovy; urgency=medium
 
