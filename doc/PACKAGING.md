@@ -26,8 +26,8 @@ Unstable and stable PPAs are already provided for pre-compiled packages, as desc
 Start by generating the "upstream" tarball:
 
 ```console
-cd nicotine_source
-./debian/rules get-orig-source
+python setup.py sdist
+mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 
 Build the Debian source package:
@@ -39,7 +39,7 @@ debuild -S -sa
 Build the binary from the source package and upstream tarball via `sbuild`:
 
 ```console
-sbuild ../nicotine(...).dsc
+sbuild ../nicotine*.dsc
 ```
 
 #### Building a RPM package

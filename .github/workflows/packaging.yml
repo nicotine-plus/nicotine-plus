@@ -1,8 +1,51 @@
-name: Packaging (Windows and macOS)
+name: Packaging (Debian, Windows and macOS)
 
 on: [push, pull_request]
 
 jobs:
+
+  debian:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
+
+          sudo apt update
+          sudo apt -y install $BUILD_DEPS build-essential devscripts sbuild
+
+      - name: Build Debian package
+        run: |
+          # Generate tarball
+          python setup.py sdist
+          mk-origtargz dist/nicotine-plus-*.tar.gz
+
+          # Build source package
+          debuild -S -sa -us -uc
+
+          # Build binary
+          debuild -b -sa -us -uc
+
+      - name: Prepare artifacts
+        run: |
+          mkdir ../build/
+          cp -Lr ../nicotine_* ../build/
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: debian-package
+          path: ../build/
 
   windows:
     runs-on: windows-latest
@@ -42,13 +85,13 @@ jobs:
           cp -r packaging/windows/Nicotine*.exe installer/
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-installer
           path: installer
 
       - name: Archive package artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-package
           path: dist
@@ -80,7 +123,7 @@ jobs:
           packaging/macos/create-dmg.sh
 
       - name: Archive installer artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: macos-installer
           path: dmg
