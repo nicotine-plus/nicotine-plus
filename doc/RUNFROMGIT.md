@@ -5,6 +5,8 @@ This is not particularly hard, but it may come with some additional required ski
 ## Clone the repository and run Nicotine+
 This is great if you're the only Nicotine+ user on your system and you want to test the latest version. Using a Python virtual environment (venv) is recommended, as this ensures Nicotine+ will run as intended.
 
+To get started, ensure that the `gobject-introspection` package is installed on your system, and then run the following:
+
 ```console
 git clone https://github.com/Nicotine-Plus/nicotine-plus.git
 cd nicotine-plus
