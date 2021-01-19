@@ -47,21 +47,31 @@ NICOTINE = None
 
 
 def load_ui_elements(ui_class, filename):
-    builder = Gtk.Builder()
 
-    builder.set_translation_domain('nicotine')
-    builder.add_from_file(filename)
+    try:
+        builder = Gtk.Builder()
 
-    for i in builder.get_objects():
-        try:
-            obj_name = Gtk.Buildable.get_name(i)
+        builder.set_translation_domain('nicotine')
+        builder.add_from_file(filename)
 
-            if not obj_name.startswith("_"):
-                ui_class.__dict__[obj_name] = i
-        except TypeError:
-            pass
+        for i in builder.get_objects():
+            try:
+                obj_name = Gtk.Buildable.get_name(i)
 
-    builder.connect_signals(ui_class)
+                if not obj_name.startswith("_"):
+                    ui_class.__dict__[obj_name] = i
+
+            except TypeError:
+                pass
+
+        builder.connect_signals(ui_class)
+
+    except Exception as e:
+        log.add_warning(_("Failed to load ui file %(file)s: %(error)s"), {
+            "file": filename,
+            "error": e
+        })
+        sys.exit()
 
 
 """ Treeview """
