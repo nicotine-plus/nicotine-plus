@@ -132,6 +132,12 @@ class CheckDownloadQueue(InternalMessage):
     pass
 
 
+class CheckUploadQueue(InternalMessage):
+    """ Sent from a timer to the main thread to indicate that the upload queue
+    should be checked. """
+    pass
+
+
 class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write and offset to resume download
@@ -2145,8 +2151,6 @@ class FileSearchResult(PeerMessage):
         self.pos, self.inqueue = self.get_object(message, int, self.pos, getunsignedlonglong=True)
 
     def make_network_message(self):
-        queuesize = self.inqueue[0]
-
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.token, unsignedint=True))
@@ -2197,7 +2201,7 @@ class FileSearchResult(PeerMessage):
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.pack_object(self.ulspeed, unsignedint=True))
-        msg.extend(self.pack_object(queuesize, unsignedlonglong=True))
+        msg.extend(self.pack_object(self.inqueue, unsignedlonglong=True))
 
         return zlib.compress(msg)
 

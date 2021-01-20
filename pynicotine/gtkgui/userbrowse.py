@@ -851,7 +851,6 @@ class UserBrowse:
                 realfilename = "\\".join([realpath, file[1]])
                 size = file[2]
                 self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size)
-                self.frame.np.transfers.check_upload_queue()
 
         if not recurse:
             return
@@ -888,7 +887,6 @@ class UserBrowse:
 
         for fn in self.selected_files:
             self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
-            self.frame.np.transfers.check_upload_queue()
 
     def on_key_press_event(self, widget, event):
 

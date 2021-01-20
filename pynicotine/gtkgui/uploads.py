@@ -238,17 +238,11 @@ class Uploads(TransferList):
                     i.transfertimer.cancel()
                 self.remove_specific(i)
 
-        self.frame.np.transfers.calc_upload_queue_sizes()
-        self.frame.np.transfers.check_upload_queue()
-
     def on_abort_transfer(self, widget, remove_file=False, clear=False):
 
         self.select_transfers()
 
         self.abort_transfers(remove_file, clear)
-
-        self.frame.np.transfers.calc_upload_queue_sizes()
-        self.frame.np.transfers.check_upload_queue()
 
     def on_abort_user(self, widget):
 
@@ -260,22 +254,12 @@ class Uploads(TransferList):
                     self.selected_transfers.add(i)
 
         self.on_abort_transfer(widget)
-        self.frame.np.transfers.calc_upload_queue_sizes()
-        self.frame.np.transfers.check_upload_queue()
 
     def on_clear_queued(self, widget):
-
         self.clear_transfers(["Queued"])
 
-        self.frame.np.transfers.calc_upload_queue_sizes()
-        self.frame.np.transfers.check_upload_queue()
-
     def on_clear_failed(self, widget):
-
         self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"])
-
-        self.frame.np.transfers.calc_upload_queue_sizes()
-        self.frame.np.transfers.check_upload_queue()
 
     def on_upload_transfer(self, widget):
 
@@ -286,7 +270,7 @@ class Uploads(TransferList):
             path = transfer.path
             user = transfer.user
 
-            if user in self.frame.np.transfers.get_transferring_users():
+            if user in self.frame.np.transfers.get_uploading_users():
                 continue
 
             self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
