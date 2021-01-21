@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020 Nicotine+ Team
+# COPYRIGHT (C) 2020-2021 Nicotine+ Team
 # COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 #
 # GNU GENERAL PUBLIC LICENSE

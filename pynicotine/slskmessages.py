@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Nicotine+ Team
+# Copyright (C) 2020-2021 Nicotine+ Team
 # Copyright (C) 2007 daelstorm. All rights reserved.
 # Copyright (c) 2003-2004 Hyriand. All rights reserved.
 #

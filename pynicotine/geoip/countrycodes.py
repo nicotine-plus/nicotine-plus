@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020 Nicotine+ Team
+# COPYRIGHT (C) 2020-2021 Nicotine+ Team
 # COPYRIGHT (C) 2009 quinox. All rights reserved.
 #
 # This program is free software: you can redistribute it and/or modify

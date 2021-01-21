@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (C) 2020 Nicotine+ Team
+# Copyright (C) 2020-2021 Nicotine+ Team
 # Copyright (c) 2019 Dave Mulford
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
