@@ -58,7 +58,15 @@ class Plugin(BasePlugin):
         player = self.frame.np.config.sections["players"]["npothercommand"]
 
         if not player:
-            names = self.bus.ListNames()
+            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
+                                                Gio.DBusProxyFlags.NONE,
+                                                None,
+                                                'org.freedesktop.DBus',
+                                                '/org/freedesktop/DBus',
+                                                'org.freedesktop.DBus',
+                                                None)
+
+            names = dbus_proxy.ListNames()
 
             for name in names:
                 if name.startswith(self.dbus_mpris_service):
