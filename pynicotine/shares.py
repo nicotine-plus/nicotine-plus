@@ -251,19 +251,18 @@ class Shares:
             self.config.sections["transfers"][db].close()
 
     def send_num_shared_folders_files(self):
-        """
-        Send number of files in buddy shares if only buddies can
-        download, and buddy-shares are enabled.
-        """
+        """ Send number publicly shared files to the server. """
 
         config = self.config.sections
 
         if config["transfers"]["enablebuddyshares"] and config["transfers"]["friendsonly"]:
-            shared_db = "bsharedfiles"
-            index_db = "bfileindex"
-        else:
-            shared_db = "sharedfiles"
-            index_db = "fileindex"
+            # No public shares
+            files = folders = 0
+            self.queue.put(slskmessages.SharedFoldersFiles(files, folders))
+            return
+
+        shared_db = "sharedfiles"
+        index_db = "fileindex"
 
         try:
             sharedfolders = len(config["transfers"][shared_db])
