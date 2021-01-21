@@ -34,7 +34,7 @@ def test_version():
     assert isinstance(latest_version, int)
 
     # Validate date of latest release
-    date_format = "%Y-%m-%dT%H:%M:%SZ"
+    date_format = "%Y-%m-%dT%H:%M:%S"
     datetime.datetime.strptime(date, date_format)
 
     # Test a sample dev version to ensure it's older than the stable counterpart

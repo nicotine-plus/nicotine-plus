@@ -81,14 +81,18 @@ def get_latest_version():
     import json
 
     response = http_request(
-        "https", "api.github.com", "/repos/Nicotine-Plus/nicotine-plus/releases/latest",
+        "https", "pypi.org", "/pypi/nicotine-plus/json",
         headers={"User-Agent": "Nicotine+"}
     )
     data = json.loads(response)
 
-    hlatest = data['tag_name']
+    hlatest = data['info']['version']
     latest = int(make_version(hlatest))
-    date = data['created_at']
+
+    try:
+        date = data['releases'][hlatest][0]['upload_time']
+    except Exception:
+        date = None
 
     return hlatest, latest, date
 
@@ -415,7 +419,10 @@ def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
         print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
 
 
-def http_request(url_scheme, base_url, path, request_type="GET", body="", headers={}, timeout=10):
+def http_request(url_scheme, base_url, path, request_type="GET", body="", headers={}, timeout=10, redirect_depth=0):
+
+    if redirect_depth > 15:
+        raise Exception("Redirected too many times, giving up")
 
     import http.client
 
@@ -425,10 +432,23 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
         conn = http.client.HTTPConnection(base_url, timeout=timeout)
 
     conn.request(request_type, path, body=body, headers=headers)
-    response = conn.getresponse().read().decode("utf-8")
+    response = conn.getresponse()
+    redirect = response.getheader('Location')
+
+    if redirect:
+        from urllib.parse import urlparse
+        parsed_url = urlparse(redirect)
+        redirect_depth += 1
+
+        return http_request(
+            parsed_url.scheme, parsed_url.netloc, parsed_url.path,
+            request_type, body, headers, timeout, redirect_depth
+        )
+
+    contents = response.read().decode("utf-8")
     conn.close()
 
-    return response
+    return contents
 
 
 class RestrictedUnpickler(pickle.Unpickler):

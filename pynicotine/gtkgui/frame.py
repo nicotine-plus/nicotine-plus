@@ -1202,11 +1202,16 @@ class NicotineFrame:
             return
 
         if latest > myversion:
+            version_label = _("Version %s is available") % hlatest
+
+            if date:
+                version_label += ", " + _("released on %s") % date
+
             GLib.idle_add(
                 message_dialog,
                 self.MainWindow,
                 _("Out of date"),
-                _("A newer version %s is available, released on %s.") % (hlatest, date)
+                version_label
             )
 
         elif myversion > latest:
