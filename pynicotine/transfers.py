@@ -1748,24 +1748,27 @@ class Transfers:
 
     def get_upload_candidate(self, queued_uploads):
 
+        if not queued_uploads:
+            return None
+
         if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
             # FIFO
             # Get the first item in the list
-            transfercandidate = queued_uploads[0]
+            upload_candidate = queued_uploads[0]
 
         else:
             # Round Robin
             # Get first transfer that was queued less than one second from now
-            transfercandidate = None
+            upload_candidate = None
             mintimequeued = time.time() + 1
 
             for i in queued_uploads:
                 if i.timequeued is not None and i.timequeued < mintimequeued:
-                    transfercandidate = i
+                    upload_candidate = i
                     # Break loop
                     mintimequeued = i.timequeued
 
-        return transfercandidate
+        return upload_candidate
 
     # Find next file to upload
     def check_upload_queue(self, start_timer=False):
