@@ -25,10 +25,10 @@
 pacman --noconfirm -S --needed \
   mingw-w64-$ARCH-python \
   mingw-w64-$ARCH-python-flake8 \
-  mingw-w64-$ARCH-python-pip \
-  mingw-w64-$ARCH-python-pytest
+  mingw-w64-$ARCH-python-pip
 
 # Install dependencies with pip
 pip3 install \
   pep8-naming \
+  pytest \
   semidbm

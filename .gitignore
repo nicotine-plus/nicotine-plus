@@ -1,6 +1,7 @@
 # Auto-generated files
 *.desktop
 *.metainfo.xml
+temp_config
 
 # Translation Machine Object files
 *.mo
