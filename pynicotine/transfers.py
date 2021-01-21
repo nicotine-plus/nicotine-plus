@@ -131,6 +131,13 @@ class Transfers:
         self.privilegedusers = set()
         userstatus = set()
 
+        uselimit = self.eventprocessor.config.sections["transfers"]["uselimit"]
+        uploadlimit = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+        limitby = self.eventprocessor.config.sections["transfers"]["limitby"]
+
+        self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
+        self.queue.put(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
+
         for i in self.load_download_queue():
             size = currentbytes = bitrate = length = None
 
@@ -1821,9 +1828,9 @@ class Transfers:
             uploading_users = set()
 
             for i in self.uploads:
-                if i.req is not None or i.conn is not None or \
-                        i.status == "Getting status":
-                    uploading_users.add(i.user)
+                if i.req is not None or i.conn is not None or i.status == "Getting status":
+                    if i.user not in uploading_users:
+                        uploading_users.add(i.user)
 
                 # Ignore non-queued files
                 if i.status != "Queued":

@@ -854,7 +854,7 @@ class NicotineFrame:
 
         # Clear any potential messages queued up to this point (should not happen)
         while not self.np.queue.empty():
-            self.np.queue.get(0)
+            print(self.np.queue.get(0))
 
         self.set_user_status("...")
 
