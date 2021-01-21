@@ -1070,6 +1070,12 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
             self.privatechat.login()
             self.queue.put(slskmessages.CheckPrivileges())
+
+            """ Request a complete room list. A limited room list not including blacklisted rooms and
+            rooms with few users is automatically sent when logging in, but subsequent room list
+            requests contain all rooms. """
+            self.queue.put(slskmessages.RoomList())
+
             self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
         else:
             self.manualdisconnect = True
