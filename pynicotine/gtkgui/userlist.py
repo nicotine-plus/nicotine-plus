@@ -159,7 +159,7 @@ class UserList:
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
         self.buddies_combo_entries = (
-            self.frame.UserSearchCombo, self.frame.UserPrivateCombo, self.frame.UserInfoCombo, self.frame.UserBrowseCombo
+            self.frame.UserSearchCombo, self.frame.PrivateChatCombo, self.frame.UserInfoCombo, self.frame.UserBrowseCombo
         )
 
         self.buddies_combos_fill()

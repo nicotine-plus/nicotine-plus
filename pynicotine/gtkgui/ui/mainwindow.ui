@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
+  <object class="GtkEntryCompletion" id="RoomSearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserSearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="SearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="PrivateChatCompletion">
+    <property name="inline-completion">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserInfoCompletion">
+    <property name="inline-completion">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserBrowseCompletion">
+    <property name="inline-completion">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
   <object class="GtkMenuButton" id="HeaderMenu">
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
@@ -78,6 +109,7 @@
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Room...</property>
+                <property name="completion">RoomSearchCompletion</property>
               </object>
             </child>
             <child internal-child="button">
@@ -96,6 +128,7 @@
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="completion">UserSearchCompletion</property>
               </object>
             </child>
             <child internal-child="button">
@@ -106,7 +139,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="SearchEntryCombo">
+          <object class="GtkComboBoxText" id="SearchCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
@@ -117,6 +150,7 @@
                 <property name="placeholder-text" translatable="yes">Search term...</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
+                <property name="completion">SearchCompletion</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
                 <signal name="icon-press" handler="on_search" swapped="no"/>
               </object>
@@ -523,16 +557,17 @@
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBoxText" id="UserPrivateCombo">
+          <object class="GtkComboBoxText" id="PrivateChatCombo">
             <property name="visible">1</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
-              <object class="GtkEntry" id="UserPrivateEntry">
+              <object class="GtkEntry" id="PrivateChatEntry">
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <property name="completion">PrivateChatCompletion</property>
                 <signal name="activate" handler="on_get_private_chat" swapped="no"/>
                 <signal name="icon-press" handler="on_get_private_chat" swapped="no"/>
               </object>
@@ -590,6 +625,7 @@
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <property name="completion">UserInfoCompletion</property>
                 <signal name="activate" handler="on_get_user_info" swapped="no"/>
                 <signal name="icon-press" handler="on_get_user_info" swapped="no"/>
               </object>
@@ -679,6 +715,7 @@
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
+                <property name="completion">UserBrowseCompletion</property>
                 <signal name="activate" handler="on_get_shares" swapped="no"/>
                 <signal name="icon-press" handler="on_get_shares" swapped="no"/>
               </object>

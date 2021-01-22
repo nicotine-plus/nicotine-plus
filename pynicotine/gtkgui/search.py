@@ -89,7 +89,7 @@ class Searches(IconNotebook):
 
     def load_config(self):
         """
-        Add search history to SearchEntryCombo later and connect Wishlist,
+        Add search history to SearchCombo later and connect Wishlist,
         after widgets have been created.
         """
         items = self.frame.np.config.sections["searches"]["history"]
@@ -103,7 +103,7 @@ class Searches(IconNotebook):
                 templist.append(i)
 
         for i in templist:
-            self.frame.SearchEntryCombo.append_text(i)
+            self.frame.SearchCombo.append_text(i)
 
     def on_search(self):
 
@@ -201,13 +201,13 @@ class Searches(IconNotebook):
         self.frame.np.config.write_configuration()
 
         # Repopulate the combo list
-        self.frame.SearchEntryCombo.remove_all()
+        self.frame.SearchCombo.remove_all()
 
         for i in items:
             if not isinstance(i, str):
                 continue
 
-            self.frame.SearchEntryCombo.append_text(i)
+            self.frame.SearchCombo.append_text(i)
 
         if mode == "user" and users != [] and users[0] != '':
             self.usersearches[self.searchid] = users
@@ -261,7 +261,7 @@ class Searches(IconNotebook):
         self.frame.np.config.sections["searches"]["history"] = []
         self.frame.np.config.write_configuration()
 
-        self.frame.SearchEntryCombo.remove_all()
+        self.frame.SearchCombo.remove_all()
 
     def clear_filter_history(self):
 

@@ -254,7 +254,16 @@ class NicotineFrame:
         self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.update_visuals()
 
-        """ Tray/notifications """
+        """ Entry Completion """
+
+        for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
+            completion = self.__dict__[entry_name + "Completion"]
+            model = self.__dict__[entry_name + "Combo"].get_model()
+
+            completion.set_model(model)
+            completion.set_text_column(0)
+
+        """ Tray/Notifications """
 
         # Commonly accessed strings
         self.tray_download_template = _("Downloads: %(speed)s")
@@ -634,7 +643,7 @@ class NicotineFrame:
         self.check_privileges_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
 
-        self.UserPrivateCombo.set_sensitive(status)
+        self.PrivateChatCombo.set_sensitive(status)
 
         self.UserBrowseCombo.set_sensitive(status)
 
@@ -647,7 +656,7 @@ class NicotineFrame:
             GLib.idle_add(self.UserInfoEntry.grab_focus)
 
         self.UserSearchCombo.set_sensitive(status)
-        self.SearchEntryCombo.set_sensitive(status)
+        self.SearchCombo.set_sensitive(status)
 
         if self.current_tab_label == self.SearchTabLabel:
             GLib.idle_add(self.SearchEntry.grab_focus)
