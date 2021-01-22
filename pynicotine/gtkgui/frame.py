@@ -1794,7 +1794,7 @@ class NicotineFrame:
 
         self.RoomSearchCombo.set_sensitive(act)
 
-    def on_search(self, widget):
+    def on_search(self, widget, *args):
         self.searches.on_search()
 
     """ User Info """
@@ -1802,7 +1802,7 @@ class NicotineFrame:
     def on_settings_userinfo(self, widget):
         self.on_settings(page='User Info')
 
-    def on_get_user_info(self, widget):
+    def on_get_user_info(self, widget, *args):
 
         text = widget.get_text()
 
@@ -1880,7 +1880,7 @@ class NicotineFrame:
         indeterminate_progress = change_page = False
         GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page)
 
-    def on_get_shares(self, widget):
+    def on_get_shares(self, widget, *args):
 
         text = widget.get_text()
 
@@ -1935,7 +1935,7 @@ class NicotineFrame:
     def on_settings_logging(self, widget):
         self.on_settings(page='Logging')
 
-    def on_get_private_chat(self, widget):
+    def on_get_private_chat(self, widget, *args):
 
         text = widget.get_text()
 
@@ -2012,7 +2012,7 @@ class NicotineFrame:
         # stop the event propagation
         return True
 
-    def on_create_room(self, widget):
+    def on_create_room(self, widget, *args):
 
         room = widget.get_text()
         private = self.RoomType.get_active()
@@ -2064,7 +2064,7 @@ class NicotineFrame:
 
     """ User Actions """
 
-    def on_add_user(self, widget):
+    def on_add_user(self, widget, *args):
         self.userlist.on_add_user(widget)
 
     def on_settings_ban_ignore(self, widget):

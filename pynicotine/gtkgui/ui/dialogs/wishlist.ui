@@ -62,6 +62,7 @@
                     <property name="placeholder-text" translatable="yes">Add search term...</property>
                     <property name="primary-icon-name">bookmark-new-symbolic</property>
                     <signal name="activate" handler="on_add_wish" swapped="no"/>
+                    <signal name="icon-press" handler="on_add_wish" swapped="no"/>
                   </object>
                 </child>
               </object>

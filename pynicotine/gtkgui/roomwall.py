@@ -34,7 +34,7 @@ class RoomWall:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
         self.RoomWallDialog.set_transient_for(frame.MainWindow)
 
-    def on_set_room_wall_message(self, widget):
+    def on_set_room_wall_message(self, widget, *args):
 
         result = widget.get_text()
         widget.set_text("")

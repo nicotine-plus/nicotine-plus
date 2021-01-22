@@ -63,6 +63,7 @@
                         <property name="placeholder-text" translatable="yes">Add something you like...</property>
                         <property name="primary-icon-name">non-starred-symbolic</property>
                         <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
+                        <signal name="icon-press" handler="on_add_thing_i_like" swapped="no"/>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -110,6 +111,7 @@
                         <property name="placeholder-text" translatable="yes">Add something you dislike...</property>
                         <property name="primary-icon-name">action-unavailable-symbolic</property>
                         <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
+                        <signal name="icon-press" handler="on_add_thing_i_dislike" swapped="no"/>
                         <style>
                           <class name="flat"/>
                         </style>

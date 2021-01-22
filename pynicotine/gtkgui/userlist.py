@@ -194,7 +194,7 @@ class UserList:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 14)
 
-    def on_add_user(self, widget):
+    def on_add_user(self, widget, *args):
 
         text = widget.get_text()
 

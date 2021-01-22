@@ -184,7 +184,7 @@ class Interests:
 
         self.update_visuals()
 
-    def on_add_thing_i_like(self, widget):
+    def on_add_thing_i_like(self, widget, *args):
         thing = widget.get_text()
         widget.set_text("")
 
@@ -195,7 +195,7 @@ class Interests:
             self.np.config.write_configuration()
             self.np.queue.put(slskmessages.AddThingILike(thing))
 
-    def on_add_thing_i_dislike(self, widget):
+    def on_add_thing_i_dislike(self, widget, *args):
         thing = widget.get_text()
         widget.set_text("")
 

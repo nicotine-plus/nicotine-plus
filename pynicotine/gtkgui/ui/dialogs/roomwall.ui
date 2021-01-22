@@ -66,6 +66,7 @@
                 <property name="placeholder-text" translatable="yes">Set wall message...</property>
                 <property name="primary-icon-name">user-available-symbolic</property>
                 <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
+                <signal name="icon-press" handler="on_set_room_wall_message" swapped="no"/>
               </object>
             </child>
           </object>

@@ -80,7 +80,7 @@ class WishList:
             self.remove_wish(old_value)
             self.add_wish(value)
 
-    def on_add_wish(self, widget):
+    def on_add_wish(self, widget, *args):
 
         wish = widget.get_text()
         widget.set_text("")
