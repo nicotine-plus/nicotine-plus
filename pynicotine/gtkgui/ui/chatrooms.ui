@@ -127,6 +127,7 @@
                         <property name="can-focus">1</property>
                         <property name="has-focus">1</property>
                         <property name="hexpand">1</property>
+                        <property name="width-chars">5</property>
                         <signal name="activate" handler="on_enter" swapped="no"/>
                         <signal name="key-press-event" handler="on_key_press" swapped="no"/>
                       </object>
@@ -204,6 +205,7 @@
           </object>
           <packing>
             <property name="resize">1</property>
+            <property name="shrink">0</property>
           </packing>
         </child>
         <child>
@@ -294,6 +296,7 @@
           </object>
           <packing>
             <property name="resize">0</property>
+            <property name="shrink">1</property>
           </packing>
         </child>
       </object>
