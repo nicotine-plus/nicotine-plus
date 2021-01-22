@@ -373,7 +373,7 @@ class Interests:
 
     def on_popup_ru_menu(self, widget):
 
-        user = self.get_selected_item(widget)
+        user = self.get_selected_item(widget, column=1)
         if user is None:
             return False
 
@@ -393,7 +393,7 @@ class Interests:
 
     def on_popup_til_menu(self, widget):
 
-        item = self.get_selected_item(widget)
+        item = self.get_selected_item(widget, column=0)
         if item is None:
             return False
 
@@ -412,7 +412,7 @@ class Interests:
 
     def on_popup_tidl_menu(self, widget):
 
-        item = self.get_selected_item(widget)
+        item = self.get_selected_item(widget, column=0)
         if item is None:
             return False
 
