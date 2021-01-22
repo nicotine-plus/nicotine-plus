@@ -19,10 +19,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
-
+          sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
           sudo apt update
-          sudo apt -y install $BUILD_DEPS build-essential devscripts sbuild
+          sudo apt build-dep .
 
       - name: Build Debian package
         run: |

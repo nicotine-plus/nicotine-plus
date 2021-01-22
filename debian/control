@@ -6,6 +6,7 @@ Standards-Version: 3.9.7
 Build-Depends:
     appstream,
     debhelper (>= 9~),
+    devscripts,
     dh-python,
     flake8,
     gettext,
