@@ -70,19 +70,10 @@ Next create the test image, substituting `groovy` or `amd64` for other releases 
 autopkgtest-buildvm-ubuntu-cloud -r groovy -a amd64
 ```
 
-Generate a Nicotine+ source package in the parent directory of `nicotine_source`:
+Test your changes on the host architecture in QEMU with KVM support and 8GB of RAM and four CPUs:
 
 ```sh
-cd nicotine_source
-sudo apt build-dep nicotine
-./debian/rules get-orig-source
-debuild -S -sa
-```
-
-Test the source package on the host architecture in QEMU with KVM support and 8GB of RAM and four CPUs:
-
-```sh
-autopkgtest --shell-fail --apt-upgrade ../nicotine_(...).dsc -- \
+autopkgtest --shell-fail --apt-upgrade . -- \
       qemu --ram-size=8192 --cpus=4 --show-boot path_to_build_image.img \
       --qemu-options='-enable-kvm'
 ```

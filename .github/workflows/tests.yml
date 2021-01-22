@@ -23,10 +23,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
-
+          sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
           sudo apt update
-          sudo apt -y install $BUILD_DEPS
+
+          # Ubuntu 16.04 support
+          if ! sudo apt build-dep .; then
+            BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
+            sudo apt -y install $BUILD_DEPS
+          fi
 
       - name: Lint with flake8
         run: |

@@ -1,10 +1,12 @@
 Source: nicotine
 Section: net
 Priority: optional
-Maintainer: Kip Warner <kip@thevertigo.com>
+Maintainer: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Standards-Version: 3.9.7
 Build-Depends:
+    appstream,
     debhelper (>= 9~),
+    devscripts,
     dh-python,
     flake8,
     gettext,
