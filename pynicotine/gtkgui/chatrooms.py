@@ -821,26 +821,6 @@ class ChatRoom:
         else:
             self.Speech.hide()
 
-    def on_hide_status_log(self, widget):
-
-        act = widget.get_active()
-        if act:
-            self.RoomLogWindow.hide()
-            self.HideStatusLogImage.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
-        else:
-            self.RoomLogWindow.show()
-            self.HideStatusLogImage.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
-
-    def on_hide_user_list(self, widget):
-
-        act = widget.get_active()
-        if act:
-            self.vbox5.hide()
-            self.HideUserListImage.set_from_icon_name("go-previous-symbolic", Gtk.IconSize.BUTTON)
-        else:
-            self.vbox5.show()
-            self.HideUserListImage.set_from_icon_name("go-next-symbolic", Gtk.IconSize.BUTTON)
-
     def ticker_set(self, msg):
 
         self.tickers.set_ticker([])
