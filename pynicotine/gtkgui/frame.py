@@ -926,7 +926,7 @@ class NicotineFrame:
         self.settingswindow.SettingsWindow.deiconify()
 
     def on_quit(self, *args):
-        self.MainWindow.destroy()
+        self.application.quit()
 
     # View
 
@@ -2634,7 +2634,7 @@ class NicotineFrame:
             if checkbox:
                 self.np.config.sections["ui"]["exitdialog"] = 0
 
-            self.MainWindow.destroy()
+            self.on_quit()
 
         elif response == Gtk.ResponseType.REJECT:
             if checkbox:
