@@ -33,5 +33,10 @@ To update to newer versions of Nicotine+, run the same command as previously:
 pip install git+https://github.com/Nicotine-Plus/nicotine-plus.git
 ```
 
+To uninstall Nicotine+, run:
+```console
+pip uninstall nicotine-plus
+```
+
 ## Windows
 For Windows, follow the instructions in [PACKAGING.md](PACKAGING.md#windows) instead
