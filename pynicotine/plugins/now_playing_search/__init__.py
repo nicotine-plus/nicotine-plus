@@ -27,8 +27,12 @@ class Plugin(BasePlugin):
         return (users, self.get_np(text))
 
     def get_np(self, text):
-        self.np_format = text
-        return self.frame.np.now_playing.get_np(get_format=self.get_format)
+        now_playing = self.frame.np.now_playing.get_np(get_format=self.get_format)
+
+        if now_playing:
+            return now_playing
+
+        return text
 
     def get_format(self):
         return self.np_format
