@@ -1392,6 +1392,9 @@ class PopupMenu(Gtk.Menu):
         )
 
 
+""" Entry """
+
+
 class TextSearchBar:
 
     def __init__(self, textview, search_bar, entry):
@@ -1470,6 +1473,14 @@ class TextSearchBar:
     def show_search_bar(self):
         self.search_bar.set_search_mode(True)
         self.entry.grab_focus_without_selecting()
+
+
+def clear_entry(entry):
+
+    completion = entry.get_completion()
+    entry.set_completion(None)
+    entry.set_text("")
+    entry.set_completion(completion)
 
 
 size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']

@@ -57,6 +57,7 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import clear_entry
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -1805,6 +1806,7 @@ class NicotineFrame:
 
     def on_search(self, widget, *args):
         self.searches.on_search()
+        clear_entry(widget)
 
     """ User Info """
 
@@ -1819,7 +1821,7 @@ class NicotineFrame:
             return
 
         self.local_user_info_request(text)
-        widget.set_text("")
+        clear_entry(widget)
 
     def local_user_info_request(self, user):
         msg = slskmessages.UserInfoRequest(None)
@@ -1897,7 +1899,7 @@ class NicotineFrame:
             return
 
         self.browse_user(text)
-        widget.set_text("")
+        clear_entry(widget)
 
     def on_load_from_disk(self, widget):
         sharesdir = os.path.join(self.data_dir, "usershares")
@@ -1952,7 +1954,7 @@ class NicotineFrame:
             return
 
         self.privatechats.send_message(text, show_user=True)
-        widget.set_text("")
+        clear_entry(widget)
 
     """ Chat """
 

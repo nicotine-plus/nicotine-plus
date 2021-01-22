@@ -162,7 +162,6 @@ class Searches(IconNotebook):
 
         if feedback is not None:
             self.do_search(text, search_mode, users, room)
-            self.frame.SearchEntry.set_text("")
 
     def do_search(self, text, mode, users=[], room=None):
 
