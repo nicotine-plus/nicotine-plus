@@ -68,6 +68,7 @@ from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
+from pynicotine.pluginsystem import PluginHandler
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import make_version
@@ -362,6 +363,10 @@ class NicotineFrame:
         # Check command line option and config option
         if not start_hidden and not config["ui"]["startup_hidden"]:
             self.MainWindow.show()
+
+        """ Plugins: loaded here to ensure all requirements are initialized """
+
+        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
 
         """ Connect """
 

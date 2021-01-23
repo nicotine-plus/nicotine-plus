@@ -42,7 +42,6 @@ from pynicotine.config import Config
 from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
-from pynicotine.pluginsystem import PluginHandler
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
 from pynicotine.transfers import Statistics
@@ -134,7 +133,7 @@ class NetworkEventProcessor:
         self.queue = queue.Queue(0)
         self.statistics = Statistics(self.config, self.ui_callback)
         self.shares = Shares(self, self.config, self.queue, self.ui_callback)
-        self.pluginhandler = PluginHandler(self.ui_callback, plugins, self.config)
+        self.pluginhandler = None  # Initialized when the GUI is ready
         self.now_playing = NowPlaying(self.config)
 
         script_dir = os.path.dirname(__file__)
