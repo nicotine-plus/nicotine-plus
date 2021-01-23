@@ -1319,7 +1319,7 @@ class Search:
 
         return text
 
-    def on_refilter(self, widget):
+    def on_refilter(self, widget, *args):
 
         if self.clearing_filters:
             return
