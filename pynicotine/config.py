@@ -30,7 +30,6 @@ This module contains configuration classes for Nicotine.
 
 import configparser
 import os
-import pickle
 import sys
 
 from ast import literal_eval
@@ -90,7 +89,8 @@ class Config:
                 "ipblocklist": {},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
-                "private_chatrooms": False
+                "private_chatrooms": False,
+                "command_aliases": {}
             },
 
             "transfers": {
@@ -403,12 +403,14 @@ class Config:
         # Update config values from file
         self.set_config()
 
+        # Load command aliases from legacy file
         try:
-            with open(filename + ".alias", 'rb') as f:
-                self.aliases = RestrictedUnpickler(f, encoding='utf-8').load()
+            if not self.sections["server"]["command_aliases"] and os.path.exists(filename + ".alias"):
+                with open(filename + ".alias", 'rb') as f:
+                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(f, encoding='utf-8').load()
 
         except Exception:
-            self.aliases = {}
+            return
 
     def create_config_folder(self):
         """ Create the folder for storing the config file in, if the folder
@@ -730,59 +732,8 @@ class Config:
 
                 tar.add(self.filename)
 
-                if os.path.exists(self.filename + ".alias"):
-                    tar.add(self.filename + ".alias")
-
         except Exception as e:
             print(e)
             return (True, "Cannot write backup archive: %s" % e)
 
         return (False, filename)
-
-    def write_aliases(self):
-
-        self.create_config_folder()
-
-        try:
-            with open(self.filename + ".alias", "wb") as f:
-                pickle.dump(self.aliases, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-        except IOError as e:
-            log.add_warning(_("Something went wrong while opening your alias file: %s"), e)
-
-        except Exception as e:
-            log.add_warning(_("Something went wrong while saving your alias file: %s"), e)
-
-    def add_alias(self, rest):
-        if rest:
-            args = rest.split(" ", 1)
-
-            if len(args) == 2:
-                if args[0] in ("alias", "unalias"):
-                    return "I will not alias that!\n"
-                self.aliases[args[0]] = args[1]
-                self.write_aliases()
-
-            if args[0] in self.aliases:
-                return "Alias %s: %s\n" % (args[0], self.aliases[args[0]])
-            else:
-                return _("No such alias (%s)") % rest + "\n"
-
-        else:
-            m = "\n" + _("Aliases:") + "\n"
-
-            for (key, value) in self.aliases.items():
-                m = m + "%s: %s\n" % (key, value)
-
-            return m + "\n"
-
-    def unalias(self, rest):
-        if rest and rest in self.aliases:
-            x = self.aliases[rest]
-            del self.aliases[rest]
-
-            self.write_aliases()
-            return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
-
-        else:
-            return _("No such alias (%(alias)s)\n") % {'alias': rest}

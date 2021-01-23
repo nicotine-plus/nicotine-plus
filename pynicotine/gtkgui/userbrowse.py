@@ -515,11 +515,12 @@ class UserBrowse:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
         try:
-            import pickle as mypickle
-            import bz2
-            sharesfile = bz2.BZ2File(os.path.join(sharesdir, clean_file(self.user)), 'w')
-            mypickle.dump(self.shares, sharesfile, protocol=mypickle.HIGHEST_PROTOCOL)
-            sharesfile.close()
+            filepath = os.path.join(sharesdir, clean_file(self.user))
+
+            with open(filepath, "w", encoding="utf-8") as sharesfile:
+                import json
+                json.dump(self.shares, sharesfile, ensure_ascii=False)
+
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"), {'user': self.user, 'dir': sharesdir})
 
         except Exception as msg:
