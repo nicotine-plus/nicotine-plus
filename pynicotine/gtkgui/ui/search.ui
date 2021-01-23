@@ -156,7 +156,7 @@
         <property name="margin-bottom">5</property>
         <property name="margin-start">10</property>
         <property name="margin-end">5</property>
-        <property name="max-children-per-line">5</property>
+        <property name="max-children-per-line">6</property>
         <property name="selection-mode">none</property>
         <child>
           <object class="GtkFlowBoxChild">
@@ -170,7 +170,7 @@
                 <child internal-child="entry">
                   <object class="GtkEntry" id="FilterInEntry">
                     <property name="can-focus">1</property>
-                    <property name="width-chars">15</property>
+                    <property name="width-chars">12</property>
                     <property name="placeholder-text" translatable="yes">Include text...</property>
                     <property name="tooltip-text" translatable="yes">Include text</property>
                     <property name="primary-icon-name">emblem-ok-symbolic</property>
@@ -199,10 +199,39 @@
                 <child internal-child="entry">
                   <object class="GtkEntry" id="FilterOutEntry">
                     <property name="can-focus">1</property>
-                    <property name="width-chars">15</property>
+                    <property name="width-chars">12</property>
                     <property name="placeholder-text" translatable="yes">Exclude text...</property>
                     <property name="tooltip-text" translatable="yes">Exclude text</property>
                     <property name="primary-icon-name">action-unavailable-symbolic</property>
+                    <signal name="activate" handler="on_refilter" swapped="no"/>
+                    <signal name="icon-press" handler="on_refilter" swapped="no"/>
+                  </object>
+                </child>
+                <child internal-child="button">
+                  <object class="GtkButton">
+                    <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBoxChild">
+            <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkComboBoxText" id="FilterType">
+                <property name="visible">1</property>
+                <property name="has-entry">1</property>
+                <property name="hexpand">1</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry" id="FilterTypeEntry">
+                    <property name="can-focus">1</property>
+                    <property name="width-chars">7</property>
+                    <property name="placeholder-text" translatable="yes">File type...</property>
+                    <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
+                    <property name="primary-icon-name">text-x-generic-symbolic</property>
                     <signal name="activate" handler="on_refilter" swapped="no"/>
                     <signal name="icon-press" handler="on_refilter" swapped="no"/>
                   </object>
@@ -228,7 +257,7 @@
                 <child internal-child="entry">
                   <object class="GtkEntry" id="FilterSizeEntry">
                     <property name="can-focus">1</property>
-                    <property name="width-chars">10</property>
+                    <property name="width-chars">7</property>
                     <property name="placeholder-text" translatable="yes">File size...</property>
                     <property name="tooltip-text" translatable="yes">File size</property>
                     <property name="primary-icon-name">drive-harddisk-symbolic</property>
@@ -257,7 +286,7 @@
                 <child internal-child="entry">
                   <object class="GtkEntry" id="FilterBitrateEntry">
                     <property name="can-focus">1</property>
-                    <property name="width-chars">10</property>
+                    <property name="width-chars">7</property>
                     <property name="placeholder-text" translatable="yes">Bitrate...</property>
                     <property name="tooltip-text" translatable="yes">Bitrate</property>
                     <property name="primary-icon-name">audio-volume-high-symbolic</property>
@@ -290,9 +319,9 @@
                     <child internal-child="entry">
                       <object class="GtkEntry" id="FilterCountryEntry">
                         <property name="can-focus">1</property>
-                        <property name="width-chars">10</property>
-                        <property name="placeholder-text" translatable="yes">Country...</property>
-                        <property name="tooltip-text" translatable="yes">Country</property>
+                        <property name="width-chars">7</property>
+                        <property name="placeholder-text" translatable="yes">Country code...</property>
+                        <property name="tooltip-text" translatable="yes">Country code, e.g. US|UK|ES or !DE|!UK</property>
                         <property name="primary-icon-name">mark-location-symbolic</property>
                         <signal name="activate" handler="on_refilter" swapped="no"/>
                         <signal name="icon-press" handler="on_refilter" swapped="no"/>

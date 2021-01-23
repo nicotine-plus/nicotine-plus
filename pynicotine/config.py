@@ -239,6 +239,7 @@ class Config:
                 "filterout": [],
                 "filtersize": [],
                 "filterbr": [],
+                "filtertype": [],
                 "search_results": True,
                 "max_displayed_results": 1000,
                 "max_stored_results": 1500,

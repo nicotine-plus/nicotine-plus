@@ -1958,8 +1958,12 @@ class SearchFrame(BuildFrame):
             self.FilterSize.set_text(searches["defilter"][2])
             self.FilterBR.set_text(searches["defilter"][3])
             self.FilterFree.set_active(searches["defilter"][4])
+
             if(len(searches["defilter"]) > 5):
                 self.FilterCC.set_text(searches["defilter"][5])
+
+            if(len(searches["defilter"]) > 6):
+                self.FilterType.set_text(searches["defilter"][6])
 
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
@@ -1979,7 +1983,8 @@ class SearchFrame(BuildFrame):
                     self.FilterSize.get_text(),
                     self.FilterBR.get_text(),
                     self.FilterFree.get_active(),
-                    self.FilterCC.get_text()
+                    self.FilterCC.get_text(),
+                    self.FilterType.get_text()
                 ],
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
@@ -1999,7 +2004,7 @@ class SearchFrame(BuildFrame):
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
-        for w in self.FilterIn, self.FilterOut, self.FilterSize, self.FilterBR, self.FilterCC, self.FilterFree:
+        for w in self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC, self.FilterFree:
             w.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
