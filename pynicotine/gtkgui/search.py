@@ -883,7 +883,7 @@ class Search:
     def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
 
         self.filters = [None, None, None, None, freeslot, None]
-        filter_count = 0
+        self.active_filter_count = 0
 
         if f_in:
             try:
@@ -894,7 +894,7 @@ class Search:
             else:
                 set_widget_fg_bg_css(self.FilterInEntry)
 
-            filter_count += 1
+            self.active_filter_count += 1
 
         if f_out:
             try:
@@ -905,22 +905,22 @@ class Search:
             else:
                 set_widget_fg_bg_css(self.FilterOutEntry)
 
-            filter_count += 1
+            self.active_filter_count += 1
 
         if size:
             self.filters[2] = size
-            filter_count += 1
+            self.active_filter_count += 1
 
         if bitrate:
             self.filters[3] = bitrate
-            filter_count += 1
+            self.active_filter_count += 1
 
         if country:
             self.filters[5] = country.upper().split(" ")
-            filter_count += 1
+            self.active_filter_count += 1
 
         if freeslot:
-            filter_count += 1
+            self.active_filter_count += 1
 
         self.usersiters.clear()
         self.directoryiters.clear()
@@ -936,7 +936,7 @@ class Search:
 
         # Update number of visible results
         self.update_result_counter()
-        self.update_filter_counter(filter_count)
+        self.update_filter_counter(self.active_filter_count)
 
     def on_popup_menu_users(self, widget):
 
@@ -1380,4 +1380,3 @@ class Search:
             self.FilterLabel.set_text(_("Result Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
-        self.active_filter_count = count
