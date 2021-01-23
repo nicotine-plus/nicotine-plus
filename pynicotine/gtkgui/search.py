@@ -308,15 +308,19 @@ class Searches(IconNotebook):
     def show_tab(self, tab, id, text, mode):
 
         length = 15
+        template = "(%s) %s"
 
         if mode == "rooms":
-            fulltext = "(" + _("Rooms") + ") " + text
+            fulltext = template % (_("Rooms"), text)
 
         elif mode == "buddies":
-            fulltext = "(" + _("Buddies") + ") " + text
+            fulltext = template % (_("Buddies"), text)
+
+        elif mode == "wishlist":
+            fulltext = template % (_("Wish"), text)
 
         elif mode == "user":
-            fulltext = "(" + self.get_user_search_name(id) + ") " + text
+            fulltext = template % (self.get_user_search_name(id), text)
 
         else:
             fulltext = text
@@ -483,7 +487,7 @@ class Search:
             '>': operator.gt
         }
 
-        if mode != "global":
+        if mode not in ("global", "wishlist"):
             self.RememberCheckButton.set_sensitive(False)
 
         self.RememberCheckButton.set_active(remember)

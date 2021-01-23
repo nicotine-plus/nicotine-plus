@@ -131,7 +131,7 @@ class WishList:
             "id": self.searches.searchid,
             "term": wish,
             "tab": None,
-            "mode": "global",
+            "mode": "wishlist",
             "remember": True,
             "ignore": True
         }
@@ -176,7 +176,7 @@ class WishList:
                     "id": self.searches.searchid,
                     "term": term,
                     "tab": None,
-                    "mode": "global",
+                    "mode": "wishlist",
                     "remember": True,
                     "ignore": True
                 }
