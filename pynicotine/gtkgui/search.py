@@ -814,11 +814,12 @@ class Search:
 
         factor = 1
         if factorize:
-            base = 1024
+            base = 1024  # Default to binary for "k", "m", "g" suffixes
             if sfilter[-1:].lower() == 'b':
-                sfilter = sfilter[:-1]  # stripping off the b, we always assume it means bytes
+                base = 1000  # Byte suffix detected, prepare to use decimal if necessary
+                sfilter = sfilter[:-1]
             if sfilter[-1:].lower() == 'i':
-                base = 1000
+                base = 1024  # Binary requested, stop using decimal
                 sfilter = sfilter[:-1]
             if sfilter.lower()[-1:] == "g":
                 factor = pow(base, 3)
