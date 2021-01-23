@@ -418,7 +418,7 @@ class Searches(IconNotebook):
             ("", None),
             ("#" + _("Clear All Results"), self.searches[search_id]["tab"].on_clear),
             ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self),
-            ("#" + _("_Close This Tab"), self.searches[search_id]["tab"].on_close)
+            ("#" + _("_Close Tab"), self.searches[search_id]["tab"].on_close)
         )
 
         menu.popup()
