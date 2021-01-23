@@ -55,7 +55,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkToggleButton" id="filtersCheck">
+          <object class="GtkToggleButton" id="ShowFilters">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
@@ -70,10 +70,9 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="FilterLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Filter Results</property>
-                    <property name="tooltip-text" translatable="yes">Toggle the search result filter&apos;s visibility and effect.</property>
+                    <property name="label" translatable="yes">Result Filters</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -152,7 +151,7 @@
     </child>
     <child>
       <object class="GtkFlowBox" id="FiltersContainer">
-        <property name="visible">1</property>
+        <property name="visible">0</property>
         <property name="column-spacing">15</property>
         <property name="margin-bottom">5</property>
         <property name="margin-start">10</property>

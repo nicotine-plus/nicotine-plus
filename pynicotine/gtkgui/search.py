@@ -472,6 +472,7 @@ class Search:
         self.clearing_filters = False
         self.resultslimit = 2000
         self.numvisibleresults = 0
+        self.active_filter_count = 0
 
         self.operators = {
             '<': operator.lt,
@@ -550,6 +551,7 @@ class Search:
 
         """ Filters """
 
+        self.ShowFilters.set_active(self.frame.np.config.sections["searches"]["filters_visible"])
         self.populate_filters()
 
         """ Popup """
@@ -598,7 +600,7 @@ class Search:
             if(len(sfilter) > 5):
                 self.FilterCountryEntry.set_text(sfilter[5])
 
-            self.filtersCheck.set_active(1)
+            self.on_refilter(None)
 
         for i in ['0', '128', '160', '192', '256', '320']:
             self.FilterBitrate.append_text(i)
@@ -712,7 +714,7 @@ class Search:
                 self.showtab = True
 
             # Update number of results
-            self.update_counter()
+            self.update_result_counter()
 
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
@@ -838,7 +840,7 @@ class Search:
     def check_filter(self, row):
 
         filters = self.filters
-        if not self.filtersCheck.get_active():
+        if self.active_filter_count == 0:
             return True
 
         # "Included text"-filter, check full file path (located at index 12 in row)
@@ -876,6 +878,7 @@ class Search:
     def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
 
         self.filters = [None, None, None, None, freeslot, None]
+        filter_count = 0
 
         if f_in:
             try:
@@ -886,6 +889,8 @@ class Search:
             else:
                 set_widget_fg_bg_css(self.FilterInEntry)
 
+            filter_count += 1
+
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
@@ -895,14 +900,22 @@ class Search:
             else:
                 set_widget_fg_bg_css(self.FilterOutEntry)
 
+            filter_count += 1
+
         if size:
             self.filters[2] = size
+            filter_count += 1
 
         if bitrate:
             self.filters[3] = bitrate
+            filter_count += 1
 
         if country:
             self.filters[5] = country.upper().split(" ")
+            filter_count += 1
+
+        if freeslot:
+            filter_count += 1
 
         self.usersiters.clear()
         self.directoryiters.clear()
@@ -917,7 +930,8 @@ class Search:
                 self.add_row_to_model(row)
 
         # Update number of visible results
-        self.update_counter()
+        self.update_result_counter()
+        self.update_filter_counter(filter_count)
 
     def on_popup_menu_users(self, widget):
 
@@ -973,7 +987,7 @@ class Search:
 
         self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
 
-    def update_counter(self):
+    def update_result_counter(self):
         self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
 
     def update_visuals(self):
@@ -1254,22 +1268,9 @@ class Search:
 
     def on_toggle_filters(self, widget):
 
-        if widget.get_active():
-            self.FiltersContainer.show()
-            self.on_refilter(None)
-        else:
-            self.FiltersContainer.hide()
-            self.ResultsList.set_model(None)
-            self.set_filters(0, None, None, None, None, None, "")
-            self.ResultsList.set_model(self.resultsmodel)
-
-        if self.ResultGrouping.get_active_id() != "ungrouped":
-            # Group by folder or user
-
-            if self.ExpandButton.get_active():
-                self.ResultsList.expand_all()
-            else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+        visible = widget.get_active()
+        self.FiltersContainer.set_visible(visible)
+        self.frame.np.config.sections["searches"]["filters_visible"] = visible
 
     def on_clear(self, widget):
         self.all_data = []
@@ -1279,7 +1280,7 @@ class Search:
         self.numvisibleresults = 0
 
         # Update number of visible results
-        self.update_counter()
+        self.update_result_counter()
 
     def on_close(self, widget):
         self.searches.remove_tab(self)
@@ -1365,3 +1366,13 @@ class Search:
             self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
 
         self.AboutSearchFiltersPopover.popup()
+
+    def update_filter_counter(self, count):
+
+        if count > 0:
+            self.FilterLabel.set_text(_("Result Filters") + " *")
+        else:
+            self.FilterLabel.set_text(_("Result Filters"))
+
+        self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
+        self.active_filter_count = count

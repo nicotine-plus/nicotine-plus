@@ -232,6 +232,7 @@ class Config:
                 "re_filter": False,
                 "history": [],
                 "enablefilters": False,
+                "filters_visible": False,
                 "defilter": ["", "", "", "", 0, ""],
                 "filtercc": [],
                 "filterin": [],
