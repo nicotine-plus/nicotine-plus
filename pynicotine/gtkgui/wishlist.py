@@ -27,6 +27,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import update_widget_visuals
@@ -100,8 +101,21 @@ class WishList:
     def _remove_wish(self, model, path, iterator, line):
         line.append(iterator)
 
-    def on_select_all_wishes(self, widget):
-        self.WishlistView.get_selection().select_all()
+    def clear_wishlist_response(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            for wish in self.wishes.copy():
+                self.remove_wish(wish)
+
+        dialog.destroy()
+
+    def on_clear_wishlist(self, *args):
+        option_dialog(
+            parent=self.WishListDialog,
+            title=_('Clear Wishlist?'),
+            message=_('Are you sure you wish to clear your wishlist?'),
+            callback=self.clear_wishlist_response
+        )
 
     def add_wish(self, wish):
 

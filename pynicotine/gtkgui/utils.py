@@ -278,8 +278,13 @@ def save_columns(treeview_name, columns, subpage=None):
     column_config = NICOTINE.np.config.sections["columns"]
 
     for column in columns:
+        width = column.get_width()
+
+        if width <= 0:
+            continue
+
         title = column.get_title()
-        saved_columns[title] = {"visible": column.get_visible(), "width": column.get_width()}
+        saved_columns[title] = {"visible": column.get_visible(), "width": width}
 
     if subpage is not None:
         try:

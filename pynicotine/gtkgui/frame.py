@@ -600,11 +600,10 @@ class NicotineFrame:
 
     def on_network_event(self, msgs):
 
-        if self.shutdown:
-            return
-
         for i in msgs:
-            if i.__class__ in self.np.events:
+            if self.shutdown:
+                return
+            elif i.__class__ in self.np.events:
                 self.np.events[i.__class__](i)
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
@@ -939,9 +938,6 @@ class NicotineFrame:
 
         self.settingswindow.SettingsWindow.show()
         self.settingswindow.SettingsWindow.deiconify()
-
-    def on_quit(self, *args):
-        self.application.quit()
 
     # View
 
@@ -1542,12 +1538,11 @@ class NicotineFrame:
 
     def set_last_session_tab(self):
 
-        # Small hack to trigger "switch-page" signal for default page (0), so the header
-        # bar is updated
-        self.MainNotebook.set_current_page(-1)
+        # Ensure we set a header bar, by activating the "switch-page" signal at least once
+        default_page = self.MainNotebook.get_nth_page(0)
+        self.MainNotebook.emit("switch-page", default_page, 0)
 
         if not self.np.config.sections["ui"]["tab_select_previous"]:
-            self.MainNotebook.set_current_page(0)
             return
 
         last_tab_id = int(self.np.config.sections["ui"]["last_tab_id"])
@@ -2611,6 +2606,7 @@ class NicotineFrame:
     def on_delete_event(self, widget, event):
 
         if not self.np.config.sections["ui"]["exitdialog"]:
+            self.save_state()
             return False
 
         if self.tray.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
@@ -2642,6 +2638,10 @@ class NicotineFrame:
         widget.hide()
         return True
 
+    def on_quit(self, *args):
+        self.save_state()
+        self.application.quit()
+
     def on_quit_response(self, dialog, response, data):
         checkbox = dialog.checkbox.get_active()
 
@@ -2660,7 +2660,7 @@ class NicotineFrame:
 
         dialog.destroy()
 
-    def on_destroy(self, widget):
+    def save_state(self):
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
