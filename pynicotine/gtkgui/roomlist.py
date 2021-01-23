@@ -51,7 +51,6 @@ class RoomList:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
         self.room_model = Gtk.ListStore(str, int, int)
-        self.RoomsList.set_model(self.room_model)
 
         self.cols = initialise_columns(
             None,
@@ -61,8 +60,6 @@ class RoomList:
         )
         self.cols["room"].set_sort_column_id(0)
         self.cols["users"].set_sort_column_id(1)
-
-        self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
 
         self.popup_room = None
         self.popup_menu = PopupMenu(self.frame)
@@ -138,13 +135,23 @@ class RoomList:
 
         return (private1 > private2) - (private1 < private2)
 
+    def room_match_function(self, model, iterator, data=None):
+
+        query = self.SearchRooms.get_text().lower()
+        value = model.get_value(iterator, 0)
+
+        if query == "" or query in value.lower():
+            return True
+
+        return False
+
     def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
 
-        if self.room_model.get_value(iterator, 2) >= 2:
+        if self.room_model_filtered.get_value(iterator, 2) >= 2:
             cellrenderer.set_property("underline", Pango.Underline.SINGLE)
             cellrenderer.set_property("weight", Pango.Weight.BOLD)
 
-        elif self.room_model.get_value(iterator, 2) >= 1:
+        elif self.room_model_filtered.get_value(iterator, 2) >= 1:
             cellrenderer.set_property("weight", Pango.Weight.BOLD)
             cellrenderer.set_property("underline", Pango.Underline.NONE)
 
@@ -155,11 +162,6 @@ class RoomList:
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         self.room_model.clear()
-        self.RoomsList.set_model(None)
-
-        self.room_model.set_default_sort_func(lambda *args: -1)
-        self.room_model.set_sort_func(1, lambda *args: -1)
-        self.room_model.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for room, users in rooms:
             self.room_model.append([room, users, 0])
@@ -174,7 +176,10 @@ class RoomList:
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
 
-        self.RoomsList.set_model(self.room_model)
+        self.room_filter = self.room_model.filter_new()
+        self.room_filter.set_visible_func(self.room_match_function)
+        self.room_model_filtered = Gtk.TreeModelSort(self.room_filter)
+        self.RoomsList.set_model(self.room_model_filtered)
 
     def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
 
@@ -309,34 +314,7 @@ class RoomList:
         self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
 
     def on_search_room(self, widget):
-
-        if self.room_model is not self.RoomsList.get_model():
-            self.room_model = self.RoomsList.get_model()
-            self.search_iter = self.room_model.get_iter_first()
-
-        room = self.SearchRooms.get_text().lower()
-
-        if not room:
-            return
-
-        if self.query == room:
-            if self.search_iter is None:
-                self.search_iter = self.room_model.get_iter_first()
-            else:
-                self.search_iter = self.room_model.iter_next(self.search_iter)
-        else:
-            self.search_iter = self.room_model.get_iter_first()
-            self.query = room
-
-        while self.search_iter:
-
-            room_match, size = self.room_model.get(self.search_iter, 0, 1)
-            if self.query in room_match.lower():
-                path = self.room_model.get_path(self.search_iter)
-                self.RoomsList.set_cursor(path)
-                break
-
-            self.search_iter = self.room_model.iter_next(self.search_iter)
+        self.room_filter.refilter()
 
     def on_refresh(self, widget):
         self.frame.np.queue.put(slskmessages.RoomList())

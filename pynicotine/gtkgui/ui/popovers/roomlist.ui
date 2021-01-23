@@ -22,7 +22,7 @@
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">15</property>
-                <signal name="activate" handler="on_search_room" swapped="no"/>
+                <signal name="changed" handler="on_search_room" swapped="no"/>
               </object>
             </child>
             <child>
