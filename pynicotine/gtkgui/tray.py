@@ -20,6 +20,7 @@ import gi
 import os
 import sys
 
+from gi.repository import Gdk
 from gi.repository import GLib
 
 from pynicotine import slskmessages
@@ -298,7 +299,7 @@ class Tray:
             self.trayicon.set_visible(False)
 
     def show_window(self):
-        self.frame.MainWindow.show()
+        self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
         self.frame.chatrooms.clear_notifications()
         self.frame.privatechats.clear_notifications()

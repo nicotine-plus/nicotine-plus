@@ -362,7 +362,7 @@ class NicotineFrame:
 
         # Check command line option and config option
         if not start_hidden and not config["ui"]["startup_hidden"]:
-            self.MainWindow.show()
+            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
         """ Plugins: loaded here to ensure all requirements are initialized """
 
@@ -2608,7 +2608,7 @@ class NicotineFrame:
                 self.connect_action.set_enabled(True)
 
         if msg == "ok" and not self.np.config.sections["ui"]["trayicon"]:
-            self.MainWindow.show()
+            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
     """ Exit """
 
@@ -2628,7 +2628,7 @@ class NicotineFrame:
                 parent=self.MainWindow,
                 title=_('Close Nicotine+?'),
                 message=_('Are you sure you wish to exit Nicotine+ at this time?'),
-                third=_("Send to tray"),
+                third=_("Send to Tray"),
                 checkbox_label=_("Remember choice"),
                 callback=self.on_quit_response
             )
@@ -2737,3 +2737,7 @@ class MainApp(Gtk.Application):
                 self.bindip,
                 self.port
             )
+            return
+
+        # Show the window of the running Nicotine+ instance
+        self.get_active_window().present_with_time(Gdk.CURRENT_TIME)
