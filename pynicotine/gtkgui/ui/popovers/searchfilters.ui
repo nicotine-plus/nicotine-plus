@@ -125,7 +125,53 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">Size</property>
+                <property name="label" translatable="yes">File Type</property>
+                <property name="selectable">1</property>
+                <attributes>
+                  <attribute name="style" value="italic"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="xpad">10</property>
+                <property name="label" translatable="yes">Filters files based on their file extension.</property>
+                <property name="justify">fill</property>
+                <property name="selectable">1</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="xpad">10</property>
+                <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will broaden the list of results.
+Example: flac|wav|ape</property>
+                <property name="justify">fill</property>
+                <property name="selectable">1</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="xpad">10</property>
+                <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don't want in your results.
+Example: !mp3|!jpg</property>
+                <property name="justify">fill</property>
+                <property name="selectable">1</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">File Size</property>
                 <property name="selectable">1</property>
                 <attributes>
                   <attribute name="style" value="italic"/>

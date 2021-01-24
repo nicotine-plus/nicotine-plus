@@ -267,6 +267,7 @@ class Searches(IconNotebook):
         # Clear filter history in config
         self.frame.np.config.sections["searches"]["filterin"] = []
         self.frame.np.config.sections["searches"]["filterout"] = []
+        self.frame.np.config.sections["searches"]["filtertype"] = []
         self.frame.np.config.sections["searches"]["filtersize"] = []
         self.frame.np.config.sections["searches"]["filterbr"] = []
         self.frame.np.config.sections["searches"]["filtercc"] = []
@@ -587,7 +588,7 @@ class Search:
 
     def populate_filters(self, set_default_filters=True):
 
-        for combobox in (self.FilterIn, self.FilterOut, self.FilterSize,
+        for combobox in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
                          self.FilterBitrate, self.FilterCountry):
             combobox.remove_all()
 
@@ -614,6 +615,9 @@ class Search:
 
         for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
             self.FilterSize.append_text(i)
+
+        for i in ['flac|wav|ape|cue', 'mp4|mkv|webm|mov', '!mp3', 'jpg|png', 'iso|img', 'epub|pdf']:
+            self.FilterType.append_text(i)
 
         s_config = self.frame.np.config.sections["searches"]
 
