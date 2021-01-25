@@ -279,12 +279,13 @@ def save_columns(treeview_name, columns, subpage=None):
 
     for column in columns:
         width = column.get_width()
+        visible = column.get_visible()
 
-        if width <= 0:
+        if visible and width <= 0:
             continue
 
         title = column.get_title()
-        saved_columns[title] = {"visible": column.get_visible(), "width": width}
+        saved_columns[title] = {"visible": visible, "width": width}
 
     if subpage is not None:
         try:
