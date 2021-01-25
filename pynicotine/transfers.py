@@ -56,14 +56,14 @@ class Transfer(object):
                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed", \
                 "timeleft", "timequeued", "transfertimer", "requestconn", \
                 "modifier", "place", "bitrate", "length", "iter", "_status", \
-                "laststatuschange"
+                "laststatuschange", "legacy_attempt"
 
     def __init__(
         self, conn=None, user=None, realfilename=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
         timeleft=None, timequeued=None, transfertimer=None, requestconn=None,
-        modifier=None, place=0, bitrate=None, length=None, iter=None
+        modifier=None, place=0, bitrate=None, length=None, iter=None, legacy_attempt=False
     ):
         self.user = user
         self.realfilename = realfilename  # Sent as is to the user announcing what file we're sending
@@ -89,6 +89,7 @@ class Transfer(object):
         self.bitrate = bitrate
         self.length = length
         self.iter = iter
+        self.legacy_attempt = legacy_attempt
         self.setstatus(status)
 
     def setstatus(self, status):
@@ -1066,6 +1067,25 @@ class Transfers:
                 if i.req != msg.req:
                     continue
 
+                if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
+                        not i.legacy_attempt:
+                    """ The peer is possibly using an old client that doesn't support Unicode
+                    (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
+
+                    i.req = new_id()
+                    realpath = self.eventprocessor.shares.virtual2real(i.filename)
+                    request = slskmessages.TransferRequest(None, 0, i.req, i.filename, self.get_file_size(realpath), realpath, legacy_client=True)
+                    self.eventprocessor.send_message_to_peer(i.user, request)
+                    i.legacy_attempt = True
+
+                    log.add_transfer("Peer responded with reason '%(reason)s' for download request %(request)s for file %(filename)s. "
+                                     "Attempting to request file as latin-1.", {
+                                         "reason": msg.reason,
+                                         "request": msg.req,
+                                         "filename": i.filename
+                                     })
+                    break
+
                 i.status = msg.reason
                 i.req = None
                 self.downloadsview.update(i)
@@ -1076,7 +1096,9 @@ class Transfers:
                         if i.user not in self.eventprocessor.watchedusers:
                             self.queue.put(slskmessages.AddUser(i.user))
 
-                    self.queue.put(slskmessages.PlaceInQueueRequest(msg.conn.conn, i.filename))
+                    self.queue.put(
+                        slskmessages.PlaceInQueueRequest(msg.conn.conn, i.filename, i.legacy_attempt)
+                    )
 
                 self.check_upload_queue()
                 break
@@ -1292,6 +1314,7 @@ class Transfers:
 
                     if i.size > size:
                         i.status = "Transferring"
+                        i.legacy_attempt = False
                         self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
                         log.add_transfer("Download started: %s", f.name)
 
@@ -1720,7 +1743,10 @@ class Transfers:
                 self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
             elif transfer.status == "Queued":
-                self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.PlaceInQueueRequest(None, transfer.filename))
+                self.eventprocessor.send_message_to_peer(
+                    transfer.user,
+                    slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
+                )
 
         self.start_check_download_queue_timer()
 
@@ -1980,6 +2006,7 @@ class Transfers:
             i.file.close()
 
         i.conn = None
+        i.legacy_attempt = False
 
         if i.status != "Finished":
             if i.user in self.users and self.users[i.user].status == 0:
@@ -2163,6 +2190,7 @@ class Transfers:
 
     def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):
 
+        transfer.legacy_attempt = False
         transfer.req = None
         transfer.speed = 0
         transfer.timeleft = ""

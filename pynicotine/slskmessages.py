@@ -260,7 +260,7 @@ class SlskMessage:
             log.add_warning("%s %s trying to unpack %s at '%s' at %s/%s", (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
 
-    def pack_object(self, object, unsignedint=False, unsignedlonglong=False):
+    def pack_object(self, object, unsignedint=False, unsignedlonglong=False, latin1=False):
         """ Returns object (integer, long or string packed into a
         binary array."""
 
@@ -276,10 +276,13 @@ class SlskMessage:
             return struct.pack("<i", len(object)) + object
 
         elif isinstance(object, str):
-            try:
-                # Try to encode in latin-1 first for older clients (Soulseek NS)
-                encoded = object.encode("latin-1")
-            except Exception:
+            if latin1:
+                try:
+                    # Try to encode in latin-1 first for older clients (Soulseek NS)
+                    encoded = object.encode("latin-1")
+                except Exception:
+                    encoded = object.encode("utf-8", "replace")
+            else:
                 encoded = object.encode("utf-8", "replace")
 
             return struct.pack("<i", len(encoded)) + encoded
@@ -693,7 +696,7 @@ class FileSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.searchid, unsignedint=True))
-        msg.extend(self.pack_object(self.searchterm))
+        msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
 
@@ -1494,7 +1497,7 @@ class RoomSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_object(self.room))
         msg.extend(self.pack_object(self.searchid, unsignedint=True))
-        msg.extend(self.pack_object(self.searchterm))
+        msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
 
@@ -2377,19 +2380,20 @@ class TransferRequest(PeerMessage):
     """ We request a file from a peer, or tell a peer that we want to send
     a file to them. """
 
-    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None):
+    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None, legacy_client=False):
         self.conn = conn
         self.direction = direction
         self.req = req
         self.file = file  # virtual file
         self.realfile = realfile
         self.filesize = filesize
+        self.legacy_client = legacy_client
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.direction))
         msg.extend(self.pack_object(self.req))
-        msg.extend(self.pack_object(self.file))
+        msg.extend(self.pack_object(self.file, latin1=self.legacy_client))
 
         if self.filesize is not None and self.direction == 1:
             msg.extend(self.pack_object(self.filesize, unsignedlonglong=True))
@@ -2445,12 +2449,13 @@ class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
     """ DEPRECATED """
 
-    def __init__(self, conn, file=None):
+    def __init__(self, conn, file=None, legacy_client=False):
         self.conn = conn
         self.file = file
+        self.legacy_client = legacy_client
 
     def make_network_message(self):
-        return self.pack_object(self.file)
+        return self.pack_object(self.file, latin1=self.legacy_client)
 
     def parse_network_message(self, message):
         pos, self.file = self.get_object(message, str)
