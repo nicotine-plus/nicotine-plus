@@ -172,7 +172,7 @@
                     <property name="can-focus">1</property>
                     <property name="width-chars">12</property>
                     <property name="placeholder-text" translatable="yes">Include text...</property>
-                    <property name="tooltip-text" translatable="yes">Include text</property>
+                    <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                     <property name="primary-icon-name">emblem-ok-symbolic</property>
                     <signal name="activate" handler="on_refilter" swapped="no"/>
                     <signal name="icon-press" handler="on_refilter" swapped="no"/>
@@ -201,7 +201,7 @@
                     <property name="can-focus">1</property>
                     <property name="width-chars">12</property>
                     <property name="placeholder-text" translatable="yes">Exclude text...</property>
-                    <property name="tooltip-text" translatable="yes">Exclude text</property>
+                    <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                     <property name="primary-icon-name">action-unavailable-symbolic</property>
                     <signal name="activate" handler="on_refilter" swapped="no"/>
                     <signal name="icon-press" handler="on_refilter" swapped="no"/>

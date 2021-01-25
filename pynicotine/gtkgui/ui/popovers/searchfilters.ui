@@ -97,6 +97,18 @@
                     <property name="wrap">1</property>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="halign">start</property>
+                    <property name="xpad">10</property>
+                    <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
+Example: Spears|Brittany|My beautiful album|hello</property>
+                    <property name="justify">fill</property>
+                    <property name="selectable">1</property>
+                    <property name="wrap">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
