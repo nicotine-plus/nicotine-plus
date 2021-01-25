@@ -84,6 +84,8 @@ class UserTabs(IconNotebook):
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None):
 
+        self.save_columns()
+
         if user in self.users:
             self.users[user].conn = conn
         else:
@@ -348,6 +350,10 @@ class UserInfo:
 
         for hate in hates:
             self.hates_store.append([hate])
+
+    def save_columns(self):
+        # Unused
+        pass
 
     def show_user(self, msg, folder=None, indeterminate_progress=False):
 

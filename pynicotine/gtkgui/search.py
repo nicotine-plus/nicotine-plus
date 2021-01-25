@@ -532,7 +532,7 @@ class Search:
             ["filename", _("Filename"), 400, "text", self.cell_data_func, None],
             ["size", _("Size"), 100, "number", self.cell_data_func, None],
             ["bitrate", _("Bitrate"), 100, "number", self.cell_data_func, None],
-            ["length", _("Length"), 0, "number", self.cell_data_func, None]
+            ["length", _("Length"), 100, "number", self.cell_data_func, None]
         )
 
         cols["id"].set_sort_column_id(0)

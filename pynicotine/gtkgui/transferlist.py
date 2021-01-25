@@ -119,7 +119,7 @@ class TransferList:
             ["size", _("Size"), 170, "number", None, (text_color, None)],
             ["speed", _("Speed"), 90, "number", None, (text_color, None)],
             ["time_elapsed", _("Time Elapsed"), 140, "number", None, (text_color, None)],
-            ["time_left", _("Time Left"), 0, "number", None, (text_color, None)],
+            ["time_left", _("Time Left"), 140, "number", None, (text_color, None)],
         )
 
         cols["user"].set_sort_column_id(0)

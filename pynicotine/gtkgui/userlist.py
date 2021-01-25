@@ -79,14 +79,14 @@ class UserList:
             self.UserListTree,
             ["status", _("Status"), 25, "pixbuf", None, None],
             ["country", _("Country"), 25, "pixbuf", None, None],
-            ["user", _("User"), 180, "text", None, None],
-            ["speed", _("Speed"), 0, "number", None, None],
-            ["files", _("Files"), 0, "number", None, None],
+            ["user", _("User"), 250, "text", None, None],
+            ["speed", _("Speed"), 150, "number", None, None],
+            ["files", _("Files"), 150, "number", None, None],
             ["trusted", _("Trusted"), 0, "toggle", None, None],
             ["notify", _("Notify"), 0, "toggle", None, None],
             ["privileged", _("Privileged"), 0, "toggle", None, None],
             ["last_seen", _("Last seen"), 160, "text", None, None],
-            ["comments", _("Comments"), 0, "edit", None, None]
+            ["comments", _("Comments"), 400, "edit", None, None]
         )
 
         cols["status"].set_sort_column_id(10)

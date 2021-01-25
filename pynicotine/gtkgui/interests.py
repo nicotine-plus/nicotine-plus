@@ -52,7 +52,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.LikesList,
-            ["i_like", _("I Like") + ":", 0, "text", None, None]
+            ["i_like", _("I Like"), -1, "text", None, None]
         )
 
         cols["i_like"].set_sort_column_id(0)
@@ -74,7 +74,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.DislikesList,
-            ["i_dislike", _("I Dislike") + ":", 0, "text", None, None]
+            ["i_dislike", _("I Dislike"), -1, "text", None, None]
         )
 
         cols["i_dislike"].set_sort_column_id(0)
@@ -91,7 +91,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.RecommendationsList,
-            ["rating", _("Rating"), 0, "text", None, None],
+            ["rating", _("Rating"), 0, "number", None, None],
             ["item", _("Item"), -1, "text", None, None]
         )
 
@@ -118,7 +118,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
-            ["rating", _("Rating"), 0, "text", None, None],
+            ["rating", _("Rating"), 0, "number", None, None],
             ["item", _("Item"), -1, "text", None, None]
         )
 
@@ -147,8 +147,8 @@ class Interests:
             self.RecommendationUsersList,
             ["country", _("Country"), 25, "pixbuf", None, None],
             ["user", _("User"), 100, "text", None, None],
-            ["speed", _("Speed"), 0, "text", None, None],
-            ["files", _("Files"), 0, "text", None, None],
+            ["speed", _("Speed"), 100, "text", None, None],
+            ["files", _("Files"), 100, "text", None, None],
         )
 
         cols["country"].set_sort_column_id(4)

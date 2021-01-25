@@ -217,6 +217,9 @@ def initialise_columns(treeview_name, treeview, *args):
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
 
+    treeview.connect("columns-changed", set_last_column_autosize)
+    treeview.emit("columns-changed")
+
     return cols
 
 
@@ -247,6 +250,37 @@ def append_columns(treeview, cols, config):
         pos += 1
 
 
+def set_last_column_autosize(treeview):
+
+    columns = treeview.get_columns()
+    col_count = len(columns)
+
+    if col_count == 0:
+        return
+
+    prev_index = col_count - 1
+
+    # Make sure the width of the last visible column isn't fixed
+    for i in reversed(range(len(columns))):
+        prev_index -= 1
+
+        if columns[i].get_visible():
+            column = columns[i]
+            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
+            column.set_resizable(False)
+            column.set_fixed_width(-1)
+            break
+
+    """ If the column we toggled the visibility of is now the last visible one,
+    the previously last visible column should've resized to fit properly now,
+    since it was set to AUTOSIZE. We can now set the previous column to FIXED,
+    and make it resizable again. """
+
+    prev_column = columns[prev_index]
+    prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
+    prev_column.set_resizable(True)
+
+
 def hide_columns(treeview, cols, config):
 
     for (column_id, column) in cols.items():
@@ -262,14 +296,6 @@ def hide_columns(treeview, cols, config):
             except Exception:
                 # Invalid value
                 pass
-
-    # Make sure the width of the last visible column isn't fixed
-    col_id, last_column = next(reversed(cols.items()))
-
-    if last_column.get_visible():
-        last_column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-        last_column.set_resizable(False)
-        last_column.set_fixed_width(-1)
 
 
 def save_columns(treeview_name, columns, subpage=None):
@@ -318,7 +344,8 @@ def press_header(widget, event):
     if not triggers_context_menu(event):
         return False
 
-    columns = widget.get_parent().get_columns()
+    treeview = widget.get_parent()
+    columns = treeview.get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     one_visible_column = len(visible_columns) == 1
     menu = PopupMenu(NICOTINE)
@@ -339,38 +366,18 @@ def press_header(widget, event):
         else:
             item.set_active(False)
 
-        item.connect('activate', header_toggle, columns, pos - 1)
+        item.connect('activate', header_toggle, treeview, columns, pos - 1)
         pos += 1
 
     menu.popup()
     return True
 
 
-def header_toggle(menuitem, columns, index):
+def header_toggle(widget, treeview, columns, index):
 
     column = columns[index]
     column.set_visible(not column.get_visible())
-
-    # Make sure the width of the last visible column isn't fixed
-    for i in reversed(range(len(columns))):
-
-        if columns[i].get_visible():
-            column = columns[i]
-            column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-            column.set_resizable(False)
-            column.set_fixed_width(-1)
-            break
-
-    """ If the column we toggled the visibility of is now the last visible one,
-    the previously last visible column should've resized to fit properly now,
-    since it was set to AUTOSIZE. We can now set the previous column to FIXED,
-    and make it resizable again. """
-
-    prev_column = columns[index - 1]
-    prev_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
-    prev_column.set_resizable(True)
-
-    NICOTINE.save_columns()
+    set_last_column_autosize(treeview)
 
 
 def set_treeview_selected_row(treeview, event):

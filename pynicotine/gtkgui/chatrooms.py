@@ -581,8 +581,8 @@ class ChatRoom:
             ["status", _("Status"), 25, "pixbuf", None, None],
             ["country", _("Country"), 25, "pixbuf", None, None],
             ["user", _("User"), 100, "text", self.user_column_draw, None],
-            ["speed", _("Speed"), 0, "number", None, None],
-            ["files", _("Files"), 0, "number", None, None]
+            ["speed", _("Speed"), 100, "number", None, None],
+            ["files", _("Files"), 100, "number", None, None]
         )
 
         cols["status"].set_sort_column_id(5)
