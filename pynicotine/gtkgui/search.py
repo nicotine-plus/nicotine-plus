@@ -267,6 +267,7 @@ class Searches(IconNotebook):
         # Clear filter history in config
         self.frame.np.config.sections["searches"]["filterin"] = []
         self.frame.np.config.sections["searches"]["filterout"] = []
+        self.frame.np.config.sections["searches"]["filtertype"] = []
         self.frame.np.config.sections["searches"]["filtersize"] = []
         self.frame.np.config.sections["searches"]["filterbr"] = []
         self.frame.np.config.sections["searches"]["filtercc"] = []
@@ -587,7 +588,7 @@ class Search:
 
     def populate_filters(self, set_default_filters=True):
 
-        for combobox in (self.FilterIn, self.FilterOut, self.FilterSize,
+        for combobox in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
                          self.FilterBitrate, self.FilterCountry):
             combobox.remove_all()
 
@@ -604,6 +605,9 @@ class Search:
             if(len(sfilter) > 5):
                 self.FilterCountryEntry.set_text(sfilter[5])
 
+            if(len(sfilter) > 6):
+                self.FilterTypeEntry.set_text(sfilter[6])
+
             self.on_refilter(None)
 
         for i in ['0', '128', '160', '192', '256', '320']:
@@ -611,6 +615,9 @@ class Search:
 
         for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
             self.FilterSize.append_text(i)
+
+        for i in ['flac|wav|ape|aiff|wv|cue', 'mp3|m4a|aac|ogg|opus|wma', '!mp3']:
+            self.FilterType.append_text(i)
 
         s_config = self.frame.np.config.sections["searches"]
 
@@ -628,6 +635,9 @@ class Search:
 
         for i in s_config["filtercc"]:
             self.add_combo(self.FilterCountry, i, True)
+
+        for i in s_config["filtertype"]:
+            self.add_combo(self.FilterType, i, True)
 
     def focus_combobox(self, button):
         self.frame.focus_combobox(button)
@@ -842,6 +852,57 @@ class Search:
         operation = self.operators.get(op)
         return operation(value, sfilter)
 
+    def check_country(self, sfilter, value):
+
+        if not isinstance(value, str):
+            return False
+
+        value = value.upper()
+        allowed = False
+
+        for cc in sfilter.split("|"):
+            if cc == value:
+                allowed = True
+
+            elif cc.startswith("!") and cc[1:] != value:
+                allowed = True
+
+            elif cc.startswith("!") and cc[1:] == value:
+                return False
+
+        return allowed
+
+    def check_file_type(self, sfilter, value):
+
+        if not isinstance(value, str):
+            return False
+
+        value = value.lower()
+        allowed = False
+
+        for ext in sfilter.split("|"):
+            exclude_ext = None
+
+            if ext.startswith("!"):
+                exclude_ext = ext[1:]
+
+                if not exclude_ext.startswith("."):
+                    exclude_ext = "." + exclude_ext
+
+            elif not ext.startswith("."):
+                ext = "." + ext
+
+            if not ext.startswith("!") and value.endswith(ext):
+                allowed = True
+
+            elif ext.startswith("!") and not value.endswith(exclude_ext):
+                allowed = True
+
+            elif ext.startswith("!") and value.endswith(exclude_ext):
+                return False
+
+        return allowed
+
     def check_filter(self, row):
 
         filters = self.filters
@@ -849,46 +910,48 @@ class Search:
             return True
 
         # "Included text"-filter, check full file path (located at index 12 in row)
-        if filters[0] and not filters[0].search(row[12].lower()):
+        if filters["include"] and not filters["include"].search(row[12].lower()):
             return False
 
         # "Excluded text"-filter, check full file path (located at index 12 in row)
-        if filters[1] and filters[1].search(row[12].lower()):
+        if filters["exclude"] and filters["exclude"].search(row[12].lower()):
             return False
 
-        if filters[2] and not self.check_digit(filters[2], row[14]):
+        if filters["size"] and not self.check_digit(filters["size"], row[14]):
             return False
 
-        if filters[3] and not self.check_digit(filters[3], row[11], False):
+        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[11], False):
             return False
 
-        if filters[4] and row[3] != "Y":
+        if filters["freeslot"] and row[3] != "Y":
             return False
 
-        if filters[5]:
-            for cc in filters[5]:
-                if not cc:
-                    continue
-                if row[13] is None:
-                    return False
+        if filters["country"] and not self.check_country(filters["country"], row[13]):
+            return False
 
-                if cc[0] == "-":
-                    if row[13].upper() == cc[1:].upper():
-                        return False
-                elif cc.upper() != row[13].upper():
-                    return False
+        if filters["type"] and not self.check_file_type(filters["type"], row[12]):
+            return False
 
         return True
 
-    def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country):
+    def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country, f_type):
 
-        self.filters = [None, None, None, None, freeslot, None]
+        self.filters = {
+            "include": None,
+            "exclude": None,
+            "size": None,
+            "bitrate": None,
+            "freeslot": freeslot,
+            "country": None,
+            "type": None
+        }
+
         self.active_filter_count = 0
 
         if f_in:
             try:
                 f_in = re.compile(f_in.lower())
-                self.filters[0] = f_in
+                self.filters["include"] = f_in
             except sre_constants.error:
                 set_widget_fg_bg_css(self.FilterInEntry, "red", "white")
             else:
@@ -899,7 +962,7 @@ class Search:
         if f_out:
             try:
                 f_out = re.compile(f_out.lower())
-                self.filters[1] = f_out
+                self.filters["exclude"] = f_out
             except sre_constants.error:
                 set_widget_fg_bg_css(self.FilterOutEntry, "red", "white")
             else:
@@ -908,15 +971,19 @@ class Search:
             self.active_filter_count += 1
 
         if size:
-            self.filters[2] = size
+            self.filters["size"] = size
             self.active_filter_count += 1
 
         if bitrate:
-            self.filters[3] = bitrate
+            self.filters["bitrate"] = bitrate
             self.active_filter_count += 1
 
         if country:
-            self.filters[5] = country.upper().split(" ")
+            self.filters["country"] = country.upper()
+            self.active_filter_count += 1
+
+        if f_type:
+            self.filters["type"] = f_type.lower()
             self.active_filter_count += 1
 
         if freeslot:
@@ -1336,9 +1403,10 @@ class Search:
         f_br = self.push_history(self.FilterBitrate, "filterbr")
         f_free = self.FilterFreeSlot.get_active()
         f_country = self.push_history(self.FilterCountry, "filtercc")
+        f_type = self.push_history(self.FilterType, "filtertype")
 
         self.ResultsList.set_model(None)
-        self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country)
+        self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country, f_type)
         self.ResultsList.set_model(self.resultsmodel)
 
         if self.ResultGrouping.get_active_id() != "ungrouped":
@@ -1358,6 +1426,7 @@ class Search:
         self.FilterSizeEntry.set_text("")
         self.FilterBitrateEntry.set_text("")
         self.FilterCountryEntry.set_text("")
+        self.FilterTypeEntry.set_text("")
         self.FilterFreeSlot.set_active(False)
 
         self.clearing_filters = False
