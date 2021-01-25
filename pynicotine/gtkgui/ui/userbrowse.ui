@@ -5,6 +5,22 @@
     <property name="visible">1</property>
     <property name="orientation">vertical</property>
     <child>
+      <object class="GtkInfoBar" id="InfoBar">
+        <property name="visible">1</property>
+        <child internal-child="content_area">
+          <object class="GtkBox">
+            <property name="spacing">16</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
       <object class="GtkPaned">
         <property name="visible">1</property>
         <property name="can-focus">1</property>
@@ -157,7 +173,6 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="vexpand">1</property>
-                <property name="width-request">550</property>
                 <child>
                   <object class="GtkTreeView" id="FolderTreeView">
                     <property name="visible">1</property>
@@ -185,7 +200,7 @@
             </child>
           </object>
           <packing>
-            <property name="resize">0</property>
+            <property name="resize">1</property>
           </packing>
         </child>
         <child>
@@ -193,23 +208,8 @@
             <property name="visible">1</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkInfoBar" id="InfoBar">
-                <property name="visible">1</property>
-                <child internal-child="content_area">
-                  <object class="GtkBox">
-                    <property name="spacing">16</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="wrap">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkScrolledWindow">
+                <property name="width-request">400</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="vexpand">1</property>
@@ -227,6 +227,9 @@
               </object>
             </child>
           </object>
+          <packing>
+            <property name="resize">1</property>
+          </packing>
         </child>
       </object>
     </child>
