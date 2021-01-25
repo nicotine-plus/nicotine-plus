@@ -1056,8 +1056,9 @@ class IconNotebook:
                 page = self.get_nth_page(self.get_current_page())
                 tab_label, menu_label = self.get_labels(page)
                 tab_label.onclose(widget)
+                return True
 
-        return True
+        return False
 
 
 class InfoBar:
