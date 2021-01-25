@@ -186,16 +186,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">6</property>
-                <property name="margin-start">11</property>
-                <property name="margin-end">11</property>
-                <property name="margin-bottom">5</property>
-
-              </object>
-            </child>
-            <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
@@ -219,10 +209,10 @@
                 <property name="valign">center</property>
                 <property name="visible">1</property>
                 <property name="pulse-step">0.10000000149</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
-                <property name="margin-top">5</property>
-                <property name="margin-bottom">5</property>
+                <property name="margin-start">8</property>
+                <property name="margin-end">8</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
               </object>
             </child>
           </object>

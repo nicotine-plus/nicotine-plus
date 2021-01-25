@@ -87,7 +87,6 @@ class UserBrowse:
 
         self.dir_store = Gtk.TreeStore(str, str)
 
-        self.FolderTreeView.set_headers_visible(True)
         self.FolderTreeView.set_enable_tree_lines(True)
 
         cols = initialise_columns(
@@ -619,32 +618,6 @@ class UserBrowse:
 
         self.FolderTreeView.expand_to_path(path)
         self.set_directory(directory)
-
-    def on_resort(self, column, column_id):
-
-        model = self.FileTreeView.get_model()
-
-        if model.sort_col == column_id:
-            order = model.sort_order
-
-            if order == Gtk.SortType.ASCENDING:
-                order = Gtk.SortType.DESCENDING
-            else:
-                order = Gtk.SortType.ASCENDING
-
-            column.set_sort_order(order)
-            model.sort_order = order
-            self.FileTreeView.set_model(None)
-            model.sort()
-            self.FileTreeView.set_model(model)
-            return
-
-        cols = self.FileTreeView.get_columns()
-        cols[model.sort_col].set_sort_indicator(False)
-        cols[column_id].set_sort_indicator(True)
-        model.sort_col = column_id
-
-        self.on_resort(column, column_id)
 
     def selected_results_all_data(self, model, path, iterator, data):
 
