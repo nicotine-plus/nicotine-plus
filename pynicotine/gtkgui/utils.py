@@ -278,13 +278,28 @@ def save_columns(treeview_name, columns, subpage=None):
     column_config = NICOTINE.np.config.sections["columns"]
 
     for column in columns:
+        title = column.get_title()
         width = column.get_width()
         visible = column.get_visible()
 
-        if visible and width <= 0:
-            continue
+        """ A column width of zero should not be saved to the config.
+        When a column is hidden, the correct width will be remembered during the
+        run it was hidden. Subsequent runs will yield a zero width, so we
+        attempt to re-use a previously saved non-zero column width instead. """
+        try:
+            if width <= 0:
+                if not visible:
+                    saved_columns[title] = {
+                        "visible": visible,
+                        "width": column_config[treeview_name][title]["width"]
+                    }
 
-        title = column.get_title()
+                continue
+
+        except KeyError:
+            # No previously saved width, going with zero
+            pass
+
         saved_columns[title] = {"visible": visible, "width": width}
 
     if subpage is not None:
