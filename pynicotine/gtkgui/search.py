@@ -616,7 +616,7 @@ class Search:
         for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
             self.FilterSize.append_text(i)
 
-        for i in ['flac|wav|ape|cue', 'mp4|mkv|webm|mov', '!mp3', 'jpg|png', 'iso|img', 'epub|pdf']:
+        for i in ['flac|wav|ape|aiff|wv|cue', 'mp3|m4a|aac|ogg|opus|wma', '!mp3']:
             self.FilterType.append_text(i)
 
         s_config = self.frame.np.config.sections["searches"]
