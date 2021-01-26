@@ -70,7 +70,7 @@ class SSDP:
     multicast_host = '239.255.255.250'
     multicast_port = 1900
     buffer_size = 4096
-    response_time_secs = 3
+    response_time_secs = 2
 
     @classmethod
     def list(cls, refresh=False):
@@ -86,7 +86,7 @@ class SSDP:
         # Create the WANIPConnection:1 and WANIPConnection:2 request objects
         headers = {
             'HOST': "{}:{}".format(SSDP.multicast_host, SSDP.multicast_port),
-            'ST': '',
+            'ST': None,
             'MAN': '"ssdp:discover"',
             'MX': str(SSDP.response_time_secs)
         }

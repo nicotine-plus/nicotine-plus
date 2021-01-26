@@ -954,7 +954,7 @@ class GeoBlockFrame(BuildFrame):
         self.GeoBlockCC.set_sensitive(sensitive)
 
 
-class UserinfoFrame(BuildFrame):
+class UserInfoFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -1030,7 +1030,7 @@ class UserinfoFrame(BuildFrame):
         self.ImageChooser.unselect_all()
 
 
-class IgnoreFrame(BuildFrame):
+class IgnoreListFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -1158,7 +1158,7 @@ class IgnoreFrame(BuildFrame):
         self.ignored_ips_list.clear()
 
 
-class BanFrame(BuildFrame):
+class BanListFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
@@ -1301,7 +1301,7 @@ class BanFrame(BuildFrame):
         self.blocked_list_model.clear()
 
 
-class TTSFrame(BuildFrame):
+class TextToSpeechFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -1824,7 +1824,7 @@ class TabsFrame(BuildFrame):
         }
 
 
-class LogFrame(BuildFrame):
+class LoggingFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -1925,7 +1925,7 @@ class LogFrame(BuildFrame):
         self.PrivateChatFormat.set_text(defaults["logging"]["private_timestamp"])
 
 
-class SearchFrame(BuildFrame):
+class SearchesFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
@@ -2014,7 +2014,7 @@ class SearchFrame(BuildFrame):
             w.set_sensitive(active)
 
 
-class AwayFrame(BuildFrame):
+class AwayModeFrame(BuildFrame):
 
     def __init__(self, parent):
         self.p = parent
@@ -2087,7 +2087,7 @@ class EventsFrame(BuildFrame):
         }
 
 
-class UrlCatchFrame(BuildFrame):
+class UrlCatchingFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -2236,7 +2236,7 @@ class UrlCatchFrame(BuildFrame):
         self.protocolmodel.clear()
 
 
-class CensorFrame(BuildFrame):
+class CensorListFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -2339,7 +2339,7 @@ class CensorFrame(BuildFrame):
         self.censor_list_model.clear()
 
 
-class AutoReplaceFrame(BuildFrame):
+class AutoReplaceListFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -2904,7 +2904,7 @@ class NotificationsFrame(BuildFrame):
         }
 
 
-class PluginFrame(BuildFrame):
+class PluginsFrame(BuildFrame):
 
     def __init__(self, parent):
 
@@ -3082,7 +3082,7 @@ class Settings:
         self.tree = {}
 
         # Pages
-        self.pages = p = {}
+        self.pages = {}
         self.handler_ids = {}
 
         # Model of the treeview
@@ -3094,59 +3094,31 @@ class Settings:
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["User Info"] = model.append(row, [_("User Info"), "User Info"])
+        self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
         self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
         self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
-        self.tree["Ban List"] = model.append(row, [_("Ban List"), "Ban List"])
+        self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
-        self.tree["Geo Block"] = model.append(row, [_("Geo Block"), "Geo Block"])
+        self.tree["GeoBlock"] = model.append(row, [_("Geo Block"), "GeoBlock"])
 
         self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
-        self.tree["Fonts & Colors"] = model.append(row, [_("Fonts & Colors"), "Fonts & Colors"])
+        self.tree["FontsColors"] = model.append(row, [_("Fonts & Colors"), "FontsColors"])
         self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
         self.tree["Tabs"] = model.append(row, [_("Tabs"), "Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["Now Playing"] = model.append(row, [_("Now Playing"), "Now Playing"])
-        self.tree["Away Mode"] = model.append(row, [_("Away Mode"), "Away Mode"])
-        self.tree["Ignore List"] = model.append(row, [_("Ignore List"), "Ignore List"])
-        self.tree["Censor List"] = model.append(row, [_("Censor List"), "Censor List"])
-        self.tree["Auto-Replace List"] = model.append(row, [_("Auto-Replace List"), "Auto-Replace List"])
-        self.tree["URL Catching"] = model.append(row, [_("URL Catching"), "URL Catching"])
+        self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
+        self.tree["AwayMode"] = model.append(row, [_("Away Mode"), "AwayMode"])
+        self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])
+        self.tree["CensorList"] = model.append(row, [_("Censor List"), "CensorList"])
+        self.tree["AutoReplaceList"] = model.append(row, [_("Auto-Replace List"), "AutoReplaceList"])
+        self.tree["UrlCatching"] = model.append(row, [_("URL Catching"), "UrlCatching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
-        self.tree["Text-to-Speech"] = model.append(row, [_("Text-to-Speech"), "Text-to-Speech"])
-
-        # Build individual categories
-        p["Server"] = ServerFrame(self)
-        p["Searches"] = SearchFrame(self)
-        p["Notifications"] = NotificationsFrame(self)
-        p["Plugins"] = PluginFrame(self)
-        p["User Info"] = UserinfoFrame(self)
-        p["Logging"] = LogFrame(self)
-
-        p["Shares"] = SharesFrame(self)
-        p["Downloads"] = DownloadsFrame(self)
-        p["Uploads"] = UploadsFrame(self)
-        p["Ban List"] = BanFrame(self)
-        p["Events"] = EventsFrame(self)
-        p["Geo Block"] = GeoBlockFrame(self)
-
-        p["Fonts & Colors"] = FontsColorsFrame(self)
-        p["Icons"] = IconsFrame(self)
-        p["Tabs"] = TabsFrame(self)
-
-        p["Now Playing"] = NowPlayingFrame(self)
-        p["Away Mode"] = AwayFrame(self)
-        p["Ignore List"] = IgnoreFrame(self)
-        p["Censor List"] = CensorFrame(self)
-        p["Auto-Replace List"] = AutoReplaceFrame(self)
-        p["URL Catching"] = UrlCatchFrame(self)
-        p["Completion"] = CompletionFrame(self)
-        p["Text-to-Speech"] = TTSFrame(self)
+        self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
 
         # Title of the treeview
         column = Gtk.TreeViewColumn(_("Categories"), Gtk.CellRendererText(), text=0)
@@ -3190,24 +3162,20 @@ class Settings:
 
         page = model.get_value(iterator, 1)
 
-        if page in self.pages:
-            self.viewport1.add(self.pages[page].Main)
-        else:
-            self.viewport1.add(self.empty_label)
+        if page not in self.pages:
+            try:
+                self.pages[page] = getattr(sys.modules[__name__], page + "Frame")(self)
+                self.pages[page].set_settings(self.frame.np.config.sections)
+
+            except AttributeError:
+                return
+
+        self.viewport1.add(self.pages[page].Main)
 
     def set_active_page(self, page):
 
         # Unminimize window
         self.SettingsWindow.deiconify()
-
-        child = self.viewport1.get_child()
-
-        if child:
-            self.viewport1.remove(child)
-
-        if self.tree[page] is None:
-            self.viewport1.add(self.empty_label)
-            return
 
         model = self.SettingsTreeview.get_model()
         sel = self.SettingsTreeview.get_selection()
@@ -3218,6 +3186,8 @@ class Settings:
 
         if path is not None:
             sel.select_path(path)
+
+        self.switch_page(sel)
 
     def get_position(self, combobox, option):
 
@@ -3339,14 +3309,6 @@ class Settings:
                     # Invalid input
                     continue
 
-    def invalid_settings(self, domain, key):
-
-        for name, page in self.pages.items():
-            if domain in page.options:
-                if key in page.options[domain]:
-                    self.set_active_page(name)
-                    break
-
     def set_settings(self, config):
 
         for page in self.pages.values():
@@ -3354,31 +3316,51 @@ class Settings:
 
     def get_settings(self):
 
+        config = {
+            "server": {},
+            "transfers": {},
+            "userinfo": {},
+            "logging": {},
+            "searches": {},
+            "privatechat": {},
+            "ui": {},
+            "urls": {},
+            "players": {},
+            "words": {},
+            "notifications": {},
+            "plugins": {}
+        }
+
+        for page in self.pages.values():
+            sub = page.get_settings()
+            for key, data in sub.items():
+                config[key].update(data)
+
         try:
-            config = {
-                "server": {},
-                "transfers": {},
-                "userinfo": {},
-                "logging": {},
-                "searches": {},
-                "privatechat": {},
-                "ui": {},
-                "urls": {},
-                "players": {},
-                "words": {},
-                "notifications": {},
-                "plugins": {}
-            }
+            need_portmap = self.pages["Server"].get_need_portmap()
 
-            for page in self.pages.values():
-                sub = page.get_settings()
-                for key, data in sub.items():
-                    config[key].update(data)
+        except KeyError:
+            need_portmap = False
 
-            return self.pages["Server"].get_need_portmap(), self.pages["Shares"].get_need_rescan(), \
-                self.pages["Fonts & Colors"].needcolors, self.pages["Completion"].needcompletion, config
-        except UserWarning:
-            return None
+        try:
+            need_rescan = self.pages["Shares"].get_need_rescan()
+
+        except KeyError:
+            need_rescan = False
+
+        try:
+            need_colors = self.pages["FontsColors"].needcolors
+
+        except KeyError:
+            need_colors = False
+
+        try:
+            need_completion = self.pages["Completion"].needcompletion
+
+        except KeyError:
+            need_completion = False
+
+        return need_portmap, need_rescan, need_colors, need_completion, config
 
     def on_backup_config(self, *args):
 

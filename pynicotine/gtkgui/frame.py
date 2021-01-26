@@ -1811,7 +1811,7 @@ class NicotineFrame:
     """ User Info """
 
     def on_settings_userinfo(self, widget):
-        self.on_settings(page='User Info')
+        self.on_settings(page='UserInfo')
 
     def on_get_user_info(self, widget, *args):
 
@@ -2088,7 +2088,7 @@ class NicotineFrame:
         self.userlist.on_add_user(widget)
 
     def on_settings_ban_ignore(self, widget):
-        self.on_settings(page='Ban List')
+        self.on_settings(page='BanList')
 
     def ban_user(self, user):
         if self.np.transfers is not None:
@@ -2129,7 +2129,7 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
+                self.settingswindow.pages["IgnoreList"].set_settings(self.np.config.sections)
 
     def on_ignore_ip(self, user):
         if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
@@ -2147,7 +2147,7 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
+                self.settingswindow.pages["IgnoreList"].set_settings(self.np.config.sections)
 
     def on_un_ignore_ip(self, user):
         ipignorelist = self.np.config.sections["server"]["ipignorelist"]
@@ -2160,7 +2160,7 @@ class NicotineFrame:
                 self.np.config.write_configuration()
 
                 if self.settingswindow is not None:
-                    self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
+                    self.settingswindow.pages["IgnoreList"].set_settings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
@@ -2178,7 +2178,7 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ignore List"].set_settings(self.np.config.sections)
+                self.settingswindow.pages["IgnoreList"].set_settings(self.np.config.sections)
 
     def on_block_user(self, user):
         if user not in self.np.users or not isinstance(self.np.users[user].addr, tuple):
@@ -2194,7 +2194,7 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
+                self.settingswindow.pages["BanList"].set_settings(self.np.config.sections)
 
     def on_un_block_user(self, user):
         if self.user_ip_is_blocked(user):
@@ -2205,7 +2205,7 @@ class NicotineFrame:
                 self.np.config.write_configuration()
 
                 if self.settingswindow is not None:
-                    self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
+                    self.settingswindow.pages["BanList"].set_settings(self.np.config.sections)
                 return True
 
         if user not in self.np.users:
@@ -2224,7 +2224,7 @@ class NicotineFrame:
             self.np.config.write_configuration()
 
             if self.settingswindow is not None:
-                self.settingswindow.pages["Ban List"].set_settings(self.np.config.sections)
+                self.settingswindow.pages["BanList"].set_settings(self.np.config.sections)
 
     def unban_user(self, user):
         if user in self.np.config.sections["server"]["banlist"]:
