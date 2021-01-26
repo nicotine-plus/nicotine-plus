@@ -86,6 +86,7 @@ class SSDP:
         # Create the WANIPConnection:1 and WANIPConnection:2 request objects
         headers = {
             'HOST': "{}:{}".format(SSDP.multicast_host, SSDP.multicast_port),
+            'ST': None,
             'MAN': '"ssdp:discover"',
             'MX': str(SSDP.response_time_secs)
         }
@@ -313,7 +314,7 @@ class SSDPRequest(SSDPMessage):
             addr (Tuple[str, int]):
                 IP address and port pair to send the message to.
         """
-        msg = bytes(self) + b'\r\n'
+        msg = bytes(self) + b'\r\n\r\n'
         log.add_debug('UPnP: SSDP request: %s', msg)
         transport.sendto(msg, addr)
 
