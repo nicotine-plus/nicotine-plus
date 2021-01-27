@@ -142,7 +142,8 @@ class UPnp:
             lease_duration
         )
 
-        log.add_debug('UPnP: Add port mapping request: %s', data)
+        log.add_debug('UPnP: Add port mapping request headers: %s', headers)
+        log.add_debug('UPnP: Add port mapping request contents: %s', data)
 
         response = http_request(
             router.url_scheme, router.base_url, router.control_url,
@@ -182,7 +183,8 @@ class UPnp:
         }
 
         data = UPnp._delete_port_mapping_template.format(public_port, protocol)
-        log.add_debug('UPnP: Delete port mapping request: %s', data)
+        log.add_debug('UPnP: Delete port mapping request headers: %s', headers)
+        log.add_debug('UPnP: Delete port mapping request contents: %s', data)
 
         response = http_request(
             router.url_scheme, router.base_url, router.control_url,
@@ -210,7 +212,8 @@ class UPnp:
         while portmap_found:
             index += 1
             data = UPnp._list_port_mappings_template.format(index)
-            log.add_debug('UPnP: List port mappings request: %s', data)
+            log.add_debug('UPnP: List port mappings request headers: %s', headers)
+            log.add_debug('UPnP: List port mappings request contents: %s', data)
 
             response = http_request(
                 router.url_scheme, router.base_url, router.control_url,
