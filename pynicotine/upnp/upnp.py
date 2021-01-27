@@ -236,8 +236,21 @@ class UPnp:
     @classmethod
     def find_router(cls):
         routers = SSDP.list()
+        router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
 
-        # Pick first router in list
-        router = next((r for r in routers), None)
+        if not router:
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANIPConnection:1"), None)
+
+        if not router:
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
+
+        if not router:
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:InternetGatewayDevice:2"), None)
+
+        if not router:
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:InternetGatewayDevice:1"), None)
+
+        if not router:
+            router = next((r for r in routers), None)
 
         return router
