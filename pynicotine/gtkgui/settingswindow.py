@@ -3312,11 +3312,12 @@ class Settings:
         except KeyError:
             need_rescan = False
 
-        try:
-            need_rescan = self.pages["Downloads"].needrescan
+        if not need_rescan:
+            try:
+                need_rescan = self.pages["Downloads"].needrescan
 
-        except KeyError:
-            need_rescan = False
+            except KeyError:
+                need_rescan = False
 
         try:
             need_colors = self.pages["FontsColors"].needcolors
