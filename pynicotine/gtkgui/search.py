@@ -490,7 +490,7 @@ class Search:
         }
 
         if mode not in ("global", "wishlist"):
-            self.RememberCheckButton.set_sensitive(False)
+            self.RememberCheckButton.hide()
 
         self.RememberCheckButton.set_active(remember)
 
