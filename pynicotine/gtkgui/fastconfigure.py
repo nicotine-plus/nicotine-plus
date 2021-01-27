@@ -24,6 +24,7 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
+from pynicotine.gtkgui.utils import FileChooserButton
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
@@ -37,8 +38,9 @@ class FastConfigureAssistant(object):
         self.config = frame.np.config
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
-
         self.FastConfigureDialog.set_transient_for(self.frame.MainWindow)
+
+        self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")
 
         # Page specific, sharepage
         self.sharelist = Gtk.ListStore(
@@ -68,7 +70,7 @@ class FastConfigureAssistant(object):
 
         # sharepage
         if self.config.sections['transfers']['downloaddir']:
-            self.downloaddir.set_current_folder(
+            self.downloaddir.set_path(
                 self.config.sections['transfers']['downloaddir']
             )
 
@@ -86,7 +88,7 @@ class FastConfigureAssistant(object):
         self.config.sections["server"]["passw"] = self.password.get_text()
 
         # sharepage
-        self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_file().get_path()
+        self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
         self.config.sections["transfers"]["shared"] = self.get_shared_folders()
 
     def reset_completeness(self):
@@ -112,7 +114,7 @@ class FastConfigureAssistant(object):
             complete = True
 
         elif name == 'sharepage':
-            if self.downloaddir.get_file():
+            if self.downloaddir.get_path():
                 complete = True
 
         elif name == 'summarypage':

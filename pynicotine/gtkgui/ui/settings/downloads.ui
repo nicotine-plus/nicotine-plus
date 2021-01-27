@@ -165,12 +165,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="UploadDir">
+              <object class="GtkButton" id="UploadDir">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder created for each buddy).</property>
-                <property name="action">select-folder</property>
-                <property name="show-hidden">1</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -191,12 +188,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="IncompleteDir">
+              <object class="GtkButton" id="IncompleteDir">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
-                <property name="action">select-folder</property>
-                <property name="show-hidden">1</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -204,12 +198,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="DownloadDir">
+              <object class="GtkButton" id="DownloadDir">
                 <property name="visible">1</property>
-                <property name="action">select-folder</property>
-                <property name="show-hidden">1</property>
-                <property name="title" translatable="yes">Select a Folder</property>
-                <signal name="selection-changed" handler="on_choose_download_dir" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">1</property>

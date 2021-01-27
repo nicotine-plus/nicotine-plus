@@ -127,10 +127,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="RoomLogDir">
+              <object class="GtkButton" id="RoomLogDir">
                 <property name="visible">1</property>
-                <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -138,10 +136,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="PrivateLogDir">
+              <object class="GtkButton" id="PrivateLogDir">
                 <property name="visible">1</property>
-                <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -149,10 +145,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="TransfersLogDir">
+              <object class="GtkButton" id="TransfersLogDir">
                 <property name="visible">1</property>
-                <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -160,10 +154,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="DebugLogDir">
+              <object class="GtkButton" id="DebugLogDir">
                 <property name="visible">1</property>
-                <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>

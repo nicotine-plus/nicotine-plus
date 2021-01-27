@@ -22,6 +22,7 @@
 
 import os
 
+from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 
 
@@ -195,10 +196,10 @@ def choose_dir(parent=None, initialdir="~", title=None, multichoice=True):
     return res
 
 
-def choose_file(parent=None, initialdir="~", initialfile="", multiple=False):
+def choose_file(parent=None, initialdir="~", title=None, multiple=False):
     try:
         dialog = Gtk.FileChooserNative.new(
-            None,
+            title,
             parent,
             Gtk.FileChooserAction.OPEN,
             _("_Open"),
@@ -206,11 +207,73 @@ def choose_file(parent=None, initialdir="~", initialfile="", multiple=False):
         )
     except AttributeError:
         dialog = Gtk.FileChooserDialog(
-            None,
+            title,
             parent,
             Gtk.FileChooserAction.OPEN
         )
         dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+
+    dialog.set_select_multiple(multiple)
+    folder = os.path.expanduser(initialdir)
+
+    if os.path.exists(folder):
+        dialog.set_current_folder(folder)
+    else:
+        dialog.set_current_folder(os.path.expanduser("~"))
+
+    response = dialog.run()
+
+    if response == Gtk.ResponseType.ACCEPT:
+        res = dialog.get_filenames()
+    else:
+        res = None
+
+    dialog.destroy()
+
+    return res
+
+
+def choose_image(parent=None, initialdir="~", title=None, multiple=False):
+    try:
+        dialog = Gtk.FileChooserNative.new(
+            title,
+            parent,
+            Gtk.FileChooserAction.OPEN,
+            _("_Open"),
+            _("_Cancel")
+        )
+    except AttributeError:
+        dialog = Gtk.FileChooserDialog(
+            title,
+            parent,
+            Gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+
+    preview = Gtk.Image()
+    dialog.set_preview_widget(preview)
+
+    def on_update_image_preview(chooser):
+        path = chooser.get_preview_filename()
+
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+
+            maxwidth, maxheight = 300.0, 700.0
+            width, height = pixbuf.get_width(), pixbuf.get_height()
+            scale = min(maxwidth / width, maxheight / height)
+
+            if scale < 1:
+                width, height = int(width * scale), int(height * scale)
+                pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
+
+            preview.set_from_pixbuf(pixbuf)
+            chooser.set_preview_widget_active(True)
+
+        except Exception:
+            chooser.set_preview_widget_active(False)
+
+    dialog.connect("update-preview", on_update_image_preview)
 
     dialog.set_select_multiple(multiple)
     folder = os.path.expanduser(initialdir)

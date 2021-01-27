@@ -248,10 +248,9 @@
               </object>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="downloaddir">
+              <object class="GtkButton" id="downloaddir">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="action">select-folder</property>
               </object>
             </child>
           </object>

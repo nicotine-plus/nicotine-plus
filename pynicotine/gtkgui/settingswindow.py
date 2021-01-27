@@ -28,7 +28,6 @@ import sys
 import time
 
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -37,6 +36,7 @@ from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.dialogs import save_file
+from pynicotine.gtkgui.utils import FileChooserButton
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
@@ -132,9 +132,6 @@ class ServerFrame(BuildFrame):
             }
         }
 
-    def get_need_portmap(self):
-        return self.needportmap
-
     def on_change_password(self, widget):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
@@ -166,6 +163,16 @@ class DownloadsFrame(BuildFrame):
         BuildFrame.__init__(self, "downloads")
 
         self.needrescan = False
+
+        self.IncompleteDir = FileChooserButton(
+            self.IncompleteDir, parent.SettingsWindow, "folder"
+        )
+        self.DownloadDir = FileChooserButton(
+            self.DownloadDir, parent.SettingsWindow, "folder", self.on_choose_download_dir
+        )
+        self.UploadDir = FileChooserButton(
+            self.UploadDir, parent.SettingsWindow, "folder"
+        )
 
         self.options = {
             "transfers": {
@@ -219,13 +226,13 @@ class DownloadsFrame(BuildFrame):
         self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
         if transfers["incompletedir"]:
-            self.IncompleteDir.set_current_folder(transfers["incompletedir"])
+            self.IncompleteDir.set_path(transfers["incompletedir"])
 
         if transfers["downloaddir"]:
-            self.DownloadDir.set_current_folder(transfers["downloaddir"])
+            self.DownloadDir.set_path(transfers["downloaddir"])
 
         if transfers["uploaddir"]:
-            self.UploadDir.set_current_folder(transfers["uploaddir"])
+            self.UploadDir.set_path(transfers["uploaddir"])
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -256,38 +263,29 @@ class DownloadsFrame(BuildFrame):
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
                 "uploadallowed": uploadallowed,
-                "incompletedir": self.IncompleteDir.get_file().get_path(),
-                "downloaddir": self.DownloadDir.get_file().get_path(),
+                "incompletedir": self.IncompleteDir.get_path(),
+                "downloaddir": self.DownloadDir.get_path(),
                 "sharedownloaddir": self.ShareDownloadDir.get_active(),
-                "uploaddir": self.UploadDir.get_file().get_path(),
+                "uploaddir": self.UploadDir.get_path(),
                 "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int()
             }
         }
 
-    def get_need_rescan(self):
-        return self.needrescan
-
-    def on_choose_download_dir(self, widget):
+    def on_choose_download_dir(self):
         """
         Function called when the download directory is modified.
         """
 
-        # Get a gio.File object from Gtk.FileChooser
-        # Convert the gio.File to a string
-        dir_disp = self.DownloadDir.get_file().get_path()
+        # Get the transfers section
+        transfers = self.frame.np.config.sections["transfers"]
 
-        if dir_disp is not None:
-
-            # Get the transfers section
-            transfers = self.frame.np.config.sections["transfers"]
-
-            # This function will be called upon creating the settings window,
-            # so only force a scan if the user changes his donwload directory
-            if self.ShareDownloadDir.get_active():
-                if dir_disp != transfers["downloaddir"]:
-                    self.needrescan = True
+        # This function will be called upon creating the settings window,
+        # so only force a scan if the user changes his donwload directory
+        if self.ShareDownloadDir.get_active():
+            if self.DownloadDir.get_path() != transfers["downloaddir"]:
+                self.needrescan = True
 
     def on_remote_downloads(self, widget):
 
@@ -633,9 +631,6 @@ class SharesFrame(BuildFrame):
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
 
-    def get_need_rescan(self):
-        return self.needrescan
-
     def on_add_shared_dir(self, widget):
 
         dir1 = choose_dir(
@@ -962,15 +957,14 @@ class UserInfoFrame(BuildFrame):
 
         BuildFrame.__init__(self, "userinfo")
 
+        self.ImageChooser = FileChooserButton(self.ImageChooser, parent.SettingsWindow, "image")
+
         self.options = {
             "userinfo": {
                 "descr": None,
                 "pic": self.ImageChooser
             }
         }
-
-        self.preview = Gtk.Image()
-        self.ImageChooser.set_preview_widget(self.preview)
 
     def set_settings(self, config):
 
@@ -983,7 +977,7 @@ class UserInfoFrame(BuildFrame):
             self.Description.get_buffer().set_text(descr)
 
         if userinfo["pic"]:
-            self.ImageChooser.set_filename(userinfo["pic"])
+            self.ImageChooser.set_path(userinfo["pic"])
 
     def get_settings(self):
 
@@ -994,40 +988,15 @@ class UserInfoFrame(BuildFrame):
 
         descr = buffer.get_text(start, end, True).replace("; ", ", ").__repr__()
 
-        if self.ImageChooser.get_filename() is not None:
-            pic = self.ImageChooser.get_filename()
-        else:
-            pic = ""
-
         return {
             "userinfo": {
                 "descr": descr,
-                "pic": pic
+                "pic": self.ImageChooser.get_path()
             }
         }
 
-    def on_update_image_preview(self, chooser):
-        path = chooser.get_preview_filename()
-
-        try:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
-
-            maxwidth, maxheight = 300.0, 700.0
-            width, height = pixbuf.get_width(), pixbuf.get_height()
-            scale = min(maxwidth / width, maxheight / height)
-
-            if scale < 1:
-                width, height = int(width * scale), int(height * scale)
-                pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
-
-            self.preview.set_from_pixbuf(pixbuf)
-            chooser.set_preview_widget_active(True)
-
-        except Exception:
-            chooser.set_preview_widget_active(False)
-
     def on_default_image(self, widget):
-        self.ImageChooser.unselect_all()
+        self.ImageChooser.clear()
 
 
 class IgnoreListFrame(BuildFrame):
@@ -1372,6 +1341,8 @@ class IconsFrame(BuildFrame):
 
         BuildFrame.__init__(self, "icons")
 
+        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.SettingsWindow, "folder")
+
         self.options = {
             "ui": {
                 "icontheme": self.ThemeDir,
@@ -1400,7 +1371,7 @@ class IconsFrame(BuildFrame):
         self.p.set_widgets_data(config, self.options)
 
         if ui["icontheme"]:
-            self.ThemeDir.set_current_folder(ui["icontheme"])
+            self.ThemeDir.set_path(ui["icontheme"])
 
         if sys.platform == "darwin":
             # Tray icons don't work as expected on macOS
@@ -1441,12 +1412,7 @@ class IconsFrame(BuildFrame):
 
     def on_default_theme(self, widget):
 
-        """ Since the file chooser doesn't allow us to unselect a folder,
-        we use this hack to identify a cleared state, and actually clear the theme path
-        in the config later. """
-
-        self.ThemeDir.unselect_all()
-        self.ThemeDir.set_current_folder("   __invalid__   ")
+        self.ThemeDir.clear()
 
     def on_toggle_tray(self, widget):
 
@@ -1466,16 +1432,9 @@ class IconsFrame(BuildFrame):
                 mainwindow_close = widgets.index(i)
                 break
 
-        file_obj = self.ThemeDir.get_file()
-
-        if file_obj is not None and not file_obj.get_path().endswith("   __invalid__   "):
-            icontheme = file_obj.get_path()
-        else:
-            icontheme = ""
-
         return {
             "ui": {
-                "icontheme": icontheme,
+                "icontheme": self.ThemeDir.get_path(),
                 "trayicon": self.TrayiconCheck.get_active(),
                 "startup_hidden": self.StartupHidden.get_active(),
                 "exitdialog": mainwindow_close
@@ -1832,6 +1791,11 @@ class LoggingFrame(BuildFrame):
 
         BuildFrame.__init__(self, "log")
 
+        self.PrivateLogDir = FileChooserButton(self.PrivateLogDir, parent.SettingsWindow, "folder")
+        self.RoomLogDir = FileChooserButton(self.RoomLogDir, parent.SettingsWindow, "folder")
+        self.TransfersLogDir = FileChooserButton(self.TransfersLogDir, parent.SettingsWindow, "folder")
+        self.DebugLogDir = FileChooserButton(self.DebugLogDir, parent.SettingsWindow, "folder")
+
         self.options = {
             "logging": {
                 "privatechat": self.LogPrivate,
@@ -1864,41 +1828,41 @@ class LoggingFrame(BuildFrame):
             if not os.path.exists(roomlogsdir):
                 os.makedirs(roomlogsdir)
 
-            self.RoomLogDir.set_current_folder(roomlogsdir)
+            self.RoomLogDir.set_path(roomlogsdir)
 
         privatelogsdir = config["logging"]["privatelogsdir"]
         if privatelogsdir:
             if not os.path.exists(privatelogsdir):
                 os.makedirs(privatelogsdir)
 
-            self.PrivateLogDir.set_current_folder(privatelogsdir)
+            self.PrivateLogDir.set_path(privatelogsdir)
 
         transferslogsdir = config["logging"]["transferslogsdir"]
         if transferslogsdir:
             if not os.path.exists(transferslogsdir):
                 os.makedirs(transferslogsdir)
 
-            self.TransfersLogDir.set_current_folder(transferslogsdir)
+            self.TransfersLogDir.set_path(transferslogsdir)
 
         debuglogsdir = config["logging"]["debuglogsdir"]
         if debuglogsdir:
             if not os.path.exists(debuglogsdir):
                 os.makedirs(debuglogsdir)
 
-            self.DebugLogDir.set_current_folder(debuglogsdir)
+            self.DebugLogDir.set_path(debuglogsdir)
 
     def get_settings(self):
 
         return {
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
-                "privatelogsdir": self.PrivateLogDir.get_file().get_path(),
+                "privatelogsdir": self.PrivateLogDir.get_path(),
                 "chatrooms": self.LogRooms.get_active(),
-                "roomlogsdir": self.RoomLogDir.get_file().get_path(),
+                "roomlogsdir": self.RoomLogDir.get_path(),
                 "transfers": self.LogTransfers.get_active(),
-                "transferslogsdir": self.TransfersLogDir.get_file().get_path(),
+                "transferslogsdir": self.TransfersLogDir.get_path(),
                 "debug_file_output": self.LogDebug.get_active(),
-                "debuglogsdir": self.DebugLogDir.get_file().get_path(),
+                "debuglogsdir": self.DebugLogDir.get_path(),
                 "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
@@ -3165,10 +3129,10 @@ class Settings:
         if page not in self.pages:
             try:
                 self.pages[page] = getattr(sys.modules[__name__], page + "Frame")(self)
-                self.pages[page].set_settings(self.frame.np.config.sections)
-
             except AttributeError:
                 return
+
+            self.pages[page].set_settings(self.frame.np.config.sections)
 
         self.viewport1.add(self.pages[page].Main)
 
@@ -3337,13 +3301,19 @@ class Settings:
                 config[key].update(data)
 
         try:
-            need_portmap = self.pages["Server"].get_need_portmap()
+            need_portmap = self.pages["Server"].needportmap
 
         except KeyError:
             need_portmap = False
 
         try:
-            need_rescan = self.pages["Shares"].get_need_rescan()
+            need_rescan = self.pages["Shares"].needrescan
+
+        except KeyError:
+            need_rescan = False
+
+        try:
+            need_rescan = self.pages["Downloads"].needrescan
 
         except KeyError:
             need_rescan = False

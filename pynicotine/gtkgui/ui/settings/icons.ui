@@ -89,11 +89,9 @@
               </object>
             </child>
             <child>
-              <object class="GtkFileChooserButton" id="ThemeDir">
+              <object class="GtkButton" id="ThemeDir">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="action">select-folder</property>
-                <property name="title" translatable="yes">Select a Folder</property>
               </object>
             </child>
             <child>
