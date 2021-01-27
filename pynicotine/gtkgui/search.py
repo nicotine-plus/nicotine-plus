@@ -28,6 +28,7 @@ import re
 import sre_constants
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -640,7 +641,20 @@ class Search:
             self.add_combo(self.FilterType, i, True)
 
     def focus_combobox(self, button):
-        self.frame.focus_combobox(button)
+
+        # We have the button of a combobox, find the entry
+        parent = button.get_parent()
+
+        if parent is None:
+            return
+
+        if isinstance(parent, Gtk.ComboBox):
+            entry = parent.get_child()
+            entry.grab_focus()
+            GLib.idle_add(entry.emit, "activate")
+            return
+
+        self.focus_combobox(parent)
 
     def add_combo(self, combobox, text, list=False):
 
@@ -1372,7 +1386,7 @@ class Search:
 
     def push_history(self, widget, title):
 
-        text = widget.get_child().get_text()
+        text = widget.get_active_text()
         if not text.strip():
             return None
 
