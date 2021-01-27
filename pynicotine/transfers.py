@@ -283,14 +283,6 @@ class Transfers:
                         i.status = "User logged off"
                         self.downloadsview.update(i)
 
-        for i in self.uploads[:]:
-            if msg.user == i.user and i.status != "Finished":
-                if msg.status == 0:
-                    if i.transfertimer is not None:
-                        i.transfertimer.cancel()
-                    self.uploads.remove(i)
-                    self.uploadsview.remove_specific(i, True)
-
         if msg.status == 0:
             self.check_upload_queue()
 
