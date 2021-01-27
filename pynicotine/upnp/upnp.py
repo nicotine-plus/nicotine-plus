@@ -130,7 +130,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '{}#AddPortMapping'.format(router.type)
+            'SOAPACTION': '"{}#AddPortMapping"'.format(router.type)
         }
 
         data = UPnp._add_port_mapping_template.format(
@@ -179,7 +179,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '{}#DeletePortMapping'.format(router.type)
+            'SOAPACTION': '"{}#DeletePortMapping"'.format(router.type)
         }
 
         data = UPnp._delete_port_mapping_template.format(public_port, protocol)
@@ -202,7 +202,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '{}#GetGenericPortMappingEntry'.format(router.type)
+            'SOAPACTION': '"{}#GetGenericPortMappingEntry"'.format(router.type)
         }
 
         index = -1
