@@ -30,11 +30,34 @@ sys.path.append('.')
 
 import pynicotine.plugins
 
+
+""" Add Contents """
+
+
 binaries = []
 hiddenimports = []
 added_files = []
 
-# Include CA bundle for update checker
+
+# Files to be added to the frozen app
+added_files += [
+
+    # About icon
+    ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
+
+    # Tray icons
+    ('../../files/icons/tray', 'share/icons/hicolor/scalable/apps'),
+
+    # GTK Builder files, plugins, geoip database
+    ('../../pynicotine', 'pynicotine')
+]
+
+
+# Include plugins
+hiddenimports += [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
+
+
+# SSL support
 hiddenimports.append('certifi')
 
 if sys.platform == 'win32':
@@ -51,30 +74,13 @@ if sys.platform == 'win32':
     # Notification support on Windows
     hiddenimports.append('plyer.platforms.win.notification')
 
-# Include plugins
-hiddenimports += [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
 
+# Translations
+languages = set()
 
-# Files to be added to the frozen app
-added_files += [
-    #
-    # Application core modules
-    #
-
-    # About icon
-    ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
-
-    # Tray icons
-    ('../../files/icons/tray', 'share/icons/hicolor/scalable/apps'),
-
-    # GTK Builder files, plugins, geoip database
-    ('../../pynicotine', 'pynicotine')
-]
-
-# Translation
 for po_file in glob.glob("po/*.po"):
-
     lang = os.path.basename(po_file[:-3])
+    languages.add(lang)
 
     mo_dir = "mo/" + lang + "/LC_MESSAGES"
     mo_file = mo_dir + "/" + "nicotine.mo"
@@ -93,6 +99,8 @@ for po_file in glob.glob("po/*.po"):
         )
     )
 
+
+# Analyze required files
 a = Analysis(['../../nicotine'],
              pathex=['.'],
              binaries=binaries,
@@ -106,17 +114,42 @@ a = Analysis(['../../nicotine'],
              cipher=None,
              noarchive=False)
 
-# Remove unwanted files
-for file in a.datas[:]:
-    excluded = ('.ani', '.cur', '.md', '.py', '.pyc')
 
-    if file[0].endswith(excluded) or \
-        file[0].endswith('.png') and not 'org.nicotine_plus.Nicotine' in file[0] or \
-        'share/icons/Adwaita/cursors' in file[0]:
+# Remove unwanted files added in previous step
+for file in a.datas[:]:
+    excluded = ('.ani', '.cur', '.md', '.png', '.py', '.pyc')
+
+    if file[0].endswith(excluded):
         a.datas.remove(file)
+
+    elif 'share/icons' in file[0] or \
+            'share/themes' in file[0]:
+        theme = file[0].split('/')[2]
+
+        # Remove unwanted themes
+        if theme not in ('Adwaita', 'hicolor', 'win32'):
+            a.datas.remove(file)
+
+        elif 'Adwaita/cursors' in file[0]:
+            a.datas.remove(file)
+
+    elif 'share/locale' in file[0]:
+        lang = file[0].split('/')[2]
+
+        # Remove system translations for unsupported languages
+        if lang not in languages:
+            a.datas.remove(file)
+
+
+""" Archive """
+
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=None)
+
+
+""" Freeze Application """
+
 
 name = 'Nicotine+'
 icon = 'nicotine.ico'
@@ -141,6 +174,7 @@ exe = EXE(pyz,
           console=False,
           icon=icon)
 
+
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -148,6 +182,10 @@ coll = COLLECT(exe,
                strip=False,
                upx=enable_upx,
                name=name)
+
+
+""" Create macOS .app """
+
 
 if sys.platform == 'darwin':
 
