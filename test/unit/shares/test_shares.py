@@ -43,7 +43,7 @@ def test_shares_scan():
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
 
     shares = Shares(None, config, queue.Queue(0))
-    shares.rescan_shares()
+    shares.rescan_public_shares(thread=False)
 
     # Verify that modification time was saved for shares folder
     assert SHARES_DIR in list(config.sections["transfers"]["sharedmtimes"])
@@ -85,7 +85,7 @@ def test_hidden_file_folder_scan():
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
 
     shares = Shares(None, config, queue.Queue(0))
-    shares.rescan_shares()
+    shares.rescan_public_shares(thread=False)
 
     # Check folders
     mtimes = list(config.sections["transfers"]["sharedmtimes"])

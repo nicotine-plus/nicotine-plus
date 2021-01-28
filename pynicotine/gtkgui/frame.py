@@ -1106,7 +1106,7 @@ class NicotineFrame:
 
         log.add(_("Rescanning started"))
 
-        _thread.start_new_thread(self.np.shares.rescan_shares, (rebuild,))
+        _thread.start_new_thread(self.np.shares.rescan_public_shares, (rebuild,))
 
     def on_buddy_rescan(self, *args, rebuild=False):
 

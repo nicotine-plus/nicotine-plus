@@ -147,7 +147,7 @@ def rescanshares(config, data_dir):
     from pynicotine.shares import Shares
 
     config = Config(config, data_dir)
-    config.read_config()
+    config.parse_config()
 
     # Show normal log messages in console
     console.set_log_levels((0, 1))
@@ -158,10 +158,10 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
     queue = queue.Queue(0)
     shares = Shares(None, config, queue)
 
-    shares.rescan_shares()
+    shares.rescan_public_shares(thread=False)
 
     if config.sections["transfers"]["enablebuddyshares"]:
-        shares.rescan_buddy_shares()
+        shares.rescan_buddy_shares(thread=False)
 
 
 def run():
