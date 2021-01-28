@@ -64,53 +64,47 @@ else:
 
 
 class Scanner(multiprocessing.Process):
-    """ Separate process responsible for scanning shares """
+    """ Separate process responsible for building shares. It handles scanning of
+    folders and files, as well as building databases and writing them to disk. """
 
-    def __init__(self, config, queue, sharestype="normal", rebuild=False):
+    def __init__(self, config, queue, shared_folders, share_dbs, sharestype="normal", rebuild=False):
 
         multiprocessing.Process.__init__(self)
 
         self.config = config
         self.queue = queue
+        self.shared_folders = shared_folders
+        self.share_dbs = share_dbs
         self.sharestype = sharestype
         self.rebuild = rebuild
-        self.shares = {}
-
         self.tinytag = TinyTag()
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
-
-    def set_shared_folders_dbs(self, shared_folders, mtimes, files, file_streams, wordindex, fileindex):
-
-        self.shared_folders = shared_folders
-        fileindex_db, self.fileindex_path = fileindex
 
     def run(self):
 
         apply_translation()
 
-        self.public_share_dbs = [
-            ("files", os.path.join(self.config.data_dir, "files.db")),
-            ("streams", os.path.join(self.config.data_dir, "streams.db")),
-            ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
-            ("fileindex", os.path.join(self.config.data_dir, "fileindex.db")),
-            ("mtimes", os.path.join(self.config.data_dir, "mtimes.db"))
-        ]
-        self.buddy_share_dbs = [
-            ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
-            ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
-            ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
-            ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
-            ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
-        ]
-        self.load_shares(self.public_share_dbs)
-        self.load_shares(self.buddy_share_dbs)
+        if self.sharestype == "normal":
+            Shares.load_shares(self.share_dbs, [
+                ("files", os.path.join(self.config.data_dir, "files.db")),
+                ("streams", os.path.join(self.config.data_dir, "streams.db")),
+                ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
+                ("mtimes", os.path.join(self.config.data_dir, "mtimes.db"))
+            ])
+        else:
+            Shares.load_shares(self.share_dbs, [
+                ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
+                ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
+                ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
+                ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+            ])
 
         try:
             self.rescan_dirs(
                 self.shared_folders,
-                self.shares["mtimes"],
-                self.shares["files"],
-                self.shares["streams"],
+                self.share_dbs["mtimes"],
+                self.share_dbs["files"],
+                self.share_dbs["streams"],
                 rebuild=self.rebuild
             )
 
@@ -126,56 +120,6 @@ class Scanner(multiprocessing.Process):
                 }
             ))
             self.queue.put(Exception("Scanning failed"))
-
-    def load_shares(self, dbs):
-
-        errors = []
-
-        for destination, shelvefile in dbs:
-            try:
-                self.shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
-            except Exception:
-                from traceback import format_exc
-
-                self.shares[destination] = None
-                errors.append(shelvefile)
-                exception = format_exc()
-
-        if errors:
-            log.add_warning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
-            log.add_warning(exception)
-
-            log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
-
-    def real2virtual(self, path):
-        path = path.replace('/', '\\')
-
-        for (virtual, real, *unused) in self._virtualmapping():
-            # Remove slashes from share name to avoid path conflicts
-            virtual = virtual.replace('/', '_').replace('\\', '_')
-
-            real = real.replace('/', '\\')
-
-            if path == real:
-                return virtual
-
-            if path.startswith(real + '\\'):
-                virtualpath = virtual + '\\' + path[len(real + '\\'):]
-                return virtualpath
-
-        return "__INTERNAL_ERROR__" + path
-
-    def _virtualmapping(self):
-
-        mapping = self.config.sections["transfers"]["shared"][:]
-
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            mapping += self.config.sections["transfers"]["buddyshared"]
-
-        if self.config.sections["transfers"]["sharedownloaddir"]:
-            mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
-
-        return mapping
 
     def set_shares(self, files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
 
@@ -199,10 +143,10 @@ class Scanner(multiprocessing.Process):
         for source, destination in storable_objects:
             if source is not None:
                 try:
-                    self.shares[destination].close()
-                    self.shares[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                    self.shares[destination].update(source)
-                    self.shares[destination].close()
+                    self.share_dbs[destination].close()
+                    self.share_dbs[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                    self.share_dbs[destination].update(source)
+                    self.share_dbs[destination].close()
 
                 except Exception as e:
                     self.queue.put((0, _("Can't save %s: %s"), (destination + ".db", e)))
@@ -348,7 +292,7 @@ class Scanner(multiprocessing.Process):
                     self.queue.put(percent)
                     lastpercent = percent
 
-                virtualdir = self.real2virtual(folder)
+                virtualdir = Shares._real2virtual(folder, self.config)
 
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
@@ -492,10 +436,14 @@ class Scanner(multiprocessing.Process):
 
         """ We dump data directly into the file index database to save memory.
         For the word index db, we can't use the same approach, as we need to access
-        dict elements frequently. This would take too long on a database. """
+        dict elements frequently. This would take too long to access from disk. """
 
-        self.shares["fileindex"].close()
-        fileindex = shelve.open(self.fileindex_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        if self.sharestype == "normal":
+            fileindex_dest = "fileindex"
+        else:
+            fileindex_dest = "buddyfileindex"
+
+        fileindex = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         wordindex = {}
 
         index = 0
@@ -532,8 +480,8 @@ class Shares:
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.tinytag = TinyTag()
-        self.shares = {}
-        self.create_scanner()
+        self.share_dbs = {}
+        self.build_scanner_process()
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -550,8 +498,8 @@ class Shares:
             ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
             ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
         ]
-        self.load_shares(self.public_share_dbs)
-        self.load_shares(self.buddy_share_dbs)
+        self.load_shares(self.share_dbs, self.public_share_dbs)
+        self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
         self.create_compressed_shares_message("normal")
         self.create_compressed_shares_message("buddy")
@@ -564,9 +512,13 @@ class Shares:
     """ Shares-related actions """
 
     def real2virtual(self, path):
+        return self._real2virtual(path, self.config)
+
+    @classmethod
+    def _real2virtual(cls, path, config):
         path = path.replace('/', '\\')
 
-        for (virtual, real, *unused) in self._virtualmapping():
+        for (virtual, real, *unused) in cls._virtualmapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -584,7 +536,7 @@ class Shares:
     def virtual2real(self, path):
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for (virtual, real, *unused) in self._virtualmapping():
+        for (virtual, real, *unused) in self._virtualmapping(self.config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -597,15 +549,16 @@ class Shares:
 
         return "__INTERNAL_ERROR__" + path
 
-    def _virtualmapping(self):
+    @classmethod
+    def _virtualmapping(cls, config):
 
-        mapping = self.config.sections["transfers"]["shared"][:]
+        mapping = config.sections["transfers"]["shared"][:]
 
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            mapping += self.config.sections["transfers"]["buddyshared"]
+        if config.sections["transfers"]["enablebuddyshares"]:
+            mapping += config.sections["transfers"]["buddyshared"]
 
-        if self.config.sections["transfers"]["sharedownloaddir"]:
-            mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
+        if config.sections["transfers"]["sharedownloaddir"]:
+            mapping += [(_("Downloaded"), config.sections["transfers"]["downloaddir"])]
 
         return mapping
 
@@ -622,17 +575,18 @@ class Shares:
         self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
 
-    def load_shares(self, dbs):
+    @classmethod
+    def load_shares(cls, shares, dbs):
 
         errors = []
 
         for destination, shelvefile in dbs:
             try:
-                self.shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
+                shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception:
                 from traceback import format_exc
 
-                self.shares[destination] = None
+                shares[destination] = None
                 errors.append(shelvefile)
                 exception = format_exc()
 
@@ -649,15 +603,15 @@ class Shares:
         if not config["transfers"]["sharedownloaddir"]:
             return
 
-        shared = self.shares["files"]
-        sharedstreams = self.shares["streams"]
-        wordindex = self.shares["wordindex"]
-        fileindex = self.shares["fileindex"]
+        shared = self.share_dbs["files"]
+        sharedstreams = self.share_dbs["streams"]
+        wordindex = self.share_dbs["wordindex"]
+        fileindex = self.share_dbs["fileindex"]
 
         shareddirs = [path for _name, path in config["transfers"]["shared"]]
         shareddirs.append(config["transfers"]["downloaddir"])
 
-        sharedmtimes = self.shares["mtimes"]
+        sharedmtimes = self.share_dbs["mtimes"]
 
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
@@ -691,16 +645,16 @@ class Shares:
         if not config["transfers"]["sharedownloaddir"]:
             return
 
-        bshared = self.shares["buddyfiles"]
-        bsharedstreams = self.shares["buddystreams"]
-        bwordindex = self.shares["buddywordindex"]
-        bfileindex = self.shares["buddyfileindex"]
+        bshared = self.share_dbs["buddyfiles"]
+        bsharedstreams = self.share_dbs["buddystreams"]
+        bwordindex = self.share_dbs["buddywordindex"]
+        bfileindex = self.share_dbs["buddyfileindex"]
 
         bshareddirs = [path for _name, path in config["transfers"]["shared"]]
         bshareddirs += [path for _name, path in config["transfers"]["buddyshared"]]
         bshareddirs.append(config["transfers"]["downloaddir"])
 
-        bsharedmtimes = self.shares["buddymtimes"]
+        bsharedmtimes = self.share_dbs["buddymtimes"]
 
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
@@ -732,13 +686,13 @@ class Shares:
         if sharestype == "normal":
             self.compressed_shares_normal = slskmessages.SharedFileList(
                 None,
-                self.shares["streams"]
+                self.share_dbs["streams"]
             )
 
         elif sharestype == "buddy":
             self.compressed_shares_buddy = slskmessages.SharedFileList(
                 None,
-                self.shares["buddystreams"]
+                self.share_dbs["buddystreams"]
             )
 
     def compress_shares(self, sharestype):
@@ -759,7 +713,7 @@ class Shares:
             "buddyfiles", "buddystreams", "buddywordindex",
             "buddyfileindex", "buddymtimes"
         ]:
-            self.shares[db].close()
+            self.share_dbs[db].close()
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
@@ -776,19 +730,27 @@ class Shares:
         index_db = "fileindex"
 
         try:
-            sharedfolders = len(self.shares[shared_db])
-            sharedfiles = len(self.shares[index_db])
+            sharedfolders = len(self.share_dbs[shared_db])
+            sharedfiles = len(self.share_dbs[index_db])
 
         except TypeError:
-            sharedfolders = len(list(self.shares[shared_db]))
-            sharedfiles = len(list(self.shares[index_db]))
+            sharedfolders = len(list(self.share_dbs[shared_db]))
+            sharedfiles = len(list(self.share_dbs[index_db]))
 
         self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
     """ Scanning """
 
-    def create_scanner(self, sharestype="normal", rebuild=False):
-        self.scanner = Scanner(self.config, self.scanner_queue, sharestype, rebuild)
+    def build_scanner_process(self, shared_folders=None, sharestype="normal", rebuild=False):
+
+        self.scanner = Scanner(
+            self.config,
+            self.scanner_queue,
+            shared_folders,
+            self.share_dbs,
+            sharestype,
+            rebuild
+        )
         self.scanner.daemon = True
 
     def rebuild_public_shares(self, thread=True):
@@ -810,47 +772,29 @@ class Shares:
         else:
             self._rescan_shares(sharestype, rebuild)
 
-    def get_shared_folders_dbs(self, sharestype):
+    def get_shared_folders(self, sharestype):
 
         if sharestype == "normal":
             log.add(_("Rescanning normal shares..."))
-
             shared_folders = self.config.sections["transfers"]["shared"][:]
-
-            if self.config.sections["transfers"]["sharedownloaddir"]:
-                shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
-
-            old_mtimes = self.shares["mtimes"]
-            old_files = self.shares["files"]
-            old_file_streams = self.shares["streams"]
-            old_wordindex = self.shares["wordindex"]
-
-            fileindex = (self.shares["fileindex"], os.path.join(self.config.data_dir, "fileindex.db"))
 
         else:
             log.add(_("Rescanning buddy shares..."))
-
             shared_folders = self.config.sections["transfers"]["buddyshared"][:] + self.config.sections["transfers"]["shared"][:]
 
-            if self.config.sections["transfers"]["sharedownloaddir"]:
-                shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
+        if self.config.sections["transfers"]["sharedownloaddir"]:
+            shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
 
-            old_mtimes = self.shares["buddymtimes"]
-            old_files = self.shares["buddyfiles"]
-            old_file_streams = self.shares["buddystreams"]
-            old_wordindex = self.shares["buddywordindex"]
-
-            fileindex = (self.shares["buddyfileindex"], os.path.join(self.config.data_dir, "buddyfileindex.db"))
-
-        return shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex
+        return shared_folders
 
     def _rescan_shares(self, sharestype, rebuild):
 
-        shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex = self.get_shared_folders_dbs(sharestype)
+        shared_folders = self.get_shared_folders(sharestype)
 
+        # Hand over database control to the scanner process
         self.close_shares()
-        self.create_scanner(sharestype, rebuild)
-        self.scanner.set_shared_folders_dbs(shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex)
+
+        self.build_scanner_process(shared_folders, sharestype, rebuild)
         self.scanner.start()
 
         if self.ui_callback:
@@ -883,9 +827,9 @@ class Shares:
                     # Load shares in the main process again
 
                     if sharestype == "normal":
-                        self.load_shares(self.public_share_dbs)
+                        self.load_shares(self.share_dbs, self.public_share_dbs)
                     else:
-                        self.load_shares(self.buddy_share_dbs)
+                        self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
                     self.create_compressed_shares_message(sharestype)
                     self.compress_shares(sharestype)
@@ -974,9 +918,9 @@ class Shares:
             return
 
         if checkuser == 2:
-            wordindex = self.shares["buddywordindex"]
+            wordindex = self.share_dbs["buddywordindex"]
         else:
-            wordindex = self.shares["wordindex"]
+            wordindex = self.share_dbs["wordindex"]
 
         # Find common file matches for each word in search term
         resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)
@@ -991,9 +935,9 @@ class Shares:
             slotsavail = self.np.transfers.allow_new_uploads()
 
             if checkuser == 2:
-                fileindex = self.shares["buddyfileindex"]
+                fileindex = self.share_dbs["buddyfileindex"]
             else:
-                fileindex = self.shares["fileindex"]
+                fileindex = self.share_dbs["fileindex"]
 
             fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 

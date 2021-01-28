@@ -1909,9 +1909,9 @@ class NetworkEventProcessor:
             return
 
         if checkuser == 1:
-            shares = self.shares.shares["streams"]
+            shares = self.shares.share_dbs["streams"]
         elif checkuser == 2:
-            shares = self.shares.shares["streams"]
+            shares = self.shares.share_dbs["streams"]
         else:
             self.queue.put(slskmessages.TransferResponse(conn, 0, reason=reason, req=0))
             shares = {}
@@ -1923,7 +1923,7 @@ class NetworkEventProcessor:
                 self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
             else:
                 if checkuser == 2:
-                    shares = self.shares.shares["streams"]
+                    shares = self.shares.share_dbs["streams"]
                     if msg.dir in shares:
                         self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
                     elif msg.dir.rstrip("\\") in shares:

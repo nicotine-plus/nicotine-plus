@@ -44,17 +44,17 @@ def test_shares_scan():
     shares.rescan_public_shares(thread=False)
 
     # Verify that modification time was saved for shares folder
-    assert SHARES_DIR in list(shares.shares["mtimes"])
+    assert SHARES_DIR in list(shares.share_dbs["mtimes"])
 
     # Verify that shared files were added
-    assert ('dummy_file', 0, None, None) in shares.shares["files"]["Shares"]
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.shares["files"]["Shares"]
+    assert ('dummy_file', 0, None, None) in shares.share_dbs["files"]["Shares"]
+    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Shares"]
 
     # Verify that expected folder is empty
-    assert len(shares.shares["files"]["Shares\\folder2"]) == 0
+    assert len(shares.share_dbs["files"]["Shares\\folder2"]) == 0
 
     # Verify that search index was updated
-    word_index = shares.shares["wordindex"]
+    word_index = shares.share_dbs["wordindex"]
     nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
     ogg_indexes = list(word_index["ogg"])
 
@@ -66,7 +66,7 @@ def test_shares_scan():
 
     # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
     assert ogg_indexes[0] in nicotinetestdata_indexes
-    assert shares.shares["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
+    assert shares.share_dbs["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
 
     shares.close_shares()
 
@@ -81,7 +81,7 @@ def test_hidden_file_folder_scan():
     shares.rescan_public_shares(thread=False)
 
     # Check folders
-    mtimes = list(shares.shares["mtimes"])
+    mtimes = list(shares.share_dbs["mtimes"])
 
     assert os.path.join(SHARES_DIR, ".abc") not in mtimes
     assert os.path.join(SHARES_DIR, ".xyz") not in mtimes
@@ -92,7 +92,7 @@ def test_hidden_file_folder_scan():
     assert os.path.join(SHARES_DIR, "something") in mtimes
 
     # Check files
-    files = shares.shares["files"]["Shares"]
+    files = shares.share_dbs["files"]["Shares"]
 
     assert (".abc_file", 0, None, None) not in files
     assert (".hidden_file", 0, None, None) not in files
@@ -113,7 +113,7 @@ def test_shares_add_downloaded():
     shares = Shares(None, config, queue.Queue(0), None)
     shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.shares["files"]["Downloaded"]
-    assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.shares["fileindex"].values()
+    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Downloaded"]
+    assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["fileindex"].values()
 
     shares.close_shares()
