@@ -321,7 +321,7 @@
                         <property name="can-focus">1</property>
                         <property name="width-chars">7</property>
                         <property name="placeholder-text" translatable="yes">Country code...</property>
-                        <property name="tooltip-text" translatable="yes">Country code, e.g. US|UK|ES or !DE|!UK</property>
+                        <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                         <property name="primary-icon-name">mark-location-symbolic</property>
                         <signal name="activate" handler="on_refilter" swapped="no"/>
                         <signal name="icon-press" handler="on_refilter" swapped="no"/>

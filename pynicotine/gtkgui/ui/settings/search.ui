@@ -267,7 +267,7 @@
                   <object class="GtkEntry" id="FilterCC">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="tooltip-text" translatable="yes">Country code, e.g. US|UK|ES or !DE|!UK</property>
+                    <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                   </object>
                 </child>
               </object>
@@ -350,6 +350,7 @@
               <object class="GtkEntry" id="FilterOut">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -360,6 +361,7 @@
               <object class="GtkEntry" id="FilterIn">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
