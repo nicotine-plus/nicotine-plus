@@ -35,6 +35,7 @@ import time
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.metadata.tinytag import TinyTag
+from pynicotine.utils import apply_translation
 
 """ Check if there's an appropriate (performant) database type for shelves """
 
@@ -65,30 +66,32 @@ else:
 class Scanner(multiprocessing.Process):
     """ Separate process responsible for scanning shares """
 
-    def __init__(self, shares_callback, queue, sharestype="normal", rebuild=False):
+    def __init__(self, config, queue, sharestype="normal", rebuild=False):
 
         multiprocessing.Process.__init__(self)
+        apply_translation()
 
-        self.shares_callback = shares_callback
+        self.config = config
         self.queue = queue
         self.sharestype = sharestype
         self.rebuild = rebuild
         self.shares = {}
 
-        self.tinytag = shares_callback.tinytag
+        self.tinytag = TinyTag()
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     def set_shared_folders_dbs(self, shared_folders, mtimes, files, file_streams, wordindex, fileindex):
+
+        self.shared_folders = shared_folders
+        fileindex_db, self.fileindex_path = fileindex
 
         self.shares = {
             "files": files,
             "streams": file_streams,
             "mtimes": mtimes,
-            "wordindex": wordindex
+            "wordindex": wordindex,
+            "fileindex": fileindex_db
         }
-
-        self.shared_folders = shared_folders
-        self.fileindex_key, self.fileindex_db = fileindex
 
     def run(self):
 
@@ -108,15 +111,45 @@ class Scanner(multiprocessing.Process):
 
             self.queue.put((
                 0, _("Serious error occurred while rescanning shares. If this problem persists, delete %(dir)s/*.db and try again. If that doesn't help, please file a bug report with this stack trace included: %(trace)s"), {
-                    "dir": self.shares_callback.config.data_dir,
+                    "dir": self.config.data_dir,
                     "trace": "\n" + format_exc()
                 }
             ))
             self.queue.put(Exception("Scanning failed"))
 
+    def real2virtual(self, path):
+        path = path.replace('/', '\\')
+
+        for (virtual, real, *unused) in self._virtualmapping():
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+
+            real = real.replace('/', '\\')
+
+            if path == real:
+                return virtual
+
+            if path.startswith(real + '\\'):
+                virtualpath = virtual + '\\' + path[len(real + '\\'):]
+                return virtualpath
+
+        return "__INTERNAL_ERROR__" + path
+
+    def _virtualmapping(self):
+
+        mapping = self.config.sections["transfers"]["shared"][:]
+
+        if self.config.sections["transfers"]["enablebuddyshares"]:
+            mapping += self.config.sections["transfers"]["buddyshared"]
+
+        if self.config.sections["transfers"]["sharedownloaddir"]:
+            mapping += [(_("Downloaded"), self.config.sections["transfers"]["downloaddir"])]
+
+        return mapping
+
     def set_shares(self, files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
 
-        self.shares_callback.config.create_data_folder()
+        self.config.create_data_folder()
 
         if self.sharestype == "normal":
             storable_objects = [
@@ -137,7 +170,7 @@ class Scanner(multiprocessing.Process):
             if source is not None:
                 try:
                     self.shares[destination].close()
-                    self.shares[destination] = shelve.open(os.path.join(self.shares_callback.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                    self.shares[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
                     self.shares[destination].update(source)
                     self.shares[destination].close()
 
@@ -285,7 +318,7 @@ class Scanner(multiprocessing.Process):
                     self.queue.put(percent)
                     lastpercent = percent
 
-                virtualdir = self.shares_callback.real2virtual(folder)
+                virtualdir = self.real2virtual(folder)
 
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
@@ -431,8 +464,8 @@ class Scanner(multiprocessing.Process):
         For the word index db, we can't use the same approach, as we need to access
         dict elements frequently. This would take too long on a database. """
 
-        self.shares_callback.shares[self.fileindex_key].close()
-        fileindex = shelve.open(self.fileindex_db, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        self.shares["fileindex"].close()
+        fileindex = shelve.open(self.fileindex_path, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         wordindex = {}
 
         index = 0
@@ -725,7 +758,7 @@ class Shares:
     """ Scanning """
 
     def create_scanner(self, sharestype="normal", rebuild=False):
-        self.scanner = Scanner(self, self.scanner_queue, sharestype, rebuild)
+        self.scanner = Scanner(self.config, self.scanner_queue, sharestype, rebuild)
         self.scanner.daemon = True
 
     def rebuild_public_shares(self, thread=True):
@@ -762,7 +795,7 @@ class Shares:
             old_file_streams = self.shares["streams"]
             old_wordindex = self.shares["wordindex"]
 
-            fileindex = ("fileindex", os.path.join(self.config.data_dir, "fileindex.db"))
+            fileindex = (self.shares["fileindex"], os.path.join(self.config.data_dir, "fileindex.db"))
 
         else:
             log.add(_("Rescanning buddy shares..."))
@@ -777,7 +810,7 @@ class Shares:
             old_file_streams = self.shares["buddystreams"]
             old_wordindex = self.shares["buddywordindex"]
 
-            fileindex = ("bfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db"))
+            fileindex = (self.shares["buddyfileindex"], os.path.join(self.config.data_dir, "buddyfileindex.db"))
 
         return shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex
 
