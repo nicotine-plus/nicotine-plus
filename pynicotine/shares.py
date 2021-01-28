@@ -531,6 +531,14 @@ class Shares:
 
         mtimes = {}
 
+        # Ensure folder paths are in utf-8
+        try:
+            folder = folder.encode('latin-1').decode('utf-8')
+
+        except Exception:
+            # Already utf-8
+            pass
+
         try:
             for entry in os.scandir(folder):
                 if entry.is_dir():
