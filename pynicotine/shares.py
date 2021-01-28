@@ -715,39 +715,24 @@ class Shares:
 
         return stream
 
-    def setup_index_databases(self, sharestype):
-        """ Reset the file and word index databases """
-
-        if sharestype == "normal":
-            f_section = f_target = "fileindex"
-            w_section = w_target = "wordindex"
-        else:
-            f_section = "bfileindex"
-            f_target = "buddyfileindex"
-            w_section = "bwordindex"
-            w_target = "buddywordeindex"
-
-        for section in (f_section, w_section):
-            self.config.sections["transfers"][section].close()
-
-        fileindex = self.config.sections["transfers"][f_section] = \
-            shelve.open(os.path.join(self.config.data_dir, f_target + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-        wordindex = self.config.sections["transfers"][w_section] = \
-            shelve.open(os.path.join(self.config.data_dir, w_target + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-
-        """ Temporary dicts to use while scanning a folder. After a folder is done,
-        the contents of the dicts are saved to the real dbs, and cleaned up. """
-
-        fileindex_temp = {}
-        wordindex_temp = {}
-
-        return fileindex, fileindex_temp, wordindex, wordindex_temp
-
     def get_files_index(self, sharestype, sharedfiles):
         """ Update Search index with new files """
 
-        fileindex, fileindex_temp, wordindex, wordindex_temp = self.setup_index_databases(sharestype)
+        """ We dump data directly into the file index shelf to save memory """
+        if sharestype == "normal":
+            section = target = "fileindex"
+        else:
+            section = "bfileindex"
+            target = "buddyfileindex"
+
+        self.config.sections["transfers"][section].close()
+
+        fileindex = self.config.sections["transfers"][section] = \
+            shelve.open(os.path.join(self.config.data_dir, target + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+
+        """ For the word index, we can't use the same approach as above, as we need
+        to access dict elements frequently. This would take too long on a shelf. """
+        wordindex = {}
 
         index = 0
         count = len(sharedfiles)
@@ -765,14 +750,10 @@ class Shares:
                     lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
-                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex_temp, fileindex_temp)
+                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex, fileindex)
                 index += 1
 
-            fileindex.update(fileindex_temp)
-            fileindex_temp = {}
-
-            wordindex.update(wordindex_temp)
-            wordindex_temp = {}
+        self.set_shares(sharestype=sharestype, wordindex=wordindex)
 
     """ Search request processing """
 

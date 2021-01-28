@@ -123,12 +123,19 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
-        """ Dark Mode """
+        """ GTK Settings """
 
         dark_mode = config["ui"]["dark_mode"]
+        global_font = config["ui"]["globalfont"]
+
+        if dark_mode or global_font:
+            gtk_settings = Gtk.Settings.get_default()
 
         if dark_mode:
-            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode)
+            gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode)
+
+        if global_font and global_font != "Normal":
+            gtk_settings.set_property("gtk-font-name", global_font)
 
         """ Main Window UI """
 
@@ -2542,6 +2549,13 @@ class NicotineFrame:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
+            global_font = config["ui"]["globalfont"]
+
+            if global_font == "Normal":
+                Gtk.Settings.get_default().reset_property("gtk-font-name")
+            else:
+                Gtk.Settings.get_default().set_property("gtk-font-name", global_font)
+
             self.chatrooms.update_visuals()
             self.privatechats.update_visuals()
             self.searches.update_visuals()

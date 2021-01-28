@@ -288,6 +288,7 @@ class Config:
                 "labelbrowse": 0,
                 "labelsearch": 0,
                 "decimalsep": ",",
+                "globalfont": "",
                 "chatfont": "",
                 "roomlistcollapsed": False,
                 "tabclosers": True,

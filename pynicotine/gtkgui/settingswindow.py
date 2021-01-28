@@ -1453,6 +1453,7 @@ class FontsColorsFrame(BuildFrame):
         self.needcolors = 0
         self.options = {
             "ui": {
+                "globalfont": self.SelectGlobalFont,
                 "chatfont": self.SelectChatFont,
                 "listfont": self.SelectListFont,
                 "searchfont": self.SelectSearchFont,
@@ -1514,6 +1515,7 @@ class FontsColorsFrame(BuildFrame):
 
         return {
             "ui": {
+                "globalfont": self.SelectGlobalFont.get_font(),
                 "chatfont": self.SelectChatFont.get_font(),
                 "listfont": self.SelectListFont.get_font(),
                 "searchfont": self.SelectSearchFont.get_font(),
