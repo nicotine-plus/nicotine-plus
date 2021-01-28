@@ -26,6 +26,7 @@ import os
 import signal
 import sys
 import threading
+import time
 
 import gi
 from gi.repository import Gdk
@@ -2442,18 +2443,38 @@ class NicotineFrame:
         self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
     def show_scan_progress(self, sharestype):
+
+        self.scan_progress_indeterminate = True
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.show)
         else:
             GLib.idle_add(self.BuddySharesProgress.show)
 
     def set_scan_progress(self, sharestype, value):
+
+        self.scan_progress_indeterminate = False
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.set_fraction, value)
         else:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
+    def set_scan_indeterminate(self, sharestype):
+        _thread.start_new_thread(self._set_scan_indeterminate, (sharestype,))
+
+    def _set_scan_indeterminate(self, sharestype):
+
+        while self.scan_progress_indeterminate:
+            if sharestype == "normal":
+                GLib.idle_add(self.SharesProgress.pulse)
+            else:
+                GLib.idle_add(self.BuddySharesProgress.pulse)
+
+            time.sleep(0.2)
+
     def hide_scan_progress(self, sharestype):
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.hide)
         else:

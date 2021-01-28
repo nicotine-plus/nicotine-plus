@@ -794,8 +794,8 @@ class Shares:
         self.scanner.start()
 
         if self.ui_callback:
-            self.ui_callback.set_scan_progress(sharestype, 0.0)
             self.ui_callback.show_scan_progress(sharestype)
+            self.ui_callback.set_scan_indeterminate(sharestype)
 
         while self.scanner.is_alive():
             time.sleep(0.5)
@@ -828,8 +828,6 @@ class Shares:
                 elif item == "compress_shares":
                     self.create_compressed_shares_message(sharestype)
                     self.compress_shares(sharestype)
-
-        self.scanner.join()
 
         if self.connected:
             """ Don't attempt to send file stats to the server before we're connected. If we skip the
