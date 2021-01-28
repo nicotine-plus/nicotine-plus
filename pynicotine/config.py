@@ -130,17 +130,7 @@ class Config:
                 "uploadallowed": 2,
                 "autoclear_downloads": False,
                 "autoclear_uploads": False,
-                "sharedfiles": {},
-                "sharedfilesstreams": {},
                 "uploadsinsubdirs": True,
-                "wordindex": {},
-                "fileindex": {},
-                "sharedmtimes": {},
-                "bsharedfiles": {},
-                "bsharedfilesstreams": {},
-                "bwordindex": {},
-                "bfileindex": {},
-                "bsharedmtimes": {},
                 "rescanonstartup": True,
                 "enablefilters": True,
                 "downloadregexp": "",
@@ -676,21 +666,12 @@ class Config:
 
     def write_configuration(self):
 
-        external_sections = (
-            "sharedfiles", "sharedfilesstreams", "wordindex", "fileindex", "sharedmtimes",
-            "bsharedfiles", "bsharedfilesstreams", "bwordindex", "bfileindex", "bsharedmtimes"
-        )
-
         for i in self.sections:
             if not self.parser.has_section(i):
                 self.parser.add_section(i)
 
             for j in self.sections[i]:
-                if j not in external_sections:
-                    self.parser.set(i, j, self.sections[i][j])
-
-                else:
-                    self.parser.remove_option(i, j)
+                self.parser.set(i, j, self.sections[i][j])
 
         if not self.create_config_folder():
             return
