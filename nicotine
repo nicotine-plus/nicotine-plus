@@ -75,7 +75,7 @@ You should install GTK 3.0 or newer.""") % e
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
-    # Require gdbm or semidbm, for faster loading of databases
+    # Require gdbm or semidbm, for faster loading of shelves
     if not importlib.util.find_spec("_gdbm") and \
             not importlib.util.find_spec("semidbm"):
         return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
@@ -233,7 +233,7 @@ def run():
             trayicon = False
 
         if o in ('-r', '--rescan'):
-            """ Flag currently undocumented, since we can't rescan shares while Nicotine+ is open (dbm limitation) """
+            """ Flag currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation) """
             rescan = True
 
         if o in ('-s', '--hidden'):

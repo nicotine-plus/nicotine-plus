@@ -24,83 +24,40 @@ import importlib
 import os
 import pickle
 import re
+import shelve
 import stat
 import string
 import sys
 import _thread
 
-from collections import MutableMapping
-from io import BytesIO
-
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.metadata.tinytag import TinyTag
-from pynicotine.utils import RestrictedUnpickler
 
+""" Check if there's an appropriate (performant) database type for shelves """
 
-class Database(MutableMapping):
+if importlib.util.find_spec("_gdbm"):
 
-    def __init__(self, filename, flag="c", protocol=pickle.HIGHEST_PROTOCOL, encoding='utf-8'):
+    def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
+        import _gdbm
+        return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
 
-        if importlib.util.find_spec("_gdbm"):
-            import _gdbm
-            self.dict = _gdbm.open(filename, flag)
+    shelve.open = shelve_open_gdbm
 
-        elif importlib.util.find_spec("semidbm"):
-            import semidbm
-            self.dict = semidbm.open(filename, flag)
+elif importlib.util.find_spec("semidbm"):
 
-        else:
-            print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-                "option1": "gdbm",
-                "option2": "semidbm"
-            })
-            sys.exit()
+    def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
+        import semidbm
+        return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
-        self.protocol = protocol
-        self.encoding = encoding
+    shelve.open = shelve_open_semidbm
 
-    def __iter__(self):
-        for k in self.dict.keys():
-            yield k.decode(self.encoding)
-
-    def __len__(self):
-        return len(self.dict)
-
-    def __contains__(self, key):
-        return key.encode(self.encoding) in self.dict
-
-    def get(self, key, default=None):
-
-        encoded_key = key.encode(self.encoding)
-
-        if encoded_key in self.dict:
-            return self[encoded_key]
-
-        return default
-
-    def __getitem__(self, key):
-        return RestrictedUnpickler(
-            BytesIO(self.dict[key.encode(self.encoding)]), encoding=self.encoding).load()
-
-    def __setitem__(self, key, value):
-        self.dict[key.encode(self.encoding)] = pickle.dumps(value, self.protocol)
-
-    def __delitem__(self, key):
-        del self.dict[key.encode(self.encoding)]
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.close()
-
-    def close(self):
-
-        try:
-            self.dict.close()
-        except AttributeError:
-            pass
+else:
+    print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+        "option1": "gdbm",
+        "option2": "semidbm"
+    })
+    sys.exit()
 
 
 class Shares:
@@ -203,13 +160,13 @@ class Shares:
 
         errors = []
 
-        for destination, dbfile in dbs:
+        for destination, shelvefile in dbs:
             try:
-                self.config.sections["transfers"][destination] = Database(dbfile)
+                self.config.sections["transfers"][destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception:
                 from traceback import format_exc
 
-                errors.append(dbfile)
+                errors.append(shelvefile)
                 exception = format_exc()
 
         if errors:
@@ -245,7 +202,7 @@ class Shares:
             if source is not None:
                 try:
                     self.config.sections["transfers"][destination].close()
-                    self.config.sections["transfers"][destination] = Database(os.path.join(self.config.data_dir, filename), flag='n')
+                    self.config.sections["transfers"][destination] = shelve.open(os.path.join(self.config.data_dir, filename), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
                     self.config.sections["transfers"][destination].update(source)
 
                 except Exception as e:
@@ -435,7 +392,7 @@ class Shares:
         # returns dict in format { Directory : hex string of files+metadata, ... }
         newsharedfiles, newsharedfilesstreams = self.get_files_list(sharestype, newmtimes, oldmtimes, oldfiles, oldstreams, rebuild)
 
-        # Save data to databases
+        # Save data to shelves
         self.set_shares(sharestype=sharestype, files=newsharedfiles, streams=newsharedfilesstreams, mtimes=newmtimes)
 
         # Update Search Index
@@ -573,14 +530,6 @@ class Shares:
         """ Get Modification Times """
 
         mtimes = {}
-
-        # Ensure folder names are in utf-8
-        try:
-            folder = folder.encode('latin-1').decode('utf-8')
-
-        except Exception:
-            # Already utf-8
-            pass
 
         try:
             for entry in os.scandir(folder):
@@ -758,39 +707,24 @@ class Shares:
 
         return stream
 
-    def setup_index_databases(self, sharestype):
-        """ Reset the file and word index databases """
-
-        if sharestype == "normal":
-            fsection = ftarget = "fileindex"
-            wsection = wtarget = "wordindex"
-        else:
-            fsection = "bfileindex"
-            ftarget = "buddyfileindex"
-            wsection = "bwordindex"
-            wtarget = "buddywordeindex"
-
-        for section in (fsection, wsection):
-            self.config.sections["transfers"][section].close()
-
-        fileindex = self.config.sections["transfers"][fsection] = \
-            Database(os.path.join(self.config.data_dir, ftarget + ".db"), flag='n')
-
-        wordindex = self.config.sections["transfers"][wsection] = \
-            Database(os.path.join(self.config.data_dir, wtarget + ".db"), flag='n')
-
-        """ Temporary dicts to use while scanning a folder. After a folder is done,
-        the contents of the dicts are saved to the real dbs, and cleaned up. """
-
-        fileindex_temp = {}
-        wordindex_temp = {}
-
-        return fileindex, fileindex_temp, wordindex, wordindex_temp
-
     def get_files_index(self, sharestype, sharedfiles):
         """ Update Search index with new files """
 
-        fileindex, fileindex_temp, wordindex, wordindex_temp = self.setup_index_databases(sharestype)
+        """ We dump data directly into the file index shelf to save memory """
+        if sharestype == "normal":
+            section = target = "fileindex"
+        else:
+            section = "bfileindex"
+            target = "buddyfileindex"
+
+        self.config.sections["transfers"][section].close()
+
+        fileindex = self.config.sections["transfers"][section] = \
+            shelve.open(os.path.join(self.config.data_dir, target + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+
+        """ For the word index, we can't use the same approach as above, as we need
+        to access dict elements frequently. This would take too long on a shelf. """
+        wordindex = {}
 
         index = 0
         count = len(sharedfiles)
@@ -808,14 +742,10 @@ class Shares:
                     lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
-                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex_temp, fileindex_temp)
+                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex, fileindex)
                 index += 1
 
-            fileindex.update(fileindex_temp)
-            fileindex_temp = {}
-
-            wordindex.update(wordindex_temp)
-            wordindex_temp = {}
+        self.set_shares(sharestype=sharestype, wordindex=wordindex)
 
     """ Search request processing """
 

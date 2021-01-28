@@ -2697,7 +2697,7 @@ class NicotineFrame:
         if self.np.transfers is not None:
             self.np.transfers.save_downloads()
 
-        # Closing up all dbs
+        # Closing up all shelves db
         self.np.shares.close_shares()
 
     def save_columns(self):
