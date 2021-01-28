@@ -69,7 +69,6 @@ class Scanner(multiprocessing.Process):
     def __init__(self, config, queue, sharestype="normal", rebuild=False):
 
         multiprocessing.Process.__init__(self)
-        apply_translation()
 
         self.config = config
         self.queue = queue
@@ -85,15 +84,26 @@ class Scanner(multiprocessing.Process):
         self.shared_folders = shared_folders
         fileindex_db, self.fileindex_path = fileindex
 
-        self.shares = {
-            "files": files,
-            "streams": file_streams,
-            "mtimes": mtimes,
-            "wordindex": wordindex,
-            "fileindex": fileindex_db
-        }
-
     def run(self):
+
+        apply_translation()
+
+        self.public_share_dbs = [
+            ("files", os.path.join(self.config.data_dir, "files.db")),
+            ("streams", os.path.join(self.config.data_dir, "streams.db")),
+            ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
+            ("fileindex", os.path.join(self.config.data_dir, "fileindex.db")),
+            ("mtimes", os.path.join(self.config.data_dir, "mtimes.db"))
+        ]
+        self.buddy_share_dbs = [
+            ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
+            ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
+            ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
+            ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
+            ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+        ]
+        self.load_shares(self.public_share_dbs)
+        self.load_shares(self.buddy_share_dbs)
 
         try:
             self.rescan_dirs(
@@ -116,6 +126,26 @@ class Scanner(multiprocessing.Process):
                 }
             ))
             self.queue.put(Exception("Scanning failed"))
+
+    def load_shares(self, dbs):
+
+        errors = []
+
+        for destination, shelvefile in dbs:
+            try:
+                self.shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
+            except Exception:
+                from traceback import format_exc
+
+                self.shares[destination] = None
+                errors.append(shelvefile)
+                exception = format_exc()
+
+        if errors:
+            log.add_warning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
+            log.add_warning(exception)
+
+            log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
 
     def real2virtual(self, path):
         path = path.replace('/', '\\')
@@ -818,6 +848,7 @@ class Shares:
 
         shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex = self.get_shared_folders_dbs(sharestype)
 
+        self.close_shares()
         self.create_scanner(sharestype, rebuild)
         self.scanner.set_shared_folders_dbs(shared_folders, old_mtimes, old_files, old_file_streams, old_wordindex, fileindex)
         self.scanner.start()
