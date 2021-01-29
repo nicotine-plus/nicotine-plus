@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import multiprocessing
 import os
 import pytest
 import queue
@@ -29,9 +30,12 @@ SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfi
 
 
 @pytest.fixture(scope="module", autouse=True)
-def translation():
+def setup():
     # Setting gettext and locale
     apply_translation()
+
+    # Use 'spawn' start method for file scanning process
+    multiprocessing.set_start_method("spawn")
 
 
 def test_shares_scan():

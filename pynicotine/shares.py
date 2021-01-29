@@ -470,12 +470,6 @@ class Shares:
 
     def __init__(self, np, config, queue, ui_callback=None, connected=False):
 
-        try:
-            multiprocessing.set_start_method("spawn")
-        except RuntimeError:
-            # Start method already set
-            pass
-
         self.np = np
         self.ui_callback = ui_callback
         self.config = config
