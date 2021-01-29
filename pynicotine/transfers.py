@@ -960,13 +960,13 @@ class Transfers:
 
         if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
             if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
-                bshared = self.eventprocessor.config.sections["transfers"]["bsharedfiles"]
+                bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
 
                 for i in bshared.get(str(folder), ''):
                     if file == i[0]:
                         return True
 
-        shared = self.eventprocessor.config.sections["transfers"]["sharedfiles"]
+        shared = self.eventprocessor.shares.share_dbs["files"]
 
         for i in shared.get(str(folder), ''):
             if file == i[0]:

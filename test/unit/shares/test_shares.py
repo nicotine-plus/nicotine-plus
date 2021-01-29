@@ -16,11 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import multiprocessing
 import os
 import pytest
 import queue
-
-from time import sleep
 
 from pynicotine.shares import Shares
 from pynicotine.config import Config
@@ -31,9 +30,12 @@ SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfi
 
 
 @pytest.fixture(scope="module", autouse=True)
-def translation():
+def setup():
     # Setting gettext and locale
     apply_translation()
+
+    # Use 'spawn' start method for file scanning process
+    multiprocessing.set_start_method("spawn")
 
 
 def test_shares_scan():
@@ -43,20 +45,20 @@ def test_shares_scan():
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
 
     shares = Shares(None, config, queue.Queue(0))
-    shares.rescan_shares()
+    shares.rescan_public_shares(thread=False)
 
     # Verify that modification time was saved for shares folder
-    assert SHARES_DIR in list(config.sections["transfers"]["sharedmtimes"])
+    assert SHARES_DIR in list(shares.share_dbs["mtimes"])
 
     # Verify that shared files were added
-    assert ('dummy_file', 0, None, None) in config.sections["transfers"]["sharedfiles"]["Shares"]
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in config.sections["transfers"]["sharedfiles"]["Shares"]
+    assert ('dummy_file', 0, None, None) in shares.share_dbs["files"]["Shares"]
+    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Shares"]
 
     # Verify that expected folder is empty
-    assert len(config.sections["transfers"]["sharedfiles"]["Shares\\folder2"]) == 0
+    assert len(shares.share_dbs["files"]["Shares\\folder2"]) == 0
 
     # Verify that search index was updated
-    word_index = config.sections["transfers"]["wordindex"]
+    word_index = shares.share_dbs["wordindex"]
     nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
     ogg_indexes = list(word_index["ogg"])
 
@@ -68,14 +70,9 @@ def test_shares_scan():
 
     # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
     assert ogg_indexes[0] in nicotinetestdata_indexes
-    assert config.sections["transfers"]["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
+    assert shares.share_dbs["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
 
-    # Slight delay to ensure shares compression finishes in different thread
-    sleep(4)
-
-    # Verify that dbs are cleared
-    shares.clear_shares()
-    assert len(list(config.sections["transfers"]["sharedfiles"])) == 0
+    shares.close_shares()
 
 
 def test_hidden_file_folder_scan():
@@ -85,10 +82,10 @@ def test_hidden_file_folder_scan():
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
 
     shares = Shares(None, config, queue.Queue(0))
-    shares.rescan_shares()
+    shares.rescan_public_shares(thread=False)
 
     # Check folders
-    mtimes = list(config.sections["transfers"]["sharedmtimes"])
+    mtimes = list(shares.share_dbs["mtimes"])
 
     assert os.path.join(SHARES_DIR, ".abc") not in mtimes
     assert os.path.join(SHARES_DIR, ".xyz") not in mtimes
@@ -99,13 +96,15 @@ def test_hidden_file_folder_scan():
     assert os.path.join(SHARES_DIR, "something") in mtimes
 
     # Check files
-    files = config.sections["transfers"]["sharedfiles"]["Shares"]
+    files = shares.share_dbs["files"]["Shares"]
 
     assert (".abc_file", 0, None, None) not in files
     assert (".hidden_file", 0, None, None) not in files
     assert (".xyz_file", 0, None, None) not in files
     assert ("dummy_file", 0, None, None) in files
     assert len(files) == 3
+
+    shares.close_shares()
 
 
 def test_shares_add_downloaded():
@@ -118,5 +117,7 @@ def test_shares_add_downloaded():
     shares = Shares(None, config, queue.Queue(0), None)
     shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in config.sections["transfers"]["sharedfiles"]["Downloaded"]
-    assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in config.sections["transfers"]["fileindex"].values()
+    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Downloaded"]
+    assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["fileindex"].values()
+
+    shares.close_shares()

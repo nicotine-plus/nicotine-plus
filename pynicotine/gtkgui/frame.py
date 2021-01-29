@@ -26,6 +26,7 @@ import os
 import signal
 import sys
 import threading
+import time
 
 import gi
 from gi.repository import Gdk
@@ -1103,9 +1104,7 @@ class NicotineFrame:
         self.rescan_public_action.set_enabled(False)
         self.browse_public_shares_action.set_enabled(False)
 
-        log.add(_("Rescanning started"))
-
-        _thread.start_new_thread(self.np.shares.rescan_shares, (rebuild,))
+        _thread.start_new_thread(self.np.shares.rescan_public_shares, (rebuild,))
 
     def on_buddy_rescan(self, *args, rebuild=False):
 
@@ -1116,8 +1115,6 @@ class NicotineFrame:
 
         self.rescan_buddy_action.set_enabled(False)
         self.browse_buddy_shares_action.set_enabled(False)
-
-        log.add(_("Rescanning Buddy Shares started"))
 
         _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
 
@@ -1753,6 +1750,7 @@ class NicotineFrame:
 
         if type == "buddy":
             GLib.idle_add(self._buddy_rescan_finished)
+
         elif type == "normal":
             GLib.idle_add(self._rescan_finished)
 
@@ -1763,8 +1761,6 @@ class NicotineFrame:
             self.browse_buddy_shares_action.set_enabled(True)
 
         self.brescanning = False
-        log.add(_("Rescanning Buddy Shares finished"))
-
         self.BuddySharesProgress.hide()
 
     def _rescan_finished(self):
@@ -1774,8 +1770,6 @@ class NicotineFrame:
             self.browse_public_shares_action.set_enabled(True)
 
         self.rescanning = False
-        log.add(_("Rescanning finished"))
-
         self.SharesProgress.hide()
 
     """ Transfer Statistics """
@@ -2441,18 +2435,38 @@ class NicotineFrame:
         self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
     def show_scan_progress(self, sharestype):
+
+        self.scan_progress_indeterminate = True
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.show)
         else:
             GLib.idle_add(self.BuddySharesProgress.show)
 
     def set_scan_progress(self, sharestype, value):
+
+        self.scan_progress_indeterminate = False
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.set_fraction, value)
         else:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
+    def set_scan_indeterminate(self, sharestype):
+        _thread.start_new_thread(self._set_scan_indeterminate, (sharestype,))
+
+    def _set_scan_indeterminate(self, sharestype):
+
+        while self.scan_progress_indeterminate:
+            if sharestype == "normal":
+                GLib.idle_add(self.SharesProgress.pulse)
+            else:
+                GLib.idle_add(self.BuddySharesProgress.pulse)
+
+            time.sleep(0.2)
+
     def hide_scan_progress(self, sharestype):
+
         if sharestype == "normal":
             GLib.idle_add(self.SharesProgress.hide)
         else:
