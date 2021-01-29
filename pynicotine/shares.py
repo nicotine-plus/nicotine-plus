@@ -82,24 +82,24 @@ class Scanner(multiprocessing.Process):
 
     def run(self):
 
-        apply_translation()
-
-        if self.sharestype == "normal":
-            Shares.load_shares(self.share_dbs, [
-                ("files", os.path.join(self.config.data_dir, "files.db")),
-                ("streams", os.path.join(self.config.data_dir, "streams.db")),
-                ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
-                ("mtimes", os.path.join(self.config.data_dir, "mtimes.db"))
-            ])
-        else:
-            Shares.load_shares(self.share_dbs, [
-                ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
-                ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
-                ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
-                ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
-            ])
-
         try:
+            apply_translation()
+
+            if self.sharestype == "normal":
+                Shares.load_shares(self.share_dbs, [
+                    ("files", os.path.join(self.config.data_dir, "files.db")),
+                    ("streams", os.path.join(self.config.data_dir, "streams.db")),
+                    ("wordindex", os.path.join(self.config.data_dir, "wordindex.db")),
+                    ("mtimes", os.path.join(self.config.data_dir, "mtimes.db"))
+                ])
+            else:
+                Shares.load_shares(self.share_dbs, [
+                    ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
+                    ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
+                    ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
+                    ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+                ])
+
             self.rescan_dirs(
                 self.shared_folders,
                 self.share_dbs["mtimes"],
@@ -107,8 +107,6 @@ class Scanner(multiprocessing.Process):
                 self.share_dbs["streams"],
                 rebuild=self.rebuild
             )
-
-            self.queue.put("finalize_shares")
 
         except Exception:
             from traceback import format_exc
@@ -793,6 +791,30 @@ class Shares:
 
         return shared_folders
 
+    def process_scanner_messages(self, sharestype):
+
+        while self.scanner.is_alive():
+            # Cooldown
+            time.sleep(0.5)
+
+            while not self.scanner_queue.empty():
+                item = self.scanner_queue.get()
+
+                if isinstance(item, Exception):
+                    return True
+
+                elif isinstance(item, tuple):
+                    log_level, template, args = item
+                    log.add(template, args, log_level)
+
+                elif isinstance(item, float):
+                    if self.ui_callback:
+                        self.ui_callback.set_scan_progress(sharestype, item)
+                    else:
+                        log.add(_("Progress: %s"), str(int(item * 100)) + " %")
+
+        return False
+
     def _rescan_shares(self, sharestype, rebuild):
 
         shared_folders = self.get_shared_folders(sharestype)
@@ -807,44 +829,29 @@ class Shares:
             self.ui_callback.show_scan_progress(sharestype)
             self.ui_callback.set_scan_indeterminate(sharestype)
 
-        while self.scanner.is_alive():
-            # Cooldown
-            time.sleep(0.5)
+        # Let the scanner process do its thing
+        error = self.process_scanner_messages(sharestype)
 
-            while not self.scanner_queue.empty():
-                item = self.scanner_queue.get()
+        # Scanning done, load shares in the main process again
+        if sharestype == "normal":
+            self.load_shares(self.share_dbs, self.public_share_dbs)
+        else:
+            self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
-                if isinstance(item, Exception):
-                    if self.ui_callback:
-                        self.ui_callback.hide_scan_progress(sharestype)
-                    return
+        self.create_compressed_shares_message(sharestype)
+        self.compress_shares(sharestype)
 
-                elif isinstance(item, tuple):
-                    log_level, template, args = item
-                    log.add(template, args, log_level)
+        if not error:
+            if self.connected:
+                """ Don't attempt to send file stats to the server before we're connected. If we skip the
+                step here, it will be done once we log in instead ("login" function in pynicotine.py). """
 
-                elif isinstance(item, float):
-                    if self.ui_callback:
-                        self.ui_callback.set_scan_progress(sharestype, item)
-                    else:
-                        log.add(_("Progress: %s"), str(int(item * 100)) + " %")
+                self.send_num_shared_folders_files()
 
-                elif item == "finalize_shares":
-                    # Load shares in the main process again
-
-                    if sharestype == "normal":
-                        self.load_shares(self.share_dbs, self.public_share_dbs)
-                    else:
-                        self.load_shares(self.share_dbs, self.buddy_share_dbs)
-
-                    self.create_compressed_shares_message(sharestype)
-                    self.compress_shares(sharestype)
-
-        if self.connected:
-            """ Don't attempt to send file stats to the server before we're connected. If we skip the
-            step here, it will be done once we log in instead ("login" function in pynicotine.py). """
-
-            self.send_num_shared_folders_files()
+            if sharestype == "normal":
+                log.add(_("Finished rescanning public shares"))
+            else:
+                log.add(_("Finished rescanning buddy shares"))
 
         if self.ui_callback:
             self.ui_callback.rescan_finished(sharestype)

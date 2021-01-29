@@ -1105,8 +1105,6 @@ class NicotineFrame:
         self.rescan_public_action.set_enabled(False)
         self.browse_public_shares_action.set_enabled(False)
 
-        log.add(_("Rescanning started"))
-
         _thread.start_new_thread(self.np.shares.rescan_public_shares, (rebuild,))
 
     def on_buddy_rescan(self, *args, rebuild=False):
@@ -1118,8 +1116,6 @@ class NicotineFrame:
 
         self.rescan_buddy_action.set_enabled(False)
         self.browse_buddy_shares_action.set_enabled(False)
-
-        log.add(_("Rescanning Buddy Shares started"))
 
         _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
 
@@ -1755,6 +1751,7 @@ class NicotineFrame:
 
         if type == "buddy":
             GLib.idle_add(self._buddy_rescan_finished)
+
         elif type == "normal":
             GLib.idle_add(self._rescan_finished)
 
@@ -1765,8 +1762,6 @@ class NicotineFrame:
             self.browse_buddy_shares_action.set_enabled(True)
 
         self.brescanning = False
-        log.add(_("Rescanning Buddy Shares finished"))
-
         self.BuddySharesProgress.hide()
 
     def _rescan_finished(self):
@@ -1776,8 +1771,6 @@ class NicotineFrame:
             self.browse_public_shares_action.set_enabled(True)
 
         self.rescanning = False
-        log.add(_("Rescanning finished"))
-
         self.SharesProgress.hide()
 
     """ Transfer Statistics """
