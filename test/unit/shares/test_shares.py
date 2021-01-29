@@ -72,7 +72,7 @@ def test_shares_scan():
     assert ogg_indexes[0] in nicotinetestdata_indexes
     assert shares.share_dbs["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
 
-    shares.close_shares()
+    shares.close_shares("normal")
 
 
 def test_hidden_file_folder_scan():
@@ -104,7 +104,7 @@ def test_hidden_file_folder_scan():
     assert ("dummy_file", 0, None, None) in files
     assert len(files) == 3
 
-    shares.close_shares()
+    shares.close_shares("normal")
 
 
 def test_shares_add_downloaded():
@@ -120,4 +120,4 @@ def test_shares_add_downloaded():
     assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Downloaded"]
     assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["fileindex"].values()
 
-    shares.close_shares()
+    shares.close_shares("normal")

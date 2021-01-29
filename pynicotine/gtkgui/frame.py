@@ -1104,7 +1104,7 @@ class NicotineFrame:
         self.rescan_public_action.set_enabled(False)
         self.browse_public_shares_action.set_enabled(False)
 
-        _thread.start_new_thread(self.np.shares.rescan_public_shares, (rebuild,))
+        self.np.shares.rescan_public_shares(rebuild)
 
     def on_buddy_rescan(self, *args, rebuild=False):
 
@@ -1116,7 +1116,7 @@ class NicotineFrame:
         self.rescan_buddy_action.set_enabled(False)
         self.browse_buddy_shares_action.set_enabled(False)
 
-        _thread.start_new_thread(self.np.shares.rescan_buddy_shares, (rebuild,))
+        self.np.shares.rescan_buddy_shares(rebuild)
 
     def on_browse_public_shares(self, *args, folder=None):
         """ Browse your own public shares """
@@ -2725,7 +2725,8 @@ class NicotineFrame:
             self.np.transfers.save_downloads()
 
         # Closing up all shelves db
-        self.np.shares.close_shares()
+        self.np.shares.close_shares("normal")
+        self.np.shares.close_shares("buddy")
 
     def save_columns(self):
         for i in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):

@@ -67,14 +67,14 @@ class Scanner(multiprocessing.Process):
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
 
-    def __init__(self, config, queue, shared_folders, share_dbs, sharestype="normal", rebuild=False):
+    def __init__(self, config, queue, shared_folders, sharestype="normal", rebuild=False):
 
         multiprocessing.Process.__init__(self)
 
         self.config = config
         self.queue = queue
         self.shared_folders = shared_folders
-        self.share_dbs = share_dbs
+        self.share_dbs = {}
         self.sharestype = sharestype
         self.rebuild = rebuild
         self.tinytag = TinyTag()
@@ -94,10 +94,10 @@ class Scanner(multiprocessing.Process):
                 ])
             else:
                 Shares.load_shares(self.share_dbs, [
-                    ("buddyfiles", os.path.join(self.config.data_dir, "buddyfiles.db")),
-                    ("buddystreams", os.path.join(self.config.data_dir, "buddystreams.db")),
-                    ("buddywordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
-                    ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
+                    ("files", os.path.join(self.config.data_dir, "buddyfiles.db")),
+                    ("streams", os.path.join(self.config.data_dir, "buddystreams.db")),
+                    ("wordindex", os.path.join(self.config.data_dir, "buddywordindex.db")),
+                    ("mtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
                 ])
 
             self.rescan_dirs(
@@ -123,28 +123,25 @@ class Scanner(multiprocessing.Process):
 
         self.config.create_data_folder()
 
-        if self.sharestype == "normal":
-            storable_objects = [
-                (files, "files"),
-                (streams, "streams"),
-                (mtimes, "mtimes"),
-                (wordindex, "wordindex")
-            ]
-        else:
-            storable_objects = [
-                (files, "buddyfiles"),
-                (streams, "buddystreams"),
-                (mtimes, "buddymtimes"),
-                (wordindex, "buddywordindex")
-            ]
+        storable_objects = [
+            (files, "files"),
+            (streams, "streams"),
+            (mtimes, "mtimes"),
+            (wordindex, "wordindex")
+        ]
 
         for source, destination in storable_objects:
             if source is not None:
                 try:
+                    # Close old db
                     self.share_dbs[destination].close()
-                    self.share_dbs[destination] = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                    self.share_dbs[destination].update(source)
-                    self.share_dbs[destination].close()
+
+                    if self.sharestype == "buddy":
+                        destination = "buddy" + destination
+
+                    db = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                    db.update(source)
+                    db.close()
 
                 except Exception as e:
                     self.queue.put((0, _("Can't save %s: %s"), (destination + ".db", e)))
@@ -474,12 +471,11 @@ class Shares:
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.scanner_queue = multiprocessing.Queue()
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.tinytag = TinyTag()
         self.share_dbs = {}
-        self.build_scanner_process()
+        self.scanner, scanner_queue = self.build_scanner_process()
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -704,13 +700,20 @@ class Shares:
         elif sharestype == "buddy":
             _thread.start_new_thread(self.compressed_shares_buddy.make_network_message, (0, True))
 
-    def close_shares(self):
-        for db in [
-            "files", "streams", "wordindex",
-            "fileindex", "mtimes",
-            "buddyfiles", "buddystreams", "buddywordindex",
-            "buddyfileindex", "buddymtimes"
-        ]:
+    def close_shares(self, sharestype):
+
+        if sharestype == "normal":
+            dbs = [
+                "files", "streams", "wordindex",
+                "fileindex", "mtimes"
+            ]
+        else:
+            dbs = [
+                "buddyfiles", "buddystreams", "buddywordindex",
+                "buddyfileindex", "buddymtimes"
+            ]
+
+        for db in dbs:
             self.share_dbs[db].close()
 
     def send_num_shared_folders_files(self):
@@ -741,15 +744,16 @@ class Shares:
 
     def build_scanner_process(self, shared_folders=None, sharestype="normal", rebuild=False):
 
-        self.scanner = Scanner(
+        scanner_queue = multiprocessing.Queue()
+        scanner = Scanner(
             self.config,
-            self.scanner_queue,
+            scanner_queue,
             shared_folders,
-            self.share_dbs,
             sharestype,
             rebuild
         )
-        self.scanner.daemon = True
+        scanner.daemon = True
+        return scanner, scanner_queue
 
     def rebuild_public_shares(self, thread=True):
         self.rescan_shares("normal", rebuild=True, thread=thread)
@@ -785,14 +789,14 @@ class Shares:
 
         return shared_folders
 
-    def process_scanner_messages(self, sharestype):
+    def process_scanner_messages(self, sharestype, scanner, scanner_queue):
 
-        while self.scanner.is_alive():
+        while scanner.is_alive():
             # Cooldown
             time.sleep(0.5)
 
-            while not self.scanner_queue.empty():
-                item = self.scanner_queue.get()
+            while not scanner_queue.empty():
+                item = scanner_queue.get()
 
                 if isinstance(item, Exception):
                     return True
@@ -814,17 +818,17 @@ class Shares:
         shared_folders = self.get_shared_folders(sharestype)
 
         # Hand over database control to the scanner process
-        self.close_shares()
+        self.close_shares(sharestype)
 
-        self.build_scanner_process(shared_folders, sharestype, rebuild)
-        self.scanner.start()
+        scanner, scanner_queue = self.build_scanner_process(shared_folders, sharestype, rebuild)
+        scanner.start()
 
         if self.ui_callback:
             self.ui_callback.show_scan_progress(sharestype)
             self.ui_callback.set_scan_indeterminate(sharestype)
 
         # Let the scanner process do its thing
-        error = self.process_scanner_messages(sharestype)
+        error = self.process_scanner_messages(sharestype, scanner, scanner_queue)
 
         # Scanning done, load shares in the main process again
         if sharestype == "normal":
