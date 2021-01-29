@@ -374,10 +374,6 @@ class NicotineFrame:
 
         self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
 
-        """ Plugins: loaded here to ensure all requirements are initialized """
-
-        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
-
         """ Connect """
 
         if self.np.config.need_config():
