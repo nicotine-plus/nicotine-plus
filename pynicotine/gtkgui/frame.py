@@ -117,8 +117,7 @@ class NicotineFrame:
             self.bindip,
             self.port,
             data_dir,
-            config,
-            plugins
+            config
         )
 
         config = self.np.config.sections
@@ -370,6 +369,10 @@ class NicotineFrame:
         # Check command line option and config option
         if not start_hidden and not config["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+        """ Plugins: loaded here to ensure all requirements are initialized """
+
+        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
 
         """ Plugins: loaded here to ensure all requirements are initialized """
 
@@ -2436,7 +2439,7 @@ class NicotineFrame:
             log.add(orig_msg, msg_args)
 
     def set_user_status(self, status):
-        self.UserStatus.set_markup("<b>%s</b>" % status)
+        self.UserStatus.set_text(status)
 
     def set_socket_status(self, status):
         self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
@@ -2483,10 +2486,10 @@ class NicotineFrame:
             down = up = human_speed(0.0)
             filesup = filesdown = total_usersdown = total_usersup = 0
 
-        self.DownloadUsers.set_markup("<b>%d</b>" % total_usersdown)
-        self.UploadUsers.set_markup("<b>%d</b>" % total_usersup)
-        self.DownloadFiles.set_markup("<b>%d</b>" % filesdown)
-        self.UploadFiles.set_markup("<b>%d</b>" % filesup)
+        self.DownloadUsers.set_text(str(total_usersdown))
+        self.UploadUsers.set_text(str(total_usersup))
+        self.DownloadFiles.set_text(str(filesdown))
+        self.UploadFiles.set_text(str(filesup))
 
         self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersdown, 'speed': down})
         self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersup, 'speed': up})

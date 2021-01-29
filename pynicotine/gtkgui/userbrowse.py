@@ -336,8 +336,8 @@ class UserBrowse:
                 if filedata[2] < maxsize:
                     self.totalsize += filedata[2]
 
-        self.AmountShared.set_markup("<b>%s</b>" % human_size(self.totalsize))
-        self.NumDirectories.set_markup("<b>%d</b>" % len(self.shares))
+        self.AmountShared.set_text(human_size(self.totalsize))
+        self.NumDirectories.set_text(str(len(self.shares)))
 
         # Generate the directory tree and select first directory
         currentdir = self.browse_get_dirs()

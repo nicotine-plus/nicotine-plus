@@ -1223,7 +1223,7 @@ class ChatRoom:
     def count_users(self):
 
         user_count = len(self.users)
-        self.LabelPeople.set_markup("<b>%d</b>" % user_count)
+        self.LabelPeople.set_text(str(user_count))
         self.chatrooms.roomlist.update_room(self.room, user_count)
 
     def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):

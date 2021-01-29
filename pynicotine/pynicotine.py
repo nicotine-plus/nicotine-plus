@@ -98,7 +98,7 @@ class ConnectToPeerTimeout(Timeout):
 class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking thread """
 
-    def __init__(self, ui_callback, network_callback, setstatus, bindip, port, data_dir, config, plugins):
+    def __init__(self, ui_callback, network_callback, setstatus, bindip, port, data_dir, config):
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback

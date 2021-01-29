@@ -20,9 +20,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+            <property name="label" translatable="yes">General</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -58,9 +60,11 @@
         <child>
           <object class="GtkLabel" id="CompletionsLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Allowed Completions&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Allowed Completions</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -113,9 +117,11 @@
         <child>
           <object class="GtkLabel" id="DropDownLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Drop-down list&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Drop-down list</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

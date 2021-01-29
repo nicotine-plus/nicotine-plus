@@ -88,12 +88,12 @@ class ServerFrame(BuildFrame):
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
         if self.frame.np.waitport is None:
-            self.CurrentPort.set_markup(_("Client port is not set"))
+            self.CurrentPort.set_text(_("Client port is not set"))
         else:
             self.CurrentPort.set_markup(_("Client port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
 
         if self.frame.np.ipaddress is None:
-            self.YourIP.set_markup(_("Your IP address has not been retrieved from the server"))
+            self.YourIP.set_text(_("Your IP address has not been retrieved from the server"))
         else:
             self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
 
@@ -471,9 +471,9 @@ class DownloadsFrame(BuildFrame):
                 'error': errors}
             )
 
-            self.VerifiedLabel.set_markup("<span color=\"red\" weight=\"bold\">%s</span>" % error)
+            self.VerifiedLabel.set_markup("<span foreground=\"#e04f5e\">%s</span>" % error)
         else:
-            self.VerifiedLabel.set_markup(_("<b>Filters Successful</b>"))
+            self.VerifiedLabel.set_text(_("Filters Successful"))
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 

@@ -26,8 +26,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">&lt;b&gt;Welcome to Nicotine+!&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">Welcome to Nicotine+!</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -112,8 +114,10 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Username&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Username</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>
@@ -142,8 +146,10 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Password&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Password</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>
@@ -243,8 +249,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Download Files To Folder&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Download Files To Folder</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -263,8 +271,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Share Folders&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Share Folders</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -339,8 +349,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">&lt;b&gt;You are now ready to use Nicotine+!&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">You are now ready to use Nicotine+!</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

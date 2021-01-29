@@ -47,8 +47,10 @@
                         <property name="margin-end">10</property>
                         <property name="margin-top">10</property>
                         <property name="margin-bottom">10</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Self Description&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Self Description</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>
@@ -80,8 +82,10 @@
                     <property name="halign">start</property>
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Information&lt;/b&gt;</property>
-                    <property name="use-markup">1</property>
+                    <property name="label" translatable="yes">Information</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                 </child>
                 <child>
@@ -203,8 +207,10 @@
                         <property name="margin-end">10</property>
                         <property name="margin-top">10</property>
                         <property name="margin-bottom">10</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Interests&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Interests</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>
@@ -264,8 +270,10 @@
                         <property name="margin-end">10</property>
                         <property name="margin-top">10</property>
                         <property name="margin-bottom">10</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Picture&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Picture</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>

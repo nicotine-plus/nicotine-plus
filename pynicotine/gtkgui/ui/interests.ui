@@ -22,8 +22,10 @@
                 <property name="margin-end">10</property>
                 <property name="margin-top">13</property>
                 <property name="margin-bottom">13</property>
-                <property name="label" translatable="yes">&lt;b&gt;My Interests&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">My Interests</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -152,8 +154,10 @@
                             <property name="halign">start</property>
                             <property name="hexpand">1</property>
                             <property name="margin-start">5</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Recommendations&lt;/b&gt;</property>
-                            <property name="use-markup">1</property>
+                            <property name="label" translatable="yes">Recommendations</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
                           </object>
                         </child>
                         <child>
@@ -243,8 +247,10 @@
                         <property name="margin-end">10</property>
                         <property name="margin-top">13</property>
                         <property name="margin-bottom">13</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Unrecommendations&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Unrecommendations</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>
@@ -292,8 +298,10 @@
                         <property name="halign">start</property>
                         <property name="hexpand">1</property>
                         <property name="margin-start">5</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Similar Users&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label" translatable="yes">Similar Users</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                     <child>

@@ -55,8 +55,10 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Folders&lt;/b&gt;</property>
-                                <property name="use-markup">1</property>
+                                <property name="label" translatable="yes">Folders</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
                               </object>
                             </child>
                             <child>
@@ -72,10 +74,12 @@
                                     <child>
                                       <object class="GtkLabel" id="NumDirectories">
                                         <property name="visible">1</property>
-                                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
-                                        <property name="use-markup">1</property>
+                                        <property name="label">0</property>
                                         <property name="margin-start">5</property>
                                         <property name="margin-end">5</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
                                       </object>
                                     </child>
                                   </object>
@@ -96,8 +100,10 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Shared&lt;/b&gt;</property>
-                                <property name="use-markup">1</property>
+                                <property name="label" translatable="yes">Shared</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
                               </object>
                             </child>
                             <child>
@@ -113,10 +119,12 @@
                                     <child>
                                       <object class="GtkLabel" id="AmountShared">
                                         <property name="visible">1</property>
-                                        <property name="label">&lt;b&gt;0 B&lt;/b&gt;</property>
-                                        <property name="use-markup">1</property>
+                                        <property name="label">0 B</property>
                                         <property name="margin-start">5</property>
                                         <property name="margin-end">5</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                        </attributes>
                                       </object>
                                     </child>
                                   </object>

@@ -53,8 +53,10 @@
                   <object class="GtkLabel" id="PluginName">
                     <property name="visible">1</property>
                     <property name="halign">start</property>
-                    <property name="label" translatable="yes">&lt;b&gt;No Plugin Selected&lt;/b&gt;</property>
-                    <property name="use-markup">1</property>
+                    <property name="label" translatable="yes">No Plugin Selected</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                 </child>
                 <child>
@@ -70,7 +72,6 @@
                             <property name="visible">1</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Version: </property>
-                            <property name="use-markup">1</property>
                             <property name="width-chars">15</property>
                           </object>
                         </child>
@@ -78,7 +79,6 @@
                           <object class="GtkLabel" id="PluginVersion">
                             <property name="visible">1</property>
                             <property name="xalign">0</property>
-                            <property name="use-markup">1</property>
                           </object>
                         </child>
                       </object>
@@ -91,7 +91,6 @@
                             <property name="visible">1</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Author(s): </property>
-                            <property name="use-markup">1</property>
                             <property name="width-chars">15</property>
                           </object>
                         </child>
@@ -99,7 +98,6 @@
                           <object class="GtkLabel" id="PluginAuthor">
                             <property name="visible">1</property>
                             <property name="xalign">0</property>
-                            <property name="use-markup">1</property>
                           </object>
                         </child>
                       </object>
@@ -112,7 +110,6 @@
                             <property name="visible">1</property>
                             <property name="xalign">0</property>
                             <property name="label" translatable="yes">Description: </property>
-                            <property name="use-markup">1</property>
                             <property name="width-chars">15</property>
                           </object>
                         </child>

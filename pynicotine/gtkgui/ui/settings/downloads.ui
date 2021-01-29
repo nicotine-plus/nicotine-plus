@@ -19,8 +19,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">General</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -119,8 +121,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">&lt;b&gt;Folders&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">Folders</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -219,8 +223,10 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">&lt;b&gt;Download Filters&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">Download Filters</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -313,10 +319,12 @@
                   <object class="GtkLabel" id="VerifiedLabel">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Unverified&lt;/b&gt;</property>
-                    <property name="use-markup">1</property>
+                    <property name="label" translatable="yes">Unverified</property>
                     <property name="wrap">1</property>
                     <property name="xalign">1</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                 </child>
               </object>

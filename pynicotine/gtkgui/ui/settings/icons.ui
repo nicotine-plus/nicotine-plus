@@ -13,9 +13,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Tray&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Tray</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -73,9 +75,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Icon Theme&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Icon Theme</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -131,9 +135,11 @@
             <child>
               <object class="GtkLabel" id="Trayicon_Label">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Tray Icon&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Tray Icon</property>
                 <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -311,9 +317,11 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Status&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Status</property>
                 <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="left-attach">0</property>

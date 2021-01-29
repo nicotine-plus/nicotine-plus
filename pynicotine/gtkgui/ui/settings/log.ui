@@ -23,11 +23,12 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+            <property name="label" translatable="yes">General</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
-
         </child>
         <child>
           <object class="GtkCheckButton" id="LogRooms">
@@ -71,9 +72,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Folder Locations&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Folder Locations</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -174,9 +177,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Chat History&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Chat History</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -258,9 +263,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Timestamps&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Timestamps</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

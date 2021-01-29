@@ -231,8 +231,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Users&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Users</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -248,10 +250,12 @@
                     <child>
                       <object class="GtkLabel" id="DownloadUsers">
                         <property name="visible">1</property>
-                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label">0</property>
                         <property name="margin-start">5</property>
                         <property name="margin-end">5</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                   </object>
@@ -272,8 +276,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Files&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Files</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -289,10 +295,12 @@
                     <child>
                       <object class="GtkLabel" id="DownloadFiles">
                         <property name="visible">1</property>
-                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label">0</property>
                         <property name="margin-start">5</property>
                         <property name="margin-end">5</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                   </object>
@@ -398,8 +406,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Users&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Users</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -415,10 +425,12 @@
                     <child>
                       <object class="GtkLabel" id="UploadUsers">
                         <property name="visible">1</property>
-                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label">0</property>
                         <property name="margin-start">5</property>
                         <property name="margin-end">5</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                   </object>
@@ -439,8 +451,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;Files&lt;/b&gt;</property>
-                <property name="use-markup">1</property>
+                <property name="label" translatable="yes">Files</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>
@@ -456,10 +470,12 @@
                     <child>
                       <object class="GtkLabel" id="UploadFiles">
                         <property name="visible">1</property>
-                        <property name="label">&lt;b&gt;0&lt;/b&gt;</property>
-                        <property name="use-markup">1</property>
+                        <property name="label">0</property>
                         <property name="margin-start">5</property>
                         <property name="margin-end">5</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
                       </object>
                     </child>
                   </object>
@@ -1523,11 +1539,13 @@
                         <child>
                           <object class="GtkLabel" id="debugLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Debug Logging&lt;/b&gt;</property>
-                            <property name="use-markup">1</property>
+                            <property name="label" translatable="yes">Debug Logging</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">10</property>
                             <property name="margin-end">10</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
@@ -1763,7 +1781,9 @@
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="label">...</property>
-                <property name="use-markup">1</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
             </child>
             <child>

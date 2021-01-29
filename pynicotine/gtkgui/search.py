@@ -1074,7 +1074,7 @@ class Search:
         self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
 
     def update_result_counter(self):
-        self.Counter.set_markup("<b>%d</b>" % self.numvisibleresults)
+        self.Counter.set_text(str(self.numvisibleresults))
 
     def update_visuals(self):
 

@@ -31,9 +31,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Login Details&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Login Details</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -150,10 +152,12 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Ports&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Ports</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
             <property name="margin-top">10</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -197,7 +201,6 @@
                 <property name="hexpand">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Client port is not set</property>
-                <property name="use-markup">1</property>
               </object>
             </child>
             <child>
@@ -259,10 +262,12 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Miscellaneous&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Miscellaneous</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
             <property name="margin-top">10</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

@@ -49,9 +49,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
+            <property name="label" translatable="yes">General</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -93,9 +95,11 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Tab Bar Positioning&lt;/b&gt;</property>
+            <property name="label" translatable="yes">Tab Bar Positioning</property>
             <property name="halign">start</property>
-            <property name="use-markup">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

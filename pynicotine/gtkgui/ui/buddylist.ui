@@ -16,10 +16,12 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">&lt;b&gt;Buddy List&lt;/b&gt;</property>
-            <property name="use-markup">1</property>
+            <property name="label" translatable="yes">Buddy List</property>
             <property name="margin-start">5</property>
             <property name="margin-end">10</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>

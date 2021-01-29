@@ -28,6 +28,7 @@ import sys
 import time
 
 from collections import OrderedDict
+from html import escape
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -798,7 +799,7 @@ class ImageLabel(Gtk.Box):
         if not color:
             self.label.set_text("%s" % self.text)
         else:
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, self.text.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")))
+            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
 
     def set_hilite_image(self, pixbuf):
         self.hilite_pixbuf = pixbuf
