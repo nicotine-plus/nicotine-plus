@@ -3,135 +3,191 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkInfoBar" id="InfoBar">
-        <property name="visible">1</property>
-        <child internal-child="content_area">
-          <object class="GtkBox">
-            <property name="spacing">16</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="wrap">1</property>
+      <object class="GtkBox">
+        <property name="visible">0</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkInfoBar" id="InfoBar">
+            <property name="visible">1</property>
+            <child internal-child="content_area">
+              <object class="GtkBox">
+                <property name="spacing">16</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="wrap">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkPaned">
-        <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <child>
-          <object class="GtkBox" id="FolderPane">
+          <object class="GtkPaned">
             <property name="visible">1</property>
-            <property name="orientation">vertical</property>
+            <property name="can-focus">1</property>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox" id="FolderPane">
                 <property name="visible">1</property>
-                <property name="column-spacing">8</property>
-                <property name="row-spacing">2</property>
-                <property name="margin-top">4</property>
-                <property name="margin-bottom">4</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkFlowBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="column-spacing">8</property>
+                    <property name="row-spacing">2</property>
+                    <property name="margin-top">4</property>
+                    <property name="margin-bottom">4</property>
+                    <property name="margin-start">5</property>
+                    <property name="margin-end">5</property>
+                    <property name="max-children-per-line">2</property>
+                    <property name="selection-mode">none</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
+                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <property name="margin-start">4</property>
-                            <property name="margin-end">5</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Folders</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
+                                <property name="spacing">6</property>
+                                <property name="margin-start">4</property>
+                                <property name="margin-end">5</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Folders</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                    </attributes>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">1</property>
+                                    <property name="sensitive">0</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">1</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">1</property>
+                                        <child>
+                                          <object class="GtkLabel" id="NumDirectories">
+                                            <property name="visible">1</property>
+                                            <property name="label">0</property>
+                                            <property name="margin-start">5</property>
+                                            <property name="margin-end">5</property>
+                                            <attributes>
+                                              <attribute name="weight" value="bold"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="sensitive">0</property>
+                                <property name="spacing">6</property>
+                                <property name="margin-start">5</property>
+                                <property name="margin-end">5</property>
                                 <child>
-                                  <object class="GtkBox">
-                                    <property name="width-request">24</property>
+                                  <object class="GtkLabel">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <property name="homogeneous">1</property>
-                                    <child>
-                                      <object class="GtkLabel" id="NumDirectories">
-                                        <property name="visible">1</property>
-                                        <property name="label">0</property>
-                                        <property name="margin-start">5</property>
-                                        <property name="margin-end">5</property>
-                                        <attributes>
-                                          <attribute name="weight" value="bold"/>
-                                        </attributes>
-                                      </object>
-                                    </child>
+                                    <property name="label" translatable="yes">Shared</property>
+                                    <attributes>
+                                      <attribute name="weight" value="bold"/>
+                                    </attributes>
                                   </object>
                                 </child>
-                                <style>
-                                  <class name="circular"/>
-                                </style>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="visible">1</property>
+                                    <property name="sensitive">0</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="width-request">24</property>
+                                        <property name="visible">1</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">1</property>
+                                        <child>
+                                          <object class="GtkLabel" id="AmountShared">
+                                            <property name="visible">1</property>
+                                            <property name="label">0 B</property>
+                                            <property name="margin-start">5</property>
+                                            <property name="margin-end">5</property>
+                                            <attributes>
+                                              <attribute name="weight" value="bold"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
                         </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
                             <property name="spacing">6</property>
-                            <property name="margin-start">5</property>
-                            <property name="margin-end">5</property>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkSearchEntry" id="SearchEntry">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Shared</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
+                                <property name="width-chars">20</property>
+                                <signal name="activate" handler="on_search" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="RefreshButton">
                                 <property name="visible">1</property>
-                                <property name="sensitive">0</property>
+                                <property name="can-focus">1</property>
+                                <property name="tooltip-text" translatable="yes">Refresh files</property>
+                                <signal name="clicked" handler="on_refresh" swapped="no"/>
                                 <child>
-                                  <object class="GtkBox">
-                                    <property name="width-request">24</property>
+                                  <object class="GtkImage">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
-                                    <property name="homogeneous">1</property>
-                                    <child>
-                                      <object class="GtkLabel" id="AmountShared">
-                                        <property name="visible">1</property>
-                                        <property name="label">0 B</property>
-                                        <property name="margin-start">5</property>
-                                        <property name="margin-end">5</property>
-                                        <attributes>
-                                          <attribute name="weight" value="bold"/>
-                                        </attributes>
-                                      </object>
-                                    </child>
+                                    <property name="icon-name">view-refresh-symbolic</property>
                                   </object>
                                 </child>
-                                <style>
-                                  <class name="circular"/>
-                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkToggleButton" id="ExpandButton">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="active">1</property>
+                                <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
+                                <signal name="clicked" handler="on_expand" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage" id="expand">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">go-down-symbolic</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -141,120 +197,69 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
+                    <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkTreeView" id="FolderTreeView">
                         <property name="visible">1</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkSearchEntry" id="SearchEntry">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="hexpand">1</property>
-                            <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
-                            <property name="width-chars">20</property>
-                            <signal name="activate" handler="on_search" swapped="no"/>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="RefreshButton">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="tooltip-text" translatable="yes">Refresh files</property>
-                            <signal name="clicked" handler="on_refresh" swapped="no"/>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkToggleButton" id="ExpandButton">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="active">1</property>
-                            <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-                            <signal name="clicked" handler="on_expand" swapped="no"/>
-                            <child>
-                              <object class="GtkImage" id="expand">
-                                <property name="visible">1</property>
-                                <property name="icon-name">go-down-symbolic</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                        <property name="sensitive">0</property>
+                        <property name="can-focus">1</property>
+                        <property name="headers-visible">0</property>
+                        <signal name="button-press-event" handler="on_folder_clicked" swapped="no"/>
+                        <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                        <signal name="popup-menu" handler="on_folder_popup_menu" swapped="no"/>
+                        <signal name="touch-event" handler="on_folder_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="progressbar1">
+                    <property name="valign">center</property>
+                    <property name="visible">1</property>
+                    <property name="pulse-step">0.10000000149</property>
+                    <property name="margin-start">8</property>
+                    <property name="margin-end">8</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="width-request">400</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="vexpand">1</property>
+                    <child>
+                      <object class="GtkTreeView" id="FileTreeView">
+                        <property name="visible">1</property>
+                        <property name="sensitive">0</property>
+                        <property name="can-focus">1</property>
+                        <signal name="button-press-event" handler="on_file_clicked" swapped="no"/>
+                        <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
+                        <signal name="popup-menu" handler="on_file_popup_menu" swapped="no"/>
+                        <signal name="touch-event" handler="on_file_clicked" swapped="no"/>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="vexpand">1</property>
-                <child>
-                  <object class="GtkTreeView" id="FolderTreeView">
-                    <property name="visible">1</property>
-                    <property name="sensitive">0</property>
-                    <property name="can-focus">1</property>
-                    <property name="headers-visible">0</property>
-                    <signal name="button-press-event" handler="on_folder_clicked" swapped="no"/>
-                    <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
-                    <signal name="popup-menu" handler="on_folder_popup_menu" swapped="no"/>
-                    <signal name="touch-event" handler="on_folder_clicked" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkProgressBar" id="progressbar1">
-                <property name="valign">center</property>
-                <property name="visible">1</property>
-                <property name="pulse-step">0.10000000149</property>
-                <property name="margin-start">8</property>
-                <property name="margin-end">8</property>
-                <property name="margin-top">6</property>
-                <property name="margin-bottom">6</property>
-              </object>
+              <packing>
+                <property name="resize">1</property>
+              </packing>
             </child>
           </object>
-          <packing>
-            <property name="resize">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="width-request">400</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="vexpand">1</property>
-                <child>
-                  <object class="GtkTreeView" id="FileTreeView">
-                    <property name="visible">1</property>
-                    <property name="sensitive">0</property>
-                    <property name="can-focus">1</property>
-                    <signal name="button-press-event" handler="on_file_clicked" swapped="no"/>
-                    <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
-                    <signal name="popup-menu" handler="on_file_popup_menu" swapped="no"/>
-                    <signal name="touch-event" handler="on_file_clicked" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="resize">1</property>
-          </packing>
         </child>
       </object>
     </child>

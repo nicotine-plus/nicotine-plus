@@ -3,100 +3,105 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkSearchBar" id="SearchBar">
-        <property name="visible">1</property>
-        <property name="show-close-button">1</property>
+      <object class="GtkBox">
+        <property name="visible">0</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkSearchBar" id="SearchBar">
+            <property name="visible">1</property>
+            <property name="show-close-button">1</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkSearchEntry" id="SearchEntry">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="max-width-chars">75</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="vexpand">1</property>
+            <child>
+              <object class="GtkTextView" id="ChatScroll">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="editable">0</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="cursor-visible">0</property>
+                <property name="pixels-above-lines">1</property>
+                <property name="pixels-below-lines">1</property>
+                <property name="left-margin">10</property>
+                <property name="right-margin">10</property>
+                <property name="top-margin">5</property>
+                <property name="bottom-margin">5</property>
+                <signal name="button-press-event" handler="on_message_view_clicked" swapped="no"/>
+                <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
+                <signal name="touch-event" handler="on_message_view_clicked" swapped="no"/>
+              </object>
+            </child>
+          </object>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
+            <property name="margin-start">8</property>
+            <property name="margin-end">8</property>
+            <property name="margin-top">8</property>
+            <property name="margin-bottom">8</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkSearchEntry" id="SearchEntry">
+              <object class="GtkEntry" id="ChatLine">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="max-width-chars">75</property>
+                <property name="hexpand">1</property>
+                <signal name="activate" handler="on_enter" swapped="no"/>
+                <signal name="key-press-event" handler="on_key_press" swapped="no"/>
               </object>
             </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkScrolledWindow">
-        <property name="visible">1</property>
-        <property name="can-focus">1</property>
-        <property name="vexpand">1</property>
-        <child>
-          <object class="GtkTextView" id="ChatScroll">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="editable">0</property>
-            <property name="wrap-mode">word-char</property>
-            <property name="cursor-visible">0</property>
-            <property name="pixels-above-lines">1</property>
-            <property name="pixels-below-lines">1</property>
-            <property name="left-margin">10</property>
-            <property name="right-margin">10</property>
-            <property name="top-margin">5</property>
-            <property name="bottom-margin">5</property>
-            <signal name="button-press-event" handler="on_message_view_clicked" swapped="no"/>
-            <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
-            <signal name="touch-event" handler="on_message_view_clicked" swapped="no"/>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="margin-start">8</property>
-        <property name="margin-end">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">8</property>
-        <property name="spacing">6</property>
-        <child>
-          <object class="GtkEntry" id="ChatLine">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <signal name="activate" handler="on_enter" swapped="no"/>
-            <signal name="key-press-event" handler="on_key_press" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="PeerPrivateMessages">
-            <property name="label" translatable="yes">Direct Message</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="Log">
-            <property name="label" translatable="yes">Log</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="ShowChatHelp">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
-            <property name="tooltip-text" translatable="yes">Private chat command help</property>
-            <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
             <child>
-              <object class="GtkImage">
+              <object class="GtkCheckButton" id="PeerPrivateMessages">
+                <property name="label" translatable="yes">Direct Message</property>
                 <property name="visible">1</property>
-                <property name="icon-name">dialog-question-symbolic</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
               </object>
             </child>
-            <style>
-              <class name="image-button"/>
-            </style>
+            <child>
+              <object class="GtkCheckButton" id="Log">
+                <property name="label" translatable="yes">Log</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="ShowChatHelp">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="receives-default">1</property>
+                <property name="tooltip-text" translatable="yes">Private chat command help</property>
+                <signal name="clicked" handler="on_show_chat_help" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">dialog-question-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
       </object>
