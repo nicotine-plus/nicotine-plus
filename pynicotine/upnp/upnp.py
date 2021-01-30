@@ -245,10 +245,10 @@ class UPnp:
             router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:InternetGatewayDevice:2"), None)
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:device:InternetGatewayDevice:2"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:InternetGatewayDevice:1"), None)
+            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
 
         if not router:
             router = next((r for r in routers), None)
