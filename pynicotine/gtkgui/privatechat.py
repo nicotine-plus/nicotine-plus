@@ -93,9 +93,9 @@ class PrivateChats(IconNotebook):
         self.users = {}
         self.clist = []
 
-        self.notebook.connect("switch-page", self.on_switch_page)
+        self.notebook.connect("switch-page", self.on_switch_chat)
 
-    def on_switch_page(self, notebook, page, page_num, forceupdate=False):
+    def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
             return

@@ -856,7 +856,7 @@ class IconNotebook:
         self._show_status_image = show_status_image
 
         self.notebook.connect("key-press-event", self.on_key_press_event)
-        self.notebook.connect("switch-page", self.dismiss_icon)
+        self.notebook.connect("switch-page", self.on_switch_page)
 
         self.angle = angle
 
@@ -1006,11 +1006,6 @@ class IconNotebook:
         tab_label, menu_label = self.get_labels(page)
         tab_label.set_text_color(status)
 
-    def dismiss_icon(self, notebook, page, page_num):
-
-        self.set_hilite_image(page, status=0)
-        self.set_text_color(page, status=0)
-
     def request_hilite(self, page):
 
         current = self.get_nth_page(self.get_current_page())
@@ -1064,6 +1059,21 @@ class IconNotebook:
                 return True
 
         return False
+
+    def on_switch_page(self, notebook, new_page, page_num):
+
+        # Hide widgets on previous page for a performance boost
+        current_page = self.get_nth_page(self.get_current_page())
+
+        for child in current_page.get_children():
+            child.hide()
+
+        for child in new_page.get_children():
+            child.show()
+
+        # Dismiss tab notification
+        self.set_hilite_image(new_page, status=0)
+        self.set_text_color(new_page, status=0)
 
 
 class InfoBar:

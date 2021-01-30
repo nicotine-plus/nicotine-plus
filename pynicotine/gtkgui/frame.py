@@ -1426,14 +1426,14 @@ class NicotineFrame:
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
-            self.chatrooms.on_switch_page(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+            self.chatrooms.on_switch_chat(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.PrivateChatTabLabel:
             self.set_active_header_bar("PrivateChat")
 
             curr_page_num = self.privatechats.get_current_page()
             curr_page = self.privatechats.get_nth_page(curr_page_num)
-            self.privatechats.on_switch_page(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
+            self.privatechats.on_switch_chat(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")

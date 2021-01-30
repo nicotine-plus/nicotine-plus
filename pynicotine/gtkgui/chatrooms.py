@@ -126,7 +126,7 @@ class ChatRooms(IconNotebook):
 
         self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
 
-        self.notebook.connect("switch-page", self.on_switch_page)
+        self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
         self.update_visuals()
@@ -187,7 +187,7 @@ class ChatRooms(IconNotebook):
         # Save
         self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
 
-    def on_switch_page(self, notebook, page, page_num, forceupdate=False):
+    def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and not forceupdate:
             return
