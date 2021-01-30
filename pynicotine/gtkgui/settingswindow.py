@@ -74,6 +74,7 @@ class ServerFrame(BuildFrame):
                 "portrange": None,
                 "upnp": self.UseUPnP,
                 "upnp_interval": self.UPnPInterval,
+                "auto_connect_startup": self.AutoConnectStartup,
                 "ctcpmsgs": self.ctcptogglebutton
             }
         }
@@ -128,7 +129,8 @@ class ServerFrame(BuildFrame):
                 "portrange": portrange,
                 "upnp": self.UseUPnP.get_active(),
                 "upnp_interval": self.UPnPInterval.get_value_as_int(),
-                "ctcpmsgs": not self.ctcptogglebutton.get_active(),
+                "auto_connect_startup": self.AutoConnectStartup.get_active(),
+                "ctcpmsgs": not self.ctcptogglebutton.get_active()
             }
         }
 

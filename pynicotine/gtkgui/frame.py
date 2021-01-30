@@ -384,7 +384,7 @@ class NicotineFrame:
             # Set up fast configure dialog
             self.on_fast_configure()
 
-        else:
+        elif config["server"]["auto_connect_startup"]:
             self.on_connect()
 
         self.update_bandwidth()
