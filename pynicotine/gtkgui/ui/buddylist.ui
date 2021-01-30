@@ -3,89 +3,84 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
+    <property name="orientation">vertical</property>
     <property name="hexpand">1</property>
     <child>
-      <object class="GtkBox">
-        <property name="visible">0</property>
-        <property name="orientation">vertical</property>
+      <object class="GtkBox" id="BuddiesToolbar">
+        <property name="visible">1</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="spacing">6</property>
         <child>
-          <object class="GtkBox" id="BuddiesToolbar">
+          <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="margin-start">6</property>
-            <property name="margin-end">6</property>
-            <property name="margin-top">6</property>
-            <property name="margin-bottom">6</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Buddy List</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">10</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="UserLabel">
-                <property name="visible">1</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
-                <property name="label" translatable="yes">User:</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkEntry" id="AddUserEntry">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="width-chars">15</property>
-                <property name="placeholder-text" translatable="yes">Add buddy...</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
-                <property name="primary-icon-name">avatar-default-symbolic</property>
-                <signal name="activate" handler="on_add_user" swapped="no"/>
-                <signal name="icon-press" handler="on_add_user" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="receives-default">1</property>
-                <property name="tooltip-text" translatable="yes">Configure banned users</property>
-                <property name="halign">end</property>
-                <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">emblem-system-symbolic</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="circular"/>
-                  <class name="image-button"/>
-                </style>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Buddy List</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">10</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkLabel" id="UserLabel">
+            <property name="visible">1</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+            <property name="label" translatable="yes">User:</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="vexpand">1</property>
+            <property name="hexpand">1</property>
+            <property name="width-chars">15</property>
+            <property name="placeholder-text" translatable="yes">Add buddy...</property>
+            <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="primary-icon-name">avatar-default-symbolic</property>
+            <signal name="activate" handler="on_add_user" swapped="no"/>
+            <signal name="icon-press" handler="on_add_user" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="receives-default">1</property>
+            <property name="tooltip-text" translatable="yes">Configure banned users</property>
+            <property name="halign">end</property>
+            <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
             <child>
-              <object class="GtkTreeView" id="UserListTree">
+              <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="has-tooltip">1</property>
-                <signal name="button-press-event" handler="on_list_clicked" swapped="no"/>
-                <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
-                <signal name="touch-event" handler="on_list_clicked" swapped="no"/>
-                <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="circular"/>
+              <class name="image-button"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">1</property>
+        <property name="can-focus">1</property>
+        <property name="vexpand">1</property>
+        <child>
+          <object class="GtkTreeView" id="UserListTree">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="has-tooltip">1</property>
+            <signal name="button-press-event" handler="on_list_clicked" swapped="no"/>
+            <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
+            <signal name="touch-event" handler="on_list_clicked" swapped="no"/>
+            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
           </object>
         </child>
       </object>
