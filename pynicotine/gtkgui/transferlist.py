@@ -205,11 +205,12 @@ class TransferList:
             iterator = model.iter_next(iterator)
 
     def select_transfer(self, model, iterator, selectuser=False):
+
         user = model.get_value(iterator, 0)
-        file = model.get_value(iterator, 10)
+        filepath = model.get_value(iterator, 10)
 
         for i in self.list:
-            if i.user == user and i.filename == file:
+            if i.user == user and i.filename == filepath:
                 self.selected_transfers.add(i)
                 break
 

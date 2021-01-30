@@ -146,24 +146,32 @@ class UserBrowse:
 
         if user == self.frame.np.config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
-                ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
+                ("#" + _("_Download Folder"), self.on_download_directory),
+                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
+                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
                 ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, None),
-                (1, _("Upload"), self.popup_menu_uploads_folders, None),
+                ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
+                ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_file_path, False),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
+                ("", None),
+                (1, _("User"), self.popup_menu_users, self.on_popup_menu_folder_user)
             )
         else:
             self.folder_popup_menu.setup(
-                ("USERMENU", _("User"), self.popup_menu_users, self.on_popup_menu_folder_user),
-                ("", None),
-                (1, _("Download"), self.popup_menu_downloads_folders, None),
+                ("#" + _("_Download Folder"), self.on_download_directory),
+                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
+                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_file_path, False),
-                ("#" + _("Copy _URL"), self.on_copy_dir_url)
+                ("#" + _("Copy _URL"), self.on_copy_dir_url),
+                ("", None),
+                (1, _("User"), self.popup_menu_users, self.on_popup_menu_folder_user)
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
@@ -202,7 +210,7 @@ class UserBrowse:
 
         if user == self.frame.np.config.sections["server"]["login"]:
             self.file_popup_menu.setup(
-                ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
+                ("#" + "selected_files", None),
                 ("", None),
                 (1, _("Download"), self.popup_menu_downloads_files, None),
                 (1, _("Upload"), self.popup_menu_uploads_files, None),
@@ -212,18 +220,22 @@ class UserBrowse:
                 ("#" + _("File _Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path, True),
-                ("#" + _("Copy _URL"), self.on_copy_url)
+                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("", None),
+                (1, "User", self.popup_menu_users2, self.on_popup_menu_file_user)
             )
         else:
             self.file_popup_menu.setup(
-                ("USERMENU", "User", self.popup_menu_users2, self.on_popup_menu_file_user),
+                ("#" + "selected_files", None),
                 ("", None),
                 (1, _("Download"), self.popup_menu_downloads_files, None),
                 ("", None),
                 ("#" + _("File _Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path, True),
-                ("#" + _("Copy _URL"), self.on_copy_url)
+                ("#" + _("Copy _URL"), self.on_copy_url),
+                ("", None),
+                (1, "User", self.popup_menu_users2, self.on_popup_menu_file_user)
             )
 
         self.update_visuals()
@@ -308,8 +320,9 @@ class UserBrowse:
     def on_file_popup_menu(self, widget):
 
         self.select_files()
+        num_selected_files = len(self.selected_files)
 
-        if len(self.selected_files) >= 1:
+        if num_selected_files >= 1:
             files = True
         else:
             files = False
@@ -323,6 +336,9 @@ class UserBrowse:
         else:
             for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
                 items[i].set_sensitive(files)
+
+        items["selected_files"].set_sensitive(False)
+        items["selected_files"].set_label(_("%s File(s) Selected") % num_selected_files)
 
         self.file_popup_menu.popup()
         return True

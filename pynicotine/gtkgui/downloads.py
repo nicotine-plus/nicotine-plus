@@ -61,6 +61,8 @@ class Downloads(TransferList):
 
         self.popup_menu = popup = PopupMenu(frame)
         popup.setup(
+            ("#" + "selected_files", None),
+            ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
             ("#" + _("_Open Folder"), self.on_open_directory),
             ("#" + _("File P_roperties"), self.on_file_properties),
@@ -349,9 +351,10 @@ class Downloads(TransferList):
     def on_popup_menu(self, widget):
 
         self.select_transfers()
+        num_selected_transfers = len(self.selected_transfers)
 
         users = len(self.selected_users) > 0
-        files = len(self.selected_transfers) > 0
+        files = num_selected_transfers > 0
 
         items = self.popup_menu.get_items()
         items[_("User(s)")].set_sensitive(users)  # Users Menu
@@ -376,6 +379,9 @@ class Downloads(TransferList):
 
         for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
             items[i].set_sensitive(act)
+
+        items["selected_files"].set_sensitive(False)
+        items["selected_files"].set_label(_("%s File(s) Selected") % num_selected_transfers)
 
         self.popup_menu.popup()
         return True

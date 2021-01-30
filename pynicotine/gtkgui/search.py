@@ -566,6 +566,8 @@ class Search:
         self.popup_menu_users = PopupMenu(self.frame, False)
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
+            ("#" + "selected_files", None),
+            ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
             ("#" + _("Download File(s) _To..."), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
@@ -1071,6 +1073,7 @@ class Search:
 
         self.selected_results = set()
         self.selected_users = set()
+        self.selected_files_count = 0
 
         self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
 
@@ -1105,6 +1108,11 @@ class Search:
         size = model.get_value(iterator, 14)
 
         self.selected_results.add((user, filepath, size, bitrate, length))
+
+        filename = model.get_value(iterator, 7)
+
+        if filename:
+            self.selected_files_count += 1
 
     def on_list_clicked(self, widget, event):
 
@@ -1166,6 +1174,9 @@ class Search:
                     items[i].set_sensitive(True)
 
                 break
+
+        items["selected_files"].set_sensitive(False)
+        items["selected_files"].set_label(_("%s File(s) Selected") % self.selected_files_count)
 
         self.popup_menu.popup()
         return True
