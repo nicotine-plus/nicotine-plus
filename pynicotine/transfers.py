@@ -2113,7 +2113,7 @@ class Transfers:
 
                     for file in files:
                         size = file[2]
-                        h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
+                        h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                         if directory[-1] == '\\':
                             self.get_file(

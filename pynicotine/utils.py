@@ -154,6 +154,7 @@ def get_result_bitrate_length(filesize, attributes):
     h_length = ""
 
     bitrate = 0
+    length = 0
 
     # If there are 3 entries in the attribute list
     if len(attributes) == 3:
@@ -171,6 +172,7 @@ def get_result_bitrate_length(filesize, attributes):
             bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
+            length = second
             h_length = '%i:%02i' % (second / 60, second % 60)
 
         # Sometimes the vbr indicator is in second position
@@ -182,6 +184,7 @@ def get_result_bitrate_length(filesize, attributes):
             bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
+            length = third
             h_length = '%i:%02i' % (third / 60, third % 60)
 
         # Lossless audio, length is in first position
@@ -192,6 +195,7 @@ def get_result_bitrate_length(filesize, attributes):
             bitrate = (second * third * 2) / 1000
             h_bitrate = str(bitrate)
 
+            length = first
             h_length = '%i:%02i' % (first / 60, first % 60)
 
         else:
@@ -236,9 +240,10 @@ def get_result_bitrate_length(filesize, attributes):
             bitrate = first
             h_bitrate = str(bitrate) + h_bitrate
 
+            length = second
             h_length = '%i:%02i' % (second / 60, second % 60)
 
-    return h_bitrate, bitrate, h_length
+    return h_bitrate, bitrate, h_length, length
 
 
 def apply_translation():

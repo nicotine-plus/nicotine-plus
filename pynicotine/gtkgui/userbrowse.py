@@ -168,8 +168,15 @@ class UserBrowse:
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
 
-        # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
-        self.file_store = Gtk.ListStore(str, str, str, str, GObject.TYPE_INT64, int, str)
+        self.file_store = Gtk.ListStore(
+            str,                  # (0) file name
+            str,                  # (1) hsize
+            str,                  # (2) hbitrate
+            str,                  # (3) hlength
+            GObject.TYPE_UINT64,  # (4) size
+            GObject.TYPE_UINT64,  # (5) bitrate
+            GObject.TYPE_UINT64   # (6) length
+        )
 
         self.FileTreeView.set_model(self.file_store)
 
@@ -183,8 +190,8 @@ class UserBrowse:
         )
         cols["filename"].set_sort_column_id(0)
         cols["size"].set_sort_column_id(4)
-        cols["bitrate"].set_sort_column_id(2)
-        cols["length"].set_sort_column_id(5)
+        cols["bitrate"].set_sort_column_id(5)
+        cols["length"].set_sort_column_id(6)
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.FileTreeView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -278,7 +285,7 @@ class UserBrowse:
         self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
 
     def selected_files_callback(self, model, path, iterator):
-        rawfilename = self.file_store.get_value(iterator, 6)
+        rawfilename = self.file_store.get_value(iterator, 0)
         self.selected_files.append(rawfilename)
 
     def on_file_clicked(self, widget, event):
@@ -481,8 +488,6 @@ class UserBrowse:
 
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
-            rl = 0
-
             try:
                 size = int(file[2])
 
@@ -494,10 +499,8 @@ class UserBrowse:
 
             f = [file[1], human_size(size)]
 
-            h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
-            f += [h_bitrate, h_length]
-
-            f += [int(size), rl, file[1]]
+            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+            f += [h_bitrate, h_length, int(size), bitrate, length]
 
             try:
                 self.files[f[0]] = self.file_store.append(f)
@@ -704,7 +707,7 @@ class UserBrowse:
 
                 path = "\\".join([folder, file[1]])
                 size = file[2]
-                h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
+                h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                 self.frame.np.transfers.get_file(
                     self.user,
@@ -744,7 +747,7 @@ class UserBrowse:
 
                 path = "\\".join([folder, file[1]])
                 size = file[2]
-                h_bitrate, bitrate, h_length = get_result_bitrate_length(size, file[4])
+                h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                 # Get the file
                 self.frame.np.transfers.get_file(self.user, path, prefix, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)

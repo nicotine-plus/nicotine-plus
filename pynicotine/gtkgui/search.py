@@ -512,13 +512,14 @@ class Search:
             str,                  # (7)  filename
             str,                  # (8)  h_size
             str,                  # (9)  h_bitrate
-            str,                  # (10) length
+            str,                  # (10) h_length
             GObject.TYPE_UINT64,  # (11) bitrate
             str,                  # (12) fullpath
             str,                  # (13) country
             GObject.TYPE_UINT64,  # (14) size
             GObject.TYPE_UINT64,  # (15) speed
-            GObject.TYPE_UINT64   # (16) queue
+            GObject.TYPE_UINT64,  # (16) queue
+            GObject.TYPE_UINT64   # (17) length
         )
 
         self.cols = cols = initialise_columns(
@@ -547,7 +548,7 @@ class Search:
         cols["filename"].set_sort_column_id(7)
         cols["size"].set_sort_column_id(14)
         cols["bitrate"].set_sort_column_id(11)
-        cols["length"].set_sort_column_id(10)
+        cols["length"].set_sort_column_id(17)
 
         cols["country"].get_widget().hide()
 
@@ -729,9 +730,9 @@ class Search:
 
             size = result[2]
             h_size = human_size(size)
-            h_bitrate, bitrate, h_length = get_result_bitrate_length(size, result[4])
+            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
 
-            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue])
+            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, length])
             append = True
             counter += 1
 
@@ -785,7 +786,7 @@ class Search:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
     def add_row_to_model(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, length, bitrate, fullpath, country, size, speed, queue = row
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length = row
 
         if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
@@ -793,7 +794,7 @@ class Search:
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue]
+                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, 0]
                 )
 
             parent = self.usersiters[user]
@@ -804,7 +805,7 @@ class Search:
                 if directory not in self.directoryiters:
                     self.directoryiters[directory] = self.resultsmodel.append(
                         self.usersiters[user],
-                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue]
+                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue, 0]
                     )
 
                 row = row[:]
