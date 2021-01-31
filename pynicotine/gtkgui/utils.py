@@ -443,6 +443,32 @@ def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, stripprefix='fla
     return True
 
 
+def show_file_path_tooltip(treeview, x, y, tooltip, sourcecolumn):
+
+    try:
+        bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(x, y)
+        path, column, cx, cy = treeview.get_path_at_pos(bin_x, bin_y)
+
+    except TypeError:
+        return False
+
+    if column.get_title() not in ("folder", "filename"):
+        return False
+
+    model = treeview.get_model()
+    iterator = model.get_iter(path)
+    value = model.get_value(iterator, sourcecolumn)
+
+    if not value:
+        return False
+
+    # Update tooltip position
+    treeview.set_tooltip_cell(tooltip, path, column, None)
+
+    tooltip.set_text(value)
+    return True
+
+
 def open_file_path(file_path, command=None):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to

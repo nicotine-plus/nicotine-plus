@@ -49,6 +49,7 @@ from pynicotine.gtkgui.utils import select_user_row_iter
 from pynicotine.gtkgui.utils import set_widget_fg_bg_css
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import show_file_path_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
@@ -588,7 +589,15 @@ class Search:
         self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
+
+        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
+        file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 12)
+
+        if country_tooltip:
+            return country_tooltip
+
+        elif file_path_tooltip:
+            return file_path_tooltip
 
     def populate_filters(self, set_default_filters=True):
 

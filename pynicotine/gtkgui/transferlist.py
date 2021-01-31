@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import select_user_row_iter
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import show_file_path_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
@@ -134,11 +135,13 @@ class TransferList:
         cols["time_left"].set_sort_column_id(9)
 
         widget.set_model(self.transfersmodel)
+        widget.set_has_tooltip(True)
 
-        widget.connect("button_press_event", self.on_list_clicked)
-        widget.connect("popup_menu", self.on_popup_menu)
-        widget.connect("touch_event", self.on_list_clicked)
+        widget.connect("button-press-event", self.on_list_clicked)
+        widget.connect("popup-menu", self.on_popup_menu)
+        widget.connect("touch-event", self.on_list_clicked)
         widget.connect("key-press-event", self.on_key_press_event)
+        widget.connect("query-tooltip", self.on_tooltip)
 
         self.update_visuals()
 
@@ -557,6 +560,9 @@ class TransferList:
         if self.list is not None:
             for i in self.list:
                 i.iter = None
+
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return show_file_path_tooltip(widget, x, y, tooltip, 10)
 
     def on_list_clicked(self, widget, event):
 
