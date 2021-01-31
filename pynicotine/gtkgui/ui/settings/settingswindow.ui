@@ -3,7 +3,6 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkDialog" id="SettingsWindow">
     <property name="title" translatable="yes">Preferences</property>
-    <property name="modal">1</property>
     <property name="window-position">center</property>
     <property name="default-width">1050</property>
     <property name="default-height">700</property>
