@@ -36,12 +36,13 @@ class Router:
     def __init__(self, ip, port, wan_ip_type, url_scheme, base_url, root_url):
         self.ip = ip
         self.port = port
-        self.type = wan_ip_type
+        self.search_target = wan_ip_type
         self.url_scheme = url_scheme
         self.base_url = base_url
         self.root_url = root_url
         self.serial_number = ""
         self.uuid = ""
+        self.svc_type = ""
         self.control_url = ""
 
     @classmethod
@@ -163,13 +164,14 @@ class SSDP:
             time.sleep(0.4)
 
         for r in routers:
-            serial_number, control_url, uuid = SSDP._get_router_service_description(
+            serial_number, control_url, uuid, svc_type = SSDP._get_router_service_description(
                 r.url_scheme, r.base_url, r.root_url
             )
 
             r.serial_number = serial_number
             r.control_url = control_url
             r.uuid = uuid
+            r.svc_type = svc_type
 
         sock.close()
         log.add_debug('UPnP: %s device(s) detected', str(len(routers)))
@@ -216,9 +218,9 @@ class SSDP:
             control_url = svc.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
 
             if SSDP._is_wanip_service(svc_type):
-                return (serial_number, control_url, uuid)
+                return (serial_number, control_url, uuid, svc_type)
 
-        return (None, None, None)
+        return (None, None, None, None)
 
     @classmethod
     def _is_wanip_service(cls, svc_type):

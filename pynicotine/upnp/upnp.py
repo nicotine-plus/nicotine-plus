@@ -130,7 +130,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '"{}#AddPortMapping"'.format(router.type)
+            'SOAPACTION': '"{}#AddPortMapping"'.format(router.svc_type)
         }
 
         data = UPnp._add_port_mapping_template.format(
@@ -179,7 +179,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '"{}#DeletePortMapping"'.format(router.type)
+            'SOAPACTION': '"{}#DeletePortMapping"'.format(router.svc_type)
         }
 
         data = UPnp._delete_port_mapping_template.format(public_port, protocol)
@@ -202,7 +202,7 @@ class UPnp:
         headers = {
             'Host': '{}:{}'.format(router.ip, router.port),
             'Content-Type': 'text/xml; charset=utf-8',
-            'SOAPACTION': '"{}#GetGenericPortMappingEntry"'.format(router.type)
+            'SOAPACTION': '"{}#GetGenericPortMappingEntry"'.format(router.svc_type)
         }
 
         index = -1
@@ -222,7 +222,7 @@ class UPnp:
 
             log.add_debug('UPnP: List port mappings response: %s', response.encode('utf-8'))
 
-            portmap = PortMapping.parse_port_map_xml(response, router.type)
+            portmap = PortMapping.parse_port_map_xml(response, router.svc_type)
 
             if not portmap:
                 portmap_found = False
@@ -236,19 +236,19 @@ class UPnp:
     @classmethod
     def find_router(cls):
         routers = SSDP.list()
-        router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
+        router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANIPConnection:1"), None)
+            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:1"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
+            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:device:InternetGatewayDevice:2"), None)
+            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:2"), None)
 
         if not router:
-            router = next((r for r in routers if r.type == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
+            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
 
         if not router:
             router = next((r for r in routers), None)
