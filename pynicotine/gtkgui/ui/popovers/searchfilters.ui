@@ -255,7 +255,7 @@
                         <property name="halign">start</property>
                         <property name="xpad">10</property>
                         <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
-    &lt;128k will find files 128 kibibytes (i.e. 1 mebibyte) or smaller.</property>
+    &lt;1024k will find files 1024 kibibytes (i.e. 1 mebibyte) or smaller.</property>
                         <property name="justify">fill</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
