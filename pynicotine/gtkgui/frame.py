@@ -262,7 +262,6 @@ class NicotineFrame:
         self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
         self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
 
-        self.tag_log = self.LogWindow.get_buffer().create_tag()
         self.update_visuals()
 
         """ Entry Completion """
@@ -438,7 +437,7 @@ class NicotineFrame:
             self.np.queue.put(slskmessages.AddUser(user))
 
         if msg.banner != "":
-            append_line(self.LogWindow, msg.banner, self.tag_log)
+            log.add(msg.banner)
 
         return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist, self.interests
 
@@ -2322,7 +2321,7 @@ class NicotineFrame:
         else:
             should_scroll = True
 
-        append_line(self.LogWindow, msg, self.tag_log, scroll=should_scroll)
+        append_line(self.LogWindow, msg, scroll=should_scroll, find_urls=False)
 
         return False
 

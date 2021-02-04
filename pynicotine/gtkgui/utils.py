@@ -565,7 +565,7 @@ def on_soul_seek_uri(url):
         log.add(_("Invalid SoulSeek meta-url: %s"), url)
 
 
-def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True):
+def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True, find_urls=True):
 
     if type(line) not in (type(""), type("")):
         line = str(line)  # Error messages are sometimes tuples
@@ -646,23 +646,25 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     # Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
     _append(buffer, line[:ts], tag)
     line = line[ts:]
-    # Match first url
-    match = URL_RE.search(line)
-    # Highlight urls, if found and tag them
-    while NICOTINE.np.config.sections["urls"]["urlcatching"] and match:
-        start = line[:match.start()]
-        _usertag(buffer, start)
-        url = match.group()
-        urltag = _makeurltag(buffer, url)
-        line = line[match.end():]
 
-        if url.startswith("slsk://") and NICOTINE.np.config.sections["urls"]["humanizeurls"]:
-            import urllib.parse
-            url = urllib.parse.unquote(url)
-
-        _append(buffer, url, urltag)
-        # Match remaining url
+    if find_urls:
+        # Match first url
         match = URL_RE.search(line)
+        # Highlight urls, if found and tag them
+        while NICOTINE.np.config.sections["urls"]["urlcatching"] and match:
+            start = line[:match.start()]
+            _usertag(buffer, start)
+            url = match.group()
+            urltag = _makeurltag(buffer, url)
+            line = line[match.end():]
+
+            if url.startswith("slsk://") and NICOTINE.np.config.sections["urls"]["humanizeurls"]:
+                import urllib.parse
+                url = urllib.parse.unquote(url)
+
+            _append(buffer, url, urltag)
+            # Match remaining url
+            match = URL_RE.search(line)
 
     if line:
         _usertag(buffer, line)
