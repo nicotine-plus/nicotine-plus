@@ -221,7 +221,7 @@ class Transfers:
                 download_queue = json.load(handle)
 
         except Exception as inst:
-            log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+            log.add(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
 
         return download_queue
 
@@ -236,7 +236,7 @@ class Transfers:
                 download_queue = RestrictedUnpickler(handle, encoding='utf-8').load()
 
         except Exception as inst:
-            log.add_warning(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
+            log.add(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
 
         return download_queue
 
@@ -2248,7 +2248,7 @@ class Transfers:
                 json.dump(self.get_downloads(), handle, ensure_ascii=False)
 
         except Exception as inst:
-            log.add_warning(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
+            log.add(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
 
 
 class Statistics:

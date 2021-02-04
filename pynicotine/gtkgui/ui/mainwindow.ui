@@ -1221,7 +1221,7 @@
                         <property name="can-focus">0</property>
                         <child>
                           <object class="GtkCheckButton" id="debugSearches">
-                            <property name="label" translatable="yes">Search results</property>
+                            <property name="label" translatable="yes">Search</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
                             <signal name="toggled" handler="on_debug_searches" swapped="no"/>

@@ -1937,7 +1937,7 @@ class NicotineFrame:
                     self.userbrowse.users[username].load_shares(mylist)
 
             except Exception as msg:
-                log.add_warning(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
+                log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
 
     """ Buddy List """
 

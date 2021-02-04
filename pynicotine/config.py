@@ -446,7 +446,7 @@ class Config:
 
         except Exception as e:
             # Miscellaneous failure, default config will be used
-            log.add_warning(_("Unable to parse config file: %s"), e)
+            log.add(_("Unable to parse config file: %s"), e)
 
     def convert_config(self):
         """ Converts the config to utf-8.
@@ -687,7 +687,7 @@ class Config:
                 os.chmod(self.filename + ".old", 0o600)
 
         except Exception as error:
-            log.add_warning(_("Unable to back up config file: %s"), error)
+            log.add(_("Unable to back up config file: %s"), error)
 
         # Save new config to file
         oldumask = os.umask(0o077)
@@ -697,7 +697,7 @@ class Config:
                 self.parser.write(f)
 
         except Exception as e:
-            log.add_warning(_("Unable to save config file: %s"), e)
+            log.add(_("Unable to save config file: %s"), e)
 
         os.umask(oldumask)
 

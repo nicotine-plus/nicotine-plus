@@ -32,6 +32,28 @@ class Logger(object):
         self.timestamp_format = "%Y-%m-%d %H:%M:%S"
         self.log_levels = (0, 1)
 
+    def set_msg_prefix(self, level, msg):
+
+        if level == 1:
+            prefix = "Warn"
+        elif level == 2:
+            prefix = "Search"
+        elif level == 3:
+            prefix = "Conn"
+        elif level == 4:
+            prefix = "Msg"
+        elif level == 5:
+            prefix = "Transfer"
+        elif level == 6:
+            prefix = "Stat"
+        else:
+            prefix = ""
+
+        if prefix:
+            msg = "[%s] %s" % (prefix, msg)
+
+        return msg
+
     def add(self, msg, msg_args=None, level=0):
         """Add a message. The list of logging levels is as follows:
         None - Deprecated (calls that haven't been updated yet)
@@ -41,11 +63,13 @@ class Logger(object):
         3    - Peer Connections
         4    - Message Contents
         5    - Transfers
-        6    - Connection, Bandwidth and Usage Statistics
+        6    - Statistics
         """
 
         if level not in self.log_levels:
             return
+
+        msg = self.set_msg_prefix(level, msg)
 
         if msg_args:
             msg = msg % msg_args
