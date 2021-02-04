@@ -96,6 +96,10 @@ class PrivateChats(IconNotebook):
 
         self.notebook.connect("switch-page", self.on_switch_chat)
 
+        # Clear list of previously open chats if we don't want to restore them
+        if not frame.np.config.sections["privatechat"]["store"]:
+            frame.np.config.sections["privatechat"]["users"].clear()
+
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
@@ -151,6 +155,9 @@ class PrivateChats(IconNotebook):
         if user not in self.users:
             tab = PrivateChat(self, user)
             self.users[user] = tab
+
+            if user not in self.frame.np.config.sections["privatechat"]["users"]:
+                self.frame.np.config.sections["privatechat"]["users"].append(user)
 
             if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
                 userlabel = "%s (%s)" % (user[:15], _("Offline"))
@@ -288,11 +295,13 @@ class PrivateChats(IconNotebook):
         for user in self.users:
             self.users[user].login()
 
-        if self.frame.np.config.sections["privatechat"]["store"]:
-            self.frame.np.config.sections["privatechat"]["users"].sort()
-            for user in self.frame.np.config.sections["privatechat"]["users"]:
-                if user not in self.users:
-                    self.send_message(user, show_user=True)
+        if not self.frame.np.config.sections["privatechat"]["store"]:
+            return
+
+        self.frame.np.config.sections["privatechat"]["users"].sort()
+        for user in self.frame.np.config.sections["privatechat"]["users"]:
+            if user not in self.users:
+                self.send_message(user, show_user=True)
 
     def conn_close(self):
 

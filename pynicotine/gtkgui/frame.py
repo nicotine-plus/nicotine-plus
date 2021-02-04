@@ -2726,7 +2726,6 @@ class NicotineFrame:
 
         self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
         self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
-        self.np.config.sections["privatechat"]["users"] = list(self.privatechats.users.keys())
 
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray.hide()
