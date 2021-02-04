@@ -2154,55 +2154,66 @@ class FileSearchResult(PeerMessage):
         self.pos, self.inqueue = self.get_object(message, int, self.pos, getunsignedlonglong=True)
 
     def make_network_message(self):
-        queuesize = self.inqueue[0]
-
-        msg = bytearray()
-        msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.token, unsignedint=True))
-        msg.extend(self.pack_object(self.numresults, unsignedint=True))
+        msg_list = bytearray()
+        final_num_results = 0
 
         for index in islice(self.list, self.numresults):
             try:
                 fileinfo = self.fileindex[repr(index)]
-            except Exception:
-                continue
+                final_num_results += 1
 
-            msg.extend(bytes([1]))
-            msg.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
-            msg.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
+            except Exception:
+                log.add(
+                    _("Your shares database is corrupted. Please rescan your shares and report any potential scanning issues to the developers.")
+                )
+                break
+
+            msg_list.extend(bytes([1]))
+            msg_list.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
+            msg_list.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
 
             if fileinfo[2] is None:
                 # No metadata
-                msg.extend(self.pack_object(''))
-                msg.extend(self.pack_object(0))
+                msg_list.extend(self.pack_object(''))
+                msg_list.extend(self.pack_object(0))
             else:
                 # FileExtension, NumAttributes,
-                msg.extend(self.pack_object("mp3"))
-                msg.extend(self.pack_object(3))
+                msg_list.extend(self.pack_object("mp3"))
+                msg_list.extend(self.pack_object(3))
 
-                msg.extend(self.pack_object(0))
+                msg_list.extend(self.pack_object(0))
                 try:
-                    msg.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
+                    msg_list.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
 
                 except Exception:
                     # Invalid bitrate
-                    msg.extend(self.pack_object(0))
+                    msg_list.extend(self.pack_object(0))
 
-                msg.extend(self.pack_object(1))
+                msg_list.extend(self.pack_object(1))
                 try:
-                    msg.extend(self.pack_object(fileinfo[3], unsignedint=True))
+                    msg_list.extend(self.pack_object(fileinfo[3], unsignedint=True))
 
                 except Exception:
                     # Invalid duration
-                    msg.extend(self.pack_object(0))
+                    msg_list.extend(self.pack_object(0))
 
-                msg.extend(self.pack_object(2))
+                msg_list.extend(self.pack_object(2))
                 try:
-                    msg.extend(self.pack_object(fileinfo[2][1]))
+                    msg_list.extend(self.pack_object(fileinfo[2][1]))
 
                 except Exception:
                     # Invalid VBR value
-                    msg.extend(self.pack_object(0))
+                    msg_list.extend(self.pack_object(0))
+
+        queuesize = self.inqueue[0]
+        msg = bytearray()
+        msg.extend(self.pack_object(self.user))
+        msg.extend(self.pack_object(self.token, unsignedint=True))
+        msg.extend(self.pack_object(final_num_results, unsignedint=True))
+
+        # We generate the result list early, so we don't send an incorrect result count
+        # if something goes wrong when reading the file index database
+        msg.extend(msg_list)
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.pack_object(self.ulspeed, unsignedint=True))
