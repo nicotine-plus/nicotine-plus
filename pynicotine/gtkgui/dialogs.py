@@ -157,7 +157,7 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
 """ File Chooser Dialogs """
 
 
-def choose_dir(parent=None, initialdir="~", title=None, multichoice=True):
+def choose_dir(parent=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
     try:
         dialog = Gtk.FileChooserNative.new(
             title,
@@ -196,7 +196,7 @@ def choose_dir(parent=None, initialdir="~", title=None, multichoice=True):
     return res
 
 
-def choose_file(parent=None, initialdir="~", title=None, multiple=False):
+def choose_file(parent=None, initialdir="~", title=_("Select a File"), multiple=False):
     try:
         dialog = Gtk.FileChooserNative.new(
             title,
@@ -233,7 +233,7 @@ def choose_file(parent=None, initialdir="~", title=None, multiple=False):
     return res
 
 
-def choose_image(parent=None, initialdir="~", title=None, multiple=False):
+def choose_image(parent=None, initialdir="~", title=_("Select an Image"), multiple=False):
     try:
         dialog = Gtk.FileChooserNative.new(
             title,

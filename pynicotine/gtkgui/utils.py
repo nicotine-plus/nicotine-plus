@@ -1517,7 +1517,7 @@ class FileChooserButton:
     def open_file_chooser(self, widget):
 
         if self.chooser_type == "folder":
-            selected = choose_dir(self.parent, self.path, title=_("Select a Folder"), multichoice=False)
+            selected = choose_dir(self.parent, self.path, multichoice=False)
 
         else:
             if self.path:
@@ -1526,9 +1526,9 @@ class FileChooserButton:
                 folder_path = ""
 
             if self.chooser_type == "image":
-                selected = choose_image(self.parent, folder_path, title=_("Select an Image"))
+                selected = choose_image(self.parent, folder_path)
             else:
-                selected = choose_file(self.parent, folder_path, title=_("Select a File"))
+                selected = choose_file(self.parent, folder_path)
 
         if selected:
             self.set_path(selected[0])
