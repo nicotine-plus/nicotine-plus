@@ -62,6 +62,8 @@ from pynicotine.gtkgui.utils import clear_entry
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import open_file_path
+from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
@@ -322,6 +324,9 @@ class NicotineFrame:
             ("", None),
             ("#" + _("Copy"), self.on_copy_log_window),
             ("#" + _("Copy All"), self.on_copy_all_log_window),
+            ("", None),
+            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
+            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_window)
         )
@@ -2349,6 +2354,22 @@ class NicotineFrame:
         start, end = self.LogWindow.get_buffer().get_bounds()
         log = self.LogWindow.get_buffer().get_text(start, end, True)
         self.clip.set_text(log, -1)
+
+    def on_view_debug_logs(self, widget):
+
+        log_path = self.np.config.sections["logging"]["debuglogsdir"]
+
+        try:
+            if not os.path.exists(log_path):
+                os.mkdir(log_path)
+
+            open_file_path(self.np.config.sections["logging"]["debuglogsdir"])
+
+        except Exception as e:
+            log.add("Failed to open debug log folder: %s", e)
+
+    def on_view_transfer_log(self, widget):
+        open_log(self.np.config.sections["logging"]["transferslogsdir"], "transfers")
 
     def on_clear_log_window(self, widget):
         self.LogWindow.get_buffer().set_text("")

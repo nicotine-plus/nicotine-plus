@@ -48,6 +48,7 @@ from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
@@ -667,9 +668,10 @@ class ChatRoom:
             ("#" + _("Copy"), self.on_copy_room_log),
             ("#" + _("Copy All"), self.on_copy_all_room_log),
             ("", None),
+            ("#" + _("View Room Log"), self.on_view_room_log),
             ("#" + _("Delete Room Log"), self.on_delete_room_log),
-            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("", None),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
@@ -1690,6 +1692,9 @@ class ChatRoom:
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
+
+    def on_view_room_log(self, widget):
+        open_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room)
 
     def delete_room_log_response(self, dialog, response, data):
 

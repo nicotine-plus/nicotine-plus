@@ -44,6 +44,7 @@ from pynicotine.gtkgui.dialogs import choose_image
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import execute_command
 
 
@@ -481,6 +482,22 @@ def open_file_path(file_path, command=None):
             Gio.AppInfo.launch_default_for_uri("file:///" + file_path)
         except GLib.Error as error:
             log.add_warning(_("Failed to open folder: %s"), str(error))
+
+
+def open_log(folder, filename):
+
+    try:
+        path = os.path.join(folder, clean_file(filename.replace(os.sep, "-")) + ".log")
+
+        if not os.path.exists(path):
+            # No logs, create empty file
+            with open(path, "w"):
+                pass
+
+        open_file_path(path)
+
+    except Exception as e:
+        log.add("Failed to open log file: %s", e)
 
 
 def scroll_bottom(widget):

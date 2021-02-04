@@ -43,6 +43,7 @@ from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
@@ -385,9 +386,10 @@ class PrivateChat:
             ("#" + _("Copy"), self.on_copy_chat_log),
             ("#" + _("Copy All"), self.on_copy_all_chat_log),
             ("", None),
+            ("#" + _("View Chat Log"), self.on_view_chat_log),
             ("#" + _("Delete Chat Log"), self.on_delete_chat_log),
-            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("", None),
+            ("#" + _("Clear Message View"), self.on_clear_messages),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
@@ -474,6 +476,9 @@ class PrivateChat:
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
+
+    def on_view_chat_log(self, widget):
+        open_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user)
 
     def delete_chat_log_response(self, dialog, response, data):
 
