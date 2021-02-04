@@ -680,6 +680,7 @@ class ImageLabel(Gtk.Box):
     def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
         Gtk.Box.__init__(self)
+        self.set_hexpand(False)
 
         self.closebutton = closebutton
         self.angle = angle
@@ -690,6 +691,7 @@ class ImageLabel(Gtk.Box):
         self.label = Gtk.Label()
         self.label.set_angle(angle)
         self.label.set_halign(Gtk.Align.START)
+        self.label.set_hexpand(True)
         self.label.show()
 
         self.text = label
