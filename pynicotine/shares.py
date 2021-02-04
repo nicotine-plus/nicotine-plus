@@ -416,15 +416,22 @@ class Scanner(multiprocessing.Process):
     def add_file_to_index(self, index, filename, folder, fileinfo, wordindex, fileindex):
         """ Add a file to the file index database """
 
-        fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
+        try:
+            fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
 
-        # Collect words from filenames for Search index
-        # Use set to prevent duplicates
-        for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
-            try:
-                wordindex[k].append(index)
-            except KeyError:
-                wordindex[k] = [index]
+            # Collect words from filenames for Search index
+            # Use set to prevent duplicates
+            for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
+                try:
+                    wordindex[k].append(index)
+                except KeyError:
+                    wordindex[k] = [index]
+
+        except Exception as e:
+            self.queue.put((0, "Error while attempting to add file '%(filename)s' to file index: %(error)s", {
+                "filename": filename,
+                "error": e
+            }))
 
     def get_files_index(self, sharedfiles):
         """ Update Search index with new files """
