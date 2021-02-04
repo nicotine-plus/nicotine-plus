@@ -299,7 +299,9 @@
                     <property name="can-focus">1</property>
                     <property name="rubber-banding">1</property>
                     <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
+                      <object class="GtkTreeSelection">
+                        <property name="mode">multiple</property>
+                      </object>
                     </child>
                   </object>
                 </child>

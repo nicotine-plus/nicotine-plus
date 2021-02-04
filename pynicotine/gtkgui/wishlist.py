@@ -57,7 +57,6 @@ class WishList:
         )
 
         self.WishlistView.set_model(self.store)
-        self.WishlistView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
@@ -69,7 +68,7 @@ class WishList:
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)
 
-        self.frame.WishList.connect("clicked", self.show)
+        frame.WishList.connect("clicked", self.show)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 

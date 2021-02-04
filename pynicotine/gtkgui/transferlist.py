@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from sys import maxsize
 from time import time
 
@@ -29,9 +31,11 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import select_user_row_iter
@@ -43,10 +47,15 @@ from pynicotine.gtkgui.utils import update_widget_visuals
 
 class TransferList:
 
-    def __init__(self, frame, widget, type):
+    def __init__(self, frame, type):
+
         self.frame = frame
-        self.widget = widget
         self.type = type
+
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", type + "s.ui"))
+        self.frame.__dict__[type + "svbox"].add(self.Main)
+        self.widget = widget = self.__dict__[type.title() + "List"]
+
         self.last_ui_update = self.last_save = time()
         self.list = []
         self.users = {}
@@ -80,10 +89,6 @@ class TransferList:
         # String templates
         self.extension_list_template = _("All %(ext)s")
         self.files_template = _("%(number)2s files ")
-
-        widget.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        widget.set_enable_tree_lines(True)
-        widget.set_rubber_banding(True)
 
         self.transfersmodel = Gtk.TreeStore(
             str,                   # (0)  user
@@ -135,13 +140,15 @@ class TransferList:
         cols["time_left"].set_sort_column_id(9)
 
         widget.set_model(self.transfersmodel)
-        widget.set_has_tooltip(True)
 
-        widget.connect("button-press-event", self.on_list_clicked)
-        widget.connect("popup-menu", self.on_popup_menu)
-        widget.connect("touch-event", self.on_list_clicked)
-        widget.connect("key-press-event", self.on_key_press_event)
-        widget.connect("query-tooltip", self.on_tooltip)
+        self.group_dropdown = frame.__dict__["ToggleTree%ss" % self.type.title()]
+        self.expand_button = frame.__dict__["Expand%ss" % self.type.title()]
+
+        self.group_dropdown.connect("changed", self.on_toggle_tree)
+        self.group_dropdown.set_active(frame.np.config.sections["transfers"]["group%ss" % self.type])
+
+        self.expand_button.connect("toggled", self.on_expand_tree)
+        self.expand_button.set_active(frame.np.config.sections["transfers"]["%ssexpanded" % self.type])
 
         self.update_visuals()
 
@@ -560,6 +567,45 @@ class TransferList:
         if self.list is not None:
             for i in self.list:
                 i.iter = None
+
+    def expand(self, transfer_path, user_path):
+
+        if self.expand_button.get_active():
+            self.widget.expand_to_path(transfer_path)
+
+        elif user_path and self.tree_users == "folder_grouping":
+            # Group by folder, show user folders in collapsed mode
+
+            self.widget.expand_to_path(user_path)
+
+    def on_expand_tree(self, widget):
+
+        expand_button_icon = self.frame.__dict__["Expand%ssImage" % self.type.title()]
+        expanded = self.expand_button.get_active()
+
+        if expanded:
+            self.widget.expand_all()
+            expand_button_icon.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+        else:
+            collapse_treeview(self.widget, self.tree_users)
+            expand_button_icon.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+
+        self.frame.np.config.sections["transfers"]["%ssexpanded" % self.type] = expanded
+        self.frame.np.config.write_configuration()
+
+    def on_toggle_tree(self, widget):
+
+        pos = self.group_dropdown.get_active()
+        self.frame.np.config.sections["transfers"]["group%ss" % self.type] = pos
+
+        self.tree_users = self.group_dropdown.get_active_id()
+
+        if self.tree_users == "ungrouped":
+            self.expand_button.hide()
+        else:
+            self.expand_button.show()
+
+        self.rebuild_transfers()
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_file_path_tooltip(widget, x, y, tooltip, 10)

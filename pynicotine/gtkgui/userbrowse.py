@@ -87,8 +87,6 @@ class UserBrowse:
 
         self.dir_store = Gtk.TreeStore(str, str)
 
-        self.FolderTreeView.set_enable_tree_lines(True)
-
         cols = initialise_columns(
             None,
             self.FolderTreeView,
@@ -201,10 +199,6 @@ class UserBrowse:
         cols["bitrate"].set_sort_column_id(5)
         cols["length"].set_sort_column_id(6)
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        self.FileTreeView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        self.FileTreeView.set_headers_clickable(True)
-        self.FileTreeView.set_rubber_banding(True)
 
         self.file_popup_menu = PopupMenu(self.frame)
 

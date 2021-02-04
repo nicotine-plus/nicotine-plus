@@ -497,11 +497,6 @@ class Search:
 
         """ Columns """
 
-        self.ResultsList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        self.ResultsList.set_enable_tree_lines(True)
-        self.ResultsList.set_headers_clickable(True)
-        self.ResultsList.set_rubber_banding(True)
-
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user

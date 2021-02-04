@@ -56,7 +56,6 @@ class FastConfigureAssistant(object):
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)
-        self.shareddirectoriestree.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def show(self):
 

@@ -25,13 +25,11 @@
 import os
 
 from gi.repository import Gdk
-from gi.repository import Gtk
 
 from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 
@@ -40,7 +38,7 @@ class Uploads(TransferList):
 
     def __init__(self, frame, tab_label):
 
-        TransferList.__init__(self, frame, frame.UploadList, type='upload')
+        TransferList.__init__(self, frame, type='upload')
         self.tab_label = tab_label
 
         self.popup_menu_users = PopupMenu(frame, False)
@@ -75,18 +73,6 @@ class Uploads(TransferList):
             (1, _("Clear Groups"), self.popup_menu_clear, None)
         )
 
-        frame.clearUploadFinishedErredButton.connect("clicked", self.on_clear_finished_erred)
-        frame.clearUploadQueueButton.connect("clicked", self.on_try_clear_queued)
-        frame.abortUploadButton.connect("clicked", self.on_abort_transfer)
-        frame.abortUserUploadButton.connect("clicked", self.on_abort_user)
-        frame.banUploadButton.connect("clicked", self.on_ban)
-
-        frame.ToggleTreeUploads.connect("changed", self.on_toggle_tree)
-        frame.ToggleTreeUploads.set_active(frame.np.config.sections["transfers"]["groupuploads"])
-
-        frame.ExpandUploads.connect("toggled", self.on_expand_uploads)
-        frame.ExpandUploads.set_active(frame.np.config.sections["transfers"]["uploadsexpanded"])
-
     def on_try_clear_queued(self, widget):
         option_dialog(
             parent=self.frame.MainWindow,
@@ -113,43 +99,6 @@ class Uploads(TransferList):
         # Finally, try to open the directory we got...
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
-
-    def expand(self, transfer_path, user_path):
-        if self.frame.ExpandUploads.get_active():
-            self.frame.UploadList.expand_to_path(transfer_path)
-
-        elif user_path and self.tree_users == "folder_grouping":
-            # Group by folder, show user folders in collapsed mode
-
-            self.frame.UploadList.expand_to_path(user_path)
-
-    def on_expand_uploads(self, widget):
-
-        expanded = self.frame.ExpandUploads.get_active()
-
-        if expanded:
-            self.frame.UploadList.expand_all()
-            self.frame.ExpandUploadsImage.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
-        else:
-            collapse_treeview(self.frame.UploadList, self.tree_users)
-            self.frame.ExpandUploadsImage.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
-
-        self.frame.np.config.sections["transfers"]["uploadsexpanded"] = expanded
-        self.frame.np.config.write_configuration()
-
-    def on_toggle_tree(self, widget):
-
-        pos = self.frame.ToggleTreeUploads.get_active()
-        self.frame.np.config.sections["transfers"]["groupuploads"] = pos
-
-        self.tree_users = self.frame.ToggleTreeUploads.get_active_id()
-
-        if self.tree_users == "ungrouped":
-            self.frame.ExpandUploads.hide()
-        else:
-            self.frame.ExpandUploads.show()
-
-        self.rebuild_transfers()
 
     def on_key_press_event(self, widget, event):
 
