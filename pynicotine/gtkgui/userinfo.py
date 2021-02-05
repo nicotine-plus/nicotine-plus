@@ -359,6 +359,30 @@ class UserInfo:
         # Unused
         pass
 
+    def load_picture(self, data):
+
+        try:
+            import gc
+            import tempfile
+
+            with tempfile.NamedTemporaryFile() as f:
+                f.write(data)
+                del data
+
+                self.image_pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
+                self.image.set_from_pixbuf(self.image_pixbuf)
+
+            gc.collect()
+
+            self.actual_zoom = 0
+            self.SavePicture.set_sensitive(True)
+
+        except Exception as e:
+            log.add(_("Failed to load picture for user %(user)s: %(error)s") % {
+                "user": self.user,
+                "error": str(e)
+            })
+
     def show_user(self, msg, folder=None, indeterminate_progress=False):
 
         if msg is None:
@@ -395,25 +419,7 @@ class UserInfo:
         self.AcceptUploads.set_text(_("%s") % allowed)
 
         if msg.has_pic and msg.pic is not None:
-            try:
-                import gc
-                loader = GdkPixbuf.PixbufLoader()
-                loader.write(msg.pic)
-                loader.close()
-                self.image_pixbuf = loader.get_pixbuf()
-                self.image.set_from_pixbuf(self.image_pixbuf)
-                del msg.pic, loader
-                gc.collect()
-                self.actual_zoom = 0
-                self.SavePicture.set_sensitive(True)
-            except TypeError:
-                import tempfile
-                name = tempfile.NamedTemporaryFile(delete=False)
-                with open(name, "w") as f:
-                    f.write(msg.pic)
-
-                self.image.set_from_file(name)
-                os.remove(name)
+            self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
         self.set_finished()
