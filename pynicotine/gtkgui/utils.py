@@ -475,13 +475,23 @@ def open_file_path(file_path, command=None):
     Tries to run a user-specified command first, and falls back to
     the system default. """
 
-    if command and "$" in command:
-        execute_command(command, file_path)
-    else:
-        try:
-            Gio.AppInfo.launch_default_for_uri("file:///" + file_path)
-        except GLib.Error as error:
-            log.add_warning(_("Failed to open folder: %s"), str(error))
+    try:
+        file_path = os.path.normpath(file_path)
+
+        if command and "$" in command:
+            execute_command(command, file_path)
+
+        elif sys.platform == "win32":
+            os.startfile(file_path)
+
+        elif sys.platform == "darwin":
+            execute_command("open $", file_path)
+
+        else:
+            Gio.AppInfo.launch_default_for_uri("file:///" + file_path.lstrip("/"))
+
+    except Exception as error:
+        log.add_warning(_("Failed to open file path: %s"), str(error))
 
 
 def open_log(folder, filename):
@@ -538,16 +548,18 @@ def open_uri(uri, window):
         on_soul_seek_uri(uri.strip())
 
     # Situation 2, user did not define a way of handling the protocol
-    if sys.platform == "win32":
-        import webbrowser
-        webbrowser.open(uri)
-        return
-
     try:
-        Gtk.show_uri_on_window(window, uri, Gdk.CURRENT_TIME)
-    except AttributeError:
-        screen = window.get_screen()
-        Gtk.show_uri(screen, uri, Gdk.CURRENT_TIME)
+        if sys.platform == "win32":
+            os.startfile(uri)
+
+        elif sys.platform == "darwin":
+            execute_command("open $", uri)
+
+        else:
+            Gio.AppInfo.launch_default_for_uri(uri)
+
+    except Exception as error:
+        log.add_warning(_("Failed to open URL: %s"), str(error))
 
 
 def on_soul_seek_uri(url):
