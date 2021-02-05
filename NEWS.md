@@ -71,10 +71,12 @@ Issues closed on GitHub
  * MacOS 11.1, open folder opens the wrong directory ([#971](https://github.com/Nicotine-Plus/nicotine-plus/issues/971))
  * MacOS 11.1, wrong flag in buddy list ([#972](https://github.com/Nicotine-Plus/nicotine-plus/issues/972))
  * New bundled UPnP is not working ([#973](https://github.com/Nicotine-Plus/nicotine-plus/issues/973))
- * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
- * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
- * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
- * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+ * Replace GtkFileChooserButton with a custom button widget ([#975](https://github.com/Nicotine-Plus/nicotine-plus/issues/975))
+ * Feature Request: Enable tooltips for long strings that are cut off by another column ([#977](https://github.com/Nicotine-Plus/nicotine-plus/issues/977))
+ * Bug: Private chat tabs closed/discarded without manually doing so ([#983](https://github.com/Nicotine-Plus/nicotine-plus/issues/983))
+ * Bug: Unable to reliably close search tabs via middle mouse button click ([#984](https://github.com/Nicotine-Plus/nicotine-plus/issues/984))
+ * Feature Request: Log Viewer / Context menu items to browse logs in system text editor ([#986](https://github.com/Nicotine-Plus/nicotine-plus/issues/986))
+ * Failure to report buddy shares ([#988](https://github.com/Nicotine-Plus/nicotine-plus/issues/988))
 
 Version 2.2.2 (December 15, 2020)
 -----------------------------
