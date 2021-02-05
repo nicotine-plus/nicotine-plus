@@ -28,6 +28,7 @@ Changes
  * Added an option to copy the file path of a selected file using Ctrl+C
  * Added file properties dialog for user browse
  * Improved the default color scheme
+ * Fixed an issue where upload speed limits were not applied on startup
  * Fixed an issue where UPnP portforwarding did not succeed with certain routers
  * Fixed an issue where enabling the geographical paranoia option would prevent search results from being delivered to others
  * Fixed issues where certain uploads would be stuck in a "Cancelled" state
