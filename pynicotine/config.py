@@ -378,7 +378,6 @@ class Config:
 
         # Windows specific stuff
         if sys.platform == "win32":
-            self.defaults['ui']['filemanager'] = 'explorer $'
             self.defaults['players']['npplayer'] = 'other'
 
         # Non-functional tray icon is disabled on macOS
