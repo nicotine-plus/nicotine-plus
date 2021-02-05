@@ -130,6 +130,8 @@ class Transfers:
         self.privilegedusers = set()
         userstatus = set()
 
+        self.update_limits()
+
         for i in self.load_download_queue():
             size = currentbytes = bitrate = length = None
 
@@ -269,6 +271,16 @@ class Transfers:
             self.privusersqueued[user] += self.usersqueued[user]
             self.privcount += self.usersqueued[user]
             del self.usersqueued[user]
+
+    def update_limits(self):
+        """ Sends the updated speed limits to the networking thread """
+
+        uselimit = self.eventprocessor.config.sections["transfers"]["uselimit"]
+        uploadlimit = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
+        limitby = self.eventprocessor.config.sections["transfers"]["limitby"]
+
+        self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
+        self.queue.put(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
 
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """

@@ -150,13 +150,6 @@ class NetworkEventProcessor:
         self.upnp_timer = None
         _thread.start_new_thread(self.add_upnp_portmapping, ())
 
-        uselimit = self.config.sections["transfers"]["uselimit"]
-        uploadlimit = self.config.sections["transfers"]["uploadlimit"]
-        limitby = self.config.sections["transfers"]["limitby"]
-
-        self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.queue.put(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
-
         self.active_server_conn = None
         self.waitport = None
         self.chatrooms = None

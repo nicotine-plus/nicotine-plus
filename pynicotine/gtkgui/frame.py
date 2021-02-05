@@ -2545,14 +2545,11 @@ class NicotineFrame:
             self.np.upnp_interval = config["server"]["upnp_interval"]
             _thread.start_new_thread(self.np.add_upnp_portmapping, ())
 
-        # Write utils.py options
-        uselimit = config["transfers"]["uselimit"]
-        uploadlimit = config["transfers"]["uploadlimit"]
-        limitby = config["transfers"]["limitby"]
+        # Download/upload limits
+        if self.np.transfers:
+            self.np.transfers.update_limits()
 
-        self.np.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.np.queue.put(slskmessages.SetDownloadLimit(config["transfers"]["downloadlimit"]))
-
+        # Search
         if self.searches:
             self.searches.maxdisplayedresults = config["searches"]["max_displayed_results"]
             self.searches.maxstoredresults = config["searches"]["max_stored_results"]

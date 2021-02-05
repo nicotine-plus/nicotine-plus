@@ -433,7 +433,7 @@ class SlskProtoThread(threading.Thread):
         self._conns = {}
         self._connsinprogress = {}
         self._uploadlimit = (self._calc_upload_limit_none, 0)
-        self._downloadlimit = (self._calc_download_limit_by_total, self._config.sections["transfers"]["downloadlimit"])
+        self._downloadlimit = (self._calc_download_limit_by_total, 0)
         self._ulimits = {}
         self._dlimits = {}
         self.total_uploads = 0
