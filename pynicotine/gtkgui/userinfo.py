@@ -295,7 +295,7 @@ class UserInfo:
 
     def on_likes_list_clicked(self, widget, event):
 
-        if not triggers_context_menu(event):
+        if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
             return self.on_popup_likes_menu(widget)
 
@@ -307,6 +307,8 @@ class UserInfo:
         if item is None:
             return False
 
+        self.likes_popup_menu.set_user(item)
+
         items = self.likes_popup_menu.get_items()
         items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
         items[_("I _Dislike This")].set_active(item in self.frame.np.config.sections["interests"]["dislikes"])
@@ -316,7 +318,7 @@ class UserInfo:
 
     def on_hates_list_clicked(self, widget, event):
 
-        if not triggers_context_menu(event):
+        if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
             return self.on_popup_hates_menu(widget)
 
@@ -327,6 +329,8 @@ class UserInfo:
         item = self.get_selected_like_item(widget)
         if item is None:
             return False
+
+        self.hates_popup_menu.set_user(item)
 
         items = self.hates_popup_menu.get_items()
         items[_("I _Like This")].set_active(item in self.frame.np.config.sections["interests"]["likes"])
