@@ -2710,12 +2710,16 @@ class NicotineFrame:
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
+        self.np.manualdisconnect = True
+
+        # Shut down networking thread
+        server_conn = self.np.active_server_conn
+
+        if server_conn:
+            self.np.closed_connection(server_conn, server_conn.getsockname())
 
         self.np.protothread.abort()
         self.np.stop_timers()
-
-        # Inform networking thread we've disconnected from server
-        self.np.protothread.server_disconnect()
 
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)
@@ -2729,9 +2733,6 @@ class NicotineFrame:
         self.save_columns()
 
         self.np.config.write_configuration()
-
-        if self.np.transfers is not None:
-            self.np.transfers.save_downloads()
 
         # Closing up all shelves db
         self.np.shares.close_shares("normal")

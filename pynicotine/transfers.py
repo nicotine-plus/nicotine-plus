@@ -1729,10 +1729,11 @@ class Transfers:
             self.eventprocessor.config.write_configuration()
 
     def start_check_download_queue_timer(self):
-        timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
-        timer.setName("DownloadQueueTimer")
-        timer.setDaemon(True)
-        timer.start()
+
+        self.download_queue_timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
+        self.download_queue_timer.setName("DownloadQueueTimer")
+        self.download_queue_timer.setDaemon(True)
+        self.download_queue_timer.start()
 
     # Find failed or stuck downloads and attempt to queue them.
     # Also ask for the queue position of downloads.
@@ -2261,6 +2262,14 @@ class Transfers:
 
         except Exception as inst:
             log.add(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
+
+    def disconnect(self):
+
+        if self.download_queue_timer is not None:
+            self.download_queue_timer.cancel()
+
+        self.abort_transfers(send_fail_message=False)
+        self.save_downloads()
 
 
 class Statistics:

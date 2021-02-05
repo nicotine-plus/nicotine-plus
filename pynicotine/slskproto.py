@@ -1401,10 +1401,6 @@ class SlskProtoThread(threading.Thread):
             # Don't exhaust the CPU
             time.sleep(0.2)
 
-        # Close Server Port
-        if server_socket is not None:
-            server_socket.close()
-
         # Networking thread aborted
 
     def server_connect(self):
@@ -1433,3 +1429,4 @@ class SlskProtoThread(threading.Thread):
     def abort(self):
         """ Call this to abort the thread """
         self._want_abort = True
+        self.server_disconnect()

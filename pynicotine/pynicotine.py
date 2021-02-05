@@ -817,8 +817,7 @@ class NetworkEventProcessor:
             self.shares.set_connected(False)
 
             if self.transfers is not None:
-                self.transfers.abort_transfers(send_fail_message=False)
-                self.transfers.save_downloads()
+                self.transfers.disconnect()
 
             self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
             self.ui_callback.conn_close(conn, addr)
