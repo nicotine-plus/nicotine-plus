@@ -3,6 +3,79 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.0 (Unstable)
+-----------------------------
+
+Changes
+
+ * Introduced a new design utilizing header bars. The previous, traditional design can be used by toggling Menu -> View -> Use Header Bar
+ * Improved UI responsiveness when scanning shares
+ * Improved UI performance when multiple tabs are open
+ * Added transfer statitics dialog
+ * Added help window for keyboard shortcuts
+ * Added an option to set a global font
+ * Added support for text completion when typing in the search entry
+ * Added a "Browse Folder" option for search results
+ * Search results can now be filtered by file type
+ * Added an option to clear search and filter history
+ * Columns can now be reordered by dragging them to the desired location
+ * Context menus for tabs now include an option to close all tabs
+ * Added context menu items for viewing and deleting logs (chatrooms, private chat, log pane)
+ * Added a keyboard shortcut to close tabs (Ctrl+W / Alt+F4)
+ * Context menus can now be opened by long-pressing on a touch screen
+ * Context menus can now be opened with the keyboard (Menu Key / Shift+F10)
+ * The number of selected files is now visible in context menus
+ * Added an option to copy the file path of a selected file using Ctrl+C
+ * Added file properties dialog for user browse
+ * Improved the default color scheme
+ * Fixed an issue where UPnP portforwarding did not succeed with certain routers
+ * Fixed an issue where enabling the geographical paranoia option would prevent search results from being delivered to others
+ * Fixed issues where certain uploads would be stuck in a "Cancelled" state
+ * Fixed a Windows-specific issue where the config file did not always save
+ * Fixed an macOS-specific issue where opening a folder did not work
+ * Fixed an issue where custom commands registered in plugins did not work
+ * Several other bug fixes and improvements
+
+Issues closed on GitHub
+
+ * Nicotine will not login to server ([#904](https://github.com/Nicotine-Plus/nicotine-plus/issues/904))
+ * File not shared ! ([#905](https://github.com/Nicotine-Plus/nicotine-plus/issues/905))
+ * Backup of the slide position in the user browse tab ([#908](https://github.com/Nicotine-Plus/nicotine-plus/issues/908))
+ * Save share list to disk => user tab ([#909](https://github.com/Nicotine-Plus/nicotine-plus/issues/909))
+ * Double-clicking on shares ([#917](https://github.com/Nicotine-Plus/nicotine-plus/issues/917))
+ * Fix viewing of shared files ([#919](https://github.com/Nicotine-Plus/nicotine-plus/issues/919))
+ * WinError 3, "the system cannot find the path specified" ([#920](https://github.com/Nicotine-Plus/nicotine-plus/issues/920))
+ * Replace usage of GtkComboBox with GtkComboBoxText ([#921](https://github.com/Nicotine-Plus/nicotine-plus/issues/921))
+ * nicotine-plus.org certificate expired ([#922](https://github.com/Nicotine-Plus/nicotine-plus/issues/922))
+ * Cyrillic characters don't display correctly in chat rooms (Unicode issue?) ([#925](https://github.com/Nicotine-Plus/nicotine-plus/issues/925))
+ * Log windows scroll back to begin after any new entry. ([#926](https://github.com/Nicotine-Plus/nicotine-plus/issues/926))
+ * Config resetting when quitting and opening again ([#934](https://github.com/Nicotine-Plus/nicotine-plus/issues/934))
+ * nicotine.po ([#936](https://github.com/Nicotine-Plus/nicotine-plus/issues/936))
+ * Bug: Browsing your own shares with "Share only to buddies" enabled isn't possible via User browse ([#940](https://github.com/Nicotine-Plus/nicotine-plus/issues/940))
+ * Bug: Displayed shared files count in Chat rooms / User info inconsistent ([#941](https://github.com/Nicotine-Plus/nicotine-plus/issues/941))
+ * Feature Request: Clear filters button ([#944](https://github.com/Nicotine-Plus/nicotine-plus/issues/944))
+ * Feature Request: Allow regular expressions in Country field of Search Filters ([#946](https://github.com/Nicotine-Plus/nicotine-plus/issues/946))
+ * Config Bug: WinError 32 + WinError 2: Can't rename config file, error & The system cannot find the file specified ([#949](https://github.com/Nicotine-Plus/nicotine-plus/issues/949))
+ * Feature Request: Clear Search Result Filter History ([#950](https://github.com/Nicotine-Plus/nicotine-plus/issues/950))
+ * Feature Request: A method to quit via Tray Icon ([#951](https://github.com/Nicotine-Plus/nicotine-plus/issues/951))
+ * Windows Bug: Can't bring Nicotine+ to the foreground if one of its popup windows are open ([#953](https://github.com/Nicotine-Plus/nicotine-plus/issues/953))
+ * Windows Bug: Preferences popup window is slow to open on occasion ([#954](https://github.com/Nicotine-Plus/nicotine-plus/issues/954))
+ * Now Playing ([#957](https://github.com/Nicotine-Plus/nicotine-plus/issues/957))
+ * Filtering by `10m` gives files >=10MiB, but filtering `10MiB` gives files >=9.54MiB ([#961](https://github.com/Nicotine-Plus/nicotine-plus/issues/961))
+ * Setting Plugin /commands ([#962](https://github.com/Nicotine-Plus/nicotine-plus/issues/962))
+ * Feature Request: Search Wishlist: Change "Select All" Button to "Clear All" ([#963](https://github.com/Nicotine-Plus/nicotine-plus/issues/963))
+ * Feature Request: Indication that a search tab was opened automatically by the wishlist ([#964](https://github.com/Nicotine-Plus/nicotine-plus/issues/964))
+ * Feature Request: Option to choose the search result filter's tab bar position ([#965](https://github.com/Nicotine-Plus/nicotine-plus/issues/965))
+ * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+ * MacOS 11.1 Open folder fails ([#970](https://github.com/Nicotine-Plus/nicotine-plus/issues/970))
+ * MacOS 11.1, open folder opens the wrong directory ([#971](https://github.com/Nicotine-Plus/nicotine-plus/issues/971))
+ * MacOS 11.1, wrong flag in buddy list ([#972](https://github.com/Nicotine-Plus/nicotine-plus/issues/972))
+ * New bundled UPnP is not working ([#973](https://github.com/Nicotine-Plus/nicotine-plus/issues/973))
+ * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+ * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+ * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+ * Bug: Clearing all active filters requires double-Enter for next filter attempt ([#966](https://github.com/Nicotine-Plus/nicotine-plus/issues/966))
+
 Version 2.2.2 (December 15, 2020)
 -----------------------------
 
