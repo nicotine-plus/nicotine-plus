@@ -1339,6 +1339,11 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">1</property>
+          </object>
+        </child>
         <!-- Status Bar -->
         <child>
           <object class="GtkBox">
