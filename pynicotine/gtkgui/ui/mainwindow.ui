@@ -194,7 +194,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureSearches">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure searches</property>
@@ -369,7 +369,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureTransfers1">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure downloads</property>
@@ -544,7 +544,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureTransfers2">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure uploads</property>
@@ -602,7 +602,7 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkButton" id="configureLog">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure logging</property>
@@ -660,7 +660,7 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkButton" id="configureUserinfo">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure user info</property>
@@ -750,7 +750,7 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkButton" id="configureShares">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure shares</property>
@@ -885,7 +885,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="configureLogSecond">
+          <object class="GtkButton">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure logging</property>
@@ -1182,7 +1182,7 @@
                       <object class="GtkBox" id="chatroomsvbox">
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
-                         <child>
+                        <child>
                           <object class="GtkBox" id="ChatroomsToolbar">
                             <property name="visible">0</property>
                             <child>

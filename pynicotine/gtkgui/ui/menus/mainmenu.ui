@@ -137,13 +137,15 @@
         <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;p</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">_Browse Public Shares</attribute>
+        <attribute name="action">app.browsepublicshares</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">Rescan B_uddy Shares</attribute>
         <attribute name="action">app.buddyrescan</attribute>
         <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;b</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Browse Public Shares</attribute>
-        <attribute name="action">app.browsepublicshares</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">Bro_wse Buddy Shares</attribute>
