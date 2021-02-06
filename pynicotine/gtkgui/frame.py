@@ -2668,28 +2668,19 @@ class NicotineFrame:
             self.save_state()
             return False
 
-        if self.tray.is_tray_icon_visible() and self.np.config.sections["ui"]["exitdialog"] == 2:
+        if self.np.config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
             return True
 
-        if self.tray.is_tray_icon_visible():
-            option_dialog(
-                parent=self.MainWindow,
-                title=_('Close Nicotine+?'),
-                message=_('Are you sure you wish to exit Nicotine+ at this time?'),
-                third=_("Send to Tray"),
-                checkbox_label=_("Remember choice"),
-                callback=self.on_quit_response
-            )
-        else:
-            option_dialog(
-                parent=self.MainWindow,
-                title=_('Close Nicotine+?'),
-                message=_('Are you sure you wish to exit Nicotine+ at this time?'),
-                checkbox_label=_("Remember choice"),
-                callback=self.on_quit_response
-            )
+        option_dialog(
+            parent=self.MainWindow,
+            title=_('Close Nicotine+?'),
+            message=_('Are you sure you wish to exit Nicotine+ at this time?'),
+            third=_("Run in Background"),
+            checkbox_label=_("Remember choice"),
+            callback=self.on_quit_response
+        )
 
         return True
 

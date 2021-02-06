@@ -380,10 +380,6 @@ class Config:
         if sys.platform == "win32":
             self.defaults['players']['npplayer'] = 'other'
 
-        # Non-functional tray icon is disabled on macOS
-        if sys.platform == "darwin":
-            self.defaults['ui']['exitdialog'] = 0
-
         # Clean up old config options
         self.remove_old_options()
 
