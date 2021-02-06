@@ -500,8 +500,8 @@ def open_log(folder, filename):
         path = os.path.join(folder, clean_file(filename.replace(os.sep, "-")) + ".log")
 
         if not os.path.exists(path):
-            # No logs, create empty file
             with open(path, "w"):
+                # No logs, create empty file
                 pass
 
         open_file_path(path)
@@ -1016,7 +1016,7 @@ class IconNotebook:
 
         return next(owner for owner, tab in items.items() if tab.Main is page)
 
-    def on_tab_popup(self, widget):
+    def on_tab_popup(self, widget, page):
         # Dummy implementation
         pass
 
