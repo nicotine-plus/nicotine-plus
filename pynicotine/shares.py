@@ -774,13 +774,6 @@ class Shares:
     def rescan_buddy_shares(self, rebuild=False, thread=True):
         self.rescan_shares("buddy", rebuild, thread)
 
-    def rescan_shares(self, sharestype, rebuild=False, thread=True):
-
-        if thread:
-            _thread.start_new_thread(self._rescan_shares, (sharestype, rebuild))
-        else:
-            self._rescan_shares(sharestype, rebuild)
-
     def get_shared_folders(self, sharestype):
 
         if sharestype == "normal":
@@ -820,7 +813,7 @@ class Shares:
 
         return False
 
-    def _rescan_shares(self, sharestype, rebuild):
+    def rescan_shares(self, sharestype, rebuild=False, thread=True):
 
         shared_folders = self.get_shared_folders(sharestype)
 
@@ -829,6 +822,13 @@ class Shares:
 
         scanner, scanner_queue = self.build_scanner_process(shared_folders, sharestype, rebuild)
         scanner.start()
+
+        if thread:
+            _thread.start_new_thread(self._process_scanner, (scanner, scanner_queue, sharestype))
+        else:
+            self._process_scanner(scanner, scanner_queue, sharestype)
+
+    def _process_scanner(self, scanner, scanner_queue, sharestype):
 
         if self.ui_callback:
             self.ui_callback.show_scan_progress(sharestype)
