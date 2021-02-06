@@ -1469,7 +1469,13 @@ class Search:
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
             self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
 
-        self.AboutSearchFiltersPopover.popup()
+        try:
+            self.AboutSearchFiltersPopover.popup()
+
+        except AttributeError:
+            # GTK <3.22 support
+            self.AboutSearchFiltersPopover.set_transitions_enabled(True)
+            self.AboutSearchFiltersPopover.show()
 
     def update_filter_counter(self, count):
 

@@ -816,7 +816,13 @@ class ChatRoom:
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
             self.AboutChatRoomCommandsPopover.set_relative_to(self.ShowChatHelp)
 
-        self.AboutChatRoomCommandsPopover.popup()
+        try:
+            self.AboutChatRoomCommandsPopover.popup()
+
+        except AttributeError:
+            # GTK <3.22 support
+            self.AboutChatRoomCommandsPopover.set_transitions_enabled(True)
+            self.AboutChatRoomCommandsPopover.show()
 
     def on_show_chat_buttons(self, show=True):
 

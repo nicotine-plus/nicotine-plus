@@ -333,4 +333,11 @@ class RoomList:
         self.room_model.clear()
 
     def show(self, *args):
-        self.RoomListPopover.popup()
+
+        try:
+            self.RoomListPopover.popup()
+
+        except AttributeError:
+            # GTK <3.22 support
+            self.RoomListPopover.set_transitions_enabled(True)
+            self.RoomListPopover.show()

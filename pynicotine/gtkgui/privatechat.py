@@ -529,7 +529,13 @@ class PrivateChat:
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
             self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
 
-        self.AboutPrivateChatCommandsPopover.popup()
+        try:
+            self.AboutPrivateChatCommandsPopover.popup()
+
+        except AttributeError:
+            # GTK <3.22 support
+            self.AboutPrivateChatCommandsPopover.set_transitions_enabled(True)
+            self.AboutPrivateChatCommandsPopover.show()
 
     def show_message(self, text, newmessage=True, timestamp=None):
 
