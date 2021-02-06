@@ -604,6 +604,17 @@ class NicotineFrame:
 
     def update_visuals(self):
 
+        if not hasattr(self, "global_css_provider"):
+
+            screen = Gdk.Screen.get_default()
+            self.global_css_provider = Gtk.CssProvider()
+            self.global_css_provider.load_from_data(
+                b".toolbar { border-bottom: 1px solid @borders; }"
+            )
+            Gtk.StyleContext.add_provider_for_screen(
+                screen, self.global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
+
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
@@ -1308,19 +1319,20 @@ class NicotineFrame:
 
         header_bar = self.__dict__["Header" + page_id]
         toolbar = self.__dict__[page_id + "Toolbar"]
+        toolbar_contents = self.__dict__[page_id + "ToolbarContents"]
 
         title_widget = self.__dict__[page_id + "Title"]
         header_bar.set_custom_title(None)
-        toolbar.pack_start(title_widget, True, True, 0)
+        toolbar_contents.pack_start(title_widget, True, True, 0)
 
         end_widget = self.__dict__[page_id + "End"]
         header_bar.remove(end_widget)
-        toolbar.pack_end(end_widget, False, False, 0)
+        toolbar_contents.pack_end(end_widget, False, False, 0)
 
         try:
             start_widget = self.__dict__[page_id + "Start"]
             header_bar.remove(start_widget)
-            toolbar.add(start_widget)
+            toolbar_contents.add(start_widget)
 
         except KeyError:
             # No start widget
@@ -1347,18 +1359,19 @@ class NicotineFrame:
 
         header_bar = self.__dict__["Header" + self.current_page_id]
         toolbar = self.__dict__[self.current_page_id + "Toolbar"]
+        toolbar_contents = self.__dict__[self.current_page_id + "ToolbarContents"]
 
         title_widget = self.__dict__[self.current_page_id + "Title"]
-        toolbar.remove(title_widget)
+        toolbar_contents.remove(title_widget)
         header_bar.set_custom_title(title_widget)
 
         end_widget = self.__dict__[self.current_page_id + "End"]
-        toolbar.remove(end_widget)
+        toolbar_contents.remove(end_widget)
         header_bar.pack_end(end_widget)
 
         try:
             start_widget = self.__dict__[self.current_page_id + "Start"]
-            toolbar.remove(start_widget)
+            toolbar_contents.remove(start_widget)
             header_bar.add(start_widget)
 
         except KeyError:
