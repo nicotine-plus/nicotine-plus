@@ -45,25 +45,51 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">6</property>
+                <property name="spacing">12</property>
                 <property name="margin-start">10</property>
                 <property name="orientation">vertical</property>
                 <property name="width-request">260</property>
-                <child>
-                  <object class="GtkLabel" id="PluginName">
-                    <property name="visible">1</property>
-                    <property name="halign">start</property>
-                    <property name="label" translatable="yes">No Plugin Selected</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
                     <property name="spacing">6</property>
                     <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkLabel" id="PluginName">
+                            <property name="visible">1</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">1</property>
+                            <property name="label" translatable="yes">No Plugin Selected</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="PluginProperties">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="sensitive">0</property>
+                            <property name="tooltip-text" translatable="yes">Plugin preferences</property>
+                            <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">emblem-system-symbolic</property>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="circular"/>
+                              <class name="image-button"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
@@ -102,66 +128,26 @@
                         </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">1</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Description: </property>
-                            <property name="width-chars">15</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkScrolledWindow">
-                        <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="vexpand">1</property>
-                        <property name="shadow-type">in</property>
-                        <child>
-                          <object class="GtkTextView" id="PluginDescription">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="editable">0</property>
-                            <property name="wrap-mode">word-char</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">1</property>
-                    <property name="halign">end</property>
-                    <property name="hexpand">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="vexpand">1</property>
+                    <property name="shadow-type">in</property>
                     <child>
-                      <object class="GtkButton" id="PluginProperties">
+                      <object class="GtkTextView" id="PluginDescription">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
-                        <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">emblem-system-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Properties</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                        <property name="editable">0</property>
+                        <property name="pixels-above-lines">1</property>
+                        <property name="pixels-below-lines">1</property>
+                        <property name="left-margin">8</property>
+                        <property name="right-margin">8</property>
+                        <property name="top-margin">5</property>
+                        <property name="bottom-margin">5</property>
+                        <property name="wrap-mode">word-char</property>
                       </object>
                     </child>
                   </object>

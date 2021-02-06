@@ -32,6 +32,12 @@
                   <object class="GtkTextView" id="Description">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="pixels-above-lines">1</property>
+                    <property name="pixels-below-lines">1</property>
+                    <property name="left-margin">8</property>
+                    <property name="right-margin">8</property>
+                    <property name="top-margin">5</property>
+                    <property name="bottom-margin">5</property>
                     <property name="wrap-mode">word</property>
                   </object>
                 </child>
