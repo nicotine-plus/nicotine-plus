@@ -28,6 +28,10 @@ Changes
  * Added an option to copy the file path of a selected file using Ctrl+C
  * Added file properties dialog for user browse
  * Improved the default color scheme
+ * Several other minor improvements
+
+Corrections
+
  * Fixed an issue where upload speed limits were not applied on startup
  * Fixed an issue where UPnP portforwarding did not succeed with certain routers
  * Fixed an issue where enabling the geographical paranoia option would prevent search results from being delivered to others
@@ -35,7 +39,7 @@ Changes
  * Fixed a Windows-specific issue where the config file did not always save
  * Fixed an macOS-specific issue where opening a folder did not work
  * Fixed an issue where custom commands registered in plugins did not work
- * Several other bug fixes and improvements
+ * Several other minor corrections
 
 Issues closed on GitHub
 
