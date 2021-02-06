@@ -29,7 +29,6 @@ import re
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from _thread import start_new_thread
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.transferlist import TransferList
@@ -253,9 +252,6 @@ class Downloads(TransferList):
 
         widget.stop_emission_by_name("key_press_event")
         return True
-
-    def on_play_files(self, widget, prefix=""):
-        start_new_thread(self._on_play_files, (widget, prefix))
 
     def _on_play_files(self, widget, prefix=""):
 

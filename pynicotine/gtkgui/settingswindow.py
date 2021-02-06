@@ -633,131 +633,80 @@ class SharesFrame(BuildFrame):
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
 
+    def add_shared_dir(self, folder, shareslist, shareddirs):
+
+        if folder is None:
+            return
+
+        for directory in folder:
+
+            # If the directory is already shared
+            if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
+
+                dlg = Gtk.MessageDialog(
+                    transient_for=self.Main.get_toplevel(),
+                    flags=0,
+                    type=Gtk.MessageType.WARNING,
+                    buttons=Gtk.ButtonsType.OK,
+                    text=_("Warning")
+                )
+                dlg.format_secondary_text(_("The chosen folder is already shared"))
+                dlg.run()
+                dlg.destroy()
+                return
+
+            virtual = combo_box_dialog(
+                parent=self.Main.get_toplevel(),
+                title=_("Virtual Name"),
+                message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+            )
+
+            # Remove slashes from share name to avoid path conflicts
+            if virtual:
+                virtual = virtual.replace('/', '_').replace('\\', '_')
+
+            # If the virtual share name is not already used
+            if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
+
+                dlg = Gtk.MessageDialog(
+                    transient_for=self.Main.get_toplevel(),
+                    flags=0,
+                    type=Gtk.MessageType.WARNING,
+                    buttons=Gtk.ButtonsType.OK,
+                    text=_("Warning")
+                )
+                dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
+                dlg.run()
+                dlg.destroy()
+                return
+
+            shareslist.append(
+                [
+                    virtual,
+                    directory
+                ]
+            )
+
+            shareddirs.append((virtual, directory))
+            self.needrescan = True
+
     def on_add_shared_dir(self, widget):
 
-        dir1 = choose_dir(
+        folder = choose_dir(
             self.Main.get_toplevel(),
             title=_("Add a Shared Folder")
         )
 
-        if dir1 is not None:
-
-            for directory in dir1:
-
-                # If the directory is already shared
-                if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
-
-                    dlg = Gtk.MessageDialog(
-                        transient_for=self.Main.get_toplevel(),
-                        flags=0,
-                        type=Gtk.MessageType.WARNING,
-                        buttons=Gtk.ButtonsType.OK,
-                        text=_("Warning")
-                    )
-                    dlg.format_secondary_text(_("The chosen folder is already shared"))
-                    dlg.run()
-                    dlg.destroy()
-
-                else:
-
-                    virtual = combo_box_dialog(
-                        parent=self.Main.get_toplevel(),
-                        title=_("Virtual Name"),
-                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
-                    )
-
-                    # Remove slashes from share name to avoid path conflicts
-                    if virtual:
-                        virtual = virtual.replace('/', '_').replace('\\', '_')
-
-                    # If the virtual share name is not already used
-                    if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
-
-                        dlg = Gtk.MessageDialog(
-                            transient_for=self.Main.get_toplevel(),
-                            flags=0,
-                            type=Gtk.MessageType.WARNING,
-                            buttons=Gtk.ButtonsType.OK,
-                            text=_("Warning")
-                        )
-                        dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
-                        dlg.run()
-                        dlg.destroy()
-
-                    else:
-
-                        self.shareslist.append(
-                            [
-                                virtual,
-                                directory
-                            ]
-                        )
-
-                        self.shareddirs.append((virtual, directory))
-                        self.needrescan = True
+        self.add_shared_dir(folder, self.shareslist, self.shareddirs)
 
     def on_add_shared_buddy_dir(self, widget):
 
-        dir1 = choose_dir(
+        folder = choose_dir(
             self.Main.get_toplevel(),
             title=_("Add a Shared Buddy Folder")
         )
 
-        if dir1 is not None:
-
-            for directory in dir1:
-
-                # If the directory is already shared
-                if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
-
-                    dlg = Gtk.MessageDialog(
-                        transient_for=self.Main.get_toplevel(),
-                        flags=0,
-                        type=Gtk.MessageType.WARNING,
-                        buttons=Gtk.ButtonsType.OK,
-                        text=_("Warning")
-                    )
-                    dlg.format_secondary_text(_("The chosen folder is already shared"))
-                    dlg.run()
-                    dlg.destroy()
-
-                else:
-
-                    virtual = combo_box_dialog(
-                        parent=self.Main.get_toplevel(),
-                        title=_("Virtual Name"),
-                        message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
-                    )
-
-                    # Remove slashes from share name to avoid path conflicts
-                    if virtual:
-                        virtual = virtual.replace('/', '_').replace('\\', '_')
-
-                    # If the virtual share name is not already used
-                    if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
-
-                        dlg = Gtk.MessageDialog(
-                            transient_for=self.Main.get_toplevel(),
-                            flags=0,
-                            type=Gtk.MessageType.WARNING,
-                            buttons=Gtk.ButtonsType.OK,
-                            text=_("Warning")
-                        )
-                        dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
-                        dlg.run()
-                        dlg.destroy()
-
-                    else:
-
-                        self.bshareslist.append(
-                            [
-                                virtual,
-                                directory
-                            ]
-                        )
-
-                        self.bshareddirs.append((virtual, directory))
-                        self.needrescan = True
+        self.add_shared_dir(folder, self.bshareslist, self.bshareddirs)
 
     def _remove_shared_dir(self, model, path, iterator, list):
         list.append(iterator)
