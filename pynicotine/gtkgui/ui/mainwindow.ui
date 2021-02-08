@@ -1483,7 +1483,7 @@
                 <property name="margin-start">8</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
-                <property name="tooltip-text" translatable="yes">Downloading (speed / users)</property>
+                <property name="tooltip-text" translatable="yes">Downloading (speed / active downloads)</property>
               </object>
             </child>
             <child>
@@ -1499,7 +1499,7 @@
                 <property name="margin-start">8</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
-                <property name="tooltip-text" translatable="yes">Uploading (speed / users)</property>
+                <property name="tooltip-text" translatable="yes">Uploading (speed / active uploads)</property>
               </object>
             </child>
             <child>
