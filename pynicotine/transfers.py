@@ -2202,7 +2202,7 @@ class Transfers:
 
         transfer.legacy_attempt = False
         transfer.req = None
-        transfer.speed = 0
+        transfer.speed = None
         transfer.timeleft = ""
 
         if send_fail_message and transfer in self.uploads:
