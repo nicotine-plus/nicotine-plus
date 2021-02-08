@@ -250,10 +250,15 @@ class TransferList:
 
             self.last_save = curtime
 
-        if not forceupdate:
-            if self.frame.current_tab_label != self.tab_label:
-                """ No need to do unnecessary work if transfers are not visible """
-                return
+        finished = (transfer is not None and transfer.status == "Finished")
+
+        if forceupdate or finished or \
+                (curtime - self.last_ui_update) > 1:
+            self.frame.update_bandwidth()
+
+        if not forceupdate and self.frame.current_tab_label != self.tab_label:
+            """ No need to do unnecessary work if transfers are not visible """
+            return
 
         if transfer is not None:
             self.update_specific(transfer)
@@ -262,18 +267,13 @@ class TransferList:
             for i in self.list:
                 self.update_specific(i)
 
-        finished = (transfer is not None and transfer.status == "Finished")
-
-        if not forceupdate and \
-            not finished and \
-                (curtime - self.last_ui_update) <= 1:
+        if forceupdate or finished or \
+                (curtime - self.last_ui_update) > 1:
 
             """ Unless a transfer finishes, use a cooldown to avoid updating
             too often """
 
-            return
-
-        self.update_parent_rows()
+            self.update_parent_rows()
 
     def update_parent_rows(self, only_remove=False):
 

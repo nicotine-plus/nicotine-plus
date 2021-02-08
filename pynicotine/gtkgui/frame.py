@@ -2502,33 +2502,35 @@ class NicotineFrame:
 
         def _bandwidth(line):
             bandwidth = 0.0
+            num_active_users = 0
 
             for i in line:
                 speed = i.speed
                 if speed is not None:
                     bandwidth = bandwidth + speed
+                    num_active_users += 1
 
-            return human_speed(bandwidth)
+            return human_speed(bandwidth), num_active_users
 
         def _users(transfers, users):
             return len(users), len(transfers)
 
         if self.np.transfers is not None:
-            down = _bandwidth(self.np.transfers.downloads)
-            up = _bandwidth(self.np.transfers.uploads)
+            down, active_usersdown = _bandwidth(self.np.transfers.downloads)
+            up, active_usersup = _bandwidth(self.np.transfers.uploads)
             total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
             total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
         else:
             down = up = human_speed(0.0)
-            filesup = filesdown = total_usersdown = total_usersup = 0
+            filesup = filesdown = total_usersdown = total_usersup = active_usersdown = active_usersup = 0
 
         self.DownloadUsers.set_text(str(total_usersdown))
         self.UploadUsers.set_text(str(total_usersup))
         self.DownloadFiles.set_text(str(filesdown))
         self.UploadFiles.set_text(str(filesup))
 
-        self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersdown, 'speed': down})
-        self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': total_usersup, 'speed': up})
+        self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersdown, 'speed': down})
+        self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
 
         self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 

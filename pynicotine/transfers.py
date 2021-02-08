@@ -1438,8 +1438,12 @@ class Transfers:
                     try:
                         i.speed = max(0, bytesdifference / (curtime - i.lasttime))
                     except ZeroDivisionError:
-                        i.speed = 0
+                        i.speed = None
+
                     if i.speed <= 0.0:
+                        i.speed = None
+
+                    if i.speed is None:
                         i.timeleft = "∞"
                     else:
                         i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
@@ -1501,7 +1505,7 @@ class Transfers:
 
         i.status = "Finished"
         i.currentbytes = i.size
-        i.speed = 0
+        i.speed = None
         i.timeleft = ""
 
         log.add_transfer(
@@ -1591,7 +1595,7 @@ class Transfers:
                 i.starttime = curtime
                 i.offset = msg.offset
 
-            lastspeed = 0
+            lastspeed = None
             if i.speed is not None:
                 lastspeed = i.speed
 
@@ -1610,11 +1614,12 @@ class Transfers:
                 except ZeroDivisionError:
                     i.speed = lastspeed  # too fast!
 
-                if i.speed <= 0.0 and (i.currentbytes != i.size or lastspeed == 0):
+                if i.speed <= 0.0:
+                    i.speed = None
+
+                if i.speed is None:
                     i.timeleft = "∞"
                 else:
-                    if (i.currentbytes == i.size) and i.speed == 0:
-                        i.speed = lastspeed
                     i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
 
                 self.check_upload_queue()
@@ -1660,7 +1665,7 @@ class Transfers:
 
         i.status = "Finished"
         i.currentbytes = i.size
-        i.speed = 0
+        i.speed = None
         i.timeleft = ""
 
         for j in self.uploads:
