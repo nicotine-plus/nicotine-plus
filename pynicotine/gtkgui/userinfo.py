@@ -82,7 +82,7 @@ class UserTabs(IconNotebook):
         self.append_page(w.Main, userlabel, w.on_close)
         self.frame.np.queue.put(slskmessages.AddUser(user))
 
-    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None):
+    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
 
         self.save_columns()
 
@@ -91,7 +91,7 @@ class UserTabs(IconNotebook):
         else:
             self.init_window(user)
 
-        self.users[user].show_user(msg, folder, indeterminate_progress)
+        self.users[user].show_user(msg, folder, indeterminate_progress, local_shares_type)
 
         if change_page:
             self.set_current_page(self.page_num(self.users[user].Main))
@@ -383,7 +383,7 @@ class UserInfo:
                 "error": str(e)
             })
 
-    def show_user(self, msg, folder=None, indeterminate_progress=False):
+    def show_user(self, msg, *args):
 
         if msg is None:
             return

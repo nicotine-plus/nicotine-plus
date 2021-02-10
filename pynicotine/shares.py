@@ -721,7 +721,10 @@ class Shares:
             ]
 
         for db in dbs:
-            self.share_dbs[db].close()
+            try:
+                self.share_dbs[db].close()
+            except AttributeError:
+                continue
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """

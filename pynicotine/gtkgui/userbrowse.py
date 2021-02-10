@@ -62,8 +62,8 @@ class UserBrowse:
 
         self.user = user
         self.conn = None
-        self.finished = False
-        self.refreshing = False
+        self.local_shares_type = None
+        self.refreshing = True
 
         # selected_folder is the current selected folder
         self.selected_folder = None
@@ -541,14 +541,24 @@ class UserBrowse:
     def save_columns(self):
         save_columns("user_browse", self.FileTreeView.get_columns())
 
-    def show_user(self, msg, folder=None, indeterminate_progress=False):
+    def show_user(self, msg, folder=None, indeterminate_progress=False, local_shares_type=None):
 
         self.set_in_progress(indeterminate_progress)
 
         if folder:
             self.queued_folder = folder
 
-        if not self.finished or self.refreshing:
+        # If this is our own share, remember if it's public or buddy
+        # (needed for refresh button)
+        if local_shares_type:
+            self.local_shares_type = local_shares_type
+
+        """ Update the list model if:
+        1. This is a new user browse tab
+        2. We're refreshing the file list
+        3. This is the list of our own shared files (local_shares_type set)
+        """
+        if self.refreshing or local_shares_type:
             if msg is None:
                 return
 
@@ -601,7 +611,7 @@ class UserBrowse:
         self.FileTreeView.set_sensitive(True)
         self.RefreshButton.set_sensitive(True)
 
-        self.finished = True
+        self.refreshing = False
 
     def update_gauge(self, msg):
 
@@ -985,7 +995,7 @@ class UserBrowse:
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
 
-        self.frame.browse_user(self.user)
+        self.frame.browse_user(self.user, local_shares_type=self.local_shares_type)
 
     def on_copy_file_path(self, widget, files=False):
 

@@ -1138,10 +1138,8 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_normal
 
-        if self.userbrowse.is_new_request(login):
-            _thread.start_new_thread(self.parse_local_shares, (login, msg))
-
-        self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
+        _thread.start_new_thread(self.parse_local_shares, (login, msg, folder, "normal"))
+        self.userbrowse.show_user(login, indeterminate_progress=True)
 
     def on_browse_buddy_shares(self, *args, folder=None):
         """ Browse your own buddy shares """
@@ -1154,10 +1152,8 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_buddy
 
-        if self.userbrowse.is_new_request(login):
-            _thread.start_new_thread(self.parse_local_shares, (login, msg))
-
-        self.userbrowse.show_user(login, folder=folder, indeterminate_progress=True)
+        _thread.start_new_thread(self.parse_local_shares, (login, msg, folder, "buddy"))
+        self.userbrowse.show_user(login, indeterminate_progress=True)
 
     # Modes
 
@@ -1876,14 +1872,14 @@ class NicotineFrame:
 
     """ User Browse """
 
-    def browse_user(self, user, folder=None):
+    def browse_user(self, user, folder=None, local_shares_type=None):
         """ Browse a user shares """
 
         login = self.np.config.sections["server"]["login"]
 
         if user is not None:
             if user == login:
-                if not self.np.config.sections["transfers"]["enablebuddyshares"]:
+                if local_shares_type == "normal" or not self.np.config.sections["transfers"]["enablebuddyshares"]:
                     self.on_browse_public_shares(folder=folder)
                 else:
                     self.on_browse_buddy_shares(folder=folder)
@@ -1893,14 +1889,14 @@ class NicotineFrame:
 
                 self.userbrowse.show_user(user, folder=folder)
 
-    def parse_local_shares(self, username, msg, folder=None):
+    def parse_local_shares(self, username, msg, folder=None, shares_type="normal"):
         """ Parse our local shares list and show it in the UI """
 
         built = msg.make_network_message(nozlib=0)
         msg.parse_network_message(built)
 
         indeterminate_progress = change_page = False
-        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page)
+        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page, folder, shares_type)
 
     def on_get_shares(self, widget, *args):
 
