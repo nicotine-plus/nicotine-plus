@@ -34,7 +34,6 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.metadata.tinytag import TinyTag
 from pynicotine.utils import apply_translation
 
 """ Check if there's an appropriate (performant) database type for shelves """
@@ -69,6 +68,7 @@ class Scanner(multiprocessing.Process):
 
     def __init__(self, config, queue, shared_folders, sharestype="normal", rebuild=False):
 
+        from pynicotine.metadata.tinytag import TinyTag
         multiprocessing.Process.__init__(self)
 
         self.config = config
@@ -480,7 +480,6 @@ class Shares:
         self.queue = queue
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
-        self.tinytag = TinyTag()
         self.share_dbs = {}
         self.scanner, scanner_queue = self.build_scanner_process()
 
