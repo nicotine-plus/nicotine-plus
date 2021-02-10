@@ -738,14 +738,18 @@ class Shares:
         index_db = "fileindex"
 
         try:
-            sharedfolders = len(self.share_dbs[shared_db])
-            sharedfiles = len(self.share_dbs[index_db])
+            try:
+                sharedfolders = len(self.share_dbs[shared_db])
+                sharedfiles = len(self.share_dbs[index_db])
 
-        except TypeError:
-            sharedfolders = len(list(self.share_dbs[shared_db]))
-            sharedfiles = len(list(self.share_dbs[index_db]))
+            except TypeError:
+                sharedfolders = len(list(self.share_dbs[shared_db]))
+                sharedfiles = len(list(self.share_dbs[index_db]))
 
-        self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+
+        except Exception as e:
+            log.add(_("Failed to send number of shared files to the server: %s"), e)
 
     """ Scanning """
 

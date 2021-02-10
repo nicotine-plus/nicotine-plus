@@ -985,6 +985,7 @@ class NicotineFrame:
 
     def set_show_log(self, show):
         if show:
+            self.set_status_text("")
             self.debugLogBox.show()
             scroll_bottom(self.LogScrolledWindow)
         else:
