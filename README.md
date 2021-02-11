@@ -9,7 +9,7 @@ Check out the [screenshots](files/screenshots/SCREENSHOTS.md) and [source code](
 <br clear="right">
 
 # Download Nicotine+
-The current stable version of Nicotine+ is 2.2.2, released on December 15, 2020. See the [release notes](NEWS.md).
+The current stable version of Nicotine+ is 3.0.0, released on February 12, 2021. See the [release notes](NEWS.md).
 
 ## GNU/Linux, *BSD
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use precompiled packages for your distribution/operating system. This will save you time.
@@ -68,7 +68,7 @@ guix install nicotine+
 If Nicotine+ isn't packaged for your distribution/operating system yet, there are other recommended ways of installing Nicotine+.
 
 #### pip (Stable)
-Nicotine+ can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [dependencies](https://github.com/Nicotine-Plus/nicotine-plus/blob/2.2.2/doc/DEPENDENCIES.md) are installed, and run the following:
+Nicotine+ can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [dependencies](https://github.com/Nicotine-Plus/nicotine-plus/blob/3.0.0/doc/DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
@@ -85,13 +85,13 @@ If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
 
 Stable Windows installers for Nicotine+ are available to download. Installing Nicotine+ requires administrator privileges.
 
-- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/windows-x86_64-installer.zip)
-- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/windows-i686-installer.zip)
+- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/3.0.0/windows-x86_64-installer.zip)
+- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/3.0.0/windows-i686-installer.zip)
 
 If you don't want to, or you aren't able to install Nicotine+ on your system, portable packages are also available. These can be run from your home directory.
 
-- [64-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/windows-x86_64-package.zip)
-- [32-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/windows-i686-package.zip)
+- [64-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/3.0.0/windows-x86_64-package.zip)
+- [32-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/3.0.0/windows-i686-package.zip)
 
 ### Unstable
 
@@ -105,7 +105,7 @@ Unstable Windows packages are generated after every commit to the master branch,
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
-- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/2.2.2/macos-installer.zip)
+- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/download/3.0.0/macos-installer.zip)
 
 ### Stable (Mojave/10.14)
 
