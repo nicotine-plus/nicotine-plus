@@ -8,7 +8,7 @@ Version 3.0.0 (Unstable)
 
 Changes
 
- * Introduced a new design utilizing header bars. The previous, traditional design can be used by toggling Menu -> View -> Use Header Bar
+ * Introduced a new design utilizing header bars (to use the old design, uncheck Menu -> View -> Use Header Bar)
  * Improved UI responsiveness when scanning shares
  * Improved UI performance when multiple tabs are open
  * Added transfer statitics dialog
@@ -66,7 +66,7 @@ Issues closed on GitHub
  * Windows Bug: Can't bring Nicotine+ to the foreground if one of its popup windows are open ([#953](https://github.com/Nicotine-Plus/nicotine-plus/issues/953))
  * Windows Bug: Preferences popup window is slow to open on occasion ([#954](https://github.com/Nicotine-Plus/nicotine-plus/issues/954))
  * Now Playing ([#957](https://github.com/Nicotine-Plus/nicotine-plus/issues/957))
- * Filtering by `10m` gives files >=10MiB, but filtering `10MiB` gives files >=9.54MiB ([#961](https://github.com/Nicotine-Plus/nicotine-plus/issues/961))
+ * Filtering by "10m" gives files >=10MiB, but filtering "10MiB" gives files >=9.54MiB ([#961](https://github.com/Nicotine-Plus/nicotine-plus/issues/961))
  * Setting Plugin /commands ([#962](https://github.com/Nicotine-Plus/nicotine-plus/issues/962))
  * Feature Request: Search Wishlist: Change "Select All" Button to "Clear All" ([#963](https://github.com/Nicotine-Plus/nicotine-plus/issues/963))
  * Feature Request: Indication that a search tab was opened automatically by the wishlist ([#964](https://github.com/Nicotine-Plus/nicotine-plus/issues/964))
@@ -77,7 +77,9 @@ Issues closed on GitHub
  * MacOS 11.1, wrong flag in buddy list ([#972](https://github.com/Nicotine-Plus/nicotine-plus/issues/972))
  * New bundled UPnP is not working ([#973](https://github.com/Nicotine-Plus/nicotine-plus/issues/973))
  * Replace GtkFileChooserButton with a custom button widget ([#975](https://github.com/Nicotine-Plus/nicotine-plus/issues/975))
+ * Windows: Toggle show / minimize app on taskbar icon click ([#976](https://github.com/Nicotine-Plus/nicotine-plus/issues/976))
  * Feature Request: Enable tooltips for long strings that are cut off by another column ([#977](https://github.com/Nicotine-Plus/nicotine-plus/issues/977))
+ * What is causing the log "Filtered out inexact or incorrect search result ... from user X"? ([#979](https://github.com/Nicotine-Plus/nicotine-plus/issues/979))
  * Bug: Private chat tabs closed/discarded without manually doing so ([#983](https://github.com/Nicotine-Plus/nicotine-plus/issues/983))
  * Bug: Unable to reliably close search tabs via middle mouse button click ([#984](https://github.com/Nicotine-Plus/nicotine-plus/issues/984))
  * Feature Request: Log Viewer / Context menu items to browse logs in system text editor ([#986](https://github.com/Nicotine-Plus/nicotine-plus/issues/986))
