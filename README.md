@@ -123,6 +123,17 @@ Unstable macOS installers are generated after every commit to the master branch,
 
 - [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
+## OpenBSD
+
+This port has been submitted to the OpenBSD ports team and is awaiting approval. Here is how you can build and install the port on systems up to 6.9.
+
+```
+mkdir -p /usr/ports/mystuff/net
+cp -r packaging/openbsd /usr/ports/mystuff/net/nicotine-plus
+make package
+sudo make install
+```
+
 ## Building from git (Unstable)
 For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
 
