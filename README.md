@@ -128,8 +128,10 @@ Unstable macOS installers are generated after every commit to the master branch,
 This port has been submitted to the OpenBSD ports team and is awaiting approval. Here is how you can build and install the port on systems up to 6.9.
 
 ```
+git clone https://github.com/Nicotine-Plus/nicotine-plus.git
 mkdir -p /usr/ports/mystuff/net
-cp -r packaging/openbsd /usr/ports/mystuff/net/nicotine-plus
+cp -r nicotine-plus/packaging/openbsd /usr/ports/mystuff/net/nicotine-plus
+cd  /usr/ports/mystuff/net/nicotine-plus
 make package
 sudo make install
 ```
