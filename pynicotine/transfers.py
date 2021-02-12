@@ -293,6 +293,7 @@ class Transfers:
                 else:
                     if i.status not in ["Aborted", "Filtered"]:
                         i.status = "User logged off"
+                        self.abort_transfer(i, send_fail_message=False)
                         self.downloadsview.update(i)
 
         if msg.status == 0:
@@ -1798,17 +1799,29 @@ class Transfers:
                     mintimequeued = i.timequeued
 
         if transfercandidate is not None:
+            user = transfercandidate.user
+
             log.add_transfer(
                 "Checked upload queue, attempting to upload file %(file)s to user %(user)s", {
                     'file': transfercandidate.filename,
-                    'user': transfercandidate.user
+                    'user': user
                 }
             )
 
-            self.push_file(
-                user=transfercandidate.user, filename=transfercandidate.filename,
-                realfilename=transfercandidate.realfilename, transfer=transfercandidate
-            )
+            if user in self.users and self.users[user].status == 0:
+                transfercandidate.status = "User logged off"
+                self.abort_transfer(transfercandidate, send_fail_message=False)
+                self.uploadsview.update(transfercandidate)
+                self.auto_clear_upload(transfercandidate)
+
+                self.check_upload_queue()
+
+            else:
+                self.push_file(
+                    user=transfercandidate.user, filename=transfercandidate.filename,
+                    realfilename=transfercandidate.realfilename, transfer=transfercandidate
+                )
+
             self.remove_queued(transfercandidate.user, transfercandidate.filename)
 
     def place_in_queue_request(self, msg):
@@ -2012,26 +2025,25 @@ class Transfers:
             i.status = "Connection closed by peer"
             i.req = None
 
-        if i.file is not None:
-            i.file.close()
-
-        i.conn = None
-        i.legacy_attempt = False
+        self.abort_transfer(i, send_fail_message=False)  # Don't send "Aborted" message, let remote user recover
 
         if i.status != "Finished":
-            if i.user in self.users and self.users[i.user].status == 0:
-                i.status = "User logged off"
-
-            elif type == "download":
-                i.status = "Connection closed by peer"
+            if type == "download":
+                if i.user in self.users and self.users[i.user].status == 0:
+                    i.status = "User logged off"
+                else:
+                    i.status = "Connection closed by peer"
 
             elif type == "upload" and i.status == "Transferring":
                 """ Only cancel files being transferred, queued files will take care of
                 themselves. We don't want to cancel all queued files at once, in case
                 it's just a connectivity fluke. """
 
-                i.status = "Cancelled"
-                self.abort_transfer(i, send_fail_message=False)  # Don't send "Aborted" message, let remote user recover
+                if i.user in self.users and self.users[i.user].status == 0:
+                    i.status = "User logged off"
+                else:
+                    i.status = "Cancelled"
+
                 self.auto_clear_upload(i)
 
         curtime = time.time()
