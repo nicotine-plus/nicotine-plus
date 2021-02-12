@@ -747,13 +747,28 @@ class Transfers:
 
     def _append_upload(self, user, filename, transferobj):
 
+        previously_queued = False
+        old_index = 0
+
         for i in self.uploads:
             if i.user == user and i.filename == filename:
+                if i.status == "Queued":
+                    # This upload was queued previously
+                    # Use the previous queue position and time
+                    transferobj.place = i.place
+                    transferobj.timequeued = i.timequeued
+                    previously_queued = True
+
                 self.uploads.remove(i)
                 self.uploadsview.remove_specific(i, True)
                 break
 
-        self.uploads.append(transferobj)
+            old_index += 1
+
+        if previously_queued:
+            self.uploads.insert(old_index, transferobj)
+        else:
+            self.uploads.append(transferobj)
 
     def file_is_upload_queued(self, user, filename):
 
