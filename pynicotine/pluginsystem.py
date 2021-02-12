@@ -378,6 +378,12 @@ class PluginHandler(object):
     def leave_chatroom_notification(self, room):
         self.trigger_event("LeaveChatroomNotification", (room,))
 
+    def user_join_chatroom_notification(self, room, user):
+        self.trigger_event("UserJoinChatroomNotification", (room, user,))
+
+    def user_leave_chatroom_notification(self, room, user):
+        self.trigger_event("UserLeaveChatroomNotification", (room, user,))
+
     def upload_queued_notification(self, user, virtualfile, realfile):
         self.trigger_event("UploadQueuedNotification", (user, virtualfile, realfile))
 
@@ -573,6 +579,12 @@ class BasePlugin(object):
         pass
 
     def LeaveChatroomNotification(self, room):  # noqa
+        pass
+
+    def UserJoinChatroomNotification(self, room, user):  # noqa
+        pass
+
+    def UserLeaveChatroomNotification(self, room, user):  # noqa
         pass
 
     def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa

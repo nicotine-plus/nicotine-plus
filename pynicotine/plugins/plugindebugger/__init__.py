@@ -70,3 +70,9 @@ class Plugin(BasePlugin):
 
     def LeaveChatroomNotification(self, room):  # noqa
         self.log('LeaveChatroomNotification, room=%s' % (room,))
+
+    def UserJoinChatroomNotification(self, room, user):  # noqa
+        self.log('UserJoinChatroomNotification, room=%s, user=%s' % (room, user,))
+
+    def UserLeaveChatroomNotification(self, room, user):  # noqa
+        self.log('UserLeaveChatroomNotification, room=%s, user=%s' % (room, user,))

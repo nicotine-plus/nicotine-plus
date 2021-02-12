@@ -1177,6 +1177,8 @@ class ChatRoom:
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
+        self.frame.np.pluginhandler.user_join_chatroom_notification(self.room, username)
+
         img = self.frame.get_status_image(userdata.status)
         flag = userdata.country
 
@@ -1221,6 +1223,8 @@ class ChatRoom:
 
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
+
+        self.frame.np.pluginhandler.user_leave_chatroom_notification(self.room, username)
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]
