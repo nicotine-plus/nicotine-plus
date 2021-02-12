@@ -32,7 +32,7 @@ import pickle
 import sys
 import time
 
-version = "3.0.0"
+version = "3.0.1.dev1"
 
 win32 = sys.platform.startswith("win")
 
