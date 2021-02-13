@@ -316,7 +316,7 @@ class Scanner(multiprocessing.Process):
                             continue
 
                         # Get the metadata of the file
-                        data = self.get_file_info(filename, entry.path, entry)
+                        data = self.get_file_info(filename, entry.path, self.tinytag, self.queue, entry)
                         if data is not None:
                             files[virtualdir].append(data)
 
@@ -328,7 +328,8 @@ class Scanner(multiprocessing.Process):
 
         return files, streams
 
-    def get_file_info(self, name, pathname, file=None):
+    @classmethod
+    def get_file_info(cls, name, pathname, tinytag, queue=None, file=None):
         """ Get file metadata """
 
         try:
@@ -345,15 +346,19 @@ class Scanner(multiprocessing.Process):
             """ We skip metadata scanning of files without meaningful content """
             if size > 128:
                 try:
-                    audio = self.tinytag.get(pathname, size, tags=False)
+                    audio = tinytag.get(pathname, size, tags=False)
 
                 except Exception as errtuple:
-                    self.queue.put((
-                        0, _("Error while scanning metadata for file %(path)s: %(error)s"), {
-                            'path': pathname,
-                            'error': errtuple
-                        }
-                    ))
+                    error = _("Error while scanning metadata for file %(path)s: %(error)s")
+                    args = {
+                        'path': pathname,
+                        'error': errtuple
+                    }
+
+                    if queue:
+                        queue.put((0, error, args))
+                    else:
+                        log.add(error, args)
 
             if audio is not None:
                 if audio.bitrate is not None:
@@ -365,9 +370,19 @@ class Scanner(multiprocessing.Process):
             return (name, size, bitrateinfo, duration)
 
         except Exception as errtuple:
-            self.queue.put((0, _("Error while scanning file %(path)s: %(error)s"), {'path': pathname, 'error': errtuple}))
+            error = _("Error while scanning file %(path)s: %(error)s")
+            args = {
+                'path': pathname,
+                'error': errtuple
+            }
 
-    def get_dir_stream(self, folder):
+            if queue:
+                queue.put((0, error, args))
+            else:
+                log.add(error, args)
+
+    @classmethod
+    def get_dir_stream(cls, folder):
         """ Pack all files and metadata in directory """
 
         message = slskmessages.SlskMessage()
@@ -413,14 +428,15 @@ class Scanner(multiprocessing.Process):
 
         return stream
 
-    def add_file_to_index(self, index, filename, folder, fileinfo, wordindex, fileindex):
+    @classmethod
+    def add_file_to_index(cls, index, filename, folder, fileinfo, wordindex, fileindex, pattern):
         """ Add a file to the file index database """
 
         fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
 
         # Collect words from filenames for Search index
         # Use set to prevent duplicates
-        for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
+        for k in set((folder + " " + filename).lower().translate(pattern).split()):
             try:
                 wordindex[k].append(index)
             except KeyError:
@@ -456,7 +472,7 @@ class Scanner(multiprocessing.Process):
                 lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
-                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex, fileindex)
+                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex, fileindex, self.translatepunctuation)
                 index += 1
 
         fileindex.close()
@@ -474,7 +490,6 @@ class Shares:
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.share_dbs = {}
-        self.scanner, scanner_queue = self.build_scanner_process()
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -613,17 +628,18 @@ class Shares:
         shared[vdir] = shared.get(vdir, [])
 
         if file not in (i[0] for i in shared[vdir]):
-            fileinfo = self.scanner.get_file_info(file, name)
+            from pynicotine.metadata.tinytag import TinyTag
+            fileinfo = Scanner.get_file_info(file, name, TinyTag())
             shared[vdir] += [fileinfo]
 
-            sharedstreams[vdir] = self.scanner.get_dir_stream(shared[vdir])
+            sharedstreams[vdir] = Scanner.get_dir_stream(shared[vdir])
 
             try:
                 index = len(fileindex)
             except TypeError:
                 index = len(list(fileindex))
 
-            self.scanner.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex)
+            Scanner.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex, self.translatepunctuation)
 
             sharedmtimes[vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
@@ -656,18 +672,18 @@ class Shares:
         bshared[vdir] = bshared.get(vdir, [])
 
         if file not in (i[0] for i in bshared[vdir]):
-
-            fileinfo = self.scanner.get_file_info(file, name)
+            from pynicotine.metadata.tinytag import TinyTag
+            fileinfo = Scanner.get_file_info(file, name, TinyTag())
             bshared[vdir] += [fileinfo]
 
-            bsharedstreams[vdir] = self.scanner.get_dir_stream(bshared[vdir])
+            bsharedstreams[vdir] = Scanner.get_dir_stream(bshared[vdir])
 
             try:
                 index = len(bfileindex)
             except TypeError:
                 index = len(list(bfileindex))
 
-            self.scanner.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex)
+            Scanner.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex, self.translatepunctuation)
 
             bsharedmtimes[vdir] = os.path.getmtime(rdir)
             self.newbuddyshares = True
