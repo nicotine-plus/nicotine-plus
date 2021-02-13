@@ -46,6 +46,19 @@ jobs:
           name: debian-package
           path: ../build/
 
+  flatpak:
+    runs-on: ubuntu-20.04
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-3.38
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v2
+    - uses: bilelmoussaoui/flatpak-github-actions@v2
+      with:
+        bundle: flatpak-package.flatpak
+        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.yaml
+        run-tests: true
+
   windows:
     runs-on: windows-latest
     strategy:
