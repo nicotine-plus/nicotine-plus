@@ -119,15 +119,6 @@ class FastConfigureAssistant(object):
         elif name == 'summarypage':
             complete = True
 
-            shownfwarning = (
-                len(self.get_shared_folders()) == 0
-            )
-
-            if shownfwarning:
-                self.labelnoshare.show()
-            else:
-                self.labelnoshare.hide()
-
         self.FastConfigureDialog.set_page_complete(page, complete)
 
     def get_shared_folders(self):
