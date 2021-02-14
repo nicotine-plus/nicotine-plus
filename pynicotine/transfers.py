@@ -287,7 +287,7 @@ class Transfers:
 
         for i in self.downloads:
             if msg.user == i.user and i.status in ["Queued", "Getting status", "User logged off", "Connection closed by peer", "Aborted", "Cannot connect", "Paused"]:
-                if msg.status != 0:
+                if msg.status > 0:
                     if i.status not in ["Queued", "Aborted", "Cannot connect", "Paused"]:
                         self.get_file(i.user, i.filename, i.path, i)
                 else:
@@ -296,7 +296,7 @@ class Transfers:
                         self.abort_transfer(i, send_fail_message=False)
                         self.downloadsview.update(i)
 
-        if msg.status == 0:
+        if msg.status <= 0:
             self.check_upload_queue()
 
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
@@ -1823,7 +1823,7 @@ class Transfers:
                 }
             )
 
-            if user in self.users and self.users[user].status == 0:
+            if user in self.users and self.users[user].status <= 0:
                 transfercandidate.status = "User logged off"
                 self.abort_transfer(transfercandidate, send_fail_message=False)
                 self.uploadsview.update(transfercandidate)
@@ -2044,7 +2044,7 @@ class Transfers:
 
         if i.status != "Finished":
             if type == "download":
-                if i.user in self.users and self.users[i.user].status == 0:
+                if i.user in self.users and self.users[i.user].status <= 0:
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
@@ -2054,7 +2054,7 @@ class Transfers:
                 themselves. We don't want to cancel all queued files at once, in case
                 it's just a connectivity fluke. """
 
-                if i.user in self.users and self.users[i.user].status == 0:
+                if i.user in self.users and self.users[i.user].status <= 0:
                     i.status = "User logged off"
                 else:
                     i.status = "Cancelled"
@@ -2221,7 +2221,7 @@ class Transfers:
 
         user = transfer.user
 
-        if user in self.users and self.users[user].status == 0:
+        if user in self.users and self.users[user].status <= 0:
             transfer.status = "User logged off"
             self.abort_transfer(transfer, send_fail_message=False)
             self.downloadsview.update(transfer)
@@ -2237,7 +2237,7 @@ class Transfers:
         if user in self.get_transferring_users():
             return
 
-        if user in self.users and self.users[user].status == 0:
+        if user in self.users and self.users[user].status <= 0:
             transfer.status = "User logged off"
             self.abort_transfer(transfer, send_fail_message=False)
             self.uploadsview.update(transfer)

@@ -119,7 +119,13 @@ class UserTabs(IconNotebook):
 
             tab = self.users[msg.user]
             tab.status = msg.status
-            status = [_("Offline"), _("Away"), _("Online")][msg.status]
+
+            if msg.status == 1:
+                status = _("Away")
+            elif msg.status == 2:
+                status = _("Online")
+            else:
+                status = _("Offline")
 
             if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
                 self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))

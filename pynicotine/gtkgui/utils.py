@@ -1027,7 +1027,15 @@ class IconNotebook:
     def set_status_image(self, page, status):
 
         tab_label, menu_label = self.get_labels(page)
-        image = self.images[("offline", "away", "online")[status]]
+
+        if status == 1:
+            image_name = "away"
+        elif status == 2:
+            image_name = "online"
+        else:
+            image_name = "offline"
+
+        image = self.images[image_name]
 
         tab_label.set_status_image(image)
         menu_label.set_status_image(image)

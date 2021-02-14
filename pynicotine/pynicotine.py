@@ -1328,14 +1328,10 @@ class NetworkEventProcessor:
 
         self.watchedusers.add(msg.user)
 
-        if not msg.userexists:
-            if msg.user not in self.users:
-                self.users[msg.user] = UserAddr(status=-1)
-
-        if msg.status is not None:
-            self.get_user_status(msg)
-        elif msg.userexists and msg.status is None:
+        if msg.userexists and msg.status is None:
             self.queue.put(slskmessages.GetUserStatus(msg.user))
+        else:
+            self.get_user_status(msg)
 
         if msg.files is not None:
             self.get_user_stats(msg)
@@ -1415,6 +1411,9 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
+        if msg.status is None:
+            msg.status = -1
+
         # Causes recursive requests when privileged?
         # self.queue.put(slskmessages.AddUser(msg.user))
         if msg.user in self.users:
@@ -1429,8 +1428,6 @@ class NetworkEventProcessor:
             if msg.privileged == 1:
                 if self.transfers is not None:
                     self.transfers.add_to_privileged(msg.user)
-                else:
-                    log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.interests is not None:
             self.interests.get_user_status(msg)
