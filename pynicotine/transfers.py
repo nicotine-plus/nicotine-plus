@@ -2214,6 +2214,39 @@ class Transfers:
 
         return destination
 
+    def retry_download(self, transfer):
+
+        if transfer.status in ("Finished", "Old"):
+            return
+
+        user = transfer.user
+
+        if user in self.users and self.users[user].status == 0:
+            transfer.status = "User logged off"
+            self.abort_transfer(transfer, send_fail_message=False)
+            self.downloadsview.update(transfer)
+            return
+
+        self.abort_transfer(transfer)
+        self.get_file(user, transfer.filename, transfer.path, transfer)
+
+    def retry_upload(self, transfer):
+
+        user = transfer.user
+
+        if user in self.get_transferring_users():
+            return
+
+        if user in self.users and self.users[user].status == 0:
+            transfer.status = "User logged off"
+            self.abort_transfer(transfer, send_fail_message=False)
+            self.uploadsview.update(transfer)
+            self.auto_clear_upload(transfer)
+            return
+
+        self.eventprocessor.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
+
     def abort_transfers(self, send_fail_message=True):
         """ Stop all transfers """
 
