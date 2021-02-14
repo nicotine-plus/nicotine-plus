@@ -344,9 +344,4 @@ class Downloads(TransferList):
         self.select_transfers()
 
         for transfer in self.selected_transfers:
-
-            if transfer.status in ["Finished", "Old"]:
-                continue
-
-            self.frame.np.transfers.abort_transfer(transfer)
-            self.frame.np.transfers.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+            self.frame.np.transfers.retry_download(transfer)
