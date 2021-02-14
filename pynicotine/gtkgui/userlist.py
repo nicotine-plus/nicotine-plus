@@ -364,7 +364,13 @@ class UserList:
         notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
-            status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
+            if status == 1:
+                status_text = _("User %s is away")
+            elif status == 2:
+                status_text = _("User %s is online")
+            else:
+                status_text = _("User %s is offline")
+
             log.add(status_text, user)
             self.frame.notifications.new_notification(status_text % user)
 
