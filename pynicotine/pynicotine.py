@@ -596,7 +596,8 @@ class NetworkEventProcessor:
         if cc == "-":
             cc = ""
 
-        self.ui_callback.has_user_flag(user, "flag_" + cc)
+        self.ui_callback.has_user_flag(user, cc)
+        self.users[user].country = cc
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
@@ -1421,7 +1422,8 @@ class NetworkEventProcessor:
             msg.status = -1
 
         if msg.user in self.users:
-            if msg.status == 0:
+            if msg.status <= 0:
+                # User went offline, reset stored IP address
                 self.users[msg.user] = UserAddr(status=msg.status)
             else:
                 self.users[msg.user].status = msg.status
@@ -2162,6 +2164,7 @@ class NetworkEventProcessor:
 
 class UserAddr:
 
-    def __init__(self, addr=None, status=None):
+    def __init__(self, addr=None, country=None, status=None):
         self.addr = addr
+        self.country = country
         self.status = status

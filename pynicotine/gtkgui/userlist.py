@@ -31,6 +31,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
+from pynicotine.gtkgui.utils import get_user_country_flag
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
@@ -394,7 +395,6 @@ class UserList:
         if iterator is None:
             return
 
-        country = msg.country
         hspeed = human_speed(msg.avgspeed)
         hfiles = humanize(msg.files)
 
@@ -405,11 +405,6 @@ class UserList:
             11, msg.avgspeed,
             12, msg.files
         )
-
-        if country is not None and country != "":
-
-            country = "flag_" + country
-            self.set_user_flag(user, country)
 
     def set_user_flag(self, user, country):
 
@@ -423,7 +418,7 @@ class UserList:
         self.usersmodel.set(
             iterator,
             1, self.frame.get_flag_image(country),
-            14, country
+            14, "flag_" + country
         )
 
     def add_to_list(self, user):
@@ -431,15 +426,19 @@ class UserList:
         if user in (i[2] for i in self.usersmodel):
             return
 
-        row = [self.frame.get_status_image(0), None, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
+        country, flag_image = get_user_country_flag(user)
+
+        if not country:
+            # Request user's IP address, so we can get the country
+            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+
+        row = [self.frame.get_status_image(0), flag_image, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, country]
         self.usersmodel.append(row)
 
         self.save_user_list()
 
         if user not in self.frame.np.watchedusers:
             self.frame.np.queue.put(slskmessages.AddUser(user))
-
-        self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
