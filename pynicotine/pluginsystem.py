@@ -141,10 +141,10 @@ class PluginHandler(object):
     def list_installed_plugins(self):
         pluginlist = []
 
-        for dir in self.plugindirs:
-            if os.path.exists(dir):
-                for file in os.listdir(dir):
-                    if file not in pluginlist and os.path.isdir(os.path.join(dir, file)):
+        for folder in self.plugindirs:
+            if os.path.isdir(folder):
+                for file in os.listdir(folder):
+                    if file not in pluginlist and os.path.isdir(os.path.join(folder, file)):
                         pluginlist.append(file)
 
         return pluginlist

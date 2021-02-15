@@ -2357,8 +2357,8 @@ class NicotineFrame:
         log_path = self.np.config.sections["logging"]["debuglogsdir"]
 
         try:
-            if not os.path.exists(log_path):
-                os.mkdir(log_path)
+            if not os.path.isdir(log_path):
+                os.makedirs(log_path)
 
             open_file_path(self.np.config.sections["logging"]["debuglogsdir"])
 

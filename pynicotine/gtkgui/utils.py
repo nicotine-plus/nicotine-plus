@@ -497,6 +497,9 @@ def open_file_path(file_path, command=None):
 def open_log(folder, filename):
 
     try:
+        if not os.path.isdir(folder):
+            os.makedirs(folder)
+
         path = os.path.join(folder, clean_file(filename.replace(os.sep, "-")) + ".log")
 
         if not os.path.exists(path):
