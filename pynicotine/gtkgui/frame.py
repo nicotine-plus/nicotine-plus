@@ -432,10 +432,6 @@ class NicotineFrame:
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
 
-        for i in self.np.config.sections["server"]["userlist"]:
-            user = i[0]
-            self.np.queue.put(slskmessages.AddUser(user))
-
         if msg.banner != "":
             log.add(msg.banner)
 

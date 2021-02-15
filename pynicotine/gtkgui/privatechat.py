@@ -170,7 +170,9 @@ class PrivateChats(IconNotebook):
                 userlabel = user
 
             self.append_page(tab.Main, userlabel, tab.on_close)
-            self.frame.np.queue.put(slskmessages.AddUser(user))
+
+            if user not in self.frame.np.watchedusers:
+                self.frame.np.queue.put(slskmessages.AddUser(user))
 
         if show_user:
             if self.get_current_page() != self.page_num(self.users[user].Main):
