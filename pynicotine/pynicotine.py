@@ -1339,10 +1339,10 @@ class NetworkEventProcessor:
             # Legacy support (Soulfind server)
             self.queue.put(slskmessages.GetUserStatus(msg.user))
         else:
-            self.get_user_status(msg)
+            self.get_user_status(msg, log_contents=False)
 
         if msg.files is not None:
-            self.get_user_stats(msg)
+            self.get_user_stats(msg, log_contents=False)
 
     def privileged_users(self, msg):
 
@@ -1413,9 +1413,10 @@ class NetworkEventProcessor:
         if self.search is not None:
             self.search.wish_list.set_interval(msg)
 
-    def get_user_status(self, msg):
+    def get_user_status(self, msg, log_contents=True):
 
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+        if log_contents:
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.status is None:
             msg.status = -1
@@ -1462,9 +1463,10 @@ class NetworkEventProcessor:
         if self.userinfo is not None:
             self.userinfo.show_interests(msg)
 
-    def get_user_stats(self, msg):
+    def get_user_stats(self, msg, log_contents=True):
 
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+        if log_contents:
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.user == self.config.sections["server"]["login"]:
             self.speed = msg.avgspeed
