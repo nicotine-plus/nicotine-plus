@@ -636,12 +636,17 @@ class NicotineFrame:
             self.remove_away_timer(self.awaytimerid)
             self.awaytimerid = None
 
+        if self.autoaway:
+            self.autoaway = self.away = False
+
+        self.uploads.conn_close()
+        self.downloads.conn_close()
+        self.searches.wish_list.conn_close()
+        self.userlist.conn_close()
+
         if self.shutdown:
             # Application is shutting down, stop here
             return
-
-        if self.autoaway:
-            self.autoaway = self.away = False
 
         self.set_widget_online_status(False)
         self.tray.set_connected(False)
@@ -651,10 +656,6 @@ class NicotineFrame:
         self.searches.wish_list.interval = 0
         self.chatrooms.conn_close()
         self.privatechats.conn_close()
-        self.searches.wish_list.conn_close()
-        self.uploads.conn_close()
-        self.downloads.conn_close()
-        self.userlist.conn_close()
         self.userinfo.conn_close()
         self.userbrowse.conn_close()
 
