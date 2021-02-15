@@ -446,23 +446,23 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.spell_checker = False
 
-    def get_flag_image(self, flag):
+    def get_flag_image(self, country):
 
-        if flag is None:
-            return
+        if not country:
+            return None
 
-        flag = flag.lower()
+        country = country.lower().replace("flag_", "")
 
         try:
-            if flag not in self.flag_images:
-                self.flag_images[flag] = GdkPixbuf.Pixbuf.new_from_file(
-                    os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
+            if country not in self.flag_images:
+                self.flag_images[country] = GdkPixbuf.Pixbuf.new_from_file(
+                    os.path.join(self.gui_dir, "icons", "flags", country + ".svg")
                 )
 
         except Exception:
             return None
 
-        return self.flag_images[flag]
+        return self.flag_images[country]
 
     def load_ui_icon(self, name):
         """ Load icon required by the UI """
@@ -568,7 +568,6 @@ class NicotineFrame:
 
         self.images = {}
         self.flag_images = {}
-        self.flag_users = {}
 
         names = [
             "away",
@@ -2275,25 +2274,13 @@ class NicotineFrame:
         else:
             return self.images["offline"]
 
-    def has_user_flag(self, user, flag):
-        if flag.lower() not in self.flag_images:
-            self.get_flag_image(flag)
+    def has_user_flag(self, user, country):
 
-        if flag.lower() not in self.flag_images:
+        if not self.get_flag_image(country):
             return
 
-        self.flag_users[user] = flag
-        self.chatrooms.set_user_flag(user, flag)
-        self.userlist.set_user_flag(user, flag)
-
-    def get_user_flag(self, user):
-        if user not in self.flag_users:
-            for i in self.np.config.sections["server"]["userlist"]:
-                if user == i[0] and i[6] is not None:
-                    return i[6]
-            return "flag_"
-        else:
-            return self.flag_users[user]
+        self.chatrooms.set_user_flag(user, country)
+        self.userlist.set_user_flag(user, country)
 
     def on_settings_downloads(self, widget):
         self.on_settings(page='Downloads')

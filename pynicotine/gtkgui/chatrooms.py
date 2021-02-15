@@ -43,6 +43,7 @@ from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import get_user_country_flag
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -398,20 +399,14 @@ class ChatRooms(IconNotebook):
         for room in self.joinedrooms.values():
             room.get_user_status(msg.user, msg.status)
 
-    def set_user_flag(self, user, flag):
+    def set_user_flag(self, user, country):
         for room in self.joinedrooms.values():
-            room.set_user_flag(user, flag)
-
-    def get_user_address(self, user):
-
-        if user not in self.frame.np.users or self.frame.np.users[user].addr is None:
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+            room.set_user_flag(user, country)
 
     def user_joined_room(self, msg):
 
         if msg.room in self.joinedrooms:
             self.joinedrooms[msg.room].user_joined_room(msg.username, msg.userdata)
-            self.get_user_address(msg.username)
 
     def user_left_room(self, msg):
         self.joinedrooms[msg.room].user_left_room(msg.username)
@@ -613,24 +608,8 @@ class ChatRoom:
             GObject.TYPE_STRING
         )
 
-        for username, user in users.items():
-
-            img = self.frame.get_status_image(user.status)
-            flag = user.country
-
-            if flag:
-                flag = "flag_" + flag
-                self.frame.flag_users[username] = flag
-            else:
-                flag = self.frame.get_user_flag(username)
-
-            hspeed = human_speed(user.avgspeed)
-            hfiles = humanize(user.files)
-            iterator = self.usersmodel.append(
-                [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
-            )
-            self.users[username] = iterator
-            self.chatrooms.get_user_address(username)
+        for username, userdata in users.items():
+            self.add_user_row(username, userdata)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -683,6 +662,24 @@ class ChatRoom:
             self.read_room_logs()
 
         self.count_users()
+
+    def add_user_row(self, username, userdata):
+
+        status_image = self.frame.get_status_image(userdata.status)
+        country, flag_image = get_user_country_flag(username)
+
+        if not country:
+            # Request user's IP address, so we can get the country
+            self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
+
+        hspeed = human_speed(userdata.avgspeed)
+        hfiles = humanize(userdata.files)
+
+        iterator = self.usersmodel.append(
+            [status_image, flag_image, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, country]
+        )
+
+        self.users[username] = iterator
 
     def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
         # cellrenderer.set_property("weight", colour)
@@ -1177,21 +1174,7 @@ class ChatRoom:
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
-        img = self.frame.get_status_image(userdata.status)
-        flag = userdata.country
-
-        if flag is not None:
-            flag = "flag_" + flag
-            self.frame.flag_users[username] = flag
-        else:
-            flag = self.frame.get_user_flag(username)
-
-        hspeed = human_speed(userdata.avgspeed)
-        hfiles = humanize(userdata.files)
-
-        self.users[username] = self.usersmodel.append(
-            [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag]
-        )
+        self.add_user_row(username, userdata)
 
         self.get_user_tag(username)
         self.count_users()
@@ -1279,14 +1262,22 @@ class ChatRoom:
             color = self.get_user_status_color(status)
             self.update_tag_visuals(self.tag_users[user], color)
 
-        self.usersmodel.set(self.users[user], 0, img, 5, status)
+        self.usersmodel.set(
+            self.users[user],
+            0, img,
+            5, status
+        )
 
-    def set_user_flag(self, user, flag):
+    def set_user_flag(self, user, country):
 
         if user not in self.users:
             return
 
-        self.usersmodel.set(self.users[user], 1, self.frame.get_flag_image(flag), 8, flag)
+        self.usersmodel.set(
+            self.users[user],
+            1, self.frame.get_flag_image(country),
+            8, country
+        )
 
     def create_tag(self, buffer, color, username=None):
 
@@ -1460,27 +1451,12 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        for (username, user) in users.items():
+        for username, userdata in users.items():
 
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
 
-            img = self.frame.get_status_image(user.status)
-            flag = user.country
-
-            if flag is not None:
-                flag = "flag_" + flag
-                self.frame.flag_users[username] = flag
-            else:
-                flag = self.frame.get_user_flag(username)
-
-            hspeed = human_speed(user.avgspeed)
-            hfiles = humanize(user.files)
-
-            myiter = self.usersmodel.append([img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
-
-            self.users[username] = myiter
-            self.chatrooms.get_user_address(username)
+            self.add_user_row(username, userdata)
 
         self.UserList.set_sensitive(True)
 
