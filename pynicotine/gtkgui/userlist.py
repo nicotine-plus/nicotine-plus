@@ -435,7 +435,10 @@ class UserList:
         self.usersmodel.append(row)
 
         self.save_user_list()
-        self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        if user not in self.frame.np.watchedusers:
+            self.frame.np.queue.put(slskmessages.AddUser(user))
+
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         for widget in self.buddies_combo_entries:

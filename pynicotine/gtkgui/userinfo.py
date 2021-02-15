@@ -80,7 +80,9 @@ class UserTabs(IconNotebook):
             userlabel = user
 
         self.append_page(w.Main, userlabel, w.on_close)
-        self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        if user not in self.frame.np.watchedusers:
+            self.frame.np.queue.put(slskmessages.AddUser(user))
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
 

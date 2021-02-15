@@ -1029,6 +1029,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.success:
+            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
 
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
@@ -1036,6 +1037,11 @@ class NetworkEventProcessor:
 
             if msg.ip is not None:
                 self.ipaddress = msg.ip
+
+            for i in self.config.sections["server"]["userlist"]:
+                user = i[0]
+                if user not in self.watchedusers:
+                    self.queue.put(slskmessages.AddUser(user))
 
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
@@ -1068,6 +1074,7 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.RoomList())
 
             self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
+            self.pluginhandler.server_connect_notification()
         else:
             self.manualdisconnect = True
             self.set_status(_("Can not log in, reason: %s"), (msg.reason))
@@ -1329,6 +1336,7 @@ class NetworkEventProcessor:
         self.watchedusers.add(msg.user)
 
         if msg.userexists and msg.status is None:
+            # Legacy support (Soulfind server)
             self.queue.put(slskmessages.GetUserStatus(msg.user))
         else:
             self.get_user_status(msg)
@@ -1343,8 +1351,6 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.set_privileged_users(msg.users)
             log.add(_("%i privileged users"), (len(msg.users)))
-            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
-            self.pluginhandler.server_connect_notification()
 
     def add_to_privileged(self, msg):
 
@@ -1414,8 +1420,6 @@ class NetworkEventProcessor:
         if msg.status is None:
             msg.status = -1
 
-        # Causes recursive requests when privileged?
-        # self.queue.put(slskmessages.AddUser(msg.user))
         if msg.user in self.users:
             if msg.status == 0:
                 self.users[msg.user] = UserAddr(status=msg.status)
