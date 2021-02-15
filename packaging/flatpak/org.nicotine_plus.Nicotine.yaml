@@ -14,6 +14,9 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 
+  # Now Playing (MPRIS)
+  - --talk-name=org.mpris.MediaPlayer2.*
+
 cleanup:
   - /etc
   - /include
@@ -123,4 +126,4 @@ modules:
       - path: '../../'
         type: dir
     build-commands:
-      - python3 setup.py install --prefix="${FLATPAK_DEST}"
+      - pip3 install . --no-deps --prefix="${FLATPAK_DEST}"
