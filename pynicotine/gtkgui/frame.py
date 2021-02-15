@@ -636,6 +636,10 @@ class NicotineFrame:
             self.remove_away_timer(self.awaytimerid)
             self.awaytimerid = None
 
+        if self.shutdown:
+            # Application is shutting down, stop here
+            return
+
         if self.autoaway:
             self.autoaway = self.away = False
 
