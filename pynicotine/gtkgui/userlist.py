@@ -351,8 +351,13 @@ class UserList:
 
     def get_user_status(self, msg):
 
-        user = msg.user
         status = msg.status
+
+        if status < 0:
+            # User doesn't exist, nothing to do
+            return
+
+        user = msg.user
         iterator = self.get_iter(user)
 
         if iterator is None:
