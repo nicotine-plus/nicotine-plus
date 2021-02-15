@@ -31,7 +31,6 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.utils import get_user_country_flag
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
@@ -426,19 +425,16 @@ class UserList:
         if user in (i[2] for i in self.usersmodel):
             return
 
-        country, flag_image = get_user_country_flag(user)
-
-        if not country:
-            # Request user's IP address, so we can get the country
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
-
-        row = [self.frame.get_status_image(0), flag_image, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, country]
+        row = [self.frame.get_status_image(0), None, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
         self.usersmodel.append(row)
 
         self.save_user_list()
 
         if user not in self.frame.np.watchedusers:
             self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        # Request user's IP address, so we can get the country
+        self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
