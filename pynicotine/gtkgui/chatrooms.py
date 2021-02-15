@@ -43,7 +43,6 @@ from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import get_user_country_flag
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -666,17 +665,15 @@ class ChatRoom:
     def add_user_row(self, username, userdata):
 
         status_image = self.frame.get_status_image(userdata.status)
-        country, flag_image = get_user_country_flag(username)
 
-        if not country:
-            # Request user's IP address, so we can get the country
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
+        # Request user's IP address, so we can get the country
+        self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
 
         hspeed = human_speed(userdata.avgspeed)
         hfiles = humanize(userdata.files)
 
         iterator = self.usersmodel.append(
-            [status_image, flag_image, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, country]
+            [status_image, None, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, ""]
         )
 
         self.users[username] = iterator

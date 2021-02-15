@@ -407,20 +407,6 @@ def set_treeview_selected_row(treeview, event):
         selection.unselect_all()
 
 
-def get_user_country_flag(user):
-
-    users = NICOTINE.np.users
-
-    if user in users and users[user].country is not None:
-        country = users[user].country
-        flag_image = NICOTINE.get_flag_image(country)
-    else:
-        country = ""
-        flag_image = None
-
-    return country, flag_image
-
-
 def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
 
     try:

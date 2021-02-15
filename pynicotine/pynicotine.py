@@ -597,7 +597,6 @@ class NetworkEventProcessor:
             cc = ""
 
         self.ui_callback.has_user_flag(user, cc)
-        self.users[user].country = cc
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
