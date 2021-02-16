@@ -64,6 +64,18 @@ To install Nicotine+ on Guix, run the following:
 guix install nicotine+
 ```
 
+## OpenBSD
+This port has been submitted to the OpenBSD ports team and is awaiting approval. Here is how you can build and install the port on systems up to 6.9.
+
+```
+git clone https://github.com/Nicotine-Plus/nicotine-plus.git
+mkdir -p /usr/ports/mystuff/net
+cp -r nicotine-plus/packaging/openbsd /usr/ports/mystuff/net/nicotine-plus
+cd  /usr/ports/mystuff/net/nicotine-plus
+make package
+sudo make install
+```
+
 ### Other Distributions
 If Nicotine+ isn't packaged for your distribution/operating system yet, there are other recommended ways of installing Nicotine+.
 
@@ -122,19 +134,6 @@ brew install nicotine-plus
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing. You need to be signed into a GitHub account to download the installers.
 
 - [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
-
-## OpenBSD
-
-This port has been submitted to the OpenBSD ports team and is awaiting approval. Here is how you can build and install the port on systems up to 6.9.
-
-```
-git clone https://github.com/Nicotine-Plus/nicotine-plus.git
-mkdir -p /usr/ports/mystuff/net
-cp -r nicotine-plus/packaging/openbsd /usr/ports/mystuff/net/nicotine-plus
-cd  /usr/ports/mystuff/net/nicotine-plus
-make package
-sudo make install
-```
 
 ## Building from git (Unstable)
 For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
