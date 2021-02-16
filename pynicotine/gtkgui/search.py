@@ -604,17 +604,17 @@ class Search:
 
             sfilter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterInEntry.set_text(sfilter[0])
-            self.FilterOutEntry.set_text(sfilter[1])
-            self.FilterSizeEntry.set_text(sfilter[2])
-            self.FilterBitrateEntry.set_text(sfilter[3])
-            self.FilterFreeSlot.set_active(sfilter[4])
+            self.FilterInEntry.set_text(str(sfilter[0]))
+            self.FilterOutEntry.set_text(str(sfilter[1]))
+            self.FilterSizeEntry.set_text(str(sfilter[2]))
+            self.FilterBitrateEntry.set_text(str(sfilter[3]))
+            self.FilterFreeSlot.set_active(str(sfilter[4]))
 
             if(len(sfilter) > 5):
-                self.FilterCountryEntry.set_text(sfilter[5])
+                self.FilterCountryEntry.set_text(str(sfilter[5]))
 
             if(len(sfilter) > 6):
-                self.FilterTypeEntry.set_text(sfilter[6])
+                self.FilterTypeEntry.set_text(str(sfilter[6]))
 
             self.on_refilter(None)
 
@@ -665,7 +665,7 @@ class Search:
 
     def add_combo(self, combobox, text, list=False):
 
-        text = text.strip()
+        text = str(text).strip()
         if not text:
             return False
 

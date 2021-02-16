@@ -1978,7 +1978,7 @@ class NicotineFrame:
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
             for word, replacement in autoreplaced.items():
-                message = message.replace(word, replacement)
+                message = message.replace(str(word), str(replacement))
 
         return message
 
@@ -1987,6 +1987,7 @@ class NicotineFrame:
             filler = self.np.config.sections["words"]["censorfill"]
             censored = self.np.config.sections["words"]["censored"]
             for word in censored:
+                word = str(word)
                 message = message.replace(word, filler * len(word))
 
         return message
