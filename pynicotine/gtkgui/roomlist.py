@@ -224,10 +224,10 @@ class RoomList:
             num = self.private_rooms[room]["joined"]
 
             if self.is_private_room_owned(room):
-                self.room_model.prepend([room, num, 2])
+                self.room_model.prepend([str(room), num, 2])
 
             elif self.is_private_room_member(room):
-                self.room_model.prepend([room, num, 1])
+                self.room_model.prepend([str(room), num, 1])
 
     def update_room(self, room, user_count):
 

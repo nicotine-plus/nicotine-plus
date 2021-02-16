@@ -1870,17 +1870,17 @@ class SearchesFrame(BuildFrame):
         self.p.set_widgets_data(config, self.options)
 
         if searches["defilter"] is not None:
-            self.FilterIn.set_text(searches["defilter"][0])
-            self.FilterOut.set_text(searches["defilter"][1])
-            self.FilterSize.set_text(searches["defilter"][2])
-            self.FilterBR.set_text(searches["defilter"][3])
-            self.FilterFree.set_active(searches["defilter"][4])
+            self.FilterIn.set_text(str(searches["defilter"][0]))
+            self.FilterOut.set_text(str(searches["defilter"][1]))
+            self.FilterSize.set_text(str(searches["defilter"][2]))
+            self.FilterBR.set_text(str(searches["defilter"][3]))
+            self.FilterFree.set_active(str(searches["defilter"][4]))
 
             if(len(searches["defilter"]) > 5):
-                self.FilterCC.set_text(searches["defilter"][5])
+                self.FilterCC.set_text(str(searches["defilter"][5]))
 
             if(len(searches["defilter"]) > 6):
-                self.FilterType.set_text(searches["defilter"][6])
+                self.FilterType.set_text(str(searches["defilter"][6]))
 
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
