@@ -305,9 +305,8 @@ class PrivateChats(IconNotebook):
         if not self.frame.np.config.sections["privatechat"]["store"]:
             return
 
-        self.frame.np.config.sections["privatechat"]["users"].sort()
         for user in self.frame.np.config.sections["privatechat"]["users"]:
-            if user not in self.users:
+            if isinstance(user, str) and user not in self.users:
                 self.send_message(user, show_user=True)
 
     def conn_close(self):
@@ -672,84 +671,87 @@ class PrivateChat:
         s = text.split(" ", 1)
         cmd = s[0]
         if len(s) == 2 and s[1]:
-            realargs = args = s[1]
+            args = arg_self = s[1]
         else:
-            args = self.user
-            realargs = ""
+            args = ""
+            arg_self = self.user
 
         if cmd in ("/alias", "/al"):
 
-            append_line(self.ChatScroll, add_alias(realargs), None, "")
+            append_line(self.ChatScroll, add_alias(args), None, "")
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
 
-            append_line(self.ChatScroll, unalias(realargs), None, "")
+            append_line(self.ChatScroll, unalias(args), None, "")
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
-        elif cmd in ["/join", "/j"]:
-            self.frame.np.queue.put(slskmessages.JoinRoom(args))
-
-        elif cmd in ["/w", "/whois", "/info"]:
+        elif cmd in ("/join", "/j"):
             if args:
-                self.frame.local_user_info_request(args)
-                self.frame.on_user_info(None)
+                self.frame.np.queue.put(slskmessages.JoinRoom(args))
 
-        elif cmd in ["/b", "/browse"]:
-            if args:
-                self.frame.browse_user(args)
-                self.frame.on_user_browse(None)
+        elif cmd in ("/w", "/whois", "/info"):
+            self.frame.local_user_info_request(arg_self)
+            self.frame.change_main_page("userinfo")
+
+        elif cmd in ("/b", "/browse"):
+            self.frame.browse_user(arg_self)
+            self.frame.change_main_page("userbrowse")
 
         elif cmd == "/ip":
-            if args:
-                user = args
-                self.frame.np.ip_requested.add(user)
-                self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+            self.frame.np.ip_requested.add(arg_self)
+            self.frame.np.queue.put(slskmessages.GetPeerAddress(arg_self))
 
         elif cmd == "/pm":
-            if realargs:
-                self.frame.privatechats.send_message(realargs, show_user=True)
+            if args:
+                self.frame.privatechats.send_message(args, show_user=True)
+                self.frame.change_main_page("private")
 
-        elif cmd in ["/m", "/msg"]:
-            if realargs:
-                s = realargs.split(" ", 1)
+        elif cmd in ("/m", "/msg"):
+            if args:
+                s = args.split(" ", 1)
                 user = s[0]
                 if len(s) == 2:
                     msg = s[1]
                 else:
                     msg = None
 
-                self.frame.privatechats.send_message(user, msg)
+                self.frame.privatechats.send_message(user, msg, show_user=True)
+                self.frame.change_main_page("private")
 
-        elif cmd in ["/s", "/search"]:
-            if realargs:
-                self.frame.searches.do_search(realargs, 0)
+        elif cmd in ("/s", "/search"):
+            if args:
+                self.frame.searches.do_search(args, 0)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/us", "/usearch"]:
-            if realargs:
-                self.frame.searches.do_search(realargs, 3, [self.user])
+        elif cmd in ("/us", "/usearch"):
+            if args:
+                self.frame.searches.do_search(args, 3, [self.user])
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/rs", "/rsearch"]:
-            if realargs:
-                self.frame.searches.do_search(realargs, 1)
+        elif cmd in ("/rs", "/rsearch"):
+            if args:
+                self.frame.searches.do_search(args, 1)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/bs", "/bsearch"]:
-            if realargs:
-                self.frame.searches.do_search(realargs, 2)
+        elif cmd in ("/bs", "/bsearch"):
+            if args:
+                self.frame.searches.do_search(args, 2)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/ad", "/add", "/buddy"]:
+        elif cmd in ("/ad", "/add", "/buddy"):
             if args:
                 self.frame.userlist.add_to_list(args)
 
-        elif cmd in ["/rem", "/unbuddy"]:
+        elif cmd in ("/rem", "/unbuddy"):
             if args:
                 self.frame.userlist.remove_from_list(args)
 
@@ -774,37 +776,44 @@ class PrivateChat:
                 self.frame.unignore_user(args)
 
         elif cmd == "/ctcpversion":
-            if args:
-                self.frame.privatechats.send_message(args, CTCP_VERSION, show_user=True, bytestring=True)
+            if arg_self:
+                self.frame.privatechats.send_message(arg_self, CTCP_VERSION, show_user=True, bytestring=True)
 
-        elif cmd in ["/clear", "/cl"]:
+        elif cmd in ("/clear", "/cl"):
             self.ChatScroll.get_buffer().set_text("")
 
-        elif cmd in ["/a", "/away"]:
+        elif cmd in ("/a", "/away"):
             self.frame.on_away(None)
 
-        elif cmd in ["/q", "/quit", "/exit"]:
+        elif cmd in ("/q", "/quit", "/exit"):
             self.frame.on_quit(None)
             return
 
-        elif cmd in ["/c", "/close"]:
+        elif cmd in ("/c", "/close"):
             self.on_close(None)
 
         elif cmd == "/now":
             self.display_now_playing()
 
         elif cmd == "/rescan":
-            self.frame.on_rescan()
+            # Rescan public shares if needed
+            if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
+                self.frame.on_rescan()
 
-        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_private_command_event(self.user, cmd[1:], args):
-            pass
+            # Rescan buddy shares if needed
+            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
+                self.frame.on_buddy_rescan()
 
-        elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            log.add(_("Command %s is not recognized"), text)
+        elif cmd and cmd[:1] == "/":
+            if self.frame.np.pluginhandler.trigger_private_command_event(self.user, cmd[1:], args):
+                pass
+
+            elif cmd != "/me" and cmd[:2] != "//":
+                log.add(_("Command %s is not recognized"), text)
+
             return
 
         else:
-
             if text[:2] == "//":
                 text = text[1:]
 
