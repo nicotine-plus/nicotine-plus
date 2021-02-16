@@ -980,7 +980,7 @@ class ChatRoom:
             widget.set_text("")
             return
 
-        s = text.split(" ", 1)  # string
+        s = text.split(" ", 1)
         cmd = s[0]
 
         if len(s) == 2:
@@ -988,116 +988,122 @@ class ChatRoom:
         else:
             args = ""
 
-        byteargs = args.encode('utf-8')  # bytes
-
         if cmd in ("/alias", "/al"):
             append_line(self.ChatScroll, add_alias(args), self.tag_remote, "")
+
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             append_line(self.ChatScroll, unalias(args), self.tag_remote, "")
+
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
-        elif cmd in ["/w", "/whois", "/info"]:
-            if byteargs:
-                self.frame.local_user_info_request(byteargs)
-                self.frame.on_user_info(None)
+        elif cmd in ("/w", "/whois", "/info"):
+            if args:
+                self.frame.local_user_info_request(args)
+                self.frame.change_main_page("userinfo")
 
-        elif cmd in ["/b", "/browse"]:
-            if byteargs:
-                self.frame.browse_user(byteargs)
-                self.frame.on_user_browse(None)
+        elif cmd in ("/b", "/browse"):
+            if args:
+                self.frame.browse_user(args)
+                self.frame.change_main_page("userbrowse")
 
         elif cmd == "/ip":
-            if byteargs:
-                user = byteargs
+            if args:
+                user = args
                 self.frame.np.ip_requested.add(user)
                 self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         elif cmd == "/pm":
-            if byteargs:
-                self.frame.privatechats.send_message(byteargs, show_user=True)
+            if args:
+                self.frame.privatechats.send_message(args, show_user=True)
                 self.frame.change_main_page("private")
 
-        elif cmd in ["/m", "/msg"]:
-            if byteargs:
-                user = byteargs.split(b" ", 1)[0]
-                try:
-                    msg = args.split(" ", 1)[1]
-                except IndexError:
+        elif cmd in ("/m", "/msg"):
+            if args:
+                s = args.split(" ", 1)
+                user = s[0]
+                if len(s) == 2:
+                    msg = s[1]
+                else:
                     msg = None
-                self.frame.privatechats.send_message(user, msg)
+                self.frame.privatechats.send_message(user, msg, show_user=True)
+                self.frame.change_main_page("private")
 
-        elif cmd in ["/s", "/search"]:
+        elif cmd in ("/s", "/search"):
             if args:
                 self.frame.searches.do_search(args, 0)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/us", "/usearch"]:
-            s = byteargs.split(" ", 1)
+        elif cmd in ("/us", "/usearch"):
+            s = args.split(" ", 1)
             if len(s) == 2:
                 self.frame.searches.do_search(s[1], 3, [s[0]])
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/rs", "/rsearch"]:
+        elif cmd in ("/rs", "/rsearch"):
             if args:
                 self.frame.searches.do_search(args, 1)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/bs", "/bsearch"]:
+        elif cmd in ("/bs", "/bsearch"):
             if args:
                 self.frame.searches.do_search(args, 2)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/j", "/join"]:
-            if byteargs:
-                self.frame.np.queue.put(slskmessages.JoinRoom(byteargs))
+        elif cmd in ("/j", "/join"):
+            if args:
+                self.frame.np.queue.put(slskmessages.JoinRoom(args))
 
-        elif cmd in ["/l", "/leave", "/p", "/part"]:
-            if byteargs:
-                self.frame.np.queue.put(slskmessages.LeaveRoom(byteargs))
+        elif cmd in ("/l", "/leave", "/p", "/part"):
+            if args:
+                self.frame.np.queue.put(slskmessages.LeaveRoom(args))
             else:
                 self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 
-        elif cmd in ["/ad", "/add", "/buddy"]:
-            if byteargs:
-                self.frame.userlist.add_to_list(byteargs)
+        elif cmd in ("/ad", "/add", "/buddy"):
+            if args:
+                self.frame.userlist.add_to_list(args)
 
-        elif cmd in ["/rem", "/unbuddy"]:
-            if byteargs:
-                self.frame.userlist.remove_from_list(byteargs)
+        elif cmd in ("/rem", "/unbuddy"):
+            if args:
+                self.frame.userlist.remove_from_list(args)
 
         elif cmd == "/ban":
-            if byteargs:
-                self.frame.ban_user(byteargs)
+            if args:
+                self.frame.ban_user(args)
 
         elif cmd == "/ignore":
-            if byteargs:
-                self.frame.ignore_user(byteargs)
+            if args:
+                self.frame.ignore_user(args)
 
         elif cmd == "/ignoreip":
-            if byteargs:
-                self.frame.ignore_ip(byteargs)
+            if args:
+                self.frame.ignore_ip(args)
 
         elif cmd == "/unban":
-            if byteargs:
-                self.frame.unban_user(byteargs)
+            if args:
+                self.frame.unban_user(args)
 
         elif cmd == "/unignore":
-            if byteargs:
-                self.frame.unignore_user(byteargs)
+            if args:
+                self.frame.unignore_user(args)
 
-        elif cmd in ["/clear", "/cl"]:
+        elif cmd in ("/clear", "/cl"):
             self.ChatScroll.get_buffer().set_text("")
 
-        elif cmd in ["/a", "/away"]:
+        elif cmd in ("/a", "/away"):
             self.frame.on_away(None)
 
-        elif cmd in ["/q", "/quit", "/exit"]:
+        elif cmd in ("/q", "/quit", "/exit"):
             self.frame.on_quit(None)
             return  # Avoid gsignal warning
 
@@ -1105,7 +1111,6 @@ class ChatRoom:
             self.display_now_playing()
 
         elif cmd == "/rescan":
-
             # Rescan public shares if needed
             if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
                 self.frame.on_rescan()
@@ -1114,25 +1119,25 @@ class ChatRoom:
             if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
-        elif cmd in ["/tick", "/t"]:
+        elif cmd in ("/tick", "/t"):
             self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, args))
 
-        elif cmd in ("/tickers",):
+        elif cmd == "/tickers":
             self.show_tickers()
 
-        elif cmd in ('/toggle',):
-            if byteargs:
-                self.frame.np.pluginhandler.toggle_plugin(byteargs)
+        elif cmd == "/toggle":
+            if args:
+                self.frame.np.pluginhandler.toggle_plugin(args)
 
-        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
-            pass
+        elif cmd and cmd[:1] == "/":
+            if self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
+                pass
 
-        elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            log.add(_("Command %s is not recognized"), text)
-            return
+            elif cmd != "/me" and cmd[:2] != "//":
+                log.add(_("Command %s is not recognized"), text)
+                return
 
         else:
-
             if text[:2] == "//":
                 text = text[1:]
 
