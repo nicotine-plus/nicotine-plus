@@ -139,19 +139,19 @@ class UserList:
             row = [
                 self.frame.get_status_image(0),
                 self.frame.get_flag_image(country),
-                username,
+                str(username),
                 "",
                 "",
                 trusted,
                 notify,
                 privileged,
-                last_seen,
-                comment,
+                str(last_seen),
+                str(comment),
                 0,
                 0,
                 0,
                 time_from_epoch,
-                country
+                str(country)
             ]
 
             self.usersmodel.insert(0, row)
@@ -189,7 +189,7 @@ class UserList:
             widget.append_text("")
 
             for user in self.frame.np.config.sections["server"]["userlist"]:
-                widget.append_text(user[0])
+                widget.append_text(str(user[0]))
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_country_tooltip(widget, x, y, tooltip, 14)
