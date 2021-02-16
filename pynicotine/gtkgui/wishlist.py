@@ -61,6 +61,7 @@ class WishList:
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         for wish in self.frame.np.config.sections["server"]["autosearch"]:
+            wish = str(wish)
             self.wishes[wish] = self.store.append([wish])
 
         renderers = cols["wishes"].get_cells()
