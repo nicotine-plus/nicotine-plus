@@ -1142,14 +1142,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.privatechat is not None:
-            event = self.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
-
-            if event is not None:
-                (u, msg.msg) = event
-                self.privatechat.show_message(msg, msg.msg, msg.newmessage)
-
-                self.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
-
+            self.privatechat.show_message(msg, msg.msg, msg.newmessage)
             self.queue.put(slskmessages.MessageAcked(msg.msgid))
 
     def user_joined_room(self, msg):
