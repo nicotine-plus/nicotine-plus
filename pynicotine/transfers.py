@@ -402,6 +402,19 @@ class Transfers:
             else:
                 self.uploadsview.update(transfer)
 
+    def close_file(self, file, transfer):
+
+        transfer.file = None
+
+        try:
+            file.close()
+
+        except Exception as e:
+            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
+                "filename": file.name,
+                "error": e
+            })
+
     def upload_failed(self, msg):
 
         for i in self.peerconns:
@@ -1309,17 +1322,6 @@ class Transfers:
 
                     f = open(fname, 'ab+')
 
-                except IOError as strerror:
-                    log.add(_("Download I/O error: %s"), strerror)
-                    i.status = "Local file error"
-                    try:
-                        f.close()
-                    except Exception:
-                        pass
-                    i.conn = None
-                    self.queue.put(slskmessages.ConnClose(msg.conn))
-
-                else:
                     if self.eventprocessor.config.sections["transfers"]["lock"]:
                         try:
                             import fcntl
@@ -1333,6 +1335,16 @@ class Transfers:
                     f.seek(0, 2)
                     size = f.tell()
 
+                except IOError as strerror:
+                    log.add(_("Download I/O error: %s"), strerror)
+
+                    i.status = "Local file error"
+                    self.close_file(f, i)
+
+                    i.conn = None
+                    self.queue.put(slskmessages.ConnClose(msg.conn))
+
+                else:
                     i.currentbytes = size
                     i.file = f
                     i.place = 0
@@ -1384,6 +1396,17 @@ class Transfers:
             try:
                 # Open File
                 f = open(i.realfilename, "rb")
+
+            except IOError as strerror:
+                log.add(_("Upload I/O error: %s"), strerror)
+
+                i.status = "Local file error"
+                self.close_file(f, i)
+
+                i.conn = None
+                self.queue.put(slskmessages.ConnClose(msg.conn))
+
+            else:
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
                 i.status = "Initializing transfer"
                 i.file = f
@@ -1399,15 +1422,6 @@ class Transfers:
                     'ip': ip_address,
                     'file': i.filename
                 })
-            except IOError as strerror:
-                log.add(_("Upload I/O error: %s"), strerror)
-                i.status = "Local file error"
-                try:
-                    f.close()
-                except Exception:
-                    pass
-                i.conn = None
-                self.queue.put(slskmessages.ConnClose(msg.conn))
 
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
@@ -1484,11 +1498,10 @@ class Transfers:
                     needupdate = False
             except IOError as strerror:
                 log.add(_("Download I/O error: %s"), strerror)
+
                 i.status = "Local file error"
-                try:
-                    msg.file.close()
-                except Exception:
-                    pass
+                self.close_file(msg.file, i)
+
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
 
@@ -1499,8 +1512,7 @@ class Transfers:
 
     def download_finished(self, file, i):
 
-        file.close()
-        i.file = None
+        self.close_file(file, i)
 
         basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
         config = self.eventprocessor.config.sections
@@ -1681,8 +1693,7 @@ class Transfers:
             self.eventprocessor.speed = speedbytes
             self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
 
-        if file is not None:
-            file.close()
+        self.close_file(file, i)
 
         ip_address = None
         if i.conn is not None:
@@ -2126,11 +2137,7 @@ class Transfers:
                 continue
 
             i.status = "Local file error"
-
-            try:
-                msg.file.close()
-            except Exception:
-                pass
+            self.close_file(msg.file, i)
 
             i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn.conn))
@@ -2267,7 +2274,7 @@ class Transfers:
                 self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
 
-    def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):
+    def abort_transfer(self, transfer, reason="Aborted", send_fail_message=True):
 
         transfer.legacy_attempt = False
         transfer.req = None
@@ -2285,14 +2292,7 @@ class Transfers:
             transfer.transfertimer.cancel()
 
         if transfer.file is not None:
-            try:
-                transfer.file.close()
-                if remove:
-                    os.remove(transfer.file.name)
-            except Exception:
-                pass
-
-            transfer.file = None
+            self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
                 self.log_transfer(

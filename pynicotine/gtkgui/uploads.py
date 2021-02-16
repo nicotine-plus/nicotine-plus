@@ -191,11 +191,11 @@ class Uploads(TransferList):
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
 
-    def on_abort_transfer(self, widget, remove_file=False, clear=False):
+    def on_abort_transfer(self, widget, clear=False):
 
         self.select_transfers()
 
-        self.abort_transfers(remove_file, clear)
+        self.abort_transfers(clear)
 
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()
