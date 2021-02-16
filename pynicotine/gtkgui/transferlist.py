@@ -522,11 +522,11 @@ class TransferList:
 
                 self.expand(transfer_path, user_path)
 
-    def abort_transfers(self, remove_file=False, clear=False):
+    def abort_transfers(self, clear=False):
 
         for i in self.selected_transfers:
             if i.status != "Finished":
-                self.frame.np.transfers.abort_transfer(i, remove_file)
+                self.frame.np.transfers.abort_transfer(i)
 
                 if not clear:
                     i.status = "Aborted"
@@ -698,7 +698,7 @@ class TransferList:
 
     def on_clear_transfer(self, widget):
         self.select_transfers()
-        self.abort_transfers(remove_file=False, clear=True)
+        self.abort_transfers(clear=True)
 
     def on_clear_response(self, dialog, response, data=None):
         if response == Gtk.ResponseType.OK:

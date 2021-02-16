@@ -282,12 +282,21 @@ class Transfers:
         self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.queue.put(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
 
+    def user_logged_out(self, user):
+        """ Check if a user who previously queued a file has logged out since """
+
+        try:
+            return (self.users[user].status <= 0)
+
+        except (KeyError, TypeError):
+            return False
+
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
         for i in self.downloads:
             if msg.user == i.user and i.status in ["Queued", "Getting status", "User logged off", "Connection closed by peer", "Aborted", "Cannot connect", "Paused"]:
-                if msg.status != 0:
+                if msg.status > 0:
                     if i.status not in ["Queued", "Aborted", "Cannot connect", "Paused"]:
                         self.get_file(i.user, i.filename, i.path, i)
                 else:
@@ -296,7 +305,7 @@ class Transfers:
                         self.abort_transfer(i, send_fail_message=False)
                         self.downloadsview.update(i)
 
-        if msg.status == 0:
+        if msg.status <= 0:
             self.check_upload_queue()
 
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
@@ -392,6 +401,19 @@ class Transfers:
                 self.downloadsview.update(transfer)
             else:
                 self.uploadsview.update(transfer)
+
+    def close_file(self, file, transfer):
+
+        transfer.file = None
+
+        try:
+            file.close()
+
+        except Exception as e:
+            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
+                "filename": file.name,
+                "error": e
+            })
 
     def upload_failed(self, msg):
 
@@ -1300,17 +1322,6 @@ class Transfers:
 
                     f = open(fname, 'ab+')
 
-                except IOError as strerror:
-                    log.add(_("Download I/O error: %s"), strerror)
-                    i.status = "Local file error"
-                    try:
-                        f.close()
-                    except Exception:
-                        pass
-                    i.conn = None
-                    self.queue.put(slskmessages.ConnClose(msg.conn))
-
-                else:
                     if self.eventprocessor.config.sections["transfers"]["lock"]:
                         try:
                             import fcntl
@@ -1324,6 +1335,16 @@ class Transfers:
                     f.seek(0, 2)
                     size = f.tell()
 
+                except IOError as strerror:
+                    log.add(_("Download I/O error: %s"), strerror)
+
+                    i.status = "Local file error"
+                    self.close_file(f, i)
+
+                    i.conn = None
+                    self.queue.put(slskmessages.ConnClose(msg.conn))
+
+                else:
                     i.currentbytes = size
                     i.file = f
                     i.place = 0
@@ -1375,6 +1396,17 @@ class Transfers:
             try:
                 # Open File
                 f = open(i.realfilename, "rb")
+
+            except IOError as strerror:
+                log.add(_("Upload I/O error: %s"), strerror)
+
+                i.status = "Local file error"
+                self.close_file(f, i)
+
+                i.conn = None
+                self.queue.put(slskmessages.ConnClose(msg.conn))
+
+            else:
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
                 i.status = "Initializing transfer"
                 i.file = f
@@ -1390,15 +1422,6 @@ class Transfers:
                     'ip': ip_address,
                     'file': i.filename
                 })
-            except IOError as strerror:
-                log.add(_("Upload I/O error: %s"), strerror)
-                i.status = "Local file error"
-                try:
-                    f.close()
-                except Exception:
-                    pass
-                i.conn = None
-                self.queue.put(slskmessages.ConnClose(msg.conn))
 
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
@@ -1475,11 +1498,10 @@ class Transfers:
                     needupdate = False
             except IOError as strerror:
                 log.add(_("Download I/O error: %s"), strerror)
+
                 i.status = "Local file error"
-                try:
-                    msg.file.close()
-                except Exception:
-                    pass
+                self.close_file(msg.file, i)
+
                 i.conn = None
                 self.queue.put(slskmessages.ConnClose(msg.conn))
 
@@ -1490,8 +1512,7 @@ class Transfers:
 
     def download_finished(self, file, i):
 
-        file.close()
-        i.file = None
+        self.close_file(file, i)
 
         basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
         config = self.eventprocessor.config.sections
@@ -1672,8 +1693,7 @@ class Transfers:
             self.eventprocessor.speed = speedbytes
             self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
 
-        if file is not None:
-            file.close()
+        self.close_file(file, i)
 
         ip_address = None
         if i.conn is not None:
@@ -1823,7 +1843,7 @@ class Transfers:
                 }
             )
 
-            if user in self.users and self.users[user].status == 0:
+            if self.user_logged_out(user):
                 transfercandidate.status = "User logged off"
                 self.abort_transfer(transfercandidate, send_fail_message=False)
                 self.uploadsview.update(transfercandidate)
@@ -2044,17 +2064,17 @@ class Transfers:
 
         if i.status != "Finished":
             if type == "download":
-                if i.user in self.users and self.users[i.user].status == 0:
+                if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
 
-            elif type == "upload" and i.status == "Transferring":
+            elif type == "upload" and i.status != "Queued":
                 """ Only cancel files being transferred, queued files will take care of
                 themselves. We don't want to cancel all queued files at once, in case
                 it's just a connectivity fluke. """
 
-                if i.user in self.users and self.users[i.user].status == 0:
+                if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Cancelled"
@@ -2117,11 +2137,7 @@ class Transfers:
                 continue
 
             i.status = "Local file error"
-
-            try:
-                msg.file.close()
-            except Exception:
-                pass
+            self.close_file(msg.file, i)
 
             i.conn = None
             self.queue.put(slskmessages.ConnClose(msg.conn.conn))
@@ -2214,6 +2230,39 @@ class Transfers:
 
         return destination
 
+    def retry_download(self, transfer):
+
+        if transfer.status in ("Finished", "Old"):
+            return
+
+        user = transfer.user
+
+        if self.user_logged_out(user):
+            transfer.status = "User logged off"
+            self.abort_transfer(transfer, send_fail_message=False)
+            self.downloadsview.update(transfer)
+            return
+
+        self.abort_transfer(transfer)
+        self.get_file(user, transfer.filename, transfer.path, transfer)
+
+    def retry_upload(self, transfer):
+
+        user = transfer.user
+
+        if user in self.get_transferring_users():
+            return
+
+        if self.user_logged_out(user):
+            transfer.status = "User logged off"
+            self.abort_transfer(transfer, send_fail_message=False)
+            self.uploadsview.update(transfer)
+            self.auto_clear_upload(transfer)
+            return
+
+        self.eventprocessor.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
+
     def abort_transfers(self, send_fail_message=True):
         """ Stop all transfers """
 
@@ -2225,7 +2274,7 @@ class Transfers:
                 self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
 
-    def abort_transfer(self, transfer, remove=False, reason="Aborted", send_fail_message=True):
+    def abort_transfer(self, transfer, reason="Aborted", send_fail_message=True):
 
         transfer.legacy_attempt = False
         transfer.req = None
@@ -2243,14 +2292,7 @@ class Transfers:
             transfer.transfertimer.cancel()
 
         if transfer.file is not None:
-            try:
-                transfer.file.close()
-                if remove:
-                    os.remove(transfer.file.name)
-            except Exception:
-                pass
-
-            transfer.file = None
+            self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
                 self.log_transfer(

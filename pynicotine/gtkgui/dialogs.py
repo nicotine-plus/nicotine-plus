@@ -179,7 +179,7 @@ def choose_dir(parent=None, initialdir="~", title=_("Select a Folder"), multicho
 
     folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(folder):
+    if os.path.isdir(folder):
         dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
@@ -216,7 +216,7 @@ def choose_file(parent=None, initialdir="~", title=_("Select a File"), multiple=
     dialog.set_select_multiple(multiple)
     folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(folder):
+    if os.path.isdir(folder):
         dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
@@ -278,7 +278,7 @@ def choose_image(parent=None, initialdir="~", title=_("Select an Image"), multip
     dialog.set_select_multiple(multiple)
     folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(folder):
+    if os.path.isdir(folder):
         dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))
@@ -317,7 +317,7 @@ def save_file(parent=None, initialdir="~", initialfile="", title=None):
 
     folder = os.path.expanduser(initialdir)
 
-    if os.path.exists(folder):
+    if os.path.isdir(folder):
         dialog.set_current_folder(folder)
     else:
         dialog.set_current_folder(os.path.expanduser("~"))

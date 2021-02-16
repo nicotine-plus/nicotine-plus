@@ -351,8 +351,13 @@ class UserList:
 
     def get_user_status(self, msg):
 
-        user = msg.user
         status = msg.status
+
+        if status < 0:
+            # User doesn't exist, nothing to do
+            return
+
+        user = msg.user
         iterator = self.get_iter(user)
 
         if iterator is None:
@@ -364,7 +369,13 @@ class UserList:
         notify = self.usersmodel.get_value(iterator, 6)
 
         if notify:
-            status_text = [_("User %s is offline"), _("User %s is away"), _("User %s is online")][status]
+            if status == 1:
+                status_text = _("User %s is away")
+            elif status == 2:
+                status_text = _("User %s is online")
+            else:
+                status_text = _("User %s is offline")
+
             log.add(status_text, user)
             self.frame.notifications.new_notification(status_text % user)
 
@@ -388,7 +399,6 @@ class UserList:
         if iterator is None:
             return
 
-        country = msg.country
         hspeed = human_speed(msg.avgspeed)
         hfiles = humanize(msg.files)
 
@@ -399,11 +409,6 @@ class UserList:
             11, msg.avgspeed,
             12, msg.files
         )
-
-        if country is not None and country != "":
-
-            country = "flag_" + country
-            self.set_user_flag(user, country)
 
     def set_user_flag(self, user, country):
 
@@ -417,7 +422,7 @@ class UserList:
         self.usersmodel.set(
             iterator,
             1, self.frame.get_flag_image(country),
-            14, country
+            14, "flag_" + country
         )
 
     def add_to_list(self, user):
@@ -429,7 +434,11 @@ class UserList:
         self.usersmodel.append(row)
 
         self.save_user_list()
-        self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        if user not in self.frame.np.watchedusers:
+            self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        # Request user's IP address, so we can get the country
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         for widget in self.buddies_combo_entries:

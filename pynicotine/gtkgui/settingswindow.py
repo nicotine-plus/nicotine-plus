@@ -1870,17 +1870,17 @@ class SearchesFrame(BuildFrame):
         self.p.set_widgets_data(config, self.options)
 
         if searches["defilter"] is not None:
-            self.FilterIn.set_text(searches["defilter"][0])
-            self.FilterOut.set_text(searches["defilter"][1])
-            self.FilterSize.set_text(searches["defilter"][2])
-            self.FilterBR.set_text(searches["defilter"][3])
-            self.FilterFree.set_active(searches["defilter"][4])
+            self.FilterIn.set_text(str(searches["defilter"][0]))
+            self.FilterOut.set_text(str(searches["defilter"][1]))
+            self.FilterSize.set_text(str(searches["defilter"][2]))
+            self.FilterBR.set_text(str(searches["defilter"][3]))
+            self.FilterFree.set_active(str(searches["defilter"][4]))
 
             if(len(searches["defilter"]) > 5):
-                self.FilterCC.set_text(searches["defilter"][5])
+                self.FilterCC.set_text(str(searches["defilter"][5]))
 
             if(len(searches["defilter"]) > 6):
-                self.FilterType.set_text(searches["defilter"][6])
+                self.FilterType.set_text(str(searches["defilter"][6]))
 
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
@@ -2604,6 +2604,49 @@ class NowPlayingFrame(BuildFrame):
         }
 
 
+class NotificationsFrame(BuildFrame):
+
+    def __init__(self, parent):
+
+        self.p = parent
+
+        BuildFrame.__init__(self, "notifications")
+
+        self.options = {
+            "notifications": {
+                "notification_window_title": self.NotificationWindowTitle,
+                "notification_tab_colors": self.NotificationTabColors,
+                "notification_tab_icons": self.NotificationTabIcons,
+                "notification_popup_sound": self.NotificationPopupSound,
+                "notification_popup_file": self.NotificationPopupFile,
+                "notification_popup_folder": self.NotificationPopupFolder,
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
+                "notification_popup_chatroom": self.NotificationPopupChatroom,
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
+            }
+        }
+
+    def set_settings(self, config):
+
+        self.p.set_widgets_data(config, self.options)
+
+    def get_settings(self):
+
+        return {
+            "notifications": {
+                "notification_window_title": self.NotificationWindowTitle.get_active(),
+                "notification_tab_colors": self.NotificationTabColors.get_active(),
+                "notification_tab_icons": self.NotificationTabIcons.get_active(),
+                "notification_popup_sound": self.NotificationPopupSound.get_active(),
+                "notification_popup_file": self.NotificationPopupFile.get_active(),
+                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
+                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
+            }
+        }
+
+
 class BuildDialog(Gtk.Dialog):
     """ Class used to build a custom dialog for the plugins """
 
@@ -2613,14 +2656,16 @@ class BuildDialog(Gtk.Dialog):
 
         # Build the window
         load_ui_elements(self, os.path.join(self.settings.frame.gui_dir, "ui", "settings", "pluginproperties.ui"))
-
         self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
+
         self.tw = {}
         self.options = {}
         self.plugin = None
 
     def generate_label(self, text):
+
         label = Gtk.Label(text)
+        label.set_justify(Gtk.Justification.FILL)
         label.set_line_wrap(True)
         return label
 
@@ -2630,6 +2675,10 @@ class BuildDialog(Gtk.Dialog):
         self.tw["box%d" % c].set_orientation(Gtk.Orientation.VERTICAL)
 
         self.tw[name + "SW"] = Gtk.ScrolledWindow()
+        self.tw[name + "SW"].set_hexpand(True)
+        self.tw[name + "SW"].set_vexpand(True)
+        self.tw[name + "SW"].set_min_content_height(200)
+        self.tw[name + "SW"].set_min_content_width(350)
         self.tw[name + "SW"].set_shadow_type(Gtk.ShadowType.IN)
         self.tw[name + "SW"].set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
@@ -2637,7 +2686,7 @@ class BuildDialog(Gtk.Dialog):
         self.tw[name].set_model(Gtk.ListStore(GObject.TYPE_STRING))
         self.tw[name + "SW"].add(self.tw[name])
 
-        self.tw["box%d" % c].pack_start(self.tw[name + "SW"], True, True, 5)
+        self.tw["box%d" % c].add(self.tw[name + "SW"])
 
         cols = initialise_columns(
             None,
@@ -2654,11 +2703,11 @@ class BuildDialog(Gtk.Dialog):
         self.remove_button = Gtk.Button(_("Remove"), Gtk.STOCK_REMOVE)
 
         self.tw["vbox%d" % c] = Gtk.Box(False, 5)
-        self.tw["vbox%d" % c].pack_start(self.add_button, False, False, 0)
-        self.tw["vbox%d" % c].pack_start(self.remove_button, False, False, 0)
+        self.tw["vbox%d" % c].add(self.add_button)
+        self.tw["vbox%d" % c].add(self.remove_button)
 
-        self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
-        self.Main.pack_start(self.tw["vbox%d" % c], False, False, 0)
+        self.Main.add(self.tw["box%d" % c])
+        self.Main.add(self.tw["vbox%d" % c])
 
         renderers = cols[description].get_cells()
         for render in renderers:
@@ -2714,48 +2763,73 @@ class BuildDialog(Gtk.Dialog):
             if data["type"] in ("integer", "int", "float"):
                 self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
+                self.tw["box%d" % c].add(self.tw["label%d" % c])
 
                 self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
-                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
+                self.tw["box%d" % c].add(self.tw[name])
+                self.Main.add(self.tw["box%d" % c])
+
             elif data["type"] in ("bool",):
                 self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
+                self.tw["box%d" % c].add(self.tw["label%d" % c])
 
                 self.tw[name] = Gtk.CheckButton()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
-                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
-            elif data['type'] in ('str', 'string', 'file'):
+                self.tw["box%d" % c].add(self.tw[name])
+                self.Main.add(self.tw["box%d" % c])
+
+            elif data["type"] in ("str", "string"):
                 self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
+                self.tw["box%d" % c].add(self.tw["label%d" % c])
 
                 self.tw[name] = Gtk.Entry()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].pack_start(self.tw[name], False, False, 0)
-                self.Main.pack_start(self.tw["box%d" % c], False, False, 0)
-            elif data['type'] in ('textview'):
+                self.tw["box%d" % c].add(self.tw[name])
+                self.Main.add(self.tw["box%d" % c])
+
+            elif data["type"] in ("textview"):
                 self.tw["box%d" % c] = Gtk.Box(False, 5)
                 self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].pack_start(self.tw["label%d" % c], False, False, 0)
+                self.tw["box%d" % c].add(self.tw["label%d" % c])
 
                 self.tw[name] = Gtk.TextView()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 
                 self.tw["scrolledwindow%d" % c] = Gtk.ScrolledWindow()
+                self.tw["scrolledwindow%d" % c].set_hexpand(True)
+                self.tw["scrolledwindow%d" % c].set_vexpand(True)
                 self.tw["scrolledwindow%d" % c].set_min_content_height(200)
                 self.tw["scrolledwindow%d" % c].set_min_content_width(600)
                 self.tw["scrolledwindow%d" % c].set_shadow_type(Gtk.ShadowType.IN)
                 self.tw["scrolledwindow%d" % c].add(self.tw[name])
 
-                self.tw["box%d" % c].pack_start(self.tw["scrolledwindow%d" % c], True, True, 0)
-                self.Main.pack_start(self.tw["box%d" % c], True, True, 0)
+                self.tw["box%d" % c].add(self.tw["scrolledwindow%d" % c])
+                self.Main.add(self.tw["box%d" % c])
+
             elif data["type"] in ("list string",):
                 self.generate_tree_view(name, data["description"], value, c)
+
+            elif data["type"] in ("file",):
+                self.tw["box%d" % c] = Gtk.Box(False, 5)
+                self.tw["label%d" % c] = self.generate_label(data["description"])
+                self.tw["box%d" % c].add(self.tw["label%d" % c])
+
+                button_widget = Gtk.Button()
+                button_widget.set_hexpand(True)
+
+                try:
+                    chooser = data["chooser"]
+                except KeyError:
+                    chooser = None
+
+                self.tw[name] = FileChooserButton(button_widget, self.PluginProperties, chooser)
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.tw["box%d" % c].add(button_widget)
+                self.Main.add(self.tw["box%d" % c])
+
             else:
                 print("Unknown setting type '%s', data '%s'" % (name, data))
 
@@ -2767,58 +2841,17 @@ class BuildDialog(Gtk.Dialog):
         self.PluginProperties.destroy()
 
     def on_okay(self, widget):
+
         for name in self.options:
             value = self.settings.get_widget_data(self.tw[name])
             if value is not None:
                 self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
+
         self.PluginProperties.destroy()
         self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def show(self):
         self.PluginProperties.show()
-
-
-class NotificationsFrame(BuildFrame):
-
-    def __init__(self, parent):
-
-        self.p = parent
-
-        BuildFrame.__init__(self, "notifications")
-
-        self.options = {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_tab_colors": self.NotificationTabColors,
-                "notification_tab_icons": self.NotificationTabIcons,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
-            }
-        }
-
-    def set_settings(self, config):
-
-        self.p.set_widgets_data(config, self.options)
-
-    def get_settings(self):
-
-        return {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_tab_colors": self.NotificationTabColors.get_active(),
-                "notification_tab_icons": self.NotificationTabIcons.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            }
-        }
 
 
 class PluginsFrame(BuildFrame):
@@ -3173,6 +3206,9 @@ class Settings:
 
             return wlist
 
+        elif isinstance(widget, FileChooserButton):
+            return widget.get_path()
+
     def clear_widget(self, widget):
         if isinstance(widget, Gtk.SpinButton):
             widget.set_value(0)
@@ -3225,6 +3261,9 @@ class Settings:
                 except TypeError:
                     # Invalid input
                     continue
+
+        elif isinstance(widget, FileChooserButton):
+            widget.set_path(value)
 
     def set_settings(self, config):
 

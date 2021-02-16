@@ -1,0 +1,129 @@
+---
+app-id: org.nicotine_plus.Nicotine
+runtime: org.gnome.Platform
+runtime-version: '3.38'
+sdk: org.gnome.Sdk
+command: nicotine
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --share=network
+  - --filesystem=host
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.kde.StatusNotifierWatcher
+
+  # Now Playing (MPRIS)
+  - --talk-name=org.mpris.MediaPlayer2.*
+
+cleanup:
+  - /etc
+  - /include
+  - /lib/debug
+  - /lib/pkgconfig
+  - /libexec
+  - /share/aclocal
+  - /share/info
+  - /share/gtk-doc
+  - /share/vala
+  - '*.a'
+  - '*.la'
+
+modules:
+  # App Indicator
+
+  - name: mate-common
+    cleanup:
+      - '*'
+    sources:
+      - url: https://github.com/mate-desktop/mate-common.git
+        tag: v1.24.2
+        commit: 93ca8c7f6ec902e5963f4d0ec12b32cf833de2d0
+        type: git
+
+  - name: intltool
+    cleanup:
+      - '*'
+    sources:
+      - url: https://gitlab.gnome.org/World/intltool.git
+        tag: release-0_51_0
+        commit: e6cf4480c8df86e02d6f2160ed93e9e27d4451dd
+        type: git
+
+  - name: libdbusmenu
+    config-opts:
+      - --disable-dumper
+      - --disable-introspection
+      - --disable-static
+      - --disable-vala
+      - --with-gtk=3
+    build-options:
+      cflags: -Wno-error
+    cleanup:
+      - /share/doc
+      - /share/libdbusmenu
+    sources:
+      - url: https://launchpad.net/libdbusmenu/16.04/16.04.0/+download/libdbusmenu-16.04.0.tar.gz
+        sha256: b9cc4a2acd74509435892823607d966d424bd9ad5d0b00938f27240a1bfa878a
+        type: archive
+
+  - name: libayatana-indicator
+    config-opts:
+      - --disable-ido
+      - --disable-static
+      - --disable-tests
+      - --with-gtk=3
+    cleanup:
+      - /share/libayatana-indicator
+    sources:
+      - url: https://github.com/AyatanaIndicators/libayatana-indicator.git
+        tag: 0.7.1
+        commit: 74cfb2106eefed78279c01d69079a29fb0232564
+        type: git
+
+  - name: dbus-glib
+    config-opts:
+      - --disable-gtk-doc
+      - --disable-static
+      - --disable-tests
+    cleanup:
+       - '*'
+    sources:
+      - url: https://github.com/freedesktop/dbus-glib.git
+        tag: dbus-glib-0.110
+        commit: ffeb6909967ff79585a7ede85227da94f04ecb01
+        type: git
+
+  - name: libayatana-appindicator
+    config-opts:
+      - --disable-gtk-doc
+      - --disable-static
+      - --disable-tests
+      - --with-gtk=3
+    sources:
+      - url: https://github.com/AyatanaIndicators/libayatana-appindicator.git
+        tag: 0.5.5
+        commit: c43a76e643ab930725d20d306bc3ca5e7874eebe
+        type: git
+
+  # Spell Checking
+
+  - name: gspell
+    cleanup:
+      - /bin
+    sources:
+      - url: https://gitlab.gnome.org/GNOME/gspell.git
+        tag: 1.9.1
+        commit: 5300d93dae00998801ef1be48da71dac4e2ebd1b
+        type: git
+
+  # Nicotine+
+
+  - name: nicotine+
+    buildsystem: simple
+    sources:
+      - path: '../../'
+        type: dir
+    build-commands:
+      - pip3 install . --no-deps --prefix="${FLATPAK_DEST}"

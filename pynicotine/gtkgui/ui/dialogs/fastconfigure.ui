@@ -27,8 +27,10 @@
             <property name="visible">1</property>
             <property name="halign">center</property>
             <property name="label" translatable="yes">Welcome to Nicotine+!</property>
+            <property name="wrap">1</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="ultrabold"/>
+              <attribute name="size" value="17408"/>
             </attributes>
           </object>
         </child>
@@ -351,9 +353,11 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">You are now ready to use Nicotine+!</property>
+            <property name="label" translatable="yes">You are ready to use Nicotine+!</property>
+            <property name="wrap">1</property>
             <attributes>
-              <attribute name="weight" value="bold"/>
+              <attribute name="weight" value="ultrabold"/>
+              <attribute name="size" value="17408"/>
             </attributes>
           </object>
         </child>
@@ -372,7 +376,7 @@
           <object class="GtkLabel" id="labelnoshare">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">You do not publicly share any files. Sharing files is crucial for the health of the Soulseek network, and many people will ban you if you download from them without sharing anything yourself.</property>
+            <property name="label" translatable="yes">Sharing files is crucial for the health of the Soulseek network. Many people will ban you if you download from them without sharing anything yourself.</property>
             <property name="justify">fill</property>
             <property name="wrap">1</property>
             <property name="width-chars">36</property>

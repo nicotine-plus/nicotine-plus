@@ -497,6 +497,9 @@ def open_file_path(file_path, command=None):
 def open_log(folder, filename):
 
     try:
+        if not os.path.isdir(folder):
+            os.makedirs(folder)
+
         path = os.path.join(folder, clean_file(filename.replace(os.sep, "-")) + ".log")
 
         if not os.path.exists(path):
@@ -1027,7 +1030,15 @@ class IconNotebook:
     def set_status_image(self, page, status):
 
         tab_label, menu_label = self.get_labels(page)
-        image = self.images[("offline", "away", "online")[status]]
+
+        if status == 1:
+            image_name = "away"
+        elif status == 2:
+            image_name = "online"
+        else:
+            image_name = "offline"
+
+        image = self.images[image_name]
 
         tab_label.set_status_image(image)
         menu_label.set_status_image(image)

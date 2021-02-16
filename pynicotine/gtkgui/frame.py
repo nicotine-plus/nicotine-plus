@@ -432,10 +432,6 @@ class NicotineFrame:
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
 
-        for i in self.np.config.sections["server"]["userlist"]:
-            user = i[0]
-            self.np.queue.put(slskmessages.AddUser(user))
-
         if msg.banner != "":
             log.add(msg.banner)
 
@@ -450,23 +446,23 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.spell_checker = False
 
-    def get_flag_image(self, flag):
+    def get_flag_image(self, country):
 
-        if flag is None:
-            return
+        if not country:
+            return None
 
-        flag = flag.lower()
+        country = country.lower().replace("flag_", "")
 
         try:
-            if flag not in self.flag_images:
-                self.flag_images[flag] = GdkPixbuf.Pixbuf.new_from_file(
-                    os.path.join(self.gui_dir, "icons", "flags", flag[5:] + ".svg")
+            if country not in self.flag_images:
+                self.flag_images[country] = GdkPixbuf.Pixbuf.new_from_file(
+                    os.path.join(self.gui_dir, "icons", "flags", country + ".svg")
                 )
 
         except Exception:
             return None
 
-        return self.flag_images[flag]
+        return self.flag_images[country]
 
     def load_ui_icon(self, name):
         """ Load icon required by the UI """
@@ -572,7 +568,6 @@ class NicotineFrame:
 
         self.images = {}
         self.flag_images = {}
-        self.flag_users = {}
 
         names = [
             "away",
@@ -644,6 +639,15 @@ class NicotineFrame:
         if self.autoaway:
             self.autoaway = self.away = False
 
+        self.uploads.conn_close()
+        self.downloads.conn_close()
+        self.searches.wish_list.conn_close()
+        self.userlist.conn_close()
+
+        if self.shutdown:
+            # Application is shutting down, stop here
+            return
+
         self.set_widget_online_status(False)
         self.tray.set_connected(False)
 
@@ -652,10 +656,6 @@ class NicotineFrame:
         self.searches.wish_list.interval = 0
         self.chatrooms.conn_close()
         self.privatechats.conn_close()
-        self.searches.wish_list.conn_close()
-        self.uploads.conn_close()
-        self.downloads.conn_close()
-        self.userlist.conn_close()
         self.userinfo.conn_close()
         self.userbrowse.conn_close()
 
@@ -1978,7 +1978,7 @@ class NicotineFrame:
         if self.np.config.sections["words"]["replacewords"]:
             autoreplaced = self.np.config.sections["words"]["autoreplaced"]
             for word, replacement in autoreplaced.items():
-                message = message.replace(word, replacement)
+                message = message.replace(str(word), str(replacement))
 
         return message
 
@@ -1987,6 +1987,7 @@ class NicotineFrame:
             filler = self.np.config.sections["words"]["censorfill"]
             censored = self.np.config.sections["words"]["censored"]
             for word in censored:
+                word = str(word)
                 message = message.replace(word, filler * len(word))
 
         return message
@@ -2279,25 +2280,13 @@ class NicotineFrame:
         else:
             return self.images["offline"]
 
-    def has_user_flag(self, user, flag):
-        if flag.lower() not in self.flag_images:
-            self.get_flag_image(flag)
+    def has_user_flag(self, user, country):
 
-        if flag.lower() not in self.flag_images:
+        if not self.get_flag_image(country):
             return
 
-        self.flag_users[user] = flag
-        self.chatrooms.set_user_flag(user, flag)
-        self.userlist.set_user_flag(user, flag)
-
-    def get_user_flag(self, user):
-        if user not in self.flag_users:
-            for i in self.np.config.sections["server"]["userlist"]:
-                if user == i[0] and i[6] is not None:
-                    return i[6]
-            return "flag_"
-        else:
-            return self.flag_users[user]
+        self.chatrooms.set_user_flag(user, country)
+        self.userlist.set_user_flag(user, country)
 
     def on_settings_downloads(self, widget):
         self.on_settings(page='Downloads')
@@ -2369,8 +2358,8 @@ class NicotineFrame:
         log_path = self.np.config.sections["logging"]["debuglogsdir"]
 
         try:
-            if not os.path.exists(log_path):
-                os.mkdir(log_path)
+            if not os.path.isdir(log_path):
+                os.makedirs(log_path)
 
             open_file_path(self.np.config.sections["logging"]["debuglogsdir"])
 

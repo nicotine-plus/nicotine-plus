@@ -95,9 +95,9 @@ class Config:
             },
 
             "transfers": {
-                "incompletedir": os.path.join(data_dir, 'incompletefiles'),
-                "downloaddir": os.path.join(os.path.expanduser("~"), 'nicotine-downloads'),
-                "uploaddir": os.path.join(os.path.expanduser("~"), 'nicotine-uploads'),
+                "incompletedir": os.path.join(data_dir, 'incomplete'),
+                "downloaddir": os.path.join(data_dir, 'downloads'),
+                "uploaddir": os.path.join(data_dir, 'received'),
                 "sharedownloaddir": False,
                 "shared": [],
                 "buddyshared": [],

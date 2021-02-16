@@ -398,20 +398,14 @@ class ChatRooms(IconNotebook):
         for room in self.joinedrooms.values():
             room.get_user_status(msg.user, msg.status)
 
-    def set_user_flag(self, user, flag):
+    def set_user_flag(self, user, country):
         for room in self.joinedrooms.values():
-            room.set_user_flag(user, flag)
-
-    def get_user_address(self, user):
-
-        if user not in self.frame.np.users or self.frame.np.users[user].addr is None:
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+            room.set_user_flag(user, country)
 
     def user_joined_room(self, msg):
 
         if msg.room in self.joinedrooms:
             self.joinedrooms[msg.room].user_joined_room(msg.username, msg.userdata)
-            self.get_user_address(msg.username)
 
     def user_left_room(self, msg):
         self.joinedrooms[msg.room].user_left_room(msg.username)
@@ -613,24 +607,8 @@ class ChatRoom:
             GObject.TYPE_STRING
         )
 
-        for username, user in users.items():
-
-            img = self.frame.get_status_image(user.status)
-            flag = user.country
-
-            if flag:
-                flag = "flag_" + flag
-                self.frame.flag_users[username] = flag
-            else:
-                flag = self.frame.get_user_flag(username)
-
-            hspeed = human_speed(user.avgspeed)
-            hfiles = humanize(user.files)
-            iterator = self.usersmodel.append(
-                [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag]
-            )
-            self.users[username] = iterator
-            self.chatrooms.get_user_address(username)
+        for username, userdata in users.items():
+            self.add_user_row(username, userdata)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -683,6 +661,22 @@ class ChatRoom:
             self.read_room_logs()
 
         self.count_users()
+
+    def add_user_row(self, username, userdata):
+
+        status_image = self.frame.get_status_image(userdata.status)
+
+        # Request user's IP address, so we can get the country
+        self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
+
+        hspeed = human_speed(userdata.avgspeed)
+        hfiles = humanize(userdata.files)
+
+        iterator = self.usersmodel.append(
+            [status_image, None, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, ""]
+        )
+
+        self.users[username] = iterator
 
     def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
         # cellrenderer.set_property("weight", colour)
@@ -986,7 +980,7 @@ class ChatRoom:
             widget.set_text("")
             return
 
-        s = text.split(" ", 1)  # string
+        s = text.split(" ", 1)
         cmd = s[0]
 
         if len(s) == 2:
@@ -994,116 +988,122 @@ class ChatRoom:
         else:
             args = ""
 
-        byteargs = args.encode('utf-8')  # bytes
-
         if cmd in ("/alias", "/al"):
             append_line(self.ChatScroll, add_alias(args), self.tag_remote, "")
+
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             append_line(self.ChatScroll, unalias(args), self.tag_remote, "")
+
             if self.frame.np.config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
-        elif cmd in ["/w", "/whois", "/info"]:
-            if byteargs:
-                self.frame.local_user_info_request(byteargs)
-                self.frame.on_user_info(None)
+        elif cmd in ("/w", "/whois", "/info"):
+            if args:
+                self.frame.local_user_info_request(args)
+                self.frame.change_main_page("userinfo")
 
-        elif cmd in ["/b", "/browse"]:
-            if byteargs:
-                self.frame.browse_user(byteargs)
-                self.frame.on_user_browse(None)
+        elif cmd in ("/b", "/browse"):
+            if args:
+                self.frame.browse_user(args)
+                self.frame.change_main_page("userbrowse")
 
         elif cmd == "/ip":
-            if byteargs:
-                user = byteargs
+            if args:
+                user = args
                 self.frame.np.ip_requested.add(user)
                 self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
         elif cmd == "/pm":
-            if byteargs:
-                self.frame.privatechats.send_message(byteargs, show_user=True)
+            if args:
+                self.frame.privatechats.send_message(args, show_user=True)
                 self.frame.change_main_page("private")
 
-        elif cmd in ["/m", "/msg"]:
-            if byteargs:
-                user = byteargs.split(b" ", 1)[0]
-                try:
-                    msg = args.split(" ", 1)[1]
-                except IndexError:
+        elif cmd in ("/m", "/msg"):
+            if args:
+                s = args.split(" ", 1)
+                user = s[0]
+                if len(s) == 2:
+                    msg = s[1]
+                else:
                     msg = None
-                self.frame.privatechats.send_message(user, msg)
+                self.frame.privatechats.send_message(user, msg, show_user=True)
+                self.frame.change_main_page("private")
 
-        elif cmd in ["/s", "/search"]:
+        elif cmd in ("/s", "/search"):
             if args:
                 self.frame.searches.do_search(args, 0)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/us", "/usearch"]:
-            s = byteargs.split(" ", 1)
+        elif cmd in ("/us", "/usearch"):
+            s = args.split(" ", 1)
             if len(s) == 2:
                 self.frame.searches.do_search(s[1], 3, [s[0]])
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/rs", "/rsearch"]:
+        elif cmd in ("/rs", "/rsearch"):
             if args:
                 self.frame.searches.do_search(args, 1)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/bs", "/bsearch"]:
+        elif cmd in ("/bs", "/bsearch"):
             if args:
                 self.frame.searches.do_search(args, 2)
                 self.frame.on_search(None)
+                self.frame.change_main_page("search")
 
-        elif cmd in ["/j", "/join"]:
-            if byteargs:
-                self.frame.np.queue.put(slskmessages.JoinRoom(byteargs))
+        elif cmd in ("/j", "/join"):
+            if args:
+                self.frame.np.queue.put(slskmessages.JoinRoom(args))
 
-        elif cmd in ["/l", "/leave", "/p", "/part"]:
-            if byteargs:
-                self.frame.np.queue.put(slskmessages.LeaveRoom(byteargs))
+        elif cmd in ("/l", "/leave", "/p", "/part"):
+            if args:
+                self.frame.np.queue.put(slskmessages.LeaveRoom(args))
             else:
                 self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
 
-        elif cmd in ["/ad", "/add", "/buddy"]:
-            if byteargs:
-                self.frame.userlist.add_to_list(byteargs)
+        elif cmd in ("/ad", "/add", "/buddy"):
+            if args:
+                self.frame.userlist.add_to_list(args)
 
-        elif cmd in ["/rem", "/unbuddy"]:
-            if byteargs:
-                self.frame.userlist.remove_from_list(byteargs)
+        elif cmd in ("/rem", "/unbuddy"):
+            if args:
+                self.frame.userlist.remove_from_list(args)
 
         elif cmd == "/ban":
-            if byteargs:
-                self.frame.ban_user(byteargs)
+            if args:
+                self.frame.ban_user(args)
 
         elif cmd == "/ignore":
-            if byteargs:
-                self.frame.ignore_user(byteargs)
+            if args:
+                self.frame.ignore_user(args)
 
         elif cmd == "/ignoreip":
-            if byteargs:
-                self.frame.ignore_ip(byteargs)
+            if args:
+                self.frame.ignore_ip(args)
 
         elif cmd == "/unban":
-            if byteargs:
-                self.frame.unban_user(byteargs)
+            if args:
+                self.frame.unban_user(args)
 
         elif cmd == "/unignore":
-            if byteargs:
-                self.frame.unignore_user(byteargs)
+            if args:
+                self.frame.unignore_user(args)
 
-        elif cmd in ["/clear", "/cl"]:
+        elif cmd in ("/clear", "/cl"):
             self.ChatScroll.get_buffer().set_text("")
 
-        elif cmd in ["/a", "/away"]:
+        elif cmd in ("/a", "/away"):
             self.frame.on_away(None)
 
-        elif cmd in ["/q", "/quit", "/exit"]:
+        elif cmd in ("/q", "/quit", "/exit"):
             self.frame.on_quit(None)
             return  # Avoid gsignal warning
 
@@ -1111,7 +1111,6 @@ class ChatRoom:
             self.display_now_playing()
 
         elif cmd == "/rescan":
-
             # Rescan public shares if needed
             if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
                 self.frame.on_rescan()
@@ -1120,25 +1119,25 @@ class ChatRoom:
             if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
-        elif cmd in ["/tick", "/t"]:
+        elif cmd in ("/tick", "/t"):
             self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, args))
 
-        elif cmd in ("/tickers",):
+        elif cmd == "/tickers":
             self.show_tickers()
 
-        elif cmd in ('/toggle',):
-            if byteargs:
-                self.frame.np.pluginhandler.toggle_plugin(byteargs)
+        elif cmd == "/toggle":
+            if args:
+                self.frame.np.pluginhandler.toggle_plugin(args)
 
-        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
-            pass
+        elif cmd and cmd[:1] == "/":
+            if self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
+                pass
 
-        elif cmd and cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            log.add(_("Command %s is not recognized"), text)
-            return
+            elif cmd != "/me" and cmd[:2] != "//":
+                log.add(_("Command %s is not recognized"), text)
+                return
 
         else:
-
             if text[:2] == "//":
                 text = text[1:]
 
@@ -1178,22 +1177,7 @@ class ChatRoom:
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
         self.frame.np.pluginhandler.user_join_chatroom_notification(self.room, username)
-
-        img = self.frame.get_status_image(userdata.status)
-        flag = userdata.country
-
-        if flag is not None:
-            flag = "flag_" + flag
-            self.frame.flag_users[username] = flag
-        else:
-            flag = self.frame.get_user_flag(username)
-
-        hspeed = human_speed(userdata.avgspeed)
-        hfiles = humanize(userdata.files)
-
-        self.users[username] = self.usersmodel.append(
-            [img, self.frame.get_flag_image(flag), username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, flag]
-        )
+        self.add_user_row(username, userdata)
 
         self.get_user_tag(username)
         self.count_users()
@@ -1283,14 +1267,22 @@ class ChatRoom:
             color = self.get_user_status_color(status)
             self.update_tag_visuals(self.tag_users[user], color)
 
-        self.usersmodel.set(self.users[user], 0, img, 5, status)
+        self.usersmodel.set(
+            self.users[user],
+            0, img,
+            5, status
+        )
 
-    def set_user_flag(self, user, flag):
+    def set_user_flag(self, user, country):
 
         if user not in self.users:
             return
 
-        self.usersmodel.set(self.users[user], 1, self.frame.get_flag_image(flag), 8, flag)
+        self.usersmodel.set(
+            self.users[user],
+            1, self.frame.get_flag_image(country),
+            8, country
+        )
 
     def create_tag(self, buffer, color, username=None):
 
@@ -1464,27 +1456,12 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        for (username, user) in users.items():
+        for username, userdata in users.items():
 
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
 
-            img = self.frame.get_status_image(user.status)
-            flag = user.country
-
-            if flag is not None:
-                flag = "flag_" + flag
-                self.frame.flag_users[username] = flag
-            else:
-                flag = self.frame.get_user_flag(username)
-
-            hspeed = human_speed(user.avgspeed)
-            hfiles = humanize(user.files)
-
-            myiter = self.usersmodel.append([img, self.frame.get_flag_image(flag), username, hspeed, hfiles, user.status, user.avgspeed, user.files, flag])
-
-            self.users[username] = myiter
-            self.chatrooms.get_user_address(username)
+            self.add_user_row(username, userdata)
 
         self.UserList.set_sensitive(True)
 

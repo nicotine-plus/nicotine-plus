@@ -596,7 +596,7 @@ class NetworkEventProcessor:
         if cc == "-":
             cc = ""
 
-        self.ui_callback.has_user_flag(user, "flag_" + cc)
+        self.ui_callback.has_user_flag(user, cc)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
@@ -1029,6 +1029,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.success:
+            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
 
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
@@ -1036,6 +1037,11 @@ class NetworkEventProcessor:
 
             if msg.ip is not None:
                 self.ipaddress = msg.ip
+
+            for i in self.config.sections["server"]["userlist"]:
+                user = i[0]
+                if user not in self.watchedusers:
+                    self.queue.put(slskmessages.AddUser(user))
 
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
@@ -1068,6 +1074,7 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.RoomList())
 
             self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
+            self.pluginhandler.server_connect_notification()
         else:
             self.manualdisconnect = True
             self.set_status(_("Can not log in, reason: %s"), (msg.reason))
@@ -1135,14 +1142,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.privatechat is not None:
-            event = self.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
-
-            if event is not None:
-                (u, msg.msg) = event
-                self.privatechat.show_message(msg, msg.msg, msg.newmessage)
-
-                self.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
-
+            self.privatechat.show_message(msg, msg.msg, msg.newmessage)
             self.queue.put(slskmessages.MessageAcked(msg.msgid))
 
     def user_joined_room(self, msg):
@@ -1328,17 +1328,14 @@ class NetworkEventProcessor:
 
         self.watchedusers.add(msg.user)
 
-        if not msg.userexists:
-            if msg.user not in self.users:
-                self.users[msg.user] = UserAddr(status=-1)
-
-        if msg.status is not None:
-            self.get_user_status(msg)
-        elif msg.userexists and msg.status is None:
+        if msg.userexists and msg.status is None:
+            # Legacy support (Soulfind server)
             self.queue.put(slskmessages.GetUserStatus(msg.user))
+        else:
+            self.get_user_status(msg, log_contents=False)
 
         if msg.files is not None:
-            self.get_user_stats(msg)
+            self.get_user_stats(msg, log_contents=False)
 
     def privileged_users(self, msg):
 
@@ -1347,8 +1344,6 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.set_privileged_users(msg.users)
             log.add(_("%i privileged users"), (len(msg.users)))
-            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
-            self.pluginhandler.server_connect_notification()
 
     def add_to_privileged(self, msg):
 
@@ -1411,14 +1406,17 @@ class NetworkEventProcessor:
         if self.search is not None:
             self.search.wish_list.set_interval(msg)
 
-    def get_user_status(self, msg):
+    def get_user_status(self, msg, log_contents=True):
 
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+        if log_contents:
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
-        # Causes recursive requests when privileged?
-        # self.queue.put(slskmessages.AddUser(msg.user))
+        if msg.status is None:
+            msg.status = -1
+
         if msg.user in self.users:
-            if msg.status == 0:
+            if msg.status <= 0:
+                # User went offline, reset stored IP address
                 self.users[msg.user] = UserAddr(status=msg.status)
             else:
                 self.users[msg.user].status = msg.status
@@ -1429,8 +1427,6 @@ class NetworkEventProcessor:
             if msg.privileged == 1:
                 if self.transfers is not None:
                     self.transfers.add_to_privileged(msg.user)
-                else:
-                    log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.interests is not None:
             self.interests.get_user_status(msg)
@@ -1460,9 +1456,10 @@ class NetworkEventProcessor:
         if self.userinfo is not None:
             self.userinfo.show_interests(msg)
 
-    def get_user_stats(self, msg):
+    def get_user_stats(self, msg, log_contents=True):
 
-        log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
+        if log_contents:
+            log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.user == self.config.sections["server"]["login"]:
             self.speed = msg.avgspeed
@@ -2161,6 +2158,7 @@ class NetworkEventProcessor:
 
 class UserAddr:
 
-    def __init__(self, addr=None, status=None):
+    def __init__(self, addr=None, country=None, status=None):
         self.addr = addr
+        self.country = country
         self.status = status

@@ -332,9 +332,9 @@ class Downloads(TransferList):
         self.popup_menu.popup()
         return True
 
-    def on_abort_transfer(self, widget, remove_file=False, clear=False):
+    def on_abort_transfer(self, widget, clear=False):
         self.select_transfers()
-        self.abort_transfers(remove_file, clear)
+        self.abort_transfers(clear)
 
     def on_clear_queued(self, widget):
         self.clear_transfers(["Queued"])
@@ -344,9 +344,4 @@ class Downloads(TransferList):
         self.select_transfers()
 
         for transfer in self.selected_transfers:
-
-            if transfer.status in ["Finished", "Old"]:
-                continue
-
-            self.frame.np.transfers.abort_transfer(transfer)
-            self.frame.np.transfers.get_file(transfer.user, transfer.filename, transfer.path, transfer)
+            self.frame.np.transfers.retry_download(transfer)

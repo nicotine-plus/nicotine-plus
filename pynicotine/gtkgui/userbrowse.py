@@ -522,7 +522,8 @@ class UserBrowse:
 
         try:
             if not os.path.exists(sharesdir):
-                os.mkdir(sharesdir)
+                os.makedirs(sharesdir)
+
         except Exception as msg:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 

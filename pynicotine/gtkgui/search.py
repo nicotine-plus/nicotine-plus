@@ -604,17 +604,17 @@ class Search:
 
             sfilter = self.frame.np.config.sections["searches"]["defilter"]
 
-            self.FilterInEntry.set_text(sfilter[0])
-            self.FilterOutEntry.set_text(sfilter[1])
-            self.FilterSizeEntry.set_text(sfilter[2])
-            self.FilterBitrateEntry.set_text(sfilter[3])
-            self.FilterFreeSlot.set_active(sfilter[4])
+            self.FilterInEntry.set_text(str(sfilter[0]))
+            self.FilterOutEntry.set_text(str(sfilter[1]))
+            self.FilterSizeEntry.set_text(str(sfilter[2]))
+            self.FilterBitrateEntry.set_text(str(sfilter[3]))
+            self.FilterFreeSlot.set_active(str(sfilter[4]))
 
             if(len(sfilter) > 5):
-                self.FilterCountryEntry.set_text(sfilter[5])
+                self.FilterCountryEntry.set_text(str(sfilter[5]))
 
             if(len(sfilter) > 6):
-                self.FilterTypeEntry.set_text(sfilter[6])
+                self.FilterTypeEntry.set_text(str(sfilter[6]))
 
             self.on_refilter(None)
 
@@ -665,7 +665,7 @@ class Search:
 
     def add_combo(self, combobox, text, list=False):
 
-        text = text.strip()
+        text = str(text).strip()
         if not text:
             return False
 
@@ -738,7 +738,7 @@ class Search:
             h_size = human_size(size)
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
 
-            self.append([counter, user, self.get_flag(user, country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, length])
+            self.append([counter, user, self.frame.get_flag_image(country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, length])
             append = True
             counter += 1
 
@@ -754,16 +754,6 @@ class Search:
             # Update tab notification
             self.frame.searches.request_changed(self.Main)
             self.frame.request_tab_icon(self.frame.SearchTabLabel)
-
-    def get_flag(self, user, flag=None):
-
-        if flag is not None:
-            flag = "flag_" + flag.lower()
-            self.frame.flag_users[user] = flag
-        else:
-            flag = self.frame.get_user_flag(user)
-
-        return self.frame.get_flag_image(flag)
 
     def append(self, row):
 
@@ -800,7 +790,7 @@ class Search:
             if user not in self.usersiters:
                 self.usersiters[user] = self.resultsmodel.append(
                     None,
-                    [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, 0]
+                    [0, user, flag, immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, 0]
                 )
 
             parent = self.usersiters[user]
@@ -811,7 +801,7 @@ class Search:
                 if directory not in self.directoryiters:
                     self.directoryiters[directory] = self.resultsmodel.append(
                         self.usersiters[user],
-                        [0, user, self.get_flag(user, country), immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue, 0]
+                        [0, user, flag, immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue, 0]
                     )
 
                 row = row[:]
