@@ -10,6 +10,7 @@ finish-args:
   - --socket=fallback-x11
   - --share=ipc
   - --share=network
+  - --filesystem=host
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 
