@@ -641,6 +641,8 @@ class PrivateChat:
         else:
             self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
 
+        self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
+
     def thread_alias(self, alias):
 
         text = expand_alias(alias)
