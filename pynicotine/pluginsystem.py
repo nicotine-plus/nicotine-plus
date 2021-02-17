@@ -103,7 +103,7 @@ class PluginHandler(object):
             from importlib.machinery import SourceFileLoader
             plugin = SourceFileLoader(pluginname, os.path.join(path, '__init__.py')).load_module()
 
-        instance = plugin.Plugin(self)
+        instance = plugin.Plugin(self, enable_plugin=False)
         self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
 
@@ -500,10 +500,15 @@ class BasePlugin(object):
     __publiccommands__ = []
     __privatecommands__ = []
 
-    def __init__(self, parent):
+    def __init__(self, parent, enable_plugin=True):
+
         # Never override this function, override init() instead
         self.parent = parent
         self.frame = parent.frame
+
+        if not enable_plugin:
+            # Plugin was loaded, but not enabled yet
+            return
 
         self.init()
         for (trigger, func) in self.__publiccommands__:
