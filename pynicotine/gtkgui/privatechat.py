@@ -308,7 +308,7 @@ class PrivateChats(IconNotebook):
         for user in self.frame.np.config.sections["privatechat"]["users"]:
             user = str(user)
             if user not in self.users:
-                self.send_message(user, show_user=True)
+                self.send_message(user)
 
     def conn_close(self):
 
