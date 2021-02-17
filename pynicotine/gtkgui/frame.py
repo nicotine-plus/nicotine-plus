@@ -1261,7 +1261,6 @@ class NicotineFrame:
 
         # Override link handler with our own
         self.AboutDialog.connect("activate-link", self.on_about_uri)
-        self.AboutDialog.connect("response", lambda *args: self.AboutDialog.destroy())
 
         if self.images["n"]:
             self.AboutDialog.set_logo(self.images["n"])
@@ -1271,7 +1270,8 @@ class NicotineFrame:
         self.AboutDialog.set_transient_for(self.MainWindow)
         self.AboutDialog.set_version(version)
 
-        self.AboutDialog.show()
+        self.AboutDialog.run()
+        self.AboutDialog.destroy()
 
     def on_about_uri(self, widget, uri):
         open_uri(uri, self.MainWindow)
