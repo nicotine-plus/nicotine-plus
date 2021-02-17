@@ -1129,13 +1129,12 @@ class ChatRoom:
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
 
-        elif cmd and cmd[:1] == "/":
-            if self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
-                pass
+        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
+            pass
 
-            elif cmd != "/me" and cmd[:2] != "//":
-                log.add(_("Command %s is not recognized"), text)
-                return
+        elif cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
+            log.add(_("Command %s is not recognized"), text)
+            return
 
         else:
             if text[:2] == "//":

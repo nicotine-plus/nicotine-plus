@@ -805,13 +805,11 @@ class PrivateChat:
             if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
-        elif cmd and cmd[:1] == "/":
-            if self.frame.np.pluginhandler.trigger_private_command_event(self.user, cmd[1:], args):
-                pass
+        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_private_command_event(self.user, cmd[1:], args):
+            pass
 
-            elif cmd != "/me" and cmd[:2] != "//":
-                log.add(_("Command %s is not recognized"), text)
-
+        elif cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
+            log.add(_("Command %s is not recognized"), text)
             return
 
         else:
