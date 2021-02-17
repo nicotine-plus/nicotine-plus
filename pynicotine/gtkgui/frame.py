@@ -1259,13 +1259,9 @@ class NicotineFrame:
 
         load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
 
-        # Remove non-functional close button added by GTK
-        buttons = self.AboutDialog.get_action_area().get_children()
-        if buttons:
-            buttons[-1].destroy()
-
         # Override link handler with our own
         self.AboutDialog.connect("activate-link", self.on_about_uri)
+        self.AboutDialog.connect("response", lambda *args: self.AboutDialog.destroy())
 
         if self.images["n"]:
             self.AboutDialog.set_logo(self.images["n"])
