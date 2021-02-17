@@ -178,7 +178,7 @@ class RoomList:
 
         self.room_filter = self.room_model.filter_new()
         self.room_filter.set_visible_func(self.room_match_function)
-        self.room_model_filtered = Gtk.TreeModelSort(self.room_filter)
+        self.room_model_filtered = Gtk.TreeModelSort.new_with_model(self.room_filter)
         self.RoomsList.set_model(self.room_model_filtered)
 
     def set_private_rooms(self, ownedrooms=[], otherrooms=[]):

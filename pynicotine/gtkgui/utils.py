@@ -758,7 +758,7 @@ class ImageLabel(Gtk.Box):
         self.hilite_image.set_margin_start(5)
 
         self.box.add(self.status_image)
-        self.box.pack_start(self.label, True, True, 0)
+        self.box.add(self.label)
         self.box.add(self.hilite_image)
         self.box.show()
 

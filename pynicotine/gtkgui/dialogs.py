@@ -58,7 +58,7 @@ def combo_box_dialog(parent, title, message, default_text="",
     self.combo.get_child().connect("activate", activate, self)
     self.combo.get_child().set_text(default_text)
 
-    self.get_message_area().pack_start(self.combo, False, False, 0)
+    self.get_message_area().add(self.combo)
 
     self.combo.show()
     self.combo.grab_focus()
@@ -70,7 +70,7 @@ def combo_box_dialog(parent, title, message, default_text="",
         self.option.set_label(optionmessage)
         self.option.show()
 
-        self.get_message_area().pack_start(self.option, False, False, 0)
+        self.get_message_area().add(self.option)
 
     result = None
     if self.run() == Gtk.ResponseType.OK:
@@ -101,7 +101,7 @@ def entry_dialog(parent, title, message, default=""):
     entry.connect("activate", activate, self)
     entry.set_activates_default(True)
     entry.set_text(default)
-    self.get_message_area().pack_start(entry, True, True, 0)
+    self.get_message_area().add(entry)
     entry.show()
 
     result = None
@@ -145,7 +145,7 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
     if checkbox_label:
         self.checkbox = Gtk.CheckButton()
         self.checkbox.set_label(checkbox_label)
-        self.get_message_area().pack_start(self.checkbox, False, False, 0)
+        self.get_message_area().add(self.checkbox)
         self.checkbox.show()
 
     if third:

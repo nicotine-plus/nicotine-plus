@@ -1319,12 +1319,9 @@ class NicotineFrame:
         toolbar_contents = self.__dict__[page_id + "ToolbarContents"]
 
         title_widget = self.__dict__[page_id + "Title"]
+        title_widget.set_hexpand(True)
         header_bar.set_custom_title(None)
-        toolbar_contents.pack_start(title_widget, True, True, 0)
-
-        end_widget = self.__dict__[page_id + "End"]
-        header_bar.remove(end_widget)
-        toolbar_contents.pack_end(end_widget, False, False, 0)
+        toolbar_contents.add(title_widget)
 
         try:
             start_widget = self.__dict__[page_id + "Start"]
@@ -1334,6 +1331,10 @@ class NicotineFrame:
         except KeyError:
             # No start widget
             pass
+
+        end_widget = self.__dict__[page_id + "End"]
+        header_bar.remove(end_widget)
+        toolbar_contents.add(end_widget)
 
         toolbar.show()
 
@@ -1359,12 +1360,9 @@ class NicotineFrame:
         toolbar_contents = self.__dict__[self.current_page_id + "ToolbarContents"]
 
         title_widget = self.__dict__[self.current_page_id + "Title"]
+        title_widget.set_hexpand(False)
         toolbar_contents.remove(title_widget)
         header_bar.set_custom_title(title_widget)
-
-        end_widget = self.__dict__[self.current_page_id + "End"]
-        toolbar_contents.remove(end_widget)
-        header_bar.pack_end(end_widget)
 
         try:
             start_widget = self.__dict__[self.current_page_id + "Start"]
@@ -1374,6 +1372,10 @@ class NicotineFrame:
         except KeyError:
             # No start widget
             pass
+
+        end_widget = self.__dict__[self.current_page_id + "End"]
+        toolbar_contents.remove(end_widget)
+        header_bar.pack_end(end_widget)
 
         toolbar.hide()
 
