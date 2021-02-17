@@ -102,9 +102,6 @@ class ServerFrame(BuildFrame):
             self.FirstPort.set_value(server["portrange"][0])
             self.LastPort.set_value(server["portrange"][1])
 
-        if server["ctcpmsgs"] is not None:
-            self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
-
         self.needportmap = False
 
     def get_settings(self):
@@ -218,29 +215,15 @@ class DownloadsFrame(BuildFrame):
 
     def set_settings(self, config):
 
-        transfers = config["transfers"]
-
         self.p.set_widgets_data(config, self.options)
 
-        if transfers["uploadallowed"] is not None:
-            self.UploadsAllowed.set_active(transfers["uploadallowed"])
-
         self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
-
-        if transfers["incompletedir"]:
-            self.IncompleteDir.set_path(transfers["incompletedir"])
-
-        if transfers["downloaddir"]:
-            self.DownloadDir.set_path(transfers["downloaddir"])
-
-        if transfers["uploaddir"]:
-            self.UploadDir.set_path(transfers["uploaddir"])
 
         self.filtersiters = {}
         self.filterlist.clear()
 
-        if transfers["downloadfilters"] != []:
-            for dfilter in transfers["downloadfilters"]:
+        if config["transfers"]["downloadfilters"] != []:
+            for dfilter in config["transfers"]["downloadfilters"]:
                 dfilter, escaped = dfilter
                 self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
@@ -822,7 +805,6 @@ class UploadsFrame(BuildFrame):
         self.p.set_widgets_data(config, self.options)
 
         self.on_queue_use_slots_toggled(self.QueueUseSlots)
-
         self.on_limit_toggled(self.Limit)
 
     def get_settings(self):
@@ -921,14 +903,9 @@ class UserInfoFrame(BuildFrame):
 
         self.p.set_widgets_data(config, self.options)
 
-        userinfo = config["userinfo"]
-
-        if userinfo["descr"] is not None:
-            descr = unescape(userinfo["descr"])
+        if config["userinfo"]["descr"] is not None:
+            descr = unescape(config["userinfo"]["descr"])
             self.Description.get_buffer().set_text(descr)
-
-        if userinfo["pic"]:
-            self.ImageChooser.set_path(userinfo["pic"])
 
     def get_settings(self):
 
@@ -1317,16 +1294,11 @@ class IconsFrame(BuildFrame):
 
     def set_settings(self, config):
 
-        ui = config["ui"]
-
         self.p.set_widgets_data(config, self.options)
 
-        if ui["icontheme"]:
-            self.ThemeDir.set_path(ui["icontheme"])
+        if config["ui"]["exitdialog"] is not None:
 
-        if ui["exitdialog"] is not None:
-
-            exitdialog = int(ui["exitdialog"])
+            exitdialog = int(config["ui"]["exitdialog"])
 
             if exitdialog == 1:
                 self.DialogOnClose.set_active(True)
@@ -1773,36 +1745,7 @@ class LoggingFrame(BuildFrame):
         }
 
     def set_settings(self, config):
-
         self.p.set_widgets_data(config, self.options)
-
-        roomlogsdir = config["logging"]["roomlogsdir"]
-        if roomlogsdir:
-            if not os.path.exists(roomlogsdir):
-                os.makedirs(roomlogsdir)
-
-            self.RoomLogDir.set_path(roomlogsdir)
-
-        privatelogsdir = config["logging"]["privatelogsdir"]
-        if privatelogsdir:
-            if not os.path.exists(privatelogsdir):
-                os.makedirs(privatelogsdir)
-
-            self.PrivateLogDir.set_path(privatelogsdir)
-
-        transferslogsdir = config["logging"]["transferslogsdir"]
-        if transferslogsdir:
-            if not os.path.exists(transferslogsdir):
-                os.makedirs(transferslogsdir)
-
-            self.TransfersLogDir.set_path(transferslogsdir)
-
-        debuglogsdir = config["logging"]["debuglogsdir"]
-        if debuglogsdir:
-            if not os.path.exists(debuglogsdir):
-                os.makedirs(debuglogsdir)
-
-            self.DebugLogDir.set_path(debuglogsdir)
 
     def get_settings(self):
 
@@ -1983,7 +1926,6 @@ class EventsFrame(BuildFrame):
         }
 
     def set_settings(self, config):
-
         self.p.set_widgets_data(config, self.options)
 
     def get_settings(self):
@@ -2627,7 +2569,6 @@ class NotificationsFrame(BuildFrame):
         }
 
     def set_settings(self, config):
-
         self.p.set_widgets_data(config, self.options)
 
     def get_settings(self):
