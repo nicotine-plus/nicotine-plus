@@ -217,7 +217,7 @@ class Scanner(multiprocessing.Process):
             if filename is not None:
                 folder += '\\' + filename
 
-            elif folder[1] == ":" and folder[2] in ("\\", "/"):
+            elif len(folder) == 3 and folder[1] == ":" and folder[2] in ("\\", "/"):
                 # Root directories are marked as hidden, but we allow scanning them
                 return False
 
