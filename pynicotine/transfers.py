@@ -1559,7 +1559,6 @@ class Transfers:
             show_ui=1
         )
 
-        self.queue.put(slskmessages.ConnClose(i.conn))
         i.conn = None
 
         self.add_to_shared(newname)
@@ -2140,7 +2139,6 @@ class Transfers:
             self.close_file(msg.file, i)
 
             i.conn = None
-            self.queue.put(slskmessages.ConnClose(msg.conn.conn))
             log.add(_("I/O error: %s"), msg.strerror)
 
             if i in self.downloads:

@@ -628,7 +628,7 @@ class SlskProtoThread(threading.Thread):
 
         return msgs, msg_buffer
 
-    def process_file_input(self, conn, msg_buffer):
+    def process_file_input(self, conn, msg_buffer, conns):
         """ We have a "F" connection (filetransfer), peer has sent us
         something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them
@@ -652,6 +652,8 @@ class SlskProtoThread(threading.Thread):
                     conn.filedown.file.write(addedbytes)
                 except IOError as strerror:
                     self._ui_callback([FileError(conn, conn.filedown.file, strerror)])
+                    self._ui_callback([ConnClose(conn.conn, conn.addr)])
+                    self.close_connection(conns, conn.conn)
                 except ValueError:
                     pass
 
@@ -661,16 +663,20 @@ class SlskProtoThread(threading.Thread):
             """ Depending on the number of active downloads, the cooldown for UI callbacks
             can be up to 15 seconds per transfer. We use a bit of randomness to give the
             illusion that downloads are updated often. """
+            finished = ((leftbytes - addedbyteslen) == 0)
             cooldown = max(1.0, min(self.total_downloads * uniform(0.8, 1.0), 15))
 
-            if (leftbytes - addedbyteslen) == 0 or \
-                    (curtime - conn.lastcallback) > cooldown:
+            if finished or (curtime - conn.lastcallback) > cooldown:
 
                 """ We save resources by not sending data back to the UI every time
                 a part of a file is downloaded """
 
                 self._ui_callback([DownloadFile(conn.conn, addedbyteslen, conn.filedown.file)])
                 conn.lastcallback = curtime
+
+            if finished:
+                self._ui_callback([ConnClose(conn.conn, conn.addr)])
+                self.close_connection(conns, conn.conn)
 
             conn.filereadbytes += addedbyteslen
             msg_buffer = msg_buffer[leftbytes:]
@@ -684,6 +690,8 @@ class SlskProtoThread(threading.Thread):
                         conn.fileupl.file.seek(offset)
                     except IOError as strerror:
                         self._ui_callback([FileError(conn, conn.fileupl.file, strerror)])
+                        self._ui_callback([ConnClose(conn.conn, conn.addr)])
+                        self.close_connection(conns, conn.conn)
                     except ValueError:
                         pass
 
@@ -1120,6 +1128,8 @@ class SlskProtoThread(threading.Thread):
 
                 except IOError as strerror:
                     self._ui_callback([FileError(conn, conn.fileupl.file, strerror)])
+                    self._ui_callback([ConnClose(i, conn.addr)])
+                    self.close_connection(conns, i)
 
                 except ValueError:
                     pass
@@ -1386,7 +1396,7 @@ class SlskProtoThread(threading.Thread):
                                 self._ui_callback(msgs)
 
                             if conn_obj.init is not None and conn_obj.init.type == 'F':
-                                msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf)
+                                msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
                                 self._ui_callback(msgs)
 
                             if conn_obj.init is not None and conn_obj.init.type == 'D':
