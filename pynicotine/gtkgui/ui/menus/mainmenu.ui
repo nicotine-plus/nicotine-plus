@@ -161,16 +161,12 @@
             <attribute name="action">app.keyboardshortcuts</attribute>
           </item>
           <item>
-            <attribute name="label" translatable="yes">_Donate</attribute>
-            <attribute name="action">app.reportbug</attribute>
+            <attribute name="label" translatable="yes">Check _Latest Version</attribute>
+            <attribute name="action">app.checklatest</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Report a _Bug</attribute>
             <attribute name="action">app.reportbug</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Check _Latest Version</attribute>
-            <attribute name="action">app.checklatest</attribute>
           </item>
         </section>
       </submenu>
