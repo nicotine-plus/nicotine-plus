@@ -217,6 +217,10 @@ class Scanner(multiprocessing.Process):
             if filename is not None:
                 folder += '\\' + filename
 
+            elif folder[1] == ":" and folder[2] in ("\\", "/"):
+                # Root directories are marked as hidden, but we allow scanning them
+                return False
+
             elif folder_obj is not None:
                 # Faster way if we use scandir
                 return folder_obj.stat().st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
