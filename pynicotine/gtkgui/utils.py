@@ -976,7 +976,7 @@ class IconNotebook:
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
 
-    def append_page(self, page, label, onclose=None, angle=0, fulltext=None):
+    def append_page(self, page, label, onclose=None, angle=0, fulltext=None, status=None):
 
         self.set_tab_angle(angle)
         closebutton = self.tabclosers
@@ -1001,6 +1001,9 @@ class IconNotebook:
         label_tab.show()
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
+
+        if status:
+            self.set_user_status(page, label, status)
 
         self.notebook.set_tab_reorderable(page, self.reorderable)
         self.notebook.set_show_tabs(True)
@@ -1042,6 +1045,22 @@ class IconNotebook:
 
         tab_label.set_status_image(image)
         menu_label.set_status_image(image)
+
+    def set_user_status(self, page, user, status):
+
+        if status == 1:
+            status_text = _("Away")
+        elif status == 2:
+            status_text = _("Online")
+        else:
+            status_text = _("Offline")
+
+        if not NICOTINE.np.config.sections["ui"]["tab_status_icons"]:
+            self.set_text(page, "%s (%s)" % (user[:15], status_text))
+        else:
+            self.set_text(page, user)
+
+        self.set_status_image(page, status)
 
     def set_hilite_image(self, page, status):
 

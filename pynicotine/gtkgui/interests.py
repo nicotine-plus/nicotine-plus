@@ -331,9 +331,7 @@ class Interests:
         for user in msg.users:
             iterator = self.recommendation_users_model.append([self.frame.images["offline"], user, "0", "0", 0, 0, 0])
             self.recommendation_users[user] = iterator
-
-            if user not in self.frame.np.watchedusers:
-                self.np.queue.put(slskmessages.AddUser(user))
+            self.np.queue.put(slskmessages.AddUser(user))
 
     def get_user_status(self, msg):
         if msg.user not in self.recommendation_users:

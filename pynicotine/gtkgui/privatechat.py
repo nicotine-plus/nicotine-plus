@@ -140,19 +140,7 @@ class PrivateChats(IconNotebook):
         if msg.user in self.users:
             tab = self.users[msg.user]
 
-            if msg.status == 1:
-                status = _("Away")
-            elif msg.status == 2:
-                status = _("Online")
-            else:
-                status = _("Offline")
-
-            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
-                self.set_text(tab.Main, "%s (%s)" % (msg.user[:15], status))
-            else:
-                self.set_text(tab.Main, msg.user)
-
-            self.set_status_image(tab.Main, msg.status)
+            self.set_user_status(tab.Main, msg.user, msg.status)
             tab.get_user_status(msg.status)
 
     def send_message(self, user, text=None, show_user=False, bytestring=False):
@@ -164,15 +152,16 @@ class PrivateChats(IconNotebook):
             if user not in self.frame.np.config.sections["privatechat"]["users"]:
                 self.frame.np.config.sections["privatechat"]["users"].append(user)
 
-            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
-                userlabel = "%s (%s)" % (user[:15], _("Offline"))
-            else:
-                userlabel = user
-
-            self.append_page(tab.Main, userlabel, tab.on_close)
+            try:
+                status = self.frame.np.users[user].status
+            except Exception:
+                # Offline
+                status = 0
 
             if user not in self.frame.np.watchedusers:
                 self.frame.np.queue.put(slskmessages.AddUser(user))
+
+            self.append_page(tab.Main, user, tab.on_close, status=status)
 
         if show_user:
             if self.get_current_page() != self.page_num(self.users[user].Main):
@@ -294,7 +283,6 @@ class PrivateChats(IconNotebook):
             self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
 
         self.remove_page(tab.Main)
-        tab.Main.destroy()
 
     def login(self):
 
@@ -318,13 +306,7 @@ class PrivateChats(IconNotebook):
             self.users[user].conn_close()
             tab = self.users[user]
 
-            if not self.frame.np.config.sections["ui"]["tab_status_icons"]:
-                self.set_text(tab.Main, "%s (%s)" % (user[:15], _("Offline")))
-            else:
-                self.set_text(tab.Main, user)
-
-            self.set_status_image(tab.Main, 0)
-            tab.get_user_status(0)
+            self.set_user_status(tab.Main, user, 0)
 
     def update_completions(self):
 

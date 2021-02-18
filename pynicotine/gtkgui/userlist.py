@@ -434,9 +434,7 @@ class UserList:
         self.usersmodel.append(row)
 
         self.save_user_list()
-
-        if user not in self.frame.np.watchedusers:
-            self.frame.np.queue.put(slskmessages.AddUser(user))
+        self.frame.np.queue.put(slskmessages.AddUser(user))
 
         # Request user's IP address, so we can get the country
         self.frame.np.queue.put(slskmessages.GetPeerAddress(user))

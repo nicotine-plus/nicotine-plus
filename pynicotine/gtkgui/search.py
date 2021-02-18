@@ -365,7 +365,6 @@ class Searches(IconNotebook):
                 search["ignore"] = True
 
         self.remove_page(tab.Main)
-        tab.Main.destroy()
 
     def update_visuals(self):
 

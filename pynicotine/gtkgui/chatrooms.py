@@ -463,7 +463,6 @@ class ChatRooms(IconNotebook):
         room = self.joinedrooms[msg.room]
 
         self.remove_page(room.Main)
-        room.destroy()
         del self.joinedrooms[msg.room]
 
         if msg.room[-1:] != ' ':  # meta rooms
@@ -757,9 +756,6 @@ class ChatRoom:
 
     def on_find_room_log(self, widget):
         self.ChatSearchBar.set_search_mode(True)
-
-    def destroy(self):
-        self.Main.destroy()
 
     def get_selected_username(self, treeview):
 
