@@ -151,6 +151,9 @@ class NicotineFrame:
         self.set_up_actions()
         self.set_up_menu()
 
+        self.accel_group = Gtk.AccelGroup()
+        self.MainWindow.add_accel_group(self.accel_group)
+
         """ Icons """
 
         self.load_icons()
@@ -1294,6 +1297,9 @@ class NicotineFrame:
         end_widget = self.__dict__[page_id + "End"]
         end_widget.add(self.HeaderMenu)
 
+        key, mod = Gtk.accelerator_parse("F10")
+        self.HeaderMenu.add_accelerator("clicked", self.accel_group, key, mod, Gtk.AccelFlags.VISIBLE)
+
         header_bar = self.__dict__["Header" + page_id]
         header_bar.set_title(GLib.get_application_name())
         self.MainWindow.set_titlebar(header_bar)
@@ -1337,6 +1343,9 @@ class NicotineFrame:
     def remove_header_bar(self):
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
+
+        key, mod = Gtk.accelerator_parse("F10")
+        self.HeaderMenu.remove_accelerator(self.accel_group, key, mod)
 
         self.MainWindow.unrealize()
         self.MainWindow.set_titlebar(None)

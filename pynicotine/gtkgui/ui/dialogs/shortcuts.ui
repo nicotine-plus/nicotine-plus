@@ -50,8 +50,15 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
+                <property name="accelerator">F10</property>
+                <property name="title" translatable="yes">Open Main Menu</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
                 <property name="accelerator">&lt;Shift&gt;F10</property>
-                <property name="title" translatable="yes">Context Menu</property>
+                <property name="title" translatable="yes">Open Context Menu</property>
               </object>
             </child>
           </object>
