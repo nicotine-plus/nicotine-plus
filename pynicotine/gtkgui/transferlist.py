@@ -114,6 +114,7 @@ class TransferList:
 
         text_color = self.frame.np.config.sections["ui"]["search"]
 
+        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
         self.cols = cols = initialise_columns(
             type,
             widget,
@@ -373,22 +374,19 @@ class TransferList:
             extensionlst.sort(reverse=True)
             extensions = " (" + ", ".join([str(count) + " " + ext for (count, ext) in extensionlst]) + ")"
 
-        self.transfersmodel.set(
-            initer,
-            2, self.files_template % {'number': filecount} + extensions,
-            3, self.translate_status(salientstatus),
-            5, percent,
-            6, "%s / %s" % (human_size(position), human_size(totalsize)),
-            7, hspeed,
-            8, helapsed,
-            9, left,
-            11, salientstatus,
-            12, totalsize,
-            13, position,
-            14, speed,
-            15, elapsed,
-            16, filecount,
-        )
+        self.transfersmodel.set_value(initer, 2, self.files_template % {'number': filecount} + extensions)
+        self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
+        self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
+        self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
+        self.transfersmodel.set_value(initer, 7, hspeed)
+        self.transfersmodel.set_value(initer, 8, helapsed)
+        self.transfersmodel.set_value(initer, 9, left)
+        self.transfersmodel.set_value(initer, 11, salientstatus)
+        self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, totalsize))
+        self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, position))
+        self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
+        self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
+        self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, filecount))
 
     def update_specific(self, transfer=None):
 
@@ -400,7 +398,7 @@ class TransferList:
         if currentbytes is None:
             currentbytes = 0
 
-        status = transfer.status
+        status = transfer.status or ""
         hstatus = self.translate_status(status)
 
         try:
@@ -417,7 +415,7 @@ class TransferList:
 
         speed = transfer.speed or 0
         elapsed = transfer.timeelapsed or 0
-        left = transfer.timeleft
+        left = transfer.timeleft or ""
 
         if speed > 0:
             speed = float(speed)
@@ -436,22 +434,22 @@ class TransferList:
 
         # Modify old transfer
         if transfer.iter is not None:
-            self.transfersmodel.set(
-                transfer.iter,
-                3, hstatus,
-                4, str(place),
-                5, percent,
-                6, str(hsize),
-                7, hspeed,
-                8, helapsed,
-                9, left,
-                11, status,
-                12, size,
-                13, currentbytes,
-                14, speed,
-                15, elapsed,
-                17, place
-            )
+            initer = transfer.iter
+
+            self.transfersmodel.set_value(initer, 3, hstatus)
+            self.transfersmodel.set_value(initer, 4, str(place))
+            self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
+            self.transfersmodel.set_value(initer, 6, hsize)
+            self.transfersmodel.set_value(initer, 7, hspeed)
+            self.transfersmodel.set_value(initer, 8, helapsed)
+            self.transfersmodel.set_value(initer, 9, left)
+            self.transfersmodel.set_value(initer, 11, status)
+            self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, size))
+            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, currentbytes))
+            self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
+            self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
+            self.transfersmodel.set_value(initer, 17, GObject.Value(GObject.TYPE_UINT64, place))
+
         else:
             fn = transfer.filename
             user = transfer.user
@@ -461,12 +459,34 @@ class TransferList:
             if self.tree_users != "ungrouped":
                 # Group by folder or user
 
+                empty_int = 0
+                empty_str = ""
+
                 if user not in self.users:
                     # Create Parent if it doesn't exist
                     # ProgressRender not visible (last column sets 4th column)
-                    self.users[user] = self.transfersmodel.append(
-                        None,
-                        [user, "", "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
+                    self.users[user] = self.transfersmodel.insert_with_values(
+                        None, -1, self.column_numbers,
+                        [
+                            user,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_int,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_int,
+                            empty_int,
+                            empty_int,
+                            empty_int,
+                            filecount,
+                            empty_int
+                        ]
                     )
 
                 parent = self.users[user]
@@ -481,9 +501,28 @@ class TransferList:
                     reverse_path = '/'.join(reversed(path.split('/')))
 
                     if user_path not in self.paths:
-                        self.paths[user_path] = self.transfersmodel.append(
-                            self.users[user],
-                            [user, reverse_path, "", "", "", 0, "", "", "", "", "", "", 0, 0, 0, 0, filecount, 0]
+                        self.paths[user_path] = self.transfersmodel.insert_with_values(
+                            self.users[user], -1, self.column_numbers,
+                            [
+                                user,
+                                reverse_path,
+                                empty_str,
+                                empty_str,
+                                empty_str,
+                                empty_int,
+                                empty_str,
+                                empty_str,
+                                empty_str,
+                                empty_str,
+                                empty_str,
+                                empty_str,
+                                empty_int,
+                                empty_int,
+                                empty_int,
+                                empty_int,
+                                filecount,
+                                empty_int
+                            ]
                         )
 
                     parent = self.paths[user_path]
@@ -499,13 +538,32 @@ class TransferList:
             # Add a new transfer
             if self.tree_users == "folder_grouping":
                 # Group by folder, path not visible
-                path = None
+                path = ""
             else:
                 path = '/'.join(reversed(transfer.path.split('/')))
 
-            iterator = self.transfersmodel.append(
-                parent,
-                (user, path, shortfn, status, str(place), percent, str(hsize), hspeed, helapsed, left, fn, transfer.status, size, icurrentbytes, speed, elapsed, filecount, place)
+            iterator = self.transfersmodel.insert_with_values(
+                parent, -1, self.column_numbers,
+                (
+                    user,
+                    path,
+                    shortfn,
+                    hstatus,
+                    str(place),
+                    GObject.Value(GObject.TYPE_UINT64, percent),
+                    hsize,
+                    hspeed,
+                    helapsed,
+                    left,
+                    fn,
+                    status,
+                    GObject.Value(GObject.TYPE_UINT64, size),
+                    GObject.Value(GObject.TYPE_UINT64, icurrentbytes),
+                    GObject.Value(GObject.TYPE_UINT64, speed),
+                    GObject.Value(GObject.TYPE_UINT64, elapsed),
+                    GObject.Value(GObject.TYPE_UINT64, filecount),
+                    GObject.Value(GObject.TYPE_UINT64, place)
+                )
             )
             transfer.iter = iterator
 

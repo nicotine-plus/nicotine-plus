@@ -742,7 +742,7 @@ class Search:
                 [
                     GObject.Value(GObject.TYPE_UINT64, counter),
                     user,
-                    self.frame.get_flag_image(country),
+                    GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
                     imdl,
                     h_speed,
                     h_queue,
