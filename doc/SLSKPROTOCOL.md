@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on December 12, 2020
+Last updated on February 19, 2020
 
 ## Sections
 
@@ -2459,19 +2459,16 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 ### Peer Connection Message Order
 
-1.  User A sends a [Peer Init](#peer-code-1) to User
-    B (Fails: socket cannot connect)
-2.  User A sends [ConnectToPeer](#server-code-18) to
-    the Server with a unique token
-3.  The Server sends a
-    [ConnectToPeer](#server-code-18) response to
-    User B with the same token
-4.  User B sends a [Pierce Firewall](#peer-code-0)
-    to User A with the same token (if this fails connections are doomed)
-5.  User B sends a [Cannot
-    Connect](#server-code-1001) to the Server (**DEPRECATED**, see [Can't Connect To Peer](#server-code-1001))
-6.  The Server sends a [Cannot
-    Connect](#server-code-1001) response to User A
+1.  User A sends a [Peer Init](#peer-code-1) to User B.
+If this succeeds, a connection is established, and we're free to send peer messages.
+If this fails (socket cannot connect), we proceed with an indirect connection request (step 2).
+2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token
+3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
+4.  User B sends a [Pierce Firewall](#peer-code-0) to User A with the same token
+If this succeeds, a connection is established, and User A sends the original [Peer Init](#peer-code-1).
+If this fails, there's no way to establish a connection. User B used to proceed with step 5, but this is no longer the case in modern clients.
+5.  User B sends a [Cannot Connect](#server-code-1001) to the Server (**DEPRECATED**, see [Can't Connect To Peer](#server-code-1001))
+6.  The Server sends a [Cannot Connect](#server-code-1001) response to User A
 
 ### Peer Code 0
 
