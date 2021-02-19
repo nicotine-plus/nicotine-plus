@@ -517,6 +517,7 @@ class Search:
             GObject.TYPE_UINT64   # (17) length
         )
 
+        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
         self.cols = cols = initialise_columns(
             "file_search",
             self.ResultsList,
@@ -737,7 +738,28 @@ class Search:
             h_size = human_size(size)
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
 
-            self.append([counter, user, self.frame.get_flag_image(country), imdl, h_speed, h_queue, directory, name, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, ulspeed, inqueue, length])
+            self.append(
+                [
+                    GObject.Value(GObject.TYPE_UINT64, counter),
+                    user,
+                    self.frame.get_flag_image(country),
+                    imdl,
+                    h_speed,
+                    h_queue,
+                    directory,
+                    name,
+                    h_size,
+                    h_bitrate,
+                    h_length,
+                    GObject.Value(GObject.TYPE_UINT64, bitrate),
+                    fullpath,
+                    country,
+                    GObject.Value(GObject.TYPE_UINT64, size),
+                    GObject.Value(GObject.TYPE_UINT64, ulspeed),
+                    GObject.Value(GObject.TYPE_UINT64, inqueue),
+                    GObject.Value(GObject.TYPE_UINT64, length)
+                ]
+            )
             append = True
             counter += 1
 
@@ -786,10 +808,32 @@ class Search:
         if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
 
+            empty_int = 0
+            empty_str = ""
+
             if user not in self.usersiters:
-                self.usersiters[user] = self.resultsmodel.append(
-                    None,
-                    [0, user, flag, immediatedl, h_speed, h_queue, "", "", "", "", "", 0, "", country, 0, speed, queue, 0]
+                self.usersiters[user] = self.resultsmodel.insert_with_values(
+                    None, -1, self.column_numbers,
+                    [
+                        empty_int,
+                        user,
+                        flag,
+                        immediatedl,
+                        h_speed,
+                        h_queue,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_int,
+                        empty_str,
+                        country,
+                        empty_int,
+                        speed,
+                        queue,
+                        empty_int
+                    ]
                 )
 
             parent = self.usersiters[user]
@@ -798,9 +842,28 @@ class Search:
                 # Group by folder
 
                 if directory not in self.directoryiters:
-                    self.directoryiters[directory] = self.resultsmodel.append(
-                        self.usersiters[user],
-                        [0, user, flag, immediatedl, h_speed, h_queue, directory, "", "", "", "", 0, fullpath.rsplit('\\', 1)[0] + '\\', country, 0, speed, queue, 0]
+                    self.directoryiters[directory] = self.resultsmodel.insert_with_values(
+                        self.usersiters[user], -1, self.column_numbers,
+                        [
+                            empty_int,
+                            user,
+                            flag,
+                            immediatedl,
+                            h_speed,
+                            h_queue,
+                            directory,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_str,
+                            empty_int,
+                            fullpath.rsplit('\\', 1)[0] + '\\',
+                            country,
+                            empty_int,
+                            speed,
+                            queue,
+                            empty_int
+                        ]
                     )
 
                 row = row[:]
@@ -811,7 +874,10 @@ class Search:
             parent = None
 
         try:
-            iterator = self.resultsmodel.append(parent, row)
+            """ Note that we use insert_with_values instead of append, as this reduces
+            overhead by bypassing useless row conversion to GObject.Value in PyGObject. """
+
+            iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
             self.numvisibleresults += 1
         except Exception as e:
@@ -927,10 +993,10 @@ class Search:
         if filters["exclude"] and filters["exclude"].search(row[12].lower()):
             return False
 
-        if filters["size"] and not self.check_digit(filters["size"], row[14]):
+        if filters["size"] and not self.check_digit(filters["size"], row[14].get_uint64()):
             return False
 
-        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[11], False):
+        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[11].get_uint64(), False):
             return False
 
         if filters["freeslot"] and row[3] != "Y":
