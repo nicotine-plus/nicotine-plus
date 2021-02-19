@@ -314,6 +314,8 @@ class NetworkEventProcessor:
                         i.conntimer.cancel()
 
                     found_conn = True
+
+                    # Deliver our messages to the peer
                     self.process_conn_messages(i, conn)
                     break
 
@@ -624,7 +626,8 @@ class NetworkEventProcessor:
 
     def process_conn_messages(self, peerconn, conn):
 
-        """ We may have messages from our peer, represent these in our UI """
+        """ A connection is established with the peer, time to queue up our peer
+        messages for delivery """
 
         for j in peerconn.msgs:
 
@@ -650,8 +653,10 @@ class NetworkEventProcessor:
 
     def out_conn(self, msg):
 
-        """ Direct connection to peer was successful, send pierce firewall message
-        and process any messages associated with the connection """
+        """ Networking thread told us that the connection to the peer was successful.
+        If we connected directly to the peer, send a PeerInit message. If we connected
+        as a result of an indirect connect request by the peer, send a PierceFirewall
+        message. Queue up any messages we want to deliver to the peer. """
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
@@ -675,7 +680,7 @@ class NetworkEventProcessor:
                     'messages': i.msgs
                 })
 
-                # Update UI with contents from messages
+                # Deliver our messages to the peer
                 self.process_conn_messages(i, conn)
 
                 break
@@ -707,7 +712,7 @@ class NetworkEventProcessor:
                     'messages': i.msgs
                 })
 
-                # Update UI with contents from messages
+                # Deliver our messages to the peer
                 self.process_conn_messages(i, conn)
 
                 break
