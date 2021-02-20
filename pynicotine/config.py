@@ -90,6 +90,7 @@ class Config:
                 "ipblocklist": {},
                 "autojoin": ["nicotine"],
                 "autoaway": 15,
+                "away": False,
                 "private_chatrooms": False,
                 "command_aliases": {}
             },

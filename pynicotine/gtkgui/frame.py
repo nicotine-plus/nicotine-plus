@@ -94,7 +94,6 @@ class NicotineFrame:
         self.rescanning = False
         self.brescanning = False
         self.needrescan = False
-        self.away = False
         self.autoaway = False
         self.awaytimerid = None
         self.shutdown = False
@@ -124,6 +123,10 @@ class NicotineFrame:
         )
 
         config = self.np.config.sections
+
+        """ Previous away state """
+
+        self.away = config["server"]["away"]
 
         """ GTK Settings """
 
@@ -728,7 +731,8 @@ class NicotineFrame:
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
 
-        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(False))
+        state = self.np.config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
 
@@ -912,7 +916,10 @@ class NicotineFrame:
 
     def on_away(self, *args):
         self.away = not self.away
+        self.np.config.sections["server"]["away"] = self.away
+        self._apply_away_state()
 
+    def _apply_away_state(self):
         if not self.away:
             self.set_user_status(_("Online"))
             self.on_disable_auto_away()
@@ -2074,7 +2081,8 @@ class NicotineFrame:
     def on_auto_away(self):
         if not self.away:
             self.autoaway = True
-            self.on_away()
+            self.away = True
+            self._apply_away_state()
 
         return False
 
@@ -2084,7 +2092,8 @@ class NicotineFrame:
 
             if self.away:
                 # Disable away mode if not already done
-                self.on_away()
+                self.away = False
+                self._apply_away_state()
 
         if self.awaytimerid is not None:
             self.remove_away_timer(self.awaytimerid)
