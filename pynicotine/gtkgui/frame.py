@@ -909,9 +909,6 @@ class NicotineFrame:
             self.np.servertimer.cancel()
             self.np.servertimer = None
 
-        if self.away:
-            self._apply_away_state(False)
-
     def on_disconnect(self, *args):
         self.disconnect_action.set_enabled(False)
         self.np.manualdisconnect = True
@@ -922,7 +919,7 @@ class NicotineFrame:
         self.np.config.sections["server"]["away"] = self.away
         self._apply_away_state()
 
-    def _apply_away_state(self, set_status=True):
+    def _apply_away_state(self):
         if not self.away:
             self.set_user_status(_("Online"))
             self.on_disable_auto_away()
@@ -931,9 +928,7 @@ class NicotineFrame:
 
         self.tray.set_away(self.away)
 
-        if set_status:
-            self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
-
+        self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
         self.privatechats.update_visuals()
 
