@@ -728,7 +728,8 @@ class NicotineFrame:
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
 
-        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(False))
+        state = self.np.config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
 
@@ -905,6 +906,11 @@ class NicotineFrame:
             self.np.servertimer.cancel()
             self.np.servertimer = None
 
+        self.away = self.np.config.sections["server"]["away"]
+
+        if self.away:
+            self._apply_away_state(False)
+
     def on_disconnect(self, *args):
         self.disconnect_action.set_enabled(False)
         self.np.manualdisconnect = True
@@ -912,7 +918,10 @@ class NicotineFrame:
 
     def on_away(self, *args):
         self.away = not self.away
+        self.np.config.sections["server"]["away"] = self.away
+        self._apply_away_state()
 
+    def _apply_away_state(self, set_status=True):
         if not self.away:
             self.set_user_status(_("Online"))
             self.on_disable_auto_away()
@@ -921,7 +930,9 @@ class NicotineFrame:
 
         self.tray.set_away(self.away)
 
-        self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
+        if set_status:
+            self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
+
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
         self.privatechats.update_visuals()
 
@@ -2074,7 +2085,8 @@ class NicotineFrame:
     def on_auto_away(self):
         if not self.away:
             self.autoaway = True
-            self.on_away()
+            self.away = True
+            self._apply_away_state()
 
         return False
 
@@ -2084,7 +2096,8 @@ class NicotineFrame:
 
             if self.away:
                 # Disable away mode if not already done
-                self.on_away()
+                self.away = False
+                self._apply_away_state()
 
         if self.awaytimerid is not None:
             self.remove_away_timer(self.awaytimerid)
