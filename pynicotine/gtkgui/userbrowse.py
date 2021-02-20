@@ -87,6 +87,7 @@ class UserBrowse:
 
         self.dir_store = Gtk.TreeStore(str, str)
 
+        self.dir_column_numbers = [0, 1]
         cols = initialise_columns(
             None,
             self.FolderTreeView,
@@ -186,6 +187,7 @@ class UserBrowse:
 
         self.FileTreeView.set_model(self.file_store)
 
+        self.file_column_numbers = [0, 1, 2, 3, 4, 5, 6]
         cols = initialise_columns(
             "user_browse",
             self.FileTreeView,
@@ -425,7 +427,10 @@ class UserBrowse:
                     # Other sudirs futher down the path are attached to their parent
                     current_path = dirseparator.join([path, subdir])
 
-                self.directories[current_path] = self.dir_store.append(parent, [subdir, current_path])
+                self.directories[current_path] = self.dir_store.insert_with_values(
+                    parent, -1, self.dir_column_numbers,
+                    [subdir, current_path]
+                )
 
                 # If there are subdirs futher down the path: recurse
                 if len(dictdir[subdir]):
@@ -510,10 +515,16 @@ class UserBrowse:
             f = [file[1], human_size(size)]
 
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
-            f += [h_bitrate, h_length, int(size), bitrate, length]
+            f += [
+                h_bitrate,
+                h_length,
+                GObject.Value(GObject.TYPE_UINT64, int(size)),
+                GObject.Value(GObject.TYPE_UINT64, bitrate),
+                GObject.Value(GObject.TYPE_UINT64, length)
+            ]
 
             try:
-                self.files[f[0]] = self.file_store.append(f)
+                self.files[f[0]] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
             except Exception as msg:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"), {'folder': directory, 'error': msg})
 
