@@ -217,7 +217,7 @@ class UserList:
         iterator = self.usersmodel.get_iter(index)
         value = self.usersmodel.get_value(iterator, pos)
 
-        self.usersmodel.set(iterator, pos, not value)
+        self.usersmodel.set_value(iterator, pos, not value)
 
         self.save_user_list()
 
@@ -240,8 +240,8 @@ class UserList:
 
         for i in self.usersmodel:
             if i[2] == user:
-                self.usersmodel.set(i.iter, 8, last_seen)
-                self.usersmodel.set(i.iter, 13, int(time_from_epoch))
+                self.usersmodel.set_value(i.iter, 8, last_seen)
+                self.usersmodel.set_value(i.iter, 13, int(time_from_epoch))
                 break
 
         if not online:
@@ -255,7 +255,7 @@ class UserList:
 
             for i in self.usersmodel:
                 if i[2] == user:
-                    self.usersmodel.set(iterator, 9, comments)
+                    self.usersmodel.set_value(iterator, 9, comments)
                     break
 
             self.save_user_list()
@@ -263,17 +263,16 @@ class UserList:
     def conn_close(self):
 
         for i in self.usersmodel:
-            self.usersmodel.set(
-                i.iter,
-                0, self.frame.get_status_image(0),
-                3, "",
-                4, "",
-                10, 0,
-                11, 0,
-                12, 0
-            )
+            iterator = i.iter
 
-            if self.usersmodel.get(i.iter, 8)[0] == "":
+            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)))
+            self.usersmodel.set_value(iterator, 3, "")
+            self.usersmodel.set_value(iterator, 4, "")
+            self.usersmodel.set_value(iterator, 10, 0)
+            self.usersmodel.set_value(iterator, 11, 0)
+            self.usersmodel.set_value(iterator, 12, 0)
+
+            if self.usersmodel.get(iterator, 8)[0] == "":
                 user = i[2]
                 self.set_last_seen(user)
 
@@ -380,11 +379,8 @@ class UserList:
             self.frame.notifications.new_notification(status_text % user)
 
         img = self.frame.get_status_image(status)
-        self.usersmodel.set(
-            iterator,
-            0, img,
-            10, status
-        )
+        self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, img))
+        self.usersmodel.set_value(iterator, 10, GObject.Value(GObject.TYPE_INT64, status))
 
         if status:  # online
             self.set_last_seen(user, online=True)
@@ -402,13 +398,10 @@ class UserList:
         hspeed = human_speed(msg.avgspeed)
         hfiles = humanize(msg.files)
 
-        self.usersmodel.set(
-            iterator,
-            3, hspeed,
-            4, hfiles,
-            11, msg.avgspeed,
-            12, msg.files
-        )
+        self.usersmodel.set_value(iterator, 3, hspeed)
+        self.usersmodel.set_value(iterator, 4, hfiles)
+        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, msg.avgspeed))
+        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, msg.files))
 
     def set_user_flag(self, user, country):
 
@@ -419,19 +412,37 @@ class UserList:
         if user not in (i[2] for i in self.usersmodel):
             return
 
-        self.usersmodel.set(
-            iterator,
-            1, self.frame.get_flag_image(country),
-            14, "flag_" + country
-        )
+        self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
+        self.usersmodel.set_value(iterator, 14, "flag_" + country)
 
     def add_to_list(self, user):
 
         if user in (i[2] for i in self.usersmodel):
             return
 
-        row = [self.frame.get_status_image(0), None, user, "", "", False, False, False, _("Never seen"), "", 0, 0, 0, 0, ""]
-        self.usersmodel.append(row)
+        empty_int = 0
+        empty_str = ""
+
+        self.usersmodel.insert_with_valuesv(
+            -1, self.column_numbers,
+            [
+                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
+                GObject.Value(GObject.TYPE_OBJECT, None),
+                user,
+                empty_str,
+                empty_str,
+                False,
+                False,
+                False,
+                _("Never seen"),
+                empty_str,
+                empty_int,
+                empty_int,
+                empty_int,
+                empty_int,
+                empty_str
+            ]
+        )
 
         self.save_user_list()
         self.frame.np.queue.put(slskmessages.AddUser(user))
@@ -463,7 +474,7 @@ class UserList:
             for i in self.usersmodel:
                 if i[2] == user:
                     i[9] = comments
-                    self.usersmodel.set(i.iter, 9, comments)
+                    self.usersmodel.set_value(i.iter, 9, comments)
                     break
 
             self.save_user_list()
@@ -506,7 +517,7 @@ class UserList:
 
         for i in self.usersmodel:
             if i[2] == user:
-                self.usersmodel.set(i.iter, 5, widget.get_active())
+                self.usersmodel.set_value(i.iter, 5, widget.get_active())
                 break
 
         self.save_user_list()
@@ -517,7 +528,7 @@ class UserList:
 
         for i in self.usersmodel:
             if i[2] == user:
-                self.usersmodel.set(i.iter, 6, widget.get_active())
+                self.usersmodel.set_value(i.iter, 6, widget.get_active())
                 break
 
         self.save_user_list()
@@ -528,7 +539,7 @@ class UserList:
 
         for i in self.usersmodel:
             if i[2] == user:
-                self.usersmodel.set(i.iter, 7, widget.get_active())
+                self.usersmodel.set_value(i.iter, 7, widget.get_active())
                 break
 
         self.save_user_list()
