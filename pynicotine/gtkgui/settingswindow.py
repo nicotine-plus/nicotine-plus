@@ -199,8 +199,8 @@ class DownloadsFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.FilterView,
-            ["filter", _("Filter"), 250, "text", None, None],
-            ["escaped", _("Escaped"), 40, "toggle", None, None]
+            ["filter", _("Filter"), 250, "text", None],
+            ["escaped", _("Escaped"), 40, "toggle", None]
         )
 
         cols["filter"].set_sort_column_id(0)
@@ -497,8 +497,8 @@ class SharesFrame(BuildFrame):
         initialise_columns(
             None,
             self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None, None],
-            ["folder", _("Folder"), 0, "text", None, None]
+            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
+            ["folder", _("Folder"), 0, "text", None]
         )
 
         self.Shares.set_model(self.shareslist)
@@ -507,8 +507,8 @@ class SharesFrame(BuildFrame):
         initialise_columns(
             None,
             self.BuddyShares,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None, None],
-            ["folder", _("Folder"), 0, "text", None, None]
+            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
+            ["folder", _("Folder"), 0, "text", None]
         )
 
         self.BuddyShares.set_model(self.bshareslist)
@@ -953,8 +953,8 @@ class IgnoreListFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.IgnoredIPs,
-            ["addresses", _("Addresses"), -1, "text", None, None],
-            ["users", _("Users"), -1, "text", None, None]
+            ["addresses", _("Addresses"), -1, "text", None],
+            ["users", _("Users"), -1, "text", None]
         )
         cols["addresses"].set_sort_column_id(0)
         cols["users"].set_sort_column_id(1)
@@ -1084,8 +1084,8 @@ class BanListFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.BlockedList,
-            ["addresses", _("Addresses"), -1, "text", None, None],
-            ["users", _("Users"), -1, "text", None, None]
+            ["addresses", _("Addresses"), -1, "text", None],
+            ["users", _("Users"), -1, "text", None]
         )
         cols["addresses"].set_sort_column_id(0)
         cols["users"].set_sort_column_id(1)
@@ -1972,8 +1972,8 @@ class UrlCatchingFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.ProtocolHandlers,
-            ["protocol", _("Protocol"), -1, "text", None, None],
-            ["handler", _("Handler"), -1, "combo", None, None]
+            ["protocol", _("Protocol"), -1, "text", None],
+            ["handler", _("Handler"), -1, "combo", None]
         )
 
         cols["protocol"].set_sort_column_id(0)
@@ -2116,7 +2116,7 @@ class CensorListFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.CensorList,
-            ["pattern", _("Pattern"), -1, "edit", None, None]
+            ["pattern", _("Pattern"), -1, "edit", None]
         )
 
         cols["pattern"].set_sort_column_id(0)
@@ -2220,8 +2220,8 @@ class AutoReplaceListFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.ReplacementList,
-            ["pattern", _("Pattern"), 150, "edit", None, None],
-            ["replacement", _("Replacement"), -1, "edit", None, None]
+            ["pattern", _("Pattern"), 150, "edit", None],
+            ["replacement", _("Replacement"), -1, "edit", None]
         )
         cols["pattern"].set_sort_column_id(0)
         cols["replacement"].set_sort_column_id(1)
@@ -2632,7 +2632,7 @@ class BuildDialog(Gtk.Dialog):
         cols = initialise_columns(
             None,
             self.tw[name],
-            [description, description, 150, "edit", None, None]
+            [description, description, 150, "edit", None]
         )
 
         try:
@@ -2821,8 +2821,8 @@ class PluginsFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.PluginTreeView,
-            ["enabled", _("Enabled"), 0, "toggle", None, None],
-            ["plugins", _("Plugins"), 380, "text", None, None]
+            ["enabled", _("Enabled"), 0, "toggle", None],
+            ["plugins", _("Plugins"), 380, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)

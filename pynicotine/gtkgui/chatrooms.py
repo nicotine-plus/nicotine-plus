@@ -573,11 +573,11 @@ class ChatRoom:
         self.cols = cols = initialise_columns(
             ("chat_room", room),
             self.UserList,
-            ["status", _("Status"), 25, "pixbuf", None, None],
-            ["country", _("Country"), 25, "pixbuf", None, None],
-            ["user", _("User"), 100, "text", self.user_column_draw, None],
-            ["speed", _("Speed"), 100, "number", None, None],
-            ["files", _("Files"), 100, "number", None, None]
+            ["status", _("Status"), 25, "pixbuf", None],
+            ["country", _("Country"), 25, "pixbuf", None],
+            ["user", _("User"), 100, "text", self.user_column_draw],
+            ["speed", _("Speed"), 100, "number", None],
+            ["files", _("Files"), 100, "number", None]
         )
 
         cols["status"].set_sort_column_id(5)

@@ -77,16 +77,16 @@ class UserList:
         self.cols = cols = initialise_columns(
             "buddy_list",
             self.UserListTree,
-            ["status", _("Status"), 25, "pixbuf", None, None],
-            ["country", _("Country"), 25, "pixbuf", None, None],
-            ["user", _("User"), 250, "text", None, None],
-            ["speed", _("Speed"), 150, "number", None, None],
-            ["files", _("Files"), 150, "number", None, None],
-            ["trusted", _("Trusted"), 0, "toggle", None, None],
-            ["notify", _("Notify"), 0, "toggle", None, None],
-            ["privileged", _("Privileged"), 0, "toggle", None, None],
-            ["last_seen", _("Last seen"), 160, "text", None, None],
-            ["comments", _("Comments"), 400, "edit", None, None]
+            ["status", _("Status"), 25, "pixbuf", None],
+            ["country", _("Country"), 25, "pixbuf", None],
+            ["user", _("User"), 250, "text", None],
+            ["speed", _("Speed"), 150, "number", None],
+            ["files", _("Files"), 150, "number", None],
+            ["trusted", _("Trusted"), 0, "toggle", None],
+            ["notify", _("Notify"), 0, "toggle", None],
+            ["privileged", _("Privileged"), 0, "toggle", None],
+            ["last_seen", _("Last seen"), 160, "text", None],
+            ["comments", _("Comments"), 400, "edit", None]
         )
 
         cols["status"].set_sort_column_id(10)

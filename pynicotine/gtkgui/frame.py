@@ -911,7 +911,6 @@ class NicotineFrame:
         self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
 
     def on_away(self, *args):
-
         self.away = not self.away
 
         if not self.away:
@@ -924,7 +923,6 @@ class NicotineFrame:
 
         self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
-
         self.privatechats.update_visuals()
 
     def on_check_privileges(self, *args):

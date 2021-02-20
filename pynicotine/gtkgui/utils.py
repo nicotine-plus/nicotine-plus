@@ -118,7 +118,7 @@ def initialise_columns(treeview_name, treeview, *args):
     cols = OrderedDict()
     column_config = None
 
-    for (id, title, width, type, function, colors) in args:
+    for (id, title, width, type, extra) in args:
         if treeview_name:
             try:
                 column_config = NICOTINE.np.config.sections["columns"][treeview_name[0]][treeview_name[1]]
@@ -192,22 +192,11 @@ def initialise_columns(treeview_name, treeview, *args):
                 column.set_fixed_width(width)
             column.set_min_width(0)
 
-        if function:
-            column.set_cell_data_func(renderer, function)
+        if isinstance(extra, int):
+            column.add_attribute(renderer, "foreground", extra)
 
-        if colors:
-            foreground = colors[0]
-            background = colors[1]
-
-            if foreground:
-                renderer.set_property("foreground", foreground)
-            else:
-                renderer.set_property("foreground-set", False)
-
-            if background:
-                renderer.set_property("background", background)
-            else:
-                renderer.set_property("background-set", False)
+        elif callable(extra):
+            column.set_cell_data_func(renderer, extra)
 
         column.set_reorderable(True)
         column.set_min_width(20)

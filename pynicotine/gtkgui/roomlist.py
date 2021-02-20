@@ -56,8 +56,8 @@ class RoomList:
         self.cols = initialise_columns(
             None,
             self.RoomsList,
-            ["room", _("Room"), 260, "text", self.room_status, None],
-            ["users", _("Users"), 100, "number", self.room_status, None]
+            ["room", _("Room"), 260, "text", self.room_status],
+            ["users", _("Users"), 100, "number", self.room_status]
         )
         self.cols["room"].set_sort_column_id(0)
         self.cols["users"].set_sort_column_id(1)

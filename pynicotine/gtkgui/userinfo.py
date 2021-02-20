@@ -221,7 +221,7 @@ class UserInfo:
         cols = initialise_columns(
             None,
             self.Hates,
-            ["hates", _("Hates"), 0, "text", None, None]
+            ["hates", _("Hates"), 0, "text", None]
         )
         cols["hates"].set_sort_column_id(0)
 
@@ -233,7 +233,7 @@ class UserInfo:
         cols = initialise_columns(
             None,
             self.Likes,
-            ["likes", _("Likes"), 0, "text", None, None]
+            ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
 

@@ -514,24 +514,26 @@ class Search:
             GObject.TYPE_UINT64,  # (14) size
             GObject.TYPE_UINT64,  # (15) speed
             GObject.TYPE_UINT64,  # (16) queue
-            GObject.TYPE_UINT64   # (17) length
+            GObject.TYPE_UINT64,  # (17) length
+            str                   # (18) color
         )
 
-        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+        color_col = 18
         self.cols = cols = initialise_columns(
             "file_search",
             self.ResultsList,
-            ["id", _("ID"), 50, "text", self.cell_data_func, None],
-            ["user", _("User"), 200, "text", self.cell_data_func, None],
-            ["country", _("Country"), 25, "pixbuf", None, None],
-            ["immediate_download", _("Immediate Download"), 50, "center", self.cell_data_func, None],
-            ["speed", _("Speed"), 90, "number", self.cell_data_func, None],
-            ["in_queue", _("In Queue"), 90, "center", self.cell_data_func, None],
-            ["folder", _("Folder"), 400, "text", self.cell_data_func, None],
-            ["filename", _("Filename"), 400, "text", self.cell_data_func, None],
-            ["size", _("Size"), 100, "number", self.cell_data_func, None],
-            ["bitrate", _("Bitrate"), 100, "number", self.cell_data_func, None],
-            ["length", _("Length"), 100, "number", self.cell_data_func, None]
+            ["id", _("ID"), 50, "text", color_col],
+            ["user", _("User"), 200, "text", color_col],
+            ["country", _("Country"), 25, "pixbuf", None],
+            ["immediate_download", _("Immediate Download"), 50, "center", color_col],
+            ["speed", _("Speed"), 90, "number", color_col],
+            ["in_queue", _("In Queue"), 90, "center", color_col],
+            ["folder", _("Folder"), 400, "text", color_col],
+            ["filename", _("Filename"), 400, "text", color_col],
+            ["size", _("Size"), 100, "number", color_col],
+            ["bitrate", _("Bitrate"), 100, "number", color_col],
+            ["length", _("Length"), 100, "number", color_col]
         )
 
         cols["id"].set_sort_column_id(0)
@@ -707,6 +709,9 @@ class Search:
         else:
             imdl = "N"
 
+        color_id = (imdl == "Y" and "search" or "searchq")
+        color = self.frame.np.config.sections["ui"][color_id] or None
+
         h_queue = humanize(inqueue)
 
         append = False
@@ -757,7 +762,8 @@ class Search:
                     GObject.Value(GObject.TYPE_UINT64, size),
                     GObject.Value(GObject.TYPE_UINT64, ulspeed),
                     GObject.Value(GObject.TYPE_UINT64, inqueue),
-                    GObject.Value(GObject.TYPE_UINT64, length)
+                    GObject.Value(GObject.TYPE_UINT64, length),
+                    GObject.Value(GObject.TYPE_STRING, color)
                 ]
             )
             append = True
@@ -803,7 +809,7 @@ class Search:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
     def add_row_to_model(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length = row
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
 
         if self.ResultGrouping.get_active_id() != "ungrouped":
             # Group by folder or user
@@ -832,7 +838,8 @@ class Search:
                         empty_int,
                         speed,
                         queue,
-                        empty_int
+                        empty_int,
+                        color
                     ]
                 )
 
@@ -862,7 +869,8 @@ class Search:
                             empty_int,
                             speed,
                             queue,
-                            empty_int
+                            empty_int,
+                            color
                         ]
                     )
 
@@ -1239,18 +1247,6 @@ class Search:
 
         self.popup_menu.popup()
         return True
-
-    def cell_data_func(self, column, cellrenderer, model, iterator, dummy="dummy"):
-
-        imdl = model.get_value(iterator, 3)
-        color_id = imdl == "Y" and "search" or "searchq"
-
-        color = self.frame.np.config.sections["ui"][color_id]
-
-        if color:
-            cellrenderer.set_property("foreground", color)
-        else:
-            cellrenderer.set_property("foreground-set", False)
 
     def on_browse_folder(self, widget):
 

@@ -53,7 +53,7 @@ class WishList:
         cols = initialise_columns(
             None,
             self.WishlistView,
-            ["wishes", _("Wishes"), -1, "text", None, None]
+            ["wishes", _("Wishes"), -1, "text", None]
         )
 
         self.WishlistView.set_model(self.store)

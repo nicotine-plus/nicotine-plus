@@ -112,22 +112,20 @@ class TransferList:
             GObject.TYPE_UINT64,   # (17) queue position
         )
 
-        text_color = self.frame.np.config.sections["ui"]["search"]
-
         self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
         self.cols = cols = initialise_columns(
             type,
             widget,
-            ["user", _("User"), 200, "text", None, (text_color, None)],
-            ["path", _("Path"), 400, "text", None, (text_color, None)],
-            ["filename", _("Filename"), 400, "text", None, (text_color, None)],
-            ["status", _("Status"), 140, "text", None, (text_color, None)],
-            ["queue_position", _("Queue Position"), 50, "number", None, (text_color, None)],
-            ["percent", _("Percent"), 70, "progress", None, None],
-            ["size", _("Size"), 170, "number", None, (text_color, None)],
-            ["speed", _("Speed"), 90, "number", None, (text_color, None)],
-            ["time_elapsed", _("Time Elapsed"), 140, "number", None, (text_color, None)],
-            ["time_left", _("Time Left"), 140, "number", None, (text_color, None)],
+            ["user", _("User"), 200, "text", None],
+            ["path", _("Path"), 400, "text", None],
+            ["filename", _("Filename"), 400, "text", None],
+            ["status", _("Status"), 140, "text", None],
+            ["queue_position", _("Queue Position"), 50, "number", None],
+            ["percent", _("Percent"), 70, "progress", None],
+            ["size", _("Size"), 170, "number", None],
+            ["speed", _("Speed"), 90, "number", None],
+            ["time_elapsed", _("Time Elapsed"), 140, "number", None],
+            ["time_left", _("Time Left"), 140, "number", None],
         )
 
         cols["user"].set_sort_column_id(0)

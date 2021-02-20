@@ -52,7 +52,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.LikesList,
-            ["i_like", _("I Like"), -1, "text", None, None]
+            ["i_like", _("I Like"), -1, "text", None]
         )
 
         cols["i_like"].set_sort_column_id(0)
@@ -74,7 +74,7 @@ class Interests:
         cols = initialise_columns(
             None,
             self.DislikesList,
-            ["i_dislike", _("I Dislike"), -1, "text", None, None]
+            ["i_dislike", _("I Dislike"), -1, "text", None]
         )
 
         cols["i_dislike"].set_sort_column_id(0)
@@ -91,8 +91,8 @@ class Interests:
         cols = initialise_columns(
             None,
             self.RecommendationsList,
-            ["rating", _("Rating"), 0, "number", None, None],
-            ["item", _("Item"), -1, "text", None, None]
+            ["rating", _("Rating"), 0, "number", None],
+            ["item", _("Item"), -1, "text", None]
         )
 
         cols["rating"].set_sort_column_id(2)
@@ -118,8 +118,8 @@ class Interests:
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
-            ["rating", _("Rating"), 0, "number", None, None],
-            ["item", _("Item"), -1, "text", None, None]
+            ["rating", _("Rating"), 0, "number", None],
+            ["item", _("Item"), -1, "text", None]
         )
 
         cols["rating"].set_sort_column_id(2)
@@ -145,10 +145,10 @@ class Interests:
         cols = initialise_columns(
             None,
             self.RecommendationUsersList,
-            ["country", _("Country"), 25, "pixbuf", None, None],
-            ["user", _("User"), 100, "text", None, None],
-            ["speed", _("Speed"), 100, "text", None, None],
-            ["files", _("Files"), 100, "text", None, None],
+            ["country", _("Country"), 25, "pixbuf", None],
+            ["user", _("User"), 100, "text", None],
+            ["speed", _("Speed"), 100, "text", None],
+            ["files", _("Files"), 100, "text", None],
         )
 
         cols["country"].set_sort_column_id(4)

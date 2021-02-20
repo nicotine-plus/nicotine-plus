@@ -91,7 +91,7 @@ class UserBrowse:
         cols = initialise_columns(
             None,
             self.FolderTreeView,
-            ["folders", _("Folders"), -1, "text", None, None]  # 0
+            ["folders", _("Folders"), -1, "text", None]  # 0
         )
 
         cols["folders"].set_sort_column_id(0)
@@ -191,10 +191,10 @@ class UserBrowse:
         cols = initialise_columns(
             "user_browse",
             self.FileTreeView,
-            ["filename", _("Filename"), 600, "text", None, None],
-            ["size", _("Size"), 100, "number", None, None],
-            ["bitrate", _("Bitrate"), 100, "number", None, None],
-            ["length", _("Length"), 100, "number", None, None]
+            ["filename", _("Filename"), 600, "text", None],
+            ["size", _("Size"), 100, "number", None],
+            ["bitrate", _("Bitrate"), 100, "number", None],
+            ["length", _("Length"), 100, "number", None]
         )
         cols["filename"].set_sort_column_id(0)
         cols["size"].set_sort_column_id(4)
