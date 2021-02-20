@@ -52,6 +52,7 @@ class RoomList:
 
         self.room_model = Gtk.ListStore(str, int, int)
 
+        self.column_numbers = [0, 1, 2]
         self.cols = initialise_columns(
             None,
             self.RoomsList,
@@ -164,7 +165,7 @@ class RoomList:
         self.room_model.clear()
 
         for room, users in rooms:
-            self.room_model.append([room, users, 0])
+            self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, users, 0])
 
         self.server_rooms = set()
         for room, users in rooms:
@@ -236,13 +237,13 @@ class RoomList:
 
             while iterator:
                 if self.room_model.get_value(iterator, 0) == room:
-                    self.room_model.set(iterator, 1, user_count)
+                    self.room_model.set_value(iterator, 1, user_count)
                     break
 
                 iterator = self.room_model.iter_next(iterator)
 
         else:
-            self.room_model.append([room, user_count, 0])
+            self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, user_count, 0])
             self.server_rooms.add(room)
 
     def on_list_clicked(self, widget, event):

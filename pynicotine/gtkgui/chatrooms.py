@@ -569,6 +569,7 @@ class ChatRoom:
         if room not in config["columns"]["chat_room"]:
             config["columns"]["chat_room"][room] = {}
 
+        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         self.cols = cols = initialise_columns(
             ("chat_room", room),
             self.UserList,
@@ -595,15 +596,15 @@ class ChatRoom:
         self.users = {}
 
         self.usersmodel = Gtk.ListStore(
-            GObject.TYPE_OBJECT,
-            GObject.TYPE_OBJECT,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING,
-            GObject.TYPE_INT,
-            GObject.TYPE_INT,
-            GObject.TYPE_INT,
-            GObject.TYPE_STRING
+            GObject.TYPE_OBJECT,  # (0)  status_image
+            GObject.TYPE_OBJECT,  # (1)  flag
+            str,                  # (2)  username
+            str,                  # (3)  h_speed
+            str,                  # (4)  h_files
+            int,                  # (5)  status
+            GObject.TYPE_UINT64,  # (6)  avgspeed
+            GObject.TYPE_UINT64,  # (7)  files
+            str                   # (8)  country
         )
 
         for username, userdata in users.items():
@@ -671,8 +672,19 @@ class ChatRoom:
         hspeed = human_speed(userdata.avgspeed)
         hfiles = humanize(userdata.files)
 
-        iterator = self.usersmodel.append(
-            [status_image, None, username, hspeed, hfiles, userdata.status, userdata.avgspeed, userdata.files, ""]
+        iterator = self.usersmodel.insert_with_valuesv(
+            -1, self.column_numbers,
+            [
+                GObject.Value(GObject.TYPE_OBJECT, status_image),
+                GObject.Value(GObject.TYPE_OBJECT, None),
+                username,
+                hspeed,
+                hfiles,
+                userdata.status,
+                GObject.Value(GObject.TYPE_UINT64, userdata.avgspeed),
+                GObject.Value(GObject.TYPE_UINT64, userdata.files),
+                ""
+            ]
         )
 
         self.users[username] = iterator
@@ -1239,7 +1251,10 @@ class ChatRoom:
         if user not in self.users:
             return
 
-        self.usersmodel.set(self.users[user], 3, human_speed(avgspeed), 4, humanize(files), 6, avgspeed, 7, files)
+        self.usersmodel.set_value(self.users[user], 3, human_speed(avgspeed))
+        self.usersmodel.set_value(self.users[user], 4, humanize(files))
+        self.usersmodel.set_value(self.users[user], 6, GObject.Value(GObject.TYPE_UINT64, avgspeed))
+        self.usersmodel.set_value(self.users[user], 7, GObject.Value(GObject.TYPE_UINT64, files))
 
     def get_user_status(self, user, status):
 
@@ -1262,22 +1277,16 @@ class ChatRoom:
             color = self.get_user_status_color(status)
             self.update_tag_visuals(self.tag_users[user], color)
 
-        self.usersmodel.set(
-            self.users[user],
-            0, img,
-            5, status
-        )
+        self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
+        self.usersmodel.set_value(self.users[user], 5, status)
 
     def set_user_flag(self, user, country):
 
         if user not in self.users:
             return
 
-        self.usersmodel.set(
-            self.users[user],
-            1, self.frame.get_flag_image(country),
-            8, country
-        )
+        self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
+        self.usersmodel.set_value(self.users[user], 8, country)
 
     def create_tag(self, buffer, color, username=None):
 
