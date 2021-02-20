@@ -94,7 +94,6 @@ class NicotineFrame:
         self.rescanning = False
         self.brescanning = False
         self.needrescan = False
-        self.away = False
         self.autoaway = False
         self.awaytimerid = None
         self.shutdown = False
@@ -124,6 +123,10 @@ class NicotineFrame:
         )
 
         config = self.np.config.sections
+
+        """ Previous away state """
+
+        self.away = config["server"]["away"]
 
         """ GTK Settings """
 
@@ -905,8 +908,6 @@ class NicotineFrame:
         if self.np.servertimer is not None:
             self.np.servertimer.cancel()
             self.np.servertimer = None
-
-        self.away = self.np.config.sections["server"]["away"]
 
         if self.away:
             self._apply_away_state(False)
