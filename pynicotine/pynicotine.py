@@ -1034,6 +1034,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if msg.success:
+            self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
 
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
@@ -1052,7 +1053,6 @@ class NetworkEventProcessor:
 
             self.transfers.set_transfer_views(downloads, uploads)
             self.shares.send_num_shared_folders_files()
-            self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
 
             for thing in self.config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
