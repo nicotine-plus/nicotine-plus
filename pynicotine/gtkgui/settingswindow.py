@@ -43,6 +43,7 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import unescape
+import urllib.request
 
 
 class BuildFrame:
@@ -138,7 +139,35 @@ class ServerFrame(BuildFrame):
         self.needportmap = True
 
     def on_check_port(self, widget):
-        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
+
+        port_image = self.__dict__['CheckPortImage']
+        port_is_open = self.check_listen_port()
+
+        if port_is_open:
+            port_image.set_from_icon_name(
+                'emblem-ok-symbolic', Gtk.IconSize.MENU
+            )
+            port_image.show()
+        else:
+            port_image.set_from_icon_name(
+                'dialog-warning-symbolic', Gtk.IconSize.MENU
+            )
+            port_image.show()
+
+    def check_listen_port(self) -> bool:
+        port = str(self.frame.np.waitport)
+        url = 'https://deluge-torrent.org/test_port.php?port=%s' % port
+        request = urllib.request.Request(url)
+        try:
+            with urllib.request.urlopen(request) as response:
+                parsed_response = response.read().strip()
+                if parsed_response:
+                    return bool(int(parsed_response))
+                return False
+        except Exception as exc:
+            log.add(_('Error testing listen port: %s' % exc))
+            return False
+
 
     def on_toggle_upnp(self, widget, *args):
 

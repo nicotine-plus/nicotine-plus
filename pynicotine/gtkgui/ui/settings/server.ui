@@ -223,6 +223,12 @@
                     <signal name="clicked" handler="on_check_port" swapped="no"/>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkImage" id="CheckPortImage">
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">dialog-question-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
