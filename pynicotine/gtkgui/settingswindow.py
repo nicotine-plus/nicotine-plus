@@ -39,7 +39,6 @@ from pynicotine.gtkgui.dialogs import save_file
 from pynicotine.gtkgui.utils import FileChooserButton
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import unescape
@@ -167,7 +166,6 @@ class ServerFrame(BuildFrame):
         except Exception as exc:
             log.add(_('Error testing listen port: %s' % exc))
             return False
-
 
     def on_toggle_upnp(self, widget, *args):
 
