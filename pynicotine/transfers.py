@@ -1630,7 +1630,7 @@ class Transfers:
         needupdate = True
 
         for i in self.uploads:
-            print(i.conn)
+
             if i.conn != msg.conn:
                 continue
 
