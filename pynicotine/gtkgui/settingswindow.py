@@ -102,6 +102,9 @@ class ServerFrame(BuildFrame):
             self.FirstPort.set_value(server["portrange"][0])
             self.LastPort.set_value(server["portrange"][1])
 
+        if server["ctcpmsgs"] is not None:
+            self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
+
         self.needportmap = False
 
     def get_settings(self):
