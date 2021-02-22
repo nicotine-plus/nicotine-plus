@@ -1425,7 +1425,7 @@ class Transfers:
                     try:
                         ip_address = i.conn.getpeername()
                     except OSError:
-                        # Peer disconnected
+                        # Connection already closed
                         pass
 
                 self.log_transfer(_("Upload started: user %(user)s, IP address %(ip)s, file %(file)s") % {
@@ -1707,7 +1707,11 @@ class Transfers:
 
         ip_address = None
         if i.conn is not None:
-            ip_address = i.conn.getpeername()
+            try:
+                ip_address = i.conn.getpeername()
+            except OSError:
+                # Connection already closed
+                pass
 
         i.status = "Finished"
         i.currentbytes = i.size
