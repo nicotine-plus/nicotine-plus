@@ -3,6 +3,37 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.1 (unstable)
+-----------------------------
+
+Changes
+
+ * Improved UI performance when loading many search results
+ * Main menu can now be opened using the F10 key
+ * Away status is now remembered between sessions
+
+Corrections
+
+ * Fixed several issues causing the status of an upload to be stuck if the user logged out
+ * Fixed a few chat room commands that did not work previously
+ * Several improvements and bug fixes to the plugin system
+ * Flatpak: added support for MPRIS in the Now Playing-feature
+ * Windows: fixed an issue where root directories could not be shared
+ * macOS: fixed an issue where Nicotine+ would crash on startup on some systems
+
+Issues closed on GitHub
+
+ * New installation in Big Sur. Doesn't scan shared folders. ([#899](https://github.com/Nicotine-Plus/nicotine-plus/issues/899))
+ * Download speed after restart ([#918](https://github.com/Nicotine-Plus/nicotine-plus/issues/918))
+ * Pluginsystem related issues, views and ideas [Updated] ([#990](https://github.com/Nicotine-Plus/nicotine-plus/issues/990))
+ * [Windows] Certifi not installed ([#996](https://github.com/Nicotine-Plus/nicotine-plus/issues/996))
+ * Enable CTCP-like private message responses (client version) Bool ([#998](https://github.com/Nicotine-Plus/nicotine-plus/issues/998))
+ * Sharing a whole hard disk drive content doesn't work ([#999](https://github.com/Nicotine-Plus/nicotine-plus/issues/999))
+ * CTCP_VERSION broke ([#1001](https://github.com/Nicotine-Plus/nicotine-plus/issues/1001))
+ * v3.0 not starting on macos big sur 11.2.1 ([#1002](https://github.com/Nicotine-Plus/nicotine-plus/issues/1002))
+ * Make opening of Window's file manager (File Explorer) more generic ([#1004](https://github.com/Nicotine-Plus/nicotine-plus/issues/1004))
+ * missing python req in setup.py ([#1006](https://github.com/Nicotine-Plus/nicotine-plus/issues/1006))
+
 Version 3.0.0 (February 12, 2021)
 -----------------------------
 
