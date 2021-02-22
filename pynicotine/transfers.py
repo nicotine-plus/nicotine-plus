@@ -295,15 +295,22 @@ class Transfers:
         """ We get a status of a user and if he's online, we request a file from him """
 
         for i in self.downloads:
-            if msg.user == i.user and i.status in ["Queued", "Getting status", "User logged off", "Connection closed by peer", "Aborted", "Cannot connect", "Paused"]:
+            if msg.user == i.user and i.status in ("Queued", "Getting status", "Establishing connection", "User logged off", "Connection closed by peer", "Aborted", "Cannot connect", "Paused"):
                 if msg.status > 0:
-                    if i.status not in ["Queued", "Aborted", "Cannot connect", "Paused"]:
+                    if i.status not in ("Queued", "Aborted", "Cannot connect", "Paused"):
                         self.get_file(i.user, i.filename, i.path, i)
                 else:
-                    if i.status not in ["Aborted", "Filtered"]:
+                    if i.status not in ("Aborted", "Filtered"):
                         i.status = "User logged off"
                         self.abort_transfer(i, send_fail_message=False)
                         self.downloadsview.update(i)
+
+        for i in self.uploads:
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
+                if msg.status <= 0:
+                    i.status = "User logged off"
+                    self.abort_transfer(i, send_fail_message=False)
+                    self.uploadsview.update(i)
 
         if msg.status <= 0:
             self.check_upload_queue()
@@ -1415,7 +1422,11 @@ class Transfers:
 
                 ip_address = None
                 if i.conn is not None:
-                    ip_address = i.conn.getpeername()
+                    try:
+                        ip_address = i.conn.getpeername()
+                    except OSError:
+                        # Peer disconnected
+                        pass
 
                 self.log_transfer(_("Upload started: user %(user)s, IP address %(ip)s, file %(file)s") % {
                     'user': i.user,
