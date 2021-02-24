@@ -683,7 +683,7 @@ class Config:
                 os.chmod(self.filename + ".old", 0o600)
 
         except Exception as error:
-            log.add(_("Unable to back up config file: %s"), error)
+            log.add_warning(_("Unable to back up config file: %s"), error)
 
         # Save new config to file
         oldumask = os.umask(0o077)
@@ -692,8 +692,17 @@ class Config:
             with open(self.filename, "w", encoding="utf-8") as f:
                 self.parser.write(f)
 
-        except Exception as e:
-            log.add(_("Unable to save config file: %s"), e)
+        except Exception as error:
+            log.add_warning(_("Unable to save config file: %s"), error)
+
+            # Attempt to restore config backup
+            try:
+                if os.path.exists(self.filename + ".old"):
+                    from shutil import copy2
+                    copy2(self.filename + ".old", self.filename)
+
+            except Exception as error:
+                log.add_warning(_("Unable to restore previous config file: %s"), error)
 
         os.umask(oldumask)
 
