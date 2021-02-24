@@ -413,6 +413,9 @@ class Transfers:
 
         transfer.file = None
 
+        if file is None:
+            return
+
         try:
             file.close()
 
@@ -1318,6 +1321,7 @@ class Transfers:
                 m = md5()
                 m.update((i.filename + i.user).encode('utf-8'))
 
+                f = None
                 pynewfname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                 try:
                     if os.access(winfname, os.F_OK):
@@ -1396,6 +1400,7 @@ class Transfers:
         if i.conn is None:
             i.conn = msg.conn
             i.req = None
+            f = None
 
             if i.transfertimer is not None:
                 i.transfertimer.cancel()
