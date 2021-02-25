@@ -182,6 +182,7 @@
         <item>
           <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
           <attribute name="action">app.keyboardshortcuts</attribute>
+          <attribute name="accel">&lt;Primary&gt;question</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Check _Latest Version</attribute>

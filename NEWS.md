@@ -10,6 +10,7 @@ Changes
 
  * Improved UI performance when loading many search results
  * Main menu can now be opened using the F10 key
+ * The list of keyboard shortcuts can now be opened using Ctrl+?
  * Away status is now remembered between sessions
 
 Corrections

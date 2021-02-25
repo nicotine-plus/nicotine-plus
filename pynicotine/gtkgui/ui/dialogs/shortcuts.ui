@@ -178,6 +178,13 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;question</property>
+                <property name="title" translatable="yes">Keyboard Shortcuts</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;p</property>
                 <property name="title" translatable="yes">Preferences</property>
               </object>
