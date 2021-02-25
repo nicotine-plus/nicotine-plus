@@ -16,6 +16,7 @@ Corrections
 
  * Fixed several issues causing the status of an upload to be stuck if the user logged out
  * Fixed a few chat room commands that did not work previously
+ * Fixed an issue where country flags were missing for some users that rejoined a room
  * Several improvements and bug fixes to the plugin system
  * Flatpak: added support for MPRIS in the Now Playing-feature
  * Windows: fixed an issue where root directories could not be shared
