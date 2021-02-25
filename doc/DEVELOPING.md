@@ -15,37 +15,39 @@ This document contains important information about Nicotine+ design decisions an
 
 ## Python
 
-Nicotine+ is written in Python, and is originally based on backend code from the PySoulSeek project created in 2001. Ever since, Nicotine+ has remained a pure Python application. While one could argue that Python is a bad choice due to reason x and y, and that parts of the code could be rewritten in a more performant language, sticking with Python makes it easy to distribute and run Nicotine+ virtually anywhere. This allows us to devote more time towards actual development.
+Nicotine+ is Python application, built on backend code from the PySoulSeek project started in 2001. We only allow Python code in the main client, as this makes it easy to distribute and run Nicotine+ on virtually any system. In turn, we are able to devote more time towards implementing bug fixes and additional functionality.
 
-We aim to support Python 3 versions used by the oldest distributions still actively maintained. Once a Python version is no longer used and supported by any distribution, the minimum supported Python version in Nicotine+ should be changed. Currently, the minimum version Nicotine+ supports is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
+We aim to support the oldest minor Python 3 version still used by active, supported releases of distributions and operating systems. In Nicotine+, support for a Python version should be removed once no distributions use it anymore. The minimum version Nicotine+ currently supports is 3.5. This version should be dropped once Ubuntu 16.04 reaches EOL in 2021.
 
 ## GTK
 
-Nicotine+ and its predecessors were originally developed with GNU/Linux in mind, at a time when the official Soulseek client only supported Windows. The Nicotine project (from which Nicotine+ was later forked) opted to use GTK as the GUI toolkit, as opposed to wxPython used by PySoulSeek. This decision was made due to various issues in wxPython at the time, such as large memory overhead and long compile/build times. We're happy with this choice today, and have no plans of switching to another toolkit.
+Nicotine+ and its predecessors PySoulSeek and Nicotine were originally developed with GNU/Linux in mind, at a time when the official Soulseek client only supported Windows. The Nicotine project opted to use GTK as the GUI toolkit, as opposed to wxPython previously used by PySoulSeek. This decision was made due to various issues encountered in wxPython at the time, such as large memory overhead and long compile/build times.
+
+We are content with GTK, and have no plans of switching to another toolkit.
 
 # Dependencies
 
-Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who can't use the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software depencency can cause issues for both packagers and users.
+Nicotine+ aims to be as portable as possible, providing access to the Soulseek network for people who cannot run the official Soulseek client. Nicotine+ runs on almost any architecture and system available, and has active users on a plethora of different systems. This also means that the introduction of an external software depencency can cause issues for both packagers and users.
 
-Dependencies preinstalled on a majority of systems, as well as modules included in the Python Standard Library, should be used as much as possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency needs to be introduced, think about the following points:
+Dependencies preinstalled on most systems, as well as modules included in the Python Standard Library, should be preferred whenever possible. Avoid introducing "convenient" and "new hotness" dependencies, if the standard library already includes the required functionality to some degree. If a new dependency is necessary, think about the following points:
 
- * Prefer pure-Python dependencies, as these can be used on any system and architecture.
+ * Prefer pure-Python dependencies, as these are more likely to work well on less common systems and architectures.
 
- * Try to find small, maintainable dependencies that can be bundled with the Nicotine+ source code, and give proper attribution. External dependencies can behave surprisingly different on some systems, and be quite outdated on some older systems. Use common sense though; don't bundle security-critical dependencies, rapidly changing APIs etc.
+ * Attempt to find small, maintainable dependencies that can be bundled with the Nicotine+ source code (and give proper attribution). External dependencies can behave surprisingly different on some systems, and be quite outdated on older systems. Use common sense though; do not bundle security-critical dependencies, rapidly changing APIs etc.
 
 # Profiling
 
-Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and doesn't use unnecessary resources. Our goal is to develop a lightweight client than runs well on older hardware and servers, and these can be quite constrained at times.
+Profiling code changes from time to time is important, to ensure that Nicotine+ performs well and uses few resources. Our goal is to develop a lightweight client than runs well on older hardware, as well as servers, which can be quite constrained.
 
-Addressing performance in Python can be a challenge at times, and there are no straightforward ways of solving all performance issues. These points generally help:
+Due to Python's interpreted nature, addressing performance issues can be a challenge. There is no straightforward way of solving every performance issue, but these points generally help:
 
- * Use better data structures and algorithms for the intended purpose.
+ * Use different data structures and algorithms.
 
- * Use functions in the Python Standard Library when possible, instead of reimplementing algorithms yourself.
+ * Use functionality included in the Python Standard Library when possible, instead of reimplementing the wheel. This is especially important when it comes to algorithms.
 
- * Look for alterative ways of accomplishing a task, search engines help a lot here. Certain modules in the standard library are written in C, and tend to perform better than pure-Python counterparts.
+ * Look for alterative ways of accomplishing a task. Search engines help a lot here. Certain modules in the standard library are written in C, and can perform better than pure-Python counterparts, especially in hot code paths.
 
-[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save you a lot of time.
+[py-spy](https://github.com/benfred/py-spy) is an excellent tool for profiling Python applications in real time, and will save a lot of time in the long run.
 
 # Continuous Integration Testing
 
@@ -53,7 +55,7 @@ It is important that all patches pass unit testing. Unfortunately developers mak
 
 To properly validate that things are working, continuous integration (CI) is required. This means compiling, performing local in-tree unit tests, installing through the system package manager, and finally testing the actually installed build artifacts to ensure they do what the user expects them to do.
 
-The key thing to remember is that in order to do this properly, this all needs to be done within a realistic end user system that hasn't been unintentionally modified by a developer. This might mean a chroot container with the help of QEMU and KVM to verify that everything is working as expected. The hermetically sealed test environment validates that the developer's expected steps for, as an example in the case of a library, compilation, linking, unit testing, and post installation testing are actually replicable.
+The key thing to remember is that in order to do this properly, this all needs to be done within a realistic end user system that has not been unintentionally modified by a developer. This might mean a chroot container with the help of QEMU and KVM to verify that everything is working as expected. The hermetically sealed test environment validates that the developer's expected steps for, as an example in the case of a library, compilation, linking, unit testing, and post installation testing are actually replicable.
 
 There are [different ways](https://wiki.debian.org/qa.debian.org#Other_distributions) of performing CI on different distros. The most common one is via the international [DEP-8](https://dep-team.pages.debian.net/deps/dep8/) standard as used by hundreds of different operating systems.
 
@@ -124,24 +126,24 @@ Nicotine+ tries to follow [Semantic Versioning](https://semver.org/) when possib
 
 Release dates are not set in stone, as Nicotine+ development is done by volunteers in their spare time. However, keep the following points in mind:
 
- * Taking too long to release a new Nicotine+ version (e.g. years) will likely end up in Nicotine+ no longer working due to technological advancements, or being dropped from distributions. This already happened when support for Python 2 ended in 2019.
+ * Taking too long to release a new Nicotine+ version (e.g. years) will likely result in Nicotine+ no longer functioning due to technological advancements, or being removed from distributions. This previously occurred when support for Python 2 ended in 2020.
 
- * We have no way of delivering updates to all users at the same time. Packagers for various distributions need to package and test new Nicotine+ versions before users receive them. It would be preferable to avoid creating too many releases in a very short period of time.
+ * We have no means of delivering updates to all users at the same time. Packagers for numerous distributions have to package and test new Nicotine+ releases before they can be delivered to users.
 
- * Releasing large updates can make it harder to pinpoint eventual issues that have been introduced since the previous release.
+ * Releasing large updates can make it more difficult to pinpoint eventual issues that were introduced since the previous release.
 
 ## Creating a new Nicotine+ release
 
-The following is a step-by-step guide on what a Nicotine+ maintainer should do when releasing a new version of Nicotine+.
+The following is a step-by-step guide detailing what a Nicotine+ maintainer should do when releasing a new version of Nicotine+.
 
- 1. Ensure that Nicotine+ works on at least these four systems: Windows, macOS, the oldest Ubuntu version we still support (16.04), as well as the newest Ubuntu version available.
+ 1. Ensure that Nicotine+ works on at least these four systems: Windows, macOS, the oldest Ubuntu version we still support (16.04), as well as the newest Ubuntu release available.
 
  2. Ensure that the source distribution (sdist) includes all necessary files to run Nicotine+. A source distribution can be generated by running
 ```
 python3 setup.py sdist
 ```
 
- 3. Add a new release note entry in NEWS.md. The release notes should contain a user-readable list of noteworthy changes since the last release (not a list of commits), as well as a list of closed bugs on GitHub.
+ 3. Add a new release note entry to NEWS.md. Release notes should contain a user-readable list of noteworthy changes since the last release (not a list of commits), as well as a list of closed issues on GitHub.
 
  4. Increase the Nicotine+ version number / add new version entries in the master branch. Nicotine+ uses [Semantic Versioning](https://semver.org/). The following files need to be modified:
     * NEWS.md
