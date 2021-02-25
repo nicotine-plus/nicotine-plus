@@ -2163,7 +2163,6 @@ class NetworkEventProcessor:
 
 class UserAddr:
 
-    def __init__(self, addr=None, country=None, status=None):
+    def __init__(self, addr=None, status=None):
         self.addr = addr
-        self.country = country
         self.status = status
