@@ -714,7 +714,7 @@ class Search:
 
         h_queue = humanize(inqueue)
 
-        append = False
+        update_ui = False
         maxstoredresults = self.searches.maxstoredresults
 
         for result in msg.list:
@@ -743,7 +743,7 @@ class Search:
             h_size = human_size(size)
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
 
-            self.append(
+            is_result_visible = self.append(
                 [
                     GObject.Value(GObject.TYPE_UINT64, counter),
                     user,
@@ -766,10 +766,13 @@ class Search:
                     GObject.Value(GObject.TYPE_STRING, color)
                 ]
             )
-            append = True
+
+            if is_result_visible:
+                update_ui = True
+
             counter += 1
 
-        if append:
+        if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
             if not self.showtab:
                 self.searches.show_tab(self, self.id, self.text, self.mode)
@@ -787,10 +790,10 @@ class Search:
         self.all_data.append(row)
 
         if self.numvisibleresults >= self.searches.maxdisplayedresults:
-            return
+            return False
 
         if not self.check_filter(row):
-            return
+            return False
 
         iterator = self.add_row_to_model(row)
 
@@ -807,6 +810,8 @@ class Search:
                     self.ResultsList.expand_to_path(path)
             else:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+
+        return True
 
     def add_row_to_model(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
@@ -888,6 +893,7 @@ class Search:
             iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
             self.numvisibleresults += 1
+
         except Exception as e:
             types = []
             for i in row:
