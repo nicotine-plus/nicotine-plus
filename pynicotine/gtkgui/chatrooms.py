@@ -1620,7 +1620,7 @@ class ChatRoom:
         return True
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_country_tooltip(widget, x, y, tooltip, 8)
+        return show_country_tooltip(widget, x, y, tooltip, 8, stripprefix='')
 
     def on_log_toggled(self, widget):
 
