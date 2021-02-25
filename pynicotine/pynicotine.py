@@ -49,6 +49,15 @@ from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
 
+class UserAddr:
+
+    __slots__ = "addr", "status"
+
+    def __init__(self, addr=None, status=None):
+        self.addr = addr
+        self.status = status
+
+
 class PeerConnection:
     """
     Holds information about a peer connection. Not every field may be set
@@ -2159,10 +2168,3 @@ class NetworkEventProcessor:
     def ignore(self, msg):
         # Ignore received message
         pass
-
-
-class UserAddr:
-
-    def __init__(self, addr=None, status=None):
-        self.addr = addr
-        self.status = status
