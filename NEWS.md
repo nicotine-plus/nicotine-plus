@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.0.1 (unstable)
+Version 3.0.1 (February 26, 2021)
 -----------------------------
 
 Changes
