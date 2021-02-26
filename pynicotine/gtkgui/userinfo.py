@@ -72,17 +72,13 @@ class UserTabs(IconNotebook):
 
     def init_window(self, user):
 
-        w = self.users[user] = self.subwindow(self, user)
-
         try:
             status = self.frame.np.users[user].status
         except Exception:
             # Offline
             status = 0
 
-        if user not in self.frame.np.watchedusers:
-            self.frame.np.queue.put(slskmessages.AddUser(user))
-
+        w = self.users[user] = self.subwindow(self, user)
         self.append_page(w.Main, user, w.on_close, status=status)
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
@@ -206,7 +202,12 @@ class UserInfo:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
+        # Request user status, speed and number of shared files
+        self.frame.np.queue.put(slskmessages.AddUser(user))
+
+        # Request user interests
         self.frame.np.queue.put(slskmessages.UserInterests(user))
+
         self.user = user
         self.conn = None
         self._descr = ""
