@@ -365,8 +365,8 @@ class NetworkEventProcessor:
         if conn is not None and conn.conn is not None:
             """ We have initiated a connection previously, and it's ready """
 
-            message.conn = conn.conn
-            self.queue.put(message)
+            conn.msgs.append(message)
+            self.process_conn_messages(conn, conn.conn)
 
         elif conn is not None:
             """ Connection exists but is not ready yet, add new messages to it """
@@ -1583,7 +1583,7 @@ class NetworkEventProcessor:
                 # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
-                    self.userinfo.show_user(i.username, msg.conn, msg, indeterminate_progress, change_page)
+                    self.userinfo.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
 
     def user_info_request(self, msg):
@@ -1683,7 +1683,7 @@ class NetworkEventProcessor:
             if i.conn is conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
-                    self.userbrowse.show_user(i.username, msg.conn, msg, indeterminate_progress, change_page)
+                    self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
 
     def file_search_result(self, msg):

@@ -2074,7 +2074,9 @@ class Transfers:
             self._conn_close(conn, addr, i, "upload")
 
     def _conn_close(self, conn, addr, i, type):
+
         if i.requestconn == conn and i.status == "Requesting file":
+            # This code is probably not needed anymore?
             i.requestconn = None
             i.status = "Connection closed by peer"
             i.req = None

@@ -1896,10 +1896,10 @@ class NicotineFrame:
                 else:
                     self.on_browse_buddy_shares(folder=folder)
             else:
+                self.userbrowse.show_user(user, folder=folder)
+
                 if self.userbrowse.is_new_request(user):
                     self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
-
-                self.userbrowse.show_user(user, folder=folder)
 
     def parse_local_shares(self, username, msg, folder=None, shares_type="normal"):
         """ Parse our local shares list and show it in the UI """

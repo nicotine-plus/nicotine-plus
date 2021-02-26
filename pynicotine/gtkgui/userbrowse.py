@@ -578,7 +578,6 @@ class UserBrowse:
             if msg is None:
                 return
 
-            self.conn = None
             self.make_new_model(msg.list)
 
         if msg and len(msg.list) == 0:

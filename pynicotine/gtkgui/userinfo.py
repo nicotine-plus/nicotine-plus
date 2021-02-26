@@ -381,7 +381,6 @@ class UserInfo:
         if msg is None:
             return
 
-        self.conn = None
         self._descr = msg.descr
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
