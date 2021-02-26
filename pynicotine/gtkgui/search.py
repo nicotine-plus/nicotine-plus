@@ -310,7 +310,7 @@ class Searches(IconNotebook):
 
     def show_tab(self, tab, id, text, mode):
 
-        length = 15
+        length = 25
         template = "(%s) %s"
 
         if mode == "rooms":
