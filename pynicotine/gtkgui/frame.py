@@ -2718,6 +2718,9 @@ class NicotineFrame:
         self.shutdown = True
         self.np.manualdisconnect = True
 
+        # Notify plugins
+        self.np.pluginhandler.shutdown_notification()
+
         # Shut down networking thread
         server_conn = self.np.active_server_conn
 

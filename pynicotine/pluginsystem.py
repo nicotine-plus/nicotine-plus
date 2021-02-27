@@ -397,6 +397,9 @@ class PluginHandler(object):
     def user_stats_notification(self, user, stats):
         self.trigger_event("UserStatsNotification", (user, stats))
 
+    def shutdown_notification(self):
+        self.trigger_event("ShutdownNotification", (),)
+
     """ Other Functions """
 
     def log(self, text):
@@ -603,6 +606,9 @@ class BasePlugin(object):
         pass
 
     def UserStatsNotification(self, user, stats):  # noqa
+        pass
+
+    def ShutdownNotification(self):  # noqa
         pass
 
     # The following are functions to make your life easier,
