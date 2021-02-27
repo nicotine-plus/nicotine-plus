@@ -429,7 +429,7 @@ class PrivateChat:
             lines = deque(lines, numlines)
 
             for line in lines:
-                append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite)
+                append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite, scroll=False)
 
     def login(self):
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]

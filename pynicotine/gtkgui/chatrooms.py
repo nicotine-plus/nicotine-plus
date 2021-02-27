@@ -756,9 +756,9 @@ class ChatRoom:
                 line = re.sub(r"\\s\\s+", "  ", line)
 
                 if user != config["server"]["login"]:
-                    append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="")
+                    append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
                 else:
-                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="")
+                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
 
             if len(lines) > 0:
                 append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
