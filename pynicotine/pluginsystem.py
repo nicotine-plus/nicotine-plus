@@ -235,23 +235,27 @@ class PluginHandler(object):
         return self._trigger_command(command, user, args, public_command=False)
 
     def _trigger_command(self, command, source, args, public_command):
+
         for module, plugin in self.enabled_plugins.items():
             try:
                 if plugin.PLUGIN is None:
                     continue
 
                 if public_command:
-                    ret = plugin.PLUGIN.PublicCommandEvent(command, source, args)
+                    return_value = plugin.PLUGIN.PublicCommandEvent(command, source, args)
                 else:
-                    ret = plugin.PLUGIN.PrivateCommandEvent(command, source, args)
+                    return_value = plugin.PLUGIN.PrivateCommandEvent(command, source, args)
 
-                if ret is not None:
-                    if ret == returncode['zap']:
-                        return True
-                    elif ret == returncode['pass']:
-                        pass
-                    else:
-                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(ret)})
+                if return_value is None:
+                    # Nothing changed, continue to the next plugin
+                    continue
+
+                if return_value == returncode['zap']:
+                    return True
+                elif return_value == returncode['pass']:
+                    pass
+                else:
+                    log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(return_value)})
 
             except Exception:
                 from traceback import extract_stack
@@ -269,28 +273,31 @@ class PluginHandler(object):
         return False
 
     def trigger_event(self, function, args):
-        """Triggers an event for the plugins. Since events and notifications
+        """ Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
-        triggered by this function."""
-
-        hotpotato = args
+        triggered by this function. """
 
         for module, plugin in self.enabled_plugins.items():
             try:
-                ret = getattr(plugin.PLUGIN, function)(*hotpotato)
+                return_value = getattr(plugin.PLUGIN, function)(*args)
 
-                if ret is not None and not isinstance(ret, tuple):
-                    if ret == returncode['zap']:
-                        return None
-                    elif ret == returncode['break']:
-                        return hotpotato
-                    elif ret == returncode['pass']:
-                        pass
-                    else:
-                        log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': ret})
+                if return_value is None:
+                    # Nothing changed, continue to the next plugin
+                    continue
 
-                if ret is not None:
-                    hotpotato = ret
+                if isinstance(return_value, tuple):
+                    # The original args were modified, update them
+                    args = return_value
+                    continue
+
+                if return_value == returncode['zap']:
+                    return None
+                elif return_value == returncode['break']:
+                    return args
+                elif return_value == returncode['pass']:
+                    pass
+                else:
+                    log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': return_value})
 
             except Exception:
                 from traceback import extract_stack
@@ -305,7 +312,7 @@ class PluginHandler(object):
                     'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
                 })
 
-        return hotpotato
+        return args
 
     def search_request_notification(self, searchterm, user, searchid):
         self.trigger_event("SearchRequestNotification", (searchterm, user, searchid))
