@@ -3,6 +3,19 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.2 (March 1, 2021)
+-----------------------------
+
+Corrections
+
+ * Fixed a regression where users could not be added to the buddy list
+ * Fixed an issue where file extension info could appear incorrectly in the transfer list
+ * Fixed an issue where root directories were not shared properly
+
+Issues closed on GitHub
+
+ * Cannot Add Users to Buddy List ([#1011](https://github.com/Nicotine-Plus/nicotine-plus/issues/1011))
+
 Version 3.0.1 (February 26, 2021)
 -----------------------------
 
