@@ -389,7 +389,11 @@ class TransferList:
     def update_specific(self, transfer=None):
 
         currentbytes = transfer.currentbytes
-        place = transfer.place
+        place = transfer.place or 0
+        hplace = ""
+
+        if place > 0:
+            hplace = str(place)
 
         hspeed = helapsed = ""
 
@@ -435,7 +439,7 @@ class TransferList:
             initer = transfer.iter
 
             self.transfersmodel.set_value(initer, 3, hstatus)
-            self.transfersmodel.set_value(initer, 4, str(place))
+            self.transfersmodel.set_value(initer, 4, hplace)
             self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
             self.transfersmodel.set_value(initer, 6, hsize)
             self.transfersmodel.set_value(initer, 7, hspeed)
@@ -547,7 +551,7 @@ class TransferList:
                     path,
                     shortfn,
                     hstatus,
-                    str(place),
+                    hplace,
                     GObject.Value(GObject.TYPE_UINT64, percent),
                     hsize,
                     hspeed,
