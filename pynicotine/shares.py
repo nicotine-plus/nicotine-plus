@@ -528,6 +528,7 @@ class Shares:
 
     @classmethod
     def _real2virtual(cls, path, config):
+
         path = path.replace('/', '\\')
 
         for (virtual, real, *unused) in cls._virtualmapping(config):
@@ -535,17 +536,20 @@ class Shares:
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
             real = real.replace('/', '\\')
-
             if path == real:
                 return virtual
 
-            if path.startswith(real + '\\'):
-                virtualpath = virtual + '\\' + path[len(real + '\\'):]
+            # Use rstrip to remove trailing separator from root directories
+            real = real.rstrip('\\') + '\\'
+
+            if path.startswith(real):
+                virtualpath = virtual + '\\' + path[len(real):]
                 return virtualpath
 
         return "__INTERNAL_ERROR__" + path
 
     def virtual2real(self, path):
+
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
         for (virtual, real, *unused) in self._virtualmapping(self.config):
