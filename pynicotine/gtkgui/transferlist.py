@@ -322,7 +322,7 @@ class TransferList:
             if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
                 salientstatus = status
 
-            filename = self.transfersmodel.get_value(iterator, 10)
+            filename = self.transfersmodel.get_value(iterator, 2)
             parts = filename.rsplit('.', 1)
 
             if len(parts) == 2:
@@ -332,6 +332,8 @@ class TransferList:
                 except KeyError:
                     extensions[ext.lower()] = 1
 
+            filecount += self.transfersmodel.get_value(iterator, 16)
+
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
                 iterator = self.transfersmodel.iter_next(iterator)
@@ -340,7 +342,6 @@ class TransferList:
             elapsed += self.transfersmodel.get_value(iterator, 15)
             totalsize += self.transfersmodel.get_value(iterator, 12)
             position += self.transfersmodel.get_value(iterator, 13)
-            filecount += self.transfersmodel.get_value(iterator, 16)
 
             if status == "Transferring":
                 speed += float(self.transfersmodel.get_value(iterator, 14))
@@ -366,11 +367,9 @@ class TransferList:
         if len(extensions) == 0:
             extensions = ""
         elif len(extensions) == 1:
-            extensions = " (" + self.extension_list_template % {'ext': list(extensions.keys())[0]} + ")"
+            extensions = " (" + self.extension_list_template % {'ext': next(iter(extensions))} + ")"
         else:
-            extensionlst = [(extensions[key], key) for key in extensions]
-            extensionlst.sort(reverse=True)
-            extensions = " (" + ", ".join([str(count) + " " + ext for (count, ext) in extensionlst]) + ")"
+            extensions = " (" + ", ".join((str(count) + " " + ext for (ext, count) in extensions.items())) + ")"
 
         self.transfersmodel.set_value(initer, 2, self.files_template % {'number': filecount} + extensions)
         self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
