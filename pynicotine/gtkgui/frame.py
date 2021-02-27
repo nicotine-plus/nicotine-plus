@@ -2721,6 +2721,10 @@ class NicotineFrame:
         # Notify plugins
         self.np.pluginhandler.shutdown_notification()
 
+        # Disable plugins
+        for plugin in self.np.pluginhandler.list_installed_plugins():
+            self.np.pluginhandler.disable_plugin(plugin)
+
         # Shut down networking thread
         server_conn = self.np.active_server_conn
 
