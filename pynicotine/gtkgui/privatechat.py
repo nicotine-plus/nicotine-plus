@@ -527,8 +527,6 @@ class PrivateChat:
 
     def show_message(self, text, newmessage=True, timestamp=None):
 
-        self.create_tags()
-
         if text[:4] == "/me ":
             line = "* %s %s" % (self.user, self.frame.censor_chat(text[4:]))
             speech = line[2:]
