@@ -22,6 +22,7 @@
 
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
+  git \
   upx \
   mingw-w64-$ARCH-gspell \
   mingw-w64-$ARCH-gtk3 \
@@ -32,4 +33,4 @@ pacman --noconfirm -S --needed \
 # Install dependencies with pip
 pip3 install \
   plyer \
-  pyinstaller==4.2
+  git+git://github.com/pyinstaller/pyinstaller.git@d7726545e7401a4f8c7ea2eb34317b98168daf82
