@@ -146,17 +146,17 @@ class PrivateChats(IconNotebook):
     def send_message(self, user, text=None, show_user=False, bytestring=False):
 
         if user not in self.users:
-            tab = PrivateChat(self, user)
-            self.users[user] = tab
-
-            if user not in self.frame.np.config.sections["privatechat"]["users"]:
-                self.frame.np.config.sections["privatechat"]["users"].append(user)
-
             try:
                 status = self.frame.np.users[user].status
             except Exception:
                 # Offline
                 status = 0
+
+            tab = PrivateChat(self, user, status)
+            self.users[user] = tab
+
+            if user not in self.frame.np.config.sections["privatechat"]["users"]:
+                self.frame.np.config.sections["privatechat"]["users"].append(user)
 
             if user not in self.frame.np.watchedusers:
                 self.frame.np.queue.put(slskmessages.AddUser(user))
@@ -329,7 +329,7 @@ class PrivateChats(IconNotebook):
 
 class PrivateChat:
 
-    def __init__(self, chats, user):
+    def __init__(self, chats, user, status):
 
         self.user = user
         self.chats = chats
@@ -342,7 +342,7 @@ class PrivateChat:
 
         self.autoreplied = 0
         self.offlinemessage = 0
-        self.status = -1
+        self.status = status
         self.clist = []
 
         # Text Search
