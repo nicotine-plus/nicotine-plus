@@ -42,6 +42,7 @@ from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
@@ -1208,10 +1209,10 @@ class Search:
 
     def on_key_press_event(self, widget, event):
 
-        key = Gdk.keyval_name(event.keyval)
         self.select_results()
 
-        if key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+        if event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+                event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path(widget)
         else:
             # No key match, continue event

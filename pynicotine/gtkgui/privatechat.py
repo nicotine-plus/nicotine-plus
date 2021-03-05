@@ -42,6 +42,7 @@ from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import is_alias
+from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import PopupMenu
@@ -975,25 +976,9 @@ class PrivateChat:
 
     def on_key_press(self, widget, event):
 
-        if event.keyval == Gdk.keyval_from_name("Prior"):
+        keycode = event.hardware_keycode
 
-            scrolled = self.ChatScroll.get_parent()
-            adj = scrolled.get_vadjustment()
-            adj.set_value(adj.value - adj.page_increment)
-
-        elif event.keyval == Gdk.keyval_from_name("Next"):
-
-            scrolled = self.ChatScroll.get_parent()
-            adj = scrolled.get_vadjustment()
-            maximum = adj.upper - adj.page_size
-            new = adj.value + adj.page_increment
-
-            if new > maximum:
-                new = maximum
-
-            adj.set_value(new)
-
-        if event.keyval != Gdk.keyval_from_name("Tab"):
+        if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Tab):
             return False
 
         config = self.frame.np.config.sections["words"]
@@ -1012,5 +997,4 @@ class PrivateChat:
             widget.set_position(preix + len(completion))
 
         widget.stop_emission_by_name("key_press_event")
-
         return True

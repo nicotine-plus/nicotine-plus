@@ -1125,10 +1125,11 @@ class IconNotebook:
 
     def on_key_press_event(self, widget, event):
 
-        key = Gdk.keyval_name(event.keyval)
+        keycode = event.hardware_keycode
 
-        if event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
-            if key in ("W", "w") or key == "F4":
+        if event.get_state() == Gdk.ModifierType.CONTROL_MASK:
+            if keycode in keyval_to_hardware_keycode(Gdk.KEY_w) or \
+               keycode in keyval_to_hardware_keycode(Gdk.KEY_F4):
                 # Ctrl+W and Ctrl+F4: close current tab
 
                 page = self.get_nth_page(self.get_current_page())
@@ -1663,10 +1664,9 @@ class TextSearchBar:
         self.on_search_match(search_type="next")
 
     def on_key_press(self, widget, event):
-        key = Gdk.keyval_name(event.keyval)
 
-        # Match against capslock + control and control
-        if key in ("f", "F") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+        if event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+                event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_f):
             self.show_search_bar()
 
     def show_search_bar(self):
@@ -1739,6 +1739,19 @@ def humanize(number):
         ret = "%s%s%s" % (part, fashion, ret)
 
     return neg + ret[:-1]
+
+
+def keyval_to_hardware_keycode(keyval):
+    """ This function is used for our custom keyboard shortcuts, such as Ctrl-C
+    in tree views, to ensure that they work on non-Latin keyboard layouts """
+
+    keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+    valid, keymap_keys = keymap.get_entries_for_keyval(keyval)
+
+    if not valid:
+        return []
+
+    return [key.keycode for key in keymap_keys]
 
 
 """ Command Aliases """

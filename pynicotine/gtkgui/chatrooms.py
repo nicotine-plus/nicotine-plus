@@ -47,6 +47,7 @@ from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import PopupMenu
@@ -1541,27 +1542,11 @@ class ChatRoom:
 
     def on_key_press(self, widget, event):
 
-        if event.keyval == Gdk.keyval_from_name("Prior"):
+        keycode = event.hardware_keycode
 
-            scrolled = self.ChatScroll.get_parent()
-            adj = scrolled.get_vadjustment()
-            adj.set_value(adj.value - adj.page_increment)
-
-        elif event.keyval == Gdk.keyval_from_name("Next"):
-
-            scrolled = self.ChatScroll.get_parent()
-            adj = scrolled.get_vadjustment()
-            maximum = adj.upper - adj.page_size
-            new = adj.value + adj.page_increment
-
-            if new > maximum:
-                new = maximum
-
-            adj.set_value(new)
-
-        # ISO_Left_Tab normally corresponds with shift+tab
-        if event.keyval not in (Gdk.keyval_from_name("Tab"), Gdk.keyval_from_name("ISO_Left_Tab")):
-            if event.keyval not in (Gdk.keyval_from_name("Shift_L"), Gdk.keyval_from_name("Shift_R")):
+        if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Tab):
+            if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_L) and \
+                    keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_R):
                 self.midwaycompletion = False
             return False
 
@@ -1606,7 +1591,7 @@ class ChatRoom:
                 widget.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if event.keyval == Gdk.keyval_from_name("ISO_Left_Tab"):
+                if event.get_state() == Gdk.ModifierType.SHIFT_MASK:
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
@@ -1616,7 +1601,6 @@ class ChatRoom:
                 widget.set_position(preix + len(newnick))
 
         widget.stop_emission_by_name("key_press_event")
-
         return True
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):

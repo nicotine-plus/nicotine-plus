@@ -28,6 +28,7 @@ from gi.repository import Gdk
 
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 
@@ -100,16 +101,20 @@ class Uploads(TransferList):
 
     def on_key_press_event(self, widget, event):
 
-        key = Gdk.keyval_name(event.keyval)
+        keycode = event.hardware_keycode
 
         self.select_transfers()
 
-        if key in ("T", "t"):
+        if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
             self.on_abort_transfer(widget)
-        elif key in ("C", "c") and event.state in (Gdk.ModifierType.CONTROL_MASK, Gdk.ModifierType.LOCK_MASK | Gdk.ModifierType.CONTROL_MASK):
+
+        elif event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+                keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path(widget)
-        elif key == "Delete":
+
+        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
             self.on_abort_transfer(widget, clear=True)
+
         else:
             # No key match, continue event
             return False
