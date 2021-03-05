@@ -43,6 +43,10 @@ from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import auto_replace
+from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import entry_completion_find_match
+from pynicotine.gtkgui.utils import entry_completion_found_match
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -557,8 +561,8 @@ class ChatRoom:
         completion.set_model(liststore)
         completion.set_text_column(0)
 
-        completion.set_match_func(self.frame.entry_completion_find_match, self.ChatEntry)
-        completion.connect("match-selected", self.frame.entry_completion_found_match, self.ChatEntry)
+        completion.set_match_func(entry_completion_find_match)
+        completion.connect("match-selected", entry_completion_found_match)
 
         self.Log.set_active(config["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -757,7 +761,7 @@ class ChatRoom:
                 line = re.sub(r"\\s\\s+", "  ", line)
 
                 if user != config["server"]["login"]:
-                    append_line(self.ChatScroll, self.frame.censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
+                    append_line(self.ChatScroll, censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
                 else:
                     append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
 
@@ -932,7 +936,7 @@ class ChatRoom:
         if user != login:
 
             append_line(
-                self.ChatScroll, self.frame.censor_chat(line), tag,
+                self.ChatScroll, censor_chat(line), tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
@@ -973,7 +977,7 @@ class ChatRoom:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, self.frame.auto_replace(text)))
+        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, auto_replace(text)))
 
     def on_enter(self, widget):
 
@@ -1152,7 +1156,7 @@ class ChatRoom:
             event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
             if event is not None:
                 (r, text) = event
-                self.say(self.frame.auto_replace(text))
+                self.say(auto_replace(text))
                 self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
 
         self.ChatEntry.set_text("")

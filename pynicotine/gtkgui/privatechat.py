@@ -39,6 +39,10 @@ from pynicotine.gtkgui.chatrooms import get_completion
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import auto_replace
+from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import entry_completion_find_match
+from pynicotine.gtkgui.utils import entry_completion_found_match
 from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import is_alias
@@ -366,8 +370,8 @@ class PrivateChat:
         completion.set_model(liststore)
 
         completion.set_text_column(0)
-        completion.set_match_func(self.frame.entry_completion_find_match, self.ChatLine)
-        completion.connect("match-selected", self.frame.entry_completion_found_match, self.ChatLine)
+        completion.set_match_func(entry_completion_find_match)
+        completion.connect("match-selected", entry_completion_found_match)
 
         self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
@@ -529,12 +533,12 @@ class PrivateChat:
     def show_message(self, text, newmessage=True, timestamp=None):
 
         if text[:4] == "/me ":
-            line = "* %s %s" % (self.user, self.frame.censor_chat(text[4:]))
+            line = "* %s %s" % (self.user, censor_chat(text[4:]))
             speech = line[2:]
             tag = self.tag_me
         else:
-            line = "[%s] %s" % (self.user, self.frame.censor_chat(text))
-            speech = self.frame.censor_chat(text)
+            line = "[%s] %s" % (self.user, censor_chat(text))
+            speech = censor_chat(text)
             tag = self.tag_remote
 
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
@@ -613,7 +617,7 @@ class PrivateChat:
         if bytestring:
             payload = text
         else:
-            payload = self.frame.auto_replace(text)
+            payload = auto_replace(text)
 
         if self.PeerPrivateMessages.get_active():
             # not in the soulseek protocol
@@ -633,7 +637,7 @@ class PrivateChat:
         if text[:2] == "//":
             text = text[1:]
 
-        self.frame.np.queue.put(slskmessages.MessageUser(self.user, self.frame.auto_replace(text)))
+        self.frame.np.queue.put(slskmessages.MessageUser(self.user, auto_replace(text)))
 
     def on_enter(self, widget):
 
