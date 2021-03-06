@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on February 19, 2020
+Last updated on February 19, 2021
 
 ## Sections
 
