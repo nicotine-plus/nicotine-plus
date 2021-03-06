@@ -517,7 +517,7 @@ class Search:
             self.FilterOutEntry.set_text(str(sfilter[1]))
             self.FilterSizeEntry.set_text(str(sfilter[2]))
             self.FilterBitrateEntry.set_text(str(sfilter[3]))
-            self.FilterFreeSlot.set_active(str(sfilter[4]))
+            self.FilterFreeSlot.set_active(sfilter[4])
 
             if(len(sfilter) > 5):
                 self.FilterCountryEntry.set_text(str(sfilter[5]))

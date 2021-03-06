@@ -1820,7 +1820,7 @@ class SearchesFrame(BuildFrame):
             self.FilterOut.set_text(str(searches["defilter"][1]))
             self.FilterSize.set_text(str(searches["defilter"][2]))
             self.FilterBR.set_text(str(searches["defilter"][3]))
-            self.FilterFree.set_active(str(searches["defilter"][4]))
+            self.FilterFree.set_active(searches["defilter"][4])
 
             if(len(searches["defilter"]) > 5):
                 self.FilterCC.set_text(str(searches["defilter"][5]))
@@ -1831,13 +1831,14 @@ class SearchesFrame(BuildFrame):
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
 
+        self.on_enable_filters_toggled(self.EnableFilters)
         self.on_enable_search_results(self.ToggleResults)
 
     def get_settings(self):
-        maxresults = self.MaxResults.get_value_as_int()
+
         return {
             "searches": {
-                "maxresults": maxresults,
+                "maxresults": self.MaxResults.get_value_as_int(),
                 "enablefilters": self.EnableFilters.get_active(),
                 "re_filter": self.RegexpFilters.get_active(),
                 "defilter": [
