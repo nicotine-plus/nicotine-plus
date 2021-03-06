@@ -36,6 +36,7 @@ from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.dialogs import save_file
+from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import FileChooserButton
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -2866,8 +2867,15 @@ class PluginsFrame(BuildFrame):
 
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info['Version']})
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
-        self.PluginDescription.get_buffer().set_text("%(description)s" % {"description": info['Description'].replace(r'\n', "\n")})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
+
+        self.PluginDescription.get_buffer().set_text("")
+        append_line(self.PluginDescription,
+                    "%(description)s" % {
+                        "description": info['Description'].replace(r'\n', "\n")
+                    },
+                    showstamp=False,
+                    scroll=False)
 
         self.check_properties_button(self.selected_plugin)
 
