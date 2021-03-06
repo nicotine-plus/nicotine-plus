@@ -42,6 +42,7 @@ from pynicotine.config import Config
 from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
 from pynicotine.nowplaying import NowPlaying
+from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
 from pynicotine.transfers import Statistics
@@ -166,7 +167,6 @@ class NetworkEventProcessor:
         self.globallist = None
         self.userinfo = None
         self.userbrowse = None
-        self.search = None
         self.transfers = None
         self.userlist = None
         self.ipaddress = None
@@ -1046,6 +1046,7 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
 
+            self.search = Search(self, self.config, self.queue, self.ui_callback)
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
             self.shares.set_connected(True)
@@ -1058,7 +1059,7 @@ class NetworkEventProcessor:
                 if user not in self.watchedusers:
                     self.queue.put(slskmessages.AddUser(user))
 
-            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, self.search, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
+            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
             self.transfers.set_transfer_views(downloads, uploads)
             self.shares.send_num_shared_folders_files()
@@ -1418,7 +1419,7 @@ class NetworkEventProcessor:
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
         if self.search is not None:
-            self.search.wish_list.set_interval(msg)
+            self.search.set_wishlist_interval(msg)
 
     def get_user_status(self, msg, log_contents=True):
 
@@ -1693,19 +1694,21 @@ class NetworkEventProcessor:
         conn = msg.conn
         addr = conn.addr
 
-        if self.search is not None:
-            if addr:
-                country = self.geoip.get_all(addr[0]).country_short
-            else:
-                country = ""
+        if self.search is None:
+            return
 
-            if country == "-":
-                country = ""
+        if addr:
+            country = self.geoip.get_all(addr[0]).country_short
+        else:
+            country = ""
 
-            self.search.show_result(msg, msg.user, country)
+        if country == "-":
+            country = ""
 
-            # Close peer connection immediately, otherwise we exhaust our connection limit
-            self.close_peer_connection(conn, msg.user)
+        self.search.show_search_result(msg, msg.user, country)
+
+        # Close peer connection immediately, otherwise we exhaust our connection limit
+        self.close_peer_connection(conn, msg.user)
 
     def transfer_timeout(self, msg):
 
@@ -2004,12 +2007,15 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
+        if self.search is None:
+            return
+
         conn = msg.conn.conn
 
         for i in self.peerconns:
             if i.conn == conn:
                 user = i.username
-                self.shares.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
+                self.search.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
                 break
 
     def search_request(self, msg):
@@ -2017,18 +2023,23 @@ class NetworkEventProcessor:
 
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
 
-        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        if self.search is not None:
+            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
+            self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
 
     def room_search_request(self, msg):
+
         log.add_msg_contents("%s %s", (msg.__class__, self.contents(msg)))
-        self.shares.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=False)
+
+        if self.search is not None:
+            self.search.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=False)
 
     def distrib_search(self, msg):
         """ Distrib code: 3 """
 
-        self.shares.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
+        if self.search is not None:
+            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
+            self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
 
     def possible_parents(self, msg):
         """ Server code: 102 """

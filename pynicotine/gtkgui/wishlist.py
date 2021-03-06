@@ -26,7 +26,6 @@ import os
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -86,8 +85,10 @@ class WishList:
         wish = widget.get_text()
         widget.set_text("")
 
-        if self.add_wish(wish):
-            self.do_wishlist_search(self.searches.searchid, wish)
+        id = self.add_wish(wish)
+
+        if id:
+            self.frame.np.search.do_wishlist_search(id, wish)
 
     def on_remove_wish(self, widget):
 
@@ -119,16 +120,16 @@ class WishList:
 
     def add_wish(self, wish):
 
-        if not wish:
-            return False
+        id = self.frame.np.search.add_wish(wish)
+
+        if not id:
+            return None
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.append([wish])
 
-        self.searches.searchid += 1
-
-        self.searches.searches[self.searches.searchid] = {
-            "id": self.searches.searchid,
+        self.searches.searches[id] = {
+            "id": id,
             "term": wish,
             "tab": None,
             "mode": "wishlist",
@@ -136,10 +137,7 @@ class WishList:
             "ignore": True
         }
 
-        if wish not in self.frame.np.config.sections["server"]["autosearch"]:
-            self.frame.np.config.sections["server"]["autosearch"].append(wish)
-
-        return True
+        return id
 
     def remove_wish(self, wish):
 
@@ -172,21 +170,19 @@ class WishList:
         if not self.disconnected:
             # Create wishlist searches (without tabs)
             for term in self.frame.np.config.sections["server"]["autosearch"]:
-                self.searches.searches[self.searches.searchid] = {
-                    "id": self.searches.searchid,
+                id = self.frame.np.search.increment_search_id()
+
+                self.searches.searches[id] = {
+                    "id": id,
                     "term": term,
                     "tab": None,
                     "mode": "wishlist",
                     "remember": True,
                     "ignore": True
                 }
-                self.searches.searchid += 1
 
         self.on_auto_search()
         self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
-
-    def do_wishlist_search(self, id, text):
-        self.frame.np.queue.put(slskmessages.WishlistSearch(id, text))
 
     def on_auto_search(self, *args):
 
@@ -208,7 +204,7 @@ class WishList:
             if i["term"] == term and i["remember"]:
                 i["ignore"] = False
 
-                self.do_wishlist_search(i["id"], term)
+                self.frame.np.search.do_wishlist_search(i["id"], term)
                 break
 
         return True

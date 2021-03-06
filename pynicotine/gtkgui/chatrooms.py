@@ -1381,7 +1381,7 @@ class ChatRoom:
             del config["columns"]["chat_room"][self.room]
 
         for tag in self.tag_users.values():
-            self.update_tag_visuals(tag, "useroffline")
+            update_tag_visuals(tag, "useroffline")
 
         self.tickers.set_ticker([])
 

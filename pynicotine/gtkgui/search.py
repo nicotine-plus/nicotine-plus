@@ -23,7 +23,6 @@
 
 import operator
 import os
-import random
 import re
 import sre_constants
 
@@ -64,7 +63,6 @@ class Searches(IconNotebook):
 
         self.frame = frame
 
-        self.searchid = int(random.random() * (2 ** 31 - 1))
         self.searches = {}
         self.usersearches = {}
         self.users = {}
@@ -163,47 +161,19 @@ class Searches(IconNotebook):
             log.add_warning(_("Unknown search mode, not using plugin system. Fix me!"))
             feedback = True
 
-        if feedback is not None:
-            self.do_search(text, search_mode, users, room)
+        if feedback is None:
+            return
 
-    def do_search(self, text, mode, users=[], room=None):
+        id, final_text = self.frame.np.search.do_search(text, search_mode, users, room)
 
-        # Get excluded words (starting with "-")
-        searchterm_words = text.split()
-        searchterm_words_ignore = (p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1)
-
-        # Remove words starting with "-", results containing these are excluded by us later
-        searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
-
-        if self.frame.np.config.sections["searches"]["remove_special_chars"]:
-            """
-            Remove special characters from search term
-            SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
-            """
-            searchterm_without_excluded = re.sub(r'\W+', ' ', searchterm_without_excluded)
-
-        # Remove trailing whitespace
-        searchterm_without_excluded = searchterm_without_excluded.strip()
-
-        # Append excluded words
-        searchterm_with_excluded = searchterm_without_excluded
-
-        for word in searchterm_words_ignore:
-            searchterm_with_excluded += " -" + word
-
-        items = self.frame.np.config.sections["searches"]["history"]
-
-        if searchterm_with_excluded in items:
-            items.remove(searchterm_with_excluded)
-
-        items.insert(0, searchterm_with_excluded)
-
-        # Clear old items
-        del items[15:]
-        self.frame.np.config.write_configuration()
+        search = self.create_tab(id, final_text, search_mode, showtab=True)
+        if search["tab"] is not None:
+            self.set_current_page(self.page_num(search["tab"].Main))
 
         # Repopulate the combo list
         self.frame.SearchCombo.remove_all()
+
+        items = self.frame.np.config.sections["searches"]["history"]
 
         for i in items:
             if not isinstance(i, str):
@@ -211,50 +181,11 @@ class Searches(IconNotebook):
 
             self.frame.SearchCombo.append_text(i)
 
-        if mode == "user" and users != [] and users[0] != '':
-            self.usersearches[self.searchid] = users
+        if search_mode == "user" and users != [] and users[0] != '':
+            self.usersearches[id] = users
 
-        search = self.create_tab(self.searchid, searchterm_with_excluded, mode, showtab=True)
-        if search["tab"] is not None:
-            self.set_current_page(self.page_num(search["tab"].Main))
-
-        if mode == "global":
-            self.do_global_search(self.searchid, searchterm_without_excluded)
-
-        elif mode == "rooms":
-            self.do_rooms_search(self.searchid, searchterm_without_excluded, room)
-
-        elif mode == "buddies":
-            self.do_buddies_search(self.searchid, searchterm_without_excluded)
-
-        elif mode == "user" and users != [] and users[0] != '':
-            self.do_peer_search(self.searchid, searchterm_without_excluded, users)
-
-        self.searchid += 1
-
-    def do_global_search(self, id, text):
-        self.frame.np.queue.put(slskmessages.FileSearch(id, text))
-
-        """ Request a list of related searches from the server.
-        Seemingly non-functional since 2018 (always receiving empty lists). """
-
-        # self.frame.np.queue.put(slskmessages.RelatedSearch(text))
-
-    def do_rooms_search(self, id, text, room=None):
-        if room is not None:
-            self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
-        else:
-            for room in self.frame.chatrooms.joinedrooms:
-                self.frame.np.queue.put(slskmessages.RoomSearch(room, id, text))
-
-    def do_buddies_search(self, id, text):
-        for i in self.frame.np.config.sections["server"]["userlist"]:
-            user = i[0]
-            self.frame.np.queue.put(slskmessages.UserSearch(user, id, text))
-
-    def do_peer_search(self, id, text, users):
-        for user in users:
-            self.frame.np.send_message_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
+    def set_wishlist_interval(self, msg):
+        self.wish_list.set_interval(msg)
 
     def clear_search_history(self):
 
@@ -333,7 +264,7 @@ class Searches(IconNotebook):
         label = fulltext[:length]
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
 
-    def show_result(self, msg, username, country):
+    def show_search_result(self, msg, username, country):
 
         try:
             search = self.searches[msg.token]

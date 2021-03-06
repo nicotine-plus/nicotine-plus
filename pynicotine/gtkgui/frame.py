@@ -441,7 +441,7 @@ class NicotineFrame:
         if msg.banner != "":
             log.add(msg.banner)
 
-        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.searches, self.downloads, self.uploads, self.userlist, self.interests
+        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.downloads, self.uploads, self.userlist, self.interests
 
     def init_spell_checker(self):
 
@@ -1797,6 +1797,12 @@ class NicotineFrame:
         self.statistics.update_stat_value(stat_id, stat_value)
 
     """ Search """
+
+    def set_wishlist_interval(self, msg):
+        self.searches.set_wishlist_interval(msg)
+
+    def show_search_result(self, msg, username, country):
+        self.searches.show_search_result(msg, username, country)
 
     def on_settings_searches(self, widget):
         self.on_settings(page='Searches')
