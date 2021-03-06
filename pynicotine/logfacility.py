@@ -69,6 +69,10 @@ class Logger(object):
         if level not in self.log_levels:
             return
 
+        if not msg_args and level == 4:
+            # Compile message contents
+            msg = "%s %s" % (msg.__class__, self.contents(msg))
+
         msg = self.set_msg_prefix(level, msg)
 
         if msg_args:
@@ -100,6 +104,13 @@ class Logger(object):
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level=6)
+
+    def contents(self, obj):
+        """ Returns variables for object, for debug output """
+        try:
+            return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
+        except AttributeError:
+            return vars(obj)
 
     def add_listener(self, callback):
         self.listeners.add(callback)
