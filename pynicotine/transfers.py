@@ -1578,7 +1578,9 @@ class Transfers:
         i.conn = None
 
         self.add_to_shared(newname)
-        self.eventprocessor.shares.send_num_shared_folders_files()
+
+        if self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
+            self.eventprocessor.shares.send_num_shared_folders_files()
 
         self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
 
