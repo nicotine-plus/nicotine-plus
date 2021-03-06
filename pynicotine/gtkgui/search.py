@@ -164,9 +164,9 @@ class Searches(IconNotebook):
         if feedback is None:
             return
 
-        id, final_text = self.frame.np.search.do_search(text, search_mode, users, room)
+        id, searchterm_with_excluded, searchterm_without_excluded = self.frame.np.search.do_search(text, search_mode, users, room)
 
-        search = self.create_tab(id, final_text, search_mode, showtab=True)
+        search = self.create_tab(id, searchterm_with_excluded, search_mode, showtab=True)
         if search["tab"] is not None:
             self.set_current_page(self.page_num(search["tab"].Main))
 

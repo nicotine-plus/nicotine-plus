@@ -1046,7 +1046,7 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
 
-            self.search = Search(self, self.config, self.queue, self.ui_callback)
+            self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
             self.shares.set_connected(True)

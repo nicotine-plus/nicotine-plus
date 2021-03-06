@@ -31,14 +31,14 @@ from pynicotine.logfacility import log
 
 class Search:
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, np, config, queue, share_dbs, ui_callback=None):
 
         self.np = np
         self.config = config
         self.queue = queue
         self.ui_callback = ui_callback
         self.searchid = int(random.random() * (2 ** 31 - 1))
-        self.share_dbs = self.np.shares.share_dbs
+        self.share_dbs = share_dbs
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     """ Outgoing search requests """
@@ -53,7 +53,7 @@ class Search:
         searchterm_words_ignore = (p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1)
 
         # Remove words starting with "-", results containing these are excluded by us later
-        searchterm_without_excluded = re.sub(r'(\s)-\w+', r'\1', text)
+        searchterm_without_excluded = re.sub(r'(\s)-\w+', '', text)
 
         if self.config.sections["searches"]["remove_special_chars"]:
             """
@@ -94,7 +94,7 @@ class Search:
         elif mode == "user" and users != [] and users[0] != '':
             self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
-        return self.searchid, searchterm_with_excluded
+        return self.searchid, searchterm_with_excluded, searchterm_without_excluded
 
     def do_global_search(self, id, text):
         self.queue.put(slskmessages.FileSearch(id, text))
