@@ -1840,6 +1840,21 @@ def entry_completion_found_match(completion, model, iterator):
     return True
 
 
+def get_user_status_color(status):
+
+    if status == 1:
+        color = "useraway"
+    elif status == 2:
+        color = "useronline"
+    else:
+        color = "useroffline"
+
+    if not NICOTINE.np.config.sections["ui"]["showaway"] and color == "useraway":
+        color = "useronline"
+
+    return color
+
+
 """ Command Aliases """
 
 
@@ -2044,7 +2059,37 @@ def set_widget_font(widget, font):
     widget.set_property("font", font)
 
 
+def update_tag_visuals(tag, color):
+
+    config = NICOTINE.np.config.sections["ui"]
+
+    set_widget_color(tag, config[color])
+    set_widget_font(tag, config["chatfont"])
+
+    # Hotspots
+    if color in ("useraway", "useronline", "useroffline"):
+
+        usernamestyle = config["usernamestyle"]
+
+        if usernamestyle == "bold":
+            tag.set_property("weight", Pango.Weight.BOLD)
+        else:
+            tag.set_property("weight", Pango.Weight.NORMAL)
+
+        if usernamestyle == "italic":
+            tag.set_property("style", Pango.Style.ITALIC)
+        else:
+            tag.set_property("style", Pango.Style.NORMAL)
+
+        if usernamestyle == "underline":
+            tag.set_property("underline", Pango.Underline.SINGLE)
+        else:
+            tag.set_property("underline", Pango.Underline.NONE)
+
+
 def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=True):
+
+    config = NICOTINE.np.config.sections["ui"]
 
     if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or \
             isinstance(widget, Gtk.Entry):
@@ -2053,19 +2098,19 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
 
         set_widget_fg_bg_css(
             widget,
-            bg_color=NICOTINE.np.config.sections["ui"]["textbg"],
-            fg_color=NICOTINE.np.config.sections["ui"]["inputcolor"]
+            bg_color=config["textbg"],
+            fg_color=config["inputcolor"]
         )
 
     elif update_text_tags and isinstance(widget, Gtk.TextTag):
         # Chat rooms and private chats have their own code for this
 
-        set_widget_color(widget, NICOTINE.np.config.sections["ui"]["chatremote"])
-        set_widget_font(widget, NICOTINE.np.config.sections["ui"]["chatfont"])
+        set_widget_color(widget, config["chatremote"])
+        set_widget_font(widget, config["chatfont"])
 
     elif isinstance(widget, Gtk.TreeView):
-        set_list_color(widget, NICOTINE.np.config.sections["ui"]["search"])
-        set_list_font(widget, NICOTINE.np.config.sections["ui"][list_font_target])
+        set_list_color(widget, config["search"])
+        set_list_font(widget, config[list_font_target])
 
 
 """ Events """

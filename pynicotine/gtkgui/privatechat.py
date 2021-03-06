@@ -32,7 +32,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.gtkgui.chatrooms import get_completion
@@ -44,6 +43,7 @@ from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import entry_completion_find_match
 from pynicotine.gtkgui.utils import entry_completion_found_match
 from pynicotine.gtkgui.utils import expand_alias
+from pynicotine.gtkgui.utils import get_user_status_color
 from pynicotine.gtkgui.utils import IconNotebook
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
@@ -52,10 +52,9 @@ from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import set_widget_color
-from pynicotine.gtkgui.utils import set_widget_font
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import unalias
+from pynicotine.gtkgui.utils import update_tag_visuals
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -819,8 +818,7 @@ class PrivateChat:
     def create_tag(self, buffer, color):
 
         tag = buffer.create_tag()
-        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
-        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
+        update_tag_visuals(tag, color)
 
         return tag
 
@@ -832,14 +830,8 @@ class PrivateChat:
         self.tag_me = self.create_tag(buffer, "chatme")
         self.tag_hilite = self.create_tag(buffer, "chathilite")
 
-        if self.status == 1 and self.frame.np.config.sections["ui"]["showaway"]:
-            statuscolor = "useraway"
-        elif self.status == 2 or not self.frame.np.config.sections["ui"]["showaway"] and self.status == 1:
-            statuscolor = "useronline"
-        else:
-            statuscolor = "useroffline"
-
-        self.tag_username = self.create_tag(buffer, statuscolor)
+        color = get_user_status_color(self.status)
+        self.tag_username = self.create_tag(buffer, color)
 
         if self.chats.connected:
             if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
@@ -849,84 +841,23 @@ class PrivateChat:
         else:
             self.tag_my_username = self.create_tag(buffer, "useroffline")
 
-        usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-
-        if usernamestyle == "bold":
-            self.tag_username.set_property("weight", Pango.Weight.BOLD)
-            self.tag_my_username.set_property("weight", Pango.Weight.BOLD)
-        else:
-            self.tag_username.set_property("weight", Pango.Weight.NORMAL)
-            self.tag_my_username.set_property("weight", Pango.Weight.NORMAL)
-
-        if usernamestyle == "italic":
-            self.tag_username.set_property("style", Pango.Style.ITALIC)
-            self.tag_my_username.set_property("style", Pango.Style.ITALIC)
-        else:
-            self.tag_username.set_property("style", Pango.Style.NORMAL)
-            self.tag_my_username.set_property("style", Pango.Style.NORMAL)
-
-        if usernamestyle == "underline":
-            self.tag_username.set_property("underline", Pango.Underline.SINGLE)
-            self.tag_my_username.set_property("underline", Pango.Underline.SINGLE)
-        else:
-            self.tag_username.set_property("underline", Pango.Underline.NONE)
-            self.tag_my_username.set_property("underline", Pango.Underline.NONE)
-
-    def update_tag_visuals(self, tag, color):
-
-        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
-        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
-
-        if color in ("useraway", "useronline", "useroffline"):
-
-            usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-
-            if usernamestyle == "bold":
-                tag.set_property("weight", Pango.Weight.BOLD)
-            else:
-                tag.set_property("weight", Pango.Weight.NORMAL)
-
-            if usernamestyle == "italic":
-                tag.set_property("style", Pango.Style.ITALIC)
-            else:
-                tag.set_property("style", Pango.Style.NORMAL)
-
-            if usernamestyle == "underline":
-                tag.set_property("underline", Pango.Underline.SINGLE)
-            else:
-                tag.set_property("underline", Pango.Underline.NONE)
-
     def update_tags(self):
 
-        self.update_tag_visuals(self.tag_remote, "chatremote")
-        self.update_tag_visuals(self.tag_local, "chatlocal")
-        self.update_tag_visuals(self.tag_me, "chatme")
-        self.update_tag_visuals(self.tag_hilite, "chathilite")
+        update_tag_visuals(self.tag_remote, "chatremote")
+        update_tag_visuals(self.tag_local, "chatlocal")
+        update_tag_visuals(self.tag_me, "chatme")
+        update_tag_visuals(self.tag_hilite, "chathilite")
 
-        color = self.get_user_status_color(self.status)
-        self.update_tag_visuals(self.tag_username, color)
+        color = get_user_status_color(self.status)
+        update_tag_visuals(self.tag_username, color)
 
         if self.chats.connected:
             if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
-                self.update_tag_visuals(self.tag_my_username, "useraway")
+                update_tag_visuals(self.tag_my_username, "useraway")
             else:
-                self.update_tag_visuals(self.tag_my_username, "useronline")
+                update_tag_visuals(self.tag_my_username, "useronline")
         else:
-            self.update_tag_visuals(self.tag_my_username, "useroffline")
-
-    def get_user_status_color(self, status):
-
-        if status == 1:
-            color = "useraway"
-        elif status == 2:
-            color = "useronline"
-        else:
-            color = "useroffline"
-
-        if not self.frame.np.config.sections["ui"]["showaway"] and color == "useraway":
-            color = "useronline"
-
-        return color
+            update_tag_visuals(self.tag_my_username, "useroffline")
 
     def get_user_status(self, status):
 
@@ -934,12 +865,9 @@ class PrivateChat:
             return
 
         self.status = status
-        color = self.get_user_status_color(self.status)
-        self.update_tag_visuals(self.tag_username, color)
 
-    def on_close(self, widget):
-
-        self.chats.remove_tab(self)
+        color = get_user_status_color(self.status)
+        update_tag_visuals(self.tag_username, color)
 
     def get_completion_list(self, ix=0, text="", clist=None):
 
@@ -1002,3 +930,6 @@ class PrivateChat:
 
         widget.stop_emission_by_name("key_press_event")
         return True
+
+    def on_close(self, widget):
+        self.chats.remove_tab(self)

@@ -47,6 +47,7 @@ from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import entry_completion_find_match
 from pynicotine.gtkgui.utils import entry_completion_found_match
+from pynicotine.gtkgui.utils import get_user_status_color
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import IconNotebook
@@ -62,10 +63,9 @@ from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
 from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import set_widget_color
-from pynicotine.gtkgui.utils import set_widget_font
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import unalias
+from pynicotine.gtkgui.utils import update_tag_visuals
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
@@ -960,12 +960,12 @@ class ChatRoom:
         if user not in self.users:
             color = "useroffline"
         else:
-            color = self.get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
+            color = get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
 
         if user not in self.tag_users:
             self.tag_users[user] = self.create_tag(self.ChatScroll.get_buffer(), color, user)
         else:
-            self.update_tag_visuals(self.tag_users[user], color)
+            update_tag_visuals(self.tag_users[user], color)
 
     def thread_alias(self, alias):
 
@@ -1279,8 +1279,8 @@ class ChatRoom:
             append_line(self.RoomLog, action % user, self.tag_log)
 
         if user in self.tag_users:
-            color = self.get_user_status_color(status)
-            self.update_tag_visuals(self.tag_users[user], color)
+            color = get_user_status_color(status)
+            update_tag_visuals(self.tag_users[user], color)
 
         self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(self.users[user], 5, status)
@@ -1293,35 +1293,12 @@ class ChatRoom:
         self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
         self.usersmodel.set_value(self.users[user], 8, country)
 
-    def create_tag(self, buffer, color, username=None):
+    def update_visuals(self):
 
-        tag = buffer.create_tag()
+        for widget in self.__dict__.values():
+            update_widget_visuals(widget, update_text_tags=False)
 
-        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
-        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
-
-        if username is not None:
-
-            usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-
-            if usernamestyle == "bold":
-                tag.set_property("weight", Pango.Weight.BOLD)
-            else:
-                tag.set_property("weight", Pango.Weight.NORMAL)
-
-            if usernamestyle == "italic":
-                tag.set_property("style", Pango.Style.ITALIC)
-            else:
-                tag.set_property("style", Pango.Style.NORMAL)
-
-            if usernamestyle == "underline":
-                tag.set_property("underline", Pango.Underline.SINGLE)
-            else:
-                tag.set_property("underline", Pango.Underline.NONE)
-
-            tag.connect("event", self.user_name_event, username)
-
-        return tag
+        self.room_wall.update_visuals()
 
     def user_name_event(self, tag, widget, event, iterator, user):
         """
@@ -1343,75 +1320,36 @@ class ChatRoom:
 
         return True
 
-    def update_visuals(self):
+    def create_tag(self, buffer, color, username=None):
 
-        for widget in self.__dict__.values():
-            update_widget_visuals(widget, update_text_tags=False)
+        tag = buffer.create_tag()
+        update_tag_visuals(tag, color)
 
-        self.room_wall.update_visuals()
+        if username:
+            tag.connect("event", self.user_name_event, username)
+
+        return tag
 
     def create_tags(self):
 
-        buffer = self.ChatScroll.get_buffer()
+        log_buffer = self.RoomLog.get_buffer()
+        self.tag_log = self.create_tag(log_buffer, "chatremote")
 
-        self.tag_remote = self.create_tag(buffer, "chatremote")
-        self.tag_local = self.create_tag(buffer, "chatlocal")
-        self.tag_me = self.create_tag(buffer, "chatme")
-        self.tag_hilite = self.create_tag(buffer, "chathilite")
+        chat_buffer = self.ChatScroll.get_buffer()
+        self.tag_remote = self.create_tag(chat_buffer, "chatremote")
+        self.tag_local = self.create_tag(chat_buffer, "chatlocal")
+        self.tag_me = self.create_tag(chat_buffer, "chatme")
+        self.tag_hilite = self.create_tag(chat_buffer, "chathilite")
 
         self.tag_users = {}
-        for user in self.tag_users:
-            self.get_user_tag(user)
-
-        logbuffer = self.RoomLog.get_buffer()
-        self.tag_log = self.create_tag(logbuffer, "chatremote")
-
-    def get_user_status_color(self, status):
-
-        if status == 1:
-            color = "useraway"
-        elif status == 2:
-            color = "useronline"
-        else:
-            color = "useroffline"
-
-        if not self.frame.np.config.sections["ui"]["showaway"] and color == "useraway":
-            color = "useronline"
-
-        return color
-
-    def update_tag_visuals(self, tag, color):
-
-        set_widget_color(tag, self.frame.np.config.sections["ui"][color])
-        set_widget_font(tag, self.frame.np.config.sections["ui"]["chatfont"])
-
-        # Hotspots
-        if color in ("useraway", "useronline", "useroffline"):
-
-            usernamestyle = self.frame.np.config.sections["ui"]["usernamestyle"]
-
-            if usernamestyle == "bold":
-                tag.set_property("weight", Pango.Weight.BOLD)
-            else:
-                tag.set_property("weight", Pango.Weight.NORMAL)
-
-            if usernamestyle == "italic":
-                tag.set_property("style", Pango.Style.ITALIC)
-            else:
-                tag.set_property("style", Pango.Style.NORMAL)
-
-            if usernamestyle == "underline":
-                tag.set_property("underline", Pango.Underline.SINGLE)
-            else:
-                tag.set_property("underline", Pango.Underline.NONE)
 
     def update_tags(self):
 
-        self.update_tag_visuals(self.tag_remote, "chatremote")
-        self.update_tag_visuals(self.tag_local, "chatlocal")
-        self.update_tag_visuals(self.tag_me, "chatme")
-        self.update_tag_visuals(self.tag_hilite, "chathilite")
-        self.update_tag_visuals(self.tag_log, "chatremote")
+        update_tag_visuals(self.tag_remote, "chatremote")
+        update_tag_visuals(self.tag_local, "chatlocal")
+        update_tag_visuals(self.tag_me, "chatme")
+        update_tag_visuals(self.tag_hilite, "chathilite")
+        update_tag_visuals(self.tag_log, "chatremote")
 
         for user in self.tag_users:
             self.get_user_tag(user)
