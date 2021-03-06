@@ -843,7 +843,7 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s", {'peer': self.contents(i), 'error': error})
+                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s", {'peer': log.contents(i), 'error': error})
 
                     if i.conntimer is not None:
                         i.conntimer.cancel()
@@ -1636,7 +1636,7 @@ class NetworkEventProcessor:
                 }
             )
 
-            log.add_warning("%s %s", (msg.__class__, self.contents(msg)))
+            log.add_msg_contents(msg)
 
             return
 
@@ -1993,7 +1993,7 @@ class NetworkEventProcessor:
             peermsg.tunneledaddr = msg.addr
             self.network_callback([peermsg])
         else:
-            log.add_msg_contents("Unknown tunneled message: %s", self.contents(msg))
+            log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
 
     def file_search_request(self, msg):
         """ Peer code: 8 """
