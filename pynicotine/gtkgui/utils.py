@@ -1004,6 +1004,24 @@ class IconNotebook:
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
 
+    def remove_all_pages(self):
+
+        option_dialog(
+            parent=NICOTINE.MainWindow,
+            title=_('Close All Tabs?'),
+            message=_('Are you sure you wish to close all tabs?'),
+            callback=self.remove_all_pages_cb
+        )
+
+    def remove_all_pages_cb(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+            for page in self.notebook.get_children():
+                tab_label, menu_label = self.get_labels(page)
+                tab_label.onclose(dialog)
+
+        dialog.destroy()
+
     def get_page_owner(self, page, items):
 
         n = self.page_num(page)
@@ -1015,9 +1033,18 @@ class IconNotebook:
         # Dummy implementation
         pass
 
-    def on_tab_click(self, widget, event, child):
-        # Dummy implementation
-        pass
+    def on_tab_click(self, widget, event, page):
+
+        if triggers_context_menu(event):
+            return self.on_tab_popup(widget, page)
+
+        elif event.button == 2:
+            # Middle click
+            tab_label, menu_label = self.get_labels(page)
+            tab_label.onclose(widget)
+            return True
+
+        return False
 
     def set_status_image(self, page, status):
 
@@ -1504,15 +1531,6 @@ class PopupMenu(Gtk.Menu):
 
         popup.setup(*items)
         return True
-
-    def on_close_all_tabs(self, widget, caller):
-
-        option_dialog(
-            parent=self.frame.MainWindow,
-            title=_('Close All Tabs?'),
-            message=_('Are you sure you wish to close all tabs?'),
-            callback=caller.close_all_tabs
-        )
 
 
 class FileChooserButton:

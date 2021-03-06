@@ -111,7 +111,7 @@ class UserBrowse:
 
             menu.append_item(("", None))
             menu.append_item(("#" + _("_Save Shares List To Disk"), self.on_save))
-            menu.append_item(("#" + _("Close All Tabs"), menu.on_close_all_tabs, self.userbrowses))
+            menu.append_item(("#" + _("Close All Tabs"), self.on_close_all_tabs))
             menu.append_item(("#" + _("_Close Tab"), self.on_close))
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame, False)
@@ -997,10 +997,6 @@ class UserBrowse:
         else:
             self.search_position = 0
 
-    def on_close(self, widget):
-        del self.userbrowses.users[self.user]
-        self.userbrowses.remove_page(self.Main)
-
     def on_refresh(self, widget):
 
         self.refreshing = True
@@ -1046,3 +1042,10 @@ class UserBrowse:
         command = self.frame.np.config.sections["ui"]["filemanager"]
 
         open_file_path(path, command)
+
+    def on_close(self, widget):
+        del self.userbrowses.users[self.user]
+        self.userbrowses.remove_page(self.Main)
+
+    def on_close_all_tabs(self, widget):
+        self.userbrowses.remove_all_pages()

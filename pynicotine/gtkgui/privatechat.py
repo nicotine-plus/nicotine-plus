@@ -186,32 +186,12 @@ class PrivateChats(IconNotebook):
         menu.get_items()[_("Send _Message")].set_visible(False)
 
         menu.append_item(("", None))
-        menu.append_item(("#" + _("Close All Tabs"), menu.on_close_all_tabs, self))
+        menu.append_item(("#" + _("Close All Tabs"), self.users[username].on_close_all_tabs))
         menu.append_item(("#" + _("_Close Tab"), self.users[username].on_close))
         menu.toggle_user_items()
 
         menu.popup()
         return True
-
-    def on_tab_click(self, widget, event, page):
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, page)
-
-        if event.button == 2:
-            username = self.get_page_owner(page, self.users)
-            self.users[username].on_close(widget)
-            return True
-
-        return False
-
-    def close_all_tabs(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            for user in self.users.copy():
-                self.users[user].on_close(dialog)
-
-        dialog.destroy()
 
     def show_message(self, msg, text, newmessage=True):
 
@@ -933,3 +913,6 @@ class PrivateChat:
 
     def on_close(self, widget):
         self.chats.remove_tab(self)
+
+    def on_close_all_tabs(self, widget):
+        self.chats.remove_all_pages()

@@ -160,26 +160,6 @@ class UserTabs(IconNotebook):
         menu.popup()
         return True
 
-    def on_tab_click(self, widget, event, page):
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, page)
-
-        if event.button == 2:
-            username = self.get_page_owner(page, self.users)
-            self.users[username].on_close(widget)
-            return True
-
-        return False
-
-    def close_all_tabs(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            for user in self.users.copy():
-                self.users[user].on_close(dialog)
-
-        dialog.destroy()
-
     def conn_close(self):
 
         self.connected = 0
@@ -249,7 +229,7 @@ class UserInfo:
         popup.get_items()[_("Show User I_nfo")].set_visible(False)
 
         popup.append_item(("", None))
-        popup.append_item(("#" + _("Close All Tabs"), popup.on_close_all_tabs, self.userinfos))
+        popup.append_item(("#" + _("Close All Tabs"), self.on_close_all_tabs))
         popup.append_item(("#" + _("_Close Tab"), self.on_close))
 
         self.likes_popup_menu = popup = PopupMenu(self.frame)
@@ -475,10 +455,6 @@ class UserInfo:
     def on_ignore_user(self, widget):
         self.frame.ignore_user(self.user)
 
-    def on_close(self, widget):
-        del self.userinfos.users[self.user]
-        self.userinfos.remove_page(self.Main)
-
     def on_save_picture(self, widget):
 
         if self.image is None or self.image_pixbuf is None:
@@ -585,3 +561,10 @@ class UserInfo:
         del pixbuf_zoomed
 
         gc.collect()
+
+    def on_close(self, widget):
+        del self.userinfos.users[self.user]
+        self.userinfos.remove_page(self.Main)
+
+    def on_close_all_tabs(self, widget):
+        self.userinfos.remove_all_pages()

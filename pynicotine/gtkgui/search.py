@@ -420,37 +420,12 @@ class Searches(IconNotebook):
             ("#" + _("Copy Search Term"), self.searches[search_id]["tab"].on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.searches[search_id]["tab"].on_clear),
-            ("#" + _("Close All Tabs"), menu.on_close_all_tabs, self),
+            ("#" + _("Close All Tabs"), self.searches[search_id]["tab"].on_close_all_tabs),
             ("#" + _("_Close Tab"), self.searches[search_id]["tab"].on_close)
         )
 
         menu.popup()
         return True
-
-    def on_tab_click(self, widget, event, child):
-
-        search_id = self.get_search_id(child)
-
-        if search_id is None:
-            log.add_warning(_("Search ID was none when clicking tab"))
-            return False
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, child)
-
-        if event.button == 2:
-            self.searches[search_id]["tab"].on_close(widget)
-            return True
-
-        return False
-
-    def close_all_tabs(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            for search_id in self.searches.copy():
-                self.searches[search_id]["tab"].on_close(dialog)
-
-        dialog.destroy()
 
 
 class Search:
@@ -1432,19 +1407,6 @@ class Search:
         self.FiltersContainer.set_visible(visible)
         self.frame.np.config.sections["searches"]["filters_visible"] = visible
 
-    def on_clear(self, widget):
-        self.all_data = []
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.numvisibleresults = 0
-
-        # Update number of visible results
-        self.update_result_counter()
-
-    def on_close(self, widget):
-        self.searches.remove_tab(self)
-
     def on_copy_search_term(self, widget):
         self.frame.clip.set_text(self.text, -1)
 
@@ -1543,3 +1505,19 @@ class Search:
             self.FilterLabel.set_text(_("Result Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
+
+    def on_clear(self, widget):
+        self.all_data = []
+        self.usersiters.clear()
+        self.directoryiters.clear()
+        self.resultsmodel.clear()
+        self.numvisibleresults = 0
+
+        # Update number of visible results
+        self.update_result_counter()
+
+    def on_close(self, widget):
+        self.searches.remove_tab(self)
+
+    def on_close_all_tabs(self, widget):
+        self.searches.remove_all_pages()

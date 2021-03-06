@@ -152,18 +152,6 @@ class ChatRooms(IconNotebook):
         menu.popup()
         return True
 
-    def on_tab_click(self, widget, event, page):
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, page)
-
-        if event.button == 2:
-            room = self.get_page_owner(page, self.joinedrooms)
-            self.joinedrooms[room].on_leave(widget)
-            return True
-
-        return False
-
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
         room_tab_order = {}
