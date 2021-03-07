@@ -569,12 +569,9 @@ def url_event(tag, widget, event, iterator, url):
 
 def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True, find_urls=True):
 
-    line = str(line)  # Error messages are sometimes tuples
-
     def _makeurltag(buffer, url):
 
         color = NICOTINE.np.config.sections["ui"]["urlcolor"] or None
-
         tag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
         tag.last_event_type = -1
         tag.connect("event", url_event, url)
@@ -582,57 +579,44 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
         return tag
 
     def _append(buffer, text, tag):
+
         iterator = buffer.get_end_iter()
+        start_offset = iterator.get_offset()
+        buffer.insert(iterator, text)
 
         if tag is not None:
-            buffer.insert_with_tags(iterator, text, tag)
-        else:
-            buffer.insert(iterator, text)
+            start = buffer.get_iter_at_offset(start_offset)
+            buffer.apply_tag(tag, start, iterator)
 
     def _usertag(buffer, section):
+
         # Tag usernames with popup menu creating tag, and away/online/offline colors
         if username is not None and usertag is not None and NICOTINE.np.config.sections["ui"]["usernamehotspots"]:
             np = re.compile(re.escape(str(username)))
             match = np.search(section)
-            if match is not None:
-                start2 = section[:match.start()]
-                name = match.group()[:]
-                start = section[match.end():]
-                _append(buffer, start2, tag)
-                _append(buffer, name, usertag)
-                _append(buffer, start, tag)
-            else:
-                _append(buffer, section, tag)
-        else:
-            _append(buffer, section, tag)
 
+            if match is not None:
+                _append(buffer, section[:match.start()], tag)
+                _append(buffer, match.group(), usertag)
+                _append(buffer, section[match.end():], tag)
+                return
+
+        _append(buffer, section, tag)
+
+    line = str(line).strip("\n")
     buffer = textview.get_buffer()
-    text_iter_start, text_iter_end = buffer.get_bounds()
     linenr = buffer.get_line_count()
 
-    final_timestamp = None
-    ts = 0
+    if buffer.get_char_count() > 0:
+        _append(buffer, "\n", None)
 
-    if showstamp and NICOTINE.np.config.sections["logging"]["timestamps"]:
-        if timestamp_format and not timestamp:
-            final_timestamp = time.strftime(timestamp_format)
-            line = "%s %s" % (final_timestamp, line)
-        elif timestamp_format and timestamp:
-            final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp))
-            line = "%s %s" % (final_timestamp, line)
+    if showstamp and timestamp_format and NICOTINE.np.config.sections["logging"]["timestamps"]:
+        if timestamp:
+            final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp)) + " "
+        else:
+            final_timestamp = time.strftime(timestamp_format) + " "
 
-    # Ensure newlines are in the correct place
-    # We want them before the content, to prevent adding an empty line at the end of the TextView
-    line = line.strip("\n")
-    if text_iter_end.get_offset() > 0:
-        line = "\n" + line
-
-    if final_timestamp is not None:
-        ts = len("\n") + len(final_timestamp)
-
-    # Append timestamp, if one exists, cut it from remaining line (to avoid matching against username)
-    _append(buffer, line[:ts], tag)
-    line = line[ts:]
+        _append(buffer, final_timestamp, tag)
 
     if find_urls and NICOTINE.np.config.sections["urls"]["urlcatching"]:
         # Match first url
@@ -640,13 +624,10 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 
         # Highlight urls, if found and tag them
         while match:
-            start = line[:match.start()]
-            _usertag(buffer, start)
+            _usertag(buffer, line[:match.start()])
 
             url = match.group()
             urltag = _makeurltag(buffer, url)
-
-            line = line[match.end():]
 
             if url.startswith("slsk://") and NICOTINE.np.config.sections["urls"]["humanizeurls"]:
                 import urllib.parse
@@ -655,6 +636,7 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
             _append(buffer, url, urltag)
 
             # Match remaining url
+            line = line[match.end():]
             match = URL_RE.search(line)
 
     if line:
