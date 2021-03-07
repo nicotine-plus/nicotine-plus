@@ -132,18 +132,26 @@ def message_dialog(parent, title, message):
     self.destroy()
 
 
-def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", third=""):
+def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", cancel=True, third=""):
+
+    if cancel:
+        buttons = Gtk.ButtonsType.OK_CANCEL
+    else:
+        buttons = Gtk.ButtonsType.OK
 
     self = Gtk.MessageDialog(
         transient_for=parent,
         flags=0,
         message_type=Gtk.MessageType.QUESTION,
-        buttons=Gtk.ButtonsType.OK_CANCEL,
+        buttons=buttons,
         text=title
     )
     self.connect("response", callback, callback_data)
     self.set_modal(True)
     self.format_secondary_text(message)
+
+    label = self.get_message_area().get_children()[-1]
+    label.set_selectable(True)
 
     if checkbox_label:
         self.checkbox = Gtk.CheckButton()

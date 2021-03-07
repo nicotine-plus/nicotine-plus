@@ -2610,23 +2610,36 @@ class NicotineFrame:
 
         from traceback import format_tb
 
-        if not self.ci_mode:
-            # We're running in user mode, show error dialog
+        if self.ci_mode:
+            # We're running in CI mode without user input, exit now
+            self.on_quit()
+            raise type(value)
 
-            if hasattr(self, "MainWindow"):
-                parent = self.MainWindow
-            else:
-                parent = None
+        if hasattr(self, "MainWindow"):
+            parent = self.MainWindow
+        else:
+            parent = None
 
-            message_dialog(
-                parent,
-                _("Critical Error"),
-                _("Nicotine+ has encountered a critical error and needs to exit. Please include the following error in a bug report:") +
-                "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb)))
-            )
+        option_dialog(
+            parent=parent,
+            title=_("Critical Error"),
+            message=_("Nicotine+ has encountered a critical error and needs to exit. Please copy the following error and include it in a bug report:") +
+            "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
+            third=_("Report Bug"),
+            cancel=False,
+            callback=self.on_critical_error_response
+        )
 
-        self.on_quit()
-        raise type(value)
+    def on_critical_error_response(self, dialog, response, data):
+
+        if response == Gtk.ResponseType.OK:
+
+            dialog.destroy()
+            self.on_quit()
+
+        elif response == Gtk.ResponseType.REJECT:
+
+            self.on_report_bug()
 
     def on_delete_event(self, widget, event):
 
