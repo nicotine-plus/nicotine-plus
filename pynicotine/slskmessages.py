@@ -2317,7 +2317,7 @@ class FolderContentsRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(1))
-        msg.extend(self.pack_object(self.dir))
+        msg.extend(self.pack_object(self.dir, latin1=True))
 
         return msg
 
