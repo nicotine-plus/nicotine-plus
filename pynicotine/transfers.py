@@ -2185,6 +2185,8 @@ class Transfers:
         if username is None:
             return
 
+        log.add_transfer("Received response for folder content request from user %s", username)
+
         for i in file_list:
             for directory in file_list[i]:
 
@@ -2195,29 +2197,32 @@ class Transfers:
                         files.sort(key=lambda x: x[1], reverse=True)
 
                     for file in files:
+                        destination = self.folder_destination(username, directory)
                         size = file[2]
                         h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                         if directory[-1] == '\\':
-                            self.get_file(
-                                username,
-                                directory + file[1],
-                                self.folder_destination(username, directory),
-                                size=size,
-                                bitrate=h_bitrate,
-                                length=h_length,
-                                checkduplicate=True
-                            )
+                            filename = directory + file[1]
                         else:
-                            self.get_file(
-                                username,
-                                directory + '\\' + file[1],
-                                self.folder_destination(username, directory),
-                                size=size,
-                                bitrate=h_bitrate,
-                                length=h_length,
-                                checkduplicate=True
-                            )
+                            filename = directory + '\\' + file[1]
+
+                        self.get_file(
+                            username,
+                            filename,
+                            destination,
+                            size=size,
+                            bitrate=h_bitrate,
+                            length=h_length,
+                            checkduplicate=True
+                        )
+
+                    log.add_transfer(
+                        "Attempting to download files in folder %(folder)s for user %(user)s. Destination path: %(destination)s", {
+                            "folder": directory,
+                            "user": username,
+                            "destination": destination
+                        }
+                    )
 
     def folder_destination(self, user, directory):
 
