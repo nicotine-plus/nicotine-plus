@@ -698,8 +698,7 @@ class Config:
             # Attempt to restore config backup
             try:
                 if os.path.exists(self.filename + ".old"):
-                    from shutil import copy2
-                    copy2(self.filename + ".old", self.filename)
+                    os.rename(self.filename + ".old", self.filename)
 
             except Exception as error:
                 log.add_warning(_("Unable to restore previous config file: %s"), error)
