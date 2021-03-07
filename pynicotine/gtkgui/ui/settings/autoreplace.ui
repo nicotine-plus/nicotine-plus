@@ -7,16 +7,22 @@
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkCheckButton" id="ReplaceCheck">
-        <property name="label" translatable="yes">Enable automatic replacement of chat words you&apos;ve typed incorrectly or as an acronym</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
         <signal name="toggled" handler="on_replace_check" swapped="no"/>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Enable automatic replacement of chat words you&apos;ve typed incorrectly or as an acronym</property>
+            <property name="wrap">1</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">5</property>
+        <property name="spacing">6</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
