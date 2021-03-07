@@ -48,10 +48,79 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="AutoclearFinished">
-            <property name="label" translatable="yes">Autoclear finished/canceled uploads from the transfer list</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="use-underline">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Autoclear finished/canceled uploads from the transfer list</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkGrid">
+            <property name="visible">1</property>
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">10</property>
+            <property name="column-homogeneous">1</property>
+            <child>
+              <object class="GtkCheckButton" id="Limit">
+                <property name="label" translatable="yes">Limit uploads speed to (KiB/s):</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="use-underline">1</property>
+                <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="LimitSpeed">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="adjustment">adjustment_LimitSpeed</property>
+                <property name="hexpand">1</property>
+                <property name="numeric">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="halign">end</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkRadioButton" id="LimitPerTransfer">
+                    <property name="label" translatable="yes">Per transfer</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="use-underline">1</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="LimitTotalTransfers">
+                    <property name="label" translatable="yes">Total transfers</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="use-underline">1</property>
+                    <property name="group">LimitPerTransfer</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
           </object>
         </child>
       </object>
@@ -76,10 +145,12 @@
             <property name="visible">1</property>
             <property name="row-spacing">10</property>
             <property name="column-spacing">10</property>
+            <property name="column-homogeneous">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Upload queue type:</property>
+                <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -88,13 +159,30 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="RoundRobin">
-                <property name="label" translatable="yes">Round Robin</property>
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Queued users will be uploaded one file at a time in a cyclical fashion.</property>
-                <property name="use-underline">1</property>
-                <property name="active">1</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkRadioButton" id="RoundRobin">
+                    <property name="label" translatable="yes">Round Robin</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="tooltip-text" translatable="yes">Queued users will be uploaded one file at a time in a cyclical fashion.</property>
+                    <property name="use-underline">1</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="FirstInFirstOut">
+                    <property name="label" translatable="yes">First In, First Out</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="tooltip-text" translatable="yes">Files will be uploaded in the order they were queued.</property>
+                    <property name="use-underline">1</property>
+                    <property name="group">RoundRobin</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -102,23 +190,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="FirstInFirstOut">
-                <property name="label" translatable="yes">First In, First Out</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Files will be uploaded in the order they were queued.</property>
-                <property name="use-underline">1</property>
-                <property name="group">RoundRobin</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="QueueBandwidthText1">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Queue uploads if total transfer speed reaches:</property>
+                <property name="label" translatable="yes">Queue uploads if total transfer speed reaches (KiB/s):</property>
+                <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
@@ -141,25 +216,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="QueueBandwidthText2">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">KiB/s</property>
-                <property name="wrap">1</property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="QueueUseSlots">
-                <property name="label" translatable="yes">Limit number of upload slots to:</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Limit number of upload slots to:</property>
+                    <property name="wrap">1</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -180,92 +248,38 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Limit">
-                <property name="label" translatable="yes">Limit uploads speed to:</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="LimitSpeed">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_LimitSpeed</property>
-                <property name="hexpand">1</property>
-                <property name="numeric">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">3</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">KiB/s</property>
+                <property name="label" translatable="yes">Each user may queue a maximum of either:</property>
                 <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
               <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">3</property>
+                <property name="left-attach">0</property>
+                <property name="top-attach">4</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">2</property>
+                <property name="spacing">8</property>
                 <child>
-                  <object class="GtkRadioButton" id="LimitPerTransfer">
-                    <property name="label" translatable="yes">Per transfer</property>
+                  <object class="GtkSpinButton" id="MaxUserQueue">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="use-underline">1</property>
-                    <property name="active">1</property>
+                    <property name="tooltip_text" translatable="yes">Mebibytes (2^17 bytes).</property>
+                    <property name="adjustment">adjustment_MaxUserQueue</property>
+                    <property name="hexpand">1</property>
+                    <property name="numeric">1</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="LimitTotalTransfers">
-                    <property name="label" translatable="yes">Total transfers</property>
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="use-underline">1</property>
-                    <property name="group">LimitPerTransfer</property>
+                    <property name="label" translatable="yes">MiBs</property>
+                    <property name="xalign">0</property>
                   </object>
                 </child>
-              </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Each user may queue a maximum of either:</property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="MaxUserQueue">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">Mebibytes (2^17 bytes).</property>
-                <property name="adjustment">adjustment_MaxUserQueue</property>
-                <property name="hexpand">1</property>
-                <property name="numeric">1</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -273,46 +287,42 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="MaxUserFiles">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="adjustment">adjustment_MaxUserFiles</property>
-                <property name="hexpand">1</property>
-                <property name="numeric">1</property>
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkSpinButton" id="MaxUserFiles">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="adjustment">adjustment_MaxUserFiles</property>
+                    <property name="hexpand">1</property>
+                    <property name="numeric">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">files</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="left-attach">1</property>
-                <property name="top-attach">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">MiBs</property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">files</property>
-                <property name="xalign">0</property>
-              </object>
-              <packing>
-                <property name="left-attach">2</property>
                 <property name="top-attach">5</property>
               </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="FriendsNoLimits">
-                <property name="label" translatable="yes">Queue size limit does not apply to friends</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="use-underline">1</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Queue size limit does not apply to friends</property>
+                    <property name="wrap">1</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -323,11 +333,16 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="PreferFriends">
-            <property name="label" translatable="yes">Privilege all my friends</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Friends will have higher priority in the queue, the same as globally privileged users.</property>
-            <property name="use-underline">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Privilege all my friends</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>

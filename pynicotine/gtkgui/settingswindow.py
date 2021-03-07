@@ -838,7 +838,6 @@ class UploadsFrame(BuildFrame):
 
         self.QueueBandwidth.set_sensitive(not sensitive)
         self.QueueBandwidthText1.set_sensitive(not sensitive)
-        self.QueueBandwidthText2.set_sensitive(not sensitive)
 
     def on_limit_toggled(self, widget):
 
