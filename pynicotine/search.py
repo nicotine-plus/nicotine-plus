@@ -216,7 +216,7 @@ class Search:
 
         # Don't count excluded words as matches (words starting with -)
         # Strip punctuation
-        searchterm = re.sub(r'(\s)-\w+', r'\1', searchterm).lower().translate(self.translatepunctuation).strip()
+        searchterm = re.sub(r'(\s)-\w+', '', searchterm).lower().translate(self.translatepunctuation).strip()
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
             # Don't send search response if search term contains too few characters

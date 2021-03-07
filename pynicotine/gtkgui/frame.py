@@ -623,6 +623,10 @@ class NicotineFrame:
 
     def on_network_event(self, msgs):
 
+        #if hasattr(self, "LogWindow"):
+        #    for i in range(10000):
+        #        append_line(self.LogWindow, "AAAAAAAAAAAAAAAAAAAAAAA")
+
         for i in msgs:
             if self.shutdown:
                 return

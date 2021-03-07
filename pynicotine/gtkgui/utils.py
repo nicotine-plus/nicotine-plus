@@ -502,24 +502,6 @@ def open_log(folder, filename):
         log.add("Failed to open log file: %s", e)
 
 
-def scroll_bottom(widget):
-    va = widget.get_vadjustment()
-    try:
-        va.set_value(va.get_upper() - va.get_page_size())
-    except AttributeError:
-        pass
-    widget.set_vadjustment(va)
-    return False
-
-
-def url_event(tag, widget, event, iterator, url):
-    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
-        if url[:4] == "www.":
-            url = "http://" + url
-        open_uri(url, widget.get_toplevel())
-    tag.last_event_type = event.button.type
-
-
 def open_uri(uri, window):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
@@ -569,23 +551,34 @@ def on_soul_seek_uri(url):
         log.add(_("Invalid SoulSeek meta-url: %s"), url)
 
 
+def scroll_bottom(widget):
+
+    adjustment = widget.get_vadjustment()
+    adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+
+
+def url_event(tag, widget, event, iterator, url):
+
+    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
+        if url[:4] == "www.":
+            url = "http://" + url
+        open_uri(url, widget.get_toplevel())
+
+    tag.last_event_type = event.button.type
+
+
 def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True, find_urls=True):
 
-    if type(line) not in (type(""), type("")):
-        line = str(line)  # Error messages are sometimes tuples
+    line = str(line)  # Error messages are sometimes tuples
 
     def _makeurltag(buffer, url):
-        props = {}
 
-        color = NICOTINE.np.config.sections["ui"]["urlcolor"]
+        color = NICOTINE.np.config.sections["ui"]["urlcolor"] or None
 
-        if color != "":
-            props["foreground"] = color
-
-        props["underline"] = Pango.Underline.SINGLE
-        tag = buffer.create_tag(**props)
+        tag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
         tag.last_event_type = -1
         tag.connect("event", url_event, url)
+
         return tag
 
     def _append(buffer, text, tag):
@@ -598,7 +591,7 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 
     def _usertag(buffer, section):
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if NICOTINE.np.config.sections["ui"]["usernamehotspots"] and username is not None and usertag is not None:
+        if username is not None and usertag is not None and NICOTINE.np.config.sections["ui"]["usernamehotspots"]:
             np = re.compile(re.escape(str(username)))
             match = np.search(section)
             if match is not None:
@@ -612,16 +605,6 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
                 _append(buffer, section, tag)
         else:
             _append(buffer, section, tag)
-
-    scrolledwindow = textview.get_parent()
-
-    try:
-        va = scrolledwindow.get_vadjustment()
-    except AttributeError:
-        # scrolledwindow may have disappeared already while Nicotine+ was shutting down
-        return
-
-    bottom = (va.get_value() + va.get_page_size()) >= va.get_upper()
 
     buffer = textview.get_buffer()
     text_iter_start, text_iter_end = buffer.get_bounds()
@@ -651,15 +634,18 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     _append(buffer, line[:ts], tag)
     line = line[ts:]
 
-    if find_urls:
+    if find_urls and NICOTINE.np.config.sections["urls"]["urlcatching"]:
         # Match first url
         match = URL_RE.search(line)
+
         # Highlight urls, if found and tag them
-        while NICOTINE.np.config.sections["urls"]["urlcatching"] and match:
+        while match:
             start = line[:match.start()]
             _usertag(buffer, start)
+
             url = match.group()
             urltag = _makeurltag(buffer, url)
+
             line = line[match.end():]
 
             if url.startswith("slsk://") and NICOTINE.np.config.sections["urls"]["humanizeurls"]:
@@ -667,14 +653,19 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
                 url = urllib.parse.unquote(url)
 
             _append(buffer, url, urltag)
+
             # Match remaining url
             match = URL_RE.search(line)
 
     if line:
         _usertag(buffer, line)
 
-    if scroll and bottom:
-        GLib.idle_add(scroll_bottom, scrolledwindow)
+    if scroll:
+        va = textview.get_vadjustment()
+        bottom = (va.get_value() + va.get_page_size()) >= va.get_upper() - 10
+
+        if bottom:
+            GLib.idle_add(scroll_bottom, textview)
 
     return linenr
 
