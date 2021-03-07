@@ -187,6 +187,7 @@ def run():
                                        "config=",
                                        "plugins=",
                                        "profile",
+                                       "ci-mode",
                                        "enable-trayicon",
                                        "disable-trayicon",
                                        "version",
@@ -205,6 +206,7 @@ def run():
     plugins = os.path.join(data_dir, 'plugins')
 
     profile = False
+    ci_mode = False
     trayicon = True
     rescan = False
     hidden = False
@@ -228,9 +230,6 @@ def run():
         if o in ("-l", "--port"):
             port = a
 
-        if o == "--profile":
-            profile = True
-
         if o in ("-t", "--enable-trayicon"):
             trayicon = True
 
@@ -248,6 +247,15 @@ def run():
             version()
             sys.exit()
 
+        # Developer-related
+
+        if o == "--profile":
+            profile = True
+
+        if o == "--ci-mode":
+            """ Used for integration tests. Disables critical error dialog. """
+            ci_mode = True
+
     result = checkenv()
 
     if result is None:
@@ -257,7 +265,7 @@ def run():
             return
 
         from pynicotine.gtkgui import frame
-        app = frame.MainApp(data_dir, config, plugins, trayicon, hidden, bindip, port)
+        app = frame.MainApp(data_dir, config, plugins, trayicon, hidden, ci_mode, bindip, port)
 
         if profile:
 

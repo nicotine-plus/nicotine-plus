@@ -82,13 +82,17 @@ from pynicotine.utils import version
 
 class NicotineFrame:
 
-    def __init__(self, application, data_dir, config, plugins, use_trayicon, start_hidden, bindip=None, port=None):
+    def __init__(self, application, data_dir, config, plugins, use_trayicon, start_hidden, ci_mode, bindip=None, port=None):
+
+        # Show errors in the GUI from here on
+        sys.excepthook = self.on_critical_error
 
         self.application = application
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip_data = ""
         self.data_dir = data_dir
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
+        self.ci_mode = ci_mode
         self.current_tab_label = None
         self.checking_update = False
         self.rescanning = False
@@ -2602,6 +2606,28 @@ class NicotineFrame:
 
     """ Exit """
 
+    def on_critical_error(self, exc_type, value, tb):
+
+        from traceback import format_tb
+
+        if not self.ci_mode:
+            # We're running in user mode, show error dialog
+
+            if hasattr(self, "MainWindow"):
+                parent = self.MainWindow
+            else:
+                parent = None
+
+            message_dialog(
+                parent,
+                _("Critical Error"),
+                _("Nicotine+ has encountered a critical error and needs to exit. Please include the following error in a bug report:") +
+                "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb)))
+            )
+
+        self.on_quit()
+        raise type(value)
+
     def on_delete_event(self, widget, event):
 
         if not self.np.config.sections["ui"]["exitdialog"]:
@@ -2696,7 +2722,7 @@ class NicotineFrame:
 
 class MainApp(Gtk.Application):
 
-    def __init__(self, data_dir, config, plugins, trayicon, start_hidden, bindip, port):
+    def __init__(self, data_dir, config, plugins, trayicon, start_hidden, ci_mode, bindip, port):
 
         application_id = "org.nicotine_plus.Nicotine"
 
@@ -2709,6 +2735,7 @@ class MainApp(Gtk.Application):
         self.plugins = plugins
         self.trayicon = trayicon
         self.start_hidden = start_hidden
+        self.ci_mode = ci_mode
         self.bindip = bindip
         self.port = port
 
@@ -2723,6 +2750,7 @@ class MainApp(Gtk.Application):
                 self.plugins,
                 self.trayicon,
                 self.start_hidden,
+                self.ci_mode,
                 self.bindip,
                 self.port
             )

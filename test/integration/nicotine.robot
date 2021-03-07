@@ -10,6 +10,6 @@ Library           nicotine_library.py
 *** Test Cases ***
 
 Run nicotine as shell command
-    Running nicotine starts a process    nicotine    3
+    Running nicotine starts a process    nicotine --ci-mode    3
     Result should be    ${True}
 

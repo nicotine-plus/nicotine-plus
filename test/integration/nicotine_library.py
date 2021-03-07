@@ -27,7 +27,7 @@ class nicotine_library:  # noqa
 
     def running_nicotine_starts_a_process(self, command, timeout):
         if not isinstance(command, list):
-            command = [command]
+            command = command.split()
 
         # Assume failure by default
         issuccess = False

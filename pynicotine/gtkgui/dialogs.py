@@ -125,6 +125,9 @@ def message_dialog(parent, title, message):
     self.set_modal(True)
     self.format_secondary_text(message)
 
+    label = self.get_message_area().get_children()[-1]
+    label.set_selectable(True)
+
     self.run()
     self.destroy()
 
