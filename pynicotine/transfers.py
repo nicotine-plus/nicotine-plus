@@ -300,7 +300,7 @@ class Transfers:
                     if i.status not in ("Queued", "Aborted", "Cannot connect", "Paused"):
                         self.get_file(i.user, i.filename, i.path, i)
                 else:
-                    if i.status not in ("Aborted", "Filtered"):
+                    if i.status not in ("Aborted", "Filtered", "Paused"):
                         i.status = "User logged off"
                         self.abort_transfer(i, send_fail_message=False)
                         self.downloadsview.update(i)
