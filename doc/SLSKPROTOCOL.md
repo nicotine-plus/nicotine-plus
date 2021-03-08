@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on February 19, 2021
+Last updated on March 8, 2021
 
 ## Sections
 
@@ -2543,10 +2543,10 @@ Order](#peer-connection-message-order)
 | 41   | [Download Reply](#peer-code-41-b)          |
 | 41   | [Transfer Reply](#peer-code-41-c)          |
 | 42   | [Upload Placehold](#peer-code-42)          |
-| 43   | [Queue Download](#peer-code-43)            |
-| 44   | [Upload Queue Notification](#peer-code-44) |
+| 43   | [Queue Upload or Download](#peer-code-43)  |
+| 44   | [Place In Queue Reply](#peer-code-44)      |
 | 46   | [Upload Failed](#peer-code-46)             |
-| 50   | [Queue Failed](#peer-code-50)              |
+| 50   | [Upload Denied](#peer-code-50)             |
 | 51   | [Place In Queue Request](#peer-code-51)    |
 | 52   | [Upload Queue Notification](#peer-code-52) |
 
@@ -3001,12 +3001,12 @@ Nicotine: UploadFailed
 
 ### Peer Code 50
 
-**Queue Failed**
+**Upload Denied**
 
 #### Function Names
 
 Museekd: PQueueFailed  
-Nicotine: QueueFailed
+Nicotine: UploadDenied
 
 #### Description
 

@@ -882,21 +882,21 @@ class Transfers:
 
             if not checkuser:
                 self.queue.put(
-                    slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason=reason)
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=reason)
                 )
 
             elif limits and self.queue_limit_reached(user):
                 uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
                 limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
                 self.queue.put(
-                    slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
             elif limits and self.file_limit_reached(user):
                 filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
                 limitmsg = "User limit of %i files exceeded" % (filelimit)
                 self.queue.put(
-                    slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
             elif self.file_is_shared(user, filename_utf8, realpath):
@@ -914,7 +914,7 @@ class Transfers:
 
             else:
                 self.queue.put(
-                    slskmessages.QueueFailed(conn=msg.conn.conn, file=msg.file, reason="File not shared")
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
                 )
 
         log.add_transfer("Queued upload request: User %(user)s, %(msg)s", {
@@ -981,7 +981,7 @@ class Transfers:
 
         return False
 
-    def queue_failed(self, msg):
+    def upload_denied(self, msg):
 
         user = None
         for i in self.peerconns:
@@ -1779,7 +1779,7 @@ class Transfers:
                 continue
 
             if upload.status == "Queued":
-                self.eventprocessor.send_message_to_peer(user, slskmessages.QueueFailed(None, file=upload.filename, reason=banmsg))
+                self.eventprocessor.send_message_to_peer(user, slskmessages.UploadDenied(None, file=upload.filename, reason=banmsg))
             else:
                 self.abort_transfer(upload, reason=banmsg)
 
@@ -2309,7 +2309,7 @@ class Transfers:
         transfer.timeleft = ""
 
         if send_fail_message and transfer in self.uploads:
-            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.QueueFailed(None, file=transfer.filename, reason=reason))
+            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))

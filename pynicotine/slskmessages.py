@@ -2508,7 +2508,7 @@ class UploadFailed(PlaceholdUpload):
     pass
 
 
-class QueueFailed(PeerMessage):
+class UploadDenied(PeerMessage):
     """ Peer code: 50 """
 
     def __init__(self, conn, file=None, reason=None):

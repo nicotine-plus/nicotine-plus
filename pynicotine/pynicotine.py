@@ -223,7 +223,7 @@ class NetworkEventProcessor:
             slskmessages.TransferRequest: self.transfer_request,
             slskmessages.TransferResponse: self.transfer_response,
             slskmessages.QueueUpload: self.queue_upload,
-            slskmessages.QueueFailed: self.queue_failed,
+            slskmessages.UploadDenied: self.upload_denied,
             slskmessages.UploadFailed: self.upload_failed,
             slskmessages.PlaceInQueue: self.place_in_queue,
             slskmessages.FileError: self.file_error,
@@ -1769,13 +1769,13 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.queue_upload(msg)
 
-    def queue_failed(self, msg):
+    def upload_denied(self, msg):
         """ Peer code: 50 """
 
         log.add_msg_contents(msg)
 
         if self.transfers is not None:
-            self.transfers.queue_failed(msg)
+            self.transfers.upload_denied(msg)
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """

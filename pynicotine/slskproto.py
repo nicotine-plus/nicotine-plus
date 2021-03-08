@@ -121,7 +121,7 @@ from pynicotine.slskmessages import PrivateRoomUsers
 from pynicotine.slskmessages import PrivilegedUsers
 from pynicotine.slskmessages import PublicRoomMessage
 from pynicotine.slskmessages import QueuedDownloads
-from pynicotine.slskmessages import QueueFailed
+from pynicotine.slskmessages import UploadDenied
 from pynicotine.slskmessages import QueueUpload
 from pynicotine.slskmessages import Recommendations
 from pynicotine.slskmessages import RelatedSearch
@@ -383,7 +383,7 @@ class SlskProtoThread(threading.Thread):
         QueueUpload: 43,
         PlaceInQueue: 44,
         UploadFailed: 46,
-        QueueFailed: 50,
+        UploadDenied: 50,
         PlaceInQueueRequest: 51,
         UploadQueueNotification: 52,
         UnknownPeerMessage: 12547
