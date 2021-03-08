@@ -409,9 +409,6 @@ class NetworkEventProcessor:
         if addr is None:
             self.queue.put(slskmessages.GetPeerAddress(user))
 
-            if message.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                self.transfers.getting_address(message.req)
-
             log.add_conn("Requesting address for user %(user)s", {
                 'user': user
             })
@@ -445,10 +442,6 @@ class NetworkEventProcessor:
 
         conn.token = new_id()
         self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
-
-        for j in conn.msgs:
-            if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                self.transfers.got_connect_error(j.req)
 
         conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
         timer = threading.Timer(20.0, conntimeout.timeout)
@@ -556,9 +549,6 @@ class NetworkEventProcessor:
 
                     self.connect_to_peer_direct(user, i.addr, i.type)
 
-                    for j in i.msgs:
-                        if j.__class__ is slskmessages.TransferRequest and self.transfers is not None:
-                            self.transfers.got_address(j.req)
                 else:
 
                     """ Server responded with an incorrect port, request peer address again """
@@ -902,7 +892,7 @@ class NetworkEventProcessor:
                         connect to them. """
 
                         for j in i.msgs:
-                            if j.__class__ in (slskmessages.TransferRequest, slskmessages.FileRequest) and self.transfers is not None:
+                            if j.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
                                 self.transfers.got_cant_connect(j.req)
 
                         log.add_conn("Can't connect to user %(user)s indirectly. Error: %(error)s", {

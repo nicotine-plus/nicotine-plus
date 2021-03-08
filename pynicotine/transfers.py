@@ -447,35 +447,6 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-    def getting_address(self, req):
-
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Getting address"
-                self.uploadsview.update(i)
-                break
-
-    def got_address(self, req):
-        """ A connection is in progress, we got the address for a user we need
-        to connect to."""
-
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Connecting"
-                self.uploadsview.update(i)
-                break
-
-    def got_connect_error(self, req):
-        """ We couldn't connect to the user, now we are waitng for him to
-        connect to us. Note that all this logic is handled by the network
-        event processor, we just provide a visual feedback to the user."""
-
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Waiting for peer to connect"
-                self.uploadsview.update(i)
-                break
-
     def got_cant_connect(self, req):
         """ We can't connect to the user, either way. """
 
@@ -969,7 +940,6 @@ class Transfers:
                                      "filename": i.filename
                                  })
 
-                print("TF")
                 self.abort_transfer(i, send_fail_message=False)
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
