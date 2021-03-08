@@ -1976,9 +1976,10 @@ class Transfers:
     def _conn_close(self, conn, addr, i, type):
 
         self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
-        self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
 
         if i.status != "Finished":
+            self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
+
             if type == "download":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
