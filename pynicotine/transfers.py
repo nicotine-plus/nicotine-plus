@@ -568,7 +568,11 @@ class Transfers:
     def transfer_request_downloads(self, msg, user):
 
         for i in self.downloads:
-            if i.filename == msg.file and user == i.user and i.status not in ("Aborted", "Paused"):
+            if i.filename == msg.file and user == i.user:
+
+                if i.status in ("Aborted", "Paused"):
+                    return slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
+
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
                 """ If the file is larger than 2GB, the SoulseekQt client seems to
@@ -593,33 +597,35 @@ class Transfers:
 
                 response = slskmessages.TransferResponse(None, 1, req=i.req)
                 self.downloadsview.update(i)
-                break
+
+                return response
+
+        # If this file is not in your download queue, then it must be
+        # a remotely initated download and someone is manually uploading to you
+        if self.can_upload(user):
+            path = ""
+            if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
+                parentdir = msg.file.replace('/', '\\').split('\\')[-2]
+                path = self.eventprocessor.config.sections["transfers"]["uploaddir"] + os.sep + user + os.sep + parentdir
+
+            transfer = Transfer(
+                user=user, filename=msg.file, path=path,
+                status="Queued", size=msg.filesize, req=msg.req
+            )
+            self.downloads.append(transfer)
+
+            if user not in self.eventprocessor.watchedusers:
+                self.queue.put(slskmessages.AddUser(user))
+
+            response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
+            self.downloadsview.update(transfer)
         else:
-            # If this file is not in your download queue, then it must be
-            # a remotely initated download and someone is manually uploading to you
-            if self.can_upload(user):
-                path = ""
-                if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
-                    parentdir = msg.file.replace('/', '\\').split('\\')[-2]
-                    path = self.eventprocessor.config.sections["transfers"]["uploaddir"] + os.sep + user + os.sep + parentdir
+            response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
+            log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
+                'user': user,
+                'msg': str(vars(msg))
+            })
 
-                transfer = Transfer(
-                    user=user, filename=msg.file, path=path,
-                    status="Queued", size=msg.filesize, req=msg.req
-                )
-                self.downloads.append(transfer)
-
-                if user not in self.eventprocessor.watchedusers:
-                    self.queue.put(slskmessages.AddUser(user))
-
-                response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
-                self.downloadsview.update(transfer)
-            else:
-                response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
-                log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
-                    'user': user,
-                    'msg': str(vars(msg))
-                })
         return response
 
     def transfer_request_uploads(self, msg, user, addr):
@@ -2181,7 +2187,6 @@ class Transfers:
             self.auto_clear_upload(transfer)
             return
 
-        self.eventprocessor.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
         self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
 
     def abort_transfers(self, send_fail_message=True):
