@@ -853,6 +853,7 @@ class UserBrowse:
         realpath = self.frame.np.shares.virtual2real(folder)
         ldir = folder.split("\\")[-1]
 
+        locally_queued = False
         for d, f in self.shares:
 
             # Find the wanted directory
@@ -863,8 +864,9 @@ class UserBrowse:
                 filename = "\\".join([folder, file[1]])
                 realfilename = os.path.join(realpath, file[1])
                 size = file[2]
-                self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size)
+                self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size, locally_queued=locally_queued)
                 self.frame.np.transfers.check_upload_queue()
+                locally_queued = True
 
         if not recurse:
             return
@@ -899,9 +901,11 @@ class UserBrowse:
 
         self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
 
+        locally_queued = False
         for fn in self.selected_files:
-            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix)
+            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix, locally_queued=locally_queued)
             self.frame.np.transfers.check_upload_queue()
+            locally_queued = True
 
     def on_key_press_event(self, widget, event):
 

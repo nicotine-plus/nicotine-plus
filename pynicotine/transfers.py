@@ -325,13 +325,13 @@ class Transfers:
 
         self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
 
-    def push_file(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None):
+    def push_file(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
         if size is None:
             size = self.get_file_size(realfilename)
 
-        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename)
+        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename, locally_queued)
 
-    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None):
+    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None, locally_queued=False):
 
         """ Get a single file. path is a local path. if transfer object is
         not None, update it, otherwise create a new one."""
@@ -392,7 +392,7 @@ class Transfers:
                 self.eventprocessor.send_message_to_peer(user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
                 self.eventprocessor.send_message_to_peer(user, slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt))
 
-            else:
+            elif not locally_queued:
                 log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
                     "filename": filename,
                     "request": transfer.req,
@@ -401,6 +401,9 @@ class Transfers:
                 transfer.req = new_id()
                 realpath = self.eventprocessor.shares.virtual2real(filename)
                 self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
+
+            else:
+                self.add_queued(user, filename)
 
         if shouldupdate:
             if direction == 0:
@@ -632,7 +635,7 @@ class Transfers:
             if user not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(user))
 
-            response = slskmessages.TransferResponse(None, 1, req=transfer.req)
+            response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
             self.downloadsview.update(transfer)
         else:
             response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
@@ -1107,7 +1110,15 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
-                if msg.reason == "Complete":
+                if msg.reason == "Queued":
+
+                    for j in self.uploads:
+                        if j.user == i.user:
+                            j.timequeued = time.time()
+
+                    self.add_queued(i.user, i.filename)
+
+                elif msg.reason == "Complete":
 
                     """ Edge case. There are rare cases where a "Complete" status is sent to us by
                     SoulseekQt, even though it shouldn't be (?) """
