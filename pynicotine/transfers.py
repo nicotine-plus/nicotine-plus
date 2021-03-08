@@ -439,13 +439,22 @@ class Transfers:
             if i.user != user and i.filename != msg.file:
                 continue
 
-            if not i.legacy_attempt and i.status not in ("Aborted", "Paused"):
+            if i.status in ("Aborted", "Paused", "Local file error", "User logged off"):
+                continue
+
+            if not i.legacy_attempt:
                 """ Attempt to request file name encoded as latin-1 once. """
 
                 self.abort_transfer(i, send_fail_message=False)
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
                 break
+
+            else:
+                """ Already failed once previously, give up """
+
+                i.status = "Remote file error"
+                self.downloadsview.update(i)
 
     def got_cant_connect(self, req):
         """ We can't connect to the user, either way. """
@@ -932,10 +941,10 @@ class Transfers:
             return
 
         for i in self.downloads:
-            if i.user != user and i.filename != msg.file:
+            if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status in ("File not shared.", "File not shared", "Remote file error") and \
+            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
                     not i.legacy_attempt:
                 """ The peer is possibly using an old client that doesn't support Unicode
                 (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
@@ -1683,10 +1692,7 @@ class Transfers:
             if upload.user != user:
                 continue
 
-            if upload.status == "Queued":
-                self.eventprocessor.send_message_to_peer(user, slskmessages.UploadDenied(None, file=upload.filename, reason=banmsg))
-            else:
-                self.abort_transfer(upload, reason=banmsg)
+            self.abort_transfer(upload, reason=banmsg)
 
         if self.uploadsview is not None:
             self.uploadsview.clear_by_user(user)
@@ -1984,23 +1990,21 @@ class Transfers:
         self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
 
         if i.status != "Finished":
-            self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
-
             if type == "download":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
 
-            elif type == "upload" and i.status != "Queued":
-                """ Only cancel files being transferred, queued files will take care of
-                themselves. We don't want to cancel all queued files at once, in case
-                it's just a connectivity fluke. """
-
+            elif type == "upload":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Cancelled"
+
+                    """ Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
+                    intentionally cancelled, the peer should ignore this message. """
+                    self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
 
                 self.auto_clear_upload(i)
 
@@ -2211,9 +2215,6 @@ class Transfers:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
 
-        if send_fail_message and transfer in self.uploads:
-            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
-
         if transfer.transfertimer is not None:
             transfer.transfertimer.cancel()
 
@@ -2235,6 +2236,9 @@ class Transfers:
                     },
                     show_ui=1
                 )
+
+        elif send_fail_message and transfer in self.uploads:
+            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
     def log_transfer(self, message, show_ui=0):
 

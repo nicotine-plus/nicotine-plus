@@ -2528,27 +2528,27 @@ Order](#peer-connection-message-order)
 
 #### Message Index
 
-| Code | Message                                    |
-| ---- | ------------------------------------------ |
-| 4    | [Shares Request](#peer-code-4)             |
-| 5    | [Shares Reply](#peer-code-5)               |
-| 8    | [Search Request](#peer-code-8)             |
-| 9    | [Search Reply](#peer-code-9)               |
-| 15   | [User Info Request](#peer-code-15)         |
-| 16   | [User Info Reply](#peer-code-16)           |
-| 36   | [Folder Contents Request](#peer-code-36)   |
-| 37   | [Folder Contents Reply](#peer-code-37)     |
-| 40   | [Transfer Request](#peer-code-40)          |
-| 41   | [Upload Reply](#peer-code-41-a)            |
-| 41   | [Download Reply](#peer-code-41-b)          |
-| 41   | [Transfer Reply](#peer-code-41-c)          |
-| 42   | [Upload Placehold](#peer-code-42)          |
-| 43   | [Queue Upload](#peer-code-43)              |
-| 44   | [Place In Queue Reply](#peer-code-44)      |
-| 46   | [Upload Failed](#peer-code-46)             |
-| 50   | [Upload Denied](#peer-code-50)             |
-| 51   | [Place In Queue Request](#peer-code-51)    |
-| 52   | [Upload Queue Notification](#peer-code-52) |
+| Code | Message                                    | Status     |
+| ---- | ------------------------------------------ | ---------- |
+| 4    | [Shares Request](#peer-code-4)             |            |
+| 5    | [Shares Reply](#peer-code-5)               |            |
+| 8    | [Search Request](#peer-code-8)             |            |
+| 9    | [Search Reply](#peer-code-9)               |            |
+| 15   | [User Info Request](#peer-code-15)         |            |
+| 16   | [User Info Reply](#peer-code-16)           |            |
+| 36   | [Folder Contents Request](#peer-code-36)   |            |
+| 37   | [Folder Contents Reply](#peer-code-37)     |            |
+| 40   | [Transfer Request](#peer-code-40)          |            |
+| 41   | [Upload Reply](#peer-code-41-a)            |            |
+| 41   | [Download Reply](#peer-code-41-b)          | Deprecated |
+| 41   | [Transfer Reply](#peer-code-41-c)          |            |
+| 42   | [Upload Placehold](#peer-code-42)          |            |
+| 43   | [Queue Upload](#peer-code-43)              |            |
+| 44   | [Place In Queue Reply](#peer-code-44)      |            |
+| 46   | [Upload Failed](#peer-code-46)             |            |
+| 50   | [Upload Denied](#peer-code-50)             |            |
+| 51   | [Place In Queue Request](#peer-code-51)    |            |
+| 52   | [Upload Queue Notification](#peer-code-52) | Deprecated |
 
 ### Peer Code 4
 
@@ -2828,7 +2828,7 @@ Nicotine: TransferRequest
 
 #### Description
 
-This message is sent when attempting to upload a file. It can also be used to send a download request, but Nicotine+ and the official client uses QueueUpload for this purpose instead.
+This message is sent when attempting to upload a file. It was formely used to send a download request as well, but Nicotine+, Museek+ and the official clients use QueueUpload for this purpose today.
 
 #### Data Order
 
@@ -2883,6 +2883,8 @@ Museekd: PDownloadReply
 Nicotine: TransferResponse
 
 #### Description
+
+**DEPRECATED**
 
 Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
 
@@ -2954,7 +2956,7 @@ Nicotine: QueueUpload
 
 #### Description
 
-This message is used to tell a peer that an upload should be queued on their end.
+This message is used to tell a peer that an upload should be queued on their end. Once the recipient is ready to transfer the requested file, they will send an upload request.
 
 #### Data Order
 
@@ -2996,7 +2998,7 @@ Nicotine: UploadFailed
 
 #### Description
 
-This message is sent whenever a file connection closes. The recipient either re-queues the file, or ignores the message if the download finished.
+This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file can not be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
 
 #### Data Order
 
@@ -3016,7 +3018,7 @@ Nicotine: UploadDenied
 
 #### Description
 
-This message is sent to reject a download attempt, in cases where a transfer hasn't been initiated.
+This message is sent to reject QueueUpload attempts and previously queued files. The reason for rejection will appear in the transfer list of the recipient.
 
 #### Data Order
 
@@ -3038,7 +3040,7 @@ Nicotine: PlaceInQueueRequest
 
 #### Description
 
-This message is sent to ask for the upload queue placement of a file.
+This message is sent when asking for the upload queue placement of a file.
 
 #### Data Order
 
