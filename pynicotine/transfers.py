@@ -54,7 +54,7 @@ class Transfer(object):
     __slots__ = "conn", "user", "realfilename", "filename", \
                 "path", "req", "size", "file", "starttime", "lasttime", \
                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed", \
-                "timeleft", "timequeued", "transfertimer", "requestconn", \
+                "timeleft", "timequeued", "transfertimer", \
                 "modifier", "place", "bitrate", "length", "iter", "_status", \
                 "laststatuschange", "legacy_attempt"
 
@@ -84,7 +84,6 @@ class Transfer(object):
         self.timeleft = timeleft
         self.timequeued = timequeued
         self.transfertimer = transfertimer
-        self.requestconn = None
         self.place = place  # Queue position
         self.bitrate = bitrate
         self.length = length
@@ -340,7 +339,7 @@ class Transfers:
         if transfer is None:
             transfer = Transfer(
                 user=user, filename=filename, realfilename=realfilename, path=path,
-                status="Getting status", size=size, bitrate=bitrate,
+                status="Queued", size=size, bitrate=bitrate,
                 length=length
             )
 
@@ -349,15 +348,15 @@ class Transfers:
             else:
                 self._append_upload(user, filename, transfer)
         else:
-            transfer.status = "Getting status"
+            transfer.status = "Queued"
 
-        log.add_transfer(
-            "Initializing transfer request for file %(file)s to user %(user)s, direction: %(direction)s", {
-                'file': filename,
-                'user': user,
-                'direction': direction
-            }
-        )
+        if direction == 1:
+            log.add_transfer(
+                "Initializing upload request for file %(file)s to user %(user)s", {
+                    'file': filename,
+                    'user': user
+                }
+            )
 
         try:
             status = self.users[user].status
@@ -385,23 +384,23 @@ class Transfers:
                 self.queue.put(slskmessages.AddUser(user))
 
         if transfer.status != "Filtered":
-            transfer.req = new_id()
-            realpath = self.eventprocessor.shares.virtual2real(filename)
-            request = slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath)
-            self.eventprocessor.send_message_to_peer(user, request)
-
             if direction == 0:
-                log.add_transfer("Requesting to download file %(filename)s with transfer request %(request)s from user %(user)s", {
+                log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
                     "filename": filename,
-                    "request": transfer.req,
                     "user": user
                 })
+                self.eventprocessor.send_message_to_peer(user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+                self.eventprocessor.send_message_to_peer(user, slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt))
+
             else:
                 log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
                     "filename": filename,
                     "request": transfer.req,
                     "user": user
                 })
+                transfer.req = new_id()
+                realpath = self.eventprocessor.shares.virtual2real(filename)
+                self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
 
         if shouldupdate:
             if direction == 0:
@@ -427,81 +426,55 @@ class Transfers:
 
     def upload_failed(self, msg):
 
+        user = None
         for i in self.peerconns:
             if i.conn is msg.conn.conn:
                 user = i.username
                 break
-        else:
+
+        if user is None:
             return
 
         for i in self.downloads:
-            if i.user == user and i.filename == msg.file and (i.conn is not None or i.status in ["Connection closed by peer", "Establishing connection", "Waiting for download"]):
-                self.abort_transfer(i)
+            if i.user != user and i.filename != msg.file:
+                continue
+
+            if not i.legacy_attempt:
+                """ Attempt to request file name encoded as latin-1 once. """
+
+                self.abort_transfer(i, send_fail_message=False)
+                i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
-                self.log_transfer(
-                    _("Retrying failed download: user %(user)s, file %(file)s") % {
-                        'user': i.user,
-                        'file': i.filename
-                    },
-                    show_ui=1
-                )
                 break
 
-    def getting_address(self, req, direction):
+    def getting_address(self, req):
 
-        if direction == 0:
-            for i in self.downloads:
-                if i.req == req:
-                    i.status = "Getting address"
-                    self.downloadsview.update(i)
-                    break
+        for i in self.uploads:
+            if i.req == req:
+                i.status = "Getting address"
+                self.uploadsview.update(i)
+                break
 
-        elif direction == 1:
-
-            for i in self.uploads:
-                if i.req == req:
-                    i.status = "Getting address"
-                    self.uploadsview.update(i)
-                    break
-
-    def got_address(self, req, direction):
+    def got_address(self, req):
         """ A connection is in progress, we got the address for a user we need
         to connect to."""
 
-        if direction == 0:
-            for i in self.downloads:
-                if i.req == req:
-                    i.status = "Connecting"
-                    self.downloadsview.update(i)
-                    break
+        for i in self.uploads:
+            if i.req == req:
+                i.status = "Connecting"
+                self.uploadsview.update(i)
+                break
 
-        elif direction == 1:
-
-            for i in self.uploads:
-                if i.req == req:
-                    i.status = "Connecting"
-                    self.uploadsview.update(i)
-                    break
-
-    def got_connect_error(self, req, direction):
+    def got_connect_error(self, req):
         """ We couldn't connect to the user, now we are waitng for him to
         connect to us. Note that all this logic is handled by the network
         event processor, we just provide a visual feedback to the user."""
 
-        if direction == 0:
-            for i in self.downloads:
-                if i.req == req:
-                    i.status = "Waiting for peer to connect"
-                    self.downloadsview.update(i)
-                    break
-
-        elif direction == 1:
-
-            for i in self.uploads:
-                if i.req == req:
-                    i.status = "Waiting for peer to connect"
-                    self.uploadsview.update(i)
-                    break
+        for i in self.uploads:
+            if i.req == req:
+                i.status = "Waiting for peer to connect"
+                self.uploadsview.update(i)
+                break
 
     def got_cant_connect(self, req):
         """ We can't connect to the user, either way. """
@@ -558,26 +531,15 @@ class Transfers:
                 self.uploadsview.update(i)
                 break
 
-    def got_connect(self, req, conn, direction):
+    def got_connect(self, req):
         """ A connection has been established, now exchange initialisation
         messages."""
 
-        if direction == 0:
-            for i in self.downloads:
-                if i.req == req:
-                    i.status = "Requesting file"
-                    i.requestconn = conn
-                    self.downloadsview.update(i)
-                    break
-
-        elif direction == 1:
-
-            for i in self.uploads:
-                if i.req == req:
-                    i.status = "Requesting file"
-                    i.requestconn = conn
-                    self.uploadsview.update(i)
-                    break
+        for i in self.uploads:
+            if i.req == req:
+                i.status = "Requesting file"
+                self.uploadsview.update(i)
+                break
 
     def transfer_request(self, msg):
 
@@ -672,7 +634,7 @@ class Transfers:
 
                 transfer = Transfer(
                     user=user, filename=msg.file, path=path,
-                    status="Getting status", size=msg.filesize, req=msg.req
+                    status="Queued", size=msg.filesize, req=msg.req
                 )
                 self.downloads.append(transfer)
 
@@ -993,7 +955,27 @@ class Transfers:
             return
 
         for i in self.downloads:
-            if i.user == user and i.filename == msg.file and i.status not in ["Aborted", "Paused"]:
+            if i.user != user and i.filename != msg.file:
+                continue
+
+            if i.status in ("File not shared.", "File not shared", "Remote file error") and \
+                    not i.legacy_attempt:
+                """ The peer is possibly using an old client that doesn't support Unicode
+                (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
+
+                log.add_transfer("Peer responded with reason '%(reason)s' for download request %(filename)s. "
+                                 "Attempting to request file as latin-1.", {
+                                     "reason": msg.reason,
+                                     "filename": i.filename
+                                 })
+
+                print("TF")
+                self.abort_transfer(i, send_fail_message=False)
+                i.legacy_attempt = True
+                self.get_file(i.user, i.filename, i.path, i)
+                break
+
+            elif i.status not in ("Aborted", "Paused"):
                 if i.status in self.TRANSFER:
                     self.abort_transfer(i, reason=msg.reason)
 
@@ -1114,47 +1096,6 @@ class Transfers:
 
         if msg.reason is not None:
 
-            for i in self.downloads:
-
-                if i.req != msg.req:
-                    continue
-
-                if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
-                        not i.legacy_attempt:
-                    """ The peer is possibly using an old client that doesn't support Unicode
-                    (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
-
-                    i.req = new_id()
-                    realpath = self.eventprocessor.shares.virtual2real(i.filename)
-                    request = slskmessages.TransferRequest(None, 0, i.req, i.filename, self.get_file_size(realpath), realpath, legacy_client=True)
-                    self.eventprocessor.send_message_to_peer(i.user, request)
-                    i.legacy_attempt = True
-
-                    log.add_transfer("Peer responded with reason '%(reason)s' for download request %(request)s for file %(filename)s. "
-                                     "Attempting to request file as latin-1.", {
-                                         "reason": msg.reason,
-                                         "request": msg.req,
-                                         "filename": i.filename
-                                     })
-                    break
-
-                i.status = msg.reason
-                i.req = None
-                self.downloadsview.update(i)
-
-                if msg.reason == "Queued":
-
-                    if i.user not in self.users or self.users[i.user].status is None:
-                        if i.user not in self.eventprocessor.watchedusers:
-                            self.queue.put(slskmessages.AddUser(i.user))
-
-                    self.queue.put(
-                        slskmessages.PlaceInQueueRequest(msg.conn.conn, i.filename, i.legacy_attempt)
-                    )
-
-                self.check_upload_queue()
-                break
-
             for i in self.uploads:
 
                 if i.req != msg.req:
@@ -1190,18 +1131,6 @@ class Transfers:
                 self.check_upload_queue()
                 break
 
-        elif msg.filesize is not None:
-            for i in self.downloads:
-
-                if i.req != msg.req:
-                    continue
-
-                i.size = msg.filesize
-                i.status = "Establishing connection"
-                # Have to establish 'F' connection here
-                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
-                self.downloadsview.update(i)
-                break
         else:
             for i in self.uploads:
 
@@ -1801,8 +1730,7 @@ class Transfers:
     # Also ask for the queue position of downloads.
     def check_download_queue(self):
 
-        statuslist = self.FAILED_TRANSFERS + \
-            ["Getting status", "Getting address", "Connecting", "Waiting for peer to connect", "Requesting file", "Initializing transfer"]
+        statuslist = self.FAILED_TRANSFERS + ["Getting status", "Initializing transfer"]
 
         for transfer in self.downloads:
             if transfer.status in statuslist:
@@ -2076,12 +2004,6 @@ class Transfers:
             self._conn_close(conn, addr, i, "upload")
 
     def _conn_close(self, conn, addr, i, type):
-
-        if i.requestconn == conn and i.status == "Requesting file":
-            # This code is probably not needed anymore?
-            i.requestconn = None
-            i.status = "Connection closed by peer"
-            i.req = None
 
         self.abort_transfer(i, send_fail_message=False)  # Don't send "Aborted" message, let remote user recover
 

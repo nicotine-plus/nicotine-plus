@@ -2554,6 +2554,7 @@ class UnknownPeerMessage(PeerMessage):
         self.conn = conn
 
     def parse_network_message(self, message):
+        print(message)
         # Empty message
         pass
 
