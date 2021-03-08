@@ -439,7 +439,7 @@ class Transfers:
             if i.user != user and i.filename != msg.file:
                 continue
 
-            if not i.legacy_attempt:
+            if not i.legacy_attempt and i.status not in ("Aborted", "Paused"):
                 """ Attempt to request file name encoded as latin-1 once. """
 
                 self.abort_transfer(i, send_fail_message=False)
@@ -597,7 +597,7 @@ class Transfers:
     def transfer_request_downloads(self, msg, user):
 
         for i in self.downloads:
-            if i.filename == msg.file and user == i.user and i.status not in ["Aborted", "Paused"]:
+            if i.filename == msg.file and user == i.user and i.status not in ("Aborted", "Paused"):
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
                 """ If the file is larger than 2GB, the SoulseekQt client seems to
@@ -1538,7 +1538,7 @@ class Transfers:
 
             # walk through downloads and break if any file in the same folder exists, else execute
             for ia in self.downloads:
-                if ia.status not in ["Finished", "Aborted", "Paused", "Filtered"] and ia.path and ia.path == i.path:
+                if ia.status not in ("Finished", "Aborted", "Paused", "Filtered") and ia.path and ia.path == i.path:
                     break
             else:
                 if self.notifications and config["notifications"]["notification_popup_folder"]:
@@ -2005,7 +2005,8 @@ class Transfers:
 
     def _conn_close(self, conn, addr, i, type):
 
-        self.abort_transfer(i, send_fail_message=False)  # Don't send "Aborted" message, let remote user recover
+        self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
+        self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
 
         if i.status != "Finished":
             if type == "download":
@@ -2223,19 +2224,19 @@ class Transfers:
                 self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
 
-    def abort_transfer(self, transfer, reason="Aborted", send_fail_message=True):
+    def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=True):
 
         transfer.legacy_attempt = False
         transfer.req = None
         transfer.speed = None
         transfer.timeleft = ""
 
-        if send_fail_message and transfer in self.uploads:
-            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
-
         if transfer.conn is not None:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
+
+        if send_fail_message and transfer in self.uploads:
+            self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
         if transfer.transfertimer is not None:
             transfer.transfertimer.cancel()
