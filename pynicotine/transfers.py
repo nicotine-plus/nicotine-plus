@@ -621,7 +621,7 @@ class Transfers:
             path = ""
             if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = msg.file.replace('/', '\\').split('\\')[-2]
-                path = self.eventprocessor.config.sections["transfers"]["uploaddir"] + os.sep + user + os.sep + parentdir
+                path = os.path.join(self.eventprocessor.config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(
                 user=user, filename=msg.file, path=path,
@@ -632,7 +632,7 @@ class Transfers:
             if user not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(user))
 
-            response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
+            response = slskmessages.TransferResponse(None, 1, req=transfer.req)
             self.downloadsview.update(transfer)
         else:
             response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
@@ -787,7 +787,7 @@ class Transfers:
         return numfiles >= filelimit
 
     def queue_upload(self, msg):
-        """ Peer remotely(?) queued a download (upload here) """
+        """ Peer remotely queued a download (upload here) """
 
         user = None
         for i in self.peerconns:
@@ -1102,19 +1102,7 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
-                if msg.reason == "Queued":
-
-                    if i.user not in self.users or self.users[i.user].status is None:
-                        if i.user not in self.eventprocessor.watchedusers:
-                            self.queue.put(slskmessages.AddUser(i.user))
-
-                    if i.transfertimer is not None:
-                        i.transfertimer.cancel()
-
-                    self.uploads.remove(i)
-                    self.uploadsview.remove_specific(i, True)
-
-                elif msg.reason == "Complete":
+                if msg.reason == "Complete":
 
                     """ Edge case. There are rare cases where a "Complete" status is sent to us by
                     SoulseekQt, even though it shouldn't be (?) """
