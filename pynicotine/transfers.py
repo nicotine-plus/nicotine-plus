@@ -436,7 +436,7 @@ class Transfers:
             return
 
         for i in self.downloads:
-            if i.user != user and i.filename != msg.file:
+            if i.user != user or i.filename != msg.file:
                 continue
 
             if i.status in ("Aborted", "Paused", "Local file error", "User logged off"):
@@ -455,6 +455,12 @@ class Transfers:
 
                 i.status = "Remote file error"
                 self.downloadsview.update(i)
+
+                log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
+                    "filename": i.filename,
+                    "user": user,
+                    "reason": "Remote file error"
+                })
 
     def got_cant_connect(self, req):
         """ We can't connect to the user, either way. """
@@ -949,8 +955,9 @@ class Transfers:
                 """ The peer is possibly using an old client that doesn't support Unicode
                 (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
 
-                log.add_transfer("Peer responded with reason '%(reason)s' for download request %(filename)s. "
+                log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
                                  "Attempting to request file as latin-1.", {
+                                     "user": user,
                                      "reason": msg.reason,
                                      "filename": i.filename
                                  })
@@ -967,6 +974,11 @@ class Transfers:
                 i.status = msg.reason
                 self.downloadsview.update(i)
 
+                log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
+                    "user": user,
+                    "filename": i.filename,
+                    "reason": msg.reason
+                })
                 break
 
     def file_is_shared(self, user, virtualfilename, realfilename):
