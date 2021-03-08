@@ -861,7 +861,7 @@ class UserBrowse:
 
             for file in f:
                 filename = "\\".join([folder, file[1]])
-                realfilename = "\\".join([realpath, file[1]])
+                realfilename = os.path.join(realpath, file[1])
                 size = file[2]
                 self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size)
                 self.frame.np.transfers.check_upload_queue()
@@ -900,7 +900,7 @@ class UserBrowse:
         self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
 
         for fn in self.selected_files:
-            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), "\\".join([realpath, fn]), prefix)
+            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix)
             self.frame.np.transfers.check_upload_queue()
 
     def on_key_press_event(self, widget, event):

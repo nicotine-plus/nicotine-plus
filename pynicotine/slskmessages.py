@@ -2394,8 +2394,9 @@ class FolderContentsResponse(PeerMessage):
 
 class TransferRequest(PeerMessage):
     """ Peer code: 40 """
-    """ We request a file from a peer, or tell a peer that we want to send
-    a file to them. """
+    """ This message is sent when attempting to initiate an upload. It was formely used
+    to send a download request as well, but Nicotine+, Museek+ and the official clients
+    use QueueUpload for this purpose today. """
 
     def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None, legacy_client=False):
         self.conn = conn
@@ -2480,11 +2481,15 @@ class PlaceholdUpload(PeerMessage):
 
 class QueueUpload(PlaceholdUpload):
     """ Peer code: 43 """
+    """ This message is used to tell a peer that an upload should be queued on their end.
+    Once the recipient is ready to transfer the requested file, they will send an upload
+    request."""
     pass
 
 
 class PlaceInQueue(PeerMessage):
     """ Peer code: 44 """
+    """ The peer replies with the upload queue placement of the requested file. """
 
     def __init__(self, conn, filename=None, place=None):
         self.conn = conn
@@ -2505,11 +2510,17 @@ class PlaceInQueue(PeerMessage):
 
 class UploadFailed(PlaceholdUpload):
     """ Peer code: 46 """
+    """ This message is sent whenever a file connection of an active upload
+    closes. Soulseek NS clients can also send this message when a file can
+    not be read. The recipient either re-queues the upload (download on their
+    end), or ignores the message if the transfer finished. """
     pass
 
 
 class UploadDenied(PeerMessage):
     """ Peer code: 50 """
+    """ This message is sent to reject QueueUpload attempts and previously queued
+    files. The reason for rejection will appear in the transfer list of the recipient. """
 
     def __init__(self, conn, file=None, reason=None):
         self.conn = conn
@@ -2530,11 +2541,13 @@ class UploadDenied(PeerMessage):
 
 class PlaceInQueueRequest(PlaceholdUpload):
     """ Peer code: 51 """
+    """ This message is sent when asking for the upload queue placement of a file. """
     pass
 
 
 class UploadQueueNotification(PeerMessage):
     """ Peer code: 52 """
+    """ DEPRECATED """
 
     def __init__(self, conn):
         self.conn = conn
