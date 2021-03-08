@@ -2543,7 +2543,7 @@ Order](#peer-connection-message-order)
 | 41   | [Download Reply](#peer-code-41-b)          |
 | 41   | [Transfer Reply](#peer-code-41-c)          |
 | 42   | [Upload Placehold](#peer-code-42)          |
-| 43   | [Queue Upload or Download](#peer-code-43)  |
+| 43   | [Queue Upload](#peer-code-43)              |
 | 44   | [Place In Queue Reply](#peer-code-44)      |
 | 46   | [Upload Failed](#peer-code-46)             |
 | 50   | [Upload Denied](#peer-code-50)             |
@@ -2828,7 +2828,7 @@ Nicotine: TransferRequest
 
 #### Description
 
-We request a file from a peer, or tell a peer that we want to send a file to them.
+This message is sent when attempting to upload a file. It can also be used to send a download request, but Nicotine+ and the official client uses QueueUpload for this purpose instead.
 
 #### Data Order
 
@@ -2945,7 +2945,7 @@ Nicotine: PlaceholdUpload
 
 ### Peer Code 43
 
-**Queue Upload or Download**
+**Queue Upload**
 
 #### Function Names
 
@@ -2953,6 +2953,8 @@ Museekd: PQueueDownload
 Nicotine: QueueUpload
 
 #### Description
+
+This message is used to tell a peer that an upload should be queued on their end.
 
 #### Data Order
 
@@ -2971,6 +2973,8 @@ Museekd: PPlaceInQueueReply
 Nicotine: PlaceInQueue
 
 #### Description
+
+The peer replies with the upload queue placement of the requested file.
 
 #### Data Order
 
@@ -2992,6 +2996,8 @@ Nicotine: UploadFailed
 
 #### Description
 
+This message is sent whenever a file connection closes. The recipient either re-queues the file, or ignores the message if the download finished.
+
 #### Data Order
 
   - Send
@@ -3009,6 +3015,8 @@ Museekd: PQueueFailed
 Nicotine: UploadDenied
 
 #### Description
+
+This message is sent to reject a download attempt, in cases where a transfer hasn't been initiated.
 
 #### Data Order
 
@@ -3030,6 +3038,8 @@ Nicotine: PlaceInQueueRequest
 
 #### Description
 
+This message is sent to ask for the upload queue placement of a file.
+
 #### Data Order
 
   - Send
@@ -3047,6 +3057,8 @@ Museekd: PUploadQueueNotification
 Nicotine: UploadQueueNotification
 
 #### Description
+
+**DEPRECATED**
 
 #### Data Order
 
