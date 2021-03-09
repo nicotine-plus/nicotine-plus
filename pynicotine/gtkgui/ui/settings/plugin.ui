@@ -35,6 +35,7 @@
                   <object class="GtkTreeView" id="PluginTreeView">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="search-column">1</property>
                   </object>
                 </child>
               </object>
