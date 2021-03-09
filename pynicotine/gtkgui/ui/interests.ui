@@ -223,6 +223,7 @@
                           <object class="GtkTreeView" id="RecommendationsList">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
+                            <property name="search_column">1</property>
                             <signal name="button-press-event" handler="on_r_list_clicked" swapped="no"/>
                             <signal name="popup-menu" handler="on_popup_r_menu" swapped="no"/>
                             <signal name="touch-event" handler="on_r_list_clicked" swapped="no"/>
@@ -262,6 +263,7 @@
                           <object class="GtkTreeView" id="UnrecommendationsList">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
+                            <property name="search_column">1</property>
                             <signal name="button-press-event" handler="on_un_rec_list_clicked" swapped="no"/>
                             <signal name="popup-menu" handler="on_popup_un_rec_menu" swapped="no"/>
                             <signal name="touch-event" handler="on_un_rec_list_clicked" swapped="no"/>
