@@ -1460,16 +1460,17 @@ class Transfers:
         else:
             folder = os.path.join(downloaddir, i.path)
 
-        if not os.access(folder, os.F_OK):
-            os.makedirs(folder)
-
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
+            if not os.access(folder, os.F_OK):
+                os.makedirs(folder)
+
             import shutil
             shutil.move(file.name, newname)
+
         except (IOError, OSError) as inst:
-            log.add_warning(
+            log.add(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
                     'tempfile': "%s" % file.name,
                     'file': newname,
