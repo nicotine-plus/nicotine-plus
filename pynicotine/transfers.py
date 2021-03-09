@@ -309,8 +309,9 @@ class Transfers:
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
-                    self.uploadsview.update(i)
-                    self.auto_clear_upload(i)
+
+                    if not self.auto_clear_upload(i):
+                        self.uploadsview.update(i)
 
         if msg.status <= 0:
             self.check_upload_queue()
@@ -1647,10 +1648,10 @@ class Transfers:
 
         self.eventprocessor.statistics.append_stat_value("completed_uploads", 1)
 
-        self.uploadsview.update(i)
-
         # Autoclear this upload
-        self.auto_clear_upload(i)
+        if not self.auto_clear_upload(i):
+            self.uploadsview.update(i)
+
         self.check_upload_queue()
 
     def auto_clear_download(self, transfer):
@@ -1666,6 +1667,9 @@ class Transfers:
             self.uploads.remove(transfer)
             self.uploadsview.remove_specific(transfer, True)
             self.calc_upload_queue_sizes()
+            return True
+
+        return False
 
     def ban_user(self, user, ban_message=None):
         """
@@ -1770,8 +1774,9 @@ class Transfers:
             if self.user_logged_out(user):
                 transfercandidate.status = "User logged off"
                 self.abort_transfer(transfercandidate, send_fail_message=False)
-                self.uploadsview.update(transfercandidate)
-                self.auto_clear_upload(transfercandidate)
+
+                if not self.auto_clear_upload(transfercandidate):
+                    self.uploadsview.update(transfercandidate)
 
                 self.check_upload_queue()
 
@@ -2014,11 +2019,13 @@ class Transfers:
 
         if type == "download":
             self.downloadsview.update(i)
-        elif type == "upload":
-            self.uploadsview.update(i)
 
-            if auto_clear:
-                self.auto_clear_upload(i)
+        elif type == "upload":
+            if auto_clear and self.auto_clear_upload(i):
+                # Upload cleared
+                pass
+            else:
+                self.uploadsview.update(i)
 
         self.check_upload_queue()
 
@@ -2189,8 +2196,9 @@ class Transfers:
         if self.user_logged_out(user):
             transfer.status = "User logged off"
             self.abort_transfer(transfer, send_fail_message=False)
-            self.uploadsview.update(transfer)
-            self.auto_clear_upload(transfer)
+
+            if not self.auto_clear_upload(transfer):
+                self.uploadsview.update(transfer)
             return
 
         self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
