@@ -108,7 +108,7 @@ class TransferList:
             GObject.TYPE_UINT64,   # (17) queue position
         )
 
-        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+        self.column_numbers = [i for i in range(self.transfersmodel.get_n_columns())]
         self.cols = cols = initialise_columns(
             type,
             widget,

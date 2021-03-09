@@ -92,7 +92,7 @@ class UserBrowse:
 
         self.dir_store = Gtk.TreeStore(str, str)
 
-        self.dir_column_numbers = [0, 1]
+        self.dir_column_numbers = [i for i in range(self.dir_store.get_n_columns())]
         cols = initialise_columns(
             None,
             self.FolderTreeView,
@@ -192,7 +192,7 @@ class UserBrowse:
 
         self.FileTreeView.set_model(self.file_store)
 
-        self.file_column_numbers = [0, 1, 2, 3, 4, 5, 6]
+        self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
             "user_browse",
             self.FileTreeView,

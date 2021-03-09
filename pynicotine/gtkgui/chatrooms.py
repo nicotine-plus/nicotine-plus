@@ -562,7 +562,19 @@ class ChatRoom:
         if room not in config["columns"]["chat_room"]:
             config["columns"]["chat_room"][room] = {}
 
-        self.column_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        self.usersmodel = Gtk.ListStore(
+            GObject.TYPE_OBJECT,  # (0)  status_image
+            GObject.TYPE_OBJECT,  # (1)  flag
+            str,                  # (2)  username
+            str,                  # (3)  h_speed
+            str,                  # (4)  h_files
+            int,                  # (5)  status
+            GObject.TYPE_UINT64,  # (6)  avgspeed
+            GObject.TYPE_UINT64,  # (7)  files
+            str                   # (8)  country
+        )
+
+        self.column_numbers = [i for i in range(self.usersmodel.get_n_columns())]
         self.cols = cols = initialise_columns(
             ("chat_room", room),
             self.UserList,
@@ -587,18 +599,6 @@ class ChatRoom:
             config["columns"]["chat_room"][room]["country"]["visible"] = False
 
         self.users = {}
-
-        self.usersmodel = Gtk.ListStore(
-            GObject.TYPE_OBJECT,  # (0)  status_image
-            GObject.TYPE_OBJECT,  # (1)  flag
-            str,                  # (2)  username
-            str,                  # (3)  h_speed
-            str,                  # (4)  h_files
-            int,                  # (5)  status
-            GObject.TYPE_UINT64,  # (6)  avgspeed
-            GObject.TYPE_UINT64,  # (7)  files
-            str                   # (8)  country
-        )
 
         for username, userdata in users.items():
             self.add_user_row(username, userdata)
