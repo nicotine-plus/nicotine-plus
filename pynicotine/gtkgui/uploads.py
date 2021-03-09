@@ -227,7 +227,7 @@ class Uploads(TransferList):
 
     def on_clear_failed(self, widget):
 
-        self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Getting address", "Waiting for peer to connect", "Initializing transfer"])
+        self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Initializing transfer"])
 
         self.frame.np.transfers.calc_upload_queue_sizes()
         self.frame.np.transfers.check_upload_queue()

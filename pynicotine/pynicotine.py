@@ -636,9 +636,6 @@ class NetworkEventProcessor:
             elif j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
                 self.userbrowse.show_user(peerconn.username, conn=conn)
 
-            elif j.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
-                self.transfers.got_connect(j.req)
-
             j.conn = conn
             self.queue.put(j)
 
@@ -739,10 +736,7 @@ class NetworkEventProcessor:
         """ Request UI to show error messages related to connectivity """
 
         for i in conn.msgs:
-            if i.__class__ is slskmessages.QueueUpload and self.transfers is not None:
-                self.transfers.got_cant_connect(i.file)
-
-            elif i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
+            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
                 self.transfers.got_cant_connect(i.req)
 
             elif i.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:

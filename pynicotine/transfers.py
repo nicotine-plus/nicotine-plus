@@ -117,7 +117,7 @@ class Transfers:
     FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
     COMPLETED_TRANSFERS = ["Finished", "Filtered", "Aborted", "Cancelled"]
     PRE_TRANSFER = ["Queued"]
-    TRANSFER = ["Requesting file", "Initializing transfer", "Transferring"]
+    TRANSFER = ["Initializing transfer", "Transferring"]
 
     def __init__(self, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
 
@@ -305,7 +305,7 @@ class Transfers:
                         self.downloadsview.update(i)
 
         for i in self.uploads:
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Requesting file", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
@@ -518,16 +518,6 @@ class Transfers:
         for i in self.uploads:
             if i.req == req:
                 i.status = "Initializing transfer"
-                self.uploadsview.update(i)
-                break
-
-    def got_connect(self, req):
-        """ A connection has been established, now exchange initialisation
-        messages."""
-
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Requesting file"
                 self.uploadsview.update(i)
                 break
 
