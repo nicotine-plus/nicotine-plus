@@ -476,7 +476,7 @@ class UserBrowse:
             iterator = self.directories[folder]
         except KeyError:
             # Folder not found
-            pass
+            return
 
         if folder:
             sel = self.FolderTreeView.get_selection()

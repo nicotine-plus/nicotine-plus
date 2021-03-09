@@ -241,7 +241,7 @@ class Search:
         if self.np.transfers is not None:
 
             numresults = min(len(resultlist), maxresults)
-            queuesizes = self.np.transfers.get_upload_queue_sizes()
+            queuesize = self.np.transfers.get_upload_queue_size()
             slotsavail = self.np.transfers.allow_new_uploads()
 
             if checkuser == 2:
@@ -255,7 +255,7 @@ class Search:
                 None,
                 self.config.sections["server"]["login"],
                 searchid, resultlist, fileindex, slotsavail,
-                self.np.speed, queuesizes, fifoqueue, numresults
+                self.np.speed, queuesize, fifoqueue, numresults
             )
 
             self.np.send_message_to_peer(user, message)

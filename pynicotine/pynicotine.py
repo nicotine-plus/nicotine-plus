@@ -1636,7 +1636,7 @@ class NetworkEventProcessor:
 
         if self.transfers is not None:
             totalupl = self.transfers.get_total_uploads_allowed()
-            queuesize = self.transfers.get_upload_queue_sizes()[0]
+            queuesize = self.transfers.get_upload_queue_size()
             slotsavail = self.transfers.allow_new_uploads()
 
             if self.config.sections["transfers"]["remotedownloads"]:
