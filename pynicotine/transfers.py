@@ -305,7 +305,7 @@ class Transfers:
                         self.downloadsview.update(i)
 
         for i in self.uploads:
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Requesting file", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
@@ -1688,7 +1688,6 @@ class Transfers:
             self.uploads.remove(transfer)
             self.uploadsview.remove_specific(transfer, True)
             self.calc_upload_queue_sizes()
-            self.check_upload_queue()
 
     def ban_user(self, user, ban_message=None):
         """
@@ -1947,9 +1946,14 @@ class Transfers:
             if self.privusersqueued[user] == 0:
                 del self.privusersqueued[user]
         else:
-            self.usersqueued[user] -= 1
-            if self.usersqueued[user] == 0:
-                del self.usersqueued[user]
+            try:
+                self.usersqueued[user] -= 1
+                if self.usersqueued[user] == 0:
+                    del self.usersqueued[user]
+
+            except KeyError:
+                # Hotfix, this whole function will be removed soon
+                pass
 
     def get_total_uploads_allowed(self):
 
