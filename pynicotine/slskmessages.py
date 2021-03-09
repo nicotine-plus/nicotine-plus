@@ -2002,6 +2002,7 @@ class SharedFileList(PeerMessage):
 
         for i in range(ndir):
             pos, directory = self.get_object(message, str, pos)
+            directory = directory.replace('/', '\\')
             pos, nfiles = self.get_object(message, int, pos)
 
             files = []
@@ -2145,7 +2146,7 @@ class FileSearchResult(PeerMessage):
                     self.pos, attr = self.get_object(message, int, self.pos)
                     attrs.append(attr)
 
-            shares.append((code, name, size, ext, attrs))
+            shares.append((code, name.replace('/', '\\'), size, ext, attrs))
 
         self.list = shares
 
@@ -2357,6 +2358,7 @@ class FolderContentsResponse(PeerMessage):
 
             for i in range(ndir):
                 pos, directory = self.get_object(message, str, pos)
+                directory = directory.replace('/', '\\')
                 pos, nfiles = self.get_object(message, int, pos)
 
                 shares[folder][directory] = []
