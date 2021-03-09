@@ -505,22 +505,6 @@ class Transfers:
 
         self.check_upload_queue()
 
-    def got_file_connect(self, req, conn):
-        """ A transfer connection has been established,
-        now exchange initialisation messages."""
-
-        for i in self.downloads:
-            if i.req == req:
-                i.status = "Initializing transfer"
-                self.downloadsview.update(i)
-                break
-
-        for i in self.uploads:
-            if i.req == req:
-                i.status = "Initializing transfer"
-                self.uploadsview.update(i)
-                break
-
     def transfer_request(self, msg):
 
         user = response = None
@@ -1365,6 +1349,8 @@ class Transfers:
 
             if i.size == 0:
                 # If filesize is 0, we will not receive a UploadFile message later. Finish now.
+                i.conn = None
+                i.lasttime = time.time()
                 self.upload_finished(i, file=f)
 
         else:
