@@ -193,15 +193,10 @@ class Uploads(TransferList):
                     i.transfertimer.cancel()
                 self.remove_specific(i)
 
-        self.frame.np.transfers.check_upload_queue()
-
     def on_abort_transfer(self, widget, clear=False):
 
         self.select_transfers()
-
         self.abort_transfers(clear)
-
-        self.frame.np.transfers.check_upload_queue()
 
     def on_abort_user(self, widget):
 
@@ -213,19 +208,12 @@ class Uploads(TransferList):
                     self.selected_transfers.add(i)
 
         self.on_abort_transfer(widget)
-        self.frame.np.transfers.check_upload_queue()
 
     def on_clear_queued(self, widget):
-
         self.clear_transfers(["Queued"])
 
-        self.frame.np.transfers.check_upload_queue()
-
     def on_clear_failed(self, widget):
-
         self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Initializing transfer"])
-
-        self.frame.np.transfers.check_upload_queue()
 
     def on_upload_transfer(self, widget):
 
@@ -233,5 +221,3 @@ class Uploads(TransferList):
 
         for transfer in self.selected_transfers:
             self.frame.np.transfers.retry_upload(transfer)
-
-        self.frame.np.transfers.check_upload_queue()

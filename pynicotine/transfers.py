@@ -329,9 +329,6 @@ class Transfers:
                     if not self.auto_clear_upload(i):
                         self.uploadsview.update(i)
 
-        if msg.status <= 0:
-            self.check_upload_queue()
-
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
 
         path = clean_path(path, absolute=True)
@@ -864,6 +861,8 @@ class Transfers:
                 if self.pluginhandler:
                     self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
 
+                self.check_upload_queue()
+
             else:
                 self.queue.put(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
@@ -873,8 +872,6 @@ class Transfers:
             'user': user,
             'msg': str(vars(msg))
         })
-
-        self.check_upload_queue()
 
     def upload_queue_notification(self, msg):
 
@@ -1097,13 +1094,11 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
-                if msg.reason == "Queued":
+                for j in self.uploads:
+                    if j.user == i.user:
+                        j.timequeued = time.time()
 
-                    for j in self.uploads:
-                        if j.user == i.user:
-                            j.timequeued = time.time()
-
-                elif msg.reason == "Complete":
+                if msg.reason == "Complete":
 
                     """ Edge case. There are rare cases where a "Complete" status is sent to us by
                     SoulseekQt, even though it shouldn't be (?) """
@@ -1149,18 +1144,20 @@ class Transfers:
 
             i.status = "Cannot connect"
             i.req = None
-            curtime = time.time()
-
-            for j in self.uploads:
-                if j.user == i.user:
-                    j.timequeued = curtime
 
             if i.user not in self.eventprocessor.watchedusers:
                 self.queue.put(slskmessages.AddUser(i.user))
 
             if i in self.downloads:
                 self.downloadsview.update(i)
+
             elif i in self.uploads:
+                curtime = time.time()
+
+                for j in self.uploads:
+                    if j.user == i.user:
+                        j.timequeued = curtime
+
                 self.uploadsview.update(i)
 
             break
@@ -1601,8 +1598,6 @@ class Transfers:
                 else:
                     i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
 
-                self.check_upload_queue()
-
             i.lastbytes = i.currentbytes
             i.lasttime = curtime
 
@@ -1981,22 +1976,22 @@ class Transfers:
 
                 auto_clear = True
 
-        curtime = time.time()
-        for j in self.uploads:
-            if j.user == i.user:
-                j.timequeued = curtime
-
         if type == "download":
             self.downloadsview.update(i)
 
         elif type == "upload":
+            curtime = time.time()
+            for j in self.uploads:
+                if j.user == i.user:
+                    j.timequeued = curtime
+
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
                 pass
             else:
                 self.uploadsview.update(i)
 
-        self.check_upload_queue()
+            self.check_upload_queue()
 
     def get_renamed(self, name):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
@@ -2049,10 +2044,10 @@ class Transfers:
 
             if i in self.downloads:
                 self.downloadsview.update(i)
+
             elif i in self.uploads:
                 self.uploadsview.update(i)
-
-            self.check_upload_queue()
+                self.check_upload_queue()
 
     def folder_contents_response(self, conn, file_list):
         """ When we got a contents of a folder, get all the files in it, but
@@ -2203,6 +2198,7 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
+                self.check_upload_queue()
                 self.log_transfer(
                     _("Upload aborted, user %(user)s file %(file)s") % {
                         'user': transfer.user,
