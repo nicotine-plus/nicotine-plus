@@ -1669,11 +1669,11 @@ class Transfers:
 
         self.eventprocessor.statistics.append_stat_value("completed_uploads", 1)
 
-        self.check_upload_queue()
         self.uploadsview.update(i)
 
         # Autoclear this upload
         self.auto_clear_upload(i)
+        self.check_upload_queue()
 
     def auto_clear_download(self, transfer):
         if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
