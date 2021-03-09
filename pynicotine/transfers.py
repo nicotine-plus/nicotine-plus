@@ -310,6 +310,7 @@ class Transfers:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
                     self.uploadsview.update(i)
+                    self.auto_clear_upload(i)
 
         if msg.status <= 0:
             self.check_upload_queue()
@@ -2008,6 +2009,7 @@ class Transfers:
     def _conn_close(self, conn, addr, i, type):
 
         self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
+        auto_clear = False
 
         if i.status != "Finished":
             if type == "download":
@@ -2026,7 +2028,7 @@ class Transfers:
                     intentionally cancelled, the peer should ignore this message. """
                     self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
 
-                self.auto_clear_upload(i)
+                auto_clear = True
 
         curtime = time.time()
         for j in self.uploads:
@@ -2037,6 +2039,9 @@ class Transfers:
             self.downloadsview.update(i)
         elif type == "upload":
             self.uploadsview.update(i)
+
+            if auto_clear:
+                self.auto_clear_upload(i)
 
         self.check_upload_queue()
 
