@@ -45,7 +45,7 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
-from pynicotine.utils import write_log
+from pynicotine.utils import write_file_and_backup
 
 
 class Transfer(object):
@@ -2254,7 +2254,7 @@ class Transfers:
 
         if self.eventprocessor.config.sections["logging"]["transfers"]:
             timestamp_format = self.eventprocessor.config.sections["logging"]["log_timestamp"]
-            write_log(self.eventprocessor.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
+            log.write_log(self.eventprocessor.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
 
         if show_ui:
             log.add(message)
@@ -2263,19 +2263,17 @@ class Transfers:
         """ Get a list of incomplete and not aborted downloads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
 
+    def save_downloads_callback(self, f):
+        import json
+        json.dump(self.get_downloads(), f, ensure_ascii=False)
+
     def save_downloads(self):
         """ Save list of files to be downloaded """
 
         self.eventprocessor.config.create_data_folder()
         downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'downloads.json')
 
-        try:
-            with open(downloads_file, "w", encoding="utf-8") as handle:
-                import json
-                json.dump(self.get_downloads(), handle, ensure_ascii=False)
-
-        except Exception as inst:
-            log.add(_("Something went wrong while writing your transfer list: %(error)s"), {'error': str(inst)})
+        write_file_and_backup(downloads_file, self.save_downloads_callback)
 
     def disconnect(self):
 

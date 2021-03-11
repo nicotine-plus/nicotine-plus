@@ -69,7 +69,6 @@ from pynicotine.gtkgui.utils import update_tag_visuals
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
-from pynicotine.utils import write_log
 
 
 def get_completion(part, list):
@@ -915,7 +914,7 @@ class ChatRoom:
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            write_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            log.write_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
 
         self.get_user_tag(user)
 

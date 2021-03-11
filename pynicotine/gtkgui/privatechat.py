@@ -59,7 +59,6 @@ from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import version
-from pynicotine.utils import write_log
 
 
 CTCP_VERSION = "\x01VERSION\x01"
@@ -548,7 +547,7 @@ class PrivateChat:
 
         if self.Log.get_active():
             timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            log.write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
@@ -591,7 +590,7 @@ class PrivateChat:
 
         if self.Log.get_active():
             timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            log.write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         if bytestring:
             payload = text

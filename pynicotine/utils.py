@@ -30,7 +30,8 @@ import locale
 import os
 import pickle
 import sys
-import time
+
+from pynicotine.logfacility import log
 
 version = "3.0.3.dev1"
 
@@ -407,21 +408,50 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
-def write_log(logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
+def write_file_and_backup(path, callback, protect=False):
 
+    # Back up old file to path.old
     try:
-        oldumask = os.umask(0o077)
-        if not os.path.exists(logsdir):
-            os.makedirs(logsdir)
+        if os.path.exists(path):
+            from shutil import copy2
+            copy2(path, path + ".old")
 
-        with open(os.path.join(logsdir, clean_file(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
-            os.umask(oldumask)
-
-            text = "%s %s\n" % (time.strftime(timestamp_format), msg)
-            logfile.write(text.encode('utf-8', 'replace'))
+            if protect:
+                os.chmod(path + ".old", 0o600)
 
     except Exception as error:
-        print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
+        log.add_warning(_("Unable to back up file %(path)s: %(error)s"), {
+            "path": path,
+            "error": error
+        })
+
+    # Save new file
+    if protect:
+        oldumask = os.umask(0o077)
+
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            callback(f)
+
+    except Exception as error:
+        log.add_warning(_("Unable to save file %(path)s: %(error)s"), {
+            "path": path,
+            "error": error
+        })
+
+        # Attempt to restore file
+        try:
+            if os.path.exists(path + ".old"):
+                os.rename(path + ".old", path)
+
+        except Exception as error:
+            log.add_warning(_("Unable to restore previous file %(path)s: %(error)s"), {
+                "path": path,
+                "error": error
+            })
+
+    if protect:
+        os.umask(oldumask)
 
 
 def http_request(url_scheme, base_url, path, request_type="GET", body="", headers={}, timeout=10, redirect_depth=0):

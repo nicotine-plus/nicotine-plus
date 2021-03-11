@@ -37,6 +37,7 @@ from collections import defaultdict
 
 from pynicotine.logfacility import log
 from pynicotine.utils import RestrictedUnpickler
+from pynicotine.utils import write_file_and_backup
 
 
 class Config:
@@ -661,6 +662,9 @@ class Config:
         if section in self.parser.sections():
             self.parser.remove_section(section)
 
+    def write_config_callback(self, f):
+        self.parser.write(f)
+
     def write_configuration(self):
 
         for i in self.sections:
@@ -673,37 +677,7 @@ class Config:
         if not self.create_config_folder():
             return
 
-        # Back up old config to config.old
-        try:
-            if os.path.exists(self.filename):
-                from shutil import copy2
-                copy2(self.filename, self.filename + ".old")
-
-                # A paranoid precaution since config contains the password
-                os.chmod(self.filename + ".old", 0o600)
-
-        except Exception as error:
-            log.add_warning(_("Unable to back up config file: %s"), error)
-
-        # Save new config to file
-        oldumask = os.umask(0o077)
-
-        try:
-            with open(self.filename, "w", encoding="utf-8") as f:
-                self.parser.write(f)
-
-        except Exception as error:
-            log.add_warning(_("Unable to save config file: %s"), error)
-
-            # Attempt to restore config backup
-            try:
-                if os.path.exists(self.filename + ".old"):
-                    os.rename(self.filename + ".old", self.filename)
-
-            except Exception as error:
-                log.add_warning(_("Unable to restore previous config file: %s"), error)
-
-        os.umask(oldumask)
+        write_file_and_backup(self.filename, self.write_config_callback, protect=True)
 
     def write_config_backup(self, filename):
 

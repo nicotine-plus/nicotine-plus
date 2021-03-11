@@ -16,9 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import time
-
-from pynicotine.utils import write_log
 
 
 class Logger(object):
@@ -79,7 +78,7 @@ class Logger(object):
             msg = msg % msg_args
 
         if self.log_to_file:
-            write_log(self.folder, self.file_name, msg, self.timestamp_format)
+            self.write_log(self.folder, self.file_name, msg, self.timestamp_format)
 
         for callback in self.listeners:
             try:
@@ -132,6 +131,23 @@ class Logger(object):
 
     def set_log_levels(self, levels):
         self.log_levels = levels
+
+    def write_log(self, logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
+
+        try:
+            oldumask = os.umask(0o077)
+            if not os.path.exists(logsdir):
+                os.makedirs(logsdir)
+
+            from pynicotine.utils import clean_file
+            with open(os.path.join(logsdir, clean_file(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
+                os.umask(oldumask)
+
+                text = "%s %s\n" % (time.strftime(timestamp_format), msg)
+                logfile.write(text.encode('utf-8', 'replace'))
+
+        except Exception as error:
+            print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
 
 
 class Console(object):
