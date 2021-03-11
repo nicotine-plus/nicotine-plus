@@ -46,7 +46,6 @@ from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
 from pynicotine.transfers import Statistics
-from pynicotine.utils import clean_file
 from pynicotine.utils import unescape
 
 
@@ -120,7 +119,7 @@ class NetworkEventProcessor:
 
         except Exception:
             import shutil
-            corruptfile = ".".join([config, clean_file(time.strftime("%Y-%m-%d_%H_%M_%S")), "corrupt"])
+            corruptfile = ".".join([config, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
             shutil.move(config, corruptfile)
             short = _("Your config file is corrupt")
             long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}

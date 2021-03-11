@@ -317,6 +317,7 @@ class Transfers:
             self.check_upload_queue()
 
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
+
         path = clean_path(path, absolute=True)
 
         if checkduplicate:
@@ -1199,9 +1200,9 @@ class Transfers:
 
             if not incompletedir:
                 if i.path and i.path[0] == '/':
-                    incompletedir = clean_path(i.path)
+                    incompletedir = i.path
                 else:
-                    incompletedir = os.path.join(downloaddir, clean_path(i.path))
+                    incompletedir = os.path.join(downloaddir, i.path)
 
             try:
                 if not os.access(incompletedir, os.F_OK):
@@ -1219,24 +1220,13 @@ class Transfers:
                     self.notifications.new_notification(_("OS error: %s") % strerror, title=_("Folder download error"))
 
             else:
-                # also check for a windows-style incomplete transfer
-                basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
-                winfname = os.path.join(incompletedir, "INCOMPLETE~" + basename)
-                pyfname = os.path.join(incompletedir, "INCOMPLETE" + basename)
-
-                m = md5()
-                m.update((i.filename + i.user).encode('utf-8'))
-
                 f = None
-                pynewfname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                 try:
-                    if os.access(winfname, os.F_OK):
-                        fname = winfname
-                    elif os.access(pyfname, os.F_OK):
-                        fname = pyfname
-                    else:
-                        fname = pynewfname
+                    m = md5()
+                    m.update((i.filename + i.user).encode('utf-8'))
 
+                    basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
+                    fname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                     f = open(fname, 'ab+')
 
                     if self.eventprocessor.config.sections["transfers"]["lock"]:
@@ -1434,16 +1424,65 @@ class Transfers:
 
             break
 
+    def file_downloaded_actions(self, user, filepath):
+
+        config = self.eventprocessor.config.sections
+
+        if self.notifications and config["notifications"]["notification_popup_file"]:
+            self.notifications.new_notification(
+                _("%(file)s downloaded from %(user)s") % {
+                    'user': user,
+                    'file': filepath.rsplit(os.sep, 1)[1]
+                },
+                title=_("File downloaded")
+            )
+
+        if config["transfers"]["afterfinish"]:
+            if not execute_command(config["transfers"]["afterfinish"], filepath):
+                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
+            else:
+                log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
+
+    def folder_downloaded_actions(self, user, filepath, folderpath):
+
+        if not filepath:
+            return
+
+        config = self.eventprocessor.config.sections
+
+        if not config["notifications"]["notification_popup_folder"] and not config["transfers"]["afterfolder"]:
+            return
+
+        # walk through downloads and break if any file in the same folder exists, else execute
+        for i in self.downloads:
+            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path and i.path == filepath:
+                return
+
+        if self.notifications and config["notifications"]["notification_popup_folder"]:
+            self.notifications.new_notification(
+                _("%(folder)s downloaded from %(user)s") % {
+                    'user': user,
+                    'folder': folderpath
+                },
+                title=_("Folder downloaded")
+            )
+
+        if config["transfers"]["afterfolder"]:
+            if not execute_command(config["transfers"]["afterfolder"], folderpath):
+                log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
+            else:
+                log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
+
     def download_finished(self, file, i):
 
         self.close_file(file, i)
 
-        basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
         config = self.eventprocessor.config.sections
         downloaddir = config["transfers"]["downloaddir"]
+        basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
 
         if i.path and i.path[0] == '/':
-            folder = clean_path(i.path)
+            folder = i.path
         else:
             folder = os.path.join(downloaddir, i.path)
 
@@ -1469,6 +1508,23 @@ class Transfers:
         i.currentbytes = i.size
         i.speed = None
         i.timeleft = ""
+        i.conn = None
+
+        self.add_to_shared(newname)
+        self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
+
+        if self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
+            self.eventprocessor.shares.send_num_shared_folders_files()
+
+        # Attempt to show notification and execute commands
+        self.file_downloaded_actions(i.user, newname)
+        self.folder_downloaded_actions(i.user, newname, folder)
+
+        # Attempt to autoclear this download, if configured
+        if not self.auto_clear_download(i):
+            self.downloadsview.update(i)
+
+        self.save_downloads()
 
         log.add_transfer(
             "Download finished: %(file)s", {
@@ -1483,57 +1539,6 @@ class Transfers:
             },
             show_ui=1
         )
-
-        i.conn = None
-
-        self.add_to_shared(newname)
-
-        if self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
-            self.eventprocessor.shares.send_num_shared_folders_files()
-
-        self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
-
-        if self.notifications and config["notifications"]["notification_popup_file"]:
-            self.notifications.new_notification(
-                _("%(file)s downloaded from %(user)s") % {
-                    'user': i.user,
-                    'file': newname.rsplit(os.sep, 1)[1]
-                },
-                title=_("File downloaded")
-            )
-
-        self.save_downloads()
-
-        # Attempt to autoclear this download, if configured
-        if not self.auto_clear_download(i):
-            self.downloadsview.update(i)
-
-        if config["transfers"]["afterfinish"]:
-            if not execute_command(config["transfers"]["afterfinish"], newname):
-                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
-            else:
-                log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
-
-        if i.path and (config["notifications"]["notification_popup_folder"] or config["transfers"]["afterfolder"]):
-
-            # walk through downloads and break if any file in the same folder exists, else execute
-            for ia in self.downloads:
-                if ia.status not in ("Finished", "Aborted", "Paused", "Filtered") and ia.path and ia.path == i.path:
-                    break
-            else:
-                if self.notifications and config["notifications"]["notification_popup_folder"]:
-                    self.notifications.new_notification(
-                        _("%(folder)s downloaded from %(user)s") % {
-                            'user': i.user,
-                            'folder': folder
-                        },
-                        title=_("Folder downloaded")
-                    )
-                if config["transfers"]["afterfolder"]:
-                    if not execute_command(config["transfers"]["afterfolder"], folder):
-                        log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
-                    else:
-                        log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
 
     def add_to_shared(self, name):
         """ Add a file to the normal shares database """

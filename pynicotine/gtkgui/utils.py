@@ -44,8 +44,8 @@ from pynicotine.gtkgui.dialogs import choose_image
 from pynicotine.gtkgui.dialogs import entry_dialog
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
 from pynicotine.utils import execute_command
+from pynicotine.utils import get_path
 
 
 URL_RE = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
@@ -484,22 +484,43 @@ def open_file_path(file_path, command=None):
 
 
 def open_log(folder, filename):
+    _handle_log(folder, filename, open_log_callback)
+
+
+def delete_log(folder, filename):
+    _handle_log(folder, filename, delete_log_callback)
+
+
+def _handle_log(folder, filename, callback):
 
     try:
         if not os.path.isdir(folder):
             os.makedirs(folder)
 
-        path = os.path.join(folder, clean_file(filename.replace(os.sep, "-")) + ".log")
-
-        if not os.path.exists(path):
-            with open(path, "w"):
-                # No logs, create empty file
-                pass
-
-        open_file_path(path)
+        filename = filename.replace(os.sep, "-") + ".log"
+        get_path(folder, filename, callback)
 
     except Exception as e:
-        log.add("Failed to open log file: %s", e)
+        log.add("Failed to process log file: %s", e)
+
+
+def open_log_callback(path, data):
+
+    if not os.path.exists(path):
+        with open(path, "w"):
+            # No logs, create empty file
+            pass
+
+    open_file_path(path)
+
+
+def delete_log_callback(path, data):
+
+    with open(path, "w"):
+        # Check if path should contain special characters
+        pass
+
+    os.remove(path)
 
 
 def open_uri(uri, window):

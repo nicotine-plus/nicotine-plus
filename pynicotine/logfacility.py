@@ -132,22 +132,30 @@ class Logger(object):
     def set_log_levels(self, levels):
         self.log_levels = levels
 
-    def write_log(self, logsdir, fn, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
+    def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
         try:
+            filename = filename.replace(os.sep, "-") + ".log"
             oldumask = os.umask(0o077)
+
             if not os.path.exists(logsdir):
                 os.makedirs(logsdir)
 
-            from pynicotine.utils import clean_file
-            with open(os.path.join(logsdir, clean_file(fn.replace(os.sep, "-")) + ".log"), 'ab', 0) as logfile:
-                os.umask(oldumask)
-
-                text = "%s %s\n" % (time.strftime(timestamp_format), msg)
-                logfile.write(text.encode('utf-8', 'replace'))
+            from pynicotine.utils import get_path
+            get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp_format, msg))
 
         except Exception as error:
-            print(_("Couldn't write to log file \"%s\": %s") % (fn, error))
+            print(_("Couldn't write to log file \"%s\": %s") % (filename, error))
+
+    def write_log_callback(self, path, data):
+
+        oldumask, timestamp_format, msg = data
+
+        with open(path, 'ab', 0) as logfile:
+            os.umask(oldumask)
+
+            text = "%s %s\n" % (time.strftime(timestamp_format), msg)
+            logfile.write(text.encode('utf-8', 'replace'))
 
 
 class Console(object):
