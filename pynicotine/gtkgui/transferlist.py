@@ -57,7 +57,7 @@ class TransferList:
         self.frame.__dict__[type + "svbox"].add(self.Main)
         self.widget = widget = self.__dict__[type.title() + "List"]
 
-        self.last_ui_update = self.last_save = time()
+        self.last_ui_update = self.last_save = 0
         self.list = []
         self.users = {}
         self.paths = {}
@@ -158,8 +158,8 @@ class TransferList:
 
     def init_interface(self, list):
         self.list = list
-        self.update()
         self.widget.set_sensitive(True)
+        self.update()
 
     def conn_close(self):
         self.widget.set_sensitive(False)
@@ -234,6 +234,10 @@ class TransferList:
 
     def update(self, transfer=None, forceupdate=False):
 
+        if not self.widget.get_sensitive():
+            """ List is not initialized """
+            return
+
         curtime = time()
 
         if (curtime - self.last_save) > 15:
@@ -257,8 +261,8 @@ class TransferList:
 
         if transfer is not None:
             self.update_specific(transfer)
-        elif self.list is not None:
 
+        elif self.list is not None:
             for i in self.list:
                 self.update_specific(i)
 
