@@ -682,10 +682,6 @@ class ChatRoom:
 
         self.users[username] = iterator
 
-    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
-        # cellrenderer.set_property("weight", colour)
-        pass
-
     def read_room_logs(self):
 
         config = self.frame.np.config.sections
