@@ -164,9 +164,9 @@ class Searches(IconNotebook):
         if feedback is None:
             return
 
-        id, searchterm_with_excluded, searchterm_without_excluded = self.frame.np.search.do_search(text, search_mode, users, room)
+        search_id, searchterm_with_excluded, searchterm_without_excluded = self.frame.np.search.do_search(text, search_mode, users, room)
 
-        search = self.create_tab(id, searchterm_with_excluded, search_mode, showtab=True)
+        search = self.create_tab(search_id, searchterm_with_excluded, search_mode, showtab=True)
         if search["tab"] is not None:
             self.set_current_page(self.page_num(search["tab"].Main))
 
@@ -182,7 +182,7 @@ class Searches(IconNotebook):
             self.frame.SearchCombo.append_text(i)
 
         if search_mode == "user" and users != [] and users[0] != '':
-            self.usersearches[id] = users
+            self.usersearches[search_id] = users
 
     def set_wishlist_interval(self, msg):
         self.wish_list.set_interval(msg)

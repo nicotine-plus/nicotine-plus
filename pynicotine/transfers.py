@@ -1853,10 +1853,7 @@ class Transfers:
                 if i.status != "Queued":
                     continue
 
-                if not privileged_user:
-                    place += 1
-
-                elif self.is_privileged(i.user):
+                if not privileged_user or self.is_privileged(i.user):
                     place += 1
 
                 # Stop counting on the matching file
@@ -1893,10 +1890,7 @@ class Transfers:
                     # Each unique user in the queue adds one to the placement
                     queued_users.add(i.user)
 
-                    if not privileged_user:
-                        place += 1
-
-                    elif self.is_privileged(i.user):
+                    if not privileged_user or self.is_privileged(i.user):
                         place += 1
 
         self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))

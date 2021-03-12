@@ -253,9 +253,9 @@ class PluginHandler(object):
                 if return_value == returncode['zap']:
                     return True
                 elif return_value == returncode['pass']:
-                    pass
-                else:
-                    log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(return_value)})
+                    continue
+
+                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(return_value)})
 
             except Exception:
                 from traceback import extract_stack
@@ -295,9 +295,9 @@ class PluginHandler(object):
                 elif return_value == returncode['break']:
                     return args
                 elif return_value == returncode['pass']:
-                    pass
-                else:
-                    log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': return_value})
+                    continue
+
+                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': return_value})
 
             except Exception:
                 from traceback import extract_stack

@@ -88,6 +88,6 @@ def test_wishlist_add(config, search):
     # Second item
 
     new_item = SEARCH_TEXT + "1"
-    searchid = search.add_wish(new_item)
+    search.add_wish(new_item)
     assert config.sections["server"]["autosearch"][0] == SEARCH_TEXT
     assert config.sections["server"]["autosearch"][1] == new_item

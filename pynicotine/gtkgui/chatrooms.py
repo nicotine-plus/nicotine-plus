@@ -311,49 +311,43 @@ class ChatRooms(IconNotebook):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if msg.user not in rooms[msg.room]["users"]:
-                rooms[msg.room]["users"].append(msg.user)
+        if msg.room in rooms and msg.user not in rooms[msg.room]["users"]:
+            rooms[msg.room]["users"].append(msg.user)
 
     def private_room_remove_user(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if msg.user in rooms[msg.room]["users"]:
-                rooms[msg.room]["users"].remove(msg.user)
+        if msg.room in rooms and msg.user in rooms[msg.room]["users"]:
+            rooms[msg.room]["users"].remove(msg.user)
 
     def private_room_operator_added(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
-                rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
+        if msg.room in rooms and self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
 
     def private_room_operator_removed(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
-                rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
+        if msg.room in rooms and self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
 
     def private_room_add_operator(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if msg.user not in rooms[msg.room]["operators"]:
-                rooms[msg.room]["operators"].append(msg.user)
+        if msg.room in rooms and msg.user not in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].append(msg.user)
 
     def private_room_remove_operator(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms:
-            if msg.user in rooms[msg.room]["operators"]:
-                rooms[msg.room]["operators"].remove(msg.user)
+        if msg.room in rooms and msg.user in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].remove(msg.user)
 
     def private_room_added(self, msg):
 
@@ -379,9 +373,8 @@ class ChatRooms(IconNotebook):
         self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
 
     def private_room_disown(self, msg):
-        if msg.room in self.private_rooms:
-            if self.private_rooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
-                self.private_rooms[msg.room]["owner"] = None
+        if msg.room in self.private_rooms and self.private_rooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+            self.private_rooms[msg.room]["owner"] = None
 
     def get_user_stats(self, msg):
         for room in self.joinedrooms.values():
@@ -1185,22 +1178,21 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if self.frame.np.config.sections["words"]["tab"]:
+        if self.frame.np.config.sections["words"]["tab"] and \
+                username in self.clist and username not in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]):
 
-            if username in self.clist and username not in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]):
+            self.clist.remove(username)
 
-                self.clist.remove(username)
+            if self.frame.np.config.sections["words"]["dropdown"]:
+                liststore = self.ChatEntry.get_completion().get_model()
 
-                if self.frame.np.config.sections["words"]["dropdown"]:
-                    liststore = self.ChatEntry.get_completion().get_model()
-
-                    iterator = liststore.get_iter_first()
-                    while iterator is not None:
-                        name = liststore.get_value(iterator, 0)
-                        if name == username:
-                            liststore.remove(iterator)
-                            break
-                        iterator = liststore.iter_next(iterator)
+                iterator = liststore.get_iter_first()
+                while iterator is not None:
+                    name = liststore.get_value(iterator, 0)
+                    if name == username:
+                        liststore.remove(iterator)
+                        break
+                    iterator = liststore.iter_next(iterator)
 
         if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
@@ -1496,9 +1488,8 @@ class ChatRoom:
         if not config["cycle"]:
             completion, single = get_completion(text, self.clist)
             if completion:
-                if single:
-                    if ix == len(text) and text[:1] != "/":
-                        completion += ": "
+                if single and ix == len(text) and text[:1] != "/":
+                    completion += ": "
                 widget.delete_text(preix, ix)
                 widget.insert_text(completion, preix)
                 widget.set_position(preix + len(completion))
@@ -1538,10 +1529,10 @@ class ChatRoom:
         if not widget.get_active():
             if self.room in self.frame.np.config.sections["logging"]["rooms"]:
                 self.frame.np.config.sections["logging"]["rooms"].remove(self.room)
+            return
 
-        elif widget.get_active():
-            if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
-                self.frame.np.config.sections["logging"]["rooms"].append(self.room)
+        if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
+            self.frame.np.config.sections["logging"]["rooms"].append(self.room)
 
     def on_room_log_clicked(self, widget, event):
 

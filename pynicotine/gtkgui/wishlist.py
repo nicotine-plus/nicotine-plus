@@ -85,10 +85,10 @@ class WishList:
         wish = widget.get_text()
         widget.set_text("")
 
-        id = self.add_wish(wish)
+        search_id = self.add_wish(wish)
 
-        if id:
-            self.frame.np.search.do_wishlist_search(id, wish)
+        if search_id:
+            self.frame.np.search.do_wishlist_search(search_id, wish)
 
     def on_remove_wish(self, widget):
 
@@ -120,16 +120,16 @@ class WishList:
 
     def add_wish(self, wish):
 
-        id = self.frame.np.search.add_wish(wish)
+        search_id = self.frame.np.search.add_wish(wish)
 
-        if not id:
+        if not search_id:
             return None
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.append([wish])
 
-        self.searches.searches[id] = {
-            "id": id,
+        self.searches.searches[search_id] = {
+            "id": search_id,
             "term": wish,
             "tab": None,
             "mode": "wishlist",
@@ -137,7 +137,7 @@ class WishList:
             "ignore": True
         }
 
-        return id
+        return search_id
 
     def remove_wish(self, wish):
 
@@ -170,10 +170,10 @@ class WishList:
         if not self.disconnected:
             # Create wishlist searches (without tabs)
             for term in self.frame.np.config.sections["server"]["autosearch"]:
-                id = self.frame.np.search.increment_search_id()
+                search_id = self.frame.np.search.increment_search_id()
 
-                self.searches.searches[id] = {
-                    "id": id,
+                self.searches.searches[search_id] = {
+                    "id": search_id,
                     "term": term,
                     "tab": None,
                     "mode": "wishlist",
