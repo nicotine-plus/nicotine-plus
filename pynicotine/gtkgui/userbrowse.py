@@ -46,7 +46,7 @@ from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
+from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
 
 
@@ -544,16 +544,17 @@ class UserBrowse:
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
         try:
-            filepath = os.path.join(sharesdir, clean_file(self.user))
-
-            with open(filepath, "w", encoding="utf-8") as sharesfile:
-                import json
-                json.dump(self.shares, sharesfile, ensure_ascii=False)
-
+            get_path(sharesdir, self.user, self.dump_shares_to_file)
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"), {'user': self.user, 'dir': sharesdir})
 
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
+
+    def dump_shares_to_file(self, path):
+
+        with open(path, "w", encoding="utf-8") as sharesfile:
+            import json
+            json.dump(self.shares, sharesfile, ensure_ascii=False)
 
     def save_columns(self):
         save_columns("user_browse", self.FileTreeView.get_columns())

@@ -45,6 +45,7 @@ from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import entry_completion_find_match
 from pynicotine.gtkgui.utils import entry_completion_found_match
 from pynicotine.gtkgui.utils import get_user_status_color
@@ -68,7 +69,7 @@ from pynicotine.gtkgui.utils import unalias
 from pynicotine.gtkgui.utils import update_tag_visuals
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
-from pynicotine.utils import clean_file
+from pynicotine.utils import get_path
 
 
 def get_completion(part, list):
@@ -688,10 +689,7 @@ class ChatRoom:
     def read_room_logs(self):
 
         config = self.frame.np.config.sections
-        log = os.path.join(
-            config["logging"]["roomlogsdir"],
-            clean_file(self.room.replace(os.sep, "-")) + ".log"
-        )
+        filename = self.room.replace(os.sep, "-") + ".log"
 
         try:
             numlines = int(config["logging"]["readroomlines"])
@@ -699,22 +697,26 @@ class ChatRoom:
             numlines = 15
 
         try:
-            try:
-                self.append_log_lines(log, numlines, 'utf-8')
-
-            except UnicodeDecodeError:
-                self.append_log_lines(log, numlines, 'latin-1')
+            get_path(config["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
 
         except IOError:
             pass
 
         GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
 
-    def append_log_lines(self, log, numlines, encoding='utf-8'):
+    def append_log_lines(self, path, numlines):
+
+        try:
+            self._append_log_lines(path, numlines, 'utf-8')
+
+        except UnicodeDecodeError:
+            self._append_log_lines(path, numlines, 'latin-1')
+
+    def _append_log_lines(self, path, numlines, encoding='utf-8'):
 
         config = self.frame.np.config.sections
 
-        with open(log, 'r', encoding=encoding) as lines:
+        with open(path, 'r', encoding=encoding) as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
 
@@ -1603,21 +1605,7 @@ class ChatRoom:
     def delete_room_log_response(self, dialog, response, data):
 
         if response == Gtk.ResponseType.OK:
-            log_path = os.path.join(
-                self.frame.np.config.sections["logging"]["roomlogsdir"],
-                clean_file(self.room.replace(os.sep, "-")) + ".log"
-            )
-
-            try:
-                if os.path.exists(log_path):
-                    os.remove(log_path)
-
-            except Exception as e:
-                log.add(_("Failed to remove logged room messages for room '%(room)s'. Error: %(error)s"), {
-                    "room": self.room,
-                    "error": e
-                })
-
+            delete_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room)
             self.on_clear_messages(dialog)
             self.on_clear_activity_log(dialog)
 

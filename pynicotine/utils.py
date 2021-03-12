@@ -25,6 +25,7 @@
 This module contains utility functions.
 """
 
+import errno
 import gettext
 import locale
 import os
@@ -37,44 +38,56 @@ version = "3.0.3.dev1"
 
 win32 = sys.platform.startswith("win")
 
-illegalpathchars = []
-if win32:
-    illegalpathchars += ["?", ":", ">", "<", "|", "*", '"']
-
+illegalpathchars = ["?", ":", ">", "<", "|", "*", '"']
 illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 
 
 def clean_file(filename):
 
-    if win32:
-        for char in illegalfilechars:
-            filename = filename.replace(char, replacementchar)
+    for char in illegalfilechars:
+        filename = filename.replace(char, replacementchar)
 
     return filename
 
 
 def clean_path(path, absolute=False):
 
-    if win32:
+    # Without hacks it is (up to Vista) not possible to have more
+    # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
+    # for drives - we shouldn't escape that
+    drive = ''
+    if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
+        drive = path[:3]
+        path = path[3:]
 
-        # Without hacks it is (up to Vista) not possible to have more
-        # than 26 drives mounted, so we can assume a '[a-zA-Z]:\' prefix
-        # for drives - we shouldn't escape that
-        drive = ''
-        if absolute and path[1:3] == ':\\' and path[0:1] and path[0].isalpha():
-            drive = path[:3]
-            path = path[3:]
+    for char in illegalpathchars:
+        path = path.replace(char, replacementchar)
 
-        for char in illegalpathchars:
-            path = path.replace(char, replacementchar)
+    path = ''.join([drive, path])
 
-        path = ''.join([drive, path])
-
-        # Path can never end with a period on Windows machines
-        path = path.rstrip('.')
+    # Path can never end with a period on Windows machines
+    path = path.rstrip('.')
 
     return path
+
+
+def get_path(folder_name, base_name, callback, data=None):
+    """ Call a specified function, supplying an optimal file path depending on
+    which path characters the target file system supports """
+
+    try:
+        filepath = os.path.join(folder_name, base_name)
+        callback(filepath, data)
+
+    except OSError as e:
+        if e.errno != errno.EINVAL:
+            # The issue is not caused by invalid path characters, raise error as usual
+            raise OSError(e)
+
+        # Use path with forbidden characters removed (NTFS/FAT)
+        filepath = os.path.join(folder_name, clean_file(base_name))
+        callback(filepath, data)
 
 
 def get_latest_version():
