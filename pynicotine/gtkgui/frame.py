@@ -2613,7 +2613,7 @@ class NicotineFrame:
         if self.ci_mode:
             # We're running in CI mode without user input, exit now
             self.on_quit()
-            raise type(value)
+            raise value
 
         if hasattr(self, "MainWindow"):
             parent = self.MainWindow
