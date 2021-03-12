@@ -367,15 +367,15 @@ class UserInfo:
 
         append_line(self.descr, msg.descr, self.tag_local, showstamp=False, scroll=False)
 
-        self.uploads.set_text(_("Total uploads allowed: %i") % msg.totalupl)
-        self.queuesize.set_text(_("Queue size: %i") % msg.queuesize)
+        self.uploads.set_text(_("Upload slots: %i") % msg.totalupl)
+        self.queuesize.set_text(_("Queued uploads: %i") % msg.queuesize)
 
         if msg.slotsavail:
             slots = _("Yes")
         else:
             slots = _("No")
 
-        self.slotsavail.set_text(_("Slots free: %s") % slots)
+        self.slotsavail.set_text(_("Free upload slots: %s") % slots)
 
         if msg.uploadallowed == 0:
             allowed = _("No one")

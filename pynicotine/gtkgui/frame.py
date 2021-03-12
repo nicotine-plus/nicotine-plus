@@ -1878,7 +1878,7 @@ class NicotineFrame:
             if self.np.transfers is not None:
 
                 msg.totalupl = self.np.transfers.get_total_uploads_allowed()
-                msg.queuesize = self.np.transfers.get_upload_queue_sizes()[0]
+                msg.queuesize = self.np.transfers.get_upload_queue_size()
                 msg.slotsavail = self.np.transfers.allow_new_uploads()
                 ua = self.np.config.sections["transfers"]["remotedownloads"]
                 if ua:

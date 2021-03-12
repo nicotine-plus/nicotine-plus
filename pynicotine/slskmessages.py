@@ -2206,7 +2206,6 @@ class FileSearchResult(PeerMessage):
                     # Invalid VBR value
                     msg_list.extend(self.pack_object(0))
 
-        queuesize = self.inqueue[0]
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.token, unsignedint=True))
@@ -2218,7 +2217,7 @@ class FileSearchResult(PeerMessage):
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.pack_object(self.ulspeed, unsignedint=True))
-        msg.extend(self.pack_object(queuesize, unsignedlonglong=True))
+        msg.extend(self.pack_object(self.inqueue, unsignedlonglong=True))
 
         return zlib.compress(msg)
 

@@ -103,14 +103,14 @@
                         <child>
                           <object class="GtkLabel" id="uploads">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Total uploads allowed: unknown</property>
+                            <property name="label" translatable="yes">Upload slots: unknown</property>
                             <property name="xalign">0</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel" id="slotsavail">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Slots free: unknown</property>
+                            <property name="label" translatable="yes">Free upload slots: unknown</property>
                             <property name="xalign">0</property>
                           </object>
                         </child>
@@ -121,7 +121,7 @@
                             <child>
                               <object class="GtkLabel" id="queuesize">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Queue size: unknown</property>
+                                <property name="label" translatable="yes">Queued uploads: unknown</property>
                                 <property name="xalign">0</property>
                               </object>
                             </child>

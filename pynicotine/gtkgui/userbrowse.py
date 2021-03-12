@@ -476,7 +476,7 @@ class UserBrowse:
             iterator = self.directories[folder]
         except KeyError:
             # Folder not found
-            pass
+            return
 
         if folder:
             sel = self.FolderTreeView.get_selection()
@@ -866,7 +866,6 @@ class UserBrowse:
                 realfilename = os.path.join(realpath, file[1])
                 size = file[2]
                 self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size, locally_queued=locally_queued)
-                self.frame.np.transfers.check_upload_queue()
                 locally_queued = True
 
         if not recurse:
@@ -905,7 +904,6 @@ class UserBrowse:
         locally_queued = False
         for fn in self.selected_files:
             self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix, locally_queued=locally_queued)
-            self.frame.np.transfers.check_upload_queue()
             locally_queued = True
 
     def on_key_press_event(self, widget, event):
