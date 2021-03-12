@@ -1043,6 +1043,7 @@ class Transfers:
 
     def allow_new_uploads(self):
 
+        # Limit by upload slots
         limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
 
         if limit_upload_slots:
@@ -1052,6 +1053,7 @@ class Transfers:
             if in_progress_count >= maxupslots:
                 return False
 
+        # Limit by maximum bandwidth
         maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
 
         if maxbandwidth:
@@ -1060,6 +1062,7 @@ class Transfers:
             if bandwidth_sum >= maxbandwidth:
                 return False
 
+        # No limits
         return True
 
     def get_file_size(self, filename):
@@ -1463,7 +1466,7 @@ class Transfers:
 
         # walk through downloads and break if any file in the same folder exists, else execute
         for i in self.downloads:
-            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path and i.path == filepath:
+            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path and i.path == folderpath:
                 return
 
         if self.notifications and config["notifications"]["notification_popup_folder"]:
@@ -1850,8 +1853,10 @@ class Transfers:
                 if i.status != "Queued":
                     continue
 
-                if not privileged_user or \
-                        privileged_user and self.is_privileged(i.user):
+                if not privileged_user:
+                    place += 1
+
+                elif self.is_privileged(i.user):
                     place += 1
 
                 # Stop counting on the matching file
@@ -1859,16 +1864,11 @@ class Transfers:
                     break
 
         else:
-            # TODO: more accurate calculation
+            # TODO: more accurate calculation, if possible
             should_count = True
-            transfers = 0
-            user_upload_count = {}
-            uploading_users = set()
+            queued_users = set()
 
             for i in self.uploads:
-                if i.req is not None or i.conn is not None or i.status == "Getting status":
-                    if i.user not in uploading_users:
-                        uploading_users.add(i.user)
 
                 # Ignore non-queued files
                 if i.status != "Queued":
@@ -1878,21 +1878,26 @@ class Transfers:
                     if not should_count:
                         continue
 
-                    # Count all transfers
+                    # Count all transfers for requesting user
                     place += 1
 
                     # Stop counting on the matching file
                     if i.filename == msg.file:
                         should_count = False
 
-                else:
-                    user_upload_count[i.user] += 1
+                    continue
 
-            for username, upload_count in user_upload_count.items():
-                if username not in uploading_users:
-                    transfers += 1
+                user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
 
-            place += transfers
+                if not user_uploading and i.user not in queued_users:
+                    # Each unique user in the queue adds one to the placement
+                    queued_users.add(i.user)
+
+                    if not privileged_user:
+                        place += 1
+
+                    elif self.is_privileged(i.user):
+                        place += 1
 
         self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
