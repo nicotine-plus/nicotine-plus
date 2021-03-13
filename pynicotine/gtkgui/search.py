@@ -1117,7 +1117,7 @@ class Search:
 
         self.select_results()
 
-        if event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path(widget)
         else:

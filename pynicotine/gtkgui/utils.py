@@ -1149,7 +1149,7 @@ class IconNotebook:
 
         keycode = event.hardware_keycode
 
-        if event.get_state() == Gdk.ModifierType.CONTROL_MASK:
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             if keycode in keyval_to_hardware_keycode(Gdk.KEY_w) or \
                keycode in keyval_to_hardware_keycode(Gdk.KEY_F4):
                 # Ctrl+W and Ctrl+F4: close current tab
@@ -1678,7 +1678,7 @@ class TextSearchBar:
 
     def on_key_press(self, widget, event):
 
-        if event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_f):
             self.show_search_bar()
 

@@ -1509,7 +1509,7 @@ class ChatRoom:
                 widget.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if event.get_state() == Gdk.ModifierType.SHIFT_MASK:
+                if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])

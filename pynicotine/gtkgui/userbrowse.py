@@ -910,7 +910,7 @@ class UserBrowse:
 
         self.select_files()
 
-        if event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             files = (widget == self.FileTreeView)
             self.on_copy_file_path(widget, files)

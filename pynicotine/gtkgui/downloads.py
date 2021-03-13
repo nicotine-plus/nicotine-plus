@@ -245,7 +245,7 @@ class Downloads(TransferList):
         elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
             self.on_retry_transfer(widget)
 
-        elif event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path(widget)
 

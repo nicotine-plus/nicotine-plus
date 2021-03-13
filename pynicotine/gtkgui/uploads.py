@@ -108,7 +108,7 @@ class Uploads(TransferList):
         if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
             self.on_abort_transfer(widget)
 
-        elif event.get_state() == Gdk.ModifierType.CONTROL_MASK and \
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path(widget)
 
