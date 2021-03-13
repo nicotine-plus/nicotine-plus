@@ -23,7 +23,6 @@
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
   git \
-  upx \
   mingw-w64-$ARCH-gspell \
   mingw-w64-$ARCH-gtk3 \
   mingw-w64-$ARCH-nsis \

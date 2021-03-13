@@ -84,7 +84,6 @@ First, follow the instructions on installing MSYS2: [https://pygobject.readthedo
 Then, install dependencies:
 
 ```console
-export ARCH=x86_64
 packaging/windows/dependencies-core.sh
 packaging/windows/dependencies-packaging.sh
 ```

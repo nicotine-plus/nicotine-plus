@@ -157,12 +157,6 @@ icon = 'nicotine.ico'
 if sys.platform == 'darwin':
     icon = 'nicotine.icns'
 
-enable_upx = True
-
-if sys.platform == 'win32' and os.environ['ARCH'] == 'i686':
-    # Disable UPX on 32-bit Windows, otherwise Nicotine+ won't start
-    enable_upx = False
-
 exe = EXE(pyz,
           a.scripts,
           [],
@@ -170,7 +164,7 @@ exe = EXE(pyz,
           name=name,
           debug=False,
           strip=False,
-          upx=enable_upx,
+          upx=False,
           console=False,
           icon=icon)
 
@@ -180,7 +174,7 @@ coll = COLLECT(exe,
                a.zipfiles,
                a.datas,
                strip=False,
-               upx=enable_upx,
+               upx=False,
                name=name)
 
 

@@ -26,8 +26,7 @@ brew install \
   create-dmg \
   gdk-pixbuf \
   gtk+3 \
-  librsvg \
-  upx
+  librsvg
 
 # Install dependencies with pip
 pip3 install \
