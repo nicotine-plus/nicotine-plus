@@ -224,7 +224,8 @@ class ChatRooms(IconNotebook):
             self.joinedrooms[msg.room].rejoined(msg.users)
             return
 
-        tab = ChatRoom(self, msg.room, msg.users)
+        meta = (msg.room == "Public ")
+        tab = ChatRoom(self, msg.room, msg.users, meta)
         self.joinedrooms[msg.room] = tab
 
         try:
@@ -264,7 +265,7 @@ class ChatRooms(IconNotebook):
 
             for room in room_list:
                 if room == 'Public ':
-                    self.on_join_public_room(None)
+                    self.roomlist.on_join_public_room(None)
 
                 elif isinstance(room, str):
                     self.frame.np.queue.put(slskmessages.JoinRoom(room))
