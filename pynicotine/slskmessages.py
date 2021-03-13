@@ -850,11 +850,6 @@ class UserSearch(ServerMessage):
 
         return msg
 
-    def parse_network_message(self, message):
-        pos, self.user = self.get_object(message, str)
-        pos, self.searchid = self.get_object(message, int, pos)
-        pos, self.searchterm = self.get_object(message, str, pos)
-
 
 class AddThingILike(ServerMessage):
     """ Server code: 51 """
@@ -1500,14 +1495,6 @@ class RoomSearch(ServerMessage):
         msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
-
-    def parse_network_message(self, message):
-        pos, self.room = self.get_object(message, str)
-        pos, self.searchid = self.get_object(message, int, pos)
-        pos, self.searchterm = self.get_object(message, str, pos)
-
-    def __repr__(self):
-        return "RoomSearch(room=%s, requestid=%s, text=%s)" % (self.room, self.searchid, self.searchterm)
 
 
 class SendUploadSpeed(ServerMessage):
