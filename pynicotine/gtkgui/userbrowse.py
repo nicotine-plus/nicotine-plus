@@ -550,7 +550,7 @@ class UserBrowse:
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
 
-    def dump_shares_to_file(self, path):
+    def dump_shares_to_file(self, path, data):
 
         with open(path, "w", encoding="utf-8") as sharesfile:
             import json
