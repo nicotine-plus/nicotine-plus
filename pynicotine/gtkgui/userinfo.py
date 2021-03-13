@@ -87,6 +87,11 @@ class UserTabs(IconNotebook):
 
         if user in self.users:
             self.users[user].conn = conn
+
+        elif not change_page:
+            # This tab was closed, but we received a response. Don't reopen it.
+            return
+
         else:
             self.init_window(user)
 
