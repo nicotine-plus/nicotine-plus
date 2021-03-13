@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 8, 2021
+Last updated on March 14, 2021
 
 ## Sections
 
@@ -2532,7 +2532,7 @@ Order](#peer-connection-message-order)
 | ---- | ------------------------------------------ | ---------- |
 | 4    | [Shares Request](#peer-code-4)             |            |
 | 5    | [Shares Reply](#peer-code-5)               |            |
-| 8    | [Search Request](#peer-code-8)             |            |
+| 8    | [Search Request](#peer-code-8)             | Deprecated |
 | 9    | [Search Reply](#peer-code-9)               |            |
 | 15   | [User Info Request](#peer-code-15)         |            |
 | 16   | [User Info Reply](#peer-code-16)           |            |
@@ -2620,6 +2620,8 @@ Nicotine: FileSearchRequest
 
 #### Description
 
+**DEPRECATED, use [UserSearch](#server-code-42) server message**
+
 We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
 
 #### Data Order
@@ -2642,7 +2644,7 @@ Nicotine: FileSearchResult
 
 #### Description
 
-The peer sends this when it has a file search match. The token/ticket is taken from original FileSearchRequest message.
+A peer sends this message when it has a file search match. The token/ticket is taken from original FileSearch, UserSearch or RoomSearch message.
 
 #### Data Order
 

@@ -120,7 +120,7 @@ class Search:
 
     def do_peer_search(self, id, text, users):
         for user in users:
-            self.np.send_message_to_peer(user, slskmessages.FileSearchRequest(None, id, text))
+            self.queue.put(slskmessages.UserSearch(user, id, text))
 
     def do_wishlist_search(self, id, text):
         self.queue.put(slskmessages.WishlistSearch(id, text))

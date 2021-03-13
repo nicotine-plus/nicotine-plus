@@ -1980,6 +1980,7 @@ class NetworkEventProcessor:
 
     def file_search_request(self, msg):
         """ Peer code: 8 """
+        """ DEPRECATED """
 
         log.add_msg_contents(msg)
 
@@ -1995,7 +1996,7 @@ class NetworkEventProcessor:
                 break
 
     def search_request(self, msg):
-        """ Server code: 93 """
+        """ Server code: 26, 42 and 93 """
 
         log.add_msg_contents(msg)
 
@@ -2004,6 +2005,7 @@ class NetworkEventProcessor:
             self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
 
     def room_search_request(self, msg):
+        """ Server code: 120 """
 
         log.add_msg_contents(msg)
 
@@ -2011,7 +2013,7 @@ class NetworkEventProcessor:
             self.search.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=False)
 
     def distrib_search(self, msg):
-        """ Distrib code: 3 """
+        """ Distrib code: 3 and 93 """
 
         if self.search is not None:
             self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)

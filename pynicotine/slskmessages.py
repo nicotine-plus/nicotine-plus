@@ -2078,6 +2078,7 @@ class FileSearchRequest(PeerMessage):
     """ We send this to the peer when we search for a file.
     Alternatively, the peer sends this to tell us it is
     searching for a file. """
+    """ DEPRECATED, use UserSearch server message """
 
     def __init__(self, conn, requestid=None, text=None):
         self.conn = conn
@@ -2098,8 +2099,9 @@ class FileSearchRequest(PeerMessage):
 
 class FileSearchResult(PeerMessage):
     """ Peer code: 9 """
-    """ The peer sends this when it has a file search match. The
-    token/ticket is taken from original FileSearchRequest message. """
+    """ A peer sends this message when it has a file search match. The
+    token/ticket is taken from original FileSearch, UserSearch or
+    RoomSearch message. """
 
     __slots__ = "conn", "user", "geoip", "token", "list", "fileindex", "freeulslots", \
                 "ulspeed", "inqueue", "fifoqueue", "numresults", "pos"
