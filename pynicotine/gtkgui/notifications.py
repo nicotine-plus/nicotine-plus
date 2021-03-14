@@ -56,7 +56,7 @@ class Notifications:
                 self.frame.tray.set_image()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and \
-                not self.frame.MainWindow.is_focus():
+                not self.frame.MainWindow.is_active():
             self.frame.MainWindow.set_urgency_hint(True)
 
         self.set_title(user)
