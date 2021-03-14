@@ -163,7 +163,6 @@ class NetworkEventProcessor:
         self.waitport = None
         self.chatrooms = None
         self.privatechat = None
-        self.globallist = None
         self.userinfo = None
         self.userbrowse = None
         self.transfers = None
