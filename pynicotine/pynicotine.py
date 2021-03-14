@@ -630,10 +630,10 @@ class NetworkEventProcessor:
         for j in peerconn.msgs:
 
             if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                self.userinfo.show_user(peerconn.username, conn=conn)
+                self.userinfo.show_user(peerconn.username, conn=conn, change_page=False)
 
             elif j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                self.userbrowse.show_user(peerconn.username, conn=conn)
+                self.userbrowse.show_user(peerconn.username, conn=conn, change_page=False)
 
             j.conn = conn
             self.queue.put(j)
