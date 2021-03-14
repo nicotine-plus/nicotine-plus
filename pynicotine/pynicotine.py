@@ -257,7 +257,7 @@ class NetworkEventProcessor:
             slskmessages.UploadQueueNotification: self.upload_queue_notification,
             slskmessages.SearchRequest: self.search_request,
             slskmessages.FileSearch: self.search_request,
-            slskmessages.RoomSearch: self.room_search_request,
+            slskmessages.RoomSearch: self.search_request,
             slskmessages.UserSearch: self.search_request,
             slskmessages.RelatedSearch: self.dummy_message,
             slskmessages.PossibleParents: self.possible_parents,
@@ -1996,21 +1996,13 @@ class NetworkEventProcessor:
                 break
 
     def search_request(self, msg):
-        """ Server code: 26, 42 and 93 """
+        """ Server code: 26, 42, 93 and 120 """
 
         log.add_msg_contents(msg)
 
         if self.search is not None:
             self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
             self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
-
-    def room_search_request(self, msg):
-        """ Server code: 120 """
-
-        log.add_msg_contents(msg)
-
-        if self.search is not None:
-            self.search.process_search_request(msg.searchterm, msg.room, msg.searchid, direct=False)
 
     def distrib_search(self, msg):
         """ Distrib code: 3 and 93 """

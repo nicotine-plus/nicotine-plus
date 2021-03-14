@@ -1504,7 +1504,7 @@ class RoomSearch(ServerMessage):
 
     # Soulfind support, not used by the official server
     def parse_network_message(self, message):
-        pos, self.room = self.get_object(message, str)
+        pos, self.user = self.get_object(message, str)
         pos, self.searchid = self.get_object(message, int, pos)
         pos, self.searchterm = self.get_object(message, str, pos)
 
