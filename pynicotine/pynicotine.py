@@ -230,7 +230,7 @@ class NetworkEventProcessor:
             slskmessages.FolderContentsRequest: self.folder_contents_request,
             slskmessages.RoomList: self.room_list,
             slskmessages.LeaveRoom: self.leave_room,
-            slskmessages.GlobalUserList: self.global_user_list,
+            slskmessages.GlobalUserList: self.dummy_message,
             slskmessages.AddUser: self.add_user,
             slskmessages.PrivilegedUsers: self.privileged_users,
             slskmessages.AddToPrivileged: self.add_to_privileged,
@@ -1948,14 +1948,6 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.set_room_list(msg)
             self.set_status("")
-
-    def global_user_list(self, msg):
-        """ Server code: 67 """
-
-        log.add_msg_contents(msg)
-
-        if self.globallist is not None:
-            self.globallist.set_global_users_list(msg)
 
     def peer_transfer(self, msg):
         if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
