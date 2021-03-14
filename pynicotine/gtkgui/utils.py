@@ -666,9 +666,9 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 
     if scroll:
         va = textview.get_vadjustment()
-        bottom = (va.get_value() + va.get_page_size()) >= va.get_upper() - 10
 
-        if bottom:
+        # Scroll to bottom if we had scrolled up less than ~2 lines previously
+        if (va.get_value() + va.get_page_size()) >= va.get_upper() - 40:
             GLib.idle_add(scroll_bottom, textview)
 
     return linenr
