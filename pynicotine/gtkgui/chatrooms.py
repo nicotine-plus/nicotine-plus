@@ -871,7 +871,7 @@ class ChatRoom:
 
             if self.chatrooms.get_current_page() != self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) or \
                 self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) or \
-                    not self.frame.MainWindow.get_property("visible"):
+                    not self.frame.MainWindow.is_active():
 
                 if tag == self.tag_hilite:
 

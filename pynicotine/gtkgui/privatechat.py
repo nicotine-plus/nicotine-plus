@@ -225,7 +225,7 @@ class PrivateChats(IconNotebook):
         # the tab is not selected, or the main window isn't mapped
         if self.get_current_page() != self.page_num(chat.Main) or \
            self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox) or \
-           not self.frame.MainWindow.get_property("visible"):
+           not self.frame.MainWindow.is_active():
             self.frame.notifications.add("private", msg.user)
 
             if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
