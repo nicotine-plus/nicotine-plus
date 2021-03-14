@@ -40,9 +40,8 @@ class Notifications:
     def add(self, location, user, room=None, tab=True):
 
         if location == "rooms" and room is not None and user is not None:
-            if room not in self.frame.hilites["rooms"]:
-                self.frame.hilites["rooms"].append(room)
-
+            if room not in self.frame.hilites[location]:
+                self.frame.hilites[location].append(room)
                 self.frame.tray.set_image()
 
         elif location == "private":
@@ -52,7 +51,6 @@ class Notifications:
 
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
-
                 self.frame.tray.set_image()
 
         if tab and self.frame.np.config.sections["ui"]["urgencyhint"] and \

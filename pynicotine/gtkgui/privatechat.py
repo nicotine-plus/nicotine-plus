@@ -193,6 +193,33 @@ class PrivateChats(IconNotebook):
         menu.popup()
         return True
 
+    def show_notification(self, user, text):
+
+        chat = self.users[user]
+
+        # Hilight top-level tab label
+        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
+
+        # Highlight sub-level tab label
+        self.request_changed(chat.Main)
+
+        # Don't show notifications if the private chat is open and the window
+        # is in use
+        if self.get_current_page() == self.page_num(chat.Main) and \
+           self.frame.MainNotebook.get_current_page() == self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
+           self.frame.MainWindow.is_active():
+            return
+
+        # Update tray icon and show urgency hint
+        self.frame.notifications.add("private", user)
+
+        if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
+            self.frame.notifications.new_notification(
+                text,
+                title=_("Private message from %s") % user,
+                priority=Gio.NotificationPriority.HIGH
+            )
+
     def show_message(self, msg, text, newmessage=True):
 
         if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
@@ -215,25 +242,7 @@ class PrivateChats(IconNotebook):
         (u, text) = user_text
 
         self.send_message(msg.user, None)
-        chat = self.users[msg.user]
-        self.request_changed(chat.Main)
-
-        # Hilight main private chats Label
-        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
-
-        # Show notifications if the private chats notebook isn't selected,
-        # the tab is not selected, or the main window isn't mapped
-        if self.get_current_page() != self.page_num(chat.Main) or \
-           self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox) or \
-           not self.frame.MainWindow.is_active():
-            self.frame.notifications.add("private", msg.user)
-
-            if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
-                self.frame.notifications.new_notification(
-                    text,
-                    title=_("Private message from %s") % msg.user,
-                    priority=Gio.NotificationPriority.HIGH
-                )
+        self.show_notification(msg.user, text)
 
         # SEND CLIENT VERSION to user if the following string is sent
         ctcpversion = 0

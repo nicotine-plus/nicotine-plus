@@ -839,6 +839,51 @@ class ChatRoom:
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
+    def show_notification(self, login, user, text, tag):
+
+        if user == login:
+            return
+
+        if tag == self.tag_hilite:
+
+            # Hilight top-level tab label
+            self.frame.request_tab_icon(self.frame.ChatTabLabel, status=1)
+
+            # Hilight sub-level tab label
+            self.chatrooms.request_hilite(self.Main)
+
+            if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
+                self.frame.notifications.new_notification(
+                    text,
+                    title=_("%s mentioned you in the %s room") % (user, self.room),
+                    priority=Gio.NotificationPriority.HIGH
+                )
+
+        else:
+            # Hilight top-level tab label
+            self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
+
+            # Hilight sub-level tab label
+            self.chatrooms.request_changed(self.Main)
+
+        # Don't show notifications if the chat is open and the window
+        # is in use
+        if self.chatrooms.get_current_page() == self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) and \
+           self.frame.MainNotebook.get_current_page() == self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and \
+           self.frame.MainWindow.is_active():
+            return
+
+        if tag == self.tag_hilite:
+            # We were mentioned, update tray icon and show urgency hint
+            self.frame.notifications.add("rooms", user, self.room, tab=True)
+
+        elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
+            self.frame.notifications.new_notification(
+                text,
+                title=_("Message by %s in the %s room") % (user, self.room),
+                priority=Gio.NotificationPriority.HIGH
+            )
+
     def say_chat_room(self, msg, text, public=False):
         text = re.sub("\\s\\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
@@ -851,39 +896,7 @@ class ChatRoom:
         else:
             tag = self.tag_remote
 
-        if user != login:
-
-            if tag == self.tag_hilite:
-
-                self.chatrooms.request_hilite(self.Main)
-                self.frame.request_tab_icon(self.frame.ChatTabLabel, status=1)
-
-                if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                    self.frame.notifications.new_notification(
-                        text,
-                        title=_("%s mentioned you in the %s room") % (user, self.room),
-                        priority=Gio.NotificationPriority.HIGH
-                    )
-
-            else:
-                self.chatrooms.request_changed(self.Main)
-                self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
-
-            if self.chatrooms.get_current_page() != self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) or \
-                self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) or \
-                    not self.frame.MainWindow.is_active():
-
-                if tag == self.tag_hilite:
-
-                    if self.room not in self.frame.hilites["rooms"]:
-                        self.frame.notifications.add("rooms", user, self.room, tab=True)
-
-                elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
-                    self.frame.notifications.new_notification(
-                        text,
-                        title=_("Message by %s in the %s room") % (user, self.room),
-                        priority=Gio.NotificationPriority.HIGH
-                    )
+        self.show_notification(login, user, text, tag)
 
         if text[:4] == "/me ":
 
