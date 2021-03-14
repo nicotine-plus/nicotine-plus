@@ -838,17 +838,23 @@ class UserSearch(ServerMessage):
     used to track the search results. """
 
     def __init__(self, user=None, requestid=None, text=None):
-        self.suser = user
+        self.user = user
         self.searchid = requestid
         self.searchterm = text
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.suser))
+        msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.searchid, unsignedint=True))
         msg.extend(self.pack_object(self.searchterm))
 
         return msg
+
+    # Soulfind support, not used by the official server
+    def parse_network_message(self, message):
+        pos, self.user = self.get_object(message, str)
+        pos, self.searchid = self.get_object(message, int, pos)
+        pos, self.searchterm = self.get_object(message, str, pos)
 
 
 class AddThingILike(ServerMessage):
@@ -1495,6 +1501,12 @@ class RoomSearch(ServerMessage):
         msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
+
+    # Soulfind support, not used by the official server
+    def parse_network_message(self, message):
+        pos, self.room = self.get_object(message, str)
+        pos, self.searchid = self.get_object(message, int, pos)
+        pos, self.searchterm = self.get_object(message, str, pos)
 
 
 class SendUploadSpeed(ServerMessage):
