@@ -1632,9 +1632,6 @@ class NetworkEventProcessor:
             return
 
         # Check address is spoofed, if possible
-        # if self.check_spoof(user, ip, port):
-        #     # Message IS spoofed
-        #     return
         if user == self.config.sections["server"]["login"]:
             if ip is not None and port is not None:
                 log.add(
@@ -2176,23 +2173,3 @@ class NetworkEventProcessor:
             return 0, "Sorry, your country is blocked"
 
         return 1, ""
-
-    def check_spoof(self, user, ip, port):
-
-        if user not in self.users:
-            return 0
-
-        if self.users[user].addr is not None:
-
-            if len(self.users[user].addr) == 2:
-                if self.users[user].addr is not None:
-                    u_ip, u_port = self.users[user].addr
-                    if u_ip != ip:
-                        log.add_warning(_("IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking because it does not match IP: %(real_ip)s"), {
-                            'ip': ip,
-                            'port': port,
-                            'user': user,
-                            'real_ip': u_ip
-                        })
-                        return 1
-        return 0
