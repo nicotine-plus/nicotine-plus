@@ -651,26 +651,31 @@ class ChatRoom:
 
     def add_user_row(self, username, userdata):
 
-        status_image = self.frame.get_status_image(userdata.status)
+        status = userdata.status
+        country = userdata.country
+        status_image = self.frame.get_status_image(status)
+        flag_image = self.frame.get_flag_image(country)
 
         # Request user's IP address, so we can get the country
         self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
 
-        hspeed = human_speed(userdata.avgspeed)
-        hfiles = humanize(userdata.files)
+        avgspeed = userdata.avgspeed
+        files = userdata.files
+        hspeed = human_speed(avgspeed)
+        hfiles = humanize(files)
 
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
                 GObject.Value(GObject.TYPE_OBJECT, status_image),
-                GObject.Value(GObject.TYPE_OBJECT, None),
+                GObject.Value(GObject.TYPE_OBJECT, flag_image),
                 username,
                 hspeed,
                 hfiles,
-                userdata.status,
-                GObject.Value(GObject.TYPE_UINT64, userdata.avgspeed),
-                GObject.Value(GObject.TYPE_UINT64, userdata.files),
-                ""
+                status,
+                GObject.Value(GObject.TYPE_UINT64, avgspeed),
+                GObject.Value(GObject.TYPE_UINT64, files),
+                country
             ]
         )
 
@@ -1279,6 +1284,10 @@ class ChatRoom:
     def set_user_flag(self, user, country):
 
         if user not in self.users:
+            return
+
+        if self.usersmodel.get_value(self.users[user], 8) == country:
+            # Country didn't change, no need to update
             return
 
         self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
