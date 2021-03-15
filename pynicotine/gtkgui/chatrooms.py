@@ -652,7 +652,7 @@ class ChatRoom:
     def add_user_row(self, username, userdata):
 
         status = userdata.status
-        country = userdata.country
+        country = userdata.country or ""  # country can be None, ensure string is used
         status_image = self.frame.get_status_image(status)
         flag_image = self.frame.get_flag_image(country)
 
