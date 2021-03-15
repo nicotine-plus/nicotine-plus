@@ -1456,18 +1456,21 @@ class Transfers:
 
     def folder_downloaded_actions(self, user, filepath, folderpath):
 
-        if not filepath:
-            return
+        # walk through downloads and break if any file in the same folder exists, else execute
+        for i in self.downloads:
+            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path == folderpath:
+                return
 
         config = self.eventprocessor.config.sections
 
-        if not config["notifications"]["notification_popup_folder"] and not config["transfers"]["afterfolder"]:
-            return
+        if config["transfers"]["sharedownloaddir"]:
+            """ Folder downloaded and shared. Notify the server of new stats. The
+            reason we don't send this message after each download is to reduce traffic from
+            the server to room users, since every stat update is relayed by the server. """
+            self.eventprocessor.shares.send_num_shared_folders_files()
 
-        # walk through downloads and break if any file in the same folder exists, else execute
-        for i in self.downloads:
-            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path and i.path == folderpath:
-                return
+        if not folderpath:
+            return
 
         if self.notifications and config["notifications"]["notification_popup_folder"]:
             self.notifications.new_notification(
@@ -1524,12 +1527,9 @@ class Transfers:
         self.add_to_shared(newname)
         self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
 
-        if self.eventprocessor.config.sections["transfers"]["sharedownloaddir"]:
-            self.eventprocessor.shares.send_num_shared_folders_files()
-
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
-        self.folder_downloaded_actions(i.user, newname, folder)
+        self.folder_downloaded_actions(i.user, newname, i.path)
 
         # Attempt to autoclear this download, if configured
         if not self.auto_clear_download(i):
