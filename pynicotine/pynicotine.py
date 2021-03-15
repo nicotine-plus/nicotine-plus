@@ -150,7 +150,11 @@ class NetworkEventProcessor:
         self.geoip = IP2Location(file_path, "SHARED_MEMORY")
 
         # Give the logger information about log folder
-        self.update_debug_log_options()
+        should_log = self.config.sections["logging"]["debug_file_output"]
+        log_folder = self.config.sections["logging"]["debuglogsdir"]
+        timestamp_format = self.config.sections["logging"]["log_timestamp"]
+
+        log.update_debug_log_options(should_log, log_folder, timestamp_format)
 
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
 
@@ -946,6 +950,13 @@ class NetworkEventProcessor:
         if not self.config.need_config():
             self.network_callback([slskmessages.ConnectToServer()])
 
+    def transfer_timeout(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.transfer_timeout(msg)
+
     def stop_timers(self):
 
         for i in self.peerconns:
@@ -962,22 +973,18 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
         self.ui_callback.on_connect()
 
+    def dummy_message(self, msg):
+        log.add_msg_contents(msg)
+
+    def ignore(self, msg):
+        # Ignore received message
+        pass
+
     # notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
     # @param string a string containing an error message
     def notify(self, string):
         log.add_msg_contents("%s", string)
-
-    def popup_message(self, msg):
-        self.set_status(_(msg.title))
-        self.ui_callback.popup_message(msg)
-
-    def set_current_connection_count(self, msg):
-        self.ui_callback.set_socket_status(msg.msg)
-
-    def inc_port(self, msg):
-        self.waitport = msg.port
-        self.set_status(_("Listening on port %i"), msg.port)
 
     def server_conn(self, msg):
 
@@ -1013,7 +1020,58 @@ class NetworkEventProcessor:
         if self.waitport is not None:
             self.queue.put(slskmessages.SetWaitPort(self.waitport))
 
+    def inc_port(self, msg):
+        self.waitport = msg.port
+        self.set_status(_("Listening on port %i"), msg.port)
+
+    def peer_transfer(self, msg):
+        if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
+            self.userinfo.update_gauge(msg)
+
+        if self.userbrowse is not None and msg.msg is slskmessages.SharedFileList:
+            self.userbrowse.update_gauge(msg)
+
+    def check_download_queue(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.check_download_queue()
+
+    def file_download(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.file_download(msg)
+
+    def file_upload(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.file_upload(msg)
+
+    def file_error(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.file_error(msg)
+
+    def set_current_connection_count(self, msg):
+        self.ui_callback.set_socket_status(msg.msg)
+
+    def popup_message(self, msg):
+        self.set_status(_(msg.title))
+        self.ui_callback.popup_message(msg)
+
+    """
+    Incoming Server Messages
+    """
+
     def login(self, msg):
+        """ Server code: 1 """
 
         log.add_msg_contents(msg)
 
@@ -1065,254 +1123,13 @@ class NetworkEventProcessor:
 
             self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
+            self.set_status("")
         else:
             self.manualdisconnect = True
             self.set_status(_("Can not log in, reason: %s"), (msg.reason))
 
-    def change_password(self, msg):
-
-        log.add_msg_contents(msg)
-
-        password = msg.password
-        self.config.sections["server"]["passw"] = password
-        self.config.write_configuration()
-        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
-
-    def notify_privileges(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if msg.token is not None:
-            pass
-
-    def user_privileged(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            if msg.privileged is True:
-                self.transfers.add_to_privileged(msg.user)
-
-    def ack_notify_privileges(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if msg.token is not None:
-            # Until I know the syntax, sending this message is probably a bad idea
-            self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
-
-    def p_message_user(self, msg):
-
-        log.add_msg_contents(msg)
-
-        conn = msg.conn.conn
-        user = None
-
-        # Get peer's username
-        for i in self.peerconns:
-            if i.conn is conn:
-                user = i.username
-                break
-
-        if user is None:
-            # No peer connection
-            return
-
-        if user != msg.user:
-            text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {"realuser": user, "fakeuser": msg.user} + msg.msg
-            msg.user = user
-        else:
-            text = msg.msg
-
-        if self.privatechat is not None:
-            self.privatechat.show_message(msg, text)
-
-    def message_user(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.privatechat is not None:
-            self.privatechat.show_message(msg, msg.msg, msg.newmessage)
-            self.queue.put(slskmessages.MessageAcked(msg.msgid))
-
-    def user_joined_room(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.user_joined_room(msg)
-
-    def public_room_message(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.public_room_message(msg, msg.msg)
-            self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
-
-    def join_room(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.join_room(msg)
-
-    def private_room_users(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_users(msg)
-
-    def private_room_owned(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_owned(msg)
-
-    def private_room_add_user(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_add_user(msg)
-
-    def private_room_remove_user(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_remove_user(msg)
-
-    def private_room_operator_added(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_operator_added(msg)
-
-    def private_room_operator_removed(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_operator_removed(msg)
-
-    def private_room_add_operator(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_add_operator(msg)
-
-    def private_room_remove_operator(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_remove_operator(msg)
-
-    def private_room_added(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_added(msg)
-
-    def private_room_removed(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_removed(msg)
-
-    def private_room_disown(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_disown(msg)
-
-    def private_room_toggle(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.toggle_private_rooms(msg.enabled)
-
-    def leave_room(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.leave_room(msg)
-
-    def private_message_queue_add(self, msg, text):
-
-        user = msg.user
-
-        if user not in self.private_message_queue:
-            self.private_message_queue[user] = [[msg, text]]
-        else:
-            self.private_message_queue[user].append([msg, text])
-
-    def private_message_queue_process(self, user):
-
-        if user in self.private_message_queue:
-            for data in self.private_message_queue[user][:]:
-                msg, text = data
-                self.private_message_queue[user].remove(data)
-                self.privatechat.show_message(msg, text)
-
-    def ip_ignored(self, address):
-
-        if address is None:
-            return True
-
-        ips = self.config.sections["server"]["ipignorelist"]
-        s_address = address.split(".")
-
-        for ip in ips:
-
-            # No Wildcard in IP
-            if "*" not in ip:
-                if address == ip:
-                    return True
-                continue
-
-            # Wildcard in IP
-            parts = ip.split(".")
-            seg = 0
-
-            for part in parts:
-                # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
-                    break
-
-                seg += 1
-
-                # Last time around
-                if seg == 4:
-                    # Wildcard blocked
-                    return True
-
-        # Not blocked
-        return False
-
-    def say_chat_room(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
-
-            if event is not None:
-                (r, n, msg.msg) = event
-                self.chatrooms.say_chat_room(msg, msg.msg)
-                self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
-
     def add_user(self, msg):
+        """ Server code: 5 """
 
         log.add_msg_contents(msg)
 
@@ -1327,76 +1144,8 @@ class NetworkEventProcessor:
         if msg.files is not None:
             self.get_user_stats(msg, log_contents=False)
 
-    def privileged_users(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.set_privileged_users(msg.users)
-            log.add(_("%i privileged users"), (len(msg.users)))
-
-    def add_to_privileged(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.add_to_privileged(msg.user)
-
-    def check_privileges(self, msg):
-
-        log.add_msg_contents(msg)
-
-        mins = msg.seconds // 60
-        hours = mins // 60
-        days = hours // 24
-
-        if msg.seconds == 0:
-            log.add(
-                _("You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users.")
-            )
-        else:
-            log.add(
-                _("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."), {
-                    'days': days,
-                    'hours': hours % 24,
-                    'minutes': mins % 60,
-                    'seconds': msg.seconds % 60
-                }
-            )
-
-        self.privileges_left = msg.seconds
-
-    def admin_message(self, msg):
-        log.add("%s", (msg.msg))
-
-    def child_depth(self, msg):
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def branch_level(self, msg):
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def branch_root(self, msg):
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def distrib_child_depth(self, msg):
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def distrib_branch_root(self, msg):
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def wishlist_interval(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.search is not None:
-            self.search.set_wishlist_interval(msg)
-
     def get_user_status(self, msg, log_contents=True):
+        """ Server code: 7 """
 
         if log_contents:
             log.add_msg_contents(msg)
@@ -1439,14 +1188,71 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.get_user_status(msg)
 
-    def user_interests(self, msg):
+    def say_chat_room(self, msg):
+        """ Server code: 13 """
 
         log.add_msg_contents(msg)
 
-        if self.userinfo is not None:
-            self.userinfo.show_interests(msg)
+        if self.chatrooms is not None:
+            event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+
+            if event is not None:
+                (r, n, msg.msg) = event
+                self.chatrooms.say_chat_room(msg, msg.msg)
+                self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
+
+    def join_room(self, msg):
+        """ Server code: 14 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.join_room(msg)
+
+    def leave_room(self, msg):
+        """ Server code: 15 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.leave_room(msg)
+
+    def user_joined_room(self, msg):
+        """ Server code: 16 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.user_joined_room(msg)
+
+    def user_left_room(self, msg):
+        """ Server code: 17 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.user_left_room(msg)
+
+    def message_user(self, msg):
+        """ Server code: 22 """
+
+        log.add_msg_contents(msg)
+
+        if self.privatechat is not None:
+            self.privatechat.show_message(msg, msg.msg, msg.newmessage)
+            self.queue.put(slskmessages.MessageAcked(msg.msgid))
+
+    def search_request(self, msg):
+        """ Server code: 26, 42, 93 and 120 """
+
+        log.add_msg_contents(msg)
+
+        if self.search is not None:
+            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
+            self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
 
     def get_user_stats(self, msg, log_contents=True):
+        """ Server code: 36 """
 
         if log_contents:
             log.add_msg_contents(msg)
@@ -1475,94 +1281,464 @@ class NetworkEventProcessor:
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
 
-    def user_left_room(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.user_left_room(msg)
-
     def relogged(self, msg):
+        """ Server code: 41 """
+
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
         self.manualdisconnect = True
         self.pluginhandler.server_disconnect_notification(False)
 
-    def check_user(self, user, ip):
-        """
-        Check if this user is banned, geoip-blocked, and which shares
-        it is allowed to access based on transfer and shares settings.
-        """
-
-        if user in self.config.sections["server"]["banlist"]:
-            if self.config.sections["transfers"]["usecustomban"]:
-                return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
-            else:
-                return 0, "Banned"
-
-        if user in (i[0] for i in self.config.sections["server"]["userlist"]):
-            if self.config.sections["transfers"]["enablebuddyshares"]:
-                # For sending buddy-only shares
-                return 2, ""
-
-            return 1, ""
-
-        if self.config.sections["transfers"]["friendsonly"]:
-            return 0, "Sorry, friends only"
-
-        if ip is None or not self.config.sections["transfers"]["geoblock"]:
-            return 1, ""
-
-        cc = self.geoip.get_all(ip).country_short
-
-        if cc == "-":
-            if self.config.sections["transfers"]["geopanic"]:
-                return 0, "Sorry, geographical paranoia"
-
-            return 1, ""
-
-        """ Please note that all country codes are stored in the same string at the first index
-        of an array, separated by commas (no idea why...) """
-
-        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
-            return 0, "Sorry, your country is blocked"
-
-        return 1, ""
-
-    def check_spoof(self, user, ip, port):
-
-        if user not in self.users:
-            return 0
-
-        if self.users[user].addr is not None:
-
-            if len(self.users[user].addr) == 2:
-                if self.users[user].addr is not None:
-                    u_ip, u_port = self.users[user].addr
-                    if u_ip != ip:
-                        log.add_warning(_("IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking because it does not match IP: %(real_ip)s"), {
-                            'ip': ip,
-                            'port': port,
-                            'user': user,
-                            'real_ip': u_ip
-                        })
-                        return 1
-        return 0
-
-    def user_info_reply(self, msg):
+    def recommendations(self, msg):
+        """ Server code: 54 """
 
         log.add_msg_contents(msg)
+
+        if self.interests is not None:
+            self.interests.recommendations(msg)
+
+    def global_recommendations(self, msg):
+        """ Server code: 56 """
+
+        log.add_msg_contents(msg)
+
+        if self.interests is not None:
+            self.interests.global_recommendations(msg)
+
+    def user_interests(self, msg):
+        """ Server code: 57 """
+
+        log.add_msg_contents(msg)
+
+        if self.userinfo is not None:
+            self.userinfo.show_interests(msg)
+
+    def room_list(self, msg):
+        """ Server code: 64 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.set_room_list(msg)
+
+    def admin_message(self, msg):
+        """ Server code: 66 """
+
+        log.add("%s", (msg.msg))
+
+    def tunneled_message(self, msg):
+        """ Server code: 68 """
+        """ DEPRECATED """
+
+        if msg.code in self.protothread.peerclasses:
+            peermsg = self.protothread.peerclasses[msg.code](None)
+            peermsg.parse_network_message(msg.msg)
+            peermsg.tunneleduser = msg.user
+            peermsg.tunneledreq = msg.req
+            peermsg.tunneledaddr = msg.addr
+            self.network_callback([peermsg])
+        else:
+            log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
+
+    def privileged_users(self, msg):
+        """ Server code: 69 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.set_privileged_users(msg.users)
+            log.add(_("%i privileged users"), (len(msg.users)))
+
+    def add_to_privileged(self, msg):
+        """ Server code: 91 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.add_to_privileged(msg.user)
+
+    def check_privileges(self, msg):
+        """ Server code: 92 """
+
+        log.add_msg_contents(msg)
+
+        mins = msg.seconds // 60
+        hours = mins // 60
+        days = hours // 24
+
+        if msg.seconds == 0:
+            log.add(
+                _("You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users.")
+            )
+        else:
+            log.add(
+                _("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."), {
+                    'days': days,
+                    'hours': hours % 24,
+                    'minutes': mins % 60,
+                    'seconds': msg.seconds % 60
+                }
+            )
+
+        self.privileges_left = msg.seconds
+
+    def possible_parents(self, msg):
+        """ Server code: 102 """
+
+        """ Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
+        We attempt to connect to them all at once, since connection errors are fairly common. """
+
+        log.add_msg_contents(msg)
+
+        potential_parents = msg.list
+
+        if not self.has_parent and potential_parents:
+
+            for user in potential_parents:
+                addr = potential_parents[user]
+
+                self.send_message_to_peer(user, slskmessages.DistribConn(), address=addr)
+
+    def wishlist_interval(self, msg):
+        """ Server code: 104 """
+
+        log.add_msg_contents(msg)
+
+        if self.search is not None:
+            self.search.set_wishlist_interval(msg)
+
+    def similar_users(self, msg):
+        """ Server code: 110 and 112 """
+
+        log.add_msg_contents(msg)
+
+        if self.interests is not None:
+            self.interests.similar_users(msg)
+
+    def item_recommendations(self, msg):
+        """ Server code: 111 """
+
+        log.add_msg_contents(msg)
+
+        if self.interests is not None:
+            self.interests.item_recommendations(msg)
+
+    def room_ticker_state(self, msg):
+        """ Server code: 113 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.ticker_set(msg)
+
+    def room_ticker_add(self, msg):
+        """ Server code: 114 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.ticker_add(msg)
+
+    def room_ticker_remove(self, msg):
+        """ Server code: 115 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.ticker_remove(msg)
+
+    def user_privileged(self, msg):
+        """ Server code: 122 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            if msg.privileged is True:
+                self.transfers.add_to_privileged(msg.user)
+
+    def notify_privileges(self, msg):
+        """ Server code: 124 """
+
+        log.add_msg_contents(msg)
+
+        if msg.token is not None:
+            pass
+
+    def ack_notify_privileges(self, msg):
+        """ Server code: 125 """
+
+        log.add_msg_contents(msg)
+
+        if msg.token is not None:
+            # Until I know the syntax, sending this message is probably a bad idea
+            self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
+
+    def branch_level(self, msg):
+        """ Server code: 126 """
+
+        # TODO: Implement me
+        log.add_msg_contents(msg)
+
+    def branch_root(self, msg):
+        """ Server code: 127 """
+
+        # TODO: Implement me
+        log.add_msg_contents(msg)
+
+    def child_depth(self, msg):
+        """ Server code: 129 """
+
+        # TODO: Implement me
+        log.add_msg_contents(msg)
+
+    def private_room_users(self, msg):
+        """ Server code: 133 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_users(msg)
+
+    def private_room_add_user(self, msg):
+        """ Server code: 134 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_add_user(msg)
+
+    def private_room_remove_user(self, msg):
+        """ Server code: 135 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_remove_user(msg)
+
+    def private_room_disown(self, msg):
+        """ Server code: 137 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_disown(msg)
+
+    def private_room_added(self, msg):
+        """ Server code: 139 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_added(msg)
+
+    def private_room_removed(self, msg):
+        """ Server code: 140 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_removed(msg)
+
+    def private_room_toggle(self, msg):
+        """ Server code: 141 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.toggle_private_rooms(msg.enabled)
+
+    def change_password(self, msg):
+        """ Server code: 142 """
+
+        log.add_msg_contents(msg)
+
+        password = msg.password
+        self.config.sections["server"]["passw"] = password
+        self.config.write_configuration()
+        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
+
+    def private_room_add_operator(self, msg):
+        """ Server code: 143 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_add_operator(msg)
+
+    def private_room_remove_operator(self, msg):
+        """ Server code: 144 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_remove_operator(msg)
+
+    def private_room_operator_added(self, msg):
+        """ Server code: 145 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_operator_added(msg)
+
+    def private_room_operator_removed(self, msg):
+        """ Server code: 146 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_operator_removed(msg)
+
+    def private_room_owned(self, msg):
+        """ Server code: 148 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.private_room_owned(msg)
+
+    def public_room_message(self, msg):
+        """ Server code: 152 """
+
+        log.add_msg_contents(msg)
+
+        if self.chatrooms is not None:
+            self.chatrooms.public_room_message(msg, msg.msg)
+            self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
+
+    """
+    Incoming Peer Messages
+    """
+
+    def get_shared_file_list(self, msg):
+        """ Peer code: 4 """
+
+        log.add_msg_contents(msg)
+
+        user = ip = port = None
+        conn = msg.conn.conn
+
+        # Get peer's username, ip and port
+        for i in self.peerconns:
+            if i.conn is conn:
+                user = i.username
+                if i.addr is not None:
+                    if len(i.addr) != 2:
+                        break
+                    ip, port = i.addr
+                break
+
+        if user is None:
+            # No peer connection
+            return
+
+        # Check address is spoofed, if possible
+        # if self.check_spoof(user, ip, port):
+        #     # Message IS spoofed
+        #     return
+        if user == self.config.sections["server"]["login"]:
+            if ip is not None and port is not None:
+                log.add(
+                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s"), {
+                        'user': user,
+                        'ip': ip,
+                        'port': port
+                    })
+            else:
+                log.add(
+                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port"), {
+                        'user': user
+                    })
+
+            if conn is not None:
+                self.queue.put(slskmessages.ConnClose(conn))
+            return
+
+        log.add(_("%(user)s is making a BrowseShares request"), {
+            'user': user
+        })
+
+        ip, port = msg.conn.addr
+        checkuser, reason = self.check_user(user, ip)
+
+        if checkuser == 1:
+            # Send Normal Shares
+            if self.shares.newnormalshares:
+                self.shares.create_compressed_shares_message("normal")
+                self.shares.compress_shares("normal")
+                self.shares.newnormalshares = False
+            m = self.shares.compressed_shares_normal
+
+        elif checkuser == 2:
+            # Send Buddy Shares
+            if self.shares.newbuddyshares:
+                self.shares.create_compressed_shares_message("buddy")
+                self.shares.compress_shares("buddy")
+                self.shares.newbuddyshares = False
+            m = self.shares.compressed_shares_buddy
+
+        else:
+            # Nyah, Nyah
+            m = slskmessages.SharedFileList(conn, {})
+            m.make_network_message(nozlib=0)
+
+        m.conn = conn
+        self.queue.put(m)
+
+    def shared_file_list(self, msg):
+        """ Peer code: 5 """
 
         conn = msg.conn.conn
 
         for i in self.peerconns:
-            if i.conn is conn and self.userinfo is not None:
-                # probably impossible to do this
+            if i.conn is conn and self.userbrowse is not None:
                 if i.username != self.config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
-                    self.userinfo.show_user(i.username, None, msg, indeterminate_progress, change_page)
+                    self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
 
+    def file_search_request(self, msg):
+        """ Peer code: 8 """
+        """ DEPRECATED """
+
+        log.add_msg_contents(msg)
+
+        if self.search is None:
+            return
+
+        conn = msg.conn.conn
+
+        for i in self.peerconns:
+            if i.conn == conn:
+                user = i.username
+                self.search.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
+                break
+
+    def file_search_result(self, msg):
+        """ Peer message: 9 """
+
+        log.add_msg_contents(msg)
+
+        conn = msg.conn
+        addr = conn.addr
+
+        if self.search is None:
+            return
+
+        if addr:
+            country = self.geoip.get_all(addr[0]).country_short
+        else:
+            country = ""
+
+        if country == "-":
+            country = ""
+
+        self.search.show_search_result(msg, msg.user, country)
+
+        # Close peer connection immediately, otherwise we exhaust our connection limit
+        self.close_peer_connection(conn, msg.user)
+
     def user_info_request(self, msg):
+        """ Peer code: 15 """
 
         log.add_msg_contents(msg)
 
@@ -1651,220 +1827,47 @@ class NetworkEventProcessor:
             }
         )
 
-    def shared_file_list(self, msg):
+    def user_info_reply(self, msg):
+        """ Peer code: 16 """
+
+        log.add_msg_contents(msg)
 
         conn = msg.conn.conn
 
         for i in self.peerconns:
-            if i.conn is conn and self.userbrowse is not None:
+            if i.conn is conn and self.userinfo is not None:
+                # probably impossible to do this
                 if i.username != self.config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
-                    self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
+                    self.userinfo.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
 
-    def file_search_result(self, msg):
+    def p_message_user(self, msg):
+        """ Peer code: 22 """
 
         log.add_msg_contents(msg)
 
-        conn = msg.conn
-        addr = conn.addr
-
-        if self.search is None:
-            return
-
-        if addr:
-            country = self.geoip.get_all(addr[0]).country_short
-        else:
-            country = ""
-
-        if country == "-":
-            country = ""
-
-        self.search.show_search_result(msg, msg.user, country)
-
-        # Close peer connection immediately, otherwise we exhaust our connection limit
-        self.close_peer_connection(conn, msg.user)
-
-    def transfer_timeout(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_timeout(msg)
-
-    def check_download_queue(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.check_download_queue()
-
-    def file_download(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_download(msg)
-
-    def file_upload(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_upload(msg)
-
-    def file_request(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_request(msg)
-
-    def file_error(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_error(msg)
-
-    def transfer_request(self, msg):
-        """ Peer code: 40 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_request(msg)
-
-    def transfer_response(self, msg):
-        """ Peer code: 41 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_response(msg)
-
-    def queue_upload(self, msg):
-        """ Peer code: 43 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.queue_upload(msg)
-
-    def upload_denied(self, msg):
-        """ Peer code: 50 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_denied(msg)
-
-    def place_in_queue_request(self, msg):
-        """ Peer code: 51 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.place_in_queue_request(msg)
-
-    def upload_queue_notification(self, msg):
-        """ Peer code: 52 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_queue_notification(msg)
-
-    def upload_failed(self, msg):
-        """ Peer code: 46 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_failed(msg)
-
-    def place_in_queue(self, msg):
-        """ Peer code: 44 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.place_in_queue(msg)
-
-    def get_shared_file_list(self, msg):
-        """ Peer code: 4 """
-
-        log.add_msg_contents(msg)
-
-        user = ip = port = None
         conn = msg.conn.conn
+        user = None
 
-        # Get peer's username, ip and port
+        # Get peer's username
         for i in self.peerconns:
             if i.conn is conn:
                 user = i.username
-                if i.addr is not None:
-                    if len(i.addr) != 2:
-                        break
-                    ip, port = i.addr
                 break
 
         if user is None:
             # No peer connection
             return
 
-        # Check address is spoofed, if possible
-        # if self.check_spoof(user, ip, port):
-        #     # Message IS spoofed
-        #     return
-        if user == self.config.sections["server"]["login"]:
-            if ip is not None and port is not None:
-                log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s"), {
-                        'user': user,
-                        'ip': ip,
-                        'port': port
-                    })
-            else:
-                log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port"), {
-                        'user': user
-                    })
-
-            if conn is not None:
-                self.queue.put(slskmessages.ConnClose(conn))
-            return
-
-        log.add(_("%(user)s is making a BrowseShares request"), {
-            'user': user
-        })
-
-        ip, port = msg.conn.addr
-        checkuser, reason = self.check_user(user, ip)
-
-        if checkuser == 1:
-            # Send Normal Shares
-            if self.shares.newnormalshares:
-                self.shares.create_compressed_shares_message("normal")
-                self.shares.compress_shares("normal")
-                self.shares.newnormalshares = False
-            m = self.shares.compressed_shares_normal
-
-        elif checkuser == 2:
-            # Send Buddy Shares
-            if self.shares.newbuddyshares:
-                self.shares.create_compressed_shares_message("buddy")
-                self.shares.compress_shares("buddy")
-                self.shares.newbuddyshares = False
-            m = self.shares.compressed_shares_buddy
-
+        if user != msg.user:
+            text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {"realuser": user, "fakeuser": msg.user} + msg.msg
+            msg.user = user
         else:
-            # Nyah, Nyah
-            m = slskmessages.SharedFileList(conn, {})
-            m.make_network_message(nozlib=0)
+            text = msg.msg
 
-        m.conn = conn
-        self.queue.put(m)
+        if self.privatechat is not None:
+            self.privatechat.show_message(msg, text)
 
     def folder_contents_request(self, msg):
         """ Peer code: 36 """
@@ -1939,61 +1942,80 @@ class NetworkEventProcessor:
             else:
                 self.transfers.folder_contents_response(conn, file_list)
 
-    def room_list(self, msg):
-        """ Server code: 64 """
+    def transfer_request(self, msg):
+        """ Peer code: 40 """
 
         log.add_msg_contents(msg)
 
-        if self.chatrooms is not None:
-            self.chatrooms.set_room_list(msg)
-            self.set_status("")
+        if self.transfers is not None:
+            self.transfers.transfer_request(msg)
 
-    def peer_transfer(self, msg):
-        if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
-            self.userinfo.update_gauge(msg)
-
-        if self.userbrowse is not None and msg.msg is slskmessages.SharedFileList:
-            self.userbrowse.update_gauge(msg)
-
-    def tunneled_message(self, msg):
-        """ Server code: 68 """
-        """ DEPRECATED """
-
-        if msg.code in self.protothread.peerclasses:
-            peermsg = self.protothread.peerclasses[msg.code](None)
-            peermsg.parse_network_message(msg.msg)
-            peermsg.tunneleduser = msg.user
-            peermsg.tunneledreq = msg.req
-            peermsg.tunneledaddr = msg.addr
-            self.network_callback([peermsg])
-        else:
-            log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
-
-    def file_search_request(self, msg):
-        """ Peer code: 8 """
-        """ DEPRECATED """
+    def transfer_response(self, msg):
+        """ Peer code: 41 """
 
         log.add_msg_contents(msg)
 
-        if self.search is None:
-            return
+        if self.transfers is not None:
+            self.transfers.transfer_response(msg)
 
-        conn = msg.conn.conn
-
-        for i in self.peerconns:
-            if i.conn == conn:
-                user = i.username
-                self.search.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
-                break
-
-    def search_request(self, msg):
-        """ Server code: 26, 42, 93 and 120 """
+    def queue_upload(self, msg):
+        """ Peer code: 43 """
 
         log.add_msg_contents(msg)
 
-        if self.search is not None:
-            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
-            self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        if self.transfers is not None:
+            self.transfers.queue_upload(msg)
+
+    def place_in_queue(self, msg):
+        """ Peer code: 44 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.place_in_queue(msg)
+
+    def upload_failed(self, msg):
+        """ Peer code: 46 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.upload_failed(msg)
+
+    def upload_denied(self, msg):
+        """ Peer code: 50 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.upload_denied(msg)
+
+    def place_in_queue_request(self, msg):
+        """ Peer code: 51 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.place_in_queue_request(msg)
+
+    def upload_queue_notification(self, msg):
+        """ Peer code: 52 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.upload_queue_notification(msg)
+
+    def file_request(self, msg):
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.file_request(msg)
+
+    """
+    Incoming Distributed Messages
+    """
 
     def distrib_search(self, msg):
         """ Distrib code: 3 and 93 """
@@ -2001,23 +2023,6 @@ class NetworkEventProcessor:
         if self.search is not None:
             self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
             self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
-
-    def possible_parents(self, msg):
-        """ Server code: 102 """
-
-        """ Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
-        We attempt to connect to them all at once, since connection errors are fairly common. """
-
-        log.add_msg_contents(msg)
-
-        potential_parents = msg.list
-
-        if not self.has_parent and potential_parents:
-
-            for user in potential_parents:
-                addr = potential_parents[user]
-
-                self.send_message_to_peer(user, slskmessages.DistribConn(), address=addr)
 
     def get_parent_conn(self):
 
@@ -2067,76 +2072,127 @@ class NetworkEventProcessor:
             else:
                 self.parent_conn_closed()
 
-    def global_recommendations(self, msg):
-        """ Server code: 56 """
+    def distrib_branch_root(self, msg):
+        """ Distrib code: 5 """
 
+        # TODO: Implement me
         log.add_msg_contents(msg)
 
-        if self.interests is not None:
-            self.interests.global_recommendations(msg)
+    def distrib_child_depth(self, msg):
+        """ Distrib code: 7 """
 
-    def recommendations(self, msg):
-        """ Server code: 54 """
-
+        # TODO: Implement me
         log.add_msg_contents(msg)
 
-        if self.interests is not None:
-            self.interests.recommendations(msg)
+    def private_message_queue_add(self, msg, text):
 
-    def item_recommendations(self, msg):
-        """ Server code: 111 """
+        user = msg.user
 
-        log.add_msg_contents(msg)
+        if user not in self.private_message_queue:
+            self.private_message_queue[user] = [[msg, text]]
+        else:
+            self.private_message_queue[user].append([msg, text])
 
-        if self.interests is not None:
-            self.interests.item_recommendations(msg)
+    def private_message_queue_process(self, user):
 
-    def similar_users(self, msg):
-        """ Server code: 110 """
+        if user in self.private_message_queue:
+            for data in self.private_message_queue[user][:]:
+                msg, text = data
+                self.private_message_queue[user].remove(data)
+                self.privatechat.show_message(msg, text)
 
-        log.add_msg_contents(msg)
+    def ip_ignored(self, address):
 
-        if self.interests is not None:
-            self.interests.similar_users(msg)
+        if address is None:
+            return True
 
-    def room_ticker_state(self, msg):
-        """ Server code: 113 """
+        ips = self.config.sections["server"]["ipignorelist"]
+        s_address = address.split(".")
 
-        log.add_msg_contents(msg)
+        for ip in ips:
 
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_set(msg)
+            # No Wildcard in IP
+            if "*" not in ip:
+                if address == ip:
+                    return True
+                continue
 
-    def room_ticker_add(self, msg):
-        """ Server code: 114 """
+            # Wildcard in IP
+            parts = ip.split(".")
+            seg = 0
 
-        log.add_msg_contents(msg)
+            for part in parts:
+                # Stop if there's no wildcard or matching string number
+                if part not in (s_address[seg], "*"):
+                    break
 
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_add(msg)
+                seg += 1
 
-    def room_ticker_remove(self, msg):
-        """ Server code: 115 """
+                # Last time around
+                if seg == 4:
+                    # Wildcard blocked
+                    return True
 
-        log.add_msg_contents(msg)
+        # Not blocked
+        return False
 
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_remove(msg)
+    def check_user(self, user, ip):
+        """
+        Check if this user is banned, geoip-blocked, and which shares
+        it is allowed to access based on transfer and shares settings.
+        """
 
-    def update_debug_log_options(self):
-        """ Gives the logger updated logging settings """
+        if user in self.config.sections["server"]["banlist"]:
+            if self.config.sections["transfers"]["usecustomban"]:
+                return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
+            else:
+                return 0, "Banned"
 
-        should_log = self.config.sections["logging"]["debug_file_output"]
-        log_folder = self.config.sections["logging"]["debuglogsdir"]
-        timestamp_format = self.config.sections["logging"]["log_timestamp"]
+        if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+            if self.config.sections["transfers"]["enablebuddyshares"]:
+                # For sending buddy-only shares
+                return 2, ""
 
-        log.set_log_to_file(should_log)
-        log.set_folder(log_folder)
-        log.set_timestamp_format(timestamp_format)
+            return 1, ""
 
-    def dummy_message(self, msg):
-        log.add_msg_contents(msg)
+        if self.config.sections["transfers"]["friendsonly"]:
+            return 0, "Sorry, friends only"
 
-    def ignore(self, msg):
-        # Ignore received message
-        pass
+        if ip is None or not self.config.sections["transfers"]["geoblock"]:
+            return 1, ""
+
+        cc = self.geoip.get_all(ip).country_short
+
+        if cc == "-":
+            if self.config.sections["transfers"]["geopanic"]:
+                return 0, "Sorry, geographical paranoia"
+
+            return 1, ""
+
+        """ Please note that all country codes are stored in the same string at the first index
+        of an array, separated by commas (no idea why...) """
+
+        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
+            return 0, "Sorry, your country is blocked"
+
+        return 1, ""
+
+    def check_spoof(self, user, ip, port):
+
+        if user not in self.users:
+            return 0
+
+        if self.users[user].addr is not None:
+
+            if len(self.users[user].addr) == 2:
+                if self.users[user].addr is not None:
+                    u_ip, u_port = self.users[user].addr
+                    if u_ip != ip:
+                        log.add_warning(_("IP %(ip)s:%(port)s is spoofing user %(user)s with a peer request, blocking because it does not match IP: %(real_ip)s"), {
+                            'ip': ip,
+                            'port': port,
+                            'user': user,
+                            'real_ip': u_ip
+                        })
+                        return 1
+        return 0

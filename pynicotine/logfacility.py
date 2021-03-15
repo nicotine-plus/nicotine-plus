@@ -120,17 +120,15 @@ class Logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
-    def set_log_to_file(self, write):
-        self.log_to_file = write
-
-    def set_folder(self, folder):
-        self.folder = folder
-
-    def set_timestamp_format(self, timestamp_format):
-        self.timestamp_format = timestamp_format
-
     def set_log_levels(self, levels):
         self.log_levels = levels
+
+    def update_debug_log_options(self, should_log, log_folder, timestamp_format):
+        """ Gives the logger updated logging settings """
+
+        self.log_to_file = should_log
+        self.folder = log_folder
+        self.timestamp_format = timestamp_format
 
     def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 

@@ -2492,7 +2492,11 @@ class NicotineFrame:
 
         config = self.np.config.sections
 
-        self.np.update_debug_log_options()
+        should_log = config["logging"]["debug_file_output"]
+        log_folder = config["logging"]["debuglogsdir"]
+        timestamp_format = config["logging"]["log_timestamp"]
+
+        log.update_debug_log_options(should_log, log_folder, timestamp_format)
 
         # UPnP
         if (not config["server"]["upnp"] or needportmap) and self.np.upnp_timer:
