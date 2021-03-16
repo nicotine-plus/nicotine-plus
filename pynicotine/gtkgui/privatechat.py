@@ -94,7 +94,7 @@ class PrivateChats(IconNotebook):
 
         self.popup_enable()
 
-        self.connected = 1
+        self.connected = True
         self.users = {}
         self.clist = []
         self.private_message_queue = {}
@@ -163,6 +163,7 @@ class PrivateChats(IconNotebook):
             if user not in self.frame.np.config.sections["privatechat"]["users"]:
                 self.frame.np.config.sections["privatechat"]["users"].append(user)
 
+            # Get notified of user status
             if user not in self.frame.np.watchedusers:
                 self.frame.np.queue.put(slskmessages.AddUser(user))
 
@@ -299,9 +300,14 @@ class PrivateChats(IconNotebook):
 
     def login(self):
 
-        self.connected = 1
+        self.connected = True
+
         for user in self.users:
             self.users[user].login()
+
+            # Get notified of user status
+            if user not in self.frame.np.watchedusers:
+                self.frame.np.queue.put(slskmessages.AddUser(user))
 
         if not self.frame.np.config.sections["privatechat"]["store"]:
             return
@@ -312,7 +318,7 @@ class PrivateChats(IconNotebook):
 
     def conn_close(self):
 
-        self.connected = 0
+        self.connected = False
 
         for user in self.users:
             self.users[user].conn_close()
