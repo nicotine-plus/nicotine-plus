@@ -458,10 +458,10 @@ class ResponseThrottle(object):
         except Exception:
             port = True
 
-        if nick in self.frame.np.config.sections["server"]["ignorelist"]:
+        if self.frame.np.network_filter.is_user_ignored(nick):
             willing_to_respond, reason = False, "The nick is ignored"
 
-        elif self.frame.user_ip_is_ignored(nick):
+        elif self.frame.np.network_filter.is_user_ip_ignored(nick):
             willing_to_respond, reason = False, "The nick's Ip is ignored"
 
         elif not port:

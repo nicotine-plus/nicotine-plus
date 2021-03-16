@@ -97,6 +97,7 @@ class PrivateChats(IconNotebook):
         self.connected = 1
         self.users = {}
         self.clist = []
+        self.private_message_queue = {}
 
         self.notebook.connect("switch-page", self.on_switch_chat)
 
@@ -193,6 +194,25 @@ class PrivateChats(IconNotebook):
         menu.popup()
         return True
 
+    def private_message_queue_add(self, msg, text):
+
+        user = msg.user
+
+        if user not in self.private_message_queue:
+            self.private_message_queue[user] = [[msg, text]]
+        else:
+            self.private_message_queue[user].append([msg, text])
+
+    def private_message_queue_process(self, user):
+
+        if user not in self.private_message_queue:
+            return
+
+        for data in self.private_message_queue[user][:]:
+            msg, text = data
+            self.private_message_queue[user].remove(data)
+            self.show_message(msg, text)
+
     def show_notification(self, user, text):
 
         chat = self.users[user]
@@ -222,17 +242,17 @@ class PrivateChats(IconNotebook):
 
     def show_message(self, msg, text, newmessage=True):
 
-        if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
+        if self.frame.np.network_filter.is_user_ignored(msg.user):
             return
 
         if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
             ip, port = self.frame.np.users[msg.user].addr
-            if self.frame.np.ip_ignored(ip):
+            if self.frame.np.network_filter.is_ip_ignored(ip):
                 return
 
         elif newmessage:
             self.frame.np.queue.put(slskmessages.GetPeerAddress(msg.user))
-            self.frame.np.private_message_queue_add(msg, text)
+            self.private_message_queue_add(msg, text)
             return
 
         user_text = self.frame.np.pluginhandler.incoming_private_chat_event(msg.user, text)
@@ -720,23 +740,23 @@ class PrivateChat:
 
         elif cmd == "/ban":
             if args:
-                self.frame.ban_user(args)
+                self.frame.np.network_filter.ban_user(args)
 
         elif cmd == "/ignore":
             if args:
-                self.frame.ignore_user(args)
+                self.frame.np.network_filter.ignore_user(args)
 
         elif cmd == "/ignoreip":
             if args:
-                self.frame.ignore_ip(args)
+                self.frame.np.network_filter.ignore_ip(args)
 
         elif cmd == "/unban":
             if args:
-                self.frame.unban_user(args)
+                self.frame.np.network_filter.unban_user(args)
 
         elif cmd == "/unignore":
             if args:
-                self.frame.unignore_user(args)
+                self.frame.np.network_filter.unignore_user(args)
 
         elif cmd == "/ctcpversion":
             if arg_self:

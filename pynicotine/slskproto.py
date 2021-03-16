@@ -402,7 +402,7 @@ class SlskProtoThread(threading.Thread):
     CONNECTION_MAX_IDLE = 60
     CONNCOUNT_UI_INTERVAL = 0.5
 
-    def __init__(self, ui_callback, queue, bindip, port, config, eventprocessor):
+    def __init__(self, ui_callback, queue, bindip, port, port_range, network_filter, eventprocessor):
         """ ui_callback is a UI callback function to be called with messages
         list as a parameter. queue is Queue object that holds messages from UI
         thread.
@@ -416,7 +416,7 @@ class SlskProtoThread(threading.Thread):
         self._want_abort = False
         self._server_disconnect = True
         self._bindip = bindip
-        self._config = config
+        self._network_filter = network_filter
         self._eventprocessor = eventprocessor
 
         self.serverclasses = {}
@@ -441,7 +441,7 @@ class SlskProtoThread(threading.Thread):
 
         self.last_conncount_ui_update = time.time()
 
-        portrange = (port, port) if port else config.sections["server"]["portrange"]
+        portrange = (port, port) if port else port_range
         listenport = None
 
         for listenport in range(int(portrange[0]), int(portrange[1]) + 1):
@@ -548,39 +548,6 @@ class SlskProtoThread(threading.Thread):
             return False
 
         return len(connection.obuf) > 0 or len(connection.ibuf) > 0
-
-    def ip_blocked(self, address):
-        if address is None:
-            return True
-
-        ips = self._config.sections["server"]["ipblocklist"]
-        s_address = address.split(".")
-
-        for ip in ips:
-            # No Wildcard in IP
-            if "*" not in ip:
-                if address == ip:
-                    return True
-                continue
-
-            # Wildcard in IP
-            parts = ip.split(".")
-            seg = 0
-
-            for part in parts:
-                # Stop if there's no wildcard or matching string number
-                if part != s_address[seg] and part != "*":
-                    break
-
-                seg += 1
-
-                # Last time around
-                if seg == 4:
-                    # Wildcard blocked
-                    return True
-
-        # Not blocked
-        return False
 
     def parse_file_req(self, conn, msg_buffer):
         msg = None
@@ -1281,7 +1248,7 @@ class SlskProtoThread(threading.Thread):
                 except Exception:
                     time.sleep(0.01)
                 else:
-                    if self.ip_blocked(incaddr[0]):
+                    if self._network_filter.is_ip_blocked(incaddr[0]):
                         log.add_conn(_("Ignoring connection request from blocked IP Address %(ip)s:%(port)s"), {
                             'ip': incaddr[0],
                             'port': incaddr[1]
@@ -1324,12 +1291,8 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ServerConn(server_socket, addr)])
 
                         else:
-                            if self.ip_blocked(addr[0]):
-                                log.add_conn("Blocking peer connection in progress to IP: %(ip)s Port: %(port)s", {"ip": addr[0], "port": addr[1]})
-                                connection_in_progress.close()
-                            else:
-                                conns[connection_in_progress] = PeerConnection(conn=connection_in_progress, addr=addr, init=msg_obj.init)
-                                self._ui_callback([OutConn(connection_in_progress, addr)])
+                            conns[connection_in_progress] = PeerConnection(conn=connection_in_progress, addr=addr, init=msg_obj.init)
+                            self._ui_callback([OutConn(connection_in_progress, addr)])
 
                         del connsinprogress[connection_in_progress]
 
@@ -1361,7 +1324,7 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(conns, connection)
                             continue
 
-                    if self.ip_blocked(addr[0]):
+                    if self._network_filter.is_ip_blocked(addr[0]):
                         log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {"ip": addr[0], "port": addr[1]})
                         self.close_connection(conns, connection)
                         continue

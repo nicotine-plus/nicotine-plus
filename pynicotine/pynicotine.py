@@ -41,6 +41,7 @@ from pynicotine import transfers
 from pynicotine.config import Config
 from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
+from pynicotine.networkfilter import NetworkFilter
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.search import Search
 from pynicotine.shares import Shares
@@ -133,21 +134,19 @@ class NetworkEventProcessor:
 
         self.peerconns = []
         self.watchedusers = set()
-        self.ipblock_requested = {}
-        self.ipignore_requested = {}
         self.ip_requested = set()
-        self.private_message_queue = {}
         self.users = {}
-
-        self.queue = queue.Queue(0)
-        self.statistics = Statistics(self.config, self.ui_callback)
-        self.shares = Shares(self, self.config, self.queue, self.ui_callback)
-        self.pluginhandler = None  # Initialized when the GUI is ready
-        self.now_playing = NowPlaying(self.config)
 
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
         self.geoip = IP2Location(file_path, "SHARED_MEMORY")
+
+        self.queue = queue.Queue(0)
+        self.network_filter = NetworkFilter(self, self.config, self.users, self.queue, self.geoip)
+        self.statistics = Statistics(self.config, self.ui_callback)
+        self.shares = Shares(self, self.config, self.queue, self.ui_callback)
+        self.pluginhandler = None  # Initialized when the GUI is ready
+        self.now_playing = NowPlaying(self.config)
 
         # Give the logger information about log folder
         should_log = self.config.sections["logging"]["debug_file_output"]
@@ -156,7 +155,8 @@ class NetworkEventProcessor:
 
         log.update_debug_log_options(should_log, log_folder, timestamp_format)
 
-        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, self.config, self)
+        port_range = self.config.sections["server"]["portrange"]
+        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
         # UPnP
         self.upnp_interval = self.config.sections["server"]["upnp_interval"]
@@ -568,30 +568,21 @@ class NetworkEventProcessor:
                     self.queue.put(slskmessages.GetPeerAddress(user))
                     return
 
-        if user in self.users:
-            self.users[user].addr = (msg.ip, msg.port)
-        else:
-            self.users[user] = UserAddr(addr=(msg.ip, msg.port))
-
-        if user in self.ipblock_requested:
-
-            if self.ipblock_requested[user]:
-                self.ui_callback.on_un_block_user(user)
+        # User seems to be offline, don't update IP
+        if msg.ip != "0.0.0.0" and msg.port != 0:
+            if user in self.users:
+                self.users[user].addr = (msg.ip, msg.port)
             else:
-                self.ui_callback.on_block_user(user)
+                self.users[user] = UserAddr(addr=(msg.ip, msg.port))
 
-            del self.ipblock_requested[user]
-            return
+            # If the IP address changed, make sure our IP block/ignore list reflects this
+            self.network_filter.update_saved_user_ip_filters(user)
 
-        if user in self.ipignore_requested:
+            if self.network_filter.block_unblock_user_ip_callback(user):
+                return
 
-            if self.ipignore_requested[user]:
-                self.ui_callback.on_un_ignore_user(user)
-            else:
-                self.ui_callback.on_ignore_user(user)
-
-            del self.ipignore_requested[user]
-            return
+            if self.network_filter.ignore_unignore_user_ip_callback(user):
+                return
 
         ip_record = self.geoip.get_all(msg.ip)
         cc = ip_record.country_short
@@ -603,8 +594,7 @@ class NetworkEventProcessor:
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
-        if user in self.private_message_queue:
-            self.private_message_queue_process(user)
+        self.privatechat.private_message_queue_process(user)
 
         if user not in self.ip_requested:
             self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port)
@@ -999,7 +989,7 @@ class NetworkEventProcessor:
 
         self.active_server_conn = msg.conn
         self.server_timeout_value = -1
-        self.users = {}
+        self.users.clear()
         self.queue.put(
             slskmessages.Login(
                 self.config.sections["server"]["login"],
@@ -1655,7 +1645,7 @@ class NetworkEventProcessor:
         })
 
         ip, port = msg.conn.addr
-        checkuser, reason = self.check_user(user, ip)
+        checkuser, reason = self.network_filter.check_user(user, ip)
 
         if checkuser == 1:
             # Send Normal Shares
@@ -1783,16 +1773,13 @@ class NetworkEventProcessor:
 
             return
 
-        if user in self.config.sections["server"]["banlist"]:
-
+        if self.network_filter.is_user_banned(user) or self.network_filter.is_user_ip_banned(user):
             log.add_warning(
                 _("%(user)s is banned, but is making a UserInfo request"), {
                     'user': user
                 }
             )
-
             log.add_msg_contents(msg)
-
             return
 
         try:
@@ -1880,11 +1867,12 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn:
                 username = i.username
-                checkuser, reason = self.check_user(username, ip)
+                checkuser, reason = self.network_filter.check_user(username, ip)
                 break
 
         if not username:
             return
+
         if not checkuser:
             self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
             return
@@ -2080,96 +2068,3 @@ class NetworkEventProcessor:
 
         # TODO: Implement me
         log.add_msg_contents(msg)
-
-    def private_message_queue_add(self, msg, text):
-
-        user = msg.user
-
-        if user not in self.private_message_queue:
-            self.private_message_queue[user] = [[msg, text]]
-        else:
-            self.private_message_queue[user].append([msg, text])
-
-    def private_message_queue_process(self, user):
-
-        if user in self.private_message_queue:
-            for data in self.private_message_queue[user][:]:
-                msg, text = data
-                self.private_message_queue[user].remove(data)
-                self.privatechat.show_message(msg, text)
-
-    def ip_ignored(self, address):
-
-        if address is None:
-            return True
-
-        ips = self.config.sections["server"]["ipignorelist"]
-        s_address = address.split(".")
-
-        for ip in ips:
-
-            # No Wildcard in IP
-            if "*" not in ip:
-                if address == ip:
-                    return True
-                continue
-
-            # Wildcard in IP
-            parts = ip.split(".")
-            seg = 0
-
-            for part in parts:
-                # Stop if there's no wildcard or matching string number
-                if part not in (s_address[seg], "*"):
-                    break
-
-                seg += 1
-
-                # Last time around
-                if seg == 4:
-                    # Wildcard blocked
-                    return True
-
-        # Not blocked
-        return False
-
-    def check_user(self, user, ip):
-        """
-        Check if this user is banned, geoip-blocked, and which shares
-        it is allowed to access based on transfer and shares settings.
-        """
-
-        if user in self.config.sections["server"]["banlist"]:
-            if self.config.sections["transfers"]["usecustomban"]:
-                return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
-            else:
-                return 0, "Banned"
-
-        if user in (i[0] for i in self.config.sections["server"]["userlist"]):
-            if self.config.sections["transfers"]["enablebuddyshares"]:
-                # For sending buddy-only shares
-                return 2, ""
-
-            return 1, ""
-
-        if self.config.sections["transfers"]["friendsonly"]:
-            return 0, "Sorry, friends only"
-
-        if ip is None or not self.config.sections["transfers"]["geoblock"]:
-            return 1, ""
-
-        cc = self.geoip.get_all(ip).country_short
-
-        if cc == "-":
-            if self.config.sections["transfers"]["geopanic"]:
-                return 0, "Sorry, geographical paranoia"
-
-            return 1, ""
-
-        """ Please note that all country codes are stored in the same string at the first index
-        of an array, separated by commas (no idea why...) """
-
-        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
-            return 0, "Sorry, your country is blocked"
-
-        return 1, ""

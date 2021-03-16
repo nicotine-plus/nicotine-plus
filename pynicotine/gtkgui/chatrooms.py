@@ -407,16 +407,6 @@ class ChatRooms(IconNotebook):
         self.joinedrooms[msg.room].ticker_remove(msg)
 
     def say_chat_room(self, msg, text):
-        if msg.user in self.frame.np.config.sections["server"]["ignorelist"]:
-            return
-
-        # Ignore chat messages from users who've been ignore-by-ip, no matter whether their username has changed
-        # must have the user's IP for this to work.
-        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
-            ip, port = self.frame.np.users[msg.user].addr
-            if self.frame.np.ip_ignored(ip):
-                return
-
         self.joinedrooms[msg.room].say_chat_room(msg, text)
 
     def public_room_message(self, msg, text):
@@ -826,7 +816,7 @@ class ChatRoom:
 
         self.tickers.set_ticker([])
         for user in msg.msgs:
-            if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.user_ip_is_ignored(user):
+            if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
                 return
 
@@ -835,7 +825,7 @@ class ChatRoom:
     def ticker_add(self, msg):
 
         user = msg.user
-        if user in self.frame.np.config.sections["server"]["ignorelist"] or self.frame.user_ip_is_ignored(user):
+        if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
             # User ignored, ignore Ticker messages
             return
 
@@ -890,9 +880,17 @@ class ChatRoom:
             )
 
     def say_chat_room(self, msg, text, public=False):
+
+        user = msg.user
+
+        if self.frame.np.network_filter.is_user_ignored(user):
+            return
+
+        if self.frame.np.network_filter.is_user_ip_ignored(user):
+            return
+
         text = re.sub("\\s\\s+", "  ", text)
         login = self.frame.np.config.sections["server"]["login"]
-        user = msg.user
 
         if user == login:
             tag = self.tag_local
@@ -1089,23 +1087,23 @@ class ChatRoom:
 
         elif cmd == "/ban":
             if args:
-                self.frame.ban_user(args)
+                self.frame.np.network_filter.ban_user(args)
 
         elif cmd == "/ignore":
             if args:
-                self.frame.ignore_user(args)
+                self.frame.np.network_filter.ignore_user(args)
 
         elif cmd == "/ignoreip":
             if args:
-                self.frame.ignore_ip(args)
+                self.frame.np.network_filter.ignore_ip(args)
 
         elif cmd == "/unban":
             if args:
-                self.frame.unban_user(args)
+                self.frame.np.network_filter.unban_user(args)
 
         elif cmd == "/unignore":
             if args:
-                self.frame.unignore_user(args)
+                self.frame.np.network_filter.unignore_user(args)
 
         elif cmd in ("/clear", "/cl"):
             self.ChatScroll.get_buffer().set_text("")
@@ -1182,7 +1180,7 @@ class ChatRoom:
                 if self.frame.np.config.sections["words"]["dropdown"]:
                     self.ChatEntry.get_completion().get_model().append([username])
 
-        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
+        if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
         self.frame.np.pluginhandler.user_join_chatroom_notification(self.room, username)
@@ -1213,7 +1211,7 @@ class ChatRoom:
                         break
                     iterator = liststore.iter_next(iterator)
 
-        if username not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(username):
+        if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
 
         self.frame.np.pluginhandler.user_leave_chatroom_notification(self.room, username)
@@ -1271,7 +1269,7 @@ class ChatRoom:
         else:
             action = _("%s has returned")
 
-        if user not in self.frame.np.config.sections["server"]["ignorelist"] and not self.frame.user_ip_is_ignored(user):
+        if not self.frame.np.network_filter.is_user_ignored(user) and not self.frame.np.network_filter.is_user_ip_ignored(user):
             append_line(self.RoomLog, action % user, self.tag_log)
 
         if user in self.tag_users:

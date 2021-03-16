@@ -179,7 +179,7 @@ class TransferList:
         self.select_transfers()
 
         for user in self.selected_users:
-            self.frame.ban_user(user)
+            self.frame.np.network_filter.ban_user(user)
 
     def on_file_search(self, widget):
 

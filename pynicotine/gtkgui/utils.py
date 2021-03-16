@@ -1337,10 +1337,10 @@ class PopupMenu(Gtk.Menu):
         self.editing = True
 
         self.items[_("_Add User To List")].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        self.items[_("_Ban User")].set_active(self.user in self.frame.np.config.sections["server"]["banlist"])
-        self.items[_("_Ignore User")].set_active(self.user in self.frame.np.config.sections["server"]["ignorelist"])
-        self.items[_("B_lock User's IP Address")].set_active(self.frame.user_ip_is_blocked(self.user))
-        self.items[_("Ignore User's IP Address")].set_active(self.frame.user_ip_is_ignored(self.user))
+        self.items[_("_Ban User")].set_active(self.frame.np.network_filter.is_user_banned(self.user))
+        self.items[_("_Ignore User")].set_active(self.frame.np.network_filter.is_user_ignored(self.user))
+        self.items[_("B_lock User's IP Address")].set_active(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user))
+        self.items[_("Ignore User's IP Address")].set_active(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user))
 
         self.editing = False
 
@@ -1429,9 +1429,9 @@ class PopupMenu(Gtk.Menu):
             return
 
         if widget.get_active():
-            self.frame.ban_user(self.user)
+            self.frame.np.network_filter.ban_user(self.user)
         else:
-            self.frame.unban_user(self.user)
+            self.frame.np.network_filter.unban_user(self.user)
 
     def on_block_user(self, widget):
 
@@ -1439,9 +1439,9 @@ class PopupMenu(Gtk.Menu):
             return
 
         if widget.get_active():
-            self.frame.on_block_user(self.user)
+            self.frame.np.network_filter.block_user_ip(self.user)
         else:
-            self.frame.on_un_block_user(self.user)
+            self.frame.np.network_filter.unblock_user_ip(self.user)
 
     def on_ignore_ip(self, widget):
 
@@ -1449,9 +1449,9 @@ class PopupMenu(Gtk.Menu):
             return
 
         if widget.get_active():
-            self.frame.on_ignore_ip(self.user)
+            self.frame.np.network_filter.ignore_user_ip(self.user)
         else:
-            self.frame.on_un_ignore_ip(self.user)
+            self.frame.np.network_filter.unignore_user_ip(self.user)
 
     def on_ignore_user(self, widget):
 
@@ -1459,9 +1459,9 @@ class PopupMenu(Gtk.Menu):
             return
 
         if widget.get_active():
-            self.frame.ignore_user(self.user)
+            self.frame.np.network_filter.ignore_user(self.user)
         else:
-            self.frame.unignore_user(self.user)
+            self.frame.np.network_filter.unignore_user(self.user)
 
     def on_version(self, widget):
         self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)

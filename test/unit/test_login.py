@@ -41,28 +41,23 @@ def translation():
     apply_translation()
 
 
-@pytest.fixture
-def config():
-    config = MagicMock()
-    config.sections = {'server': {'portrange': (1, 2)}, 'transfers': {'downloadlimit': 10}}
-    return config
-
-
-def test_instantiate_proto(config) -> None:
+def test_instantiate_proto() -> None:
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Mock(), bindip='',
-        port=None, config=config, eventprocessor=Mock()
+        port=None, port_range=(1, 2), network_filter=None,
+        eventprocessor=Mock()
     )
     proto.server_connect()
     proto.abort()
 
 
-def test_server_conn(config, monkeypatch) -> None:
+def test_server_conn(monkeypatch) -> None:
     mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Queue(0), bindip='',
-        port=None, config=config, eventprocessor=Mock()
+        port=None, port_range=(1, 2), network_filter=None,
+        eventprocessor=Mock()
     )
     proto.server_connect()
     proto._queue.put(ServerConn())
@@ -91,11 +86,12 @@ def test_server_conn(config, monkeypatch) -> None:
     assert mock_socket.close.call_count == 1
 
 
-def test_login(config, monkeypatch) -> None:
+def test_login(monkeypatch) -> None:
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=Queue(0), bindip='',
-        port=None, config=config, eventprocessor=Mock()
+        port=None, port_range=(1, 2), network_filter=None,
+        eventprocessor=Mock()
     )
     proto.server_connect()
     proto._queue.put(ServerConn())

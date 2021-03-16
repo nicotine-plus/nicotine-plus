@@ -455,10 +455,10 @@ class UserInfo:
         self.frame.np.userlist.add_to_list(self.user)
 
     def on_ban_user(self, widget):
-        self.frame.ban_user(self.user)
+        self.frame.np.network_filter.ban_user(self.user)
 
     def on_ignore_user(self, widget):
-        self.frame.ignore_user(self.user)
+        self.frame.np.network_filter.ignore_user(self.user)
 
     def on_save_picture(self, widget):
 

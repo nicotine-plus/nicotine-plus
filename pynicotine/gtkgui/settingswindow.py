@@ -945,11 +945,14 @@ class IgnoreListFrame(BuildFrame):
         }
 
         self.ignored_users = []
-        self.ignorelist = Gtk.ListStore(GObject.TYPE_STRING)
-        column = Gtk.TreeViewColumn(_("Users"), Gtk.CellRendererText(), text=0)
-        self.IgnoredUsers.append_column(column)
+        self.ignorelist = Gtk.ListStore(str)
+        initialise_columns(
+            None,
+            self.IgnoredUsers,
+            ["users", _("Users"), -1, "text", None]
+        )
+
         self.IgnoredUsers.set_model(self.ignorelist)
-        self.IgnoredUsers.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.ignored_ips = {}
         self.ignored_ips_list = Gtk.ListStore(str, str)
@@ -963,7 +966,6 @@ class IgnoreListFrame(BuildFrame):
         cols["users"].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
-        self.IgnoredIPs.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
         server = config["server"]

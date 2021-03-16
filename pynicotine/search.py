@@ -222,7 +222,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, reason = self.np.check_user(user, None)
+        checkuser, reason = self.np.network_filter.check_user(user, None)
 
         if not checkuser:
             return

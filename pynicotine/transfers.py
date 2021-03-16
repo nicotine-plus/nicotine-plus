@@ -649,7 +649,7 @@ class Transfers:
     def _transfer_request_uploads(self, msg, user, addr):
 
         # Is user allowed to download?
-        checkuser, reason = self.eventprocessor.check_user(user, addr)
+        checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
 
         if not checkuser:
             return slskmessages.TransferResponse(None, 0, reason=reason, req=msg.req)
@@ -828,7 +828,7 @@ class Transfers:
                 if friend:
                     limits = False
 
-            checkuser, reason = self.eventprocessor.check_user(user, addr)
+            checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
 
             if not checkuser:
                 self.queue.put(
@@ -1703,9 +1703,7 @@ class Transfers:
         if self.uploadsview is not None:
             self.uploadsview.clear_by_user(user)
 
-        if user not in self.eventprocessor.config.sections["server"]["banlist"]:
-            self.eventprocessor.config.sections["server"]["banlist"].append(user)
-            self.eventprocessor.config.write_configuration()
+        self.eventprocessor.network_filter.ban_user(user)
 
     def start_check_download_queue_timer(self):
 
