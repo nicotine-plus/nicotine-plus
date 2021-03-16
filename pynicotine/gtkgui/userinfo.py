@@ -165,9 +165,14 @@ class UserTabs(IconNotebook):
         menu.popup()
         return True
 
-    def conn_close(self):
+    def login(self):
 
-        self.connected = 0
+        for user in self.users:
+            # Get notified of user status
+            if user not in self.frame.np.watchedusers:
+                self.frame.np.queue.put(slskmessages.AddUser(user))
+
+    def conn_close(self):
 
         for user in self.users:
             tab = self.users[user]

@@ -1103,7 +1103,6 @@ class NetworkEventProcessor:
             self.queue.put(slskmessages.AcceptChildren(0))
 
             self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
-            self.privatechat.login()
             self.queue.put(slskmessages.CheckPrivileges())
 
             """ Request a complete room list. A limited room list not including blacklisted rooms and

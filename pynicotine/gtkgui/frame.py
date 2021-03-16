@@ -442,6 +442,10 @@ class NicotineFrame:
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
 
+        self.privatechats.login()
+        self.userbrowse.login()
+        self.userinfo.login()
+
         if msg.banner != "":
             log.add(msg.banner)
 
