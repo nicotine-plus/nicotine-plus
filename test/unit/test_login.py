@@ -21,7 +21,7 @@ import socket
 
 from queue import Queue
 from time import sleep
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 import pytest
 
