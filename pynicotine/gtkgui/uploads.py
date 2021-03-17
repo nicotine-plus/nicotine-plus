@@ -24,11 +24,8 @@
 
 import os
 
-from gi.repository import Gdk
-
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 
@@ -65,7 +62,7 @@ class Uploads(TransferList):
             ("#" + _("_Search"), self.on_file_search),
             (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
             ("", None),
-            ("#" + _("_Retry"), self.on_upload_transfer),
+            ("#" + _("_Retry"), self.on_retry_transfer),
             ("#" + _("Abor_t"), self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
@@ -98,29 +95,6 @@ class Uploads(TransferList):
         # Finally, try to open the directory we got...
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
-
-    def on_key_press_event(self, widget, event):
-
-        keycode = event.hardware_keycode
-
-        self.select_transfers()
-
-        if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
-            self.on_abort_transfer(widget)
-
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
-            self.on_copy_file_path(widget)
-
-        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
-            self.on_abort_transfer(widget, clear=True)
-
-        else:
-            # No key match, continue event
-            return False
-
-        widget.stop_emission_by_name("key_press_event")
-        return True
 
     def _on_play_files(self, widget, prefix=""):
 
@@ -193,11 +167,6 @@ class Uploads(TransferList):
                     i.transfertimer.cancel()
                 self.remove_specific(i)
 
-    def on_abort_transfer(self, widget, clear=False):
-
-        self.select_transfers()
-        self.abort_transfers(clear)
-
     def on_abort_user(self, widget):
 
         self.select_transfers()
@@ -209,15 +178,5 @@ class Uploads(TransferList):
 
         self.on_abort_transfer(widget)
 
-    def on_clear_queued(self, widget):
-        self.clear_transfers(["Queued"])
-
     def on_clear_failed(self, widget):
         self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Initializing transfer"])
-
-    def on_upload_transfer(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.np.transfers.retry_upload(transfer)

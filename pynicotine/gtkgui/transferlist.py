@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
+from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
@@ -581,6 +582,10 @@ class TransferList:
 
                 self.expand(transfer_path, user_path)
 
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            getattr(self.frame.np.transfers, "retry_" + self.type)(transfer)
+
     def abort_transfers(self, clear=False):
 
         for i in self.selected_transfers:
@@ -728,6 +733,31 @@ class TransferList:
 
         self.select_transfers()
 
+    def on_key_press_event(self, widget, event):
+
+        keycode = event.hardware_keycode
+        self.select_transfers()
+
+        if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
+            self.on_abort_transfer(widget)
+
+        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
+            self.on_retry_transfer(widget)
+
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
+                keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
+            self.on_copy_file_path(widget)
+
+        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
+            self.on_abort_transfer(widget, clear=True)
+
+        else:
+            # No key match, continue event
+            return False
+
+        widget.stop_emission_by_name("key_press_event")
+        return True
+
     def on_play_files(self, widget, prefix=""):
         _thread.start_new_thread(self._on_play_files, (widget, prefix))
 
@@ -755,6 +785,14 @@ class TransferList:
 
         self.frame.set_clipboard_url(i.user, path)
 
+    def on_retry_transfer(self, widget):
+        self.select_transfers()
+        self.retry_transfers()
+
+    def on_abort_transfer(self, widget, clear=False):
+        self.select_transfers()
+        self.abort_transfers(clear)
+
     def on_clear_transfer(self, widget):
         self.select_transfers()
         self.abort_transfers(clear=True)
@@ -764,6 +802,9 @@ class TransferList:
             self.clear_transfers(["Queued"])
 
         dialog.destroy()
+
+    def on_clear_queued(self, widget):
+        self.clear_transfers(["Queued"])
 
     def on_clear_finished(self, widget):
         self.clear_transfers(["Finished"])

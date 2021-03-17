@@ -26,7 +26,6 @@
 import os
 import re
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.dialogs import option_dialog
@@ -34,7 +33,6 @@ from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
@@ -233,32 +231,6 @@ class Downloads(TransferList):
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def on_key_press_event(self, widget, event):
-
-        keycode = event.hardware_keycode
-
-        self.select_transfers()
-
-        if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
-            self.on_abort_transfer(widget)
-
-        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
-            self.on_retry_transfer(widget)
-
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
-            self.on_copy_file_path(widget)
-
-        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
-            self.on_abort_transfer(widget, clear=True)
-
-        else:
-            # No key match, continue event
-            return False
-
-        widget.stop_emission_by_name("key_press_event")
-        return True
-
     def _on_play_files(self, widget, prefix=""):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
@@ -337,17 +309,3 @@ class Downloads(TransferList):
 
         self.popup_menu.popup()
         return True
-
-    def on_abort_transfer(self, widget, clear=False):
-        self.select_transfers()
-        self.abort_transfers(clear)
-
-    def on_clear_queued(self, widget):
-        self.clear_transfers(["Queued"])
-
-    def on_retry_transfer(self, widget):
-
-        self.select_transfers()
-
-        for transfer in self.selected_transfers:
-            self.frame.np.transfers.retry_download(transfer)
