@@ -1046,6 +1046,10 @@ class Transfers:
 
     def allow_new_uploads(self):
 
+        # Check if any uploads exist
+        if not len(self.uploads):
+            return False
+
         # Limit by upload slots
         limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
 
