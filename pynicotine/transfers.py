@@ -186,6 +186,9 @@ class Transfers:
         # Check for failed downloads if option is enabled (1 min delay)
         self.start_check_download_queue_timer()
 
+        # Check if queued uploads can be started
+        self.start_check_upload_queue_timer()
+
     def get_download_queue_file_name(self):
 
         data_dir = self.eventprocessor.config.data_dir
@@ -1712,6 +1715,13 @@ class Transfers:
         self.download_queue_timer.setDaemon(True)
         self.download_queue_timer.start()
 
+    def start_check_upload_queue_timer(self):
+
+        self.upload_queue_timer = threading.Timer(3.0, self.ui_callback, [[slskmessages.CheckUploadQueue()]])
+        self.upload_queue_timer.setName("UploadQueueTimer")
+        self.upload_queue_timer.setDaemon(True)
+        self.upload_queue_timer.start()
+
     # Find failed or stuck downloads and attempt to queue them.
     # Also ask for the queue position of downloads.
     def check_download_queue(self):
@@ -2243,6 +2253,9 @@ class Transfers:
 
         if self.download_queue_timer is not None:
             self.download_queue_timer.cancel()
+
+        if self.upload_queue_timer is not None:
+            self.upload_queue_timer.cancel()
 
         self.abort_transfers(send_fail_message=False)
         self.save_downloads()

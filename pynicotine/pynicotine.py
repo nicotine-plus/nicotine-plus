@@ -219,6 +219,7 @@ class NetworkEventProcessor:
             slskmessages.Relogged: self.relogged,
             slskmessages.PeerInit: self.peer_init,
             slskmessages.CheckDownloadQueue: self.check_download_queue,
+            slskmessages.CheckUploadQueue: self.check_upload_queue,
             slskmessages.DownloadFile: self.file_download,
             slskmessages.UploadFile: self.file_upload,
             slskmessages.FileRequest: self.file_request,
@@ -1027,6 +1028,11 @@ class NetworkEventProcessor:
 
         if self.transfers is not None:
             self.transfers.check_download_queue()
+
+    def check_upload_queue(self, msg):
+
+        if self.transfers is not None:
+            self.transfers.check_upload_queue(start_timer=True)
 
     def file_download(self, msg):
 
