@@ -2623,7 +2623,7 @@ class DistribSearch(DistribMessage):
     if we're a branch root, or by our parent using DistribSearch.
     """
 
-    __slots__ = "conn", "user", "searchid", "searchterm"
+    __slots__ = "unknown", "conn", "user", "searchid", "searchterm"
 
     def __init__(self, conn):
         self.conn = conn
@@ -2685,7 +2685,7 @@ class DistribServerSearch(DistribMessage):
     if we're a branch root, or by our parent using DistribSearch.
     """
 
-    __slots__ = "conn", "user", "searchid", "searchterm"
+    __slots__ = "unknown", "conn", "user", "searchid", "searchterm"
 
     def __init__(self, conn):
         self.conn = conn

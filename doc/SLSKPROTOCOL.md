@@ -1274,7 +1274,7 @@ Nicotine: HaveNoParent
 
 #### Description
 
-We inform the server if we have a distributed parent or not. If not, the server eventually sends us a PossibleParents message with a list of 10 possible parents to connect to.
+We inform the server if we have a distributed parent or not. If not, the server eventually sends us a PossibleParents message with a list of possible parents to connect to. If no candidates are found, no such message is sent by the server, and we eventually become a branch root.
 
 #### Data Order
 
@@ -1310,7 +1310,7 @@ We send the IP address of our parent to the server.
 
 #### Description
 
-Unknown purpose
+The server informs us about the minimum upload speed required to become a parent in the distributed network.
 
 #### Function Names
 
@@ -1330,7 +1330,7 @@ Nicotine: ParentMinSpeed (unused)
 
 #### Description
 
-Unknown purpose
+The server sends us a speed ratio determining the number of children we can have in the distributed network. The maximum number of children is our upload speed divided by the speed ratio.
 
 #### Function Names
 
@@ -1474,7 +1474,7 @@ We ask the server how much time we have left of our privileges. The server respo
 
 #### Description
 
-The server sends us search requests from other users.
+The server sends us search requests that should be forwarded to the distributed network. We receive these messages if we are a branch root.
 
 #### Function Names
 
@@ -1519,7 +1519,9 @@ Nicotine: AcceptChildren (not yet used)
 
 #### Description
 
-The server send us a list of 10 possible distributed parents to connect to. Messages of this type are sent to us at regular intervals, until we tell the server we don't need more possible parents with a HaveNoParent message.
+The server send us a list of max 10 possible distributed parents to connect to. Messages of this type are sent to us at regular intervals, until we tell the server we don't need more possible parents with a HaveNoParent message.
+
+The received list always contains users whose upload speed is higher than our own. If we have the highest upload speed on the server, we become a branch root, and start receiving [SearchRequest](#server-code-93) messages directly from the server.
 
 #### Function Names
 
@@ -1911,7 +1913,7 @@ Nicotine: AckNotifyPrivileges
 
 #### Description
 
-Tell the server what is our position in our branch (xth generation)
+We tell the server what our position is in our branch (xth generation) on the distributed network.
 
 #### Function Names
 
@@ -1931,7 +1933,7 @@ Nicotine: Unimplemented
 
 #### Description
 
-Tell the server the username of the root of the branch we're in
+We tell the server the username of the root of the branch we're in on the distributed network.
 
 #### Function Names
 
@@ -1947,11 +1949,11 @@ Nicotine: Unimplemented
 
 ### Server Code 129
 
-**Child depth**
+**Child Depth**
 
 #### Description
 
-Tell the server the maximum number of generation of children we have.
+We tell the server the maximum number of generation of children we have on the distributed network.
 
 #### Function Names
 
@@ -3153,7 +3155,7 @@ Nicotine: DistribAlive
 Search request that arrives through the distributed network. 
 We transmit the search request to our children.
 
-Search requests are sent to us by the server using SearchRequest if we're a branch root, or by our parent using DistribSearch.
+Search requests are sent to us by the server using [SearchRequest](#server-code-93) if we're a branch root. If our parent is a branch root (distributed level 0), they send us [DistribServerSearch](#distributed-code-93) messages, otherwise [DistribSearch](#distributed-code-3). 
 
 #### Function Names
 
@@ -3242,7 +3244,7 @@ Nicotine: Unimplemented
 Search request that arrives through the distributed network. 
 We transmit the search request to our children.
 
-Search requests are sent to us by the server using SearchRequest if we're a branch root, or by our parent using DistribSearch.
+Search requests are sent to us by the server using [SearchRequest](#server-code-93) if we're a branch root. If our parent is a branch root (distributed level 0), they send us [DistribServerSearch](#distributed-code-93) messages, otherwise [DistribSearch](#distributed-code-3). 
 
 #### Function Names
 
