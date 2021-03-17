@@ -146,8 +146,11 @@ class Search:
         return self.searchid
 
     def set_wishlist_interval(self, msg):
+
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
+
+        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
     def show_search_result(self, msg, username, country):
         if self.ui_callback:
