@@ -1091,7 +1091,6 @@ class NetworkEventProcessor:
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
             self.transfers.set_transfer_views(downloads, uploads)
-            self.shares.send_num_shared_folders_files()
 
             for thing in self.config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
@@ -1101,6 +1100,7 @@ class NetworkEventProcessor:
                 if thing and isinstance(thing, str):
                     self.queue.put(slskmessages.AddThingIHate(thing))
 
+            self.queue.put(slskmessages.CheckPrivileges())
             self.queue.put(slskmessages.HaveNoParent(1))
 
             """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
@@ -1108,8 +1108,7 @@ class NetworkEventProcessor:
             children for now. """
             self.queue.put(slskmessages.AcceptChildren(0))
 
-            self.queue.put(slskmessages.NotifyPrivileges(1, self.config.sections["server"]["login"]))
-            self.queue.put(slskmessages.CheckPrivileges())
+            self.shares.send_num_shared_folders_files()
 
             """ Request a complete room list. A limited room list not including blacklisted rooms and
             rooms with few users is automatically sent when logging in, but subsequent room list

@@ -1875,6 +1875,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 #### Function Names
 
+Museekd: SNotifyPrivileges
 Nicotine: NotifyPrivileges
 
 #### Description
@@ -1896,6 +1897,7 @@ The server sends us a notification about our privileges.
 
 #### Function Names
 
+Museekd: SAckNotifyPrivileges
 Nicotine: AckNotifyPrivileges
 
 #### Description
