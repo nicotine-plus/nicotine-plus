@@ -569,12 +569,13 @@ class NetworkEventProcessor:
                     self.queue.put(slskmessages.GetPeerAddress(user))
                     return
 
+        if user in self.users:
+            self.users[user].addr = (msg.ip, msg.port)
+        else:
+            self.users[user] = UserAddr(addr=(msg.ip, msg.port))
+
         # User seems to be offline, don't update IP
         if msg.ip != "0.0.0.0" and msg.port != 0:
-            if user in self.users:
-                self.users[user].addr = (msg.ip, msg.port)
-            else:
-                self.users[user] = UserAddr(addr=(msg.ip, msg.port))
 
             # If the IP address changed, make sure our IP block/ignore list reflects this
             self.network_filter.update_saved_user_ip_filters(user)
