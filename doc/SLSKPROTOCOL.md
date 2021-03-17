@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 14, 2021
+Last updated on March 17, 2021
 
 ## Sections
 
@@ -270,6 +270,8 @@ We send this to the server to indicate the port number that we listen on (2234 b
 
   - Send
     1.  **uint32** <ins>port</ins>
+    2.  **bool** <ins>use obfuscation</ins>
+    3.  **uint32** <ins>obfuscated port</ins>
   - Receive
       - *No Message*
 
@@ -293,7 +295,9 @@ We send this to the server to ask for a peer's address (IP address and port), gi
   - Receive
     1.  **string** <ins>username</ins>
     2.  **ip** <ins>ip</ins>
-    3.  **int** <ins>port</ins>
+    3.  **uint32** <ins>port</ins>
+    4.  **bool** <ins>use obfuscation</ins>
+    5.  **uint32** <ins>obfuscated port</ins>
 
 ### Server Code 5
 
@@ -549,10 +553,12 @@ Order](#peer-connection-message-order)
     2.  **string** <ins>type</ins> *Connection Type
         (P, F or D)*
     3.  **ip** <ins>ip</ins>
-    4.  **int** <ins>port</ins>
+    4.  **uint32** <ins>port</ins>
     5.  **uint32** <ins>token</ins> *Use this token
         for [Pierce Firewall](#peer-code-0)*
     6.  **bool** <ins>privileged</ins>
+    7.  **bool** <ins>use obfuscation</ins>
+    8.  **uint32** <ins>obfuscated port</ins>
 
 ### Server Code 22
 
