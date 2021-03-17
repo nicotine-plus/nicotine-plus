@@ -2657,8 +2657,7 @@ A peer sends this message when it has a file search match. The token/ticket is t
   - Send
     1.  **string** <ins>username</ins>
     2.  **int** <ins>ticket</ins>
-    3.  **int** <ins>results size</ins> *number of
-        results*
+    3.  **int** <ins>results size</ins> *number of results*
     4.  Iterate for number of results
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
@@ -2672,14 +2671,23 @@ A peer sends this message when it has a file search match. The token/ticket is t
     5.  **bool** <ins>slotfree</ins>
     6.  **int** <ins>avgspeed</ins>
     7.  **off\_t** <ins>queue length</ins>
+    8.  **int** <ins>locked results size</ins> *number of locked results*
+    9.  Iterate for number of locked results
+        1.  **uchar** 1
+        2.  **string** <ins>filename</ins>
+        3.  **off\_t** <ins>size</ins>
+        4.  **string** <ins>ext</ins>
+        5.  **int** <ins>attribute size</ins>
+        6.  Iterate <ins>number of attributes</ins>
+            1.  **int** <ins>place in
+                attributes</ins>
+            2.  **int** <ins>attribute</ins>
   - Receive
     1.  decompress
     2.  **string** <ins>username</ins>
     3.  **int** <ins>ticket</ins>
-    4.  **int** <ins>results size</ins>
-        <ins>number of results</ins>
+    4.  **int** <ins>results size</ins> *number of results*
     5.  Iterate for <ins>number of results</ins>
-        museekd pop buffer
         1.  **string** <ins>filename</ins>
         2.  **off\_t** <ins>size</ins>
         3.  **string** <ins>ext</ins>
@@ -2691,6 +2699,16 @@ A peer sends this message when it has a file search match. The token/ticket is t
     6.  **bool** <ins>slotfree</ins>
     7.  **int** <ins>avgspeed</ins>
     8.  **off\_t** <ins>queue length</ins>
+    9.  **int** <ins>locked results size</ins> *number of locked results*
+    10.  Iterate for <ins>number of locked results</ins>
+        1.  **string** <ins>filename</ins>
+        2.  **off\_t** <ins>size</ins>
+        3.  **string** <ins>ext</ins>
+        4.  **int** <ins>number of attributes</ins>
+        5.  Iterate <ins>number of attributes</ins>
+            1.  **int** <ins>place in
+                attributes</ins>
+            2.  **int** <ins>attribute</ins>
 
 ### Peer Code 15
 
