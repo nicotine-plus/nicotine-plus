@@ -188,6 +188,12 @@ class Transfers:
         # Check if queued uploads can be started
         self.start_check_upload_queue_timer()
 
+    def set_transfer_views(self, downloads, uploads):
+        self.downloadsview = downloads
+        self.uploadsview = uploads
+
+    """ Load Downloads """
+
     def get_download_queue_file_name(self):
 
         data_dir = self.eventprocessor.config.data_dir
@@ -251,9 +257,7 @@ class Transfers:
 
         return self.load_current_queue_format(downloads_file)
 
-    def set_transfer_views(self, downloads, uploads):
-        self.downloadsview = downloads
-        self.uploadsview = uploads
+    """ Privileges """
 
     def set_privileged_users(self, list):
         for i in list:
@@ -292,6 +296,85 @@ class Transfers:
 
         return False
 
+    """ File Actions """
+
+    def file_is_shared(self, user, virtualfilename, realfilename):
+
+        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
+
+        if not os.access(realfilename, os.R_OK):
+            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
+            return False
+
+        folder, sep, file = virtualfilename.rpartition('\\')
+
+        try:
+            if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
+                if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
+                    bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
+
+                    for i in bshared.get(str(folder), ''):
+                        if file == i[0]:
+                            return True
+
+            shared = self.eventprocessor.shares.share_dbs["files"]
+
+            for i in shared.get(str(folder), ''):
+                if file == i[0]:
+                    return True
+
+        except ValueError:
+            # We're currently rescanning files
+            return False
+
+        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
+        return False
+
+    def file_is_upload_queued(self, user, filename):
+
+        for i in self.uploads:
+            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
+                return True
+
+        return False
+
+    def get_file_size(self, filename):
+
+        try:
+            size = os.path.getsize(filename)
+        except Exception:
+            # file doesn't exist (remote files are always this)
+            size = 0
+
+        return size
+
+    def close_file(self, file, transfer):
+
+        transfer.file = None
+
+        if file is None:
+            return
+
+        try:
+            file.close()
+
+        except Exception as e:
+            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
+                "filename": file.name,
+                "error": e
+            })
+
+    """ Limits """
+
     def update_limits(self):
         """ Sends the updated speed limits to the networking thread """
 
@@ -302,14 +385,53 @@ class Transfers:
         self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.queue.put(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
 
-    def user_logged_out(self, user):
-        """ Check if a user who previously queued a file has logged out since """
+    def queue_limit_reached(self, user):
 
-        try:
-            return (self.users[user].status <= 0)
+        uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        except (KeyError, TypeError):
+        if not uploadslimit:
             return False
+
+        size = sum(i.size for i in self.uploads if i.user == user and i.status == "Queued")
+
+        return size >= uploadslimit
+
+    def file_limit_reached(self, user):
+
+        filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+
+        if not filelimit:
+            return False
+
+        numfiles = sum(1 for i in self.uploads if i.user == user and i.status == "Queued")
+
+        return numfiles >= filelimit
+
+    def allow_new_uploads(self):
+
+        # Limit by upload slots
+        limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
+
+        if limit_upload_slots:
+            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+            in_progress_count = self.get_num_transfers_in_progress()
+
+            if in_progress_count >= maxupslots:
+                return False
+
+        # Limit by maximum bandwidth
+        maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
+
+        if maxbandwidth:
+            bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
+
+            if bandwidth_sum >= maxbandwidth:
+                return False
+
+        # No limits
+        return True
+
+    """ Network Events """
 
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
@@ -333,154 +455,6 @@ class Transfers:
 
                     if not self.auto_clear_upload(i):
                         self.uploadsview.update(i)
-
-    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
-
-        path = clean_path(path, absolute=True)
-
-        if checkduplicate:
-            for i in self.downloads:
-                if i.user == user and i.filename == filename and i.path == path:
-                    # Don't add duplicate downloads
-                    return
-
-        self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
-
-    def push_file(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
-        if size is None:
-            size = self.get_file_size(realfilename)
-
-        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename, locally_queued)
-
-    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None, locally_queued=False):
-
-        """ Get a single file. path is a local path. if transfer object is
-        not None, update it, otherwise create a new one."""
-
-        if transfer is None:
-            transfer = Transfer(
-                user=user, filename=filename, realfilename=realfilename, path=path,
-                status="Queued", size=size, bitrate=bitrate,
-                length=length
-            )
-
-            if direction == 0:
-                self.downloads.append(transfer)
-            else:
-                self._append_upload(user, filename, transfer)
-        else:
-            transfer.status = "Queued"
-
-        if direction == 1:
-            log.add_transfer(
-                "Initializing upload request for file %(file)s to user %(user)s", {
-                    'file': filename,
-                    'user': user
-                }
-            )
-
-        try:
-            status = self.users[user].status
-        except KeyError:
-            status = None
-
-        shouldupdate = True
-
-        if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
-            # Only filter downloads, never uploads!
-            try:
-                downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
-                if downloadregexp.search(filename) is not None:
-                    log.add_transfer("Filtering: %s", filename)
-                    self.abort_transfer(transfer)
-                    # The string to be displayed on the GUI
-                    transfer.status = "Filtered"
-
-                    shouldupdate = not self.auto_clear_download(transfer)
-            except Exception:
-                pass
-
-        if status is None:
-            self.eventprocessor.watch_user(user)
-
-        if transfer.status != "Filtered":
-            if direction == 0:
-                log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
-                    "filename": filename,
-                    "user": user
-                })
-                self.eventprocessor.send_message_to_peer(user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
-                self.eventprocessor.send_message_to_peer(user, slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt))
-
-            elif not locally_queued:
-                log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
-                    "filename": filename,
-                    "request": transfer.req,
-                    "user": user
-                })
-                transfer.req = new_id()
-                realpath = self.eventprocessor.shares.virtual2real(filename)
-                self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
-
-        if shouldupdate:
-            if direction == 0:
-                self.downloadsview.update(transfer)
-            else:
-                self.uploadsview.update(transfer)
-
-    def close_file(self, file, transfer):
-
-        transfer.file = None
-
-        if file is None:
-            return
-
-        try:
-            file.close()
-
-        except Exception as e:
-            log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file.name,
-                "error": e
-            })
-
-    def upload_failed(self, msg):
-
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
-        for i in self.downloads:
-            if i.user != user or i.filename != msg.file:
-                continue
-
-            if i.status in ("Aborted", "Paused", "Local file error", "User logged off"):
-                continue
-
-            if not i.legacy_attempt:
-                """ Attempt to request file name encoded as latin-1 once. """
-
-                self.abort_transfer(i, send_fail_message=False)
-                i.legacy_attempt = True
-                self.get_file(i.user, i.filename, i.path, i)
-                break
-
-            else:
-                """ Already failed once previously, give up """
-
-                i.status = "Remote file error"
-                self.downloadsview.update(i)
-
-                log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-                    "filename": i.filename,
-                    "user": user,
-                    "reason": "Remote file error"
-                })
 
     def got_cant_connect(self, req):
         """ We can't connect to the user, either way. """
@@ -517,6 +491,149 @@ class Transfers:
 
         self.eventprocessor.watch_user(i.user)
         self.check_upload_queue()
+
+    def folder_contents_response(self, conn, file_list):
+        """ When we got a contents of a folder, get all the files in it, but
+        skip the files in subfolders"""
+
+        username = None
+        for i in self.peerconns:
+            if i.conn is conn:
+                username = i.username
+                break
+
+        if username is None:
+            return
+
+        log.add_transfer("Received response for folder content request from user %s", username)
+
+        for i in file_list:
+            for directory in file_list[i]:
+
+                if os.path.commonprefix([i, directory]) == directory:
+                    files = file_list[i][directory][:]
+
+                    if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
+                        files.sort(key=lambda x: x[1], reverse=True)
+
+                    for file in files:
+                        destination = self.get_folder_destination(username, directory)
+                        size = file[2]
+                        h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+
+                        if directory[-1] == '\\':
+                            filename = directory + file[1]
+                        else:
+                            filename = directory + '\\' + file[1]
+
+                        self.get_file(
+                            username,
+                            filename,
+                            destination,
+                            size=size,
+                            bitrate=h_bitrate,
+                            length=h_length,
+                            checkduplicate=True
+                        )
+
+                    log.add_transfer(
+                        "Attempting to download files in folder %(folder)s for user %(user)s. Destination path: %(destination)s", {
+                            "folder": directory,
+                            "user": username,
+                            "destination": destination
+                        }
+                    )
+
+    def queue_upload(self, msg):
+        """ Peer remotely queued a download (upload here) """
+
+        user = None
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                user = i.username
+                break
+
+        if user is None:
+            return
+
+        addr = msg.conn.addr[0]
+
+        """ Under certain conditions, SoulseekQt will send a file name/path containing both
+        mojibake (utf-8 incorrectly decoded as latin-1) and correct utf-8. This was observed
+        when a file name contains special characters, and is downloaded directly from
+        a user share. In this case, the folder path is garbled, while the file name is correct.
+        Downloading from search results results in no such issue.
+
+        Decode the incorrect parts as utf-8, if necessary, otherwise Nicotine+ thinks the file
+        isn't shared. """
+
+        filename_parts = msg.file.replace('/', '\\').split('\\')
+
+        for i, part in enumerate(filename_parts):
+            try:
+                filename_parts[i] = part.encode('latin-1').decode('utf-8')
+
+            except Exception:
+                # Already utf-8
+                pass
+
+        filename_utf8 = '\\'.join(filename_parts)
+        realpath = self.eventprocessor.shares.virtual2real(filename_utf8)
+
+        if not self.file_is_upload_queued(user, msg.file):
+
+            limits = True
+
+            if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
+                friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+
+                if friend:
+                    limits = False
+
+            checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
+
+            if not checkuser:
+                self.queue.put(
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=reason)
+                )
+
+            elif limits and self.queue_limit_reached(user):
+                uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
+                limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
+                self.queue.put(
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                )
+
+            elif limits and self.file_limit_reached(user):
+                filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+                limitmsg = "User limit of %i files exceeded" % (filelimit)
+                self.queue.put(
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                )
+
+            elif self.file_is_shared(user, filename_utf8, realpath):
+                newupload = Transfer(
+                    user=user, filename=msg.file, realfilename=realpath,
+                    path=os.path.dirname(realpath), status="Queued",
+                    timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
+                )
+                self._append_upload(user, msg.file, newupload)
+                self.uploadsview.update(newupload)
+
+                if self.pluginhandler:
+                    self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+
+                self.check_upload_queue()
+
+            else:
+                self.queue.put(
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
+                )
+
+        log.add_transfer("Queued upload request: User %(user)s, %(msg)s", {
+            'user': user,
+            'msg': str(vars(msg))
+        })
 
     def transfer_request(self, msg):
 
@@ -732,354 +849,6 @@ class Transfers:
         self.uploadsview.update(transferobj)
         return response
 
-    def _append_upload(self, user, filename, transferobj):
-
-        previously_queued = False
-        old_index = 0
-
-        for i in self.uploads:
-            if i.user == user and i.filename == filename:
-                if i.status == "Queued":
-                    # This upload was queued previously
-                    # Use the previous queue position and time
-                    transferobj.place = i.place
-                    transferobj.timequeued = i.timequeued
-                    previously_queued = True
-
-                self.uploads.remove(i)
-                self.uploadsview.remove_specific(i, True)
-                break
-
-            old_index += 1
-
-        if previously_queued:
-            self.uploads.insert(old_index, transferobj)
-        else:
-            self.uploads.append(transferobj)
-
-    def file_is_upload_queued(self, user, filename):
-
-        for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
-                return True
-
-        return False
-
-    def queue_limit_reached(self, user):
-
-        uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"] * 1024 * 1024
-
-        if not uploadslimit:
-            return False
-
-        size = sum(i.size for i in self.uploads if i.user == user and i.status == "Queued")
-
-        return size >= uploadslimit
-
-    def file_limit_reached(self, user):
-
-        filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
-
-        if not filelimit:
-            return False
-
-        numfiles = sum(1 for i in self.uploads if i.user == user and i.status == "Queued")
-
-        return numfiles >= filelimit
-
-    def queue_upload(self, msg):
-        """ Peer remotely queued a download (upload here) """
-
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
-        addr = msg.conn.addr[0]
-
-        """ Under certain conditions, SoulseekQt will send a file name/path containing both
-        mojibake (utf-8 incorrectly decoded as latin-1) and correct utf-8. This was observed
-        when a file name contains special characters, and is downloaded directly from
-        a user share. In this case, the folder path is garbled, while the file name is correct.
-        Downloading from search results results in no such issue.
-
-        Decode the incorrect parts as utf-8, if necessary, otherwise Nicotine+ thinks the file
-        isn't shared. """
-
-        filename_parts = msg.file.replace('/', '\\').split('\\')
-
-        for i, part in enumerate(filename_parts):
-            try:
-                filename_parts[i] = part.encode('latin-1').decode('utf-8')
-
-            except Exception:
-                # Already utf-8
-                pass
-
-        filename_utf8 = '\\'.join(filename_parts)
-        realpath = self.eventprocessor.shares.virtual2real(filename_utf8)
-
-        if not self.file_is_upload_queued(user, msg.file):
-
-            limits = True
-
-            if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-                friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
-
-                if friend:
-                    limits = False
-
-            checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
-
-            if not checkuser:
-                self.queue.put(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=reason)
-                )
-
-            elif limits and self.queue_limit_reached(user):
-                uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
-                limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
-                self.queue.put(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
-                )
-
-            elif limits and self.file_limit_reached(user):
-                filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
-                limitmsg = "User limit of %i files exceeded" % (filelimit)
-                self.queue.put(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
-                )
-
-            elif self.file_is_shared(user, filename_utf8, realpath):
-                newupload = Transfer(
-                    user=user, filename=msg.file, realfilename=realpath,
-                    path=os.path.dirname(realpath), status="Queued",
-                    timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
-                )
-                self._append_upload(user, msg.file, newupload)
-                self.uploadsview.update(newupload)
-
-                if self.pluginhandler:
-                    self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
-
-                self.check_upload_queue()
-
-            else:
-                self.queue.put(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
-                )
-
-        log.add_transfer("Queued upload request: User %(user)s, %(msg)s", {
-            'user': user,
-            'msg': str(vars(msg))
-        })
-
-    def upload_queue_notification(self, msg):
-
-        username = None
-
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                username = i.username
-                break
-
-        if username is None:
-            return
-
-        if self.can_upload(username):
-            log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
-
-        else:
-            self.queue.put(
-                slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
-            )
-            log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
-
-    def can_upload(self, user):
-
-        transfers = self.eventprocessor.config.sections["transfers"]
-
-        if transfers["remotedownloads"]:
-
-            # Remote Uploads only for users in list
-            if transfers["uploadallowed"] == 2:
-                # Users in userlist
-                if user not in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
-                    # Not a buddy
-                    return False
-
-            if transfers["uploadallowed"] == 0:
-                # No One can sent files to you
-                return False
-
-            if transfers["uploadallowed"] == 1:
-                # Everyone can sent files to you
-                return True
-
-            if transfers["uploadallowed"] == 3:
-                # Trusted Users
-                userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
-
-                if user not in userlist:
-                    # Not a buddy
-                    return False
-                if not self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][4]:
-                    # Not Trusted
-                    return False
-
-            return True
-
-        return False
-
-    def upload_denied(self, msg):
-
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
-        for i in self.downloads:
-            if i.user != user or i.filename != msg.file:
-                continue
-
-            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
-                    not i.legacy_attempt:
-                """ The peer is possibly using an old client that doesn't support Unicode
-                (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
-
-                log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
-                                 "Attempting to request file as latin-1.", {
-                                     "user": user,
-                                     "reason": msg.reason,
-                                     "filename": i.filename
-                                 })
-
-                self.abort_transfer(i, send_fail_message=False)
-                i.legacy_attempt = True
-                self.get_file(i.user, i.filename, i.path, i)
-                break
-
-            elif i.status not in ("Aborted", "Paused"):
-                if i.status in self.TRANSFER:
-                    self.abort_transfer(i, reason=msg.reason)
-
-                i.status = msg.reason
-                self.downloadsview.update(i)
-
-                log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
-                    "user": user,
-                    "filename": i.filename,
-                    "reason": msg.reason
-                })
-                break
-
-    def file_is_shared(self, user, virtualfilename, realfilename):
-
-        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
-        })
-
-        if not os.access(realfilename, os.R_OK):
-            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
-                "virtual_name": virtualfilename,
-                "path": realfilename
-            })
-            return False
-
-        folder, sep, file = virtualfilename.rpartition('\\')
-
-        try:
-            if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
-                if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
-                    bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
-
-                    for i in bshared.get(str(folder), ''):
-                        if file == i[0]:
-                            return True
-
-            shared = self.eventprocessor.shares.share_dbs["files"]
-
-            for i in shared.get(str(folder), ''):
-                if file == i[0]:
-                    return True
-
-        except ValueError:
-            # We're currently rescanning files
-            return False
-
-        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
-        })
-        return False
-
-    def get_num_transfers_in_progress(self):
-
-        now = time.time()
-        count = 0
-
-        for i in self.uploads:
-            if i.conn is not None and i.speed is not None:
-                # Currently transferring
-                count += 1
-
-            elif (now - i.laststatuschange) < 30:
-                # Transfer initiating, changed within last 30 seconds
-
-                if i.req is not None:
-                    count += 1
-
-                elif i.conn is not None and i.speed is None:
-                    count += 1
-
-                elif i.status == "Getting status":
-                    count += 1
-
-        return count
-
-    def allow_new_uploads(self):
-
-        # Limit by upload slots
-        limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
-
-        if limit_upload_slots:
-            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            in_progress_count = self.get_num_transfers_in_progress()
-
-            if in_progress_count >= maxupslots:
-                return False
-
-        # Limit by maximum bandwidth
-        maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
-
-        if maxbandwidth:
-            bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
-
-            if bandwidth_sum >= maxbandwidth:
-                return False
-
-        # No limits
-        return True
-
-    def get_file_size(self, filename):
-
-        try:
-            size = os.path.getsize(filename)
-        except Exception:
-            # file doesn't exist (remote files are always this)
-            size = 0
-
-        return size
-
     def transfer_response(self, msg):
 
         """ Got a response to the file request from the peer."""
@@ -1170,6 +939,26 @@ class Transfers:
             break
 
         self.check_upload_queue()
+
+    def file_error(self, msg):
+        """ Networking thread encountered a local file error """
+
+        for i in self.downloads + self.uploads:
+
+            if i.conn != msg.conn.conn:
+                continue
+
+            self.abort_transfer(i, send_fail_message=False)
+            i.status = "Local file error"
+
+            log.add(_("I/O error: %s"), msg.strerror)
+
+            if i in self.downloads:
+                self.downloadsview.update(i)
+
+            elif i in self.uploads:
+                self.uploadsview.update(i)
+                self.check_upload_queue()
 
     def file_request(self, msg):
         """ Got an incoming file request. Could be an upload request or a
@@ -1362,6 +1151,90 @@ class Transfers:
 
             self.queue.put(slskmessages.ConnClose(msg.conn))
 
+    def upload_denied(self, msg):
+
+        user = None
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                user = i.username
+                break
+
+        if user is None:
+            return
+
+        for i in self.downloads:
+            if i.user != user or i.filename != msg.file:
+                continue
+
+            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
+                    not i.legacy_attempt:
+                """ The peer is possibly using an old client that doesn't support Unicode
+                (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
+
+                log.add_transfer("User %(user)s responded with reason '%(reason)s' for download request %(filename)s. "
+                                 "Attempting to request file as latin-1.", {
+                                     "user": user,
+                                     "reason": msg.reason,
+                                     "filename": i.filename
+                                 })
+
+                self.abort_transfer(i, send_fail_message=False)
+                i.legacy_attempt = True
+                self.get_file(i.user, i.filename, i.path, i)
+                break
+
+            elif i.status not in ("Aborted", "Paused"):
+                if i.status in self.TRANSFER:
+                    self.abort_transfer(i, reason=msg.reason)
+
+                i.status = msg.reason
+                self.downloadsview.update(i)
+
+                log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
+                    "user": user,
+                    "filename": i.filename,
+                    "reason": msg.reason
+                })
+                break
+
+    def upload_failed(self, msg):
+
+        user = None
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                user = i.username
+                break
+
+        if user is None:
+            return
+
+        for i in self.downloads:
+            if i.user != user or i.filename != msg.file:
+                continue
+
+            if i.status in ("Aborted", "Paused", "Local file error", "User logged off"):
+                continue
+
+            if not i.legacy_attempt:
+                """ Attempt to request file name encoded as latin-1 once. """
+
+                self.abort_transfer(i, send_fail_message=False)
+                i.legacy_attempt = True
+                self.get_file(i.user, i.filename, i.path, i)
+                break
+
+            else:
+                """ Already failed once previously, give up """
+
+                i.status = "Remote file error"
+                self.downloadsview.update(i)
+
+                log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
+                    "filename": i.filename,
+                    "user": user,
+                    "reason": "Remote file error"
+                })
+
     def file_download(self, msg):
         """ A file download is in progress"""
 
@@ -1429,6 +1302,510 @@ class Transfers:
                 self.downloadsview.update(i)
 
             break
+
+    def file_upload(self, msg):
+        """ A file upload is in progress """
+
+        needupdate = True
+
+        for i in self.uploads:
+
+            if i.conn != msg.conn:
+                continue
+
+            if i.transfertimer is not None:
+                i.transfertimer.cancel()
+
+            curtime = time.time()
+            if i.starttime is None:
+                i.starttime = curtime
+                i.offset = msg.offset
+
+            lastspeed = None
+            if i.speed is not None:
+                lastspeed = i.speed
+
+            i.currentbytes = msg.offset + msg.sentbytes
+            oldelapsed = i.timeelapsed
+            i.timeelapsed = curtime - i.starttime
+
+            if curtime > i.starttime and \
+                    i.currentbytes > i.lastbytes:
+
+                bytesdifference = (i.currentbytes - i.lastbytes)
+                self.eventprocessor.statistics.append_stat_value("uploaded_size", bytesdifference)
+
+                try:
+                    i.speed = max(0, bytesdifference / (curtime - i.lasttime))
+                except ZeroDivisionError:
+                    i.speed = lastspeed  # too fast!
+
+                if i.speed <= 0.0:
+                    i.speed = None
+
+                if i.speed is None:
+                    i.timeleft = "∞"
+                else:
+                    i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
+
+            i.lastbytes = i.currentbytes
+            i.lasttime = curtime
+
+            if i.size > i.currentbytes:
+                if oldelapsed == i.timeelapsed:
+                    needupdate = False
+                i.status = "Transferring"
+
+            elif i.size is None:
+                # Failed?
+                self.check_upload_queue()
+                sleep(0.01)
+            else:
+                self.upload_finished(i, file=msg.file)
+                needupdate = False
+
+            if needupdate:
+                self.uploadsview.update(i)
+
+            break
+
+    def conn_close(self, conn, addr, user, error):
+        """ The remote user has closed the connection either because
+        he logged off, or because there's a network problem. """
+
+        for i in self.downloads:
+            if i.conn == conn:
+                self._conn_close(conn, addr, i, "download")
+
+        for i in self.uploads:
+            if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
+                continue
+
+            if i.user != user:
+                continue
+
+            self._conn_close(conn, addr, i, "upload")
+
+    def _conn_close(self, conn, addr, i, type):
+
+        self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
+        auto_clear = False
+
+        if i.status != "Finished":
+            if type == "download":
+                if self.user_logged_out(i.user):
+                    i.status = "User logged off"
+                else:
+                    i.status = "Connection closed by peer"
+
+            elif type == "upload":
+                if self.user_logged_out(i.user):
+                    i.status = "User logged off"
+                else:
+                    i.status = "Cancelled"
+
+                    """ Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
+                    intentionally cancelled, the peer should ignore this message. """
+                    self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
+
+                auto_clear = True
+
+        if type == "download":
+            self.downloadsview.update(i)
+
+        elif type == "upload":
+            curtime = time.time()
+            for j in self.uploads:
+                if j.user == i.user:
+                    j.timequeued = curtime
+
+            if auto_clear and self.auto_clear_upload(i):
+                # Upload cleared
+                pass
+            else:
+                self.uploadsview.update(i)
+
+            self.check_upload_queue()
+
+    def place_in_queue_request(self, msg):
+
+        user = None
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                user = i.username
+                break
+
+        if user is None:
+            return
+
+        privileged_user = self.is_privileged(user)
+        place = 0
+
+        if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+            for i in self.uploads:
+                # Ignore non-queued files
+                if i.status != "Queued":
+                    continue
+
+                if not privileged_user or self.is_privileged(i.user):
+                    place += 1
+
+                # Stop counting on the matching file
+                if i.user == user and i.filename == msg.file:
+                    break
+
+        else:
+            # TODO: more accurate calculation, if possible
+            should_count = True
+            queued_users = set()
+
+            for i in self.uploads:
+
+                # Ignore non-queued files
+                if i.status != "Queued":
+                    continue
+
+                if i.user == user:
+                    if not should_count:
+                        continue
+
+                    # Count all transfers for requesting user
+                    place += 1
+
+                    # Stop counting on the matching file
+                    if i.filename == msg.file:
+                        should_count = False
+
+                    continue
+
+                user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
+
+                if not user_uploading and i.user not in queued_users:
+                    # Each unique user in the queue adds one to the placement
+                    queued_users.add(i.user)
+
+                    if not privileged_user or self.is_privileged(i.user):
+                        place += 1
+
+        self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
+
+    def place_in_queue(self, msg):
+        """ The server tells us our place in queue for a particular transfer."""
+
+        username = None
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                username = i.username
+                break
+        else:
+            return
+
+        filename = msg.filename
+
+        for i in self.downloads:
+            if i.user == username and i.filename == filename:
+                i.place = msg.place
+                self.downloadsview.update(i)
+                return
+
+    def upload_queue_notification(self, msg):
+
+        username = None
+
+        for i in self.peerconns:
+            if i.conn is msg.conn.conn:
+                username = i.username
+                break
+
+        if username is None:
+            return
+
+        if self.can_upload(username):
+            log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
+
+        else:
+            self.queue.put(
+                slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
+            )
+            log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
+
+    """ Transfer Actions """
+
+    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
+
+        path = clean_path(path, absolute=True)
+
+        if checkduplicate:
+            for i in self.downloads:
+                if i.user == user and i.filename == filename and i.path == path:
+                    # Don't add duplicate downloads
+                    return
+
+        self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
+
+    def push_file(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
+        if size is None:
+            size = self.get_file_size(realfilename)
+
+        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename, locally_queued)
+
+    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None, locally_queued=False):
+
+        """ Get a single file. path is a local path. if transfer object is
+        not None, update it, otherwise create a new one."""
+
+        if transfer is None:
+            transfer = Transfer(
+                user=user, filename=filename, realfilename=realfilename, path=path,
+                status="Queued", size=size, bitrate=bitrate,
+                length=length
+            )
+
+            if direction == 0:
+                self.downloads.append(transfer)
+            else:
+                self._append_upload(user, filename, transfer)
+        else:
+            transfer.status = "Queued"
+
+        if direction == 1:
+            log.add_transfer(
+                "Initializing upload request for file %(file)s to user %(user)s", {
+                    'file': filename,
+                    'user': user
+                }
+            )
+
+        try:
+            status = self.users[user].status
+        except KeyError:
+            status = None
+
+        shouldupdate = True
+
+        if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
+            # Only filter downloads, never uploads!
+            try:
+                downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
+                if downloadregexp.search(filename) is not None:
+                    log.add_transfer("Filtering: %s", filename)
+                    self.abort_transfer(transfer)
+                    # The string to be displayed on the GUI
+                    transfer.status = "Filtered"
+
+                    shouldupdate = not self.auto_clear_download(transfer)
+            except Exception:
+                pass
+
+        if status is None:
+            self.eventprocessor.watch_user(user)
+
+        if transfer.status != "Filtered":
+            if direction == 0:
+                log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
+                    "filename": filename,
+                    "user": user
+                })
+                self.eventprocessor.send_message_to_peer(user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+                self.eventprocessor.send_message_to_peer(user, slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt))
+
+            elif not locally_queued:
+                log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
+                    "filename": filename,
+                    "request": transfer.req,
+                    "user": user
+                })
+                transfer.req = new_id()
+                realpath = self.eventprocessor.shares.virtual2real(filename)
+                self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
+
+        if shouldupdate:
+            if direction == 0:
+                self.downloadsview.update(transfer)
+            else:
+                self.uploadsview.update(transfer)
+
+    def _append_upload(self, user, filename, transferobj):
+
+        previously_queued = False
+        old_index = 0
+
+        for i in self.uploads:
+            if i.user == user and i.filename == filename:
+                if i.status == "Queued":
+                    # This upload was queued previously
+                    # Use the previous queue position and time
+                    transferobj.place = i.place
+                    transferobj.timequeued = i.timequeued
+                    previously_queued = True
+
+                self.uploads.remove(i)
+                self.uploadsview.remove_specific(i, True)
+                break
+
+            old_index += 1
+
+        if previously_queued:
+            self.uploads.insert(old_index, transferobj)
+        else:
+            self.uploads.append(transferobj)
+
+    def can_upload(self, user):
+
+        transfers = self.eventprocessor.config.sections["transfers"]
+
+        if transfers["remotedownloads"]:
+
+            # Remote Uploads only for users in list
+            if transfers["uploadallowed"] == 2:
+                # Users in userlist
+                if user not in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
+                    # Not a buddy
+                    return False
+
+            if transfers["uploadallowed"] == 0:
+                # No One can sent files to you
+                return False
+
+            if transfers["uploadallowed"] == 1:
+                # Everyone can sent files to you
+                return True
+
+            if transfers["uploadallowed"] == 3:
+                # Trusted Users
+                userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+
+                if user not in userlist:
+                    # Not a buddy
+                    return False
+                if not self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][4]:
+                    # Not Trusted
+                    return False
+
+            return True
+
+        return False
+
+    def user_logged_out(self, user):
+        """ Check if a user who previously queued a file has logged out since """
+
+        try:
+            return (self.users[user].status <= 0)
+
+        except (KeyError, TypeError):
+            return False
+
+    def get_folder_destination(self, user, directory):
+
+        destination = ""
+
+        if user in self.eventprocessor.requested_folders:
+            if directory in self.eventprocessor.requested_folders[user]:
+                destination += self.eventprocessor.requested_folders[user][directory]
+
+        if directory[-1] == '\\':
+            parent = directory.split('\\')[-2]
+        else:
+            parent = directory.split('\\')[-1]
+
+        destination = os.path.join(destination, parent)
+
+        if destination[0] != '/':
+            destination = os.path.join(
+                self.eventprocessor.config.sections["transfers"]["downloaddir"],
+                destination
+            )
+
+        """ Make sure the target folder doesn't exist
+        If it exists, append a number to the folder name """
+
+        orig_destination = destination
+        counter = 1
+
+        while os.path.exists(destination):
+            destination = orig_destination + " (" + str(counter) + ")"
+            counter += 1
+
+        return destination
+
+    def get_total_uploads_allowed(self):
+
+        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
+            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+            return maxupslots
+        else:
+            lstlen = sum(1 for i in self.uploads if i.conn is not None)
+
+            if self.allow_new_uploads():
+                return lstlen + 1
+            else:
+                return lstlen
+
+    def get_time(self, seconds):
+
+        sec = int(seconds % 60)
+        minutes = int(seconds / 60 % 60)
+        hours = int(seconds / 3600 % 24)
+        days = int(seconds / 86400)
+
+        time_string = "%02d:%02d:%02d" % (hours, minutes, sec)
+        if days > 0:
+            time_string = str(days) + "." + time_string
+
+        return time_string
+
+    def get_upload_queue_size(self, username=None):
+
+        if self.is_privileged(username):
+            queue_size = 0
+
+            for i in self.uploads:
+                if i.status == "Queued" and self.is_privileged(i.user):
+                    queue_size += 1
+
+            return queue_size
+
+        return sum(1 for i in self.uploads if i.status == "Queued")
+
+    def get_renamed(self, name):
+        """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
+        prefix from the file's name.
+
+        Checks if a file with the same name already exists, and adds a number
+        to the file name if that's the case. """
+
+        filename, extension = os.path.splitext(name)
+        counter = 1
+
+        while os.path.exists(name):
+            name = filename + " (" + str(counter) + ")" + extension
+            counter += 1
+
+        return name
+
+    def get_num_transfers_in_progress(self):
+
+        now = time.time()
+        count = 0
+
+        for i in self.uploads:
+            if i.conn is not None and i.speed is not None:
+                # Currently transferring
+                count += 1
+
+            elif (now - i.laststatuschange) < 30:
+                # Transfer initiating, changed within last 30 seconds
+
+                if i.req is not None:
+                    count += 1
+
+                elif i.conn is not None and i.speed is None:
+                    count += 1
+
+                elif i.status == "Getting status":
+                    count += 1
+
+        return count
 
     def file_downloaded_actions(self, user, filepath):
 
@@ -1519,7 +1896,7 @@ class Transfers:
         i.timeleft = ""
         i.conn = None
 
-        self.add_to_shared(newname)
+        self.eventprocessor.shares.add_file_to_shared(newname)
         self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
 
         # Attempt to show notification and execute commands
@@ -1545,77 +1922,6 @@ class Transfers:
             },
             show_ui=1
         )
-
-    def add_to_shared(self, name):
-        """ Add a file to the normal shares database """
-
-        self.eventprocessor.shares.add_file_to_shared(name)
-
-    def file_upload(self, msg):
-        """ A file upload is in progress """
-
-        needupdate = True
-
-        for i in self.uploads:
-
-            if i.conn != msg.conn:
-                continue
-
-            if i.transfertimer is not None:
-                i.transfertimer.cancel()
-
-            curtime = time.time()
-            if i.starttime is None:
-                i.starttime = curtime
-                i.offset = msg.offset
-
-            lastspeed = None
-            if i.speed is not None:
-                lastspeed = i.speed
-
-            i.currentbytes = msg.offset + msg.sentbytes
-            oldelapsed = i.timeelapsed
-            i.timeelapsed = curtime - i.starttime
-
-            if curtime > i.starttime and \
-                    i.currentbytes > i.lastbytes:
-
-                bytesdifference = (i.currentbytes - i.lastbytes)
-                self.eventprocessor.statistics.append_stat_value("uploaded_size", bytesdifference)
-
-                try:
-                    i.speed = max(0, bytesdifference / (curtime - i.lasttime))
-                except ZeroDivisionError:
-                    i.speed = lastspeed  # too fast!
-
-                if i.speed <= 0.0:
-                    i.speed = None
-
-                if i.speed is None:
-                    i.timeleft = "∞"
-                else:
-                    i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
-
-            i.lastbytes = i.currentbytes
-            i.lasttime = curtime
-
-            if i.size > i.currentbytes:
-                if oldelapsed == i.timeelapsed:
-                    needupdate = False
-                i.status = "Transferring"
-
-            elif i.size is None:
-                # Failed?
-                self.check_upload_queue()
-                sleep(0.01)
-            else:
-                self.upload_finished(i, file=msg.file)
-                needupdate = False
-
-            if needupdate:
-                self.uploadsview.update(i)
-
-            break
 
     def upload_finished(self, i, file=None):
 
@@ -1674,31 +1980,6 @@ class Transfers:
             return True
 
         return False
-
-    def ban_user(self, user, ban_message=None):
-        """
-        Ban a user, cancel all the user's uploads, send a 'Banned'
-        message via the transfers, and clear the transfers from the
-        uploads list.
-        """
-
-        if ban_message:
-            banmsg = _("Banned (%s)") % ban_message
-        elif self.eventprocessor.config.sections["transfers"]["usecustomban"]:
-            banmsg = _("Banned (%s)") % self.eventprocessor.config.sections["transfers"]["customban"]
-        else:
-            banmsg = _("Banned")
-
-        for upload in self.uploads:
-            if upload.user != user:
-                continue
-
-            self.abort_transfer(upload, reason=banmsg)
-
-        if self.uploadsview is not None:
-            self.uploadsview.clear_by_user(user)
-
-        self.eventprocessor.network_filter.ban_user(user)
 
     def start_check_download_queue_timer(self):
 
@@ -1837,304 +2118,30 @@ class Transfers:
         if start_timer:
             self.start_check_upload_queue_timer()
 
-    def place_in_queue_request(self, msg):
+    def ban_user(self, user, ban_message=None):
+        """
+        Ban a user, cancel all the user's uploads, send a 'Banned'
+        message via the transfers, and clear the transfers from the
+        uploads list.
+        """
 
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
-        privileged_user = self.is_privileged(user)
-        place = 0
-
-        if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
-            for i in self.uploads:
-                # Ignore non-queued files
-                if i.status != "Queued":
-                    continue
-
-                if not privileged_user or self.is_privileged(i.user):
-                    place += 1
-
-                # Stop counting on the matching file
-                if i.user == user and i.filename == msg.file:
-                    break
-
+        if ban_message:
+            banmsg = _("Banned (%s)") % ban_message
+        elif self.eventprocessor.config.sections["transfers"]["usecustomban"]:
+            banmsg = _("Banned (%s)") % self.eventprocessor.config.sections["transfers"]["customban"]
         else:
-            # TODO: more accurate calculation, if possible
-            should_count = True
-            queued_users = set()
+            banmsg = _("Banned")
 
-            for i in self.uploads:
-
-                # Ignore non-queued files
-                if i.status != "Queued":
-                    continue
-
-                if i.user == user:
-                    if not should_count:
-                        continue
-
-                    # Count all transfers for requesting user
-                    place += 1
-
-                    # Stop counting on the matching file
-                    if i.filename == msg.file:
-                        should_count = False
-
-                    continue
-
-                user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
-
-                if not user_uploading and i.user not in queued_users:
-                    # Each unique user in the queue adds one to the placement
-                    queued_users.add(i.user)
-
-                    if not privileged_user or self.is_privileged(i.user):
-                        place += 1
-
-        self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
-
-    def get_time(self, seconds):
-
-        sec = int(seconds % 60)
-        minutes = int(seconds / 60 % 60)
-        hours = int(seconds / 3600 % 24)
-        days = int(seconds / 86400)
-
-        time_string = "%02d:%02d:%02d" % (hours, minutes, sec)
-        if days > 0:
-            time_string = str(days) + "." + time_string
-
-        return time_string
-
-    def get_upload_queue_size(self, username=None):
-
-        if self.is_privileged(username):
-            queue_size = 0
-
-            for i in self.uploads:
-                if i.status == "Queued" and self.is_privileged(i.user):
-                    queue_size += 1
-
-            return queue_size
-
-        return sum(1 for i in self.uploads if i.status == "Queued")
-
-    def get_total_uploads_allowed(self):
-
-        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
-            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            return maxupslots
-        else:
-            lstlen = sum(1 for i in self.uploads if i.conn is not None)
-
-            if self.allow_new_uploads():
-                return lstlen + 1
-            else:
-                return lstlen
-
-    def conn_close(self, conn, addr, user, error):
-        """ The remote user has closed the connection either because
-        he logged off, or because there's a network problem. """
-
-        for i in self.downloads:
-            if i.conn == conn:
-                self._conn_close(conn, addr, i, "download")
-
-        for i in self.uploads:
-            if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
+        for upload in self.uploads:
+            if upload.user != user:
                 continue
 
-            if i.user != user:
-                continue
+            self.abort_transfer(upload, reason=banmsg)
 
-            self._conn_close(conn, addr, i, "upload")
+        if self.uploadsview is not None:
+            self.uploadsview.clear_by_user(user)
 
-    def _conn_close(self, conn, addr, i, type):
-
-        self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
-        auto_clear = False
-
-        if i.status != "Finished":
-            if type == "download":
-                if self.user_logged_out(i.user):
-                    i.status = "User logged off"
-                else:
-                    i.status = "Connection closed by peer"
-
-            elif type == "upload":
-                if self.user_logged_out(i.user):
-                    i.status = "User logged off"
-                else:
-                    i.status = "Cancelled"
-
-                    """ Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
-                    intentionally cancelled, the peer should ignore this message. """
-                    self.eventprocessor.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
-
-                auto_clear = True
-
-        if type == "download":
-            self.downloadsview.update(i)
-
-        elif type == "upload":
-            curtime = time.time()
-            for j in self.uploads:
-                if j.user == i.user:
-                    j.timequeued = curtime
-
-            if auto_clear and self.auto_clear_upload(i):
-                # Upload cleared
-                pass
-            else:
-                self.uploadsview.update(i)
-
-            self.check_upload_queue()
-
-    def get_renamed(self, name):
-        """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
-        prefix from the file's name.
-
-        Checks if a file with the same name already exists, and adds a number
-        to the file name if that's the case. """
-
-        filename, extension = os.path.splitext(name)
-        counter = 1
-
-        while os.path.exists(name):
-            name = filename + " (" + str(counter) + ")" + extension
-            counter += 1
-
-        return name
-
-    def place_in_queue(self, msg):
-        """ The server tells us our place in queue for a particular transfer."""
-
-        username = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                username = i.username
-                break
-        else:
-            return
-
-        filename = msg.filename
-
-        for i in self.downloads:
-            if i.user == username and i.filename == filename:
-                i.place = msg.place
-                self.downloadsview.update(i)
-                return
-
-    def file_error(self, msg):
-        """ Networking thread encountered a local file error """
-
-        for i in self.downloads + self.uploads:
-
-            if i.conn != msg.conn.conn:
-                continue
-
-            self.abort_transfer(i, send_fail_message=False)
-            i.status = "Local file error"
-
-            log.add(_("I/O error: %s"), msg.strerror)
-
-            if i in self.downloads:
-                self.downloadsview.update(i)
-
-            elif i in self.uploads:
-                self.uploadsview.update(i)
-                self.check_upload_queue()
-
-    def folder_contents_response(self, conn, file_list):
-        """ When we got a contents of a folder, get all the files in it, but
-        skip the files in subfolders"""
-
-        username = None
-        for i in self.peerconns:
-            if i.conn is conn:
-                username = i.username
-                break
-
-        if username is None:
-            return
-
-        log.add_transfer("Received response for folder content request from user %s", username)
-
-        for i in file_list:
-            for directory in file_list[i]:
-
-                if os.path.commonprefix([i, directory]) == directory:
-                    files = file_list[i][directory][:]
-
-                    if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
-                        files.sort(key=lambda x: x[1], reverse=True)
-
-                    for file in files:
-                        destination = self.folder_destination(username, directory)
-                        size = file[2]
-                        h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
-
-                        if directory[-1] == '\\':
-                            filename = directory + file[1]
-                        else:
-                            filename = directory + '\\' + file[1]
-
-                        self.get_file(
-                            username,
-                            filename,
-                            destination,
-                            size=size,
-                            bitrate=h_bitrate,
-                            length=h_length,
-                            checkduplicate=True
-                        )
-
-                    log.add_transfer(
-                        "Attempting to download files in folder %(folder)s for user %(user)s. Destination path: %(destination)s", {
-                            "folder": directory,
-                            "user": username,
-                            "destination": destination
-                        }
-                    )
-
-    def folder_destination(self, user, directory):
-
-        destination = ""
-
-        if user in self.eventprocessor.requested_folders:
-            if directory in self.eventprocessor.requested_folders[user]:
-                destination += self.eventprocessor.requested_folders[user][directory]
-
-        if directory[-1] == '\\':
-            parent = directory.split('\\')[-2]
-        else:
-            parent = directory.split('\\')[-1]
-
-        destination = os.path.join(destination, parent)
-
-        if destination[0] != '/':
-            destination = os.path.join(
-                self.eventprocessor.config.sections["transfers"]["downloaddir"],
-                destination
-            )
-
-        """ Make sure the target folder doesn't exist
-        If it exists, append a number to the folder name """
-
-        orig_destination = destination
-        counter = 1
-
-        while os.path.exists(destination):
-            destination = orig_destination + " (" + str(counter) + ")"
-            counter += 1
-
-        return destination
+        self.eventprocessor.network_filter.ban_user(user)
 
     def retry_download(self, transfer):
 
@@ -2173,18 +2180,6 @@ class Transfers:
             return
 
         self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
-
-    def abort_transfers(self):
-        """ Stop all transfers """
-
-        for i in self.downloads + self.uploads:
-            if i.status in ("Aborted", "Paused"):
-                self.abort_transfer(i, send_fail_message=False)
-                i.status = "Paused"
-
-            elif i.status != "Finished":
-                self.abort_transfer(i, send_fail_message=False)
-                i.status = "Old"
 
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=True):
 
@@ -2231,6 +2226,20 @@ class Transfers:
 
         if show_ui:
             log.add(message)
+
+    """ Exit """
+
+    def abort_transfers(self):
+        """ Stop all transfers on disconnect/shutdown """
+
+        for i in self.downloads + self.uploads:
+            if i.status in ("Aborted", "Paused"):
+                self.abort_transfer(i, send_fail_message=False)
+                i.status = "Paused"
+
+            elif i.status != "Finished":
+                self.abort_transfer(i, send_fail_message=False)
+                i.status = "Old"
 
     def get_downloads(self):
         """ Get a list of incomplete and not aborted downloads """
