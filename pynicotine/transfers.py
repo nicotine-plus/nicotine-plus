@@ -339,14 +339,6 @@ class Transfers:
         })
         return False
 
-    def file_is_upload_queued(self, user, filename):
-
-        for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
-                return True
-
-        return False
-
     def get_file_size(self, filename):
 
         try:
@@ -407,6 +399,30 @@ class Transfers:
 
         return numfiles >= filelimit
 
+    def get_num_transfers_in_progress(self):
+
+        now = time.time()
+        count = 0
+
+        for i in self.uploads:
+            if i.conn is not None and i.speed is not None:
+                # Currently transferring
+                count += 1
+
+            elif (now - i.laststatuschange) < 30:
+                # Transfer initiating, changed within last 30 seconds
+
+                if i.req is not None:
+                    count += 1
+
+                elif i.conn is not None and i.speed is None:
+                    count += 1
+
+                elif i.status == "Getting status":
+                    count += 1
+
+        return count
+
     def allow_new_uploads(self):
 
         # Limit by upload slots
@@ -430,6 +446,14 @@ class Transfers:
 
         # No limits
         return True
+
+    def file_is_upload_queued(self, user, filename):
+
+        for i in self.uploads:
+            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
+                return True
+
+        return False
 
     """ Network Events """
 
@@ -871,9 +895,11 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
+                curtime = time.time()
+
                 for j in self.uploads:
                     if j.user == i.user:
-                        j.timequeued = time.time()
+                        j.timequeued = curtime
 
                 if msg.reason == "Complete":
 
@@ -1634,9 +1660,8 @@ class Transfers:
             if i.user == user and i.filename == filename:
                 if i.status == "Queued":
                     # This upload was queued previously
-                    # Use the previous queue position and time
+                    # Use the previous queue position
                     transferobj.place = i.place
-                    transferobj.timequeued = i.timequeued
                     previously_queued = True
 
                 self.uploads.remove(i)
@@ -1782,30 +1807,6 @@ class Transfers:
             counter += 1
 
         return name
-
-    def get_num_transfers_in_progress(self):
-
-        now = time.time()
-        count = 0
-
-        for i in self.uploads:
-            if i.conn is not None and i.speed is not None:
-                # Currently transferring
-                count += 1
-
-            elif (now - i.laststatuschange) < 30:
-                # Transfer initiating, changed within last 30 seconds
-
-                if i.req is not None:
-                    count += 1
-
-                elif i.conn is not None and i.speed is None:
-                    count += 1
-
-                elif i.status == "Getting status":
-                    count += 1
-
-        return count
 
     def file_downloaded_actions(self, user, filepath):
 
