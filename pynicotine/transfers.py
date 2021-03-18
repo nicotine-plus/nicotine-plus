@@ -576,7 +576,7 @@ class Transfers:
         for i in self.downloads:
             if i.filename == msg.file and user == i.user:
 
-                if i.status in ("Aborted", "Paused"):
+                if i.status in ("Finished", "Aborted", "Paused"):
                     return slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
 
                 # Remote peer is signalling a tranfer is ready, attempting to download it
