@@ -576,7 +576,12 @@ class Transfers:
         for i in self.downloads:
             if i.filename == msg.file and user == i.user:
 
-                if i.status in ("Finished", "Aborted", "Paused"):
+                if i.status == "Finished":
+                    # This download already finished
+                    return slskmessages.TransferResponse(None, 0, reason="Complete", req=msg.req)
+
+                if i.status in ("Aborted", "Paused"):
+                    # We aborted this download
                     return slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
 
                 # Remote peer is signalling a tranfer is ready, attempting to download it
@@ -2149,6 +2154,9 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
+        if transfer.status in ("Finished", "Old"):
+            return
+
         user = transfer.user
 
         for i in self.uploads:
@@ -2173,6 +2181,7 @@ class Transfers:
             if i.status in ("Aborted", "Paused"):
                 self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Paused"
+
             elif i.status != "Finished":
                 self.abort_transfer(i, send_fail_message=send_fail_message)
                 i.status = "Old"
