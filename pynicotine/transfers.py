@@ -399,50 +399,56 @@ class Transfers:
 
         return numfiles >= filelimit
 
-    def get_num_transfers_in_progress(self):
+    def slot_limit_reached(self):
 
+        limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
+
+        if not limit_upload_slots:
+            return False
+
+        maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+        in_progress_count = 0
         now = time.time()
-        count = 0
 
         for i in self.uploads:
             if i.conn is not None and i.speed is not None:
                 # Currently transferring
-                count += 1
+                in_progress_count += 1
 
             elif (now - i.laststatuschange) < 30:
                 # Transfer initiating, changed within last 30 seconds
 
                 if i.req is not None:
-                    count += 1
+                    in_progress_count += 1
 
                 elif i.conn is not None and i.speed is None:
-                    count += 1
+                    in_progress_count += 1
 
                 elif i.status == "Getting status":
-                    count += 1
+                    in_progress_count += 1
 
-        return count
+        return in_progress_count >= maxupslots
+
+    def bandwidth_limit_reached(self):
+
+        bandwidthlimit = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
+
+        if not bandwidthlimit:
+            return False
+
+        bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
+
+        return bandwidth_sum >= bandwidthlimit
 
     def allow_new_uploads(self):
 
         # Limit by upload slots
-        limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
-
-        if limit_upload_slots:
-            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
-            in_progress_count = self.get_num_transfers_in_progress()
-
-            if in_progress_count >= maxupslots:
-                return False
+        if self.slot_limit_reached():
+            return False
 
         # Limit by maximum bandwidth
-        maxbandwidth = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
-
-        if maxbandwidth:
-            bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
-
-            if bandwidth_sum >= maxbandwidth:
-                return False
+        if self.bandwidth_limit_reached():
+            return False
 
         # No limits
         return True
@@ -1660,8 +1666,9 @@ class Transfers:
             if i.user == user and i.filename == filename:
                 if i.status == "Queued":
                     # This upload was queued previously
-                    # Use the previous queue position
+                    # Use the previous queue position and time
                     transferobj.place = i.place
+                    transferobj.timequeued = i.timequeued
                     previously_queued = True
 
                 self.uploads.remove(i)
