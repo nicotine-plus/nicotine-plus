@@ -333,7 +333,7 @@ class Interests:
             self.recommendation_users[user] = iterator
 
             # Request user status, speed and number of shared files
-            self.np.queue.put(slskmessages.AddUser(user))
+            self.np.watch_user(user, force_update=True)
 
     def get_user_status(self, msg):
         if msg.user not in self.recommendation_users:

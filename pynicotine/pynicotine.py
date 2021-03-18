@@ -949,15 +949,18 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.transfer_timeout(msg)
 
-    def watch_user(self, user):
+    def watch_user(self, user, force_update=False):
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
-        if user not in self.watchedusers:
-            self.queue.put(slskmessages.AddUser(user))
+        if not force_update and user in self.watchedusers:
+            # Already being watched, and we don't need to re-fetch the status/stats
+            return
 
-            # Get privilege status
-            self.queue.put(slskmessages.GetUserStatus(user))
+        self.queue.put(slskmessages.AddUser(user))
+
+        # Get privilege status
+        self.queue.put(slskmessages.GetUserStatus(user))
 
     def stop_timers(self):
 
