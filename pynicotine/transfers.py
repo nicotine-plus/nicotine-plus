@@ -1219,9 +1219,9 @@ class Transfers:
 
             except OSError as strerror:
                 log.add(_("OS error: %s"), strerror)
+
+                self.abort_transfer(i, send_fail_message=False)
                 i.status = "Download directory error"
-                i.conn = None
-                self.queue.put(slskmessages.ConnClose(msg.conn))
 
                 if self.notifications:
                     self.notifications.new_notification(_("OS error: %s") % strerror, title=_("Folder download error"))
@@ -1252,11 +1252,8 @@ class Transfers:
                 except IOError as strerror:
                     log.add(_("Download I/O error: %s"), strerror)
 
+                    self.abort_transfer(i, send_fail_message=False)
                     i.status = "Local file error"
-                    self.close_file(f, i)
-
-                    i.conn = None
-                    self.queue.put(slskmessages.ConnClose(msg.conn))
 
                 else:
                     i.currentbytes = size
@@ -1315,11 +1312,8 @@ class Transfers:
             except IOError as strerror:
                 log.add(_("Upload I/O error: %s"), strerror)
 
+                self.abort_transfer(i, send_fail_message=False)
                 i.status = "Local file error"
-                self.close_file(f, i)
-
-                i.conn = None
-                self.queue.put(slskmessages.ConnClose(msg.conn))
 
             else:
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
@@ -1423,11 +1417,8 @@ class Transfers:
             except IOError as strerror:
                 log.add(_("Download I/O error: %s"), strerror)
 
+                self.abort_transfer(i, send_fail_message=False)
                 i.status = "Local file error"
-                self.close_file(msg.file, i)
-
-                i.conn = None
-                self.queue.put(slskmessages.ConnClose(msg.conn))
 
             if needupdate:
                 self.downloadsview.update(i)
@@ -2036,17 +2027,16 @@ class Transfers:
                 return
 
     def file_error(self, msg):
-        """ Networking thread encountered a local file error"""
+        """ Networking thread encountered a local file error """
 
         for i in self.downloads + self.uploads:
 
             if i.conn != msg.conn.conn:
                 continue
 
+            self.abort_transfer(i, send_fail_message=False)
             i.status = "Local file error"
-            self.close_file(msg.file, i)
 
-            i.conn = None
             log.add(_("I/O error: %s"), msg.strerror)
 
             if i in self.downloads:
