@@ -46,10 +46,6 @@ class InternalMessage:
     pass
 
 
-class ConnectToServer(InternalMessage):
-    pass
-
-
 class Conn(InternalMessage):
 
     __slots__ = "conn", "addr", "init"

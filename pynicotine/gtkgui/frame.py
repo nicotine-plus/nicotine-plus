@@ -627,6 +627,16 @@ class NicotineFrame:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
+    """ General """
+
+    def show_info_message(self, title, message):
+
+        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=title)
+        dialog.set_transient_for(self.application.get_active_window())
+        dialog.format_secondary_text(message)
+        dialog.run()
+        dialog.destroy()
+
     """ Connection """
 
     def on_network_event(self, msgs):
@@ -2060,12 +2070,6 @@ class NicotineFrame:
 
     """ Various """
 
-    def popup_message(self, popup):
-        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=popup.title)
-        dialog.format_secondary_text(popup.message)
-        dialog.connect('response', lambda dialog, response: dialog.destroy())
-        dialog.show()
-
     def focus_combobox(self, button):
 
         # We have the button of a combobox, find the entry
@@ -2472,13 +2476,8 @@ class NicotineFrame:
             self.on_quit()
             raise value
 
-        if hasattr(self, "MainWindow"):
-            parent = self.MainWindow
-        else:
-            parent = None
-
         option_dialog(
-            parent=parent,
+            parent=self.application.get_active_window(),
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. Please copy the following error and include it in a bug report:") +
             "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),

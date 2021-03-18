@@ -119,13 +119,16 @@ class NetworkEventProcessor:
             self.config = Config(config, data_dir)
 
         except Exception:
-            import shutil
             corruptfile = ".".join([config, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
+
+            import shutil
             shutil.move(config, corruptfile)
-            short = _("Your config file is corrupt")
-            long = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
+
+            short_message = _("Your config file is corrupt")
+            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
+            self.ui_callback.show_info_message(short_message, long_message)
+
             self.config = Config(config, data_dir)
-            self.network_callback([slskmessages.PopupMessage(short, long)])
 
         self.bindip = bindip
         self.port = port
@@ -184,7 +187,6 @@ class NetworkEventProcessor:
 
         # Callback handlers for messages
         self.events = {
-            slskmessages.ConnectToServer: self.connect_to_server,
             slskmessages.ConnectError: self.connect_error,
             slskmessages.IncPort: self.inc_port,
             slskmessages.ServerConn: self.server_conn,
@@ -940,7 +942,7 @@ class NetworkEventProcessor:
 
     def server_timeout(self):
         if not self.config.need_config():
-            self.network_callback([slskmessages.ConnectToServer()])
+            self.ui_callback.on_connect()
 
     def transfer_timeout(self, msg):
 
@@ -1074,7 +1076,7 @@ class NetworkEventProcessor:
 
     def popup_message(self, msg):
         self.set_status(_(msg.title))
-        self.ui_callback.popup_message(msg)
+        self.ui_callback.show_info_message(msg.title, msg.message)
 
     """
     Incoming Server Messages
@@ -1330,7 +1332,7 @@ class NetworkEventProcessor:
     def admin_message(self, msg):
         """ Server code: 66 """
 
-        log.add("%s", (msg.msg))
+        self.ui_callback.show_info_message(_("Server Message"), msg.msg)
 
     def tunneled_message(self, msg):
         """ Server code: 68 """
@@ -1535,7 +1537,8 @@ class NetworkEventProcessor:
         password = msg.password
         self.config.sections["server"]["passw"] = password
         self.config.write_configuration()
-        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), "Password is %s" % password)])
+
+        self.ui_callback.show_info_message(_("Your password has been changed"), _("Password is %s") % password)
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """

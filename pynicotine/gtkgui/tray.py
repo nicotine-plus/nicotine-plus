@@ -113,7 +113,7 @@ class Tray:
 
         users.sort()
         user = combo_box_dialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Start Messaging"),
             message=_('Enter the User who you wish to send a private message:'),
             droplist=users
@@ -134,7 +134,7 @@ class Tray:
         users.sort()
 
         user = combo_box_dialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Get User Info"),
             message=_('Enter the User whose User Info you wish to receive:'),
             droplist=users
@@ -152,7 +152,7 @@ class Tray:
         users.sort()
 
         user = combo_box_dialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Get A User's IP"),
             message=_('Enter the User whose IP Address you wish to receive:'),
             droplist=users
@@ -171,7 +171,7 @@ class Tray:
         users.sort()
 
         user = combo_box_dialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Get A User's Shares List"),
             message=_('Enter the User whose Shares List you wish to receive:'),
             droplist=users
