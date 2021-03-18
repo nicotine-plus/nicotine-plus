@@ -133,7 +133,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 66   | [Global/Admin Message](#server-code-66)           |            |
 | 67   | [Global User List](#server-code-67)               | Deprecated |
 | 68   | [Tunneled Message](#server-code-68)               | Deprecated |
-| 69   | [Privileged Users](#server-code-69)               | Deprecated |
+| 69   | [Privileged Users](#server-code-69)               |            |
 | 71   | [Have No Parents](#server-code-71)                |            |
 | 73   | [Parent's IP](#server-code-73)                    |            |
 | 83   | [Parent Min Speed](#server-code-83)               |            |
@@ -1248,8 +1248,6 @@ Museekd: SPrivilegedUsers
 Nicotine: PrivilegedUsers
 
 #### Description
-
-**DEPRECATED, use AddUser instead. The server sends a GetUserStatus message with a privileged flag if the specified user is privileged.**
 
 The server sends us a list of privileged users, a.k.a. users who have donated.
 

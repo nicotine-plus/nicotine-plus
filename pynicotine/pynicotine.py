@@ -236,7 +236,7 @@ class NetworkEventProcessor:
             slskmessages.LeaveRoom: self.leave_room,
             slskmessages.GlobalUserList: self.dummy_message,
             slskmessages.AddUser: self.add_user,
-            slskmessages.PrivilegedUsers: self.dummy_message,
+            slskmessages.PrivilegedUsers: self.privileged_users,
             slskmessages.AddToPrivileged: self.add_to_privileged,
             slskmessages.CheckPrivileges: self.check_privileges,
             slskmessages.ServerPing: self.dummy_message,
@@ -1335,6 +1335,15 @@ class NetworkEventProcessor:
             self.network_callback([peermsg])
         else:
             log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
+
+    def privileged_users(self, msg):
+        """ Server code: 69 """
+
+        log.add_msg_contents(msg)
+
+        if self.transfers is not None:
+            self.transfers.set_privileged_users(msg.users)
+            log.add(_("%i privileged users"), (len(msg.users)))
 
     def add_to_privileged(self, msg):
         """ Server code: 91 """

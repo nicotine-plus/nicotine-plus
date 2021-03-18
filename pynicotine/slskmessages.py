@@ -1180,8 +1180,6 @@ class PrivilegedUsers(ServerMessage):
     """ Server code: 69 """
     """ The server sends us a list of privileged users, a.k.a. users who
     have donated. """
-    """ DEPRECATED, use AddUser instead. The server sends a GetUserStatus
-    message with a privileged flag if the specified user is privileged."""
 
     def parse_network_message(self, message):
         try:
