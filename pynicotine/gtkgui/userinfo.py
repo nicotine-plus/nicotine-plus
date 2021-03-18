@@ -169,8 +169,7 @@ class UserTabs(IconNotebook):
 
         for user in self.users:
             # Get notified of user status
-            if user not in self.frame.np.watchedusers:
-                self.frame.np.queue.put(slskmessages.AddUser(user))
+            self.frame.np.watch_user(user)
 
     def conn_close(self):
 

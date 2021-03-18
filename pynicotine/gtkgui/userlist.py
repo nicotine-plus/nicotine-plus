@@ -446,6 +446,8 @@ class UserList:
         )
 
         self.save_user_list()
+
+        # Request user status, speed and number of shared files
         self.frame.np.queue.put(slskmessages.AddUser(user))
 
         # Request user's IP address, so we can get the country

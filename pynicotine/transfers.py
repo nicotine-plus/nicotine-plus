@@ -170,9 +170,8 @@ class Transfers:
             )
             userstatus.add(i[0])
 
-        for i in userstatus:
-            if i not in self.eventprocessor.watchedusers:
-                self.queue.put(slskmessages.AddUser(i))
+        for user in userstatus:
+            self.eventprocessor.watch_user(user)
 
         self.users = users
         self.ui_callback = ui_callback
@@ -402,8 +401,7 @@ class Transfers:
                 pass
 
         if status is None:
-            if user not in self.eventprocessor.watchedusers:
-                self.queue.put(slskmessages.AddUser(user))
+            self.eventprocessor.watch_user(user)
 
         if transfer.status != "Filtered":
             if direction == 0:
@@ -503,8 +501,7 @@ class Transfers:
         i.req = None
         self.downloadsview.update(i)
 
-        if i.user not in self.eventprocessor.watchedusers:
-            self.queue.put(slskmessages.AddUser(i.user))
+        self.eventprocessor.watch_user(i.user)
 
     def _get_cant_connect_upload(self, i):
 
@@ -518,9 +515,7 @@ class Transfers:
 
         self.uploadsview.update(i)
 
-        if i.user not in self.eventprocessor.watchedusers:
-            self.queue.put(slskmessages.AddUser(i.user))
-
+        self.eventprocessor.watch_user(i.user)
         self.check_upload_queue()
 
     def transfer_request(self, msg):
@@ -625,8 +620,7 @@ class Transfers:
             )
             self.downloads.append(transfer)
 
-            if user not in self.eventprocessor.watchedusers:
-                self.queue.put(slskmessages.AddUser(user))
+            self.eventprocessor.watch_user(user)
 
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
             self.downloadsview.update(transfer)
@@ -1154,8 +1148,7 @@ class Transfers:
             i.status = "Cannot connect"
             i.req = None
 
-            if i.user not in self.eventprocessor.watchedusers:
-                self.queue.put(slskmessages.AddUser(i.user))
+            self.eventprocessor.watch_user(i.user)
 
             if i in self.downloads:
                 self.downloadsview.update(i)

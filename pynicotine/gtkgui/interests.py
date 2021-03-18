@@ -331,6 +331,8 @@ class Interests:
         for user in msg.users:
             iterator = self.recommendation_users_model.append([self.frame.images["offline"], user, "0", "0", 0, 0, 0])
             self.recommendation_users[user] = iterator
+
+            # Request user status, speed and number of shared files
             self.np.queue.put(slskmessages.AddUser(user))
 
     def get_user_status(self, msg):

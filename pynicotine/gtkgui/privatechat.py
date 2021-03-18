@@ -164,8 +164,7 @@ class PrivateChats(IconNotebook):
                 self.frame.np.config.sections["privatechat"]["users"].append(user)
 
             # Get notified of user status
-            if user not in self.frame.np.watchedusers:
-                self.frame.np.queue.put(slskmessages.AddUser(user))
+            self.frame.np.watch_user(user)
 
             self.append_page(tab.Main, user, tab.on_close, status=status)
 
@@ -306,8 +305,7 @@ class PrivateChats(IconNotebook):
             self.users[user].login()
 
             # Get notified of user status
-            if user not in self.frame.np.watchedusers:
-                self.frame.np.queue.put(slskmessages.AddUser(user))
+            self.frame.np.watch_user(user)
 
         if not self.frame.np.config.sections["privatechat"]["store"]:
             return

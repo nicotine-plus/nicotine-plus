@@ -62,8 +62,7 @@ class UserBrowse:
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         # Monitor user online status
-        if user not in self.frame.np.watchedusers:
-            self.frame.np.queue.put(slskmessages.AddUser(user))
+        self.frame.np.watch_user(user)
 
         self.user = user
         self.conn = None

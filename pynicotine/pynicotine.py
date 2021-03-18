@@ -949,6 +949,16 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.transfer_timeout(msg)
 
+    def watch_user(self, user):
+        """ Tell the server we want to be notified of status/stat updates
+        for a user """
+
+        if user not in self.watchedusers:
+            self.queue.put(slskmessages.AddUser(user))
+
+            # Get privilege status
+            self.queue.put(slskmessages.GetUserStatus(user))
+
     def stop_timers(self):
 
         for i in self.peerconns:
@@ -1074,7 +1084,7 @@ class NetworkEventProcessor:
 
         if msg.success:
             self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
-            self.queue.put(slskmessages.AddUser(self.config.sections["server"]["login"]))
+            self.watch_user(self.config.sections["server"]["login"])
 
             self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
@@ -1086,8 +1096,7 @@ class NetworkEventProcessor:
 
             for i in self.config.sections["server"]["userlist"]:
                 user = i[0]
-                if user not in self.watchedusers:
-                    self.queue.put(slskmessages.AddUser(user))
+                self.watch_user(user)
 
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 
@@ -1133,8 +1142,6 @@ class NetworkEventProcessor:
         if msg.userexists and msg.status is None:
             # Legacy support (Soulfind server)
             self.queue.put(slskmessages.GetUserStatus(msg.user))
-        else:
-            self.get_user_status(msg, log_contents=False)
 
         if msg.files is not None:
             self.get_user_stats(msg, log_contents=False)
