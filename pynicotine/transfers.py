@@ -401,11 +401,6 @@ class Transfers:
 
     def slot_limit_reached(self):
 
-        limit_upload_slots = self.eventprocessor.config.sections["transfers"]["useupslots"]
-
-        if not limit_upload_slots:
-            return False
-
         maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
         in_progress_count = 0
         now = time.time()
@@ -442,13 +437,15 @@ class Transfers:
 
     def allow_new_uploads(self):
 
-        # Limit by upload slots
-        if self.slot_limit_reached():
-            return False
+        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
+            # Limit by upload slots
+            if self.slot_limit_reached():
+                return False
 
-        # Limit by maximum bandwidth
-        if self.bandwidth_limit_reached():
-            return False
+        else:
+            # Limit by maximum bandwidth
+            if self.bandwidth_limit_reached():
+                return False
 
         # No limits
         return True
