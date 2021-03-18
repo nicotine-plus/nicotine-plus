@@ -1308,16 +1308,12 @@ class Search:
 
         self.on_refilter(widget)
 
-        self.ResultsList.set_show_expanders(widget.get_active())
+        active = widget.get_active()
 
-        self.frame.np.config.sections["searches"]["group_searches"] = widget.get_active()
-
-        if widget.get_active():
-            self.cols["id"].set_visible(False)
-            self.ExpandButton.show()
-        else:
-            self.cols["id"].set_visible(True)
-            self.ExpandButton.hide()
+        self.ResultsList.set_show_expanders(active)
+        self.frame.np.config.sections["searches"]["group_searches"] = active
+        self.cols["id"].set_visible(not active)
+        self.ExpandButton.set_visible(active)
 
     def on_toggle_expand_all(self, widget):
 

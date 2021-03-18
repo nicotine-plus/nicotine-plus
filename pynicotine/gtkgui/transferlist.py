@@ -646,7 +646,7 @@ class TransferList:
     def on_expand_tree(self, widget):
 
         expand_button_icon = self.frame.__dict__["Expand%ssImage" % self.type.title()]
-        expanded = self.expand_button.get_active()
+        expanded = widget.get_active()
 
         if expanded:
             self.widget.expand_all()
@@ -660,16 +660,13 @@ class TransferList:
 
     def on_toggle_tree(self, widget):
 
-        pos = self.group_dropdown.get_active()
-        self.frame.np.config.sections["transfers"]["group%ss" % self.type] = pos
+        active = widget.get_active()
 
-        self.tree_users = self.group_dropdown.get_active_id()
+        self.frame.np.config.sections["transfers"]["group%ss" % self.type] = active
+        self.widget.set_show_expanders(active)
+        self.expand_button.set_visible(active)
 
-        if self.tree_users == "ungrouped":
-            self.expand_button.hide()
-        else:
-            self.expand_button.show()
-
+        self.tree_users = widget.get_active_id()
         self.rebuild_transfers()
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
