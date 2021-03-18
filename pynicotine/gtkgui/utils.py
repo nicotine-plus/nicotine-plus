@@ -1339,8 +1339,8 @@ class PopupMenu(Gtk.Menu):
         self.items[_("_Add User To List")].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
         self.items[_("_Ban User")].set_active(self.frame.np.network_filter.is_user_banned(self.user))
         self.items[_("_Ignore User")].set_active(self.frame.np.network_filter.is_user_ignored(self.user))
-        self.items[_("B_lock User's IP Address")].set_active(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user))
-        self.items[_("Ignore User's IP Address")].set_active(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user))
+        self.items[_("B_lock User's IP Address")].set_active(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False)
+        self.items[_("Ignore User's IP Address")].set_active(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user) or False)
 
         self.editing = False
 
