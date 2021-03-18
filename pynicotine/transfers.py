@@ -2174,16 +2174,16 @@ class Transfers:
 
         self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
 
-    def abort_transfers(self, send_fail_message=True):
+    def abort_transfers(self):
         """ Stop all transfers """
 
         for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
-                self.abort_transfer(i, send_fail_message=send_fail_message)
+                self.abort_transfer(i, send_fail_message=False)
                 i.status = "Paused"
 
             elif i.status != "Finished":
-                self.abort_transfer(i, send_fail_message=send_fail_message)
+                self.abort_transfer(i, send_fail_message=False)
                 i.status = "Old"
 
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=True):
@@ -2256,7 +2256,7 @@ class Transfers:
         if self.upload_queue_timer is not None:
             self.upload_queue_timer.cancel()
 
-        self.abort_transfers(send_fail_message=False)
+        self.abort_transfers()
         self.save_downloads()
 
 

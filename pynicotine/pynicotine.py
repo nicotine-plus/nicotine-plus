@@ -973,9 +973,6 @@ class NetworkEventProcessor:
         if self.servertimer is not None:
             self.servertimer.cancel()
 
-        if self.transfers is not None:
-            self.transfers.abort_transfers()
-
     def connect_to_server(self, msg):
         log.add_msg_contents(msg)
         self.ui_callback.on_connect()
