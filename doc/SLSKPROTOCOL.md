@@ -133,7 +133,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 66   | [Global/Admin Message](#server-code-66)           |            |
 | 67   | [Global User List](#server-code-67)               | Deprecated |
 | 68   | [Tunneled Message](#server-code-68)               | Deprecated |
-| 69   | [Privileged Users](#server-code-69)               |            |
+| 69   | [Privileged Users](#server-code-69)               | Deprecated |
 | 71   | [Have No Parents](#server-code-71)                |            |
 | 73   | [Parent's IP](#server-code-73)                    |            |
 | 83   | [Parent Min Speed](#server-code-83)               |            |
@@ -142,7 +142,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 87   | [Search Inactivity Timeout](#server-code-87)      | Deprecated |
 | 88   | [Minimum Parents In Cache](#server-code-88)       | Deprecated |
 | 90   | [Distributed Alive Interval](#server-code-90)     | Deprecated |
-| 91   | [Add Privileged User](#server-code-91)            |            |
+| 91   | [Add Privileged User](#server-code-91)            | Deprecated |
 | 92   | [Check Privileges](#server-code-92)               |            |
 | 93   | [Search Request](#server-code-93)                 |            |
 | 100  | [Accept Children](#server-code-100)               |            |
@@ -160,10 +160,10 @@ and callbacks for the messages are set in pynicotine.py.
 | 118  | [Hated Interest Remove](#server-code-118)         |            |
 | 120  | [Room Search](#server-code-120)                   |            |
 | 121  | [Send Upload Speed](#server-code-121)             |            |
-| 122  | [User Privileges](#server-code-122)               |            |
+| 122  | [User Privileges](#server-code-122)               | Deprecated |
 | 123  | [Give Privileges](#server-code-123)               |            |
-| 124  | [Notify Privileges](#server-code-124)             |            |
-| 125  | [Acknowledge Notify Privileges](#server-code-125) |            |
+| 124  | [Notify Privileges](#server-code-124)             | Deprecated |
+| 125  | [Acknowledge Notify Privileges](#server-code-125) | Deprecated |
 | 126  | [Branch Level](#server-code-126)                  |            |
 | 127  | [Branch Root](#server-code-127)                   |            |
 | 129  | [Child Depth](#server-code-129)                   |            |
@@ -546,16 +546,13 @@ Order](#peer-connection-message-order)
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>username</ins>
-    3.  **string** <ins>type</ins> *Connection Type
-        (P, F or D)*
+    3.  **string** <ins>type</ins> *Connection Type (P, F or D)*
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **string** <ins>type</ins> *Connection Type
-        (P, F or D)*
+    2.  **string** <ins>type</ins> *Connection Type (P, F or D)*
     3.  **ip** <ins>ip</ins>
     4.  **uint32** <ins>port</ins>
-    5.  **uint32** <ins>token</ins> *Use this token
-        for [Pierce Firewall](#peer-code-0)*
+    5.  **uint32** <ins>token</ins> *Use this token for [Pierce Firewall](#peer-code-0)*
     6.  **bool** <ins>privileged</ins>
     7.  **bool** <ins>use obfuscation</ins>
     8.  **uint32** <ins>obfuscated port</ins>
@@ -1252,6 +1249,8 @@ Nicotine: PrivilegedUsers
 
 #### Description
 
+**DEPRECATED, use AddUser instead. The server sends a GetUserStatus message with a privileged flag if the specified user is privileged.**
+
 The server sends us a list of privileged users, a.k.a. users who have donated.
 
 #### Data Order
@@ -1438,6 +1437,8 @@ Museekd: SAddPrivileged
 Nicotine: AddToPrivileged
 
 #### Description
+
+**DEPRECATED**
 
 The server sends us the username of a new privileged user, which we add to our list of global privileged users.
 
@@ -1837,6 +1838,8 @@ Nicotine: UserPrivileged
 
 #### Description
 
+**DEPRECATED**
+
 We ask the server whether a user is privileged or not.
 
 #### Data Order
@@ -1875,12 +1878,12 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 #### Function Names
 
-Museekd: SNotifyPrivileges
+Museekd: SNotifyPrivileges  
 Nicotine: NotifyPrivileges
 
 #### Description
 
-The server sends us a notification about our privileges.
+**DEPRECATED**
 
 #### Data Order
 
@@ -1897,10 +1900,12 @@ The server sends us a notification about our privileges.
 
 #### Function Names
 
-Museekd: SAckNotifyPrivileges
+Museekd: SAckNotifyPrivileges  
 Nicotine: AckNotifyPrivileges
 
 #### Description
+
+**DEPRECATED**
 
 #### Data Order
 

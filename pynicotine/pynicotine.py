@@ -236,7 +236,7 @@ class NetworkEventProcessor:
             slskmessages.LeaveRoom: self.leave_room,
             slskmessages.GlobalUserList: self.dummy_message,
             slskmessages.AddUser: self.add_user,
-            slskmessages.PrivilegedUsers: self.privileged_users,
+            slskmessages.PrivilegedUsers: self.dummy_message,
             slskmessages.AddToPrivileged: self.add_to_privileged,
             slskmessages.CheckPrivileges: self.check_privileges,
             slskmessages.ServerPing: self.dummy_message,
@@ -282,9 +282,9 @@ class NetworkEventProcessor:
             slskmessages.RoomTickerState: self.room_ticker_state,
             slskmessages.RoomTickerAdd: self.room_ticker_add,
             slskmessages.RoomTickerRemove: self.room_ticker_remove,
-            slskmessages.UserPrivileged: self.user_privileged,
-            slskmessages.AckNotifyPrivileges: self.ack_notify_privileges,
-            slskmessages.NotifyPrivileges: self.notify_privileges,
+            slskmessages.UserPrivileged: self.dummy_message,
+            slskmessages.AckNotifyPrivileges: self.dummy_message,
+            slskmessages.NotifyPrivileges: self.dummy_message,
             slskmessages.PrivateRoomUsers: self.private_room_users,
             slskmessages.PrivateRoomOwned: self.private_room_owned,
             slskmessages.PrivateRoomAddUser: self.private_room_add_user,
@@ -1157,10 +1157,12 @@ class NetworkEventProcessor:
         else:
             self.users[msg.user] = UserAddr(status=msg.status)
 
-        if msg.privileged is not None:
+        if self.transfers is not None:
             if msg.privileged == 1:
-                if self.transfers is not None:
-                    self.transfers.add_to_privileged(msg.user)
+                self.transfers.add_to_privileged(msg.user)
+
+            elif msg.privileged == 0:
+                self.transfers.remove_from_privileged(msg.user)
 
         if self.interests is not None:
             self.interests.get_user_status(msg)
@@ -1334,15 +1336,6 @@ class NetworkEventProcessor:
         else:
             log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
 
-    def privileged_users(self, msg):
-        """ Server code: 69 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.set_privileged_users(msg.users)
-            log.add(_("%i privileged users"), (len(msg.users)))
-
     def add_to_privileged(self, msg):
         """ Server code: 91 """
 
@@ -1440,32 +1433,6 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             self.chatrooms.ticker_remove(msg)
-
-    def user_privileged(self, msg):
-        """ Server code: 122 """
-
-        log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            if msg.privileged is True:
-                self.transfers.add_to_privileged(msg.user)
-
-    def notify_privileges(self, msg):
-        """ Server code: 124 """
-
-        log.add_msg_contents(msg)
-
-        if msg.token is not None:
-            pass
-
-    def ack_notify_privileges(self, msg):
-        """ Server code: 125 """
-
-        log.add_msg_contents(msg)
-
-        if msg.token is not None:
-            # Until I know the syntax, sending this message is probably a bad idea
-            self.queue.put(slskmessages.AckNotifyPrivileges(msg.token))
 
     def branch_level(self, msg):
         """ Server code: 126 """

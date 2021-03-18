@@ -256,13 +256,12 @@ class Transfers:
         self.downloadsview = downloads
         self.uploadsview = uploads
 
-    def set_privileged_users(self, list):
-        for i in list:
-            self.add_to_privileged(i)
-
     def add_to_privileged(self, user):
-
         self.privilegedusers.add(user)
+
+    def remove_from_privileged(self, user):
+        if user in self.privilegedusers:
+            self.privilegedusers.remove(user)
 
     def is_privileged(self, user):
 

@@ -471,6 +471,7 @@ class GetUserStatus(ServerMessage):
         pos, self.user = self.get_object(message, str)
         pos, self.status = self.get_object(message, int, pos)
 
+        # Soulfind support
         if len(message[pos:]) > 0:
             pos, self.privileged = pos + 1, message[pos]
 
@@ -639,6 +640,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.port = self.get_object(message, int, pos, 1)
         pos, self.token = self.get_object(message, int, pos)
 
+        # Soulfind support
         if len(message[pos:]) > 0:
             pos, self.privileged = pos + 1, message[pos]
 
@@ -1178,6 +1180,8 @@ class PrivilegedUsers(ServerMessage):
     """ Server code: 69 """
     """ The server sends us a list of privileged users, a.k.a. users who
     have donated. """
+    """ DEPRECATED, use AddUser instead. The server sends a GetUserStatus
+    message with a privileged flag if the specified user is privileged."""
 
     def parse_network_message(self, message):
         try:
@@ -1271,6 +1275,7 @@ class AddToPrivileged(ServerMessage):
     """ Server code: 91 """
     """ The server sends us the username of a new privileged user, which we
     add to our list of global privileged users. """
+    """ DEPRECATED """
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
@@ -1530,6 +1535,7 @@ class SendUploadSpeed(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Server code: 122 """
     """ We ask the server whether a user is privileged or not. """
+    """ DEPRECATED """
 
     def __init__(self, user=None):
         self.user = user
@@ -1562,7 +1568,7 @@ class GivePrivileges(ServerMessage):
 
 class NotifyPrivileges(ServerMessage):
     """ Server code: 124 """
-    """ Server tells us something about privileges. """
+    """ DEPRECATED """
 
     def __init__(self, token=None, user=None):
         self.token = token
@@ -1582,6 +1588,7 @@ class NotifyPrivileges(ServerMessage):
 
 class AckNotifyPrivileges(ServerMessage):
     """ Server code: 125 """
+    """ DEPRECATED """
 
     def __init__(self, token=None):
         self.token = token
