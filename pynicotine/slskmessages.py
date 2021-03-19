@@ -1596,26 +1596,38 @@ class AckNotifyPrivileges(ServerMessage):
 
 class BranchLevel(ServerMessage):
     """ Server code: 126 """
-    """ TODO: implement fully """
+    """ We tell the server what our position is in our branch (xth generation)
+    on the distributed network. """
 
-    def parse_network_message(self, message):
-        pos, self.value = self.get_object(message, int)
+    def __init__(self, value=None):
+        self.value = value
+
+    def make_network_message(self):
+        return self.pack_object(self.value)
 
 
 class BranchRoot(ServerMessage):
     """ Server code: 127 """
-    """ TODO: implement fully """
+    """ We tell the server the username of the root of the branch we’re in on
+    the distributed network. """
 
-    def parse_network_message(self, message):
-        pos, self.user = self.get_object(message, str)
+    def __init__(self, user=None):
+        self.user = user
+
+    def make_network_message(self):
+        return self.pack_object(self.user)
 
 
 class ChildDepth(ServerMessage):
     """ Server code: 129 """
-    """ TODO: implement fully """
+    """ We tell the server the maximum number of generation of children we
+    have on the distributed network. """
 
-    def parse_network_message(self, message):
-        pos, self.value = self.get_object(message, int)
+    def __init__(self, value=None):
+        self.value = value
+
+    def make_network_message(self):
+        return self.pack_object(self.value)
 
 
 class PrivateRoomUsers(ServerMessage):
@@ -2645,7 +2657,6 @@ class DistribSearch(DistribMessage):
 
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
-    """ TODO: implement fully """
 
     def __init__(self, conn):
         self.conn = conn
@@ -2656,7 +2667,6 @@ class DistribBranchLevel(DistribMessage):
 
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
-    """ TODO: implement fully """
 
     def __init__(self, conn):
         self.conn = conn

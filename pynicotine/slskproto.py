@@ -341,9 +341,9 @@ class SlskProtoThread(threading.Thread):
         GivePrivileges: 123,
         NotifyPrivileges: 124,
         AckNotifyPrivileges: 125,
-        BranchLevel: 126,             # Unimplemented
-        BranchRoot: 127,              # Unimplemented
-        ChildDepth: 129,              # Unimplemented
+        BranchLevel: 126,
+        BranchRoot: 127,
+        ChildDepth: 129,
         PrivateRoomUsers: 133,
         PrivateRoomAddUser: 134,
         PrivateRoomRemoveUser: 135,
@@ -392,8 +392,8 @@ class SlskProtoThread(threading.Thread):
     distribclasses = {
         0: DistribAlive,
         3: DistribSearch,
-        4: DistribBranchLevel,        # Unimplemented
-        5: DistribBranchRoot,         # Unimplemented
+        4: DistribBranchLevel,
+        5: DistribBranchRoot,
         7: DistribChildDepth,         # Unimplemented
         93: DistribServerSearch
     }

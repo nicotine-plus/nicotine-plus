@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 17, 2021
+Last updated on March 19, 2021
 
 ## Sections
 
@@ -1923,7 +1923,7 @@ We tell the server what our position is in our branch (xth generation) on the di
 #### Function Names
 
 Museekd: SBranchLevel  
-Nicotine: Unimplemented
+Nicotine: BranchLevel
 
 #### Data Order
 
@@ -1943,7 +1943,7 @@ We tell the server the username of the root of the branch we're in on the distri
 #### Function Names
 
 Museekd: SBranchRoot  
-Nicotine: Unimplemented
+Nicotine: BranchRoot
 
 #### Data Order
 
@@ -1963,7 +1963,7 @@ We tell the server the maximum number of generation of children we have on the d
 #### Function Names
 
 Museekd: SChildDepth  
-Nicotine: Unimplemented
+Nicotine: ChildDepth
 
 #### Data Order
 
@@ -3191,7 +3191,7 @@ See SBranchLevel
 #### Function Names
 
 Museekd: DBranchLevel  
-Nicotine: Unimplemented
+Nicotine: DistribBranchLevel
 
 #### Data Order
 
@@ -3211,7 +3211,7 @@ See SBranchRoot
 #### Function Names
 
 Museekd: DBranchRoot  
-Nicotine: Unimplemented
+Nicotine: DistribBranchRoot
 
 #### Data Order
 

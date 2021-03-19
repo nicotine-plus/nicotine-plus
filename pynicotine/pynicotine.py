@@ -249,9 +249,6 @@ class NetworkEventProcessor:
             slskmessages.MinParentsInCache: self.dummy_message,
             slskmessages.WishlistInterval: self.wishlist_interval,
             slskmessages.DistribAliveInterval: self.dummy_message,
-            slskmessages.ChildDepth: self.child_depth,
-            slskmessages.BranchLevel: self.branch_level,
-            slskmessages.BranchRoot: self.branch_root,
             slskmessages.DistribChildDepth: self.distrib_child_depth,
             slskmessages.DistribBranchLevel: self.distrib_branch_level,
             slskmessages.DistribBranchRoot: self.distrib_branch_root,
@@ -832,7 +829,7 @@ class NetworkEventProcessor:
                         self.transfers.conn_close(conn, addr, i.username, error)
 
                     if i.type == 'D':
-                        self.parent_conn_closed()
+                        self.send_have_no_parent()
 
                     self.peerconns.remove(i)
                     return
@@ -1113,7 +1110,9 @@ class NetworkEventProcessor:
                     self.queue.put(slskmessages.AddThingIHate(thing))
 
             self.queue.put(slskmessages.CheckPrivileges())
-            self.queue.put(slskmessages.HaveNoParent(1))
+
+            # Ask for a list of parents to connect to (distributed network)
+            self.send_have_no_parent()
 
             """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
             redirecting results to children is not implemented yet. Tell the server we don't accept
@@ -1451,24 +1450,6 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             self.chatrooms.ticker_remove(msg)
-
-    def branch_level(self, msg):
-        """ Server code: 126 """
-
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def branch_root(self, msg):
-        """ Server code: 127 """
-
-        # TODO: Implement me
-        log.add_msg_contents(msg)
-
-    def child_depth(self, msg):
-        """ Server code: 129 """
-
-        # TODO: Implement me
-        log.add_msg_contents(msg)
 
     def private_room_users(self, msg):
         """ Server code: 133 """
@@ -2008,12 +1989,15 @@ class NetworkEventProcessor:
 
         return None
 
-    def parent_conn_closed(self):
-        """ Tell the server it needs to send us a NetInfo message with a new list of
-        potential parents. """
+    def send_have_no_parent(self):
+        """ Inform the server we have no parent. The server should either send
+        us a PossibleParents message, or start sending us search requests. """
 
         self.has_parent = False
+
         self.queue.put(slskmessages.HaveNoParent(1))
+        self.queue.put(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
+        self.queue.put(slskmessages.BranchLevel(0))
 
     def distrib_branch_level(self, msg):
         """ Distrib code: 4 """
@@ -2044,15 +2028,18 @@ class NetworkEventProcessor:
             if parent is not None:
                 self.queue.put(slskmessages.HaveNoParent(0))
                 self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
+                self.queue.put(slskmessages.BranchLevel(msg.value + 1))
                 self.has_parent = True
             else:
-                self.parent_conn_closed()
+                self.send_have_no_parent()
 
     def distrib_branch_root(self, msg):
         """ Distrib code: 5 """
 
-        # TODO: Implement me
         log.add_msg_contents(msg)
+
+        # Inform the server of our branch root
+        self.queue.put(slskmessages.BranchRoot(msg.user))
 
     def distrib_child_depth(self, msg):
         """ Distrib code: 7 """
