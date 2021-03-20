@@ -1745,7 +1745,7 @@ class NetworkEventProcessor:
 
             return
 
-        if self.network_filter.is_user_banned(user) or self.network_filter.is_user_ip_banned(user):
+        if self.network_filter.is_user_banned(user):
             log.add_warning(
                 _("%(user)s is banned, but is making a UserInfo request"), {
                     'user': user
