@@ -114,7 +114,6 @@ class TransferTimeout:
 
 class Transfers:
     """ This is the transfers manager"""
-    FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
     PRE_TRANSFER = ["Queued"]
     TRANSFER = ["Initializing transfer", "Transferring"]
 
@@ -2006,7 +2005,7 @@ class Transfers:
     # Also ask for the queue position of downloads.
     def check_download_queue(self):
 
-        statuslist = self.FAILED_TRANSFERS + ["Getting status", "Initializing transfer"]
+        statuslist = ("Initializing transfer", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
 
         for transfer in self.downloads:
             if transfer.status in statuslist:
