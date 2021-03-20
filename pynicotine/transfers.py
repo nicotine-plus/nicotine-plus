@@ -570,7 +570,9 @@ class Transfers:
                     )
 
     def queue_upload(self, msg):
-        """ Peer remotely queued a download (upload here) """
+        """ Peer remotely queued a download (upload here). This is the modern replacement to
+        a TransferRequest with direction 0 (download request). We will initiate the upload of
+        the queued file later. """
 
         user = None
         for i in self.peerconns:
@@ -655,7 +657,7 @@ class Transfers:
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
                 )
 
-        log.add_transfer("Queued upload request: User %(user)s, %(msg)s", {
+        log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
@@ -773,13 +775,12 @@ class Transfers:
         return response
 
     def transfer_request_uploads(self, msg, user, addr):
-        """
-        Remote peer is requesting to download a file through
-        your Upload queue
-        """
+        """ Remote peer is requesting to download a file through your upload queue.
+        Note that the QueueUpload peer message has replaced this method of requesting
+        a download in most clients. """
 
         response = self._transfer_request_uploads(msg, user, addr)
-        log.add_transfer("Upload request: %(req)s Response: %(resp)s", {
+        log.add_transfer("Legacy TransferRequest upload request: %(req)s Response: %(resp)s", {
             'req': str(vars(msg)),
             'resp': response
         })
