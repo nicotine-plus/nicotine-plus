@@ -728,7 +728,7 @@ class UserBrowse:
         ldir = prefix + folder.split("\\")[-1]
 
         # Check if folder already exists on system
-        ldir = self.frame.np.transfers.folder_destination(self.user, ldir)
+        ldir = self.frame.np.transfers.get_folder_destination(self.user, ldir)
 
         for d, files in self.shares:
 
