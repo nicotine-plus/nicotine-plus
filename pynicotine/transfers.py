@@ -854,7 +854,7 @@ class Transfers:
 
         transferobj = Transfer(
             user=user, realfilename=realpath, filename=msg.file,
-            path=os.path.dirname(realpath), status="Waiting for upload",
+            path=os.path.dirname(realpath), status="Getting status",
             req=msg.req, size=size, place=len(self.uploads)
         )
 
