@@ -1645,6 +1645,7 @@ class Transfers:
                     "user": user
                 })
                 transfer.req = new_id()
+                transfer.status = "Getting status"
                 realpath = self.eventprocessor.shares.virtual2real(filename)
                 self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
 
