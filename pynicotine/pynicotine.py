@@ -1994,10 +1994,6 @@ class NetworkEventProcessor:
         us a PossibleParents message, or start sending us search requests. """
 
         self.has_parent = False
-        self.queue.put(slskmessages.AcceptChildren(0))
-
-        # TODO: allow child connections
-        self.queue.put(slskmessages.ChildDepth(0))
 
         self.queue.put(slskmessages.HaveNoParent(1))
         self.queue.put(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
@@ -2047,15 +2043,10 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         # Inform the server of our branch root
-        if msg.conn == self.get_parent_conn().conn:
-            print("HM")
-            self.queue.put(slskmessages.BranchRoot(msg.user))
+        self.queue.put(slskmessages.BranchRoot(msg.user))
 
     def distrib_child_depth(self, msg):
         """ Distrib code: 7 """
 
+        # TODO: Implement me
         log.add_msg_contents(msg)
-
-        # TODO: allow child connections
-        if msg.conn != self.get_parent_conn().conn:
-            self.queue.put(slskmessages.ChildDepth(0))

@@ -740,15 +740,7 @@ class Transfers:
 
                 i.req = msg.req
                 i.status = "Waiting for download"
-                transfertimeout = TransferTimeout(i.req, self.ui_callback)
-
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
-
-                i.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-                i.transfertimer.setName("TransferTimer")
-                i.transfertimer.setDaemon(True)
-                i.transfertimer.start()
+                self.set_transfer_timeout(i, i.req)
 
                 response = slskmessages.TransferResponse(None, 1, req=i.req)
                 self.downloadsview.update(i)
@@ -860,18 +852,14 @@ class Transfers:
         size = self.get_file_size(realpath)
         response = slskmessages.TransferResponse(None, 1, req=msg.req, filesize=size)
 
-        transfertimeout = TransferTimeout(msg.req, self.ui_callback)
         transferobj = Transfer(
             user=user, realfilename=realpath, filename=msg.file,
             path=os.path.dirname(realpath), status="Waiting for upload",
             req=msg.req, size=size, place=len(self.uploads)
         )
 
+        self.set_transfer_timeout(transferobj, msg.req)
         self._append_upload(user, msg.file, transferobj)
-        transferobj.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-        transferobj.transfertimer.setName("TransferTimer")
-        transferobj.transfertimer.setDaemon(True)
-        transferobj.transfertimer.start()
 
         self.uploadsview.update(transferobj)
         return response
@@ -1560,6 +1548,18 @@ class Transfers:
 
     """ Transfer Actions """
 
+    def set_transfer_timeout(self, transfer, req):
+
+        transfertimeout = TransferTimeout(req, self.ui_callback)
+
+        if transfer.transfertimer is not None:
+            transfer.transfertimer.cancel()
+
+        transfer.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
+        transfer.transfertimer.setName("TransferTimer")
+        transfer.transfertimer.setDaemon(True)
+        transfer.transfertimer.start()
+
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
 
         path = clean_path(path, absolute=True)
@@ -1646,6 +1646,8 @@ class Transfers:
                 })
                 transfer.req = new_id()
                 transfer.status = "Getting status"
+                self.set_transfer_timeout(transfer, transfer.req)
+
                 realpath = self.eventprocessor.shares.virtual2real(filename)
                 self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
 
@@ -2052,9 +2054,6 @@ class Transfers:
                 elif not use_privileged_queue:
                     list_queued.append(i)
 
-        log.add_transfer("Privileged upload queue: %s", str(list_privileged))
-        log.add_transfer("Regular upload queue: %s", str(list_queued))
-
         if use_privileged_queue:
             # Upload to a privileged user
             # Only Privileged users' files will get selected
@@ -2084,7 +2083,6 @@ class Transfers:
                     # Break loop
                     mintimequeued = i.timequeued
 
-        log.add_transfer("Upload candidate: %s", upload_candidate)
         return upload_candidate
 
     # Find next file to upload
