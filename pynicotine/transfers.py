@@ -115,7 +115,6 @@ class TransferTimeout:
 class Transfers:
     """ This is the transfers manager"""
     FAILED_TRANSFERS = ["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"]
-    COMPLETED_TRANSFERS = ["Finished", "Filtered", "Aborted", "Cancelled"]
     PRE_TRANSFER = ["Queued"]
     TRANSFER = ["Initializing transfer", "Transferring"]
 
@@ -928,9 +927,6 @@ class Transfers:
         for i in (self.downloads + self.uploads):
 
             if i.req != msg.req:
-                continue
-
-            if i.status in ["Queued", "User logged off", "Paused"] + self.COMPLETED_TRANSFERS:
                 continue
 
             log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
