@@ -739,7 +739,7 @@ class Transfers:
                     i.size = msg.filesize
 
                 i.req = msg.req
-                i.status = "Waiting for download"
+                i.status = "Getting status"
                 self.set_transfer_timeout(i, i.req)
 
                 response = slskmessages.TransferResponse(None, 1, req=i.req)
