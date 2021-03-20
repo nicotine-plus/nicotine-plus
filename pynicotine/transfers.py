@@ -2052,6 +2052,9 @@ class Transfers:
                 elif not use_privileged_queue:
                     list_queued.append(i)
 
+        log.add_transfer("Privileged upload queue: %s", str(list_privileged))
+        log.add_transfer("Regular upload queue: %s", str(list_queued))
+
         if use_privileged_queue:
             # Upload to a privileged user
             # Only Privileged users' files will get selected
@@ -2081,6 +2084,7 @@ class Transfers:
                     # Break loop
                     mintimequeued = i.timequeued
 
+        log.add_transfer("Upload candidate: %s", upload_candidate)
         return upload_candidate
 
     # Find next file to upload

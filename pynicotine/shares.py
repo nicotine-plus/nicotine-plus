@@ -493,6 +493,7 @@ class Shares:
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.share_dbs = {}
+        self.rescanning = False
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -837,6 +838,7 @@ class Shares:
 
     def rescan_shares(self, sharestype, rebuild=False, thread=True):
 
+        self.rescanning = True
         shared_folders = self.get_shared_folders(sharestype)
 
         # Hand over database control to the scanner process
@@ -882,3 +884,5 @@ class Shares:
 
         if self.ui_callback:
             self.ui_callback.rescan_finished(sharestype)
+
+        self.rescanning = False

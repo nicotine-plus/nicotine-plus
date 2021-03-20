@@ -200,11 +200,14 @@ class Search:
         several times a second, please keep it as optimized and memory
         sparse as possible! """
 
+        if searchterm is None:
+            return
+
         if not self.config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
 
-        if searchterm is None:
+        if self.np.shares.rescanning:
             return
 
         if not direct and user == self.config.sections["server"]["login"]:
