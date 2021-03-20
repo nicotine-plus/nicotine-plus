@@ -886,6 +886,9 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
+                if i.transfertimer is not None:
+                    i.transfertimer.cancel()
+
                 curtime = time.time()
 
                 for j in self.uploads:
