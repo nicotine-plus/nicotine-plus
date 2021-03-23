@@ -1143,7 +1143,8 @@ class NetworkEventProcessor:
             children for now. """
             self.queue.put(slskmessages.AcceptChildren(0))
 
-            self.shares.send_num_shared_folders_files()
+            if self.shares.initiated_shares:
+                self.shares.send_num_shared_folders_files()
 
             """ Request a complete room list. A limited room list not including blacklisted rooms and
             rooms with few users is automatically sent when logging in, but subsequent room list
@@ -1643,7 +1644,7 @@ class NetworkEventProcessor:
         ip, port = msg.conn.addr
         checkuser, reason = self.network_filter.check_user(user, ip)
 
-        if checkuser == 1:
+        if checkuser == 1 and self.shares.initiated_shares:
             # Send Normal Shares
             if self.shares.newnormalshares:
                 self.shares.create_compressed_shares_message("normal")
@@ -1651,7 +1652,7 @@ class NetworkEventProcessor:
                 self.shares.newnormalshares = False
             m = self.shares.compressed_shares_normal
 
-        elif checkuser == 2:
+        elif checkuser == 2 and self.shares.initiated_shares:
             # Send Buddy Shares
             if self.shares.newbuddyshares:
                 self.shares.create_compressed_shares_message("buddy")
@@ -1871,6 +1872,9 @@ class NetworkEventProcessor:
 
         if not checkuser:
             self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
+            return
+
+        if not self.shares.initiated_shares:
             return
 
         if checkuser == 1:

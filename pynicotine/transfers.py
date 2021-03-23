@@ -321,8 +321,10 @@ class Transfers:
 
         folder, sep, file = virtualfilename.rpartition('\\')
 
-        try:
-            if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"]:
+        if self.eventprocessor.shares.initiated_shares:
+
+            if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"] and \
+                    not self.eventprocessor.shares.buddy_rescanning:
                 if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
                     bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
 
@@ -330,15 +332,12 @@ class Transfers:
                         if file == i[0]:
                             return True
 
-            shared = self.eventprocessor.shares.share_dbs["files"]
+            if not self.eventprocessor.shares.public_rescanning:
+                shared = self.eventprocessor.shares.share_dbs["files"]
 
-            for i in shared.get(str(folder), ''):
-                if file == i[0]:
-                    return True
-
-        except ValueError:
-            # We're currently rescanning files
-            return False
+                for i in shared.get(str(folder), ''):
+                    if file == i[0]:
+                        return True
 
         log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
             "virtual_name": virtualfilename,
@@ -1316,6 +1315,7 @@ class Transfers:
                 else:
                     self.download_finished(msg.file, i)
                     needupdate = False
+
             except IOError as strerror:
                 log.add(_("Download I/O error: %s"), strerror)
 

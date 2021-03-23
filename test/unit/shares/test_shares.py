@@ -43,6 +43,7 @@ def test_shares_scan():
 
     config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+    config.sections["transfers"]["rescanonstartup"] = False
 
     shares = Shares(None, config, queue.Queue(0))
     shares.rescan_public_shares(thread=False)
@@ -80,6 +81,7 @@ def test_hidden_file_folder_scan():
 
     config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+    config.sections["transfers"]["rescanonstartup"] = False
 
     shares = Shares(None, config, queue.Queue(0))
     shares.rescan_public_shares(thread=False)
@@ -112,6 +114,7 @@ def test_shares_add_downloaded():
 
     config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
+    config.sections["transfers"]["rescanonstartup"] = False
     config.sections["transfers"]["sharedownloaddir"] = True
 
     shares = Shares(None, config, queue.Queue(0), None)

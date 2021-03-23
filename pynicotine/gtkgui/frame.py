@@ -94,9 +94,6 @@ class NicotineFrame:
         self.ci_mode = ci_mode
         self.current_tab_label = None
         self.checking_update = False
-        self.rescanning = False
-        self.brescanning = False
-        self.needrescan = False
         self.autoaway = False
         self.awaytimerid = None
         self.shutdown = False
@@ -351,12 +348,6 @@ class NicotineFrame:
         TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
 
         """ Scanning """
-
-        # Slight delay to prevent minor performance hit when compressing large file share
-        timer = threading.Timer(2.0, self.rescan_startup)
-        timer.name = "RescanSharesTimer"
-        timer.daemon = True
-        timer.start()
 
         # Deactivate public shares related menu entries if we don't use them
         if config["transfers"]["friendsonly"] or not config["transfers"]["shared"]:
@@ -1129,27 +1120,9 @@ class NicotineFrame:
         self.on_settings(page='Shares')
 
     def on_rescan(self, *args, rebuild=False):
-
-        if self.rescanning:
-            return
-
-        self.rescanning = True
-
-        self.rescan_public_action.set_enabled(False)
-        self.browse_public_shares_action.set_enabled(False)
-
         self.np.shares.rescan_public_shares(rebuild)
 
     def on_buddy_rescan(self, *args, rebuild=False):
-
-        if self.brescanning:
-            return
-
-        self.brescanning = True
-
-        self.rescan_buddy_action.set_enabled(False)
-        self.browse_buddy_shares_action.set_enabled(False)
-
         self.np.shares.rescan_buddy_shares(rebuild)
 
     def on_browse_public_shares(self, *args, folder=None):
@@ -1768,57 +1741,6 @@ class NicotineFrame:
             self.MainNotebook.set_current_page(page_num(tab_box))
         else:
             self.show_tab(tab_box)
-
-    """ Scanning """
-
-    def rescan_startup(self):
-
-        if self.rescanning:
-            return
-
-        if self.np.config.sections["transfers"]["rescanonstartup"]:
-
-            # Rescan public shares if needed
-            if not self.np.config.sections["transfers"]["friendsonly"] and \
-                    self.np.config.sections["transfers"]["shared"]:
-                GLib.idle_add(self.on_rescan)
-
-            # Rescan buddy shares if needed
-            if self.np.config.sections["transfers"]["enablebuddyshares"]:
-                GLib.idle_add(self.on_buddy_rescan)
-
-        else:
-            if not self.np.config.sections["transfers"]["friendsonly"]:
-                self.np.shares.compress_shares("normal")
-
-            if self.np.config.sections["transfers"]["enablebuddyshares"]:
-                self.np.shares.compress_shares("buddy")
-
-    def rescan_finished(self, type):
-
-        if type == "buddy":
-            GLib.idle_add(self._buddy_rescan_finished)
-
-        elif type == "normal":
-            GLib.idle_add(self._rescan_finished)
-
-    def _buddy_rescan_finished(self):
-
-        if self.np.config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy_action.set_enabled(True)
-            self.browse_buddy_shares_action.set_enabled(True)
-
-        self.brescanning = False
-        self.BuddySharesProgress.hide()
-
-    def _rescan_finished(self):
-
-        if self.np.config.sections["transfers"]["shared"]:
-            self.rescan_public_action.set_enabled(True)
-            self.browse_public_shares_action.set_enabled(True)
-
-        self.rescanning = False
-        self.SharesProgress.hide()
 
     """ Transfer Statistics """
 
@@ -2451,12 +2373,7 @@ class NicotineFrame:
         if self.np.transfers is not None:
             self.np.transfers.check_upload_queue()
 
-        if needrescan:
-            self.needrescan = True
-
-        if msg == "ok" and self.needrescan:
-
-            self.needrescan = False
+        if msg == "ok" and needrescan:
 
             # Rescan public shares if needed
             if not self.np.config.sections["transfers"]["friendsonly"]:

@@ -207,6 +207,9 @@ class Search:
         if searchterm is None:
             return
 
+        if not self.shares.initiated_shares:
+            return
+
         if not direct and user == self.config.sections["server"]["login"]:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
@@ -232,8 +235,14 @@ class Search:
 
         if checkuser == 2:
             wordindex = self.share_dbs["buddywordindex"]
+
+            if self.np.shares.buddy_rescanning:
+                return
         else:
             wordindex = self.share_dbs["wordindex"]
+
+            if self.np.shares.public_rescanning:
+                return
 
         # Find common file matches for each word in search term
         resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)

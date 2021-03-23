@@ -493,6 +493,9 @@ class Shares:
         self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.share_dbs = {}
+        self.public_rescanning = False
+        self.buddy_rescanning = False
+        self.initiated_shares = False
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -509,11 +512,15 @@ class Shares:
             ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
             ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
         ]
-        self.load_shares(self.share_dbs, self.public_share_dbs)
-        self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
-        self.create_compressed_shares_message("normal")
-        self.create_compressed_shares_message("buddy")
+        if ui_callback:
+            # Slight delay to prevent minor performance hit when compressing large file share
+            timer = threading.Timer(2.0, self.init_shares)
+            timer.name = "InitSharesTimer"
+            timer.daemon = True
+            timer.start()
+        else:
+            self.init_shares()
 
         self.newbuddyshares = self.newnormalshares = False
 
@@ -576,6 +583,35 @@ class Shares:
             mapping += [(_("Downloaded"), config.sections["transfers"]["downloaddir"])]
 
         return mapping
+
+    def init_shares(self):
+
+        self.load_shares(self.share_dbs, self.public_share_dbs)
+        self.load_shares(self.share_dbs, self.buddy_share_dbs)
+
+        self.create_compressed_shares_message("normal")
+        self.create_compressed_shares_message("buddy")
+
+        rescan_startup = self.config.sections["transfers"]["rescanonstartup"]
+
+        if not rescan_startup:
+            self.send_num_shared_folders_files()
+
+        # Rescan public shares if necessary
+        if not self.config.sections["transfers"]["friendsonly"]:
+            if rescan_startup and not self.public_rescanning:
+                self.rescan_public_shares()
+            else:
+                self.compress_shares("normal")
+
+        # Rescan buddy shares if necessary
+        if self.config.sections["transfers"]["enablebuddyshares"]:
+            if rescan_startup and not self.buddy_rescanning:
+                self.rescan_buddy_shares()
+            else:
+                self.compress_shares("buddy")
+
+        self.initiated_shares = True
 
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
@@ -803,11 +839,9 @@ class Shares:
     def get_shared_folders(self, sharestype):
 
         if sharestype == "normal":
-            log.add(_("Rescanning normal shares..."))
             shared_folders = self.config.sections["transfers"]["shared"][:]
 
         else:
-            log.add(_("Rescanning buddy shares..."))
             shared_folders = self.config.sections["transfers"]["buddyshared"][:] + self.config.sections["transfers"]["shared"][:]
 
         if self.config.sections["transfers"]["sharedownloaddir"]:
@@ -841,6 +875,20 @@ class Shares:
 
     def rescan_shares(self, sharestype, rebuild=False, use_thread=True):
 
+        if sharestype == "normal" and self.public_rescanning:
+            return
+
+        if sharestype == "buddy" and self.buddy_rescanning:
+            return
+
+        if sharestype == "normal":
+            log.add(_("Rescanning normal shares..."))
+            self.public_rescanning = True
+
+        else:
+            log.add(_("Rescanning buddy shares..."))
+            self.buddy_rescanning = True
+
         shared_folders = self.get_shared_folders(sharestype)
 
         # Hand over database control to the scanner process
@@ -868,8 +916,10 @@ class Shares:
 
         # Scanning done, load shares in the main process again
         if sharestype == "normal":
+            self.public_rescanning = False
             self.load_shares(self.share_dbs, self.public_share_dbs)
         else:
+            self.buddy_rescanning = False
             self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
         self.create_compressed_shares_message(sharestype)
@@ -888,4 +938,4 @@ class Shares:
                 log.add(_("Finished rescanning buddy shares"))
 
         if self.ui_callback:
-            self.ui_callback.rescan_finished(sharestype)
+            self.ui_callback.hide_scan_progress(sharestype)
