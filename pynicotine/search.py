@@ -207,9 +207,6 @@ class Search:
         if searchterm is None:
             return
 
-        if not self.shares.initiated_shares:
-            return
-
         if not direct and user == self.config.sections["server"]["login"]:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
@@ -218,6 +215,9 @@ class Search:
         maxresults = self.config.sections["searches"]["maxresults"]
 
         if maxresults == 0:
+            return
+
+        if not self.np.shares.initiated_shares:
             return
 
         # Don't count excluded words as matches (words starting with -)

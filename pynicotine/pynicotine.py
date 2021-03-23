@@ -306,9 +306,10 @@ class NetworkEventProcessor:
         while True:
             curtime = time.time()
 
-            for conn, request_time in self.out_indirect_conn_request_times.items():
-                if (curtime - request_time) >= 20:
-                    self.network_callback([ConnectToPeerTimeout(conn)])
+            if self.out_indirect_conn_request_times:
+                for conn, request_time in self.out_indirect_conn_request_times.copy().items():
+                    if (curtime - request_time) >= 20:
+                        self.network_callback([ConnectToPeerTimeout(conn)])
 
             if self.exit.wait(1):
                 # Event set, we're exiting

@@ -1989,9 +1989,10 @@ class Transfers:
         while True:
             curtime = time.time()
 
-            for transfer, start_time in self.transfer_request_times.items():
-                if (curtime - start_time) >= 30:
-                    self.ui_callback([TransferTimeout(transfer)])
+            if self.transfer_request_times:
+                for transfer, start_time in self.transfer_request_times.copy().items():
+                    if (curtime - start_time) >= 30:
+                        self.ui_callback([TransferTimeout(transfer)])
 
             if self.eventprocessor.exit.wait(1):
                 # Event set, we're exiting
