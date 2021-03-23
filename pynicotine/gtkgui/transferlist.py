@@ -65,7 +65,6 @@ class TransferList:
         # Status list
         self.statuses = {}
         self.statuses["Queued"] = _("Queued")
-        self.statuses["Waiting for download"] = _("Waiting for download")
         self.statuses["Getting status"] = _("Getting status")
         self.statuses["Establishing connection"] = _("Establishing connection")
         self.statuses["Transferring"] = _("Transferring")
