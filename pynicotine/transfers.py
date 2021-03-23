@@ -175,9 +175,6 @@ class Transfers:
 
         self.geoip = self.eventprocessor.geoip
 
-        # Tell threads when we're exiting
-        self.exit = threading.Event()
-
         # Check for transfer timeouts
         self.transfer_request_times = {}
 
@@ -187,13 +184,13 @@ class Transfers:
         thread.start()
 
         # Check for failed downloads (1 min delay)
-        thread = threading.Thread(target=self.check_download_queue_timer)
+        thread = threading.Thread(target=self._check_download_queue_timer)
         thread.name = "DownloadQueueTimer"
         thread.daemon = True
         thread.start()
 
         # Check if queued uploads can be started
-        thread = threading.Thread(target=self.check_download_queue_timer)
+        thread = threading.Thread(target=self._check_upload_queue_timer)
         thread.name = "UploadQueueTimer"
         thread.daemon = True
         thread.start()
@@ -960,6 +957,9 @@ class Transfers:
                     j.timequeued = curtime
 
             self.uploadsview.update(transfer)
+
+        if transfer in self.transfer_request_times:
+            del self.transfer_request_times[transfer]
 
         self.check_upload_queue()
 
@@ -1993,25 +1993,25 @@ class Transfers:
                 if (curtime - start_time) >= 30:
                     self.ui_callback([TransferTimeout(transfer)])
 
-            if self.exit.wait(1):
+            if self.eventprocessor.exit.wait(1):
                 # Event set, we're exiting
                 return
 
-    def check_upload_queue_timer(self):
+    def _check_upload_queue_timer(self):
 
         while True:
             self.ui_callback([slskmessages.CheckUploadQueue()])
 
-            if self.exit.wait(10):
+            if self.eventprocessor.exit.wait(10):
                 # Event set, we're exiting
                 return
 
-    def check_download_queue_timer(self):
+    def _check_download_queue_timer(self):
 
         while True:
             self.ui_callback([slskmessages.CheckDownloadQueue()])
 
-            if self.exit.wait(60):
+            if self.eventprocessor.exit.wait(60):
                 # Event set, we're exiting
                 return
 
@@ -2273,10 +2273,6 @@ class Transfers:
         write_file_and_backup(downloads_file, self.save_downloads_callback)
 
     def disconnect(self):
-
-        # Inform threads we're quitting
-        self.exit.set()
-
         self.abort_transfers()
         self.save_downloads()
 

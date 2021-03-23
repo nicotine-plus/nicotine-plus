@@ -67,9 +67,9 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "conntimer", "tryaddr"
+    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "tryaddr"
 
-    def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, conntimer=None, tryaddr=None):
+    def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, tryaddr=None):
         self.addr = addr
         self.username = username
         self.conn = conn
@@ -77,7 +77,6 @@ class PeerConnection:
         self.token = token
         self.init = init
         self.type = init.type
-        self.conntimer = conntimer
         self.tryaddr = tryaddr
 
 
@@ -95,13 +94,12 @@ class Timeout:
             log.add_warning(_("Exception in callback %s: %s"), (self.callback, e))
 
 
-class ConnectToPeerTimeout(Timeout):
+class ConnectToPeerTimeout:
 
     __slots__ = "conn"
 
-    def __init__(self, conn, callback):
+    def __init__(self, conn):
         self.conn = conn
-        self.callback = callback
 
 
 class NetworkEventProcessor:
@@ -113,6 +111,9 @@ class NetworkEventProcessor:
         self.network_callback = network_callback
         self.set_status = setstatus
         self.manualdisconnect = False
+
+        # Tell threads when we're disconnecting
+        self.exit = threading.Event()
 
         try:
             self.config = Config(config, data_dir)
@@ -138,6 +139,7 @@ class NetworkEventProcessor:
         self.watchedusers = set()
         self.ip_requested = set()
         self.users = {}
+        self.out_indirect_conn_request_times = {}
 
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
@@ -299,6 +301,19 @@ class NetworkEventProcessor:
             slskmessages.UnknownPeerMessage: self.ignore
         }
 
+    def _check_indirect_connection_timeouts(self):
+
+        while True:
+            curtime = time.time()
+
+            for conn, request_time in self.out_indirect_conn_request_times.items():
+                if (curtime - request_time) >= 20:
+                    self.network_callback([ConnectToPeerTimeout(conn)])
+
+            if self.exit.wait(1):
+                # Event set, we're exiting
+                return
+
     def peer_init(self, msg):
 
         """ Peer wants to connect to us, remember them """
@@ -319,8 +334,8 @@ class NetworkEventProcessor:
                     i.token = None
                     i.init = msg
 
-                    if i.conntimer is not None:
-                        i.conntimer.cancel()
+                    if i in self.out_indirect_conn_request_times:
+                        del self.out_indirect_conn_request_times[i]
 
                     found_conn = True
 
@@ -442,17 +457,7 @@ class NetworkEventProcessor:
 
         conn.token = new_id()
         self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
-
-        conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
-        timer = threading.Timer(20.0, conntimeout.timeout)
-        timer.name = "ConnectionTimer"
-        timer.daemon = True
-        timer.start()
-
-        if conn.conntimer is not None:
-            conn.conntimer.cancel()
-
-        conn.conntimer = timer
+        self.out_indirect_conn_request_times[conn] = time.time()
 
         log.add_conn(
             "Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s", {
@@ -492,8 +497,8 @@ class NetworkEventProcessor:
                         i.init = init
                         break
 
-                    if i.conntimer is not None:
-                        i.conntimer.cancel()
+                    if i in self.out_indirect_conn_request_times:
+                        del self.out_indirect_conn_request_times[i]
 
                     should_connect = False
                     break
@@ -684,8 +689,8 @@ class NetworkEventProcessor:
                     i.token == msg.token:
                 conn = msg.conn.conn
 
-                if i.conntimer is not None:
-                    i.conntimer.cancel()
+                if i in self.out_indirect_conn_request_times:
+                    del self.out_indirect_conn_request_times[i]
 
                 i.init.conn = conn
                 self.queue.put(i.init)
@@ -750,8 +755,8 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.token == token:
 
-                if i.conntimer is not None:
-                    i.conntimer.cancel()
+                if i in self.out_indirect_conn_request_times:
+                    del self.out_indirect_conn_request_times[i]
 
                 self.peerconns.remove(i)
 
@@ -771,6 +776,9 @@ class NetworkEventProcessor:
             self.peerconns.remove(conn)
         except ValueError:
             pass
+
+        if conn in self.out_indirect_conn_request_times:
+            del self.out_indirect_conn_request_times[conn]
 
         self.show_connection_error_message(conn)
         log.add_conn(
@@ -792,6 +800,9 @@ class NetworkEventProcessor:
             )
             userchoice = self.manualdisconnect
 
+            # Inform threads we've disconnected
+            self.exit.set()
+
             if not self.manualdisconnect:
                 self.set_server_timer()
             else:
@@ -801,6 +812,7 @@ class NetworkEventProcessor:
 
             # Clean up connections
             self.peerconns.clear()
+            self.out_indirect_conn_request_times.clear()
 
             self.watchedusers.clear()
             self.shares.set_connected(False)
@@ -820,8 +832,8 @@ class NetworkEventProcessor:
                 if i.conn == conn:
                     log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s", {'peer': log.contents(i), 'error': error})
 
-                    if i.conntimer is not None:
-                        i.conntimer.cancel()
+                    if i in self.out_indirect_conn_request_times:
+                        del self.out_indirect_conn_request_times[i]
 
                     if self.transfers is not None:
                         self.transfers.conn_close(conn, addr, i.username, error)
@@ -871,7 +883,7 @@ class NetworkEventProcessor:
 
                         self.connect_to_peer_indirect(i, msg.err)
 
-                    elif i.conntimer is None:
+                    elif i not in self.out_indirect_conn_request_times:
 
                         """ Peer sent us an indirect connection request, and we weren't able to
                         connect to them. """
@@ -972,11 +984,6 @@ class NetworkEventProcessor:
         self.queue.put(slskmessages.GetUserStatus(user))
 
     def stop_timers(self):
-
-        for i in self.peerconns:
-            if i.conntimer is not None:
-                i.conntimer.cancel()
-
         if self.servertimer is not None:
             self.servertimer.cancel()
 
@@ -1052,7 +1059,7 @@ class NetworkEventProcessor:
     def check_upload_queue(self, msg):
 
         if self.transfers is not None:
-            self.transfers.check_upload_queue(start_timer=True)
+            self.transfers.check_upload_queue()
 
     def file_download(self, msg):
 
@@ -1092,6 +1099,13 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         if msg.success:
+            # Check for indirect connection timeouts
+            self.exit.clear()
+            thread = threading.Thread(target=self._check_indirect_connection_timeouts)
+            thread.name = "IndirectConnectionTimeoutTimer"
+            thread.daemon = True
+            thread.start()
+
             self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.watch_user(self.config.sections["server"]["login"])
 
@@ -2028,8 +2042,8 @@ class NetworkEventProcessor:
                         if i.conn is not None:
                             self.queue.put(slskmessages.ConnClose(i.conn, callback=False))
 
-                        if i.conntimer is not None:
-                            i.conntimer.cancel()
+                        if i in self.out_indirect_conn_request_times:
+                            del self.out_indirect_conn_request_times[i]
 
                         self.peerconns.remove(i)
 
