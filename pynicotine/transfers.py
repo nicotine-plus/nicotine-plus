@@ -54,7 +54,7 @@ class Transfer(object):
     __slots__ = "conn", "user", "realfilename", "filename", \
                 "path", "req", "size", "file", "starttime", "lasttime", \
                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed", \
-                "timeleft", "timequeued", "transfertimer", \
+                "timeleft", "timequeued", \
                 "modifier", "place", "bitrate", "length", "iter", "_status", \
                 "laststatuschange", "legacy_attempt"
 
@@ -62,7 +62,7 @@ class Transfer(object):
         self, conn=None, user=None, realfilename=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
-        timeleft=None, timequeued=None, transfertimer=None, requestconn=None,
+        timeleft=None, timequeued=None, requestconn=None,
         modifier=None, place=0, bitrate=None, length=None, iter=None, legacy_attempt=False
     ):
         self.user = user
@@ -83,7 +83,6 @@ class Transfer(object):
         self.timeelapsed = timeelapsed
         self.timeleft = timeleft
         self.timequeued = timequeued
-        self.transfertimer = transfertimer
         self.place = place  # Queue position
         self.bitrate = bitrate
         self.length = length
@@ -102,14 +101,10 @@ class Transfer(object):
 
 class TransferTimeout:
 
-    __slots__ = "req", "callback"
+    __slots__ = "transfer"
 
-    def __init__(self, req, callback):
-        self.req = req
-        self.callback = callback
-
-    def timeout(self):
-        self.callback([self])
+    def __init__(self, transfer):
+        self.transfer = transfer
 
 
 class Transfers:
@@ -180,11 +175,28 @@ class Transfers:
 
         self.geoip = self.eventprocessor.geoip
 
-        # Check for failed downloads if option is enabled (1 min delay)
-        self.start_check_download_queue_timer()
+        # Tell threads when we're exiting
+        self.exit = threading.Event()
+
+        # Check for transfer timeouts
+        self.transfer_request_times = {}
+
+        thread = threading.Thread(target=self._check_transfer_timeouts)
+        thread.name = "TransferTimeoutTimer"
+        thread.daemon = True
+        thread.start()
+
+        # Check for failed downloads (1 min delay)
+        thread = threading.Thread(target=self.check_download_queue_timer)
+        thread.name = "DownloadQueueTimer"
+        thread.daemon = True
+        thread.start()
 
         # Check if queued uploads can be started
-        self.start_check_upload_queue_timer()
+        thread = threading.Thread(target=self.check_download_queue_timer)
+        thread.name = "UploadQueueTimer"
+        thread.daemon = True
+        thread.start()
 
     def set_transfer_views(self, downloads, uploads):
         self.downloadsview = downloads
@@ -740,7 +752,7 @@ class Transfers:
 
                 i.req = msg.req
                 i.status = "Getting status"
-                self.set_transfer_timeout(i, i.req)
+                self.transfer_request_times[i] = time.time()
 
                 response = slskmessages.TransferResponse(None, 1, req=i.req)
                 self.downloadsview.update(i)
@@ -857,7 +869,7 @@ class Transfers:
             req=msg.req, size=size, place=len(self.uploads)
         )
 
-        self.set_transfer_timeout(transferobj, msg.req)
+        self.transfer_request_times[transferobj] = time.time()
         self._append_upload(user, msg.file, transferobj)
 
         self.uploadsview.update(transferobj)
@@ -885,8 +897,8 @@ class Transfers:
                 i.req = None
                 self.uploadsview.update(i)
 
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
+                if i in self.transfer_request_times:
+                    del self.transfer_request_times[i]
 
                 curtime = time.time()
 
@@ -924,35 +936,30 @@ class Transfers:
 
     def transfer_timeout(self, msg):
 
-        for i in (self.downloads + self.uploads):
+        transfer = msg.transfer
 
-            if i.req != msg.req:
-                continue
+        log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
+            "filename": transfer.filename,
+            "request": transfer.req,
+            "user": transfer.user
+        })
 
-            log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
-                "filename": i.filename,
-                "request": i.req,
-                "user": i.user
-            })
+        transfer.status = "Cannot connect"
+        transfer.req = None
 
-            i.status = "Cannot connect"
-            i.req = None
+        self.eventprocessor.watch_user(transfer.user)
 
-            self.eventprocessor.watch_user(i.user)
+        if transfer in self.downloads:
+            self.downloadsview.update(transfer)
 
-            if i in self.downloads:
-                self.downloadsview.update(i)
+        elif transfer in self.uploads:
+            curtime = time.time()
 
-            elif i in self.uploads:
-                curtime = time.time()
+            for j in self.uploads:
+                if j.user == transfer.user:
+                    j.timequeued = curtime
 
-                for j in self.uploads:
-                    if j.user == i.user:
-                        j.timequeued = curtime
-
-                self.uploadsview.update(i)
-
-            break
+            self.uploadsview.update(transfer)
 
         self.check_upload_queue()
 
@@ -1012,8 +1019,8 @@ class Transfers:
             i.conn = msg.conn
             i.req = None
 
-            if i.transfertimer is not None:
-                i.transfertimer.cancel()
+            if i in self.transfer_request_times:
+                del self.transfer_request_times[i]
 
             if not incompletedir:
                 if i.path and i.path[0] == '/':
@@ -1112,8 +1119,8 @@ class Transfers:
             i.req = None
             f = None
 
-            if i.transfertimer is not None:
-                i.transfertimer.cancel()
+            if i in self.transfer_request_times:
+                del self.transfer_request_times[i]
 
             try:
                 # Open File
@@ -1263,8 +1270,9 @@ class Transfers:
 
             try:
 
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
+                if i in self.transfer_request_times:
+                    del self.transfer_request_times[i]
+
                 curtime = time.time()
 
                 i.currentbytes = msg.file.tell()
@@ -1329,8 +1337,8 @@ class Transfers:
             if i.conn != msg.conn:
                 continue
 
-            if i.transfertimer is not None:
-                i.transfertimer.cancel()
+            if i in self.transfer_request_times:
+                del self.transfer_request_times[i]
 
             curtime = time.time()
             if i.starttime is None:
@@ -1547,18 +1555,6 @@ class Transfers:
 
     """ Transfer Actions """
 
-    def set_transfer_timeout(self, transfer, req):
-
-        transfertimeout = TransferTimeout(req, self.ui_callback)
-
-        if transfer.transfertimer is not None:
-            transfer.transfertimer.cancel()
-
-        transfer.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-        transfer.transfertimer.name = "TransferTimer"
-        transfer.transfertimer.daemon = True
-        transfer.transfertimer.start()
-
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
 
         path = clean_path(path, absolute=True)
@@ -1645,7 +1641,7 @@ class Transfers:
                 })
                 transfer.req = new_id()
                 transfer.status = "Getting status"
-                self.set_transfer_timeout(transfer, transfer.req)
+                self.transfer_request_times[transfer] = time.time()
 
                 realpath = self.eventprocessor.shares.virtual2real(filename)
                 self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
@@ -1988,19 +1984,36 @@ class Transfers:
 
         return False
 
-    def start_check_download_queue_timer(self):
+    def _check_transfer_timeouts(self):
 
-        self.download_queue_timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
-        self.download_queue_timer.name = "DownloadQueueTimer"
-        self.download_queue_timer.daemon = True
-        self.download_queue_timer.start()
+        while True:
+            curtime = time.time()
 
-    def start_check_upload_queue_timer(self):
+            for transfer, start_time in self.transfer_request_times.items():
+                if (curtime - start_time) >= 30:
+                    self.ui_callback([TransferTimeout(transfer)])
 
-        self.upload_queue_timer = threading.Timer(10.0, self.ui_callback, [[slskmessages.CheckUploadQueue()]])
-        self.upload_queue_timer.name = "UploadQueueTimer"
-        self.upload_queue_timer.daemon = True
-        self.upload_queue_timer.start()
+            if self.exit.wait(1):
+                # Event set, we're exiting
+                return
+
+    def check_upload_queue_timer(self):
+
+        while True:
+            self.ui_callback([slskmessages.CheckUploadQueue()])
+
+            if self.exit.wait(10):
+                # Event set, we're exiting
+                return
+
+    def check_download_queue_timer(self):
+
+        while True:
+            self.ui_callback([slskmessages.CheckDownloadQueue()])
+
+            if self.exit.wait(60):
+                # Event set, we're exiting
+                return
 
     # Find failed or stuck downloads and attempt to queue them.
     # Also ask for the queue position of downloads.
@@ -2018,8 +2031,6 @@ class Transfers:
                     transfer.user,
                     slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
                 )
-
-        self.start_check_download_queue_timer()
 
     def get_queued_uploads(self):
 
@@ -2085,10 +2096,7 @@ class Transfers:
         return upload_candidate
 
     # Find next file to upload
-    def check_upload_queue(self, start_timer=False):
-
-        if start_timer:
-            self.start_check_upload_queue_timer()
+    def check_upload_queue(self):
 
         # Check if any uploads exist
         if not len(self.uploads):
@@ -2199,8 +2207,8 @@ class Transfers:
             self.queue.put(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
 
-        if transfer.transfertimer is not None:
-            transfer.transfertimer.cancel()
+        if transfer in self.transfer_request_times:
+            del self.transfer_request_times[transfer]
 
         if transfer.file is not None:
             self.close_file(transfer.file, transfer)
@@ -2266,11 +2274,8 @@ class Transfers:
 
     def disconnect(self):
 
-        if self.download_queue_timer is not None:
-            self.download_queue_timer.cancel()
-
-        if self.upload_queue_timer is not None:
-            self.upload_queue_timer.cancel()
+        # Inform threads we're quitting
+        self.exit.set()
 
         self.abort_transfers()
         self.save_downloads()
