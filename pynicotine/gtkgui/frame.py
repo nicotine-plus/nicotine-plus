@@ -35,7 +35,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-import _thread
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.gtkgui import utils
@@ -355,8 +354,8 @@ class NicotineFrame:
 
         # Slight delay to prevent minor performance hit when compressing large file share
         timer = threading.Timer(2.0, self.rescan_startup)
-        timer.setName("RescanSharesTimer")
-        timer.setDaemon(True)
+        timer.name = "RescanSharesTimer"
+        timer.daemon = True
         timer.start()
 
         # Deactivate public shares related menu entries if we don't use them
@@ -1164,7 +1163,11 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_normal
 
-        _thread.start_new_thread(self.parse_local_shares, (login, msg, folder, "normal"))
+        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "normal"))
+        thread.name = "LocalShareParser"
+        thread.daemon = True
+        thread.start()
+
         self.userbrowse.show_user(login, indeterminate_progress=True)
 
     def on_browse_buddy_shares(self, *args, folder=None):
@@ -1178,7 +1181,11 @@ class NicotineFrame:
         else:
             msg = self.np.shares.compressed_shares_buddy
 
-        _thread.start_new_thread(self.parse_local_shares, (login, msg, folder, "buddy"))
+        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "buddy"))
+        thread.name = "LocalBuddyShareParser"
+        thread.daemon = True
+        thread.start()
+
         self.userbrowse.show_user(login, indeterminate_progress=True)
 
     # Modes
@@ -1227,7 +1234,11 @@ class NicotineFrame:
     def on_check_latest(self, *args):
 
         if not self.checking_update:
-            _thread.start_new_thread(self._on_check_latest, ())
+            thread = threading.Thread(target=self._on_check_latest)
+            thread.name = "UpdateChecker"
+            thread.daemon = True
+            thread.start()
+
             self.checking_update = True
 
     def _on_check_latest(self):
@@ -2278,7 +2289,11 @@ class NicotineFrame:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
     def set_scan_indeterminate(self, sharestype):
-        _thread.start_new_thread(self._set_scan_indeterminate, (sharestype,))
+
+        thread = threading.Thread(target=self._set_scan_indeterminate, args=(sharestype,))
+        thread.name = "ScanProgressBar"
+        thread.daemon = True
+        thread.start()
 
     def _set_scan_indeterminate(self, sharestype):
 
@@ -2356,12 +2371,11 @@ class NicotineFrame:
         log.update_debug_log_options(should_log, log_folder, timestamp_format)
 
         # UPnP
-        if (not config["server"]["upnp"] or needportmap) and self.np.upnp_timer:
+        if not config["server"]["upnp"] and self.np.upnp_timer:
             self.np.upnp_timer.cancel()
 
         if needportmap:
-            self.np.upnp_interval = config["server"]["upnp_interval"]
-            _thread.start_new_thread(self.np.add_upnp_portmapping, ())
+            self.np.add_upnp_portmapping()
 
         # Download/upload limits
         if self.np.transfers:

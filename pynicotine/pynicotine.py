@@ -33,7 +33,6 @@ import os
 import queue
 import threading
 import time
-import _thread
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -162,9 +161,8 @@ class NetworkEventProcessor:
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
         # UPnP
-        self.upnp_interval = self.config.sections["server"]["upnp_interval"]
         self.upnp_timer = None
-        _thread.start_new_thread(self.add_upnp_portmapping, ())
+        self.add_upnp_portmapping()
 
         self.active_server_conn = None
         self.waitport = None
@@ -447,8 +445,8 @@ class NetworkEventProcessor:
 
         conntimeout = ConnectToPeerTimeout(conn, self.network_callback)
         timer = threading.Timer(20.0, conntimeout.timeout)
-        timer.setName("ConnectionTimer")
-        timer.setDaemon(True)
+        timer.name = "ConnectionTimer"
+        timer.daemon = True
         timer.start()
 
         if conn.conntimer is not None:
@@ -898,41 +896,53 @@ class NetworkEventProcessor:
         """ Port mapping entries last 24 hours, we need to regularly renew them """
         """ The default interval is 4 hours """
 
-        if self.upnp_interval < 1:
+        if self.upnp_timer:
+            self.upnp_timer.cancel()
+
+        upnp_interval = self.config.sections["server"]["upnp_interval"]
+
+        if upnp_interval < 1:
             return
 
-        upnp_interval_seconds = self.upnp_interval * 60 * 60
+        upnp_interval_seconds = upnp_interval * 60 * 60
 
         self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
-        self.upnp_timer.setName("UPnPTimer")
-        self.upnp_timer.setDaemon(True)
+        self.upnp_timer.name = "UPnPTimer"
+        self.upnp_timer.daemon = True
         self.upnp_timer.start()
 
     def add_upnp_portmapping(self):
 
+        # Test if we want to do a port mapping
+        if not self.config.sections["server"]["upnp"]:
+            return
+
+        # Do the port mapping
+        thread = threading.Thread(target=self._add_upnp_portmapping)
+        thread.name = "UPnPAddPortmapping"
+        thread.daemon = True
+        thread.start()
+
         # Repeat
         self.start_upnp_timer()
 
-        # Test if we want to do a port mapping
-        if self.config.sections["server"]["upnp"]:
+    def _add_upnp_portmapping(self):
 
-            # Initialise a UPnPPortMapping object
-            from pynicotine.upnp.portmapper import UPnPPortMapping
-            upnp = UPnPPortMapping()
-
-            # Do the port mapping
-            upnp.add_port_mapping(self)
+        from pynicotine.upnp.portmapper import UPnPPortMapping
+        upnp = UPnPPortMapping()
+        upnp.add_port_mapping(self)
 
     def set_server_timer(self):
 
         if self.server_timeout_value == -1:
             self.server_timeout_value = 15
+
         elif 0 < self.server_timeout_value < 600:
             self.server_timeout_value = self.server_timeout_value * 2
 
         self.servertimer = threading.Timer(self.server_timeout_value, self.server_timeout)
-        self.servertimer.setName("ServerTimer")
-        self.servertimer.setDaemon(True)
+        self.servertimer.name = "ServerTimer"
+        self.servertimer.daemon = True
         self.servertimer.start()
 
         self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))

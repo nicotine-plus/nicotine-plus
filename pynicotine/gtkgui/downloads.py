@@ -231,7 +231,7 @@ class Downloads(TransferList):
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def _on_play_files(self, widget, prefix=""):
+    def on_play_files(self, widget, prefix=""):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
 

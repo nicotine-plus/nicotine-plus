@@ -22,7 +22,7 @@
 
 import os
 import sys
-import _thread
+import threading
 
 from ast import literal_eval
 from time import time
@@ -78,12 +78,17 @@ class PluginHandler(object):
         return None
 
     def toggle_plugin(self, pluginname):
-        on = pluginname in self.enabled_plugins
 
-        if on:
-            _thread.start_new_thread(self.disable_plugin, (pluginname,))
+        enabled = pluginname in self.enabled_plugins
+
+        if enabled:
+            thread = threading.Thread(target=self.disable_plugin, args=(pluginname,))
         else:
-            _thread.start_new_thread(self.enable_plugin, (pluginname,))
+            thread = threading.Thread(target=self.enable_plugin, args=(pluginname,))
+
+        thread.name = "TogglePlugin"
+        thread.daemon = True
+        thread.start()
 
     def load_plugin(self, pluginname):
 
@@ -202,7 +207,10 @@ class PluginHandler(object):
         to_enable = self.config.sections["plugins"]["enabled"]
 
         for plugin in to_enable:
-            _thread.start_new_thread(self.enable_plugin, (plugin,))
+            thread = threading.Thread(target=self.enable_plugin, args=(plugin,))
+            thread.name = "EnablePlugin"
+            thread.daemon = True
+            thread.start()
 
     def plugin_settings(self, pluginname, plugin):
         try:

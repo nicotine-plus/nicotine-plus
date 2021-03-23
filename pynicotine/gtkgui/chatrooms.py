@@ -259,8 +259,8 @@ class ChatRooms(IconNotebook):
                     self.switch_tab = False
 
                     timer = threading.Timer(4.0, self.enable_tab_switch)
-                    timer.setName("ChatroomTabSwitchTimer")
-                    timer.setDaemon(True)
+                    timer.name = "ChatroomTabSwitchTimer"
+                    timer.daemon = True
                     timer.start()
 
             for room in room_list:
@@ -962,18 +962,6 @@ class ChatRoom:
         else:
             update_tag_visuals(self.tag_users[user], color)
 
-    def thread_alias(self, alias):
-
-        text = expand_alias(alias)
-        if not text:
-            log.add(_('Alias "%s" returned nothing'), alias)
-            return
-
-        if text[:2] == "//":
-            text = text[1:]
-
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, auto_replace(text)))
-
     def on_enter(self, widget):
 
         text = widget.get_text()
@@ -983,8 +971,16 @@ class ChatRoom:
             return
 
         if is_alias(text):
-            import _thread
-            _thread.start_new_thread(self.thread_alias, (text,))
+            new_text = expand_alias(text)
+
+            if not new_text:
+                log.add(_('Alias "%s" returned nothing'), text)
+                return
+
+            if new_text[:2] == "//":
+                new_text = new_text[1:]
+
+            self.frame.np.queue.put(slskmessages.SayChatroom(self.room, auto_replace(new_text)))
             widget.set_text("")
             return
 

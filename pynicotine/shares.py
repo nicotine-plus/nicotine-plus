@@ -28,7 +28,7 @@ import shelve
 import stat
 import string
 import sys
-import _thread
+import threading
 import time
 
 from pynicotine import slskmessages
@@ -717,10 +717,14 @@ class Shares:
         quickly send our file list to users. """
 
         if sharestype == "normal":
-            _thread.start_new_thread(self.compressed_shares_normal.make_network_message, (0, True))
+            thread = threading.Thread(target=self.compressed_shares_normal.make_network_message, args=(0, True))
 
         elif sharestype == "buddy":
-            _thread.start_new_thread(self.compressed_shares_buddy.make_network_message, (0, True))
+            thread = threading.Thread(target=self.compressed_shares_buddy.make_network_message, args=(0, True))
+
+        thread.name = "CompressShares"
+        thread.daemon = True
+        thread.start()
 
     def close_shares(self, sharestype):
 
@@ -785,13 +789,13 @@ class Shares:
         return scanner, scanner_queue
 
     def rebuild_public_shares(self, thread=True):
-        self.rescan_shares("normal", rebuild=True, thread=thread)
+        self.rescan_shares("normal", rebuild=True, use_thread=thread)
 
     def rescan_public_shares(self, rebuild=False, thread=True):
         self.rescan_shares("normal", rebuild, thread)
 
     def rebuild_buddy_shares(self, thread=True):
-        self.rescan_shares("buddy", rebuild=True, thread=thread)
+        self.rescan_shares("buddy", rebuild=True, use_thread=thread)
 
     def rescan_buddy_shares(self, rebuild=False, thread=True):
         self.rescan_shares("buddy", rebuild, thread)
@@ -835,7 +839,7 @@ class Shares:
 
         return False
 
-    def rescan_shares(self, sharestype, rebuild=False, thread=True):
+    def rescan_shares(self, sharestype, rebuild=False, use_thread=True):
 
         shared_folders = self.get_shared_folders(sharestype)
 
@@ -845,8 +849,11 @@ class Shares:
         scanner, scanner_queue = self.build_scanner_process(shared_folders, sharestype, rebuild)
         scanner.start()
 
-        if thread:
-            _thread.start_new_thread(self._process_scanner, (scanner, scanner_queue, sharestype))
+        if use_thread:
+            thread = threading.Thread(target=self._process_scanner, args=(scanner, scanner_queue, sharestype))
+            thread.name = "ProcessShareScanner"
+            thread.daemon = True
+            thread.start()
         else:
             self._process_scanner(scanner, scanner_queue, sharestype)
 

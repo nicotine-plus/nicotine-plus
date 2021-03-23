@@ -1555,8 +1555,8 @@ class Transfers:
             transfer.transfertimer.cancel()
 
         transfer.transfertimer = threading.Timer(30.0, transfertimeout.timeout)
-        transfer.transfertimer.setName("TransferTimer")
-        transfer.transfertimer.setDaemon(True)
+        transfer.transfertimer.name = "TransferTimer"
+        transfer.transfertimer.daemon = True
         transfer.transfertimer.start()
 
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, checkduplicate=False):
@@ -1991,15 +1991,15 @@ class Transfers:
     def start_check_download_queue_timer(self):
 
         self.download_queue_timer = threading.Timer(60.0, self.ui_callback, [[slskmessages.CheckDownloadQueue()]])
-        self.download_queue_timer.setName("DownloadQueueTimer")
-        self.download_queue_timer.setDaemon(True)
+        self.download_queue_timer.name = "DownloadQueueTimer"
+        self.download_queue_timer.daemon = True
         self.download_queue_timer.start()
 
     def start_check_upload_queue_timer(self):
 
-        self.upload_queue_timer = threading.Timer(3.0, self.ui_callback, [[slskmessages.CheckUploadQueue()]])
-        self.upload_queue_timer.setName("UploadQueueTimer")
-        self.upload_queue_timer.setDaemon(True)
+        self.upload_queue_timer = threading.Timer(10.0, self.ui_callback, [[slskmessages.CheckUploadQueue()]])
+        self.upload_queue_timer.name = "UploadQueueTimer"
+        self.upload_queue_timer.daemon = True
         self.upload_queue_timer.start()
 
     # Find failed or stuck downloads and attempt to queue them.
@@ -2087,6 +2087,9 @@ class Transfers:
     # Find next file to upload
     def check_upload_queue(self, start_timer=False):
 
+        if start_timer:
+            self.start_check_upload_queue_timer()
+
         # Check if any uploads exist
         if not len(self.uploads):
             return
@@ -2121,9 +2124,6 @@ class Transfers:
                     user=user, filename=upload_candidate.filename,
                     realfilename=upload_candidate.realfilename, transfer=upload_candidate
                 )
-
-        if start_timer:
-            self.start_check_upload_queue_timer()
 
     def ban_user(self, user, ban_message=None):
         """

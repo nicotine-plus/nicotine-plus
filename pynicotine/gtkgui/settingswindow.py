@@ -138,9 +138,6 @@ class ServerFrame(BuildFrame):
     def on_change_password(self, widget):
         self.frame.np.queue.put(slskmessages.ChangePassword(self.Password.get_text()))
 
-    def on_modify_port(self, widget, *args):
-        self.needportmap = True
-
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
 

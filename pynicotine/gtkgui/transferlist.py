@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import _thread
 
 from sys import maxsize
 from time import time
@@ -754,9 +753,6 @@ class TransferList:
 
         widget.stop_emission_by_name("key_press_event")
         return True
-
-    def on_play_files(self, widget, prefix=""):
-        _thread.start_new_thread(self._on_play_files, (widget, prefix))
 
     def on_copy_file_path(self, widget):
 

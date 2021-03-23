@@ -629,18 +629,6 @@ class PrivateChat:
 
         self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
 
-    def thread_alias(self, alias):
-
-        text = expand_alias(alias)
-        if not text:
-            log.add(_('Alias "%s" returned nothing'), alias)
-            return
-
-        if text[:2] == "//":
-            text = text[1:]
-
-        self.frame.np.queue.put(slskmessages.MessageUser(self.user, auto_replace(text)))
-
     def on_enter(self, widget):
 
         text = widget.get_text()
@@ -650,8 +638,16 @@ class PrivateChat:
             return
 
         if is_alias(text):
-            import _thread
-            _thread.start_new_thread(self.thread_alias, (text,))
+            new_text = expand_alias(text)
+
+            if not new_text:
+                log.add(_('Alias "%s" returned nothing'), text)
+                return
+
+            if new_text[:2] == "//":
+                new_text = new_text[1:]
+
+            self.frame.np.queue.put(slskmessages.MessageUser(self.user, auto_replace(new_text)))
             widget.set_text("")
             return
 

@@ -188,7 +188,6 @@
                     <property name="can-focus">1</property>
                     <property name="adjustment">adjustment_FirstPort</property>
                     <property name="numeric">1</property>
-                    <signal name="value-changed" handler="on_modify_port" swapped="no"/>
                   </object>
                 </child>
                 <child>
@@ -203,7 +202,6 @@
                     <property name="can-focus">1</property>
                     <property name="adjustment">adjustment_LastPort</property>
                     <property name="numeric">1</property>
-                    <signal name="value-changed" handler="on_modify_port" swapped="no"/>
                   </object>
                 </child>
                 <child>

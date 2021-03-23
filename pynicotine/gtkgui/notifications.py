@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import _thread
+import threading
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -61,12 +61,13 @@ class Notifications:
 
     def clear_page(self, notebook, item):
 
-        (page, label, window, focused) = item
+        page, label, window, focused = item
         location = None
 
         if notebook is self.frame.ChatNotebook:
             location = "rooms"
             self.clear(location, room=label)
+
         elif notebook is self.frame.PrivatechatNotebook:
             location = "private"
             self.clear(location, user=label)
@@ -77,6 +78,7 @@ class Notifications:
             if room in self.frame.hilites["rooms"]:
                 self.frame.hilites["rooms"].remove(room)
             self.set_title(room)
+
         elif location == "private":
             if user in self.frame.hilites["private"]:
                 self.frame.hilites["private"].remove(user)
@@ -99,6 +101,7 @@ class Notifications:
                 self.frame.MainWindow.set_title(
                     app_name + " - " + _("Private Message from %(user)s") % {'user': user}
                 )
+
             # Allow for the possibility the username is not available
             elif len(self.frame.hilites["rooms"]) > 0:
                 room = self.frame.hilites["rooms"][-1]
@@ -118,7 +121,11 @@ class Notifications:
 
         if message not in self.tts:
             self.tts.append(message)
-            _thread.start_new_thread(self.play_tts, ())
+
+            thread = threading.Thread(target=self.play_tts)
+            thread.name = "TTS"
+            thread.daemon = True
+            thread.start()
 
     def play_tts(self):
 
@@ -128,6 +135,7 @@ class Notifications:
 
         for message in self.tts[:]:
             self.tts_player(message)
+
             if message in self.tts:
                 self.tts.remove(message)
 

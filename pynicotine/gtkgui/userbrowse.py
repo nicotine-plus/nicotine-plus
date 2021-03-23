@@ -29,7 +29,6 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from _thread import start_new_thread
 from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
@@ -922,9 +921,6 @@ class UserBrowse:
         return True
 
     def on_play_files(self, widget, prefix=""):
-        start_new_thread(self._on_play_files, (widget, prefix))
-
-    def _on_play_files(self, widget, prefix=""):
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
 

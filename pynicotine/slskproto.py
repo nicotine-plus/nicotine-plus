@@ -455,7 +455,7 @@ class SlskProtoThread(threading.Thread):
                 break
 
         if listenport is not None:
-            self.setDaemon(True)
+            self.daemon = True
             self.start()
         else:
             short_message = _("Could not bind to a local port, aborting connection")
