@@ -108,9 +108,7 @@ class TransferTimeout:
 
 
 class Transfers:
-    """ This is the transfers manager"""
-    PRE_TRANSFER = ["Queued"]
-    TRANSFER = ["Initializing transfer", "Transferring"]
+    """ This is the transfers manager """
 
     def __init__(self, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
 
@@ -459,7 +457,7 @@ class Transfers:
     def file_is_upload_queued(self, user, filename):
 
         for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in self.PRE_TRANSFER + self.TRANSFER:
+            if i.user == user and i.filename == filename and i.status in ("Queued", "Transferring"):
                 return True
 
         return False
@@ -481,7 +479,7 @@ class Transfers:
                         self.downloadsview.update(i)
 
         for i in self.uploads:
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Initializing transfer", "Connection closed by peer", "Cannot connect"):
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Connection closed by peer", "Cannot connect"):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
@@ -934,6 +932,10 @@ class Transfers:
 
         transfer = msg.transfer
 
+        if transfer.status == "Transferring":
+            # Check if the transfer has started since the timeout callback was initiated
+            return
+
         log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
             "filename": transfer.filename,
             "request": transfer.req,
@@ -1133,7 +1135,7 @@ class Transfers:
 
             else:
                 self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
-                i.status = "Initializing transfer"
+                i.status = "Transferring"
                 i.file = f
 
                 if self.is_privileged(i.user):
@@ -1206,7 +1208,7 @@ class Transfers:
                 break
 
             elif i.status not in ("Aborted", "Paused"):
-                if i.status in self.TRANSFER:
+                if i.status == "Transferring":
                     self.abort_transfer(i, reason=msg.reason)
 
                 i.status = msg.reason
@@ -2020,7 +2022,7 @@ class Transfers:
     # Also ask for the queue position of downloads.
     def check_download_queue(self):
 
-        statuslist = ("Initializing transfer", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
+        statuslist = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
 
         for transfer in self.downloads:
             if transfer.status in statuslist:

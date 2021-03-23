@@ -179,4 +179,4 @@ class Uploads(TransferList):
         self.on_abort_transfer(widget)
 
     def on_clear_failed(self, widget):
-        self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error", "Initializing transfer"])
+        self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"])

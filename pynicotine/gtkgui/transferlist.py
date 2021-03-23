@@ -68,7 +68,6 @@ class TransferList:
         self.statuses["Waiting for download"] = _("Waiting for download")
         self.statuses["Getting status"] = _("Getting status")
         self.statuses["Establishing connection"] = _("Establishing connection")
-        self.statuses["Initializing transfer"] = _("Initializing transfer")
         self.statuses["Transferring"] = _("Transferring")
         self.statuses["Cannot connect"] = _("Cannot connect")
         self.statuses["User logged off"] = _("User logged off")

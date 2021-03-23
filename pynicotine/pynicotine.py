@@ -769,9 +769,13 @@ class NetworkEventProcessor:
 
         """ Peer was not able to repond to our indirect connection request """
 
-        log.add_msg_contents(msg)
-
         conn = msg.conn
+
+        if conn.conn is not None:
+            # Connection has succeeded since the timeout callback was initiated
+            return
+
+        log.add_msg_contents(msg)
 
         try:
             self.peerconns.remove(conn)
