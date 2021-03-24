@@ -2407,8 +2407,12 @@ class FolderContentsResponse(PeerMessage):
         msg.extend(self.pack_object(1))
         msg.extend(self.pack_object(self.dir))
 
-        # We already saved the folder contents as a bytearray when scanning our shares
-        msg.extend(self.list)
+        if self.list is not None:
+            # We already saved the folder contents as a bytearray when scanning our shares
+            msg.extend(self.list)
+        else:
+            # No folder contents
+            msg.extend(self.pack_object(0))
 
         return zlib.compress(msg)
 

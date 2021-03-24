@@ -1872,26 +1872,24 @@ class NetworkEventProcessor:
         if not self.shares.initiated_shares:
             return
 
-        if checkuser == 1:
+        if checkuser == 1 and not self.shares.public_rescanning:
             shares = self.shares.share_dbs["streams"]
-        elif checkuser == 2:
+
+        elif checkuser == 2 and not self.shares.buddy_rescanning:
             shares = self.shares.share_dbs["buddystreams"]
+
         else:
-            self.queue.put(slskmessages.TransferResponse(conn, 0, reason=reason, req=0))
             shares = {}
 
         if checkuser:
             if msg.dir in shares:
                 self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
+
             elif msg.dir.rstrip('\\') in shares:
                 self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
+
             else:
-                if checkuser == 2:
-                    shares = self.shares.share_dbs["streams"]
-                    if msg.dir in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
-                    elif msg.dir.rstrip("\\") in shares:
-                        self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip("\\")]))
+                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, None))
 
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
