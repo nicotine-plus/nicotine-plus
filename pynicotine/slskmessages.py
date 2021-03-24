@@ -489,6 +489,19 @@ class SayChatroom(ServerMessage):
         pos, self.msg = self.get_object(message, str, pos)
 
 
+class UserData:
+    """ When we join a room, the server sends us a bunch of these for each user. """
+
+    def __init__(self, list):
+        self.status = list[0]
+        self.avgspeed = list[1]
+        self.downloadnum = list[2]
+        self.files = list[3]
+        self.dirs = list[4]
+        self.slotsfull = list[5]
+        self.country = list[6]
+
+
 class JoinRoom(ServerMessage):
     """ Server code: 14 """
     """ We send this message to the server when we want to join a room. If the
@@ -534,7 +547,7 @@ class JoinRoom(ServerMessage):
         users = []
         for i in range(numusers):
             pos, username = self.get_object(message, str, pos)
-            users.append([username, None, None, None, None, None, None, None, None])
+            users.append([username, None, None, None, None, None, None, None])
 
         pos, statuslen = self.get_object(message, int, pos)
         for i in range(statuslen):
@@ -543,19 +556,18 @@ class JoinRoom(ServerMessage):
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
             pos, users[i][2] = self.get_object(message, int, pos, getsignedint=True)
-            pos, users[i][3] = self.get_object(message, int, pos)
+            pos, users[i][3] = self.get_object(message, int, pos, getunsignedlonglong=True)
             pos, users[i][4] = self.get_object(message, int, pos)
             pos, users[i][5] = self.get_object(message, int, pos)
-            pos, users[i][6] = self.get_object(message, int, pos)
 
         pos, slotslen = self.get_object(message, int, pos)
         for i in range(slotslen):
-            pos, users[i][7] = self.get_object(message, int, pos)
+            pos, users[i][6] = self.get_object(message, int, pos)
 
         if len(message[pos:]) > 0:
             pos, countrylen = self.get_object(message, int, pos)
             for i in range(countrylen):
-                pos, users[i][8] = self.get_object(message, str, pos)
+                pos, users[i][7] = self.get_object(message, str, pos)
 
         usersdict = {}
         for i in users:
@@ -586,15 +598,16 @@ class UserJoinedRoom(ServerMessage):
         pos, self.room = self.get_object(message, str)
         pos, self.username = self.get_object(message, str, pos)
 
-        i = [None, None, None, None, None, None, None, None]
+        i = [None, None, None, None, None, None, None]
         pos, i[0] = self.get_object(message, int, pos)
         pos, i[1] = self.get_object(message, int, pos, getsignedint=True)
-
-        for j in range(2, 7):
-            pos, i[j] = (self.get_object(message, int, pos))
+        pos, i[2] = self.get_object(message, int, pos, getunsignedlonglong=True)
+        pos, i[3] = self.get_object(message, int, pos)
+        pos, i[4] = self.get_object(message, int, pos)
+        pos, i[5] = self.get_object(message, int, pos)
 
         if len(message[pos:]) > 0:
-            pos, i[7] = self.get_object(message, str, pos)
+            pos, i[6] = self.get_object(message, str, pos)
 
         self.userdata = UserData(i)
 
@@ -1649,21 +1662,6 @@ class PrivateRoomUsers(ServerMessage):
             pos, user = self.get_object(message, str, pos)
 
             self.users.append(user)
-
-
-class UserData:
-    """ When we join a room the server send us a bunch of these,
-    for each user."""
-
-    def __init__(self, list):
-        self.status = list[0]
-        self.avgspeed = list[1]
-        self.downloadnum = list[2]
-        self.something = list[3]
-        self.files = list[4]
-        self.dirs = list[5]
-        self.slotsfull = list[6]
-        self.country = list[7]
 
 
 class PrivateRoomAddUser(ServerMessage):

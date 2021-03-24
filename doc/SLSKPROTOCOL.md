@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 19, 2021
+Last updated on March 25, 2021
 
 ## Sections
 
@@ -321,16 +321,13 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
     2.  **char** <ins>exists</ins> *converted to
         Boolean*
     <!-- end list -->
-      - If <ins>exists</ins> is 1/True (may not be
-        implemented)
-        1.  **int** <ins>status</ins> *0 == Offline,
-            1 == Away; 2 == Online*
+      - If <ins>exists</ins> is 1/True (may not be implemented)
+        1.  **int** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
         2.  **int** <ins>avgspeed</ins>
         3.  **off\_t** <ins>downloadnum</ins>
         4.  **int** <ins>files</ins>
         5.  **int** <ins>dirs</ins>
-        6.  **string** <ins>Country Code</ins> (may
-            not be implemented)
+        6.  **string** <ins>Country Code</ins> (may not be implemented)
 
 ### Server Code 6
 
@@ -433,8 +430,7 @@ Server responds with this message when we join a room. Contains users list with 
         **museekd uses a vector of userdata**
         1.  **int** <ins>status</ins>
     6.  **int** <ins>number of userdata</ins>
-    7.  Iterate the userdata **vector of userdata** (and add unpacked
-        data to [User Data](#user-data))
+    7.  Iterate the userdata **vector of userdata** (and add unpacked data to [User Data](#userdata))
         1.  **int** <ins>avgspeed</ins>
         2.  **off\_t** <ins>downloadnum</ins>
         3.  **int** <ins>files</ins>
@@ -3299,11 +3295,11 @@ Nicotine: DistribServerSearch
 
 1.  **uint32** <ins>status</ins> *Online Status*
 2.  **uint32** <ins>avgspeed</ins> *Average Speed*
-3.  **uint32** <ins>downloadnum</ins> *Number of
-    downloaded files*
+3.  **off\_t** <ins>downloadnum</ins> *Number of downloaded files*
 4.  **uint32** <ins>files</ins> *Files shared*
 5.  **uint32** <ins>dirs</ins> *Directories shared*
 6.  **bool** <ins>slotsfree</ins> *Slots free*
+7.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ### RoomData
 
