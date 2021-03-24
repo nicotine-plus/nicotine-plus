@@ -1019,7 +1019,8 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ConnectError(msg_obj, err)])
                             conn.close()
                     else:
-                        self._ui_callback([ConnectError(msg_obj, "Connection limit reached")])
+                        # Connection limit reached, re-queue
+                        queue.put(msg_obj)
 
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj

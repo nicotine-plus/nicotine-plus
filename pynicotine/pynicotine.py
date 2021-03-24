@@ -716,17 +716,7 @@ class NetworkEventProcessor:
             return
 
         if not self.protothread.socket_still_active(conn.conn):
-
-            for i in reversed(self.peerconns):  # File connections are added after peer connections
-                if i.username == username and i.type == 'F':
-                    # File transfer in progress, don't kill peer connection yet
-                    return
-
-                if i.conn == conn.conn:
-                    self.peerconns.remove(i)
-                    break
-
-            self.queue.put(slskmessages.ConnClose(conn.conn, callback=False))
+            self.queue.put(slskmessages.ConnClose(conn.conn))
 
     def show_connection_error_message(self, conn):
 
