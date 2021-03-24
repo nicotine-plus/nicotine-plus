@@ -83,8 +83,9 @@ class NicotineFrame:
 
     def __init__(self, application, data_dir, config, plugins, use_trayicon, start_hidden, ci_mode, bindip=None, port=None):
 
-        # Show errors in the GUI from here on
-        sys.excepthook = self.on_critical_error
+        if not ci_mode:
+            # Show errors in the GUI from here on
+            sys.excepthook = self.on_critical_error
 
         self.application = application
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
@@ -2402,11 +2403,6 @@ class NicotineFrame:
 
         from traceback import format_tb
 
-        if self.ci_mode:
-            # We're running in CI mode without user input, exit now
-            self.on_quit()
-            raise value
-
         option_dialog(
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
@@ -2416,6 +2412,8 @@ class NicotineFrame:
             cancel=False,
             callback=self.on_critical_error_response
         )
+
+        raise value
 
     def on_critical_error_response(self, dialog, response, data):
 
