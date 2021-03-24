@@ -1875,7 +1875,7 @@ class NetworkEventProcessor:
         if checkuser == 1:
             shares = self.shares.share_dbs["streams"]
         elif checkuser == 2:
-            shares = self.shares.share_dbs["streams"]
+            shares = self.shares.share_dbs["buddystreams"]
         else:
             self.queue.put(slskmessages.TransferResponse(conn, 0, reason=reason, req=0))
             shares = {}
