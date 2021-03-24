@@ -598,6 +598,9 @@ class TransferList:
 
     def remove_specific(self, transfer, cleartreeviewonly=False):
 
+        if transfer in self.frame.np.transfers.transfer_request_times:
+            del self.frame.np.transfers.transfer_request_times[transfer]
+
         if not cleartreeviewonly:
             self.list.remove(transfer)
 
@@ -610,9 +613,6 @@ class TransferList:
 
         for i in self.list[:]:
             if i.status in status:
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
-
                 if i.status == "Queued":
                     self.frame.np.transfers.abort_transfer(i)
 

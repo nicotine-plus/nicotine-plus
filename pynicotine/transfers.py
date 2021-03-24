@@ -1667,6 +1667,9 @@ class Transfers:
                     transferobj.timequeued = i.timequeued
                     previously_queued = True
 
+                if i in self.transfer_request_times:
+                    del self.transfer_request_times[i]
+
                 self.uploads.remove(i)
                 self.uploadsview.remove_specific(i, True)
                 break

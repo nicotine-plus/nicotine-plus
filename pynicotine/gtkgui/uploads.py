@@ -163,8 +163,6 @@ class Uploads(TransferList):
 
         for i in self.list[:]:
             if i.user == user:
-                if i.transfertimer is not None:
-                    i.transfertimer.cancel()
                 self.remove_specific(i)
 
     def on_abort_user(self, widget):
