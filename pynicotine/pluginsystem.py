@@ -105,8 +105,10 @@ class PluginHandler(object):
                 log.add(_("Failed to load plugin '%s', could not find it."), pluginname)
                 return False
 
-            from importlib.machinery import SourceFileLoader
-            plugin = SourceFileLoader(pluginname, os.path.join(path, '__init__.py')).load_module()
+            import importlib.util
+            spec = importlib.util.spec_from_file_location(pluginname, os.path.join(path, '__init__.py'))
+            plugin = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(plugin)
 
         instance = plugin.Plugin(self, enable_plugin=False)
         self.plugin_settings(pluginname, instance)
