@@ -71,7 +71,7 @@ class Plugin(BasePlugin):
         self.parent.frame.np.queue.put(slskmessages.GetPeerAddress(user))
 
     def checkport(self, ip, port):
-        if ip in ('0.0.0.0',) or port in ('0',):
+        if ip in ('0.0.0.0',) or port in (0,):
             return 'unknown'
         self.log("Testing port at %s:%s" % (ip, port))
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
