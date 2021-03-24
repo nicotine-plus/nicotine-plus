@@ -492,14 +492,17 @@ class SayChatroom(ServerMessage):
 class UserData:
     """ When we join a room, the server sends us a bunch of these for each user. """
 
-    def __init__(self, list):
-        self.status = list[0]
-        self.avgspeed = list[1]
-        self.downloadnum = list[2]
-        self.files = list[3]
-        self.dirs = list[4]
-        self.slotsfull = list[5]
-        self.country = list[6]
+    __slots__ = "username", "status", "avgspeed", "downloadnum", "files", "dirs", "slotsfull", "country"
+
+    def __init__(self, username=None, status=None, avgspeed=None, downloadnum=None, files=None, dirs=None, slotsfull=None, country=None):
+        self.username = username
+        self.status = status
+        self.avgspeed = avgspeed
+        self.downloadnum = downloadnum
+        self.files = files
+        self.dirs = dirs
+        self.slotsfull = slotsfull
+        self.country = country
 
 
 class JoinRoom(ServerMessage):
@@ -514,7 +517,7 @@ class JoinRoom(ServerMessage):
         self.room = room
         self.private = private
         self.owner = None
-        self.users = {}
+        self.users = []
         self.operators = []
 
     def make_network_message(self):
@@ -546,34 +549,30 @@ class JoinRoom(ServerMessage):
 
         users = []
         for i in range(numusers):
-            pos, username = self.get_object(message, str, pos)
-            users.append([username, None, None, None, None, None, None, None])
+            users.append(UserData())
+            pos, users[i].username = self.get_object(message, str, pos)
 
         pos, statuslen = self.get_object(message, int, pos)
         for i in range(statuslen):
-            pos, users[i][1] = self.get_object(message, int, pos)
+            pos, users[i].status = self.get_object(message, int, pos)
 
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
-            pos, users[i][2] = self.get_object(message, int, pos, getsignedint=True)
-            pos, users[i][3] = self.get_object(message, int, pos, getunsignedlonglong=True)
-            pos, users[i][4] = self.get_object(message, int, pos)
-            pos, users[i][5] = self.get_object(message, int, pos)
+            pos, users[i].avgspeed = self.get_object(message, int, pos, getsignedint=True)
+            pos, users[i].downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, users[i].files = self.get_object(message, int, pos)
+            pos, users[i].dirs = self.get_object(message, int, pos)
 
         pos, slotslen = self.get_object(message, int, pos)
         for i in range(slotslen):
-            pos, users[i][6] = self.get_object(message, int, pos)
+            pos, users[i].slotsfull = self.get_object(message, int, pos)
 
         if len(message[pos:]) > 0:
             pos, countrylen = self.get_object(message, int, pos)
             for i in range(countrylen):
-                pos, users[i][7] = self.get_object(message, str, pos)
+                pos, users[i].country = self.get_object(message, str, pos)
 
-        usersdict = {}
-        for i in users:
-            usersdict[i[0]] = UserData(i[1:])
-
-        return pos, usersdict
+        return pos, users
 
 
 class LeaveRoom(ServerMessage):
@@ -596,20 +595,18 @@ class UserJoinedRoom(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, str)
-        pos, self.username = self.get_object(message, str, pos)
 
-        i = [None, None, None, None, None, None, None]
-        pos, i[0] = self.get_object(message, int, pos)
-        pos, i[1] = self.get_object(message, int, pos, getsignedint=True)
-        pos, i[2] = self.get_object(message, int, pos, getunsignedlonglong=True)
-        pos, i[3] = self.get_object(message, int, pos)
-        pos, i[4] = self.get_object(message, int, pos)
-        pos, i[5] = self.get_object(message, int, pos)
+        self.userdata = UserData()
+        pos, self.userdata.username = self.get_object(message, str, pos)
+        pos, self.userdata.status = self.get_object(message, int, pos)
+        pos, self.userdata.avgspeed = self.get_object(message, int, pos, getsignedint=True)
+        pos, self.userdata.downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+        pos, self.userdata.files = self.get_object(message, int, pos)
+        pos, self.userdata.dirs = self.get_object(message, int, pos)
+        pos, self.userdata.slotsfull = self.get_object(message, int, pos)
 
         if len(message[pos:]) > 0:
-            pos, i[6] = self.get_object(message, str, pos)
-
-        self.userdata = UserData(i)
+            pos, self.userdata.country = self.get_object(message, str, pos)
 
 
 class UserLeftRoom(ServerMessage):

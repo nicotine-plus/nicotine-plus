@@ -392,7 +392,7 @@ class ChatRooms(IconNotebook):
     def user_joined_room(self, msg):
 
         if msg.room in self.joinedrooms:
-            self.joinedrooms[msg.room].user_joined_room(msg.username, msg.userdata)
+            self.joinedrooms[msg.room].user_joined_room(msg.userdata)
 
     def user_left_room(self, msg):
         self.joinedrooms[msg.room].user_left_room(msg.username)
@@ -584,8 +584,8 @@ class ChatRoom:
 
         self.users = {}
 
-        for username, userdata in users.items():
-            self.add_user_row(username, userdata)
+        for userdata in users:
+            self.add_user_row(userdata)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -639,8 +639,9 @@ class ChatRoom:
 
         self.count_users()
 
-    def add_user_row(self, username, userdata):
+    def add_user_row(self, userdata):
 
+        username = userdata.username
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
         status_image = self.frame.get_status_image(status)
@@ -1164,7 +1165,9 @@ class ChatRoom:
     def display_now_playing(self):
         self.frame.np.now_playing.display_now_playing(callback=self.say)
 
-    def user_joined_room(self, username, userdata):
+    def user_joined_room(self, userdata):
+
+        username = userdata.username
 
         if username in self.users:
             return
@@ -1180,7 +1183,7 @@ class ChatRoom:
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
         self.frame.np.pluginhandler.user_join_chatroom_notification(self.room, username)
-        self.add_user_row(username, userdata)
+        self.add_user_row(userdata)
 
         self.get_user_tag(username)
         self.count_users()
@@ -1397,12 +1400,13 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
-        for username, userdata in users.items():
+        for userdata in users:
+            username = userdata.username
 
             if username in self.users:
                 self.usersmodel.remove(self.users[username])
 
-            self.add_user_row(username, userdata)
+            self.add_user_row(userdata)
 
         self.UserList.set_sensitive(True)
 
