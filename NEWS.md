@@ -3,6 +3,45 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.3 (unstable)
+-----------------------------
+
+Changes
+
+ * Refactored download queuing to use the same system as the official client
+ * Improved reliability and performance of the upload queue
+ * Added a popup that appears whenever a critial error occurs in the program
+
+Corrections
+
+ * The configuration file no longer resets when running out of disk space
+ * Improved reliability of downloading folders containing special characters from certain clients
+ * Keyboard shortcuts are now functional on non-Latin keyboard layouts
+ * Upload bandwidth limits are no longer incorrectly applied when upload slots limits are enabled
+ * Reaching a specified upload speed limit no longer interferes with max bandwidth/upload slot limits
+ * Illegal file path characters are now replaced before downloading a file, to prevent issues with FAT/NTFS drives on Unix-based systems
+ * Directly searching a user's files now functions properly
+ * In predefined search filters, the state of the 'Free Slots' filter is now saved properly
+ * If user browse/info tabs were closed, they no longer reopen when loading new information
+ * Fixed a few behavioral issues related to chat notifications
+ * Fixed issues related to incorrect user statuses being displayed in some cases
+ * The correct status color is now displayed for usernames in past private chat messages
+ * Leaving the public room is possible once again
+ * Avoid unnecessary network traffic related to number of shared folders and files
+ * Reduced memory usage on Windows and macOS
+
+Issues closed on GitHub
+
+ * Version 3.0.1 and 3.0.2's Nicotine+.exe detected as a virus by Malwarebytes ([#1012](https://github.com/Nicotine-Plus/nicotine-plus/issues/1012))
+ * Username Wrong Color in Chat ([#1013](https://github.com/Nicotine-Plus/nicotine-plus/issues/1013))
+ * free slot setup ([#1014](https://github.com/Nicotine-Plus/nicotine-plus/issues/1014))
+ * 'invalid operation on closed shelf' while rescaning shares ([#1016](https://github.com/Nicotine-Plus/nicotine-plus/issues/1016))
+ * Complete file remains in Incomplete Downloads folder ([#1019](https://github.com/Nicotine-Plus/nicotine-plus/issues/1019))
+ * User's shared file list cannot be saved to disk, due to a mismatch in the number of arguments on function call. ([#1024](https://github.com/Nicotine-Plus/nicotine-plus/issues/1024))
+ * Deprecated messages related to privileges? ([#1025](https://github.com/Nicotine-Plus/nicotine-plus/issues/1025))
+ * line 716 ([#1026](https://github.com/Nicotine-Plus/nicotine-plus/issues/1026))
+ * line 707 ([#1029](https://github.com/Nicotine-Plus/nicotine-plus/issues/1029))
+
 Version 3.0.2 (March 1, 2021)
 -----------------------------
 
