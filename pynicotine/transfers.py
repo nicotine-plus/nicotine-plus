@@ -474,7 +474,7 @@ class Transfers:
                     self.abort_transfer(i, send_fail_message=False)
                     self.downloadsview.update(i)
 
-                elif i.status in ("User logged off", "Connection closed by peer", "Cannot connect"):
+                elif i.status in ("Getting status", "User logged off", "Connection closed by peer", "Cannot connect"):
                     self.get_file(i.user, i.filename, i.path, i)
 
         for i in self.uploads:
