@@ -162,7 +162,8 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
     if third:
         self.add_button(third, Gtk.ResponseType.REJECT)
 
-    self.show()
+    self.run()
+    self.destroy()
 
 
 """ File Chooser Dialogs """
