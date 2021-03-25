@@ -1,3 +1,7 @@
+# Classic Icon Theme
+
+This icon theme contains icons used in Nicotine+ 2.1.2 and earlier. It serves as an example of how to create an icon theme, and can be selected as the active icon theme in the Nicotine+ preferences.
+
 # Icon Credits
 
 Created by gfarmerfr (released under Public Domain)
