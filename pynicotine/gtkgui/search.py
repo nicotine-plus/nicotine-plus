@@ -519,10 +519,10 @@ class Search:
             self.FilterBitrateEntry.set_text(str(sfilter[3]))
             self.FilterFreeSlot.set_active(sfilter[4])
 
-            if(len(sfilter) > 5):
+            if len(sfilter) > 5:
                 self.FilterCountryEntry.set_text(str(sfilter[5]))
 
-            if(len(sfilter) > 6):
+            if len(sfilter) > 6:
                 self.FilterTypeEntry.set_text(str(sfilter[6]))
 
             self.on_refilter(None)
@@ -1008,7 +1008,7 @@ class Search:
 
         self.popup_menu_users.clear()
 
-        if len(self.selected_users) > 0:
+        if self.selected_users:
 
             items = []
 
@@ -1034,7 +1034,7 @@ class Search:
 
     def on_select_user_results(self, widget):
 
-        if len(self.selected_users) == 0:
+        if not self.selected_users:
             return
 
         selected_user = widget.get_parent().user

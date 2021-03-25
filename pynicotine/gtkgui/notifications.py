@@ -95,15 +95,15 @@ class Notifications:
             self.frame.MainWindow.set_title(app_name)
 
         elif self.frame.np.config.sections["notifications"]["notification_window_title"]:
-            # Private Chats have a higher priority
-            if len(self.frame.hilites["private"]) > 0:
+            if self.frame.hilites["private"]:
+                # Private Chats have a higher priority
                 user = self.frame.hilites["private"][-1]
                 self.frame.MainWindow.set_title(
                     app_name + " - " + _("Private Message from %(user)s") % {'user': user}
                 )
 
-            # Allow for the possibility the username is not available
-            elif len(self.frame.hilites["rooms"]) > 0:
+            elif self.frame.hilites["rooms"]:
+                # Allow for the possibility the username is not available
                 room = self.frame.hilites["rooms"][-1]
                 if user is None:
                     self.frame.MainWindow.set_title(

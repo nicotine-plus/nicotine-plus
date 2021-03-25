@@ -436,7 +436,7 @@ class UserBrowse:
                 )
 
                 # If there are subdirs futher down the path: recurse
-                if len(dictdir[subdir]):
+                if dictdir[subdir]:
                     buildgtktree(dictdir[subdir], self.directories[current_path], current_path)
 
         # For each shared dir we will complete the dictionnary
@@ -580,7 +580,7 @@ class UserBrowse:
 
             self.make_new_model(msg.list)
 
-        if msg and len(msg.list) == 0:
+        if msg and not msg.list:
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, or they are sharing files privately.")
             )

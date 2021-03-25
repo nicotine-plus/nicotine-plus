@@ -74,8 +74,10 @@ from pynicotine.utils import get_path
 
 def get_completion(part, list):
     matches = get_completions(part, list)
-    if len(matches) == 0:
+
+    if not matches:
         return None, 0
+
     if len(matches) == 1:
         return matches[0], 1
     else:
@@ -740,7 +742,7 @@ class ChatRoom:
                 else:
                     append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
 
-            if len(lines) > 0:
+            if lines:
                 append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
     def on_find_activity_log(self, widget):

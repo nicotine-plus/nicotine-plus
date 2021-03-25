@@ -443,7 +443,7 @@ class DownloadsFrame(BuildFrame):
         except Exception as e:
             failed[outfilter] = e
 
-        if len(failed) >= 1:
+        if failed:
             errors = ""
 
             for dfilter, error in failed.items():
@@ -1821,10 +1821,10 @@ class SearchesFrame(BuildFrame):
             self.FilterBR.set_text(str(searches["defilter"][3]))
             self.FilterFree.set_active(searches["defilter"][4])
 
-            if(len(searches["defilter"]) > 5):
+            if len(searches["defilter"]) > 5:
                 self.FilterCC.set_text(str(searches["defilter"][5]))
 
-            if(len(searches["defilter"]) > 6):
+            if len(searches["defilter"]) > 6:
                 self.FilterType.set_text(str(searches["defilter"][6]))
 
         self.ClearSearchHistorySuccess.hide()

@@ -140,7 +140,7 @@ class Downloads(TransferList):
             re.compile(outfilter)
             self.frame.np.config.sections["transfers"]["downloadregexp"] = outfilter
             # Send error messages for each failed filter to log window
-            if len(failed) >= 1:
+            if failed:
                 errors = ""
 
                 for dfilter, error in failed.items():

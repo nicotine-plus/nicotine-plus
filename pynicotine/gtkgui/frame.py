@@ -642,7 +642,7 @@ class NicotineFrame:
 
     def network_callback(self, msgs):
 
-        if len(msgs) > 0:
+        if msgs:
             GLib.idle_add(self.on_network_event, msgs)
 
     def conn_close(self, conn, addr):

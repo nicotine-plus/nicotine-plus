@@ -362,7 +362,7 @@ class TransferList:
         if elapsed > 0:
             helapsed = self.frame.np.transfers.get_time(elapsed)
 
-        if len(extensions) == 0:
+        if not extensions:
             extensions = ""
         elif len(extensions) == 1:
             extensions = " (" + self.extension_list_template % {'ext': next(iter(extensions))} + ")"
@@ -685,7 +685,7 @@ class TransferList:
 
         self.popup_menu_users.clear()
 
-        if len(self.selected_users) > 0:
+        if self.selected_users:
 
             items = []
 
@@ -712,7 +712,7 @@ class TransferList:
 
     def on_select_user_transfers(self, widget):
 
-        if len(self.selected_users) == 0:
+        if not self.selected_users:
             return
 
         selected_user = widget.get_parent().user

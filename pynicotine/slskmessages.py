@@ -361,19 +361,18 @@ class Login(ServerMessage):
         else:
             pos, self.banner = self.get_object(message, str, pos)
 
-        if len(message[pos:]) > 0:
-            try:
-                pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
-                # Unknown number
-            except Exception as error:
-                log.add_warning("Error unpacking IP address: %s", error)
-            try:
-                # MD5 hexdigest of the password you sent
-                if len(message[pos:]) > 0:
-                    pos, self.checksum = self.get_object(message, str, pos)
-            except Exception:
-                # Not an official client on the official server
-                pass
+        if not message[pos:]:
+            return
+
+        try:
+            pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+
+        except Exception as error:
+            log.add_warning("Error unpacking IP address: %s", error)
+
+        # MD5 hexdigest of the password you sent
+        if message[pos:]:
+            pos, self.checksum = self.get_object(message, str, pos)
 
 
 class SetWaitPort(ServerMessage):
@@ -468,7 +467,7 @@ class GetUserStatus(ServerMessage):
         pos, self.status = self.get_object(message, int, pos)
 
         # Soulfind support
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, self.privileged = pos + 1, message[pos]
 
 
@@ -532,11 +531,11 @@ class JoinRoom(ServerMessage):
         pos, self.users = self.get_users(message[pos:])
         pos = pos1 + pos
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             self.private = True
             pos, self.owner = self.get_object(message, str, pos)
 
-        if len(message[pos:]) > 0 and self.private:
+        if message[pos:] and self.private:
             pos, numops = self.get_object(message, int, pos)
 
             for i in range(numops):
@@ -567,7 +566,7 @@ class JoinRoom(ServerMessage):
         for i in range(slotslen):
             pos, users[i].slotsfull = self.get_object(message, int, pos)
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, countrylen = self.get_object(message, int, pos)
             for i in range(countrylen):
                 pos, users[i].country = self.get_object(message, str, pos)
@@ -605,7 +604,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.dirs = self.get_object(message, int, pos)
         pos, self.userdata.slotsfull = self.get_object(message, int, pos)
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, self.userdata.country = self.get_object(message, str, pos)
 
 
@@ -647,7 +646,7 @@ class ConnectToPeer(ServerMessage):
         pos, self.token = self.get_object(message, int, pos)
 
         # Soulfind support
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, self.privileged = pos + 1, message[pos]
 
 
@@ -672,7 +671,7 @@ class MessageUser(ServerMessage):
         pos, self.user = self.get_object(message, str, pos)
         pos, self.msg = self.get_object(message, str, pos)
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             pos, self.newmessage = pos + 1, message[pos]
         else:
             self.newmessage = 1
@@ -922,7 +921,7 @@ class Recommendations(ServerMessage):
             if rating >= 0:
                 self.recommendations[key] = rating
 
-        if len(message[pos:]) == 0:
+        if not message[pos:]:
             return
 
         pos, num2 = self.get_object(message, int, pos)
@@ -1068,7 +1067,7 @@ class RoomList(ServerMessage):
 
             self.rooms[i][1] = usercount
 
-        if len(message[pos:]) == 0:
+        if not message[pos:]:
             return
 
         pos, self.ownedprivaterooms = self._get_rooms(pos, message)
@@ -1940,7 +1939,7 @@ class PierceFireWall(PeerMessage):
         return self.pack_object(self.token, unsignedint=True)
 
     def parse_network_message(self, message):
-        if len(message) > 0:
+        if message:
             # A token is not guaranteed to be sent
             pos, self.token = self.get_object(message, int)
 
@@ -1969,7 +1968,7 @@ class PeerInit(PeerMessage):
         pos, self.user = self.get_object(message, str)
         pos, self.type = self.get_object(message, str, pos)
 
-        if len(message[pos:]) > 0:
+        if message[pos:]:
             # A token is not guaranteed to be sent
             pos, self.token = self.get_object(message, int, pos)
 
@@ -2277,7 +2276,7 @@ class UserInfoReply(PeerMessage):
         pos, self.queuesize = self.get_object(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]
 
-        if len(message[pos:]) >= 4:
+        if message[pos:]:
             pos, self.uploadallowed = self.get_object(message, int, pos)
 
     def make_network_message(self):

@@ -1188,7 +1188,7 @@ class SlskProtoThread(threading.Thread):
                     conn = conns[i]
                     event_masks = selectors.EVENT_READ
 
-                    if len(conn.obuf) > 0 or (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
+                    if conn.obuf or (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
                         if self._is_upload(conn):
                             limit = self._uploadlimit[0](conns, conn)
 
@@ -1349,7 +1349,7 @@ class SlskProtoThread(threading.Thread):
                         continue
 
                 try:
-                    if len(conn_obj.ibuf) > 0:
+                    if conn_obj.ibuf:
                         if connection is server_socket:
                             msgs, conns[server_socket].ibuf = self.process_server_input(conns[server_socket].ibuf)
                             self._ui_callback(msgs)
