@@ -425,7 +425,7 @@ class Search:
             str                   # (18) color
         )
 
-        self.column_numbers = [i for i in range(self.resultsmodel.get_n_columns())]
+        self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 18
         self.cols = cols = initialise_columns(
             "file_search",

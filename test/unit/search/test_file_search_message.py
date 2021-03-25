@@ -45,11 +45,11 @@ def test_instantiate_file_search():
 
 def test_make_network_message():
     search = FileSearch(requestid=SEARCH_ID, text=SEARCH_TEXT)
-    assert [b for b in search.make_network_message()] == SEARCH_NETWORK_VALUE
+    assert list(search.make_network_message()) == SEARCH_NETWORK_VALUE
 
 
 def test_sent_out_message():
     search = FileSearch(requestid=SEARCH_ID, text=SEARCH_TEXT)
     msg = search.make_network_message()
     out_msg = struct.pack("<ii", len(msg) + 4, SlskProtoThread.servercodes[search.__class__]) + msg
-    assert [b for b in out_msg] == SEARCH_OUT_MSG
+    assert list(out_msg) == SEARCH_OUT_MSG

@@ -52,7 +52,7 @@ class RoomList:
 
         self.room_model = Gtk.ListStore(str, int, int)
 
-        self.column_numbers = [i for i in range(self.room_model.get_n_columns())]
+        self.column_numbers = list(range(self.room_model.get_n_columns()))
         self.cols = initialise_columns(
             None,
             self.RoomsList,

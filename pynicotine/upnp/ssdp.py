@@ -279,7 +279,8 @@ class SSDPResponse(SSDPMessage):
 
     def __str__(self):
         """ Return complete SSDP response """
-        lines = list()
+
+        lines = []
         lines.append(' '.join(
             [self.version, str(self.status_code), self.reason]
         ))
@@ -322,7 +323,7 @@ class SSDPRequest(SSDPMessage):
     def __str__(self):
         """ Return complete SSDP request """
 
-        lines = list()
+        lines = []
         lines.append(' '.join(
             [self.method, self.uri, self.version]
         ))

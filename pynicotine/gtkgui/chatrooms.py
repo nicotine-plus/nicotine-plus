@@ -560,7 +560,7 @@ class ChatRoom:
             str                   # (8)  country
         )
 
-        self.column_numbers = [i for i in range(self.usersmodel.get_n_columns())]
+        self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
             ("chat_room", room),
             self.UserList,
