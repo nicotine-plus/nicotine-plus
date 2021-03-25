@@ -211,15 +211,6 @@ class ChatRooms(IconNotebook):
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
 
-    def focused(self, page, focused):
-
-        if not focused:
-            return
-
-        for name, room in self.users.items():
-            if room.Main == page:
-                self.frame.notifications.clear("rooms", name)
-
     def join_room(self, msg):
 
         if msg.room in self.joinedrooms:
@@ -873,7 +864,7 @@ class ChatRoom:
 
         if tag == self.tag_hilite:
             # We were mentioned, update tray icon and show urgency hint
-            self.frame.notifications.add("rooms", user, self.room, tab=True)
+            self.frame.notifications.add("rooms", user, self.room)
 
         elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
             self.frame.notifications.new_notification(

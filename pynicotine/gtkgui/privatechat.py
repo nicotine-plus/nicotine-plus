@@ -130,16 +130,6 @@ class PrivateChats(IconNotebook):
                 if user in self.frame.hilites["private"]:
                     self.frame.notifications.clear("private", tab.user)
 
-    def focused(self, page, focused):
-
-        if not focused:
-            return
-
-        for user, tab in list(self.users.items()):
-            if tab.Main == page:
-                if user in self.frame.hilites["private"]:
-                    self.frame.notifications.clear("private", tab.user)
-
     def get_user_status(self, msg):
 
         if msg.user in self.users:
