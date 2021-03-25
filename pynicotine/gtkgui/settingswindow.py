@@ -223,7 +223,7 @@ class DownloadsFrame(BuildFrame):
         self.filtersiters = {}
         self.filterlist.clear()
 
-        if config["transfers"]["downloadfilters"] != []:
+        if config["transfers"]["downloadfilters"]:
             for dfilter in config["transfers"]["downloadfilters"]:
                 dfilter, escaped = dfilter
                 self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
@@ -373,7 +373,7 @@ class DownloadsFrame(BuildFrame):
         iters = []
         self.FilterView.get_selection().selected_foreach(self._selected_filter, iters)
 
-        if iters == []:
+        if not iters:
             return None
 
         dfilter = self.filterlist.get_value(iters[0], 0)

@@ -91,7 +91,7 @@ class Search:
         elif mode == "buddies":
             self.do_buddies_search(self.searchid, searchterm_without_excluded)
 
-        elif mode == "user" and users != [] and users[0] != '':
+        elif mode == "user":
             self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
         return self.searchid, searchterm_with_excluded, searchterm_without_excluded

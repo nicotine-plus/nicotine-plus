@@ -318,6 +318,7 @@ class Tray:
         return True
 
     def set_image(self, status=None):
+
         if not self.is_tray_icon_visible():
             return
 
@@ -326,11 +327,11 @@ class Tray:
                 self.tray_status["status"] = status
 
             # Check for hilites, and display hilite icon if there is a room or private hilite
-            if self.frame.hilites["rooms"] == [] and self.frame.hilites["private"] == []:
+            if self.frame.hilites["rooms"] or self.frame.hilites["private"]:
+                icon_name = "msg"
+            else:
                 # If there is no hilite, display the status
                 icon_name = self.tray_status["status"]
-            else:
-                icon_name = "msg"
 
             if icon_name != self.tray_status["last"]:
                 self.tray_status["last"] = icon_name

@@ -269,7 +269,7 @@ class UserBrowse:
 
             dirs = sorted(self.directories.keys())
 
-            if dirs != []:
+            if dirs:
                 self.set_directory(dirs[0])
             else:
                 self.set_directory(None)
@@ -384,8 +384,7 @@ class UserBrowse:
         dirseparator = '\\'
 
         # If there is no share
-
-        if self.shares == []:
+        if not self.shares:
 
             # Set the model of the treeviex
             self.FolderTreeView.set_model(self.dir_store)
@@ -959,7 +958,7 @@ class UserBrowse:
                 return
             self.find_matches()
 
-        if self.search_list != []:
+        if self.search_list:
 
             if self.search_position not in list(range(len(self.search_list))):
                 self.search_position = 0
@@ -1016,7 +1015,7 @@ class UserBrowse:
 
     def on_copy_url(self, widget):
 
-        if self.selected_files != [] and self.selected_files is not None:
+        if self.selected_files:
             path = "\\".join([self.selected_folder, self.selected_files[0]])
             self.frame.set_clipboard_url(self.user, path)
 

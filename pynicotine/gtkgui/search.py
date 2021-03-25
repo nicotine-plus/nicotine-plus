@@ -158,7 +158,7 @@ class Searches(IconNotebook):
                 (users, text) = feedback
 
         else:
-            log.add_warning(_("Unknown search mode, not using plugin system. Fix me!"))
+            log.add_warning("Unknown search mode, not using plugin system. Fix me!")
             feedback = True
 
         if feedback is None:
@@ -181,7 +181,7 @@ class Searches(IconNotebook):
 
             self.frame.SearchCombo.append_text(i)
 
-        if search_mode == "user" and users != [] and users[0] != '':
+        if search_mode == "user" and users:
             self.usersearches[search_id] = users
 
     def set_wishlist_interval(self, msg):
@@ -1262,7 +1262,7 @@ class Search:
 
         directories = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
-        if directories is None or directories == []:
+        if not directories:
             return
 
         destination = directories[0]
