@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import show_user_status_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 from pynicotine.logfacility import log
@@ -67,7 +68,7 @@ class UserList:
             bool,                 # (7)  privileged
             str,                  # (8)  hlast seen
             str,                  # (9)  comments
-            GObject.TYPE_INT64,   # (10) status
+            int,                  # (10) status
             GObject.TYPE_UINT64,  # (11) speed
             GObject.TYPE_UINT64,  # (12) file count
             int,                  # (13) last seen
@@ -193,7 +194,15 @@ class UserList:
                 widget.append_text(str(user[0]))
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_country_tooltip(widget, x, y, tooltip, 14)
+
+        status_tooltip = show_user_status_tooltip(widget, x, y, tooltip, 10)
+        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 14)
+
+        if status_tooltip:
+            return status_tooltip
+
+        if country_tooltip:
+            return country_tooltip
 
     def on_add_user(self, widget, *args):
 

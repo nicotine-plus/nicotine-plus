@@ -63,6 +63,7 @@ from pynicotine.gtkgui.utils import expand_alias
 from pynicotine.gtkgui.utils import is_alias
 from pynicotine.gtkgui.utils import save_columns
 from pynicotine.gtkgui.utils import show_country_tooltip
+from pynicotine.gtkgui.utils import show_user_status_tooltip
 from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import unalias
@@ -1536,7 +1537,15 @@ class ChatRoom:
         return True
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_country_tooltip(widget, x, y, tooltip, 8, stripprefix='')
+
+        status_tooltip = show_user_status_tooltip(widget, x, y, tooltip, 5)
+        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 8, strip_prefix="")
+
+        if status_tooltip:
+            return status_tooltip
+
+        if country_tooltip:
+            return country_tooltip
 
     def on_log_toggled(self, widget):
 

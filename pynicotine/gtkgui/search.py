@@ -494,7 +494,7 @@ class Search:
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
-        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 13, stripprefix='')
+        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 13, strip_prefix="")
         file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 12)
 
         if country_tooltip:

@@ -396,7 +396,7 @@ def set_treeview_selected_row(treeview, event):
         selection.unselect_all()
 
 
-def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, stripprefix='flag_'):
+def show_tooltip(treeview, x, y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 
     try:
         bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(x, y)
@@ -405,58 +405,58 @@ def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, stripprefix='fla
     except TypeError:
         return False
 
-    if column.get_title() != "country":
+    if column.get_title() not in column_titles:
         return False
 
     model = treeview.get_model()
     iterator = model.get_iter(path)
-    value = model.get_value(iterator, sourcecolumn)
-
-    # Avoid throwing an error in there's no flag
-    if value is None:
-        return False
+    column_value = model.get_value(iterator, sourcecolumn)
 
     # Update tooltip position
     treeview.set_tooltip_cell(tooltip, path, column, None)
 
-    if not value.startswith(stripprefix):
-        tooltip.set_text(_("Unknown"))
-        return True
-
-    value = value[len(stripprefix):]
-    if value:
-        countryname = code2name(value)
-    else:
-        countryname = _("Earth")
-
-    tooltip.set_text(countryname)
+    text = text_function(column_value, strip_prefix)
+    tooltip.set_text(text)
     return True
+
+
+def get_country_tooltip_text(column_value, strip_prefix):
+
+    if not column_value.startswith(strip_prefix):
+        return _("Unknown")
+
+    column_value = column_value[len(strip_prefix):]
+    if column_value:
+        return code2name(column_value)
+
+    return _("Earth")
+
+
+def get_file_path_tooltip_text(column_value, strip_prefix):
+    return column_value
+
+
+def get_user_status_tooltip_text(column_value, strip_prefix):
+
+    if column_value == 1:
+        return _("Away")
+
+    if column_value == 2:
+        return _("Online")
+
+    return _("Offline")
+
+
+def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, strip_prefix='flag_'):
+    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("country",), get_country_tooltip_text, strip_prefix)
 
 
 def show_file_path_tooltip(treeview, x, y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("folder", "filename"), get_file_path_tooltip_text)
 
-    try:
-        bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(x, y)
-        path, column, cx, cy = treeview.get_path_at_pos(bin_x, bin_y)
 
-    except TypeError:
-        return False
-
-    if column.get_title() not in ("folder", "filename"):
-        return False
-
-    model = treeview.get_model()
-    iterator = model.get_iter(path)
-    value = model.get_value(iterator, sourcecolumn)
-
-    if not value:
-        return False
-
-    # Update tooltip position
-    treeview.set_tooltip_cell(tooltip, path, column, None)
-
-    tooltip.set_text(value)
-    return True
+def show_user_status_tooltip(treeview, x, y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("status",), get_user_status_tooltip_text)
 
 
 def open_file_path(file_path, command=None):
@@ -976,8 +976,6 @@ class IconNotebook:
         if fulltext is None:
             fulltext = label
 
-        label_tab.set_tooltip_text(fulltext)
-
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
         label_tab.connect('button_press_event', self.on_tab_click, page)
@@ -989,6 +987,8 @@ class IconNotebook:
 
         if status:
             self.set_user_status(page, label, status)
+        else:
+            label_tab.set_tooltip_text(fulltext)
 
         self.notebook.set_tab_reorderable(page, self.reorderable)
         self.notebook.set_show_tabs(True)
@@ -1073,6 +1073,10 @@ class IconNotebook:
             self.set_text(page, user)
 
         self.set_status_image(page, status)
+
+        # Set a tab tooltip containing the user's status and name
+        tab_label, menu_label = self.get_labels(page)
+        tab_label.set_tooltip_text("%s (%s)" % (user, status_text))
 
     def set_hilite_image(self, page, status):
 

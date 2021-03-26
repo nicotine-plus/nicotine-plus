@@ -31,6 +31,7 @@ from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import set_treeview_selected_row
+from pynicotine.gtkgui.utils import show_user_status_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
 
@@ -145,18 +146,18 @@ class Interests:
         cols = initialise_columns(
             None,
             self.RecommendationUsersList,
-            ["country", _("Country"), 25, "pixbuf", None],
+            ["status", _("Status"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],
             ["files", _("Files"), 100, "text", None],
         )
 
-        cols["country"].set_sort_column_id(4)
+        cols["status"].set_sort_column_id(4)
         cols["user"].set_sort_column_id(1)
         cols["speed"].set_sort_column_id(5)
         cols["files"].set_sort_column_id(6)
 
-        cols["country"].get_widget().hide()
+        cols["status"].get_widget().hide()
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(
@@ -164,7 +165,7 @@ class Interests:
             str,                  # (1) user
             str,                  # (2) hspeed
             str,                  # (3) hfiles
-            GObject.TYPE_INT64,   # (4) status
+            int,                  # (4) status
             GObject.TYPE_UINT64,  # (5) speed
             GObject.TYPE_UINT64   # (6) file count
         )
@@ -183,6 +184,9 @@ class Interests:
                 self.dislikes[thing] = self.dislikes_model.append([thing])
 
         self.update_visuals()
+
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+        return show_user_status_tooltip(widget, x, y, tooltip, 4)
 
     def on_add_thing_i_like(self, widget, *args):
         thing = widget.get_text()
