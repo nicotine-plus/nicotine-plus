@@ -185,7 +185,7 @@ functionality while keeping current with the Soulseek protocol."""
     setup(
         name="nicotine-plus",
         version=version,
-        license="GPLv3",
+        license="GPLv3+",
         description="Graphical client for the Soulseek file sharing network",
         long_description=LONG_DESCRIPTION,
         author="Nicotine+ Team",
