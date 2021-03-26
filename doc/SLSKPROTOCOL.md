@@ -1,6 +1,10 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 25, 2021
+Last updated on March 26, 2021
+
+As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
+
+If you find any inconsistencies or errors in the documentation, please report them.
 
 ## Sections
 
