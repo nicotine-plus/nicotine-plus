@@ -3336,3 +3336,12 @@ Nicotine: DistribServerSearch
 ### off\_t
 
   - Packed as a 64bit Integer
+
+# Credits
+
+This documentation exists thanks to efforts from the following projects:
+
+- Nicotine+ (Hyriand, daelstorm, mathiascode)
+- Museek+ (lbponey)
+- SoleSeek
+- PySoulSeek
