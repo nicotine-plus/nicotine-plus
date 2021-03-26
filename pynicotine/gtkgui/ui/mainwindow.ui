@@ -1471,48 +1471,87 @@
               </object>
             </child>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="icon-name">go-down-symbolic</property>
-                <property name="margin-start">20</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="DownStatus">
-                <property name="visible">1</property>
-                <property name="margin-start">8</property>
+                <property name="margin-start">12</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="tooltip-text" translatable="yes">Downloading (speed / active downloads)</property>
+                <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">go-down-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="DownStatus">
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkImage">
+              <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="icon-name">go-up-symbolic</property>
-                <property name="margin-start">20</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="UpStatus">
-                <property name="visible">1</property>
-                <property name="margin-start">8</property>
+                <property name="margin-start">2</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="tooltip-text" translatable="yes">Uploading (speed / active uploads)</property>
+                <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">go-up-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="UpStatus">
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="UserStatus">
+              <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="margin-start">25</property>
-                <property name="margin-end">10</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">2</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
-                <property name="label">Offline</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <property name="action-name">app.away</property>
+                <child>
+                  <object class="GtkLabel" id="UserStatus">
+                    <property name="visible">1</property>
+                    <property name="label">Offline</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
             <child>
