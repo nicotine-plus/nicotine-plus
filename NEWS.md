@@ -14,6 +14,7 @@ Changes
 
 Corrections
 
+ * Nicotine+ now starts properly when invalid download filters are detected
  * The configuration file no longer resets when running out of disk space
  * Improved reliability of downloading folders containing special characters from certain clients
  * Keyboard shortcuts are now functional on non-Latin keyboard layouts
@@ -41,6 +42,8 @@ Issues closed on GitHub
  * Deprecated messages related to privileges? ([#1025](https://github.com/Nicotine-Plus/nicotine-plus/issues/1025))
  * line 716 ([#1026](https://github.com/Nicotine-Plus/nicotine-plus/issues/1026))
  * line 707 ([#1029](https://github.com/Nicotine-Plus/nicotine-plus/issues/1029))
+ * line 666, ([#1030](https://github.com/Nicotine-Plus/nicotine-plus/issues/1030))
+ * Problems with new interface in 3.0 ([#1033](https://github.com/Nicotine-Plus/nicotine-plus/issues/1033))
 
 Version 3.0.2 (March 1, 2021)
 -----------------------------
