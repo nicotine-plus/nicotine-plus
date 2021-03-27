@@ -1999,6 +1999,8 @@ class NetworkEventProcessor:
     def distrib_search(self, msg):
         """ Distrib code: 3 and 93 """
 
+        log.add_msg_contents(msg)
+
         if self.search is not None:
             self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
             self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
