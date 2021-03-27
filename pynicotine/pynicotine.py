@@ -1416,6 +1416,7 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         potential_parents = msg.list
+        log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
 
         if not self.has_parent and potential_parents:
 
@@ -1423,6 +1424,7 @@ class NetworkEventProcessor:
                 addr = potential_parents[user]
 
                 self.send_message_to_peer(user, slskmessages.DistribConn(), address=addr)
+                log.add_conn("Attempting parent connection to user %s", user)
 
     def wishlist_interval(self, msg):
         """ Server code: 104 """
@@ -2019,6 +2021,7 @@ class NetworkEventProcessor:
 
         self.has_parent = False
 
+        log.add_conn("We have no parent, requesting a new one")
         self.queue.append(slskmessages.HaveNoParent(1))
         self.queue.append(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
         self.queue.append(slskmessages.BranchLevel(0))
@@ -2054,12 +2057,15 @@ class NetworkEventProcessor:
                 self.queue.append(slskmessages.SearchParent(msg.conn.addr[0]))
                 self.queue.append(slskmessages.BranchLevel(msg.value + 1))
                 self.has_parent = True
+                log.add_conn("Adopting user %s as parent", parent.username)
+                log.add_conn("Our branch level is %s", msg.value + 1)
             else:
                 self.send_have_no_parent()
 
         else:
             # Our parent sent an update
             self.queue.append(slskmessages.BranchLevel(msg.value + 1))
+            log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
 
     def distrib_branch_root(self, msg):
         """ Distrib code: 5 """
@@ -2068,6 +2074,7 @@ class NetworkEventProcessor:
 
         # Inform the server of our branch root
         self.queue.append(slskmessages.BranchRoot(msg.user))
+        log.add_conn("Our branch root is user %s", msg.user)
 
     def distrib_child_depth(self, msg):
         """ Distrib code: 7 """
