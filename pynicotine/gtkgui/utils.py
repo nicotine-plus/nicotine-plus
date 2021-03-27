@@ -1398,7 +1398,7 @@ class PopupMenu(Gtk.Menu):
     def on_show_ip_address(self, widget):
 
         self.frame.np.ip_requested.add(self.user)
-        self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
+        self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
     def on_get_user_info(self, widget):
         self.frame.local_user_info_request(self.user)
@@ -1407,16 +1407,16 @@ class PopupMenu(Gtk.Menu):
         self.frame.browse_user(self.user)
 
     def on_private_room_add_user(self, widget, room):
-        self.frame.np.queue.put(slskmessages.PrivateRoomAddUser(room, self.user))
+        self.frame.np.queue.append(slskmessages.PrivateRoomAddUser(room, self.user))
 
     def on_private_room_remove_user(self, widget, room):
-        self.frame.np.queue.put(slskmessages.PrivateRoomRemoveUser(room, self.user))
+        self.frame.np.queue.append(slskmessages.PrivateRoomRemoveUser(room, self.user))
 
     def on_private_room_add_operator(self, widget, room):
-        self.frame.np.queue.put(slskmessages.PrivateRoomAddOperator(room, self.user))
+        self.frame.np.queue.append(slskmessages.PrivateRoomAddOperator(room, self.user))
 
     def on_private_room_remove_operator(self, widget, room):
-        self.frame.np.queue.put(slskmessages.PrivateRoomRemoveOperator(room, self.user))
+        self.frame.np.queue.append(slskmessages.PrivateRoomRemoveOperator(room, self.user))
 
     def on_add_to_list(self, widget):
 
@@ -1476,7 +1476,7 @@ class PopupMenu(Gtk.Menu):
 
     def on_give_privileges(self, widget, error=None):
 
-        self.frame.np.queue.put(slskmessages.CheckPrivileges())
+        self.frame.np.queue.append(slskmessages.CheckPrivileges())
 
         if self.frame.np.privileges_left is None:
             days = _("Unknown")
@@ -1497,7 +1497,7 @@ class PopupMenu(Gtk.Menu):
         if days:
             try:
                 days = int(days)
-                self.frame.np.queue.put(slskmessages.GivePrivileges(self.user, days))
+                self.frame.np.queue.append(slskmessages.GivePrivileges(self.user, days))
 
             except ValueError:
                 self.on_give_privileges(widget, error=_("Please enter a whole number!"))

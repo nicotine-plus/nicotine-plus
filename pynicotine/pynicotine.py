@@ -30,9 +30,10 @@ This is the actual client code. Actual GUI classes are in the separate modules
 """
 
 import os
-import queue
 import threading
 import time
+
+from collections import deque
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -145,7 +146,7 @@ class NetworkEventProcessor:
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
         self.geoip = IP2Location(file_path, "SHARED_MEMORY")
 
-        self.queue = queue.Queue(0)
+        self.queue = deque()
         self.network_filter = NetworkFilter(self, self.config, self.users, self.queue, self.geoip)
         self.statistics = Statistics(self.config, self.ui_callback)
         self.shares = Shares(self, self.config, self.queue, self.ui_callback)
@@ -423,7 +424,7 @@ class NetworkEventProcessor:
             addr = address
 
         if addr is None:
-            self.queue.put(slskmessages.GetPeerAddress(user))
+            self.queue.append(slskmessages.GetPeerAddress(user))
 
             log.add_conn("Requesting address for user %(user)s", {
                 'user': user
@@ -445,7 +446,7 @@ class NetworkEventProcessor:
 
         """ Initiate a connection with a peer directly """
 
-        self.queue.put(slskmessages.OutConn(None, addr, init))
+        self.queue.append(slskmessages.OutConn(None, addr, init))
 
         log.add_conn("Initialising direct connection of type %(type)s to user %(user)s", {
             'type': message_type,
@@ -457,7 +458,7 @@ class NetworkEventProcessor:
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
         conn.token = new_id()
-        self.queue.put(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
+        self.queue.append(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
         self.out_indirect_conn_request_times[conn] = time.time()
 
         log.add_conn(
@@ -569,7 +570,7 @@ class NetworkEventProcessor:
                     else:
                         i.tryaddr += 1
 
-                    self.queue.put(slskmessages.GetPeerAddress(user))
+                    self.queue.append(slskmessages.GetPeerAddress(user))
                     return
 
         if user in self.users:
@@ -634,7 +635,7 @@ class NetworkEventProcessor:
                 self.userbrowse.show_user(peerconn.username, conn=conn, change_page=False)
 
             j.conn = conn
-            self.queue.put(j)
+            self.queue.append(j)
 
         peerconn.msgs = []
 
@@ -658,10 +659,10 @@ class NetworkEventProcessor:
 
                 if i.token is None:
                     i.init.conn = conn
-                    self.queue.put(i.init)
+                    self.queue.append(i.init)
 
                 else:
-                    self.queue.put(slskmessages.PierceFireWall(conn, i.token))
+                    self.queue.append(slskmessages.PierceFireWall(conn, i.token))
 
                 i.conn = conn
 
@@ -694,7 +695,7 @@ class NetworkEventProcessor:
                     del self.out_indirect_conn_request_times[i]
 
                 i.init.conn = conn
-                self.queue.put(i.init)
+                self.queue.append(i.init)
                 i.conn = conn
 
                 log.add_conn("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s" % {
@@ -716,7 +717,7 @@ class NetworkEventProcessor:
             return
 
         if not self.protothread.socket_still_active(conn.conn):
-            self.queue.put(slskmessages.ConnClose(conn.conn))
+            self.queue.append(slskmessages.ConnClose(conn.conn))
 
     def show_connection_error_message(self, conn):
 
@@ -973,10 +974,10 @@ class NetworkEventProcessor:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
 
-        self.queue.put(slskmessages.AddUser(user))
+        self.queue.append(slskmessages.AddUser(user))
 
         # Get privilege status
-        self.queue.put(slskmessages.GetUserStatus(user))
+        self.queue.append(slskmessages.GetUserStatus(user))
 
     def stop_timers(self):
         if self.servertimer is not None:
@@ -1013,7 +1014,7 @@ class NetworkEventProcessor:
         self.active_server_conn = msg.conn
         self.server_timeout_value = -1
         self.users.clear()
-        self.queue.put(
+        self.queue.append(
             slskmessages.Login(
                 self.config.sections["server"]["login"],
                 self.config.sections["server"]["passw"],
@@ -1031,7 +1032,7 @@ class NetworkEventProcessor:
             )
         )
         if self.waitport is not None:
-            self.queue.put(slskmessages.SetWaitPort(self.waitport))
+            self.queue.append(slskmessages.SetWaitPort(self.waitport))
 
     def inc_port(self, msg):
         self.waitport = msg.port
@@ -1101,7 +1102,7 @@ class NetworkEventProcessor:
             thread.daemon = True
             thread.start()
 
-            self.queue.put(slskmessages.SetStatus((not self.ui_callback.away) + 1))
+            self.queue.append(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.watch_user(self.config.sections["server"]["login"])
 
             self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
@@ -1122,13 +1123,13 @@ class NetworkEventProcessor:
 
             for thing in self.config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
-                    self.queue.put(slskmessages.AddThingILike(thing))
+                    self.queue.append(slskmessages.AddThingILike(thing))
 
             for thing in self.config.sections["interests"]["dislikes"]:
                 if thing and isinstance(thing, str):
-                    self.queue.put(slskmessages.AddThingIHate(thing))
+                    self.queue.append(slskmessages.AddThingIHate(thing))
 
-            self.queue.put(slskmessages.CheckPrivileges())
+            self.queue.append(slskmessages.CheckPrivileges())
 
             # Ask for a list of parents to connect to (distributed network)
             self.send_have_no_parent()
@@ -1136,7 +1137,7 @@ class NetworkEventProcessor:
             """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
             redirecting results to children is not implemented yet. Tell the server we don't accept
             children for now. """
-            self.queue.put(slskmessages.AcceptChildren(0))
+            self.queue.append(slskmessages.AcceptChildren(0))
 
             if self.shares.initiated_shares:
                 self.shares.send_num_shared_folders_files()
@@ -1144,9 +1145,9 @@ class NetworkEventProcessor:
             """ Request a complete room list. A limited room list not including blacklisted rooms and
             rooms with few users is automatically sent when logging in, but subsequent room list
             requests contain all rooms. """
-            self.queue.put(slskmessages.RoomList())
+            self.queue.append(slskmessages.RoomList())
 
-            self.queue.put(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
+            self.queue.append(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
             self.set_status("")
         else:
@@ -1162,7 +1163,7 @@ class NetworkEventProcessor:
 
         if msg.userexists and msg.status is None:
             # Legacy support (Soulfind server)
-            self.queue.put(slskmessages.GetUserStatus(msg.user))
+            self.queue.append(slskmessages.GetUserStatus(msg.user))
 
         if msg.files is not None:
             self.get_user_stats(msg, log_contents=False)
@@ -1265,7 +1266,7 @@ class NetworkEventProcessor:
 
         if self.privatechat is not None:
             self.privatechat.show_message(msg, msg.msg, msg.newmessage)
-            self.queue.put(slskmessages.MessageAcked(msg.msgid))
+            self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
     def search_request(self, msg):
         """ Server code: 26, 42, 93 and 120 """
@@ -1629,7 +1630,7 @@ class NetworkEventProcessor:
                     })
 
             if conn is not None:
-                self.queue.put(slskmessages.ConnClose(conn))
+                self.queue.append(slskmessages.ConnClose(conn))
             return
 
         log.add(_("%(user)s is making a BrowseShares request"), {
@@ -1661,7 +1662,7 @@ class NetworkEventProcessor:
             m.make_network_message(nozlib=0)
 
         m.conn = conn
-        self.queue.put(m)
+        self.queue.append(m)
 
     def shared_file_list(self, msg):
         """ Peer code: 5 """
@@ -1761,7 +1762,7 @@ class NetworkEventProcessor:
                 log.add(_("Blocking %s from making a UserInfo request, possible spoofing attempt from an unknown IP & port"), user)
 
             if conn is not None:
-                self.queue.put(slskmessages.ConnClose(conn))
+                self.queue.append(slskmessages.ConnClose(conn))
 
             return
 
@@ -1795,7 +1796,7 @@ class NetworkEventProcessor:
             else:
                 uploadallowed = 0
 
-            self.queue.put(slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+            self.queue.append(slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
         log.add(
             _("%(user)s is making a UserInfo request"), {
@@ -1866,7 +1867,7 @@ class NetworkEventProcessor:
             return
 
         if not checkuser:
-            self.queue.put(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
+            self.queue.append(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
             return
 
         if not self.shares.initiated_shares:
@@ -1883,13 +1884,13 @@ class NetworkEventProcessor:
 
         if checkuser:
             if msg.dir in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
+                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
 
             elif msg.dir.rstrip('\\') in shares:
-                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
+                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
 
             else:
-                self.queue.put(slskmessages.FolderContentsResponse(conn, msg.dir, None))
+                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, None))
 
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
@@ -2016,9 +2017,9 @@ class NetworkEventProcessor:
 
         self.has_parent = False
 
-        self.queue.put(slskmessages.HaveNoParent(1))
-        self.queue.put(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
-        self.queue.put(slskmessages.BranchLevel(0))
+        self.queue.append(slskmessages.HaveNoParent(1))
+        self.queue.append(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
+        self.queue.append(slskmessages.BranchLevel(0))
 
     def distrib_branch_level(self, msg):
         """ Distrib code: 4 """
@@ -2037,7 +2038,7 @@ class NetworkEventProcessor:
 
                     if i.conn != msg.conn.conn:
                         if i.conn is not None:
-                            self.queue.put(slskmessages.ConnClose(i.conn, callback=False))
+                            self.queue.append(slskmessages.ConnClose(i.conn, callback=False))
 
                         if i in self.out_indirect_conn_request_times:
                             del self.out_indirect_conn_request_times[i]
@@ -2047,16 +2048,16 @@ class NetworkEventProcessor:
             parent = self.get_parent_conn()
 
             if parent is not None:
-                self.queue.put(slskmessages.HaveNoParent(0))
-                self.queue.put(slskmessages.SearchParent(msg.conn.addr[0]))
-                self.queue.put(slskmessages.BranchLevel(msg.value + 1))
+                self.queue.append(slskmessages.HaveNoParent(0))
+                self.queue.append(slskmessages.SearchParent(msg.conn.addr[0]))
+                self.queue.append(slskmessages.BranchLevel(msg.value + 1))
                 self.has_parent = True
             else:
                 self.send_have_no_parent()
 
         else:
             # Our parent sent an update
-            self.queue.put(slskmessages.BranchLevel(msg.value + 1))
+            self.queue.append(slskmessages.BranchLevel(msg.value + 1))
 
     def distrib_branch_root(self, msg):
         """ Distrib code: 5 """
@@ -2064,7 +2065,7 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         # Inform the server of our branch root
-        self.queue.put(slskmessages.BranchRoot(msg.user))
+        self.queue.append(slskmessages.BranchRoot(msg.user))
 
     def distrib_child_depth(self, msg):
         """ Distrib code: 7 """

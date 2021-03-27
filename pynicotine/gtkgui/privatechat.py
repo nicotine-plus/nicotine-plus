@@ -241,7 +241,7 @@ class PrivateChats(IconNotebook):
                 return
 
         elif newmessage:
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(msg.user))
+            self.frame.np.queue.append(slskmessages.GetPeerAddress(msg.user))
             self.private_message_queue_add(msg, text)
             return
 
@@ -615,7 +615,7 @@ class PrivateChat:
             # not in the soulseek protocol
             self.frame.np.send_message_to_peer(self.user, slskmessages.PMessageUser(None, my_username, payload))
         else:
-            self.frame.np.queue.put(slskmessages.MessageUser(self.user, payload))
+            self.frame.np.queue.append(slskmessages.MessageUser(self.user, payload))
 
         self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
 
@@ -637,7 +637,7 @@ class PrivateChat:
             if new_text[:2] == "//":
                 new_text = new_text[1:]
 
-            self.frame.np.queue.put(slskmessages.MessageUser(self.user, auto_replace(new_text)))
+            self.frame.np.queue.append(slskmessages.MessageUser(self.user, auto_replace(new_text)))
             widget.set_text("")
             return
 
@@ -665,7 +665,7 @@ class PrivateChat:
 
         elif cmd in ("/join", "/j"):
             if args:
-                self.frame.np.queue.put(slskmessages.JoinRoom(args))
+                self.frame.np.queue.append(slskmessages.JoinRoom(args))
 
         elif cmd in ("/w", "/whois", "/info"):
             self.frame.local_user_info_request(arg_self)
@@ -677,7 +677,7 @@ class PrivateChat:
 
         elif cmd == "/ip":
             self.frame.np.ip_requested.add(arg_self)
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(arg_self))
+            self.frame.np.queue.append(slskmessages.GetPeerAddress(arg_self))
 
         elif cmd == "/pm":
             if args:

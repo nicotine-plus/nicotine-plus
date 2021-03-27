@@ -900,8 +900,8 @@ class SlskProtoThread(threading.Thread):
         needsleep = False
         numsockets = len(conns) + len(connsinprogress)
 
-        while not queue.empty():
-            msg_list.append(queue.get())
+        while queue:
+            msg_list.append(queue.popleft())
 
         for msg_obj in msg_list:
             if issubclass(msg_obj.__class__, ServerMessage):
@@ -912,7 +912,7 @@ class SlskProtoThread(threading.Thread):
                         conns[server_socket].obuf.extend(struct.pack("<ii", len(msg) + 4, self.servercodes[msg_obj.__class__]))
                         conns[server_socket].obuf.extend(msg)
                     else:
-                        queue.put(msg_obj)
+                        queue.append(msg_obj)
                         needsleep = True
 
                 except Exception as error:
@@ -1020,7 +1020,7 @@ class SlskProtoThread(threading.Thread):
                             conn.close()
                     else:
                         # Connection limit reached, re-queue
-                        queue.put(msg_obj)
+                        queue.append(msg_obj)
 
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj
@@ -1171,7 +1171,7 @@ class SlskProtoThread(threading.Thread):
                 time.sleep(0.2)
                 continue
 
-            if not queue.empty():
+            if queue:
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
                 self._server_socket = server_socket
 
@@ -1394,8 +1394,8 @@ class SlskProtoThread(threading.Thread):
             i.close()
             del self._connsinprogress[i]
 
-        while not self._queue.empty():
-            self._queue.get(0)
+        while self._queue:
+            self._queue.popleft()
 
         if not self._want_abort:
             self._ui_callback([SetCurrentConnectionCount(0)])

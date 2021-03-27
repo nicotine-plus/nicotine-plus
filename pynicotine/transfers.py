@@ -378,8 +378,8 @@ class Transfers:
         uploadlimit = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
         limitby = self.eventprocessor.config.sections["transfers"]["limitby"]
 
-        self.queue.put(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.queue.put(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
+        self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
+        self.queue.append(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
 
     def queue_limit_reached(self, user):
 
@@ -625,21 +625,21 @@ class Transfers:
             checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
 
             if not checkuser:
-                self.queue.put(
+                self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=reason)
                 )
 
             elif limits and self.queue_limit_reached(user):
                 uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
                 limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
-                self.queue.put(
+                self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
             elif limits and self.file_limit_reached(user):
                 filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
                 limitmsg = "User limit of %i files exceeded" % (filelimit)
-                self.queue.put(
+                self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
@@ -658,7 +658,7 @@ class Transfers:
                 self.check_upload_queue()
 
             else:
-                self.queue.put(
+                self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
                 )
 
@@ -1001,7 +1001,7 @@ class Transfers:
                 self._file_request_upload(msg, i)
                 return
 
-        self.queue.put(slskmessages.ConnClose(msg.conn))
+        self.queue.append(slskmessages.ConnClose(msg.conn))
 
     def _file_request_download(self, msg, i):
 
@@ -1084,7 +1084,7 @@ class Transfers:
                     if i.size > size:
                         i.status = "Transferring"
                         i.legacy_attempt = False
-                        self.queue.put(slskmessages.DownloadFile(i.conn, size, f, i.size))
+                        self.queue.append(slskmessages.DownloadFile(i.conn, size, f, i.size))
                         log.add_transfer("Download started: %s", f.name)
 
                         self.log_transfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, show_ui=1)
@@ -1104,7 +1104,7 @@ class Transfers:
                 'file': i.filename
             })
 
-            self.queue.put(slskmessages.ConnClose(msg.conn))
+            self.queue.append(slskmessages.ConnClose(msg.conn))
 
     def _file_request_upload(self, msg, i):
 
@@ -1133,7 +1133,7 @@ class Transfers:
                 i.status = "Local file error"
 
             else:
-                self.queue.put(slskmessages.UploadFile(i.conn, file=f, size=i.size))
+                self.queue.append(slskmessages.UploadFile(i.conn, file=f, size=i.size))
                 i.status = "Transferring"
                 i.file = f
 
@@ -1172,7 +1172,7 @@ class Transfers:
                 'file': i.filename
             })
 
-            self.queue.put(slskmessages.ConnClose(msg.conn))
+            self.queue.append(slskmessages.ConnClose(msg.conn))
 
     def upload_denied(self, msg):
 
@@ -1512,7 +1512,7 @@ class Transfers:
                     if not privileged_user or self.is_privileged(i.user):
                         place += 1
 
-        self.queue.put(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
+        self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
     def place_in_queue(self, msg):
         """ The server tells us our place in queue for a particular transfer."""
@@ -1549,7 +1549,7 @@ class Transfers:
             log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
 
         else:
-            self.queue.put(
+            self.queue.append(
                 slskmessages.MessageUser(username, _("[Automatic Message] ") + _("You are not allowed to send me files."))
             )
             log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
@@ -1935,7 +1935,7 @@ class Transfers:
         if i.speed is not None:
             speedbytes = int(i.speed)
             self.eventprocessor.speed = speedbytes
-            self.queue.put(slskmessages.SendUploadSpeed(speedbytes))
+            self.queue.append(slskmessages.SendUploadSpeed(speedbytes))
 
         self.close_file(file, i)
 
@@ -2209,7 +2209,7 @@ class Transfers:
         transfer.timeleft = ""
 
         if transfer.conn is not None:
-            self.queue.put(slskmessages.ConnClose(transfer.conn))
+            self.queue.append(slskmessages.ConnClose(transfer.conn))
             transfer.conn = None
 
         if transfer in self.transfer_request_times:

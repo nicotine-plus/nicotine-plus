@@ -42,7 +42,7 @@ class RoomWall:
         config = self.frame.np.config.sections
         room_name = self.room.room
 
-        self.frame.np.queue.put(slskmessages.RoomTickerSet(room_name, result))
+        self.frame.np.queue.append(slskmessages.RoomTickerSet(room_name, result))
 
         self.RoomWallList.get_buffer().set_text("")
 

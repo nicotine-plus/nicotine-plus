@@ -141,7 +141,7 @@ def renameprocess(newname, debug=False):
 
 
 def rescanshares(config, data_dir):
-    import queue
+    from collections import deque
 
     from pynicotine.config import Config
     from pynicotine.logfacility import console
@@ -156,8 +156,7 @@ def rescanshares(config, data_dir):
     print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
 your shares this way, keep Nicotine+ closed until rescanning is done."""))
 
-    queue = queue.Queue(0)
-    shares = Shares(None, config, queue)
+    shares = Shares(None, config, deque())
 
     shares.rescan_public_shares(thread=False)
 

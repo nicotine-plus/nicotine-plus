@@ -789,7 +789,7 @@ class Shares:
         if config["transfers"]["enablebuddyshares"] and config["transfers"]["friendsonly"]:
             # No public shares
             files = folders = 0
-            self.queue.put(slskmessages.SharedFoldersFiles(files, folders))
+            self.queue.append(slskmessages.SharedFoldersFiles(files, folders))
             return
 
         shared_db = "files"
@@ -804,7 +804,7 @@ class Shares:
                 sharedfolders = len(list(self.share_dbs[shared_db]))
                 sharedfiles = len(list(self.share_dbs[index_db]))
 
-            self.queue.put(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as e:
             log.add(_("Failed to send number of shared files to the server: %s"), e)

@@ -195,7 +195,7 @@ class UserInfo:
         self.frame.np.watch_user(user, force_update=True)
 
         # Request user interests
-        self.frame.np.queue.put(slskmessages.UserInterests(user))
+        self.frame.np.queue.append(slskmessages.UserInterests(user))
 
         self.user = user
         self.conn = None
@@ -445,7 +445,7 @@ class UserInfo:
     def on_show_ip_address(self, widget):
 
         self.frame.np.ip_requested.add(self.user)
-        self.frame.np.queue.put(slskmessages.GetPeerAddress(self.user))
+        self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
     def on_refresh(self, widget):
         self.info_bar.set_visible(False)

@@ -416,7 +416,7 @@ class PluginHandler(object):
         log.add(text)
 
     def saychatroom(self, room, text):
-        self.frame.np.queue.put(slskmessages.SayChatroom(room, text))
+        self.frame.np.queue.append(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
         '''Send user message in private (showing up in GUI)'''

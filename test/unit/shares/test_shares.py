@@ -19,7 +19,8 @@
 import multiprocessing
 import os
 import pytest
-import queue
+
+from collections import deque
 
 from pynicotine.shares import Shares
 from pynicotine.config import Config
@@ -51,7 +52,7 @@ def test_shares_scan(config):
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
     config.sections["transfers"]["rescanonstartup"] = False
 
-    shares = Shares(None, config, queue.Queue(0))
+    shares = Shares(None, config, deque())
     shares.rescan_public_shares(thread=False)
 
     # Verify that modification time was saved for shares folder
@@ -88,7 +89,7 @@ def test_hidden_file_folder_scan(config):
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
     config.sections["transfers"]["rescanonstartup"] = False
 
-    shares = Shares(None, config, queue.Queue(0))
+    shares = Shares(None, config, deque())
     shares.rescan_public_shares(thread=False)
 
     # Check folders
@@ -121,7 +122,7 @@ def test_shares_add_downloaded(config):
     config.sections["transfers"]["rescanonstartup"] = False
     config.sections["transfers"]["sharedownloaddir"] = True
 
-    shares = Shares(None, config, queue.Queue(0), None)
+    shares = Shares(None, config, deque(), None)
     shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
     assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Downloaded"]

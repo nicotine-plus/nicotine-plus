@@ -160,7 +160,7 @@ class Tray:
 
         if user:
             self.frame.np.ip_requested.add(user)
-            self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+            self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
 
     def on_get_a_users_shares(self, widget, prefix=""):
 

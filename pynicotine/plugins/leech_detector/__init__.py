@@ -31,7 +31,7 @@ class Plugin(BasePlugin):
             self.probed[user]
         except KeyError:
             self.probed[user] = 'requesting'
-            self.parent.frame.np.queue.put(slskmessages.GetUserStats(user))
+            self.parent.frame.np.queue.append(slskmessages.GetUserStats(user))
             self.log('New user %s, requesting information...' % user)
 
     def UserStatsNotification(self, user, stats):  # noqa

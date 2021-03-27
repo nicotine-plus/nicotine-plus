@@ -197,7 +197,7 @@ class Interests:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingILike(thing))
+            self.np.queue.append(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget, *args):
         thing = widget.get_text()
@@ -208,7 +208,7 @@ class Interests:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingIHate(thing))
+            self.np.queue.append(slskmessages.AddThingIHate(thing))
 
     def on_remove_thing_i_like(self, widget):
         thing = self.til_popup_menu.get_user()
@@ -221,7 +221,7 @@ class Interests:
         self.np.config.sections["interests"]["likes"].remove(thing)
 
         self.np.config.write_configuration()
-        self.np.queue.put(slskmessages.RemoveThingILike(thing))
+        self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
     def on_remove_thing_i_dislike(self, widget):
         thing = self.tidl_popup_menu.get_user()
@@ -234,7 +234,7 @@ class Interests:
         self.np.config.sections["interests"]["dislikes"].remove(thing)
 
         self.np.config.write_configuration()
-        self.np.queue.put(slskmessages.RemoveThingIHate(thing))
+        self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
     def on_like_recommendation(self, widget):
         thing = widget.get_parent().get_user()
@@ -245,7 +245,7 @@ class Interests:
             self.likes[thing] = self.likes_model.append([thing])
 
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingILike(thing))
+            self.np.queue.append(slskmessages.AddThingILike(thing))
 
         elif not widget.get_active() and \
                 thing and thing in self.np.config.sections["interests"]["likes"]:
@@ -254,7 +254,7 @@ class Interests:
             self.np.config.sections["interests"]["likes"].remove(thing)
 
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.RemoveThingILike(thing))
+            self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
     def on_dislike_recommendation(self, widget):
         thing = widget.get_parent().get_user()
@@ -265,7 +265,7 @@ class Interests:
             self.dislikes[thing] = self.dislikes_model.append([thing])
 
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.AddThingIHate(thing))
+            self.np.queue.append(slskmessages.AddThingIHate(thing))
 
         elif not widget.get_active() and \
                 thing and thing in self.np.config.sections["interests"]["dislikes"]:
@@ -274,17 +274,17 @@ class Interests:
             self.np.config.sections["interests"]["dislikes"].remove(thing)
 
             self.np.config.write_configuration()
-            self.np.queue.put(slskmessages.RemoveThingIHate(thing))
+            self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
     def on_recommend_item(self, widget):
         thing = self.til_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(thing))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
+        self.np.queue.append(slskmessages.ItemRecommendations(thing))
+        self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
     def on_recommend_recommendation(self, widget):
         thing = self.r_popup_menu.get_user()
-        self.np.queue.put(slskmessages.ItemRecommendations(thing))
-        self.np.queue.put(slskmessages.ItemSimilarUsers(thing))
+        self.np.queue.append(slskmessages.ItemRecommendations(thing))
+        self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
     def on_recommend_search(self, widget):
         thing = widget.get_parent().get_user()
@@ -292,13 +292,13 @@ class Interests:
         self.frame.change_main_page("search")
 
     def on_global_recommendations_clicked(self, widget):
-        self.np.queue.put(slskmessages.GlobalRecommendations())
+        self.np.queue.append(slskmessages.GlobalRecommendations())
 
     def on_recommendations_clicked(self, widget):
-        self.np.queue.put(slskmessages.Recommendations())
+        self.np.queue.append(slskmessages.Recommendations())
 
     def on_similar_users_clicked(self, widget):
-        self.np.queue.put(slskmessages.SimilarUsers())
+        self.np.queue.append(slskmessages.SimilarUsers())
 
     def set_recommendations(self, title, recom):
         self.recommendations_model.clear()

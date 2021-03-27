@@ -97,33 +97,33 @@ class Search:
         return self.searchid, searchterm_with_excluded, searchterm_without_excluded
 
     def do_global_search(self, id, text):
-        self.queue.put(slskmessages.FileSearch(id, text))
+        self.queue.append(slskmessages.FileSearch(id, text))
 
         """ Request a list of related searches from the server.
         Seemingly non-functional since 2018 (always receiving empty lists). """
 
-        # self.queue.put(slskmessages.RelatedSearch(text))
+        # self.queue.append(slskmessages.RelatedSearch(text))
 
     def do_rooms_search(self, id, text, room=None):
 
         if room is not None:
-            self.queue.put(slskmessages.RoomSearch(room, id, text))
+            self.queue.append(slskmessages.RoomSearch(room, id, text))
         else:
             for room in self.np.chatrooms.joinedrooms:
-                self.queue.put(slskmessages.RoomSearch(room, id, text))
+                self.queue.append(slskmessages.RoomSearch(room, id, text))
 
     def do_buddies_search(self, id, text):
 
         for i in self.config.sections["server"]["userlist"]:
             user = i[0]
-            self.queue.put(slskmessages.UserSearch(user, id, text))
+            self.queue.append(slskmessages.UserSearch(user, id, text))
 
     def do_peer_search(self, id, text, users):
         for user in users:
-            self.queue.put(slskmessages.UserSearch(user, id, text))
+            self.queue.append(slskmessages.UserSearch(user, id, text))
 
     def do_wishlist_search(self, id, text):
-        self.queue.put(slskmessages.WishlistSearch(id, text))
+        self.queue.append(slskmessages.WishlistSearch(id, text))
 
     def get_current_search_id(self):
         return self.searchid

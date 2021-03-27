@@ -18,7 +18,8 @@
 
 import os
 import pytest
-import queue
+
+from collections import deque
 
 from pynicotine.config import Config
 from pynicotine.search import Search
@@ -37,7 +38,7 @@ def config():
 
 @pytest.fixture
 def search(config):
-    return Search(None, config, queue.Queue(0), None)
+    return Search(None, config, deque(), None)
 
 
 def test_do_search(config, search):

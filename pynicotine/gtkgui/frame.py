@@ -905,14 +905,14 @@ class NicotineFrame:
             return
 
         # Clear any potential messages queued up to this point (should not happen)
-        while not self.np.queue.empty():
-            self.np.queue.get(0)
+        while self.np.queue:
+            self.np.queue.popleft()
 
         self.set_user_status("...")
 
         server = self.np.config.sections["server"]["server"]
         self.set_status_text(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
-        self.np.queue.put(slskmessages.ServerConn(None, server))
+        self.np.queue.append(slskmessages.ServerConn(None, server))
 
         if self.np.servertimer is not None:
             self.np.servertimer.cancel()
@@ -921,7 +921,7 @@ class NicotineFrame:
     def on_disconnect(self, *args):
         self.disconnect_action.set_enabled(False)
         self.np.manualdisconnect = True
-        self.np.queue.put(slskmessages.ConnClose(self.np.active_server_conn))
+        self.np.queue.append(slskmessages.ConnClose(self.np.active_server_conn))
 
     def on_away(self, *args):
         self.away = not self.away
@@ -937,12 +937,12 @@ class NicotineFrame:
 
         self.tray.set_away(self.away)
 
-        self.np.queue.put(slskmessages.SetStatus(self.away and 1 or 2))
+        self.np.queue.append(slskmessages.SetStatus(self.away and 1 or 2))
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
         self.privatechats.update_visuals()
 
     def on_check_privileges(self, *args):
-        self.np.queue.put(slskmessages.CheckPrivileges())
+        self.np.queue.append(slskmessages.CheckPrivileges())
 
     def on_get_privileges(self, *args):
         import urllib.parse
@@ -1947,7 +1947,7 @@ class NicotineFrame:
         room = widget.get_text()
         private = self.RoomType.get_active()
 
-        self.np.queue.put(slskmessages.JoinRoom(room, private))
+        self.np.queue.append(slskmessages.JoinRoom(room, private))
         widget.set_text("")
 
     def on_show_chat_buttons(self, widget=None):

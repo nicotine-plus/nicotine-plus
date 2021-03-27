@@ -48,7 +48,7 @@ class NetworkFilter:
             if user not in request_list:
                 request_list[user] = action
 
-            self.queue.put(slskmessages.GetPeerAddress(user))
+            self.queue.append(slskmessages.GetPeerAddress(user))
             return True
 
         return False

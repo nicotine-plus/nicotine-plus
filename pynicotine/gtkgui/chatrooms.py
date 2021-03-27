@@ -262,7 +262,7 @@ class ChatRooms(IconNotebook):
                     self.roomlist.on_join_public_room(None)
 
                 elif isinstance(room, str):
-                    self.frame.np.queue.put(slskmessages.JoinRoom(room))
+                    self.frame.np.queue.append(slskmessages.JoinRoom(room))
 
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
@@ -642,7 +642,7 @@ class ChatRoom:
         flag_image = self.frame.get_flag_image(country)
 
         # Request user's IP address, so we can get the country
-        self.frame.np.queue.put(slskmessages.GetPeerAddress(username))
+        self.frame.np.queue.append(slskmessages.GetPeerAddress(username))
 
         avgspeed = userdata.avgspeed
         files = userdata.files
@@ -975,7 +975,7 @@ class ChatRoom:
             if new_text[:2] == "//":
                 new_text = new_text[1:]
 
-            self.frame.np.queue.put(slskmessages.SayChatroom(self.room, auto_replace(new_text)))
+            self.frame.np.queue.append(slskmessages.SayChatroom(self.room, auto_replace(new_text)))
             widget.set_text("")
             return
 
@@ -1015,7 +1015,7 @@ class ChatRoom:
             if args:
                 user = args
                 self.frame.np.ip_requested.add(user)
-                self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+                self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
 
         elif cmd == "/pm":
             if args:
@@ -1060,13 +1060,13 @@ class ChatRoom:
 
         elif cmd in ("/j", "/join"):
             if args:
-                self.frame.np.queue.put(slskmessages.JoinRoom(args))
+                self.frame.np.queue.append(slskmessages.JoinRoom(args))
 
         elif cmd in ("/l", "/leave", "/p", "/part"):
             if args:
-                self.frame.np.queue.put(slskmessages.LeaveRoom(args))
+                self.frame.np.queue.append(slskmessages.LeaveRoom(args))
             else:
-                self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
+                self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
@@ -1119,7 +1119,7 @@ class ChatRoom:
                 self.frame.on_buddy_rescan()
 
         elif cmd in ("/tick", "/t"):
-            self.frame.np.queue.put(slskmessages.RoomTickerSet(self.room, args))
+            self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room, args))
 
         elif cmd == "/tickers":
             self.show_tickers()
@@ -1154,7 +1154,7 @@ class ChatRoom:
 
     def say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
-        self.frame.np.queue.put(slskmessages.SayChatroom(self.room, text))
+        self.frame.np.queue.append(slskmessages.SayChatroom(self.room, text))
 
     def display_now_playing(self):
         self.frame.np.now_playing.display_now_playing(callback=self.say)
@@ -1358,10 +1358,10 @@ class ChatRoom:
             del config["columns"]["chat_room"][self.room]
 
         if not self.meta:
-            self.frame.np.queue.put(slskmessages.LeaveRoom(self.room))
+            self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
         else:
             if self.room == 'Public ':
-                self.frame.np.queue.put(slskmessages.LeavePublicRoom())
+                self.frame.np.queue.append(slskmessages.LeavePublicRoom())
                 self.chatrooms.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
             else:
                 log.add_warning(_("Unknown meta chatroom closed"))

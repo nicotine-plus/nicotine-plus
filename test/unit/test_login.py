@@ -60,7 +60,7 @@ def test_server_conn(monkeypatch) -> None:
         eventprocessor=Mock()
     )
     proto.server_connect()
-    proto._queue.put(ServerConn())
+    proto._queue.append(ServerConn())
 
     sleep(SLSKPROTO_RUN_TIME)
 
@@ -94,12 +94,12 @@ def test_login(monkeypatch) -> None:
         eventprocessor=Mock()
     )
     proto.server_connect()
-    proto._queue.put(ServerConn())
+    proto._queue.append(ServerConn())
 
     sleep(SLSKPROTO_RUN_TIME / 2)
 
-    proto._queue.put(Login('username', 'password', 157))
-    proto._queue.put(SetWaitPort(1))
+    proto._queue.append(Login('username', 'password', 157))
+    proto._queue.append(SetWaitPort(1))
 
     sleep(SLSKPROTO_RUN_TIME)
 

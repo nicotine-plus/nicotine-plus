@@ -460,7 +460,7 @@ class UserList:
         self.frame.np.watch_user(user, force_update=True)
 
         # Request user's IP address, so we can get the country
-        self.frame.np.queue.put(slskmessages.GetPeerAddress(user))
+        self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)

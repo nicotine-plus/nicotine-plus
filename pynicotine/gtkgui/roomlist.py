@@ -300,37 +300,37 @@ class RoomList:
         return True
 
     def on_popup_join(self, widget):
-        self.frame.np.queue.put(slskmessages.JoinRoom(self.popup_room))
+        self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))
 
     def on_join_public_room(self, widget):
         self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
-        self.frame.np.queue.put(slskmessages.JoinPublicRoom())
+        self.frame.np.queue.append(slskmessages.JoinPublicRoom())
 
     def on_popup_private_room_disown(self, widget):
 
         if self.is_private_room_owned(self.popup_room):
-            self.frame.np.queue.put(slskmessages.PrivateRoomDisown(self.popup_room))
+            self.frame.np.queue.append(slskmessages.PrivateRoomDisown(self.popup_room))
             del self.private_rooms[self.popup_room]
 
     def on_popup_private_room_dismember(self, widget):
 
         if self.is_private_room_member(self.popup_room):
-            self.frame.np.queue.put(slskmessages.PrivateRoomDismember(self.popup_room))
+            self.frame.np.queue.append(slskmessages.PrivateRoomDismember(self.popup_room))
             del self.private_rooms[self.popup_room]
 
     def on_popup_leave(self, widget):
-        self.frame.np.queue.put(slskmessages.LeaveRoom(self.popup_room))
+        self.frame.np.queue.append(slskmessages.LeaveRoom(self.popup_room))
 
     def on_search_room(self, widget):
         self.room_filter.refilter()
 
     def on_refresh(self, widget):
-        self.frame.np.queue.put(slskmessages.RoomList())
+        self.frame.np.queue.append(slskmessages.RoomList())
 
     def on_toggle_accept_private_room(self, widget):
 
         value = self.AcceptPrivateRoom.get_active()
-        self.frame.np.queue.put(slskmessages.PrivateRoomToggle(value))
+        self.frame.np.queue.append(slskmessages.PrivateRoomToggle(value))
 
     def update_visuals(self):
 
