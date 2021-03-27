@@ -19,7 +19,7 @@
 
 import socket
 
-from queue import Queue
+from collections import deque
 from time import sleep
 from unittest.mock import Mock
 
@@ -43,7 +43,7 @@ def translation():
 
 def test_instantiate_proto() -> None:
     proto = SlskProtoThread(
-        ui_callback=Mock(), queue=Mock(), bindip='',
+        ui_callback=Mock(), queue=deque(), bindip='',
         port=None, port_range=(1, 2), network_filter=None,
         eventprocessor=Mock()
     )
@@ -55,7 +55,7 @@ def test_server_conn(monkeypatch) -> None:
     mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
-        ui_callback=Mock(), queue=Queue(0), bindip='',
+        ui_callback=Mock(), queue=deque(), bindip='',
         port=None, port_range=(1, 2), network_filter=None,
         eventprocessor=Mock()
     )
@@ -89,7 +89,7 @@ def test_server_conn(monkeypatch) -> None:
 def test_login(monkeypatch) -> None:
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
-        ui_callback=Mock(), queue=Queue(0), bindip='',
+        ui_callback=Mock(), queue=deque(), bindip='',
         port=None, port_range=(1, 2), network_filter=None,
         eventprocessor=Mock()
     )
