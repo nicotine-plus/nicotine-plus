@@ -84,7 +84,6 @@
                 <property name="label" translatable="yes">Allow these users to send you files:</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">By default, files sent by these users will be saved into a subfolder within your Download folder.</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
               </object>
@@ -99,7 +98,7 @@
                 <items>
                   <item translatable="yes">No one</item>
                   <item translatable="yes">Everyone</item>
-                  <item translatable="yes">Users in list</item>
+                  <item translatable="yes">Buddies</item>
                   <item translatable="yes">Trusted Users</item>
                 </items>
               </object>
