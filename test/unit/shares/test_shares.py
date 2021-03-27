@@ -25,7 +25,6 @@ from pynicotine.shares import Shares
 from pynicotine.config import Config
 from pynicotine.utils import apply_translation
 
-DB_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
 
 
@@ -38,10 +37,17 @@ def setup():
     multiprocessing.set_start_method("spawn")
 
 
-def test_shares_scan():
+@pytest.fixture
+def config():
+    data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
+    config_path = os.path.join(data_path, "temp_config")
+
+    return Config(config_path, data_path)
+
+
+def test_shares_scan(config):
     """ Test a full shares scan """
 
-    config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
     config.sections["transfers"]["rescanonstartup"] = False
 
@@ -76,10 +82,9 @@ def test_shares_scan():
     shares.close_shares("normal")
 
 
-def test_hidden_file_folder_scan():
+def test_hidden_file_folder_scan(config):
     """ Test that hidden files and folders are excluded """
 
-    config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
     config.sections["transfers"]["rescanonstartup"] = False
 
@@ -109,10 +114,9 @@ def test_hidden_file_folder_scan():
     shares.close_shares("normal")
 
 
-def test_shares_add_downloaded():
+def test_shares_add_downloaded(config):
     """ Test that downloaded files are added to shared files """
 
-    config = Config("temp_config", DB_DIR)
     config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
     config.sections["transfers"]["rescanonstartup"] = False
     config.sections["transfers"]["sharedownloaddir"] = True

@@ -1,7 +1,6 @@
 # Auto-generated files
 *.desktop
 *.metainfo.xml
-temp_config
 
 # Translation Machine Object files
 *.mo
@@ -11,6 +10,10 @@ temp_config
 
 # Pot backup files
 *.po~
+
+# Temporary test files
+test/**/*temp_config*
+test/**/*.db
 
 # Ignore venv files
 venv/*

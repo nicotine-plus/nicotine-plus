@@ -29,7 +29,10 @@ SEARCH_MODE = 'global'
 
 @pytest.fixture
 def config():
-    return Config("temp_config", os.path.dirname(os.path.realpath(__file__)))
+    data_path = os.path.dirname(os.path.realpath(__file__))
+    config_path = os.path.join(data_path, "temp_config")
+
+    return Config(config_path, data_path)
 
 
 @pytest.fixture
@@ -44,6 +47,7 @@ def test_do_search(config, search):
 
     # Try a search with special characters removed
 
+    config.sections["searches"]["remove_special_chars"] = True
     searchid, searchterm_with_excluded, searchterm_without_excluded = search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
     assert searchid == search.get_current_search_id()
