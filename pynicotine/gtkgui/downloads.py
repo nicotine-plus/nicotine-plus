@@ -146,12 +146,11 @@ class Downloads(TransferList):
                 for dfilter, error in failed.items():
                     errors += "Filter: %s Error: %s " % (dfilter, error)
 
-                error = _("Error: %(num)d Download filters failed! %(error)s ", {'num': len(failed), 'error': errors})
-                log.add(error)
+                log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
 
         except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
-            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s", e))
+            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), e)
             self.frame.np.config.sections["transfers"]["downloadregexp"] = ""
 
     def selected_results_all_data(self, model, path, iterator, data):
