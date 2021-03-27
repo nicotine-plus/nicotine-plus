@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 26, 2021
+Last updated on March 28, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -372,8 +372,7 @@ The server tells us if a user has gone away or has returned.
     1.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **int** <ins>status</ins> *0 == Offline, 1
-        == Away; 2 == Online*
+    2.  **int** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
     3.  **bool** <ins>privileged</ins>
 
 ### Server Code 13
@@ -2752,7 +2751,7 @@ A peer responds with this when we've sent a UserInfoRequest.
 
 #### Data Order
 
-  - Send description, picture, totalupl, queuesize, slotfree
+  - Send
     1.  **string** <ins>description</ins>
     2.  Check contents of <ins>picture</ins>
           - If <ins>picture</ins> is not empty
@@ -2762,8 +2761,9 @@ A peer responds with this when we've sent a UserInfoRequest.
             1.  **bool** <ins>has\_picture</ins> 0
     3.  **uint** <ins>totalupl</ins>
     4.  **uint** <ins>queuesize</ins>
-    5.  **bool** <ins>slotsfree</ins> *Can
-        immediately upload*
+    5.  **bool** <ins>slotsfree</ins> *Can immediately upload*
+    6.  **int** <ins>uploadpermitted</ins> *Who can upload anything to us?*
+        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
   - Receive
     1.  **string** <ins>description</ins>
     2.  **char** <ins>has\_picture</ins>
@@ -2772,8 +2772,9 @@ A peer responds with this when we've sent a UserInfoRequest.
             1.  **string** <ins>picture</ins>
     4.  **int** <ins>totalupl</ins>
     5.  **int** <ins>queuesize</ins>
-    6.  **bool** <ins>slotsfree</ins> *Can
-        immediately download*
+    6.  **bool** <ins>slotsfree</ins> *Can immediately download*
+    7.  **int** <ins>uploadpermitted</ins> *Who can upload anything to this user (not sent by SoulseekQt)?*
+        *0 == No one; 1 == Everyone; 2 == Users in List; 3 == Trusted Users*
 
 ### Peer Code 36
 
