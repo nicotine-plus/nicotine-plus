@@ -2020,8 +2020,8 @@ class NetworkEventProcessor:
         us a PossibleParents message, or start sending us search requests. """
 
         self.has_parent = False
-
         log.add_conn("We have no parent, requesting a new one")
+
         self.queue.append(slskmessages.HaveNoParent(1))
         self.queue.append(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
         self.queue.append(slskmessages.BranchLevel(0))
@@ -2054,9 +2054,9 @@ class NetworkEventProcessor:
 
             if parent is not None:
                 self.queue.append(slskmessages.HaveNoParent(0))
-                self.queue.append(slskmessages.SearchParent(msg.conn.addr[0]))
                 self.queue.append(slskmessages.BranchLevel(msg.value + 1))
                 self.has_parent = True
+
                 log.add_conn("Adopting user %s as parent", parent.username)
                 log.add_conn("Our branch level is %s", msg.value + 1)
             else:

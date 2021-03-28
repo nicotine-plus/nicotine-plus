@@ -139,7 +139,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 68   | [Tunneled Message](#server-code-68)               | Deprecated |
 | 69   | [Privileged Users](#server-code-69)               |            |
 | 71   | [Have No Parents](#server-code-71)                |            |
-| 73   | [Parent's IP](#server-code-73)                    |            |
+| 73   | [Parent's IP](#server-code-73)                    | Deprecated |
 | 83   | [Parent Min Speed](#server-code-83)               |            |
 | 84   | [Parent Speed Ratio](#server-code-84)             |            |
 | 86   | [Parent Inactivity Timeout](#server-code-86)      | Deprecated |
@@ -1290,6 +1290,8 @@ Museekd: SParentIP
 Nicotine: SearchParent
 
 #### Description
+
+**DEPRECATED**
 
 We send the IP address of our parent to the server.
 

@@ -1218,6 +1218,7 @@ class HaveNoParent(ServerMessage):
 class SearchParent(ServerMessage):
     """ Server code: 73 """
     """ We send the IP address of our parent to the server. """
+    """ DEPRECATED """
 
     def __init__(self, parentip=None):
         self.parentip = parentip
