@@ -515,7 +515,7 @@ class Shares:
 
         if ui_callback:
             # Slight delay to prevent minor performance hit when compressing large file share
-            timer = threading.Timer(2.0, self.init_shares)
+            timer = threading.Timer(0.75, self.init_shares)
             timer.name = "InitSharesTimer"
             timer.daemon = True
             timer.start()
