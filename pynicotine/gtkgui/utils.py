@@ -416,6 +416,9 @@ def show_tooltip(treeview, x, y, tooltip, sourcecolumn, column_titles, text_func
     treeview.set_tooltip_cell(tooltip, path, column, None)
 
     text = text_function(column_value, strip_prefix)
+    if not text:
+        return False
+
     tooltip.set_text(text)
     return True
 
