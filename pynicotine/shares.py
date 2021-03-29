@@ -594,9 +594,6 @@ class Shares:
 
         rescan_startup = self.config.sections["transfers"]["rescanonstartup"]
 
-        if not rescan_startup:
-            self.send_num_shared_folders_files()
-
         # Rescan public shares if necessary
         if not self.config.sections["transfers"]["friendsonly"]:
             if rescan_startup and not self.public_rescanning:
@@ -627,13 +624,17 @@ class Shares:
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
 
     @classmethod
-    def load_shares(cls, shares, dbs):
+    def load_shares(cls, shares, dbs, reset_shares=False):
 
         errors = []
 
         for destination, shelvefile in dbs:
             try:
-                shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
+                if not reset_shares:
+                    shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
+                else:
+                    shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+
             except Exception:
                 from traceback import format_exc
 
@@ -646,8 +647,10 @@ class Shares:
                 'names': '\n'.join(errors)
             })
             log.add_warning(exception)
-
             log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
+
+            if not reset_shares:
+                cls.load_shares(shares, dbs, reset_shares=True)
 
     def add_file_to_shared(self, name):
         """ Add a file to the normal shares database """

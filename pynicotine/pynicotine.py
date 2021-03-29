@@ -1140,7 +1140,8 @@ class NetworkEventProcessor:
             children for now. """
             self.queue.append(slskmessages.AcceptChildren(0))
 
-            if self.shares.initiated_shares:
+            if self.shares.initiated_shares and \
+                    not self.shares.public_rescanning and not self.shares.buddy_rescanning:
                 self.shares.send_num_shared_folders_files()
 
             """ Request a complete room list. A limited room list not including blacklisted rooms and
