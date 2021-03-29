@@ -1887,11 +1887,6 @@ class CantConnectToPeer(ServerMessage):
     to connect. We receive this if we asked peer to connect and it can't do
     this. This message means a connection can't be established either way. """
 
-    """ DEPRECATED. Since direct and indirect connection attempts are made
-    simultaneously by the official client nowadays, it's not safe to send this
-    message, as we can't be certain that both connection methods have been
-    fully attempted. The order of the attempts is also unpredictable. """
-
     def __init__(self, token=None, user=None):
         self.token = token
         self.user = user

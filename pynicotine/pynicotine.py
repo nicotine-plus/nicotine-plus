@@ -735,10 +735,8 @@ class NetworkEventProcessor:
 
     def cant_connect_to_peer(self, msg):
 
-        """ Server informs us that an indirect connection with a peer has failed.
+        """ Peer informs us via the server that an indirect connection has failed.
         Game over. """
-        """ DEPRECATED. While we can still receive CantConnectToPeer messages by
-        other clients, Nicotine+ does not send such messages anymore. """
 
         log.add_msg_contents(msg)
 
@@ -884,11 +882,7 @@ class NetworkEventProcessor:
                         """ Peer sent us an indirect connection request, and we weren't able to
                         connect to them. """
 
-                        for j in i.msgs:
-                            if j.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
-                                self.transfers.got_cant_connect(j.req)
-
-                        log.add_conn("Can't connect to user %(user)s indirectly. Error: %(error)s", {
+                        log.add_conn("Can't respond to indirect connection request from user %(user)s. Error: %(error)s", {
                             'user': i.username,
                             'error': msg.err
                         })

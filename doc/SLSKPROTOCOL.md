@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 28, 2021
+Last updated on March 29, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -191,7 +191,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 151  | [Stop Public Chat](#server-code-151)              |            |
 | 152  | [Public Chat Message](#server-code-152)           |            |
 | 153  | [Related Searches](#server-code-153)              | Deprecated |
-| 1001 | [Can't Connect To Peer](#server-code-1001)        | Deprecated |
+| 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
 ### Server Code 1
@@ -2410,8 +2410,6 @@ Nicotine: CantConnectToPeer
 
 #### Description
 
-**DEPRECATED. Since direct and indirect connection attempts are made simultaneously by the official client nowadays, it's not safe to send this message, as we can't be certain that both connection methods have been fully attempted. The order of the attempts is also unpredictable.**
-
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
@@ -2474,15 +2472,15 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 ### Peer Connection Message Order
 
 1.  User A sends a [Peer Init](#peer-code-1) to User B.  
-If this succeeds, a connection is established, and we're free to send peer messages.  
-If this fails (socket cannot connect), we proceed with an indirect connection request (step 2).
+If this succeeds, a connection is established, and User A is free to send peer messages.  
+If this fails (socket cannot connect), User A proceeds with an indirect connection request (step 2).
 2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
 4.  User B sends a [Pierce Firewall](#peer-code-0) to User A with the same token.  
-If this succeeds, a connection is established, and User A sends the original [Peer Init](#peer-code-1).  
-If this fails, there's no way to establish a connection. User B used to proceed with step 5, but this is no longer the case in modern clients.
-5.  User B sends a [Cannot Connect](#server-code-1001) to the Server (**DEPRECATED**, see [Can't Connect To Peer](#server-code-1001))
-6.  The Server sends a [Cannot Connect](#server-code-1001) response to User A
+If this succeeds, a connection is established, and User A is free to send peer messages.  
+If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
+5.  User B sends a [Cannot Connect](#server-code-1001) to the Server.
+6.  The Server sends a [Cannot Connect](#server-code-1001) response to User A.
 
 ### Peer Code 0
 
