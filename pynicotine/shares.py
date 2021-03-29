@@ -654,6 +654,9 @@ class Shares:
         if not config["transfers"]["sharedownloaddir"]:
             return
 
+        if not self.initiated_shares or self.public_rescanning:
+            return
+
         shared = self.share_dbs["files"]
         sharedstreams = self.share_dbs["streams"]
         wordindex = self.share_dbs["wordindex"]
@@ -695,6 +698,9 @@ class Shares:
 
         config = self.config.sections
         if not config["transfers"]["sharedownloaddir"]:
+            return
+
+        if not self.initiated_shares or self.buddy_rescanning:
             return
 
         bshared = self.share_dbs["buddyfiles"]
