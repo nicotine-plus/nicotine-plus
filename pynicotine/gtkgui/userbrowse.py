@@ -350,6 +350,7 @@ class UserBrowse:
         self.directories.clear()
         self.files.clear()
         self.dir_store.clear()
+        self.file_store.clear()
 
         # Compute the number of shared dirs and total size
         self.totalsize = 0
@@ -366,6 +367,7 @@ class UserBrowse:
 
         sel = self.FolderTreeView.get_selection()
         sel.unselect_all()
+
         if currentdir in self.directories:
             path = self.dir_store.get_path(self.directories[currentdir])
             if path is not None:
