@@ -501,7 +501,10 @@ class NicotineFrame:
                             loaded = True
 
                         except Exception as e:
-                            log.add(_("Error loading custom icon %(path)s: %(error)s") % {"path": path, "error": str(e)})
+                            log.add(_("Error loading custom icon %(path)s: %(error)s"), {
+                                "path": path,
+                                "error": str(e)
+                            })
 
                 if name not in self.images:
                     self.images[name] = self.load_ui_icon(name)

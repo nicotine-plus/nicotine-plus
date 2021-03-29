@@ -121,7 +121,10 @@ class PluginHandler(object):
 
         # Our config file doesn't play nicely with some characters
         if "=" in pluginname:
-            log.add(_("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s") % {"name": pluginname, "characters": "="})
+            log.add(_("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
+                "name": pluginname,
+                "characters": "="
+            })
             return
 
         if pluginname in self.enabled_plugins:

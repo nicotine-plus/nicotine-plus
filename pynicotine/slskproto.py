@@ -199,7 +199,7 @@ else:
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (maxfilelimit, maxfilelimit))
     except Exception as e:
-        log.add_warning("Failed to set RLIMIT_NOFILE: %s" % e)
+        log.add_warning("Failed to set RLIMIT_NOFILE: %s", e)
 
     """ Set the maximum number of open sockets to a lower value than the hard limit,
     otherwise we just waste resources.
@@ -956,7 +956,10 @@ class SlskProtoThread(threading.Thread):
 
                 else:
                     if msg_obj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-                        log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj)})
+                        log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                            'type': msg_obj.__class__,
+                            'msg_obj': vars(msg_obj)
+                        })
 
             elif issubclass(msg_obj.__class__, InternalMessage):
                 if msg_obj.__class__ is ServerConn:
@@ -1326,7 +1329,10 @@ class SlskProtoThread(threading.Thread):
                             continue
 
                     if self._network_filter.is_ip_blocked(addr[0]):
-                        log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {"ip": addr[0], "port": addr[1]})
+                        log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {
+                            "ip": addr[0],
+                            "port": addr[1]
+                        })
                         self.close_connection(conns, connection)
                         continue
 

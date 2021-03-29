@@ -358,7 +358,10 @@ class NetworkEventProcessor:
                 )
             )
 
-        log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s" % {'type': msg_type, 'user': user})
+        log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s", {
+            'type': msg_type,
+            'user': user
+        })
 
     def send_message_to_peer(self, user, message, address=None):
 
@@ -373,7 +376,7 @@ class NetworkEventProcessor:
             for i in self.peerconns:
                 if i.username == user and i.type == 'P':
                     conn = i
-                    log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it." % {
+                    log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
                         'type': i.type,
                         'user': user
                     })
@@ -395,7 +398,7 @@ class NetworkEventProcessor:
 
             self.initiate_connection_to_peer(user, message, address)
 
-        log.add_conn("Sending message of type %(type)s to user %(user)s" % {
+        log.add_conn("Sending message of type %(type)s to user %(user)s", {
             'type': message.__class__,
             'user': user
         })
@@ -666,7 +669,7 @@ class NetworkEventProcessor:
 
                 i.conn = conn
 
-                log.add_conn("Connection established with user %(user)s. List of outgoing messages: %(messages)s" % {
+                log.add_conn("Connection established with user %(user)s. List of outgoing messages: %(messages)s", {
                     'user': i.username,
                     'messages': i.msgs
                 })
@@ -702,7 +705,7 @@ class NetworkEventProcessor:
                 self.queue.append(i.init)
                 i.conn = conn
 
-                log.add_conn("User %(user)s managed to connect to us indirectly, connection is established. List of outgoing messages: %(messages)s" % {
+                log.add_conn("User %(user)s managed to connect to us indirectly, connection is established. List of outgoing messages: %(messages)s", {
                     'user': i.username,
                     'messages': i.msgs
                 })

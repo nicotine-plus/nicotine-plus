@@ -360,7 +360,7 @@ class UserInfo:
             self.SavePicture.set_sensitive(True)
 
         except Exception as e:
-            log.add(_("Failed to load picture for user %(user)s: %(error)s") % {
+            log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
                 "user": self.user,
                 "error": str(e)
             })

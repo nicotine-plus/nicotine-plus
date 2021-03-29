@@ -620,7 +620,7 @@ class Shares:
             if isinstance(x, tuple):
                 return x
             virtual = x.replace('/', '_').replace('\\', '_').strip('_')
-            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required." % (x, virtual))
+            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.", (x, virtual))
             return (virtual, x)
 
         self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
@@ -642,7 +642,9 @@ class Shares:
                 exception = format_exc()
 
         if errors:
-            log.add_warning(_("Failed to process the following databases: %(names)s") % {'names': '\n'.join(errors)})
+            log.add_warning(_("Failed to process the following databases: %(names)s"), {
+                'names': '\n'.join(errors)
+            })
             log.add_warning(exception)
 
             log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
