@@ -288,6 +288,19 @@ class UserBrowse:
         return False
 
     def on_folder_popup_menu(self, widget):
+
+        items = self.folder_popup_menu.get_items()
+
+        if self.user == self.frame.np.config.sections["server"]["login"]:
+            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
+                      _("Upload Folder To..."), _("Upload Folder Recursive To..."), _("Open in File _Manager"),
+                      _("Copy _Folder Path"), _("Copy _URL")):
+                items[i].set_sensitive(self.selected_folder)
+        else:
+            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
+                      _("Copy _Folder Path"), _("Copy _URL")):
+                items[i].set_sensitive(self.selected_folder)
+
         self.folder_popup_menu.popup()
         return True
 
@@ -321,20 +334,17 @@ class UserBrowse:
         self.select_files()
         num_selected_files = len(self.selected_files)
 
-        if num_selected_files >= 1:
-            files = True
-        else:
-            files = False
-
         items = self.file_popup_menu.get_items()
 
         if self.user == self.frame.np.config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
                       _("Copy _File Path"), _("Copy _URL")):
-                items[i].set_sensitive(files)
+                items[i].set_sensitive(num_selected_files)
+
+            items[_("Open in File _Manager")].set_sensitive(self.selected_folder)
         else:
             for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
-                items[i].set_sensitive(files)
+                items[i].set_sensitive(num_selected_files)
 
         items["selected_files"].set_sensitive(False)
         items["selected_files"].set_label(_("%s File(s) Selected") % num_selected_files)
@@ -649,7 +659,6 @@ class UserBrowse:
         model, iterator = selection.get_selected()
 
         if iterator is None:
-            self.selected_folder = None
             return
 
         path = model.get_path(iterator)
@@ -1007,6 +1016,9 @@ class UserBrowse:
         self.frame.browse_user(self.user, local_shares_type=self.local_shares_type)
 
     def on_copy_file_path(self, widget, files=False):
+
+        if self.selected_folder is None:
+            return
 
         text = self.selected_folder
 
