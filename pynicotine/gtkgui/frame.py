@@ -351,7 +351,7 @@ class NicotineFrame:
         """ Scanning """
 
         # Deactivate public shares related menu entries if we don't use them
-        if config["transfers"]["friendsonly"] or not config["transfers"]["shared"]:
+        if config["transfers"]["friendsonly"]:
             self.rescan_public_action.set_enabled(False)
             self.browse_public_shares_action.set_enabled(False)
 
