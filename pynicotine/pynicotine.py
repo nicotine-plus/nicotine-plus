@@ -358,7 +358,7 @@ class NetworkEventProcessor:
                 )
             )
 
-        log.add_conn("Received incoming connection of type %(type)s from user %(user)s" % {'type': msg_type, 'user': user})
+        log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s" % {'type': msg_type, 'user': user})
 
     def send_message_to_peer(self, user, message, address=None):
 
@@ -666,7 +666,7 @@ class NetworkEventProcessor:
 
                 i.conn = conn
 
-                log.add_conn("Connection established with user %(user)s, connection contains messages: %(messages)s" % {
+                log.add_conn("Connection established with user %(user)s. List of outgoing messages: %(messages)s" % {
                     'user': i.username,
                     'messages': i.msgs
                 })
@@ -677,6 +677,10 @@ class NetworkEventProcessor:
                 break
 
     def pierce_fire_wall(self, msg):
+
+        """ We received a response to our indirect connection request. Since a
+        connection is now established with the peer, re-send our original peer
+        messages. """
 
         log.add_msg_contents(msg)
 
@@ -698,7 +702,7 @@ class NetworkEventProcessor:
                 self.queue.append(i.init)
                 i.conn = conn
 
-                log.add_conn("Received PierceFirewall message from user %(user)s, connection contains messages: %(messages)s" % {
+                log.add_conn("User %(user)s managed to connect to us indirectly, connection is established. List of outgoing messages: %(messages)s" % {
                     'user': i.username,
                     'messages': i.msgs
                 })
