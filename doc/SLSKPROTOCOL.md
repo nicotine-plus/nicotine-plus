@@ -270,6 +270,8 @@ Nicotine: SetWaitPort
 
 We send this to the server to indicate the port number that we listen on (2234 by default).
 
+If this value is set to zero, or the message is not sent upon login (which defaults the listen port to 0), remote clients handling a `ConnectToPeer` message (code 18) will fail to properly purge the request.  Confirmed in Soulseek Qt 2020.3.12, but probably impacts most or all other versions.
+
 #### Data Order
 
   - Send
