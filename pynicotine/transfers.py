@@ -2103,17 +2103,20 @@ class Transfers:
     # Find next file to upload
     def check_upload_queue(self):
 
-        # Check if any uploads exist
-        if not len(self.uploads):
-            return
+        while True:
+            # Check if any uploads exist
+            if not len(self.uploads):
+                return
 
-        if not self.allow_new_uploads():
-            return
+            if not self.allow_new_uploads():
+                return
 
-        queued_uploads = self.get_queued_uploads()
-        upload_candidate = self.get_upload_candidate(queued_uploads)
+            queued_uploads = self.get_queued_uploads()
+            upload_candidate = self.get_upload_candidate(queued_uploads)
 
-        if upload_candidate is not None:
+            if upload_candidate is None:
+                return
+
             user = upload_candidate.user
 
             log.add_transfer(
@@ -2130,13 +2133,14 @@ class Transfers:
                 if not self.auto_clear_upload(upload_candidate):
                     self.uploadsview.update(upload_candidate)
 
-                self.check_upload_queue()
+                # Check queue again
+                continue
 
-            else:
-                self.push_file(
-                    user=user, filename=upload_candidate.filename,
-                    realfilename=upload_candidate.realfilename, transfer=upload_candidate
-                )
+            self.push_file(
+                user=user, filename=upload_candidate.filename,
+                realfilename=upload_candidate.realfilename, transfer=upload_candidate
+            )
+            return
 
     def ban_user(self, user, ban_message=None):
         """

@@ -44,6 +44,7 @@ Issues closed on GitHub
  * line 707 ([#1029](https://github.com/Nicotine-Plus/nicotine-plus/issues/1029))
  * line 666, ([#1030](https://github.com/Nicotine-Plus/nicotine-plus/issues/1030))
  * Problems with new interface in 3.0 ([#1033](https://github.com/Nicotine-Plus/nicotine-plus/issues/1033))
+ * line 642 ([#1037](https://github.com/Nicotine-Plus/nicotine-plus/issues/1037))
 
 Version 3.0.2 (March 1, 2021)
 -----------------------------
