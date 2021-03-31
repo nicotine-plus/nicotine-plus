@@ -34,7 +34,7 @@ import sys
 
 from pynicotine.logfacility import log
 
-version = "3.0.3.dev1"
+version = "3.0.3"
 
 win32 = sys.platform.startswith("win")
 
