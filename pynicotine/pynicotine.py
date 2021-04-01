@@ -259,7 +259,7 @@ class NetworkEventProcessor:
             slskmessages.PlaceholdUpload: self.dummy_message,
             slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
             slskmessages.UploadQueueNotification: self.upload_queue_notification,
-            slskmessages.SearchRequest: self.search_request,
+            slskmessages.EmbeddedMessage: self.embedded_message,
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.search_request,
             slskmessages.UserSearch: self.search_request,
@@ -267,7 +267,7 @@ class NetworkEventProcessor:
             slskmessages.PossibleParents: self.possible_parents,
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
-            slskmessages.DistribServerSearch: self.distrib_search,
+            slskmessages.DistribEmbeddedMessage: self.embedded_message,
             ConnectToPeerTimeout: self.connect_to_peer_timeout,
             transfers.TransferTimeout: self.transfer_timeout,
             str: self.notify,
@@ -1271,7 +1271,7 @@ class NetworkEventProcessor:
             self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
     def search_request(self, msg):
-        """ Server code: 26, 42, 93 and 120 """
+        """ Server code: 26, 42 and 120 """
 
         log.add_msg_contents(msg)
 
@@ -1408,6 +1408,21 @@ class NetworkEventProcessor:
             )
 
         self.privileges_left = msg.seconds
+
+    def embedded_message(self, msg):
+        """ Server/distrib code: 93 """
+        """ This message embeds a distributed message. We unpack the distributed message and
+        process it. """
+
+        log.add_msg_contents(msg)
+
+        if msg.distrib_code in self.protothread.distribclasses:
+            distrib_class = self.protothread.distribclasses[msg.distrib_code]
+            distrib_msg = distrib_class(None)
+            distrib_msg.parse_network_message(msg.distrib_message)
+
+            # Process the distributed message
+            self.events[distrib_class](distrib_msg)
 
     def possible_parents(self, msg):
         """ Server code: 102 """
@@ -2001,7 +2016,7 @@ class NetworkEventProcessor:
     """
 
     def distrib_search(self, msg):
-        """ Distrib code: 3 and 93 """
+        """ Distrib code: 3 """
 
         log.add_msg_contents(msg)
 

@@ -56,9 +56,10 @@ from pynicotine.slskmessages import DistribAliveInterval
 from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
+from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribSearch
-from pynicotine.slskmessages import DistribServerSearch
 from pynicotine.slskmessages import DownloadFile
+from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileError
 from pynicotine.slskmessages import FileRequest
@@ -140,7 +141,6 @@ from pynicotine.slskmessages import RoomTickerState
 from pynicotine.slskmessages import SayChatroom
 from pynicotine.slskmessages import SearchInactivityTimeout
 from pynicotine.slskmessages import SearchParent
-from pynicotine.slskmessages import SearchRequest
 from pynicotine.slskmessages import SendConnectToken
 from pynicotine.slskmessages import SendDownloadSpeed
 from pynicotine.slskmessages import SendUploadSpeed
@@ -321,7 +321,7 @@ class SlskProtoThread(threading.Thread):
         DistribAliveInterval: 90,     # Deprecated
         AddToPrivileged: 91,
         CheckPrivileges: 92,
-        SearchRequest: 93,
+        EmbeddedMessage: 93,
         AcceptChildren: 100,
         PossibleParents: 102,
         WishlistSearch: 103,
@@ -395,7 +395,7 @@ class SlskProtoThread(threading.Thread):
         4: DistribBranchLevel,
         5: DistribBranchRoot,
         7: DistribChildDepth,         # Unimplemented
-        93: DistribServerSearch
+        93: DistribEmbeddedMessage
     }
 
     IN_PROGRESS_STALE_AFTER = 2
