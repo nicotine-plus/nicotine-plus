@@ -451,6 +451,14 @@ class NicotineFrame:
         except (ImportError, ValueError):
             self.spell_checker = False
 
+    def load_pixbuf_from_path(self, path):
+
+        with open(path, 'rb') as f:
+            loader = GdkPixbuf.PixbufLoader()
+            loader.write(f.read())
+            loader.close()
+            return loader.get_pixbuf()
+
     def get_flag_image(self, country):
 
         if not country:
@@ -460,7 +468,7 @@ class NicotineFrame:
 
         try:
             if country not in self.flag_images:
-                self.flag_images[country] = GdkPixbuf.Pixbuf.new_from_file(
+                self.flag_images[country] = self.load_pixbuf_from_path(
                     os.path.join(self.gui_dir, "icons", "flags", country + ".svg")
                 )
 
@@ -473,7 +481,7 @@ class NicotineFrame:
         """ Load icon required by the UI """
 
         try:
-            return GdkPixbuf.Pixbuf.new_from_file(
+            return self.load_pixbuf_from_path(
                 os.path.join(self.gui_dir, "icons", name + ".svg")
             )
 
@@ -497,7 +505,7 @@ class NicotineFrame:
 
                     if os.path.isfile(path):
                         try:
-                            self.images[name] = GdkPixbuf.Pixbuf.new_from_file(path)
+                            self.images[name] = self.load_pixbuf_from_path(path)
                             loaded = True
 
                         except Exception as e:
@@ -543,7 +551,7 @@ class NicotineFrame:
                         pass
 
                     for name in ("n", "notify"):
-                        self.images[name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+                        self.images[name] = self.load_pixbuf_from_path(entry.path)
 
         except FileNotFoundError:
             pass
@@ -566,7 +574,7 @@ class NicotineFrame:
                             # Python 3.5 compatibility
                             pass
 
-                        self.images["trayicon_" + name] = GdkPixbuf.Pixbuf.new_from_file(entry.path)
+                        self.images["trayicon_" + name] = self.load_pixbuf_from_path(entry.path)
 
             except FileNotFoundError:
                 pass
