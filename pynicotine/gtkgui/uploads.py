@@ -40,12 +40,12 @@ class Uploads(TransferList):
         self.popup_menu_users = PopupMenu(frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(frame, False)
         popup2.setup(
-            ("#" + _("Clear Finished/Erred"), self.on_clear_finished_erred),
-            ("#" + _("Clear Finished/Aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Clear Finished / Failed"), self.on_clear_finished_failed),
+            ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear Finished"), self.on_clear_finished),
             ("#" + _("Clear Aborted"), self.on_clear_aborted),
-            ("#" + _("Clear Queued"), self.on_clear_queued),
-            ("#" + _("Clear Failed"), self.on_clear_failed)
+            ("#" + _("Clear Failed"), self.on_clear_failed),
+            ("#" + _("Clear Queued"), self.on_clear_queued)
         )
 
         self.popup_menu = popup = PopupMenu(frame)
@@ -176,5 +176,14 @@ class Uploads(TransferList):
 
         self.on_abort_transfer(widget)
 
+    def on_clear_aborted(self, widget):
+        self.clear_transfers(["Aborted", "Cancelled", "User logged off"])
+
     def on_clear_failed(self, widget):
-        self.clear_transfers(["Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"])
+        self.clear_transfers(["Cannot connect", "Local file error", "Remote file error"])
+
+    def on_clear_finished_aborted(self, widget):
+        self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished"])
+
+    def on_clear_finished_failed(self, widget):
+        self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished", "Cannot connect", "Local file error", "Remote file error"])

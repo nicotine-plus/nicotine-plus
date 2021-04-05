@@ -478,10 +478,16 @@ class Transfers:
                     self.get_file(i.user, i.filename, i.path, i)
 
         for i in self.uploads:
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Connection closed by peer", "Cannot connect"):
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "User logged off", "Cannot connect", "Cancelled"):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i, send_fail_message=False)
+
+                    if not self.auto_clear_upload(i):
+                        self.uploadsview.update(i)
+
+                elif i.status == "User logged off":
+                    i.status = "Cancelled"
 
                     if not self.auto_clear_upload(i):
                         self.uploadsview.update(i)
@@ -2210,6 +2216,7 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.req = None
         transfer.speed = None
+        transfer.place = None
         transfer.timeleft = ""
 
         if transfer.conn is not None:

@@ -48,7 +48,7 @@ class Downloads(TransferList):
         self.popup_menu_users = PopupMenu(frame, False)
         self.popup_menu_clear = popup2 = PopupMenu(frame, False)
         popup2.setup(
-            ("#" + _("Clear Finished/Aborted"), self.on_clear_finished_aborted),
+            ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear Finished"), self.on_clear_finished),
             ("#" + _("Clear Aborted"), self.on_clear_aborted),
             ("#" + _("Clear Paused"), self.on_clear_paused),
@@ -308,3 +308,9 @@ class Downloads(TransferList):
 
         self.popup_menu.popup()
         return True
+
+    def on_clear_aborted(self, widget):
+        self.clear_transfers(["Aborted", "Cancelled"])
+
+    def on_clear_finished_aborted(self, widget):
+        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])

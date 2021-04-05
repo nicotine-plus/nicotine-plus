@@ -800,17 +800,8 @@ class TransferList:
     def on_clear_finished(self, widget):
         self.clear_transfers(["Finished"])
 
-    def on_clear_aborted(self, widget):
-        self.clear_transfers(["Aborted", "Cancelled"])
-
     def on_clear_filtered(self, widget):
         self.clear_transfers(["Filtered"])
 
     def on_clear_paused(self, widget):
         self.clear_transfers(["Paused"])
-
-    def on_clear_finished_aborted(self, widget):
-        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])
-
-    def on_clear_finished_erred(self, widget):
-        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered", "Cannot connect", "Connection closed by peer", "Local file error", "Remote file error"])
