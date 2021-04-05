@@ -354,6 +354,8 @@
             <property name="visible">1</property>
             <property name="margin-top">18</property>
             <property name="spacing">5</property>
+            <property name="valign">end</property>
+            <property name="vexpand">1</property>
             <child>
               <object class="GtkButton" id="download">
                 <property name="visible">1</property>
