@@ -3,6 +3,24 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.4 (April 7, 2021)
+-----------------------------
+
+Corrections
+
+ * Invalid file names no longer break scanning of shared folders
+ * Configuration changes are now saved if Nicotine+ is terminated (SIGTERM)
+ * Fixed a case where the upload status displayed 'User logged off' after the user reconnected
+ * Action buttons in the file properties dialog now stick to the bottom as intended
+ * Windows: Nicotine+ no longer crashes on startup when translations are used
+
+Issues closed on GitHub
+
+ * Critical UnicodeDecodeError on startup: 'utf-8' codec can't decode byte 0x92 in position 12: invalid start byte ([#1038](https://github.com/Nicotine-Plus/nicotine-plus/issues/1038))
+ * You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users. [Question] ([#1039](https://github.com/Nicotine-Plus/nicotine-plus/issues/1039))
+ * line 642 ([#1042](https://github.com/Nicotine-Plus/nicotine-plus/issues/1042))
+ * 'utf-8' codec can't encode characters(surrogates not allowed) ([#1043](https://github.com/Nicotine-Plus/nicotine-plus/issues/1043))
+
 Version 3.0.3 (April 1, 2021)
 -----------------------------
 
