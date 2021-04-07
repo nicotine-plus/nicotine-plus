@@ -171,8 +171,9 @@ class NicotineFrame:
 
         self.application.add_window(self.MainWindow)
 
-        # Handle Ctrl+C exit gracefully
-        signal.signal(signal.SIGINT, self.on_quit)
+        # Handle Ctrl+C and "kill" exit gracefully
+        for signal_type in (signal.SIGINT, signal.SIGTERM):
+            signal.signal(signal_type, self.on_quit)
 
         self.MainWindow.resize(
             config["ui"]["width"],
