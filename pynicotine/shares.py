@@ -228,23 +228,26 @@ class Scanner(multiprocessing.Process):
 
         return False
 
+    def get_utf8_path(self, path):
+        """ Convert a path to utf-8, if necessary """
+
+        try:
+            # latin-1 to utf-8
+            return path.encode('latin-1').decode('utf-8')
+
+        except Exception:
+            # fix any remaining oddities (e.g. surrogates)
+            return path.encode('utf-8', 'replace').decode('utf-8')
+
     def get_folder_mtimes(self, folder):
         """ Get Modification Times """
 
         mtimes = {}
 
-        # Ensure folder paths are in utf-8
-        try:
-            folder = folder.encode('latin-1').decode('utf-8')
-
-        except Exception:
-            # Already utf-8
-            pass
-
         try:
             for entry in os.scandir(folder):
                 if entry.is_dir():
-                    path = entry.path.replace('\\', os.sep)
+                    path = self.get_utf8_path(entry.path).replace('\\', os.sep)
 
                     if self.is_hidden(path):
                         continue
@@ -313,7 +316,7 @@ class Scanner(multiprocessing.Process):
                 for entry in os.scandir(folder):
 
                     if entry.is_file():
-                        filename = entry.name
+                        filename = self.get_utf8_path(entry.name)
 
                         if self.is_hidden(folder, filename):
                             continue
