@@ -194,70 +194,10 @@ class NicotineFrame:
 
         """ Notebooks """
 
-        # Initialise main notebook
+        # Initialize main notebook
+        self.initialize_main_tabs()
 
-        self.hidden_tabs = {}
-
-        # Translation for the labels of tabs
-        translated_tablabels = {
-            self.SearchTabLabel: _("Search Files"),
-            self.DownloadsTabLabel: _("Downloads"),
-            self.UploadsTabLabel: _("Uploads"),
-            self.UserBrowseTabLabel: _("User Browse"),
-            self.UserInfoTabLabel: _("User Info"),
-            self.PrivateChatTabLabel: _("Private Chat"),
-            self.UserListTabLabel: _("Buddy List"),
-            self.ChatTabLabel: _("Chat Rooms"),
-            self.InterestsTabLabel: _("Interests")
-        }
-
-        hide_tab_template = _("Hide %(tab)s")
-
-        # Initialize tabs labels
-        for i in range(self.MainNotebook.get_n_pages()):
-            tab_box = self.MainNotebook.get_nth_page(i)
-            placehold_tab_label = self.MainNotebook.get_tab_label(tab_box)
-            eventbox_name = Gtk.Buildable.get_name(placehold_tab_label)
-
-            # Initialize the image label
-            tab_label = ImageLabel(
-                translated_tablabels[placehold_tab_label], angle=config["ui"]["labelmain"],
-                show_hilite_image=config["notifications"]["notification_tab_icons"],
-                show_status_image=True
-            )
-
-            # Set tab text color
-            tab_label.set_text_color(0)
-            tab_label.show()
-
-            self.__dict__[eventbox_name] = tab_label
-
-            # Add it to the eventbox
-            self.MainNotebook.set_tab_label(tab_box, tab_label)
-
-            # Set the menu to hide the tab
-            popup_id = eventbox_name + "Menu"
-            tab_label.connect('button_press_event', self.on_tab_click, popup_id)
-            tab_label.connect('popup_menu', self.on_tab_popup, popup_id)
-            tab_label.connect('touch_event', self.on_tab_click, popup_id)
-
-            self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
-            popup.setup(
-                ("#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box])
-            )
-
-        # Tab icons
-        self.SearchTabLabel.set_icon("system-search-symbolic")
-        self.DownloadsTabLabel.set_icon("document-save-symbolic")
-        self.UploadsTabLabel.set_icon("emblem-shared-symbolic")
-        self.UserBrowseTabLabel.set_icon("folder-symbolic")
-        self.UserInfoTabLabel.set_icon("avatar-default-symbolic")
-        self.PrivateChatTabLabel.set_icon("mail-send-symbolic")
-        self.UserListTabLabel.set_icon("contact-new-symbolic")
-        self.ChatTabLabel.set_icon("user-available-symbolic")
-        self.InterestsTabLabel.set_icon("emblem-default-symbolic")
-
-        # Initialise other notebooks
+        # Initialize other notebooks
         self.interests = Interests(self, self.np)
         self.chatrooms = ChatRooms(self)
         self.searches = Searches(self)
@@ -1445,6 +1385,53 @@ class NicotineFrame:
         self.current_page_id = page_id
 
     """ Main Notebook """
+
+    def initialize_main_tabs(self):
+
+        self.hidden_tabs = {}
+        hide_tab_template = _("Hide %(tab)s")
+
+        # Translation for the labels of tabs, icon names
+        tab_data = {
+            self.SearchTabLabel: (_("Search Files"), "system-search-symbolic"),
+            self.DownloadsTabLabel: (_("Downloads"), "document-save-symbolic"),
+            self.UploadsTabLabel: (_("Uploads"), "emblem-shared-symbolic"),
+            self.UserBrowseTabLabel: (_("User Browse"), "folder-symbolic"),
+            self.UserInfoTabLabel: (_("User Info"), "avatar-default-symbolic"),
+            self.PrivateChatTabLabel: (_("Private Chat"), "mail-send-symbolic"),
+            self.UserListTabLabel: (_("Buddy List"), "contact-new-symbolic"),
+            self.ChatTabLabel: (_("Chat Rooms"), "user-available-symbolic"),
+            self.InterestsTabLabel: (_("Interests"), "emblem-default-symbolic")
+        }
+
+        # Initialize tabs labels
+        for page in self.MainNotebook.get_children():
+            tab_label = self.MainNotebook.get_tab_label(page)
+            tab_label_id = Gtk.Buildable.get_name(tab_label)
+            tab_text, tab_icon_name = tab_data[tab_label]
+
+            # Initialize the image label
+            self.__dict__[tab_label_id] = tab_label = ImageLabel(
+                tab_text, angle=self.np.config.sections["ui"]["labelmain"],
+                show_hilite_image=self.np.config.sections["notifications"]["notification_tab_icons"],
+                show_status_image=True
+            )
+
+            tab_label.set_icon(tab_icon_name)
+            tab_label.set_text_color()
+
+            # Replace previous placeholder label
+            self.MainNotebook.set_tab_label(page, tab_label)
+            tab_label.show()
+
+            # Set the menu to hide the tab
+            popup_id = tab_label_id + "Menu"
+            tab_label.connect('button_press_event', self.on_tab_click, popup_id)
+            tab_label.connect('popup_menu', self.on_tab_popup, popup_id)
+            tab_label.connect('touch_event', self.on_tab_click, popup_id)
+
+            self.__dict__[popup_id] = popup = PopupMenu(self)
+            popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
 
     def request_tab_icon(self, tab_label, status=1):
 
