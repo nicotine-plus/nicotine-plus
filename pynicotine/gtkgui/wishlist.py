@@ -80,17 +80,17 @@ class WishList:
             self.remove_wish(old_value)
             self.add_wish(value)
 
-    def on_add_wish(self, widget, *args):
+    def on_add_wish(self, *args):
 
-        wish = widget.get_text()
-        widget.set_text("")
+        wish = self.AddWishEntry.get_text()
+        self.AddWishEntry.set_text("")
 
         search_id = self.add_wish(wish)
 
         if search_id:
             self.frame.np.search.do_wishlist_search(search_id, wish)
 
-    def on_remove_wish(self, widget):
+    def on_remove_wish(self, *args):
 
         iters = []
         self.WishlistView.get_selection().selected_foreach(self._remove_wish, iters)
@@ -221,9 +221,9 @@ class WishList:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def show(self, widget):
+    def show(self, *args):
         self.WishListDialog.show()
 
-    def quit(self, widget, event):
+    def quit(self, *args):
         self.WishListDialog.hide()
         return True

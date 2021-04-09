@@ -258,7 +258,7 @@ class RoomList:
         set_treeview_selected_row(widget, event)
 
         if triggers_context_menu(event):
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             room = self.get_selected_room(widget)

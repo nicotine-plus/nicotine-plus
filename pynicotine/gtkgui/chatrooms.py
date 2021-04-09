@@ -790,10 +790,10 @@ class ChatRoom:
         self.popup_menu.popup()
         return True
 
-    def on_show_room_wall(self, widget):
+    def on_show_room_wall(self, *args):
         self.room_wall.show()
 
-    def on_show_chat_help(self, widget):
+    def on_show_chat_help(self, *args):
 
         if not hasattr(self, "AboutChatRoomCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
@@ -1562,22 +1562,22 @@ class ChatRoom:
     def on_room_log_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_room_log_menu(widget)
+            return self.on_popup_room_log_menu()
 
         return False
 
-    def on_popup_room_log_menu(self, widget):
+    def on_popup_room_log_menu(self, *args):
         self.roomlogpopmenu.popup()
         return True
 
     def on_activity_log_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_activity_log_menu(widget)
+            return self.on_popup_activity_log_menu()
 
         return False
 
-    def on_popup_activity_log_menu(self, widget):
+    def on_popup_activity_log_menu(self, *args):
         self.activitylogpopupmenu.popup()
         return True
 

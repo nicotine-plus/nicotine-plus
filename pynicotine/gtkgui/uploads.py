@@ -70,7 +70,7 @@ class Uploads(TransferList):
             (">" + _("Clear Groups"), self.popup_menu_clear)
         )
 
-    def on_try_clear_queued(self, widget):
+    def on_try_clear_queued(self, *args):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
@@ -106,7 +106,7 @@ class Uploads(TransferList):
                 command = self.frame.np.config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
@@ -166,7 +166,7 @@ class Uploads(TransferList):
             if i.user == user:
                 self.remove_specific(i)
 
-    def on_abort_user(self, widget):
+    def on_abort_user(self, *args):
 
         self.select_transfers()
 
@@ -175,7 +175,7 @@ class Uploads(TransferList):
                 if i.user == user:
                     self.selected_transfers.add(i)
 
-        self.on_abort_transfer(widget)
+        self.on_abort_transfer()
 
     def on_clear_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off"])

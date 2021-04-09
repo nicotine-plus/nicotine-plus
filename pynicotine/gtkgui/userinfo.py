@@ -404,29 +404,29 @@ class UserInfo:
 
     """ Events """
 
-    def on_send_message(self, widget):
+    def on_send_message(self, *args):
         self.frame.privatechats.send_message(self.user, show_user=True)
         self.frame.change_main_page("private")
 
-    def on_show_ip_address(self, widget):
+    def on_show_ip_address(self, *args):
         self.frame.np.ip_requested.add(self.user)
         self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
-    def on_refresh(self, widget):
+    def on_refresh(self, *args):
         self.info_bar.set_visible(False)
         self.progressbar.set_fraction(0.0)
         self.frame.local_user_info_request(self.user)
 
-    def on_browse_user(self, widget):
+    def on_browse_user(self, *args):
         self.frame.browse_user(self.user)
 
-    def on_add_to_list(self, widget):
+    def on_add_to_list(self, *args):
         self.frame.np.userlist.add_to_list(self.user)
 
-    def on_ban_user(self, widget):
+    def on_ban_user(self, *args):
         self.frame.np.network_filter.ban_user(self.user)
 
-    def on_ignore_user(self, widget):
+    def on_ignore_user(self, *args):
         self.frame.np.network_filter.ignore_user(self.user)
 
     def on_save_picture(self, *args):
@@ -455,11 +455,11 @@ class UserInfo:
     def on_image_click(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_image_popup_menu(widget)
+            return self.on_image_popup_menu()
 
         return False
 
-    def on_image_popup_menu(self, widget):
+    def on_image_popup_menu(self, *args):
 
         act = True
 

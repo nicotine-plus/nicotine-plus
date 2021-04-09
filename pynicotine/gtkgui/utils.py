@@ -1413,10 +1413,11 @@ class PopupMenu(Gio.Menu):
 
     def populate_private_rooms(self, popup):
 
-        if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
+        popup.clear()
+
+        if self.user is None:
             return
 
-        popup.clear()
         popup.set_user(self.user)
 
         for room in self.frame.chatrooms.private_rooms:
@@ -1494,16 +1495,20 @@ class PopupMenu(Gio.Menu):
     def on_browse_user(self, *args):
         self.frame.browse_user(self.user)
 
-    def on_private_room_add_user(self, widget, room):
+    def on_private_room_add_user(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomAddUser(room, self.user))
 
-    def on_private_room_remove_user(self, widget, room):
+    def on_private_room_remove_user(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomRemoveUser(room, self.user))
 
-    def on_private_room_add_operator(self, widget, room):
+    def on_private_room_add_operator(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomAddOperator(room, self.user))
 
-    def on_private_room_remove_operator(self, widget, room):
+    def on_private_room_remove_operator(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomRemoveOperator(room, self.user))
 
     def on_add_to_list(self, action, state):
@@ -1636,7 +1641,7 @@ class FileChooserButton:
 
         self.button.connect("clicked", self.open_file_chooser)
 
-    def open_file_chooser(self, widget):
+    def open_file_chooser(self, *args):
 
         if self.chooser_type == "folder":
             selected = choose_dir(self.parent, self.path, multichoice=False)
@@ -1740,13 +1745,13 @@ class TextSearchBar:
 
             self.on_search_match(search_type, restarted=True)
 
-    def on_search_changed(self, widget):
+    def on_search_changed(self, *args):
         self.on_search_match(search_type="typing")
 
-    def on_search_previous_match(self, widget):
+    def on_search_previous_match(self, *args):
         self.on_search_match(search_type="previous")
 
-    def on_search_next_match(self, widget):
+    def on_search_next_match(self, *args):
         self.on_search_match(search_type="next")
 
     def on_key_press(self, widget, event):

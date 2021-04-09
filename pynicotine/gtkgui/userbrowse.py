@@ -273,7 +273,7 @@ class UserBrowse:
 
         return False
 
-    def on_folder_popup_menu(self, widget):
+    def on_folder_popup_menu(self, *args):
 
         actions = self.folder_popup_menu.get_actions()
 
@@ -303,7 +303,7 @@ class UserBrowse:
 
         if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
-            return self.on_file_popup_menu(widget)
+            return self.on_file_popup_menu()
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_files()
@@ -316,7 +316,7 @@ class UserBrowse:
 
         return False
 
-    def on_file_popup_menu(self, widget):
+    def on_file_popup_menu(self, *args):
 
         self.select_files()
         num_selected_files = len(self.selected_files)
@@ -927,7 +927,7 @@ class UserBrowse:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_play_files(self, widget, prefix=""):
+    def on_play_files(self, *args):
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
 
@@ -953,7 +953,7 @@ class UserBrowse:
                     if directory not in self.search_list:
                         self.search_list.append(directory)
 
-    def on_search(self, widget):
+    def on_search(self, *args):
 
         query = self.SearchEntry.get_text().lower()
 
@@ -1002,7 +1002,7 @@ class UserBrowse:
         else:
             self.search_position = 0
 
-    def on_refresh(self, widget):
+    def on_refresh(self, *args):
 
         self.refreshing = True
         self.info_bar.set_visible(False)

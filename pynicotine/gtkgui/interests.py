@@ -298,13 +298,13 @@ class Interests:
     def on_r_recommend_search(self, *args):
         self.recommend_search(self.r_popup_menu.get_user())
 
-    def on_global_recommendations_clicked(self, widget):
+    def on_global_recommendations_clicked(self, *args):
         self.np.queue.append(slskmessages.GlobalRecommendations())
 
-    def on_recommendations_clicked(self, widget):
+    def on_recommendations_clicked(self, *args):
         self.np.queue.append(slskmessages.Recommendations())
 
-    def on_similar_users_clicked(self, widget):
+    def on_similar_users_clicked(self, *args):
         self.np.queue.append(slskmessages.SimilarUsers())
 
     def set_recommendations(self, title, recom):

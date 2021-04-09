@@ -81,7 +81,7 @@ class Downloads(TransferList):
 
         self.update_download_filters()
 
-    def on_try_clear_queued(self, widget):
+    def on_try_clear_queued(self, *args):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
@@ -272,7 +272,7 @@ class Downloads(TransferList):
         elif dc == 6:  # Retry
             self.on_retry_transfer()
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)

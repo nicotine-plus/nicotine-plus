@@ -220,8 +220,8 @@ class UserList:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_settings_ban_ignore(self, widget):
-        self.frame.on_settings_ban_ignore(widget)
+    def on_settings_ban_ignore(self, *args):
+        self.frame.on_settings_ban_ignore()
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
@@ -338,16 +338,16 @@ class UserList:
         self.popup_menu.toggle_user_items()
         self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        items = self.popup_menu.get_actions()
+        actions = self.popup_menu.get_actions()
 
-        items[_("Private Rooms")].set_enabled(
+        actions[_("Private Rooms")].set_enabled(
             status or
             self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
         )
 
-        items[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
-        items[_("_Privileged")].set_state(GLib.Variant.new_boolean(privileged))
-        items[_("_Trusted")].set_state(GLib.Variant.new_boolean(trusted))
+        actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
+        actions[_("_Privileged")].set_state(GLib.Variant.new_boolean(privileged))
+        actions[_("_Trusted")].set_state(GLib.Variant.new_boolean(trusted))
 
         self.popup_menu.popup()
         return True

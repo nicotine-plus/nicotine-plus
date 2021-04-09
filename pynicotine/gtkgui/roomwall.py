@@ -34,10 +34,10 @@ class RoomWall:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
         self.RoomWallDialog.set_transient_for(frame.MainWindow)
 
-    def on_set_room_wall_message(self, widget, *args):
+    def on_set_room_wall_message(self, *args):
 
-        result = widget.get_text()
-        widget.set_text("")
+        result = self.RoomWallEntry.get_text()
+        self.RoomWallEntry.set_text("")
 
         config = self.frame.np.config.sections
         room_name = self.room.room
@@ -59,7 +59,7 @@ class RoomWall:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def hide(self, widget=None, event=None):
+    def hide(self, *args):
 
         self.RoomWallList.get_buffer().set_text("")
         self.RoomWallDialog.hide()

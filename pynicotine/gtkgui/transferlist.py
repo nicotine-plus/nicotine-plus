@@ -173,7 +173,7 @@ class TransferList:
     def new_transfer_notification(self):
         self.frame.request_tab_icon(self.tab_label)
 
-    def on_ban(self, widget):
+    def on_ban(self, *args):
         self.select_transfers()
 
         for user in self.selected_users:

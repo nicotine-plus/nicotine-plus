@@ -453,11 +453,11 @@ class PrivateChat:
     def on_message_view_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         return False
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.popup_menu_user.toggle_user_items()
         self.popup_menu.popup()
@@ -504,7 +504,7 @@ class PrivateChat:
     def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
 
-    def on_show_chat_help(self, widget):
+    def on_show_chat_help(self, *args):
 
         if not hasattr(self, "AboutPrivateChatCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
@@ -916,8 +916,8 @@ class PrivateChat:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_close(self, widget):
+    def on_close(self, *args):
         self.chats.remove_tab(self)
 
-    def on_close_all_tabs(self, widget):
+    def on_close_all_tabs(self, *args):
         self.chats.remove_all_pages()

@@ -1090,7 +1090,7 @@ class Search:
 
         if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         pathinfo = widget.get_path_at_pos(event.x, event.y)
 
@@ -1119,7 +1119,7 @@ class Search:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.select_results()
 
@@ -1361,7 +1361,7 @@ class Search:
 
         return text
 
-    def on_refilter(self, widget, *args):
+    def on_refilter(self, *args):
 
         if self.clearing_filters:
             return
@@ -1386,7 +1386,7 @@ class Search:
             else:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
-    def on_clear_filters(self, widget):
+    def on_clear_filters(self, *args):
 
         self.clearing_filters = True
 
@@ -1400,9 +1400,9 @@ class Search:
 
         self.clearing_filters = False
         self.FilterInEntry.grab_focus()
-        self.on_refilter(widget)
+        self.on_refilter()
 
-    def on_about_filters(self, widget):
+    def on_about_filters(self, *args):
 
         if not hasattr(self, "AboutSearchFiltersPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
