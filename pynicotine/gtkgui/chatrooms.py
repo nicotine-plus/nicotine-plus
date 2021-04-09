@@ -147,11 +147,7 @@ class ChatRooms(IconNotebook):
         if room not in self.joinedrooms:
             return False
 
-        menu = PopupMenu(self.frame)
-        menu.setup(
-            ("#" + _("_Leave Room"), self.joinedrooms[room].on_leave)
-        )
-
+        menu = self.joinedrooms[room].tab_menu
         menu.popup()
         return True
 
@@ -588,13 +584,15 @@ class ChatRoom:
 
         self.UserList.set_model(self.usersmodel)
 
-        self.popup_menu_private_rooms = PopupMenu(self.frame, False)
-        self.popup_menu = popup = PopupMenu(self.frame)
+        self.popup_menu_private_rooms = PopupMenu(self.frame)
 
+        self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup_user_menu()
-        popup.append_item(("", None))
-        popup.append_item(("#" + _("Sear_ch User's Files"), popup.on_search_user))
-        popup.append_item((1, _("Private Rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms))
+        popup.setup(
+            ("", None),
+            ("#" + _("Sear_ch User's Files"), popup.on_search_user),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms)
+        )
 
         self.ChatEntry.grab_focus()
 
@@ -621,6 +619,11 @@ class ChatRoom:
             ("#" + _("Delete Room Log"), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),
+            ("#" + _("_Leave Room"), self.on_leave)
+        )
+
+        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu.setup(
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
@@ -737,10 +740,19 @@ class ChatRoom:
             if lines:
                 append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
 
-    def on_find_activity_log(self, widget):
+    def populate_user_menu(self, user):
+
+        self.popup_menu.set_user(user)
+        self.popup_menu.toggle_user_items()
+
+        me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+        self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(not me)
+        self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
+
+    def on_find_activity_log(self, *args):
         self.LogSearchBar.set_search_mode(True)
 
-    def on_find_room_log(self, widget):
+    def on_find_room_log(self, *args):
         self.ChatSearchBar.set_search_mode(True)
 
     def get_selected_username(self, treeview):
@@ -774,19 +786,14 @@ class ChatRoom:
         if user is None:
             return False
 
-        self.popup_menu.set_user(user)
-        self.popup_menu.toggle_user_items()
-
-        me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
-        self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
-
+        self.populate_user_menu(user)
         self.popup_menu.popup()
         return True
 
-    def on_show_room_wall(self, widget):
+    def on_show_room_wall(self, *args):
         self.room_wall.show()
 
-    def on_show_chat_help(self, widget):
+    def on_show_chat_help(self, *args):
 
         if not hasattr(self, "AboutChatRoomCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
@@ -1301,12 +1308,7 @@ class ChatRoom:
         if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button in (1, 2, 3):
 
             # Chat, Userlists use the normal popup system
-            self.popup_menu.set_user(user)
-            self.popup_menu.toggle_user_items()
-
-            me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
-            self.popup_menu.get_items()[_("Private Rooms")].set_sensitive(not me)
-
+            self.populate_user_menu(user)
             self.popup_menu.popup(button=event.button.button)
 
         return True
@@ -1345,7 +1347,7 @@ class ChatRoom:
         for user in self.tag_users:
             self.get_user_tag(user)
 
-    def on_leave(self, widget=None):
+    def on_leave(self, *args):
 
         if self.leaving:
             return
@@ -1560,32 +1562,32 @@ class ChatRoom:
     def on_room_log_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_room_log_menu(widget)
+            return self.on_popup_room_log_menu()
 
         return False
 
-    def on_popup_room_log_menu(self, widget):
+    def on_popup_room_log_menu(self, *args):
         self.roomlogpopmenu.popup()
         return True
 
     def on_activity_log_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_activity_log_menu(widget)
+            return self.on_popup_activity_log_menu()
 
         return False
 
-    def on_popup_activity_log_menu(self, widget):
+    def on_popup_activity_log_menu(self, *args):
         self.activitylogpopupmenu.popup()
         return True
 
-    def on_copy_all_activity_log(self, widget):
+    def on_copy_all_activity_log(self, *args):
 
         start, end = self.RoomLog.get_buffer().get_bounds()
         log = self.RoomLog.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_copy_activity_log(self, widget):
+    def on_copy_activity_log(self, *args):
 
         bound = self.RoomLog.get_buffer().get_selection_bounds()
 
@@ -1594,7 +1596,7 @@ class ChatRoom:
             log = self.RoomLog.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def on_copy_room_log(self, widget):
+    def on_copy_room_log(self, *args):
 
         bound = self.ChatScroll.get_buffer().get_selection_bounds()
 
@@ -1603,13 +1605,13 @@ class ChatRoom:
             log = self.ChatScroll.get_buffer().get_text(start, end, True)
             self.frame.clip.set_text(log, -1)
 
-    def on_copy_all_room_log(self, widget):
+    def on_copy_all_room_log(self, *args):
 
         start, end = self.ChatScroll.get_buffer().get_bounds()
         log = self.ChatScroll.get_buffer().get_text(start, end, True)
         self.frame.clip.set_text(log, -1)
 
-    def on_view_room_log(self, widget):
+    def on_view_room_log(self, *args):
         open_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room)
 
     def delete_room_log_response(self, dialog, response, data):
@@ -1621,7 +1623,7 @@ class ChatRoom:
 
         dialog.destroy()
 
-    def on_delete_room_log(self, widget):
+    def on_delete_room_log(self, *args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -1630,8 +1632,8 @@ class ChatRoom:
             callback=self.delete_room_log_response
         )
 
-    def on_clear_messages(self, widget):
+    def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
 
-    def on_clear_activity_log(self, widget):
+    def on_clear_activity_log(self, *args):
         self.RoomLog.get_buffer().set_text("")

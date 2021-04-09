@@ -153,13 +153,13 @@ class FastConfigureAssistant(object):
             directory[1]
         ])
 
-    def on_prepare(self, widget, page):
+    def on_prepare(self, *args):
         self.reset_completeness()
 
-    def on_entry_changed(self, widget, *args):
+    def on_entry_changed(self, *args):
         self.reset_completeness()
 
-    def on_check_port_status(self, widget):
+    def on_check_port_status(self, *args):
 
         open_uri(
             '='.join([
@@ -169,7 +169,7 @@ class FastConfigureAssistant(object):
             self.FastConfigureDialog
         )
 
-    def on_add_share(self, widget):
+    def on_add_share(self, *args):
 
         selected = choose_dir(
             self.FastConfigureDialog.get_toplevel(),
@@ -247,14 +247,14 @@ class FastConfigureAssistant(object):
                     # The share is unique: we can add it
                     self.add_shared_folder((virtual, directory))
 
-    def on_remove_share(self, widget):
+    def on_remove_share(self, *args):
 
         model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
         for path in paths:
             self.sharelist.remove(self.sharelist.get_iter(path))
 
-    def on_apply(self, widget):
+    def on_apply(self, *args):
 
         self.store()
         self.FastConfigureDialog.hide()
@@ -270,5 +270,5 @@ class FastConfigureAssistant(object):
         if not self.frame.np.active_server_conn:
             self.frame.on_connect()
 
-    def on_close(self, widget):
+    def on_close(self, *args):
         self.FastConfigureDialog.hide()

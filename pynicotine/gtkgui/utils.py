@@ -24,8 +24,10 @@
 
 import os
 import re
+import string
 import sys
 import time
+import uuid
 
 from collections import OrderedDict
 from html import escape
@@ -342,8 +344,8 @@ def press_header(widget, event):
     treeview = widget.get_parent()
     columns = treeview.get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
-    one_visible_column = len(visible_columns) == 1
     menu = PopupMenu(NICOTINE)
+    actions = menu.get_actions()
     pos = 1
 
     for column in columns:
@@ -352,23 +354,23 @@ def press_header(widget, event):
         if title == "":
             title = _("Column #%i") % pos
 
-        item = menu.append_item(("$" + title, None))
+        menu.setup(
+            ("$" + title, None)
+        )
 
-        if column in visible_columns:
-            item.set_active(True)
-            if one_visible_column:
-                item.set_sensitive(False)
-        else:
-            item.set_active(False)
+        actions[title].set_state(
+            GLib.Variant.new_boolean(column in visible_columns)
+        )
+        actions[title].set_enabled(len(visible_columns) > 1)
 
-        item.connect('activate', header_toggle, treeview, columns, pos - 1)
+        actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
         pos += 1
 
     menu.popup()
     return True
 
 
-def header_toggle(widget, treeview, columns, index):
+def header_toggle(action, state, treeview, columns, index):
 
     column = columns[index]
     column.set_visible(not column.get_visible())
@@ -1219,96 +1221,98 @@ class InfoBar:
         self.set_visible(True)
 
 
-class PopupMenu(Gtk.Menu):
+class PopupMenu(Gio.Menu):
 
-    def __init__(self, frame=None, shouldattach=True):
+    def __init__(self, frame=None):
 
-        Gtk.Menu.__init__(self)
+        Gio.Menu.__init__(self)
 
         self.frame = frame
-        self.user = None
-        self.useritem = None
-        self.handlers = {}
+
+        self.actions = {}
         self.items = {}
+        self.submenus = []
+
+        self.popup_menu = None
+        self.menu_section = None
         self.editing = False
 
-        # If the menu is not a submenu, it needs to be attached
-        # to the main window, otherwise it has no parent
-        if shouldattach and hasattr(self.frame, 'MainWindow'):
-            self.attach_to_widget(self.frame.MainWindow, None)
+        self.popup_id = str(uuid.uuid1())
 
-    def create_item(self, item):
+        self.user = None
+        self.useritem = None
 
-        if item[0] == "":
-            label = "separator"
-            menuitem = Gtk.SeparatorMenuItem()
+    def create_action(self, action_id, stateful=False):
 
-        elif item[0] == "USER":
+        if not stateful:
+            action = Gio.SimpleAction.new(action_id, None)
+        else:
+            action = Gio.SimpleAction.new_stateful(action_id, None, GLib.Variant.new_boolean(False))
 
-            label = item[1]
-            menuitem = Gtk.MenuItem.new_with_label(label)
-            self.useritem = menuitem
+        self.frame.MainWindow.add_action(action)
+        return action
 
-            if len(item) >= 3:
-                self.handlers[menuitem] = menuitem.connect("activate", item[2])
-            else:
-                menuitem.set_sensitive(False)
+    def create_menu_item(self, item):
 
-        elif item[0] == 1:
+        submenu = False
+        stateful = False
 
-            label = item[1]
-            menuitem = Gtk.MenuItem.new_with_label(label)
-            menuitem.set_submenu(item[2])
+        if item[0][0] == ">":
+            label = item[0][1:]
+            submenu = True
 
-            if len(item) == 5 and item[4] is not None and item[3] is not None:
-                self.handlers[menuitem] = menuitem.connect("activate", item[3], item[4])
-            elif item[3] is not None:
-                self.handlers[menuitem] = menuitem.connect("activate", item[3])
+        elif item[0][0] == "$":
+            label = item[0][1:]
+            stateful = True
 
-        elif item[0] == "USERMENU":
-
-            label = item[1]
-            menuitem = Gtk.MenuItem.new_with_label(label)
-            menuitem.set_submenu(item[2])
-
-            if item[3] is not None:
-                self.handlers[menuitem] = menuitem.connect("activate", item[3])
-
-            self.useritem = menuitem
+        elif item[0][0] == "#":
+            label = item[0][1:]
 
         else:
+            label = "dummy"
 
-            if item[0][0] == "$":
-                label = item[0][1:]
-                menuitem = Gtk.CheckMenuItem.new_with_label(label)
+        action_id = (label + self.popup_id).replace(" ", "").lower().translate(str.maketrans(dict.fromkeys(string.punctuation)))
+        action = self.create_action(action_id, stateful)
 
-            elif item[0][0] == "#":
-                label = item[0][1:]
-                menuitem = Gtk.MenuItem.new_with_label(label)
+        menuitem = Gio.MenuItem.new(label, "win." + action_id)
 
-            else:
-                label = item[0]
-                menuitem = Gtk.MenuItem.new_with_label(label)
+        if item[0] == "USER":
+            self.useritem = menuitem
 
-            if len(item) >= 3 and item[2] is not None and item[1] is not None:
-                self.handlers[menuitem] = menuitem.connect("activate", item[1], item[2])
-            elif item[1] is not None:
-                self.handlers[menuitem] = menuitem.connect("activate", item[1])
+        if submenu:
+            menuitem.set_submenu(item[1])
+            self.submenus.append(item[1])
 
-        if item[0] != "":
-            menuitem.set_use_underline(True)
+            # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
+            # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
+            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
-        menuitem.show()
+        elif item[1]:
+            action_name = "change-state" if stateful else "activate"
+            action.connect(action_name, *item[1:])
 
         self.items[label] = menuitem
+        self.actions[label] = action
+
         return menuitem
 
     def append_item(self, item):
 
-        menuitem = self.create_item(item)
-        self.append(menuitem)
+        if not self.menu_section or not item[0]:
+            # Create new section
 
-        return menuitem
+            self.menu_section = Gio.Menu.new()
+            menuitem = Gio.MenuItem.new_section(None, self.menu_section)
+            Gio.Menu.append_item(self, menuitem)
+
+            if not item[0]:
+                return menuitem
+
+        menuitem = self.create_menu_item(item)
+        self.menu_section.append_item(menuitem)
+
+    def get_actions(self):
+        return self.actions
 
     def get_items(self):
         return self.items
@@ -1317,167 +1321,265 @@ class PopupMenu(Gtk.Menu):
         for item in items:
             self.append_item(item)
 
-    def setup_user_menu(self, user=None):
+    def setup_user_menu(self, user=None, page=""):
 
         self.setup(
-            ("USER", "", self.on_copy_user),
-            ("", None),
-            ("#" + _("Send _Message"), self.on_send_message),
-            ("#" + _("Show User I_nfo"), self.on_get_user_info),
-            ("#" + _("Brow_se Files"), self.on_browse_user),
+            ("USER", self.on_copy_user),
+            ("", None)
+        )
+
+        if page != "privatechat":
+            self.append_item(("#" + _("Send _Message"), self.on_send_message))
+
+        if page != "userinfo":
+            self.append_item(("#" + _("Show User I_nfo"), self.on_get_user_info))
+
+        if page != "userbrowse":
+            self.append_item(("#" + _("Brow_se Files"), self.on_browse_user))
+
+        self.setup(
             ("#" + _("Gi_ve Privileges"), self.on_give_privileges),
             ("", None),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
             ("#" + _("Client Version"), self.on_version),
-            ("", None),
-            ("$" + _("_Add User To List"), self.on_add_to_list),
+            ("", None)
+        )
+
+        if page != "userlist":
+            self.append_item(("$" + _("_Add User To List"), self.on_add_to_list))
+
+        self.setup(
             ("$" + _("_Ban User"), self.on_ban_user),
             ("$" + _("_Ignore User"), self.on_ignore_user),
             ("$" + _("B_lock User's IP Address"), self.on_block_user),
             ("$" + _("Ignore User's IP Address"), self.on_ignore_ip),
         )
 
-        if user is not None:
-            self.set_user(user)
+        self.set_user(user)
+
+    def set_num_selected_files(self, num_files):
+
+        self.actions["selected_files"].set_enabled(False)
+        self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
+
+        # Rather ugly solution, but otherwise the label update doesn't display
+        self.remove(0)
+        self.prepend_item(self.items["selected_files"])
+
+    def set_user(self, user):
+
+        if not user:
+            return
+
+        self.user = user
+
+        if not self.useritem:
+            return
+
+        self.useritem.set_label(user)
+
+        # Rather ugly solution, but otherwise the label update doesn't display
+        section = self.get_item_link(0, Gio.MENU_LINK_SECTION)
+        section.remove(0)
+        section.prepend_item(self.useritem)
+
+    def get_user(self):
+        return self.user
 
     def toggle_user_items(self):
 
         self.editing = True
+        add_to_list = _("_Add User To List")
 
-        self.items[_("_Add User To List")].set_active(self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]))
-        self.items[_("_Ban User")].set_active(self.frame.np.network_filter.is_user_banned(self.user))
-        self.items[_("_Ignore User")].set_active(self.frame.np.network_filter.is_user_ignored(self.user))
-        self.items[_("B_lock User's IP Address")].set_active(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False)
-        self.items[_("Ignore User's IP Address")].set_active(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user) or False)
+        if add_to_list in self.actions:
+            self.actions[add_to_list].set_state(
+                GLib.Variant.new_boolean(
+                    self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"])
+                )
+            )
+
+        self.actions[_("_Ban User")].set_state(
+            GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_banned(self.user))
+        )
+        self.actions[_("_Ignore User")].set_state(
+            GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_ignored(self.user))
+        )
+        self.actions[_("B_lock User's IP Address")].set_state(
+            GLib.Variant.new_boolean(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False)
+        )
+        self.actions[_("Ignore User's IP Address")].set_state(
+            GLib.Variant.new_boolean(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user) or False)
+        )
 
         self.editing = False
 
+    def populate_private_rooms(self, popup):
+
+        popup.clear()
+
+        if self.user is None:
+            return
+
+        popup.set_user(self.user)
+
+        for room in self.frame.chatrooms.private_rooms:
+
+            if not self.frame.chatrooms.roomlist.is_private_room_owned(room) or \
+                    self.frame.chatrooms.roomlist.is_private_room_operator(room):
+                continue
+
+            if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
+                popup.append_item(("#" + _("Remove from private room %s") % room, popup.on_private_room_remove_user, room))
+            else:
+                popup.append_item(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
+
+            if self.frame.chatrooms.roomlist.is_private_room_owned(room):
+
+                if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
+                    popup.append_item(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
+                else:
+                    popup.append_item(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
+
     def clear(self):
 
-        for (w, widget) in self.handlers.items():
-            w.disconnect(widget)
+        for submenu in self.submenus:
+            # Ensure we remove all submenu actions
+            submenu.clear()
 
-        self.handlers.clear()
+        self.submenus.clear()
+        self.remove_all()
 
-        for widget in self.get_children():
-            self.remove(widget)
-            widget.destroy()
+        for action in self.actions:
+            self.frame.MainWindow.remove_action(action)
 
-        if self.useritem is not None:
-            self.useritem.destroy()
-            self.useritem = None
+        self.actions.clear()
+        self.items.clear()
+
+        self.menu_section = None
+        self.useritem = None
 
     def popup(self, button=3, use_legacy=False):
+
+        if not self.popup_menu:
+            self.popup_menu = Gtk.Menu.new_from_model(self)
+
+            if hasattr(self.frame, 'MainWindow'):
+                self.popup_menu.attach_to_widget(self.frame.MainWindow, None)
 
         try:
             if use_legacy:
                 raise AttributeError("Falling back to legacy popup method")
 
-            self.popup_at_pointer()
+            self.popup_menu.popup_at_pointer()
 
         except AttributeError:
             time = Gtk.get_current_event_time()
-            Gtk.Menu.popup(self, None, None, None, None, button, time)
+            self.popup_menu.popup(None, None, None, None, button, time)
 
-    def set_user(self, user):
+    """ Events """
 
-        self.user = user
-
-        if self.useritem:
-            self.useritem.get_child().set_text(user)
-
-    def get_user(self):
-        return self.user
-
-    def on_search_user(self, widget):
+    def on_search_user(self, *args):
         self.frame.SearchMethod.set_active_id("user")
         self.frame.UserSearchEntry.set_text(self.user)
         self.frame.change_main_page("search")
 
-    def on_send_message(self, widget):
+    def on_send_message(self, *args):
         self.frame.privatechats.send_message(self.user, show_user=True)
         self.frame.change_main_page("private")
 
-    def on_show_ip_address(self, widget):
-
+    def on_show_ip_address(self, *args):
         self.frame.np.ip_requested.add(self.user)
         self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
-    def on_get_user_info(self, widget):
+    def on_get_user_info(self, *args):
         self.frame.local_user_info_request(self.user)
 
-    def on_browse_user(self, widget):
+    def on_browse_user(self, *args):
         self.frame.browse_user(self.user)
 
-    def on_private_room_add_user(self, widget, room):
+    def on_private_room_add_user(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomAddUser(room, self.user))
 
-    def on_private_room_remove_user(self, widget, room):
+    def on_private_room_remove_user(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomRemoveUser(room, self.user))
 
-    def on_private_room_add_operator(self, widget, room):
+    def on_private_room_add_operator(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomAddOperator(room, self.user))
 
-    def on_private_room_remove_operator(self, widget, room):
+    def on_private_room_remove_operator(self, *args):
+        room = args[-1]
         self.frame.np.queue.append(slskmessages.PrivateRoomRemoveOperator(room, self.user))
 
-    def on_add_to_list(self, widget):
+    def on_add_to_list(self, action, state):
 
         if self.editing:
             return
 
-        if widget.get_active():
+        if state:
             self.frame.userlist.add_to_list(self.user)
         else:
             self.frame.userlist.remove_from_list(self.user)
 
-    def on_ban_user(self, widget):
+        action.set_state(state)
+
+    def on_ban_user(self, action, state):
 
         if self.editing:
             return
 
-        if widget.get_active():
+        if state:
             self.frame.np.network_filter.ban_user(self.user)
         else:
             self.frame.np.network_filter.unban_user(self.user)
 
-    def on_block_user(self, widget):
+        action.set_state(state)
+
+    def on_block_user(self, action, state):
 
         if self.editing:
             return
 
-        if widget.get_active():
+        if state:
             self.frame.np.network_filter.block_user_ip(self.user)
         else:
             self.frame.np.network_filter.unblock_user_ip(self.user)
 
-    def on_ignore_ip(self, widget):
+        action.set_state(state)
+
+    def on_ignore_ip(self, action, state):
 
         if self.editing:
             return
 
-        if widget.get_active():
+        if state:
             self.frame.np.network_filter.ignore_user_ip(self.user)
         else:
             self.frame.np.network_filter.unignore_user_ip(self.user)
 
-    def on_ignore_user(self, widget):
+        action.set_state(state)
+
+    def on_ignore_user(self, action, state):
 
         if self.editing:
             return
 
-        if widget.get_active():
+        if state:
             self.frame.np.network_filter.ignore_user(self.user)
         else:
             self.frame.np.network_filter.unignore_user(self.user)
 
-    def on_version(self, widget):
+        action.set_state(state)
+
+    def on_version(self, *args):
         self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
-    def on_copy_user(self, widget):
+    def on_copy_user(self, *args):
         self.frame.clip.set_text(self.user, -1)
 
-    def on_give_privileges(self, widget, error=None):
+    def on_give_privileges(self, action, state, error=None):
 
         self.frame.np.queue.append(slskmessages.CheckPrivileges())
 
@@ -1503,37 +1605,7 @@ class PopupMenu(Gtk.Menu):
                 self.frame.np.queue.append(slskmessages.GivePrivileges(self.user, days))
 
             except ValueError:
-                self.on_give_privileges(widget, error=_("Please enter a whole number!"))
-
-    def on_private_rooms(self, widget, popup):
-
-        if self.user is None or self.user == self.frame.np.config.sections["server"]["login"]:
-            return False
-
-        items = []
-        popup.clear()
-        popup.set_user(self.user)
-
-        for room in self.frame.chatrooms.private_rooms:
-
-            if not self.frame.chatrooms.roomlist.is_private_room_owned(room) or \
-                    self.frame.chatrooms.roomlist.is_private_room_operator(room):
-                continue
-
-            if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
-                items.append(("#" + _("Remove from private room %s") % room, popup.on_private_room_remove_user, room))
-            else:
-                items.append(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
-
-            if self.frame.chatrooms.roomlist.is_private_room_owned(room):
-
-                if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
-                    items.append(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
-                else:
-                    items.append(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
-
-        popup.setup(*items)
-        return True
+                self.on_give_privileges(action, state, error=_("Please enter a whole number!"))
 
 
 class FileChooserButton:
@@ -1571,7 +1643,7 @@ class FileChooserButton:
 
         self.button.connect("clicked", self.open_file_chooser)
 
-    def open_file_chooser(self, widget):
+    def open_file_chooser(self, *args):
 
         if self.chooser_type == "folder":
             selected = choose_dir(self.parent, self.path, multichoice=False)
@@ -1675,13 +1747,13 @@ class TextSearchBar:
 
             self.on_search_match(search_type, restarted=True)
 
-    def on_search_changed(self, widget):
+    def on_search_changed(self, *args):
         self.on_search_match(search_type="typing")
 
-    def on_search_previous_match(self, widget):
+    def on_search_previous_match(self, *args):
         self.on_search_match(search_type="previous")
 
-    def on_search_next_match(self, widget):
+    def on_search_next_match(self, *args):
         self.on_search_match(search_type="next")
 
     def on_key_press(self, widget, event):

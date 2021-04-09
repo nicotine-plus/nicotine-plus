@@ -168,19 +168,20 @@ class UserList:
 
         """ Popup """
 
-        self.popup_menu_private_rooms = PopupMenu(self.frame, False)
-        self.popup_menu = popup = PopupMenu(frame)
-        popup.setup_user_menu()
-        popup.get_items()[_("_Add User To List")].set_visible(False)
+        self.popup_menu_private_rooms = PopupMenu(self.frame)
 
-        popup.append_item(("", None))
-        popup.append_item(("$" + _("_Online Notify"), self.on_notify))
-        popup.append_item(("$" + _("_Privileged"), self.on_privileged))
-        popup.append_item(("$" + _("_Trusted"), self.on_trusted))
-        popup.append_item(("", None))
-        popup.append_item((1, _("Private Rooms"), self.popup_menu_private_rooms, popup.on_private_rooms, self.popup_menu_private_rooms))
-        popup.append_item(("#" + _("Edit _Comments"), self.on_edit_comments))
-        popup.append_item(("#" + _("_Remove"), self.on_remove_user))
+        self.popup_menu = popup = PopupMenu(frame)
+        popup.setup_user_menu(page="userlist")
+        popup.setup(
+            ("", None),
+            ("$" + _("_Online Notify"), self.on_notify),
+            ("$" + _("_Privileged"), self.on_privileged),
+            ("$" + _("_Trusted"), self.on_trusted),
+            ("", None),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms),
+            ("#" + _("Edit _Comments"), self.on_edit_comments),
+            ("#" + _("_Remove"), self.on_remove_user)
+        )
 
         self.update_visuals()
 
@@ -219,8 +220,8 @@ class UserList:
         for widget in self.__dict__.values():
             update_widget_visuals(widget)
 
-    def on_settings_ban_ignore(self, widget):
-        self.frame.on_settings_ban_ignore(widget)
+    def on_settings_ban_ignore(self, *args):
+        self.frame.on_settings_ban_ignore()
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
@@ -335,17 +336,18 @@ class UserList:
 
         self.popup_menu.set_user(username)
         self.popup_menu.toggle_user_items()
+        self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        items = self.popup_menu.get_items()
+        actions = self.popup_menu.get_actions()
 
-        items[_("Private Rooms")].set_sensitive(
+        actions[_("Private Rooms")].set_enabled(
             status or
             self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
         )
 
-        items[_("_Online Notify")].set_active(notify)
-        items[_("_Privileged")].set_active(privileged)
-        items[_("_Trusted")].set_active(trusted)
+        actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
+        actions[_("_Privileged")].set_state(GLib.Variant.new_boolean(privileged))
+        actions[_("_Trusted")].set_state(GLib.Variant.new_boolean(trusted))
 
         self.popup_menu.popup()
         return True
@@ -469,7 +471,72 @@ class UserList:
             GLib.idle_add(self.frame.chatrooms.update_completions)
             GLib.idle_add(self.frame.privatechats.update_completions)
 
-    def on_edit_comments(self, widget):
+    def remove_from_list(self, user):
+
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.remove(i.iter)
+                break
+
+        self.save_user_list()
+
+        self.buddies_combos_fill()
+
+        if self.frame.np.config.sections["words"]["buddies"]:
+            GLib.idle_add(self.frame.chatrooms.update_completions)
+            GLib.idle_add(self.frame.privatechats.update_completions)
+
+    def save_user_list(self):
+
+        user_list = []
+
+        for i in self.usersmodel:
+            status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, hlast_seen, comments, status, speed, file_count, last_seen, country = i
+            user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
+
+        self.frame.np.config.sections["server"]["userlist"] = user_list
+        self.frame.np.config.write_configuration()
+
+    def save_columns(self):
+        save_columns("buddy_list", self.UserListTree.get_columns())
+
+    def on_trusted(self, action, state):
+
+        user = self.popup_menu.get_user()
+
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set_value(i.iter, 5, state)
+                break
+
+        self.save_user_list()
+        action.set_state(state)
+
+    def on_notify(self, action, state):
+
+        user = self.popup_menu.get_user()
+
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set_value(i.iter, 6, state)
+                break
+
+        self.save_user_list()
+        action.set_state(state)
+
+    def on_privileged(self, action, state):
+
+        user = self.popup_menu.get_user()
+
+        for i in self.usersmodel:
+            if i[2] == user:
+                self.usersmodel.set_value(i.iter, 7, state)
+                break
+
+        self.save_user_list()
+        action.set_state(state)
+
+    def on_edit_comments(self, *args):
 
         user = self.popup_menu.get_user()
 
@@ -491,67 +558,5 @@ class UserList:
 
             self.save_user_list()
 
-    def save_user_list(self):
-
-        user_list = []
-
-        for i in self.usersmodel:
-            status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, hlast_seen, comments, status, speed, file_count, last_seen, country = i
-            user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
-
-        self.frame.np.config.sections["server"]["userlist"] = user_list
-        self.frame.np.config.write_configuration()
-
-    def save_columns(self):
-        save_columns("buddy_list", self.UserListTree.get_columns())
-
-    def remove_from_list(self, user):
-
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.remove(i.iter)
-                break
-
-        self.save_user_list()
-
-        self.buddies_combos_fill()
-
-        if self.frame.np.config.sections["words"]["buddies"]:
-            GLib.idle_add(self.frame.chatrooms.update_completions)
-            GLib.idle_add(self.frame.privatechats.update_completions)
-
-    def on_remove_user(self, widget):
+    def on_remove_user(self, *args):
         self.remove_from_list(self.popup_menu.get_user())
-
-    def on_trusted(self, widget):
-
-        user = self.popup_menu.get_user()
-
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 5, widget.get_active())
-                break
-
-        self.save_user_list()
-
-    def on_notify(self, widget):
-
-        user = self.popup_menu.get_user()
-
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 6, widget.get_active())
-                break
-
-        self.save_user_list()
-
-    def on_privileged(self, widget):
-
-        user = self.popup_menu.get_user()
-
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 7, widget.get_active())
-                break
-
-        self.save_user_list()

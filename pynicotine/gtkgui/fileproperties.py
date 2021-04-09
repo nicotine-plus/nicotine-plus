@@ -37,7 +37,7 @@ class FileProperties:
 
         self.current_index = 0
 
-    def on_previous(self, widget):
+    def on_previous(self, *args):
         self.current_index -= 1
 
         if self.current_index < 0:
@@ -45,7 +45,7 @@ class FileProperties:
 
         self.update_current_file()
 
-    def on_next(self, widget):
+    def on_next(self, *args):
         self.current_index += 1
 
         if self.current_index >= len(self.properties):
@@ -53,7 +53,7 @@ class FileProperties:
 
         self.update_current_file()
 
-    def on_download_item(self, widget):
+    def on_download_item(self, *args):
         if not self.frame.np.transfers:
             return
 

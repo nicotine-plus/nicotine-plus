@@ -346,15 +346,7 @@ class Searches(IconNotebook):
             log.add_warning(_("Search ID was none when clicking tab"))
             return False
 
-        menu = PopupMenu(self.frame)
-        menu.setup(
-            ("#" + _("Copy Search Term"), self.searches[search_id]["tab"].on_copy_search_term),
-            ("", None),
-            ("#" + _("Clear All Results"), self.searches[search_id]["tab"].on_clear),
-            ("#" + _("Close All Tabs"), self.searches[search_id]["tab"].on_close_all_tabs),
-            ("#" + _("_Close Tab"), self.searches[search_id]["tab"].on_close)
-        )
-
+        menu = self.searches[search_id]["tab"].tab_menu
         menu.popup()
         return True
 
@@ -468,9 +460,10 @@ class Search:
 
         """ Popup """
 
-        self.popup_menu_users = PopupMenu(self.frame, False)
-        self.popup_menu = popup = PopupMenu(self.frame)
-        popup.setup(
+        self.popup_menu_users = PopupMenu(self.frame)
+
+        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
@@ -484,7 +477,16 @@ class Search:
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url),
             ("", None),
-            (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users)
+            (">" + _("User(s)"), self.popup_menu_users)
+        )
+
+        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu.setup(
+            ("#" + _("Copy Search Term"), self.on_copy_search_term),
+            ("", None),
+            ("#" + _("Clear All Results"), self.on_clear),
+            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("_Close Tab"), self.on_close)
         )
 
         """ Grouping """
@@ -1002,35 +1004,25 @@ class Search:
         self.update_result_counter()
         self.update_filter_counter(self.active_filter_count)
 
-    def on_popup_menu_users(self, widget):
-
-        self.select_results()
+    def populate_popup_menu_users(self):
 
         self.popup_menu_users.clear()
 
-        if self.selected_users:
-
-            items = []
-
-            for user in self.selected_users:
-                popup = PopupMenu(self.frame, False)
-                popup.setup_user_menu(user)
-                popup.append_item(("", None))
-                popup.append_item(("#" + _("Select User's Transfers"), self.on_select_user_results))
-
-                items.append((1, user, popup, self.on_popup_menu_user, popup))
-
-            self.popup_menu_users.setup(*items)
-
-        return True
-
-    def on_popup_menu_user(self, widget, popup=None):
-
-        if popup is None:
+        if not self.selected_users:
             return
 
-        popup.toggle_user_items()
-        return True
+        for user in self.selected_users:
+            popup = PopupMenu(self.frame)
+            popup.setup_user_menu(user)
+            popup.setup(
+                ("", None),
+                ("#" + _("Select User's Transfers"), self.on_select_user_results)
+            )
+
+            popup.toggle_user_items()
+            self.popup_menu_users.setup(
+                (">" + user, popup)
+            )
 
     def on_select_user_results(self, widget):
 
@@ -1098,7 +1090,7 @@ class Search:
 
         if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         pathinfo = widget.get_path_at_pos(event.x, event.y)
 
@@ -1107,7 +1099,7 @@ class Search:
 
         elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_results()
-            self.on_download_files(widget)
+            self.on_download_files()
             self.ResultsList.get_selection().unselect_all()
             return True
 
@@ -1119,7 +1111,7 @@ class Search:
 
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
-            self.on_copy_file_path(widget)
+            self.on_copy_file_path()
         else:
             # No key match, continue event
             return False
@@ -1127,23 +1119,24 @@ class Search:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.select_results()
 
-        items = self.popup_menu.get_items()
+        actions = self.popup_menu.get_actions()
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
         for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
                   _("Copy _URL")):
-            items[i].set_sensitive(False)
+            actions[i].set_enabled(False)
 
         for i in (_("Download _Folder(s)"), _("Download F_older(s) To..."), _("_Browse Folder"),
                   _("Copy _File Path"), _("Copy Folder U_RL")):
-            items[i].set_sensitive(files)
+            actions[i].set_enabled(files)
 
-        items[_("User(s)")].set_sensitive(users)
+        actions[_("User(s)")].set_enabled(users)
+        self.populate_popup_menu_users()
 
         for result in self.selected_results:
             if not result[1].endswith('\\'):
@@ -1151,17 +1144,16 @@ class Search:
 
                 for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
                           _("Copy _URL")):
-                    items[i].set_sensitive(True)
+                    actions[i].set_enabled(True)
 
                 break
 
-        items["selected_files"].set_sensitive(False)
-        items["selected_files"].set_label(_("%s File(s) Selected") % self.selected_files_count)
+        self.popup_menu.set_num_selected_files(self.selected_files_count)
 
         self.popup_menu.popup()
         return True
 
-    def on_browse_folder(self, widget):
+    def on_browse_folder(self, *args):
 
         requested_folders = set()
 
@@ -1207,7 +1199,7 @@ class Search:
                 "country": country
             })
 
-    def on_file_properties(self, widget):
+    def on_file_properties(self, *args):
 
         if not self.frame.np.transfers:
             return
@@ -1218,7 +1210,7 @@ class Search:
         if data:
             FileProperties(self.frame, data).show()
 
-    def on_download_files(self, widget, prefix=""):
+    def on_download_files(self, *args, prefix=""):
 
         if not self.frame.np.transfers:
             return
@@ -1228,7 +1220,7 @@ class Search:
             if not file[1].endswith('\\'):
                 self.frame.np.transfers.get_file(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
-    def on_download_files_to(self, widget):
+    def on_download_files_to(self, *args):
 
         folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
@@ -1236,10 +1228,10 @@ class Search:
             return
 
         for folders in folder:
-            self.on_download_files(widget, folders)
+            self.on_download_files(prefix=folders)
             break
 
-    def on_download_folders(self, widget):
+    def on_download_folders(self, *args):
 
         requested_folders = {}
 
@@ -1258,7 +1250,7 @@ class Search:
                 self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
                 requested_folders[user].append(folder)
 
-    def on_download_folders_to(self, widget):
+    def on_download_folders_to(self, *args):
 
         directories = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
@@ -1282,7 +1274,7 @@ class Search:
                 self.frame.np.requested_folders[user][folder] = destination
                 self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
-    def on_copy_file_path(self, widget):
+    def on_copy_file_path(self, *args):
 
         if not self.selected_results:
             return
@@ -1290,11 +1282,11 @@ class Search:
         user, path = next(iter(self.selected_results))[:2]
         self.frame.clip.set_text(path, -1)
 
-    def on_copy_url(self, widget):
+    def on_copy_url(self, *args):
         user, path = next(iter(self.selected_results))[:2]
         self.frame.set_clipboard_url(user, path)
 
-    def on_copy_dir_url(self, widget):
+    def on_copy_dir_url(self, *args):
 
         user, path = next(iter(self.selected_results))[:2]
         path = "\\".join(path.split("\\")[:-1])
@@ -1334,7 +1326,7 @@ class Search:
         self.FiltersContainer.set_visible(visible)
         self.frame.np.config.sections["searches"]["filters_visible"] = visible
 
-    def on_copy_search_term(self, widget):
+    def on_copy_search_term(self, *args):
         self.frame.clip.set_text(self.text, -1)
 
     def on_toggle_remember(self, widget):
@@ -1369,7 +1361,7 @@ class Search:
 
         return text
 
-    def on_refilter(self, widget, *args):
+    def on_refilter(self, *args):
 
         if self.clearing_filters:
             return
@@ -1394,7 +1386,7 @@ class Search:
             else:
                 collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
 
-    def on_clear_filters(self, widget):
+    def on_clear_filters(self, *args):
 
         self.clearing_filters = True
 
@@ -1408,9 +1400,9 @@ class Search:
 
         self.clearing_filters = False
         self.FilterInEntry.grab_focus()
-        self.on_refilter(widget)
+        self.on_refilter()
 
-    def on_about_filters(self, widget):
+    def on_about_filters(self, *args):
 
         if not hasattr(self, "AboutSearchFiltersPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
@@ -1433,7 +1425,8 @@ class Search:
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
-    def on_clear(self, widget):
+    def on_clear(self, *args):
+
         self.all_data = []
         self.usersiters.clear()
         self.directoryiters.clear()
@@ -1443,8 +1436,8 @@ class Search:
         # Update number of visible results
         self.update_result_counter()
 
-    def on_close(self, widget):
+    def on_close(self, *args):
         self.searches.remove_tab(self)
 
-    def on_close_all_tabs(self, widget):
+    def on_close_all_tabs(self, *args):
         self.searches.remove_all_pages()

@@ -173,13 +173,13 @@ class TransferList:
     def new_transfer_notification(self):
         self.frame.request_tab_icon(self.tab_label)
 
-    def on_ban(self, widget):
+    def on_ban(self, *args):
         self.select_transfers()
 
         for user in self.selected_users:
             self.frame.np.network_filter.ban_user(user)
 
-    def on_file_search(self, widget):
+    def on_file_search(self, *args):
 
         for transfer in self.selected_transfers:
             self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
@@ -630,6 +630,26 @@ class TransferList:
             for i in self.list:
                 i.iter = None
 
+    def populate_popup_menu_users(self):
+
+        self.popup_menu_users.clear()
+
+        if not self.selected_users:
+            return
+
+        for user in self.selected_users:
+            popup = PopupMenu(self.frame)
+            popup.setup_user_menu(user)
+            popup.setup(
+                ("", None),
+                ("#" + _("Select User's Transfers"), self.on_select_user_transfers)
+            )
+
+            popup.toggle_user_items()
+            self.popup_menu_users.setup(
+                (">" + user, popup)
+            )
+
     def expand(self, transfer_path, user_path):
 
         if self.expand_button.get_active():
@@ -681,35 +701,6 @@ class TransferList:
 
         return False
 
-    def on_popup_menu_users(self, widget):
-
-        self.popup_menu_users.clear()
-
-        if self.selected_users:
-
-            items = []
-
-            for user in self.selected_users:
-
-                popup = PopupMenu(self.frame, False)
-                popup.setup_user_menu(user)
-                popup.append_item(("", None))
-                popup.append_item(("#" + _("Select User's Transfers"), self.on_select_user_transfers))
-
-                items.append((1, user, popup, self.on_popup_menu_user, popup))
-
-            self.popup_menu_users.setup(*items)
-
-        return True
-
-    def on_popup_menu_user(self, widget, popup=None):
-
-        if popup is None:
-            return
-
-        popup.toggle_user_items()
-        return True
-
     def on_select_user_transfers(self, widget):
 
         if not self.selected_users:
@@ -733,17 +724,17 @@ class TransferList:
         self.select_transfers()
 
         if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
-            self.on_abort_transfer(widget)
+            self.on_abort_transfer()
 
         elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
-            self.on_retry_transfer(widget)
+            self.on_retry_transfer()
 
         elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
-            self.on_copy_file_path(widget)
+            self.on_copy_file_path()
 
         elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
-            self.on_abort_transfer(widget, clear=True)
+            self.on_abort_transfer(clear=True)
 
         else:
             # No key match, continue event
@@ -752,7 +743,7 @@ class TransferList:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def on_copy_file_path(self, widget):
+    def on_copy_file_path(self, *args):
 
         if not self.selected_transfers:
             return
@@ -762,11 +753,11 @@ class TransferList:
 
         self.frame.clip.set_text(text, -1)
 
-    def on_copy_url(self, widget):
+    def on_copy_url(self, *args):
         i = next(iter(self.selected_transfers))
         self.frame.set_clipboard_url(i.user, i.filename)
 
-    def on_copy_dir_url(self, widget):
+    def on_copy_dir_url(self, *args):
 
         i = next(iter(self.selected_transfers))
         path = "\\".join(i.filename.split("\\")[:-1])
@@ -776,15 +767,15 @@ class TransferList:
 
         self.frame.set_clipboard_url(i.user, path)
 
-    def on_retry_transfer(self, widget):
+    def on_retry_transfer(self, *args):
         self.select_transfers()
         self.retry_transfers()
 
-    def on_abort_transfer(self, widget, clear=False):
+    def on_abort_transfer(self, *args, clear=False):
         self.select_transfers()
         self.abort_transfers(clear)
 
-    def on_clear_transfer(self, widget):
+    def on_clear_transfer(self, *args):
         self.select_transfers()
         self.abort_transfers(clear=True)
 
@@ -794,14 +785,14 @@ class TransferList:
 
         dialog.destroy()
 
-    def on_clear_queued(self, widget):
+    def on_clear_queued(self, *args):
         self.clear_transfers(["Queued"])
 
-    def on_clear_finished(self, widget):
+    def on_clear_finished(self, *args):
         self.clear_transfers(["Finished"])
 
-    def on_clear_filtered(self, widget):
+    def on_clear_filtered(self, *args):
         self.clear_transfers(["Filtered"])
 
-    def on_clear_paused(self, widget):
+    def on_clear_paused(self, *args):
         self.clear_transfers(["Paused"])

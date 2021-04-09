@@ -37,9 +37,10 @@ class Uploads(TransferList):
         TransferList.__init__(self, frame, type='upload')
         self.tab_label = tab_label
 
-        self.popup_menu_users = PopupMenu(frame, False)
-        self.popup_menu_clear = popup2 = PopupMenu(frame, False)
-        popup2.setup(
+        self.popup_menu_users = PopupMenu(frame)
+
+        self.popup_menu_clear = PopupMenu(frame)
+        self.popup_menu_clear.setup(
             ("#" + _("Clear Finished / Failed"), self.on_clear_finished_failed),
             ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear Finished"), self.on_clear_finished),
@@ -48,8 +49,8 @@ class Uploads(TransferList):
             ("#" + _("Clear Queued"), self.on_clear_queued)
         )
 
-        self.popup_menu = popup = PopupMenu(frame)
-        popup.setup(
+        self.popup_menu = PopupMenu(frame)
+        self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
@@ -60,16 +61,16 @@ class Uploads(TransferList):
             ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
-            (1, _("User(s)"), self.popup_menu_users, self.on_popup_menu_users),
+            (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
             ("#" + _("_Retry"), self.on_retry_transfer),
             ("#" + _("Abor_t"), self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            (1, _("Clear Groups"), self.popup_menu_clear, None)
+            (">" + _("Clear Groups"), self.popup_menu_clear)
         )
 
-    def on_try_clear_queued(self, widget):
+    def on_try_clear_queued(self, *args):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
@@ -77,7 +78,7 @@ class Uploads(TransferList):
             callback=self.on_clear_response
         )
 
-    def on_open_directory(self, widget):
+    def on_open_directory(self, *args):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
         incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
@@ -96,7 +97,7 @@ class Uploads(TransferList):
         command = self.frame.np.config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def on_play_files(self, widget, prefix=""):
+    def on_play_files(self, *args):
 
         for fn in self.selected_transfers:
             playfile = fn.realfilename
@@ -105,16 +106,17 @@ class Uploads(TransferList):
                 command = self.frame.np.config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, *args):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
 
+        actions = self.popup_menu.get_actions()
         users = len(self.selected_users) > 0
         files = num_selected_transfers > 0
 
-        items = self.popup_menu.get_items()
-        items[_("User(s)")].set_sensitive(users)  # Users Menu
+        actions[_("User(s)")].set_enabled(users)  # Users Menu
+        self.populate_popup_menu_users()
 
         if files:
             act = True
@@ -125,7 +127,7 @@ class Uploads(TransferList):
 
         for i in (_("Send to _Player"), _("_Open Folder"), _("Copy _File Path"),
                   _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
-            items[i].set_sensitive(act)
+            actions[i].set_enabled(act)
 
         if users and files:
             act = True
@@ -135,10 +137,9 @@ class Uploads(TransferList):
             act = False
 
         for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
-            items[i].set_sensitive(act)
+            actions[i].set_enabled(act)
 
-        items["selected_files"].set_sensitive(False)
-        items["selected_files"].set_label(_("%s File(s) Selected") % num_selected_transfers)
+        self.popup_menu.set_num_selected_files(num_selected_transfers)
 
         self.popup_menu.popup()
         return True
@@ -149,15 +150,15 @@ class Uploads(TransferList):
         dc = self.frame.np.config.sections["transfers"]["upload_doubleclick"]
 
         if dc == 1:  # Send to player
-            self.on_play_files(None)
+            self.on_play_files()
         elif dc == 2:  # File manager
-            self.on_open_directory(None)
+            self.on_open_directory()
         elif dc == 3:  # Search
-            self.on_file_search(None)
+            self.on_file_search()
         elif dc == 4:  # Abort
-            self.on_abort_transfer(None)
+            self.on_abort_transfer()
         elif dc == 5:  # Clear
-            self.on_clear_transfer(None)
+            self.on_clear_transfer()
 
     def clear_by_user(self, user):
 
@@ -165,7 +166,7 @@ class Uploads(TransferList):
             if i.user == user:
                 self.remove_specific(i)
 
-    def on_abort_user(self, widget):
+    def on_abort_user(self, *args):
 
         self.select_transfers()
 
@@ -174,16 +175,16 @@ class Uploads(TransferList):
                 if i.user == user:
                     self.selected_transfers.add(i)
 
-        self.on_abort_transfer(widget)
+        self.on_abort_transfer()
 
-    def on_clear_aborted(self, widget):
+    def on_clear_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off"])
 
-    def on_clear_failed(self, widget):
+    def on_clear_failed(self, *args):
         self.clear_transfers(["Cannot connect", "Local file error", "Remote file error"])
 
-    def on_clear_finished_aborted(self, widget):
+    def on_clear_finished_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished"])
 
-    def on_clear_finished_failed(self, widget):
+    def on_clear_finished_failed(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished", "Cannot connect", "Local file error", "Remote file error"])

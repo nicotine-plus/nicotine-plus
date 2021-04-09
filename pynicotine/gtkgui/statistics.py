@@ -68,7 +68,7 @@ class Statistics:
             callback=self.reset_stats_response
         )
 
-    def hide(self, widget=None, event=None):
+    def hide(self, *args):
         self.StatisticsDialog.hide()
         return True
 

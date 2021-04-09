@@ -243,9 +243,7 @@ class NicotineFrame:
 
             self.__dict__[eventbox_name + "Menu"] = popup = PopupMenu(self)
             popup.setup(
-                (
-                    "#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box]
-                )
+                ("#" + hide_tab_template % {"tab": translated_tablabels[placehold_tab_label]}, self.hide_tab, [tab_label, tab_box])
             )
 
         # Tab icons
@@ -1091,7 +1089,7 @@ class NicotineFrame:
                 return
 
             self.userlistvbox.remove(self.userlist.Main)
-            self.hide_tab(None, [self.UserListTabLabel, self.userlistvbox])
+            self.hide_tab(None, None, lista=[self.UserListTabLabel, self.userlistvbox])
 
         if mode == "always":
 
@@ -1587,7 +1585,7 @@ class NicotineFrame:
         if 0 <= last_tab_id <= self.MainNotebook.get_n_pages():
             self.MainNotebook.set_current_page(last_tab_id)
 
-    def hide_tab(self, widget, lista):
+    def hide_tab(self, action, state, lista):
 
         event_box, tab_box = lista
 
@@ -2094,10 +2092,10 @@ class NicotineFrame:
         self.logpopupmenu.popup()
         return True
 
-    def on_find_log_window(self, widget):
+    def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
 
-    def on_copy_log_window(self, widget):
+    def on_copy_log_window(self, *args):
 
         bound = self.LogWindow.get_buffer().get_selection_bounds()
 
@@ -2106,13 +2104,13 @@ class NicotineFrame:
             log = self.LogWindow.get_buffer().get_text(start, end, True)
             self.clip.set_text(log, -1)
 
-    def on_copy_all_log_window(self, widget):
+    def on_copy_all_log_window(self, *args):
 
         start, end = self.LogWindow.get_buffer().get_bounds()
         log = self.LogWindow.get_buffer().get_text(start, end, True)
         self.clip.set_text(log, -1)
 
-    def on_view_debug_logs(self, widget):
+    def on_view_debug_logs(self, *args):
 
         log_path = self.np.config.sections["logging"]["debuglogsdir"]
 
@@ -2125,10 +2123,10 @@ class NicotineFrame:
         except Exception as e:
             log.add("Failed to open debug log folder: %s", e)
 
-    def on_view_transfer_log(self, widget):
+    def on_view_transfer_log(self, *args):
         open_log(self.np.config.sections["logging"]["transferslogsdir"], "transfers")
 
-    def on_clear_log_window(self, widget):
+    def on_clear_log_window(self, *args):
         self.LogWindow.get_buffer().set_text("")
 
     def add_debug_level(self, debug_level):

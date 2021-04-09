@@ -258,14 +258,14 @@ class RoomList:
         set_treeview_selected_row(widget, event)
 
         if triggers_context_menu(event):
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             room = self.get_selected_room(widget)
 
             if room is not None and room not in self.joined_rooms:
                 self.popup_room = room
-                self.on_popup_join(widget)
+                self.on_popup_join()
                 return True
 
         return False
@@ -288,37 +288,37 @@ class RoomList:
         self.popup_room = room
         prooms_enabled = True
 
-        items = self.popup_menu.get_items()
+        actions = self.popup_menu.get_actions()
 
-        items[_("Join Room")].set_sensitive(act[0])
-        items[_("Leave Room")].set_sensitive(act[1])
+        actions[_("Join Room")].set_enabled(act[0])
+        actions[_("Leave Room")].set_enabled(act[1])
 
-        items[_("Disown Private Room")].set_sensitive(self.is_private_room_owned(self.popup_room))
-        items[_("Cancel Room Membership")].set_sensitive((prooms_enabled and self.is_private_room_member(self.popup_room)))
+        actions[_("Disown Private Room")].set_enabled(self.is_private_room_owned(self.popup_room))
+        actions[_("Cancel Room Membership")].set_enabled((prooms_enabled and self.is_private_room_member(self.popup_room)))
 
         self.popup_menu.popup()
         return True
 
-    def on_popup_join(self, widget):
+    def on_popup_join(self, *args):
         self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))
 
-    def on_join_public_room(self, widget):
+    def on_join_public_room(self, *args):
         self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
         self.frame.np.queue.append(slskmessages.JoinPublicRoom())
 
-    def on_popup_private_room_disown(self, widget):
+    def on_popup_private_room_disown(self, *args):
 
         if self.is_private_room_owned(self.popup_room):
             self.frame.np.queue.append(slskmessages.PrivateRoomDisown(self.popup_room))
             del self.private_rooms[self.popup_room]
 
-    def on_popup_private_room_dismember(self, widget):
+    def on_popup_private_room_dismember(self, *args):
 
         if self.is_private_room_member(self.popup_room):
             self.frame.np.queue.append(slskmessages.PrivateRoomDismember(self.popup_room))
             del self.private_rooms[self.popup_room]
 
-    def on_popup_leave(self, widget):
+    def on_popup_leave(self, *args):
         self.frame.np.queue.append(slskmessages.LeaveRoom(self.popup_room))
 
     def on_search_room(self, widget):
