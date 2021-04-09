@@ -1278,10 +1278,10 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugWarnings">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Warnings</property>
                             <property name="visible">1</property>
-                            <signal name="toggled" handler="on_debug_warnings" swapped="no"/>
+                            <property name="action-name">app.debugwarnings</property>
                           </object>
                         </child>
                       </object>
@@ -1291,11 +1291,11 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugSearches">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Search</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <signal name="toggled" handler="on_debug_searches" swapped="no"/>
+                            <property name="action-name">app.debugsearches</property>
                           </object>
                         </child>
                       </object>
@@ -1305,11 +1305,11 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugConnections">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Connections</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <signal name="toggled" handler="on_debug_connections" swapped="no"/>
+                            <property name="action-name">app.debugconnections</property>
                           </object>
                         </child>
                       </object>
@@ -1319,11 +1319,11 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugMessages">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Messages</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <signal name="toggled" handler="on_debug_messages" swapped="no"/>
+                            <property name="action-name">app.debugmessages</property>
                           </object>
                         </child>
                       </object>
@@ -1333,11 +1333,11 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugTransfers">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Transfers</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <signal name="toggled" handler="on_debug_transfers" swapped="no"/>
+                            <property name="action-name">app.debugtransfers</property>
                           </object>
                         </child>
                       </object>
@@ -1347,11 +1347,11 @@
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton" id="debugStatistics">
+                          <object class="GtkCheckButton">
                             <property name="label" translatable="yes">Statistics</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <signal name="toggled" handler="on_debug_statistics" swapped="no"/>
+                            <property name="action-name">app.debugstatistics</property>
                           </object>
                         </child>
                       </object>

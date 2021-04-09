@@ -150,7 +150,7 @@ class NicotineFrame:
 
         Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", config["ui"]["header_bar"])
 
-        """ Menu """
+        """ Actions and Menu """
 
         self.set_up_actions()
         self.set_up_menu()
@@ -335,14 +335,6 @@ class NicotineFrame:
             ("", None),
             ("#" + _("Clear Log View"), self.on_clear_log_window)
         )
-
-        # Debug
-        self.debugWarnings.set_active((1 in config["logging"]["debugmodes"]))
-        self.debugSearches.set_active((2 in config["logging"]["debugmodes"]))
-        self.debugConnections.set_active((3 in config["logging"]["debugmodes"]))
-        self.debugMessages.set_active((4 in config["logging"]["debugmodes"]))
-        self.debugTransfers.set_active((5 in config["logging"]["debugmodes"]))
-        self.debugStatistics.set_active((6 in config["logging"]["debugmodes"]))
 
         # Text Search
         TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
@@ -736,9 +728,11 @@ class NicotineFrame:
         self.uploads.conn_close()
         self.downloads.conn_close()
 
-    """ Menu """
+    """ Actions """
 
     def set_up_actions(self):
+
+        config = self.np.config.sections
 
         # File
 
@@ -750,7 +744,7 @@ class NicotineFrame:
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
 
-        state = self.np.config.sections["server"]["away"]
+        state = config["server"]["away"]
         self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
@@ -777,32 +771,32 @@ class NicotineFrame:
 
         # View
 
-        state = self.np.config.sections["ui"]["header_bar"]
+        state = config["ui"]["header_bar"]
         action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_header_bar)
         self.MainWindow.add_action(action)
 
-        state = not self.np.config.sections["logging"]["logcollapsed"]
+        state = not config["logging"]["logcollapsed"]
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_log)
         self.MainWindow.add_action(action)
 
-        state = self.np.config.sections["logging"]["debug"]
+        state = config["logging"]["debug"]
         action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_debug)
         self.MainWindow.add_action(action)
 
-        state = not self.np.config.sections["columns"]["hideflags"]
+        state = not config["columns"]["hideflags"]
         action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_flags)
         self.MainWindow.add_action(action)
 
-        state = self.np.config.sections["transfers"]["enabletransferbuttons"]
+        state = config["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
 
-        state = self.verify_buddy_list_mode(self.np.config.sections["ui"]["buddylistinchatrooms"])
+        state = self.verify_buddy_list_mode(config["ui"]["buddylistinchatrooms"])
         self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
@@ -889,6 +883,40 @@ class NicotineFrame:
         action = Gio.SimpleAction.new("about", None)
         action.connect("activate", self.on_about)
         self.application.add_action(action)
+
+        # Debug Logging
+
+        state = (1 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugwarnings", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_warnings)
+        self.application.add_action(action)
+
+        state = (2 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_searches)
+        self.application.add_action(action)
+
+        state = (3 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_connections)
+        self.application.add_action(action)
+
+        state = (4 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_messages)
+        self.application.add_action(action)
+
+        state = (5 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_transfers)
+        self.application.add_action(action)
+
+        state = (6 in config["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugstatistics", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_statistics)
+        self.application.add_action(action)
+
+    """ Menu """
 
     def set_up_menu(self):
 
@@ -1118,7 +1146,7 @@ class NicotineFrame:
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
 
-        mode = str(state).replace("'", "")
+        mode = state.get_string()
 
         self.set_toggle_buddy_list(mode)
         action.set_state(state)
@@ -1766,10 +1794,10 @@ class NicotineFrame:
     def show_search_result(self, msg, username, country):
         self.searches.show_search_result(msg, username, country)
 
-    def on_settings_searches(self, widget):
+    def on_settings_searches(self, *args):
         self.on_settings(page='Searches')
 
-    def on_search_method(self, widget):
+    def on_search_method(self, *args):
 
         act = False
         search_mode = self.SearchMethod.get_active_id()
@@ -1797,7 +1825,7 @@ class NicotineFrame:
 
     """ User Info """
 
-    def on_settings_userinfo(self, widget):
+    def on_settings_userinfo(self, *args):
         self.on_settings(page='UserInfo')
 
     def on_get_user_info(self, widget, *args):
@@ -1888,7 +1916,7 @@ class NicotineFrame:
         self.browse_user(text)
         clear_entry(widget)
 
-    def on_load_from_disk(self, widget):
+    def on_load_from_disk(self, *args):
 
         sharesdir = os.path.join(self.data_dir, "usershares")
         try:
@@ -1939,7 +1967,7 @@ class NicotineFrame:
 
     """ Chat """
 
-    def on_settings_logging(self, widget):
+    def on_settings_logging(self, *args):
         self.on_settings(page='Logging')
 
     def on_get_private_chat(self, widget, *args):
@@ -2009,7 +2037,7 @@ class NicotineFrame:
     def on_add_user(self, widget, *args):
         self.userlist.on_add_user(widget)
 
-    def on_settings_ban_ignore(self, widget):
+    def on_settings_ban_ignore(self, *args):
         self.on_settings(page='BanList')
 
     """ Various """
@@ -2045,10 +2073,10 @@ class NicotineFrame:
         self.chatrooms.set_user_flag(user, country)
         self.userlist.set_user_flag(user, country)
 
-    def on_settings_downloads(self, widget):
+    def on_settings_downloads(self, *args):
         self.on_settings(page='Downloads')
 
-    def on_settings_uploads(self, widget):
+    def on_settings_uploads(self, *args):
         self.on_settings(page='Uploads')
 
     def set_clipboard_url(self, user, path):
@@ -2084,11 +2112,11 @@ class NicotineFrame:
     def on_log_window_clicked(self, widget, event):
 
         if triggers_context_menu(event):
-            return self.on_popup_log_menu(widget)
+            return self.on_popup_log_menu()
 
         return False
 
-    def on_popup_log_menu(self, widget):
+    def on_popup_log_menu(self, *args):
         self.logpopupmenu.popup()
         return True
 
@@ -2141,47 +2169,59 @@ class NicotineFrame:
             self.np.config.sections["logging"]["debugmodes"].remove(debug_level)
             log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
 
-    def on_debug_warnings(self, widget):
+    def on_debug_warnings(self, action, state):
 
-        if widget.get_active():
+        if state.get_boolean():
             self.add_debug_level(1)
         else:
             self.remove_debug_level(1)
 
-    def on_debug_searches(self, widget):
+        action.set_state(state)
 
-        if widget.get_active():
+    def on_debug_searches(self, action, state):
+
+        if state.get_boolean():
             self.add_debug_level(2)
         else:
             self.remove_debug_level(2)
 
-    def on_debug_connections(self, widget):
+        action.set_state(state)
 
-        if widget.get_active():
+    def on_debug_connections(self, action, state):
+
+        if state.get_boolean():
             self.add_debug_level(3)
         else:
             self.remove_debug_level(3)
 
-    def on_debug_messages(self, widget):
+        action.set_state(state)
 
-        if widget.get_active():
+    def on_debug_messages(self, action, state):
+
+        if state.get_boolean():
             self.add_debug_level(4)
         else:
             self.remove_debug_level(4)
 
-    def on_debug_transfers(self, widget):
+        action.set_state(state)
 
-        if widget.get_active():
+    def on_debug_transfers(self, action, state):
+
+        if state.get_boolean():
             self.add_debug_level(5)
         else:
             self.remove_debug_level(5)
 
-    def on_debug_statistics(self, widget):
+        action.set_state(state)
 
-        if widget.get_active():
+    def on_debug_statistics(self, action, state):
+
+        if state.get_boolean():
             self.add_debug_level(6)
         else:
             self.remove_debug_level(6)
+
+        action.set_state(state)
 
     """ Status Bar """
 

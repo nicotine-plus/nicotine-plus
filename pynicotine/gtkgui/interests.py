@@ -241,7 +241,7 @@ class Interests:
 
         thing = self.r_popup_menu.get_user()
 
-        if state and \
+        if state.get_boolean() and \
                 thing and thing not in self.np.config.sections["interests"]["likes"]:
             self.np.config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
@@ -264,7 +264,7 @@ class Interests:
 
         thing = self.r_popup_menu.get_user()
 
-        if state and \
+        if state.get_boolean() and \
                 thing and thing not in self.np.config.sections["interests"]["dislikes"]:
             self.np.config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])

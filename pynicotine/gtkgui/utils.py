@@ -1518,7 +1518,7 @@ class PopupMenu(Gio.Menu):
         if self.editing:
             return
 
-        if state:
+        if state.get_boolean():
             self.frame.userlist.add_to_list(self.user)
         else:
             self.frame.userlist.remove_from_list(self.user)
@@ -1530,7 +1530,7 @@ class PopupMenu(Gio.Menu):
         if self.editing:
             return
 
-        if state:
+        if state.get_boolean():
             self.frame.np.network_filter.ban_user(self.user)
         else:
             self.frame.np.network_filter.unban_user(self.user)
@@ -1542,7 +1542,7 @@ class PopupMenu(Gio.Menu):
         if self.editing:
             return
 
-        if state:
+        if state.get_boolean():
             self.frame.np.network_filter.block_user_ip(self.user)
         else:
             self.frame.np.network_filter.unblock_user_ip(self.user)
@@ -1554,7 +1554,7 @@ class PopupMenu(Gio.Menu):
         if self.editing:
             return
 
-        if state:
+        if state.get_boolean():
             self.frame.np.network_filter.ignore_user_ip(self.user)
         else:
             self.frame.np.network_filter.unignore_user_ip(self.user)
@@ -1566,7 +1566,7 @@ class PopupMenu(Gio.Menu):
         if self.editing:
             return
 
-        if state:
+        if state.get_boolean():
             self.frame.np.network_filter.ignore_user(self.user)
         else:
             self.frame.np.network_filter.unignore_user(self.user)
