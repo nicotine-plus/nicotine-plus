@@ -2613,6 +2613,14 @@ class BuildDialog(Gtk.Dialog):
         label.set_line_wrap(True)
         return label
 
+    def generate_widget_container(self, description, count):
+
+        self.tw["box%d" % count] = Gtk.Box(False, 5)
+        self.tw["label%d" % count] = self.generate_label(description)
+        self.tw["box%d" % count].add(self.tw["label%d" % count])
+
+        self.Main.add(self.tw["box%d" % count])
+
     def generate_tree_view(self, name, description, value, c=0):
 
         self.tw["box%d" % c] = Gtk.Box(False, 5)
@@ -2665,19 +2673,6 @@ class BuildDialog(Gtk.Dialog):
         iterator = store.get_iter(index)
         store.set(iterator, 0, value)
 
-    def on_add(self, widget, treeview):
-
-        iterator = treeview.get_model().append([""])
-        col = treeview.get_column(0)
-
-        treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
-
-    def on_remove(self, widget, treeview):
-        selection = treeview.get_selection()
-        iterator = selection.get_selected()[1]
-        if iterator is not None:
-            treeview.get_model().remove(iterator)
-
     def add_options(self, plugin, options=None):
 
         if options is None:
@@ -2696,48 +2691,55 @@ class BuildDialog(Gtk.Dialog):
                     print("No2 " + name + ", " + repr(list(self.settings.frame.np.config.sections["plugins"][plugin].keys())))
                 continue
 
-            # We currently support SpinButtons, TreeView (one per plugin) and Checkboxes.
             # There's no reason more widgets cannot be added,
             # and we can use self.settings.set_widget and self.settings.get_widget_data to set and get values
             #
-            # Todo: Gtk.ComboBox, and Gtk.RadioButton
+            # Todo: Gtk.ComboBox
 
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 
             if data["type"] in ("integer", "int", "float"):
-                self.tw["box%d" % c] = Gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].add(self.tw["label%d" % c])
+                self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
-                self.Main.add(self.tw["box%d" % c])
 
             elif data["type"] in ("bool",):
-                self.tw["box%d" % c] = Gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].add(self.tw["label%d" % c])
+                self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.CheckButton()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
-                self.Main.add(self.tw["box%d" % c])
+
+            elif data["type"] in ("radio",):
+                self.generate_widget_container(data["description"], c)
+
+                vbox = Gtk.Box(False, 5)
+                vbox.set_orientation(Gtk.Orientation.VERTICAL)
+                self.tw["box%d" % c].add(vbox)
+
+                initial = False
+                for label in data["options"]:
+                    if not initial:
+                        self.tw[name] = radio = Gtk.RadioButton.new_with_label(None, label)
+                        initial = True
+                    else:
+                        radio = Gtk.RadioButton.new_with_label_from_widget(self.tw[name], label)
+
+                    vbox.add(radio)
+
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
 
             elif data["type"] in ("str", "string"):
-                self.tw["box%d" % c] = Gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].add(self.tw["label%d" % c])
+                self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.Entry()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
-                self.Main.add(self.tw["box%d" % c])
 
             elif data["type"] in ("textview"):
-                self.tw["box%d" % c] = Gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].add(self.tw["label%d" % c])
+                self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.TextView()
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
@@ -2751,15 +2753,12 @@ class BuildDialog(Gtk.Dialog):
                 self.tw["scrolledwindow%d" % c].add(self.tw[name])
 
                 self.tw["box%d" % c].add(self.tw["scrolledwindow%d" % c])
-                self.Main.add(self.tw["box%d" % c])
 
             elif data["type"] in ("list string",):
                 self.generate_tree_view(name, data["description"], value, c)
 
             elif data["type"] in ("file",):
-                self.tw["box%d" % c] = Gtk.Box(False, 5)
-                self.tw["label%d" % c] = self.generate_label(data["description"])
-                self.tw["box%d" % c].add(self.tw["label%d" % c])
+                self.generate_widget_container(data["description"], c)
 
                 button_widget = Gtk.Button()
                 button_widget.set_hexpand(True)
@@ -2772,7 +2771,6 @@ class BuildDialog(Gtk.Dialog):
                 self.tw[name] = FileChooserButton(button_widget, self.PluginProperties, chooser)
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(button_widget)
-                self.Main.add(self.tw["box%d" % c])
 
             else:
                 print("Unknown setting type '%s', data '%s'" % (name, data))
@@ -2780,6 +2778,19 @@ class BuildDialog(Gtk.Dialog):
             c += 1
 
         self.PluginProperties.show_all()
+
+    def on_add(self, widget, treeview):
+
+        iterator = treeview.get_model().append([""])
+        col = treeview.get_column(0)
+
+        treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
+
+    def on_remove(self, widget, treeview):
+        selection = treeview.get_selection()
+        iterator = selection.get_selected()[1]
+        if iterator is not None:
+            treeview.get_model().remove(iterator)
 
     def on_cancel(self, widget):
         self.PluginProperties.destroy()
@@ -3134,6 +3145,16 @@ class Settings:
 
             return widget.get_buffer().get_text(start, end, True)
 
+        elif isinstance(widget, Gtk.RadioButton):
+            radio_list = list(reversed(widget.get_group()))
+
+            for radio in radio_list:
+                if radio.get_active():
+                    print(radio_list.index(radio))
+                    return radio_list.index(radio)
+
+            return 0
+
         elif isinstance(widget, Gtk.CheckButton):
             return widget.get_active()
 
@@ -3191,6 +3212,12 @@ class Settings:
         elif isinstance(widget, Gtk.TextView):
             if isinstance(value, (str, int)):
                 widget.get_buffer().set_text(value)
+
+        elif isinstance(widget, Gtk.RadioButton):
+            radio_list = list(reversed(widget.get_group()))
+
+            if isinstance(value, int) and value < len(radio_list):
+                radio_list[value].set_active(True)
 
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(value)
