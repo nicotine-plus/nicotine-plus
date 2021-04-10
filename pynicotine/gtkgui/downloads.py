@@ -29,12 +29,8 @@ import re
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.dialogs import option_dialog
-from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import human_size
-from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.logfacility import log
 
 
@@ -45,9 +41,6 @@ class Downloads(TransferList):
         TransferList.__init__(self, frame, type='download')
         self.tab_label = tab_label
 
-        self.popup_menu_users = PopupMenu(frame)
-
-        self.popup_menu_clear = PopupMenu(frame)
         self.popup_menu_clear.setup(
             ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear Finished"), self.on_clear_finished),
@@ -57,31 +50,10 @@ class Downloads(TransferList):
             ("#" + _("Clear Queued"), self.on_clear_queued)
         )
 
-        self.popup_menu = PopupMenu(frame)
-        self.popup_menu.setup(
-            ("#" + "selected_files", None),
-            ("", None),
-            ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open Folder"), self.on_open_directory),
-            ("#" + _("File P_roperties"), self.on_file_properties),
-            ("", None),
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
-            ("", None),
-            ("#" + _("_Search"), self.on_file_search),
-            (">" + _("User(s)"), self.popup_menu_users),
-            ("", None),
-            ("#" + _("_Retry"), self.on_retry_transfer),
-            ("#" + _("Abor_t"), self.on_abort_transfer),
-            ("#" + _("_Clear"), self.on_clear_transfer),
-            ("", None),
-            (">" + _("Clear Groups"), self.popup_menu_clear)
-        )
-
         self.update_download_filters()
 
     def on_try_clear_queued(self, *args):
+
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
@@ -90,6 +62,7 @@ class Downloads(TransferList):
         )
 
     def download_large_folder(self, username, folder, numfiles, conn, file_list):
+
         option_dialog(
             parent=self.frame.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
@@ -154,57 +127,6 @@ class Downloads(TransferList):
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), e)
             self.frame.np.config.sections["transfers"]["downloadregexp"] = ""
 
-    def selected_results_all_data(self, model, path, iterator, data):
-        if iterator in self.selected_users:
-            return
-
-        user = model.get_value(iterator, 0)
-        filename = model.get_value(iterator, 2)
-        fullname = model.get_value(iterator, 10)
-        size = speed = length = queue = immediate = num = country = bitratestr = ""
-
-        for transfer in self.frame.np.transfers.downloads:
-            if transfer.user == user and fullname == transfer.filename:
-                size = str(human_size(transfer.size))
-                try:
-                    if transfer.speed:
-                        speed = str(human_speed(transfer.speed))
-                except Exception:
-                    pass
-                bitratestr = str(transfer.bitrate)
-                length = str(transfer.length)
-                break
-        else:
-            return
-
-        directory = fullname.rsplit("\\", 1)[0]
-
-        data.append({
-            "user": user,
-            "fn": fullname,
-            "position": num,
-            "filename": filename,
-            "directory": directory,
-            "size": size,
-            "speed": speed,
-            "queue": queue,
-            "immediate": immediate,
-            "bitrate": bitratestr,
-            "length": length,
-            "country": country
-        })
-
-    def on_file_properties(self, *args):
-
-        if not self.frame.np.transfers:
-            return
-
-        data = []
-        self.widget.get_selection().selected_foreach(self.selected_results_all_data, data)
-
-        if data:
-            FileProperties(self.frame, data).show()
-
     def on_open_directory(self, *args):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
@@ -235,16 +157,16 @@ class Downloads(TransferList):
 
         downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
 
-        for fn in self.selected_transfers:
+        for transfer in self.selected_transfers:
 
             playfile = None
 
-            if fn.file is not None and os.path.exists(fn.file.name):
-                playfile = fn.file.name
+            if transfer.file is not None and os.path.exists(transfer.file.name):
+                playfile = transfer.file.name
             else:
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed
                 # try looking in the download directory and match the original filename.
-                basename = str.split(fn.filename, '\\')[-1]
+                basename = str.split(transfer.filename, '\\')[-1]
                 path = os.sep.join([downloaddir, basename])
 
                 if os.path.exists(path):
@@ -253,62 +175,6 @@ class Downloads(TransferList):
             if playfile:
                 command = self.frame.np.config.sections["players"]["default"]
                 open_file_path(playfile, command)
-
-    def double_click(self, event):
-
-        self.select_transfers()
-        dc = self.frame.np.config.sections["transfers"]["download_doubleclick"]
-
-        if dc == 1:  # Send to player
-            self.on_play_files()
-        elif dc == 2:  # File manager
-            self.on_open_directory()
-        elif dc == 3:  # Search
-            self.on_file_search()
-        elif dc == 4:  # Abort
-            self.on_abort_transfer()
-        elif dc == 5:  # Clear
-            self.on_clear_transfer()
-        elif dc == 6:  # Retry
-            self.on_retry_transfer()
-
-    def on_popup_menu(self, *args):
-
-        self.select_transfers()
-        num_selected_transfers = len(self.selected_transfers)
-
-        actions = self.popup_menu.get_actions()
-        users = len(self.selected_users) > 0
-        files = num_selected_transfers > 0
-
-        actions[_("User(s)")].set_enabled(users)  # Users Menu
-        self.populate_popup_menu_users()
-
-        if files:
-            act = True
-        else:
-            # Disable options
-            # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
-            act = False
-
-        for i in (_("Send to _Player"), _("_Open Folder"), _("File P_roperties"),
-                  _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
-            actions[i].set_enabled(act)
-
-        if not users or not files:
-            # Disable options
-            # Retry, Abort, Clear
-            act = False
-        else:
-            act = True
-
-        for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
-            actions[i].set_enabled(act)
-
-        self.popup_menu.set_num_selected_files(num_selected_transfers)
-
-        self.popup_menu.popup()
-        return True
 
     def on_clear_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled"])

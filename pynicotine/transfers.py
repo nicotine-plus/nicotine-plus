@@ -2162,14 +2162,12 @@ class Transfers:
         else:
             banmsg = _("Banned")
 
-        for upload in self.uploads:
+        for upload in self.uploads[:]:
             if upload.user != user:
                 continue
 
             self.abort_transfer(upload, reason=banmsg, send_fail_message=True)
-
-        if self.uploadsview is not None:
-            self.uploadsview.clear_by_user(user)
+            self.uploadsview.remove_specific(upload)
 
         self.eventprocessor.network_filter.ban_user(user)
 

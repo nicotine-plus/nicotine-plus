@@ -31,6 +31,7 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import human_size
@@ -145,6 +146,31 @@ class TransferList:
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(frame.np.config.sections["transfers"]["%ssexpanded" % self.type])
 
+        self.popup_menu_users = PopupMenu(frame)
+        self.popup_menu_clear = PopupMenu(frame)
+
+        self.popup_menu = PopupMenu(frame)
+        self.popup_menu.setup(
+            ("#" + "selected_files", None),
+            ("", None),
+            ("#" + _("Send to _Player"), self.on_play_files),
+            ("#" + _("_Open Folder"), self.on_open_directory),
+            ("#" + _("File P_roperties"), self.on_file_properties),
+            ("", None),
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
+            ("", None),
+            ("#" + _("_Search"), self.on_file_search),
+            (">" + _("User(s)"), self.popup_menu_users),
+            ("", None),
+            ("#" + _("_Retry"), self.on_retry_transfer),
+            ("#" + _("Abor_t"), self.on_abort_transfer),
+            ("#" + _("_Clear"), self.on_clear_transfer),
+            ("", None),
+            (">" + _("Clear Groups"), self.popup_menu_clear)
+        )
+
         self.update_visuals()
 
     def save_columns(self):
@@ -214,9 +240,9 @@ class TransferList:
         user = model.get_value(iterator, 0)
         filepath = model.get_value(iterator, 10)
 
-        for i in self.list:
-            if i.user == user and i.filename == filepath:
-                self.selected_transfers.add(i)
+        for transfer in self.list:
+            if transfer.user == user and transfer.filename == filepath:
+                self.selected_transfers.add(transfer)
                 break
 
         if selectuser:
@@ -262,8 +288,8 @@ class TransferList:
             self.update_specific(transfer)
 
         elif self.list is not None:
-            for i in self.list:
-                self.update_specific(i)
+            for transfer in self.list:
+                self.update_specific(transfer)
 
         if forceupdate or finished or \
                 (curtime - self.last_ui_update) > 1:
@@ -586,16 +612,16 @@ class TransferList:
 
     def abort_transfers(self, clear=False):
 
-        for i in self.selected_transfers:
-            if i.status != "Finished":
-                self.frame.np.transfers.abort_transfer(i, send_fail_message=True)
+        for transfer in self.selected_transfers:
+            if transfer.status != "Finished":
+                self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
 
                 if not clear:
-                    i.status = "Aborted"
-                    self.update(i)
+                    transfer.status = "Aborted"
+                    self.update(transfer)
 
             if clear:
-                self.remove_specific(i)
+                self.remove_specific(transfer)
 
     def remove_specific(self, transfer, cleartreeviewonly=False):
 
@@ -612,10 +638,10 @@ class TransferList:
 
     def clear_transfers(self, status):
 
-        for i in self.list[:]:
-            if i.status in status:
-                self.frame.np.transfers.abort_transfer(i, send_fail_message=True)
-                self.remove_specific(i)
+        for transfer in self.list[:]:
+            if transfer.status in status:
+                self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
+                self.remove_specific(transfer)
 
     def clear(self):
 
@@ -626,8 +652,26 @@ class TransferList:
         self.transfersmodel.clear()
 
         if self.list is not None:
-            for i in self.list:
-                i.iter = None
+            for transfer in self.list:
+                transfer.iter = None
+
+    def double_click(self, event):
+
+        self.select_transfers()
+        dc = self.frame.np.config.sections["transfers"]["%s_doubleclick" % self.type]
+
+        if dc == 1:  # Send to player
+            self.on_play_files()
+        elif dc == 2:  # File manager
+            self.on_open_directory()
+        elif dc == 3:  # Search
+            self.on_file_search()
+        elif dc == 4:  # Abort
+            self.abort_transfers()
+        elif dc == 5:  # Clear
+            self.abort_transfers(clear=True)
+        elif dc == 6:  # Retry
+            self.retry_transfers()
 
     def populate_popup_menu_users(self):
 
@@ -641,7 +685,7 @@ class TransferList:
             popup.setup_user_menu(user)
             popup.setup(
                 ("", None),
-                ("#" + _("Select User's Transfers"), self.on_select_user_transfers)
+                ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
             )
 
             popup.toggle_user_items()
@@ -688,11 +732,49 @@ class TransferList:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_file_path_tooltip(widget, x, y, tooltip, 10)
 
+    def on_popup_menu(self, *args):
+
+        self.select_transfers()
+        num_selected_transfers = len(self.selected_transfers)
+
+        actions = self.popup_menu.get_actions()
+        users = len(self.selected_users) > 0
+        files = num_selected_transfers > 0
+
+        actions[_("User(s)")].set_enabled(users)  # Users Menu
+        self.populate_popup_menu_users()
+
+        if files:
+            act = True
+        else:
+            # Disable options
+            # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
+            act = False
+
+        for i in (_("Send to _Player"), _("_Open Folder"), _("File P_roperties"),
+                  _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
+            actions[i].set_enabled(act)
+
+        if not users or not files:
+            # Disable options
+            # Retry, Abort, Clear
+            act = False
+        else:
+            act = True
+
+        for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
+            actions[i].set_enabled(act)
+
+        self.popup_menu.set_num_selected_files(num_selected_transfers)
+
+        self.popup_menu.popup()
+        return True
+
     def on_list_clicked(self, widget, event):
 
         if triggers_context_menu(event):
             set_treeview_selected_row(widget, event)
-            return self.on_popup_menu(widget)
+            return self.on_popup_menu()
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click(event)
@@ -700,12 +782,12 @@ class TransferList:
 
         return False
 
-    def on_select_user_transfers(self, widget):
+    def on_select_user_transfers(self, *args):
 
         if not self.selected_users:
             return
 
-        selected_user = widget.get_parent().user
+        selected_user = args[-1]
 
         sel = self.widget.get_selection()
         fmodel = self.widget.get_model()
@@ -723,17 +805,17 @@ class TransferList:
         self.select_transfers()
 
         if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
-            self.on_abort_transfer()
+            self.abort_transfers()
 
         elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
-            self.on_retry_transfer()
+            self.retry_transfers()
 
         elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
                 keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
             self.on_copy_file_path()
 
         elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
-            self.on_abort_transfer(clear=True)
+            self.abort_transfers(clear=True)
 
         else:
             # No key match, continue event
@@ -741,6 +823,58 @@ class TransferList:
 
         widget.stop_emission_by_name("key_press_event")
         return True
+
+    def selected_results_all_data(self, model, path, iterator, data):
+
+        if iterator in self.selected_users:
+            return
+
+        user = model.get_value(iterator, 0)
+        filename = model.get_value(iterator, 2)
+        fullname = model.get_value(iterator, 10)
+        size = speed = length = queue = immediate = num = country = bitratestr = ""
+
+        for transfer in self.list:
+            if transfer.user == user and fullname == transfer.filename:
+                size = str(human_size(transfer.size))
+                try:
+                    if transfer.speed:
+                        speed = str(human_speed(transfer.speed))
+                except Exception:
+                    pass
+                bitratestr = str(transfer.bitrate)
+                length = str(transfer.length)
+                break
+        else:
+            return
+
+        directory = fullname.rsplit("\\", 1)[0]
+
+        data.append({
+            "user": user,
+            "fn": fullname,
+            "position": num,
+            "filename": filename,
+            "directory": directory,
+            "size": size,
+            "speed": speed,
+            "queue": queue,
+            "immediate": immediate,
+            "bitrate": bitratestr,
+            "length": length,
+            "country": country
+        })
+
+    def on_file_properties(self, *args):
+
+        if not self.frame.np.transfers:
+            return
+
+        data = []
+        self.widget.get_selection().selected_foreach(self.selected_results_all_data, data)
+
+        if data:
+            FileProperties(self.frame, data).show()
 
     def on_copy_file_path(self, *args):
         transfer = next(iter(self.selected_transfers))
@@ -758,9 +892,9 @@ class TransferList:
         self.select_transfers()
         self.retry_transfers()
 
-    def on_abort_transfer(self, *args, clear=False):
+    def on_abort_transfer(self, *args):
         self.select_transfers()
-        self.abort_transfers(clear)
+        self.abort_transfers()
 
     def on_clear_transfer(self, *args):
         self.select_transfers()

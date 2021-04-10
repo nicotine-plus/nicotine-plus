@@ -1017,7 +1017,7 @@ class Search:
             popup.setup_user_menu(user)
             popup.setup(
                 ("", None),
-                ("#" + _("Select User's Transfers"), self.on_select_user_results)
+                ("#" + _("Select User's Transfers"), self.on_select_user_results, user)
             )
 
             popup.toggle_user_items()
@@ -1025,12 +1025,12 @@ class Search:
                 (">" + user, popup)
             )
 
-    def on_select_user_results(self, widget):
+    def on_select_user_results(self, *args):
 
         if not self.selected_users:
             return
 
-        selected_user = widget.get_parent().user
+        selected_user = args[-1]
 
         sel = self.ResultsList.get_selection()
         fmodel = self.ResultsList.get_model()

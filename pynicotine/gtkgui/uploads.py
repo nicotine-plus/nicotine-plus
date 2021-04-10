@@ -27,7 +27,6 @@ import os
 from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import PopupMenu
 
 
 class Uploads(TransferList):
@@ -37,9 +36,6 @@ class Uploads(TransferList):
         TransferList.__init__(self, frame, type='upload')
         self.tab_label = tab_label
 
-        self.popup_menu_users = PopupMenu(frame)
-
-        self.popup_menu_clear = PopupMenu(frame)
         self.popup_menu_clear.setup(
             ("#" + _("Clear Finished / Failed"), self.on_clear_finished_failed),
             ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
@@ -49,28 +45,8 @@ class Uploads(TransferList):
             ("#" + _("Clear Queued"), self.on_clear_queued)
         )
 
-        self.popup_menu = PopupMenu(frame)
-        self.popup_menu.setup(
-            ("#" + "selected_files", None),
-            ("", None),
-            ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open Folder"), self.on_open_directory),
-            ("", None),
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
-            ("", None),
-            ("#" + _("_Search"), self.on_file_search),
-            (">" + _("User(s)"), self.popup_menu_users),
-            ("", None),
-            ("#" + _("_Retry"), self.on_retry_transfer),
-            ("#" + _("Abor_t"), self.on_abort_transfer),
-            ("#" + _("_Clear"), self.on_clear_transfer),
-            ("", None),
-            (">" + _("Clear Groups"), self.popup_menu_clear)
-        )
-
     def on_try_clear_queued(self, *args):
+
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
@@ -99,83 +75,23 @@ class Uploads(TransferList):
 
     def on_play_files(self, *args):
 
-        for fn in self.selected_transfers:
-            playfile = fn.realfilename
+        for transfer in self.selected_transfers:
+            playfile = transfer.realfilename
 
             if os.path.exists(playfile):
                 command = self.frame.np.config.sections["players"]["default"]
                 open_file_path(playfile, command)
-
-    def on_popup_menu(self, *args):
-
-        self.select_transfers()
-        num_selected_transfers = len(self.selected_transfers)
-
-        actions = self.popup_menu.get_actions()
-        users = len(self.selected_users) > 0
-        files = num_selected_transfers > 0
-
-        actions[_("User(s)")].set_enabled(users)  # Users Menu
-        self.populate_popup_menu_users()
-
-        if files:
-            act = True
-        else:
-            # Disable options
-            # Send to player, File manager, Copy File Path, Copy URL, Copy Folder URL, Search filename
-            act = False
-
-        for i in (_("Send to _Player"), _("_Open Folder"), _("Copy _File Path"),
-                  _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
-            actions[i].set_enabled(act)
-
-        if users and files:
-            act = True
-        else:
-            # Disable options
-            # Retry, Abort, Clear
-            act = False
-
-        for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
-            actions[i].set_enabled(act)
-
-        self.popup_menu.set_num_selected_files(num_selected_transfers)
-
-        self.popup_menu.popup()
-        return True
-
-    def double_click(self, event):
-
-        self.select_transfers()
-        dc = self.frame.np.config.sections["transfers"]["upload_doubleclick"]
-
-        if dc == 1:  # Send to player
-            self.on_play_files()
-        elif dc == 2:  # File manager
-            self.on_open_directory()
-        elif dc == 3:  # Search
-            self.on_file_search()
-        elif dc == 4:  # Abort
-            self.on_abort_transfer()
-        elif dc == 5:  # Clear
-            self.on_clear_transfer()
-
-    def clear_by_user(self, user):
-
-        for i in self.list[:]:
-            if i.user == user:
-                self.remove_specific(i)
 
     def on_abort_user(self, *args):
 
         self.select_transfers()
 
         for user in self.selected_users:
-            for i in self.list:
-                if i.user == user:
-                    self.selected_transfers.add(i)
+            for transfer in self.list:
+                if transfer.user == user:
+                    self.selected_transfers.add(transfer)
 
-        self.on_abort_transfer()
+        self.abort_transfers()
 
     def on_clear_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off"])
