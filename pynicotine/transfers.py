@@ -2026,7 +2026,7 @@ class Transfers:
         while True:
             self.ui_callback([slskmessages.CheckDownloadQueue()])
 
-            if self.eventprocessor.exit.wait(60):
+            if self.eventprocessor.exit.wait(180):
                 # Event set, we're exiting
                 return
 
