@@ -46,6 +46,7 @@ from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import show_file_path_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.transfers import Transfer
 
 
 class TransferList:
@@ -106,6 +107,7 @@ class TransferList:
             GObject.TYPE_UINT64,   # (15) time elapsed
             GObject.TYPE_UINT64,   # (16) file count
             GObject.TYPE_UINT64,   # (17) queue position
+            GObject.TYPE_PYOBJECT  # (18) transfer object
         )
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
@@ -173,6 +175,20 @@ class TransferList:
 
         self.update_visuals()
 
+    def init_interface(self, list):
+
+        self.list = list
+        self.widget.set_sensitive(True)
+        self.update()
+
+    def rebuild_transfers(self):
+
+        if self.frame.np.transfers is None:
+            return
+
+        self.clear()
+        self.update()
+
     def save_columns(self):
         save_columns(self.type, self.widget.get_columns())
 
@@ -181,48 +197,22 @@ class TransferList:
         for widget in self.__dict__.values():
             update_widget_visuals(widget, list_font_target="transfersfont")
 
-    def init_interface(self, list):
-        self.list = list
-        self.widget.set_sensitive(True)
-        self.update()
-
     def conn_close(self):
+
         self.widget.set_sensitive(False)
         self.list = []
         self.clear()
 
     def select_transfers(self):
+
         self.selected_transfers = set()
         self.selected_users = set()
 
         self.widget.get_selection().selected_foreach(self.selected_transfers_callback)
 
-    def new_transfer_notification(self):
-        self.frame.request_tab_icon(self.tab_label)
-
-    def on_ban(self, *args):
-        self.select_transfers()
-
-        for user in self.selected_users:
-            self.frame.np.network_filter.ban_user(user)
-
-    def on_file_search(self, *args):
-
-        transfer = next(iter(self.selected_transfers))
-
-        self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-        self.frame.change_main_page("search")
-
-    def rebuild_transfers(self):
-        if self.frame.np.transfers is None:
-            return
-
-        self.clear()
-        self.update()
-
     def selected_transfers_callback(self, model, path, iterator):
 
-        self.select_transfer(model, iterator, selectuser=True)
+        self.select_transfer(model, iterator, select_user=True)
 
         # If we're in grouping mode, select any transfers under the selected
         # user or folder
@@ -235,18 +225,33 @@ class TransferList:
             self.select_child_transfers(model, model.iter_children(iterator))
             iterator = model.iter_next(iterator)
 
-    def select_transfer(self, model, iterator, selectuser=False):
+    def select_transfer(self, model, iterator, select_user=False):
 
         user = model.get_value(iterator, 0)
-        filepath = model.get_value(iterator, 10)
+        transfer = model.get_value(iterator, 18)
 
-        for transfer in self.list:
-            if transfer.user == user and transfer.filename == filepath:
-                self.selected_transfers.add(transfer)
-                break
+        if isinstance(transfer, Transfer):
+            self.selected_transfers.add(transfer)
 
-        if selectuser:
+        if select_user:
             self.selected_users.add(user)
+
+    def new_transfer_notification(self):
+        self.frame.request_tab_icon(self.tab_label)
+
+    def on_ban(self, *args):
+
+        self.select_transfers()
+
+        for user in self.selected_users:
+            self.frame.np.network_filter.ban_user(user)
+
+    def on_file_search(self, *args):
+
+        transfer = next(iter(self.selected_transfers))
+
+        self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+        self.frame.change_main_page("search")
 
     def translate_status(self, status):
 
@@ -511,7 +516,8 @@ class TransferList:
                             empty_int,
                             empty_int,
                             filecount,
-                            empty_int
+                            empty_int,
+                            lambda: None
                         ]
                     )
 
@@ -547,7 +553,8 @@ class TransferList:
                                 empty_int,
                                 empty_int,
                                 filecount,
-                                empty_int
+                                empty_int,
+                                lambda: None
                             ]
                         )
 
@@ -588,7 +595,8 @@ class TransferList:
                     GObject.Value(GObject.TYPE_UINT64, speed),
                     GObject.Value(GObject.TYPE_UINT64, elapsed),
                     GObject.Value(GObject.TYPE_UINT64, filecount),
-                    GObject.Value(GObject.TYPE_UINT64, place)
+                    GObject.Value(GObject.TYPE_UINT64, place),
+                    transfer
                 )
             )
             transfer.iter = iterator
@@ -826,7 +834,9 @@ class TransferList:
 
     def selected_results_all_data(self, model, path, iterator, data):
 
-        if iterator in self.selected_users:
+        transfer = model.get_value(iterator, 18)
+
+        if not isinstance(transfer, Transfer):
             return
 
         user = model.get_value(iterator, 0)
@@ -834,19 +844,13 @@ class TransferList:
         fullname = model.get_value(iterator, 10)
         size = speed = length = queue = immediate = num = country = bitratestr = ""
 
-        for transfer in self.list:
-            if transfer.user == user and fullname == transfer.filename:
-                size = str(human_size(transfer.size))
-                try:
-                    if transfer.speed:
-                        speed = str(human_speed(transfer.speed))
-                except Exception:
-                    pass
-                bitratestr = str(transfer.bitrate)
-                length = str(transfer.length)
-                break
-        else:
-            return
+        size = str(human_size(transfer.size))
+
+        if transfer.speed:
+            speed = str(human_speed(transfer.speed))
+
+        bitratestr = str(transfer.bitrate)
+        length = str(transfer.length)
 
         directory = fullname.rsplit("\\", 1)[0]
 
