@@ -1638,7 +1638,6 @@ class Transfers:
                     "user": user
                 })
                 self.eventprocessor.send_message_to_peer(user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
-                self.eventprocessor.send_message_to_peer(user, slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt))
 
             elif not locally_queued:
                 log.add_transfer("Requesting to upload file %(filename)s with transfer request %(request)s to user %(user)s", {
