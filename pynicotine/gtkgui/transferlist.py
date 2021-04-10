@@ -307,27 +307,25 @@ class TransferList:
     def update_parent_rows(self, only_remove=False):
 
         # Remove empty parent rows
-        for (path, pathiter) in list(self.paths.items()):
+        for path, pathiter in list(self.paths.items()):
             if not self.transfersmodel.iter_has_child(pathiter):
                 self.transfersmodel.remove(pathiter)
                 del self.paths[path]
+
             elif not only_remove:
                 self.update_parent_row(pathiter)
 
-        for (username, useriter) in list(self.users.items()):
-            if useriter != 0:
+        for username, useriter in list(self.users.items()):
+            if not isinstance(useriter, list):
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
+
                 elif not only_remove:
                     self.update_parent_row(useriter)
             else:
                 # No grouping
-
-                for transfer in self.list:
-                    if transfer.user == username:
-                        break
-                else:
+                if not self.users[username]:
                     del self.users[username]
 
         self.frame.update_bandwidth()
@@ -561,10 +559,12 @@ class TransferList:
                     parent = self.paths[user_path]
             else:
                 # No grouping
+                # We use this list to get the total number of users
+                try:
+                    self.users[user].append(transfer)
 
-                if user not in self.users:
-                    # Insert dummy value. We use this list to get the total number of users
-                    self.users[user] = 0
+                except KeyError:
+                    self.users[user] = [transfer]
 
                 parent = None
 
@@ -638,6 +638,11 @@ class TransferList:
 
         if not cleartreeviewonly:
             self.list.remove(transfer)
+
+        try:
+            self.users[transfer.user].remove(transfer)
+        except AttributeError:
+            pass
 
         if transfer.iter is not None:
             self.transfersmodel.remove(transfer.iter)
