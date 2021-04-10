@@ -641,7 +641,8 @@ class TransferList:
 
         try:
             self.users[transfer.user].remove(transfer)
-        except AttributeError:
+
+        except (KeyError, AttributeError):
             pass
 
         if transfer.iter is not None:

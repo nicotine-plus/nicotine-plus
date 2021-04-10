@@ -1489,6 +1489,7 @@ class Transfers:
             # TODO: more accurate calculation, if possible
             should_count = True
             queued_users = set()
+            uploading_users = set()
 
             for i in self.uploads:
 
@@ -1509,9 +1510,13 @@ class Transfers:
 
                     continue
 
-                user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
+                if i.user not in queued_users or i.user not in uploading_users:
+                    user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
 
-                if not user_uploading and i.user not in queued_users:
+                    if user_uploading:
+                        uploading_users.add(i.user)
+                        continue
+
                     # Each unique user in the queue adds one to the placement
                     queued_users.add(i.user)
 
