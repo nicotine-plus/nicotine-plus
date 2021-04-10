@@ -36,6 +36,7 @@ from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import collapse_treeview
+from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import humanize
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
@@ -1275,26 +1276,16 @@ class Search:
                 self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def on_copy_file_path(self, *args):
-
-        if not self.selected_results:
-            return
-
         user, path = next(iter(self.selected_results))[:2]
-        self.frame.clip.set_text(path, -1)
+        self.frame.clipboard.set_text(path, -1)
 
     def on_copy_url(self, *args):
         user, path = next(iter(self.selected_results))[:2]
-        self.frame.set_clipboard_url(user, path)
+        copy_file_url(user, path, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
-
         user, path = next(iter(self.selected_results))[:2]
-        path = "\\".join(path.split("\\")[:-1])
-
-        if path[:-1] != "/":
-            path += "/"
-
-        self.frame.set_clipboard_url(user, path)
+        copy_file_url(user, path.rsplit('\\', 1)[0], self.frame.clipboard)
 
     def on_group(self, widget):
 

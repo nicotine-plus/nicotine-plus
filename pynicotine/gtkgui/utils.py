@@ -1847,6 +1847,28 @@ def keyval_to_hardware_keycode(keyval):
     return [key.keycode for key in keymap_keys]
 
 
+""" Clipboard """
+
+
+def copy_all_text(textview, clipboard):
+
+    textbuffer = textview.get_buffer()
+    start, end = textbuffer.get_bounds()
+    text = textbuffer.get_text(start, end, True)
+
+    clipboard.set_text(text, -1)
+
+
+def copy_file_url(user, path, clipboard):
+
+    import urllib.parse
+    url = "slsk://" + urllib.parse.quote(
+        "%s/%s" % (user, path.replace("\\", "/"))
+    )
+
+    clipboard.set_text(url, -1)
+
+
 """ Chat """
 
 

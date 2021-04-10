@@ -40,6 +40,7 @@ from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import entry_completion_find_match
 from pynicotine.gtkgui.utils import entry_completion_found_match
@@ -467,19 +468,10 @@ class PrivateChat:
         self.SearchBar.set_search_mode(True)
 
     def on_copy_chat_log(self, *args):
-
-        bound = self.ChatScroll.get_buffer().get_selection_bounds()
-
-        if bound is not None and len(bound) == 2:
-            start, end = bound
-            log = self.ChatScroll.get_buffer().get_text(start, end, True)
-            self.frame.clip.set_text(log, -1)
+        self.ChatScroll.emit("copy-clipboard")
 
     def on_copy_all_chat_log(self, *args):
-
-        start, end = self.ChatScroll.get_buffer().get_bounds()
-        log = self.ChatScroll.get_buffer().get_text(start, end, True)
-        self.frame.clip.set_text(log, -1)
+        copy_all_text(self.ChatScroll, self.frame.clipboard)
 
     def on_view_chat_log(self, *args):
         open_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user)

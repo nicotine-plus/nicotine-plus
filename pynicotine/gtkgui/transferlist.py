@@ -32,6 +32,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import collapse_treeview
+from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import initialise_columns
@@ -181,10 +182,10 @@ class TransferList:
 
     def on_file_search(self, *args):
 
-        for transfer in self.selected_transfers:
-            self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
-            self.frame.change_main_page("search")
-            break
+        transfer = next(iter(self.selected_transfers))
+
+        self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+        self.frame.change_main_page("search")
 
     def rebuild_transfers(self):
         if self.frame.np.transfers is None:
@@ -744,28 +745,16 @@ class TransferList:
         return True
 
     def on_copy_file_path(self, *args):
-
-        if not self.selected_transfers:
-            return
-
-        i = next(iter(self.selected_transfers))
-        text = self.transfersmodel.get_value(i.iter, 10)
-
-        self.frame.clip.set_text(text, -1)
+        transfer = next(iter(self.selected_transfers))
+        self.frame.clipboard.set_text(transfer.filename, -1)
 
     def on_copy_url(self, *args):
-        i = next(iter(self.selected_transfers))
-        self.frame.set_clipboard_url(i.user, i.filename)
+        transfer = next(iter(self.selected_transfers))
+        copy_file_url(transfer.user, transfer.filename, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
-
-        i = next(iter(self.selected_transfers))
-        path = "\\".join(i.filename.split("\\")[:-1])
-
-        if path[:-1] != "/":
-            path += "/"
-
-        self.frame.set_clipboard_url(i.user, path)
+        transfer = next(iter(self.selected_transfers))
+        copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0], self.frame.clipboard)
 
     def on_retry_transfer(self, *args):
         self.select_transfers()

@@ -58,6 +58,7 @@ from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import clear_entry
+from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import human_speed
 from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -88,8 +89,7 @@ class NicotineFrame:
             sys.excepthook = self.on_critical_error
 
         self.application = application
-        self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        self.clip_data = ""
+        self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.data_dir = data_dir
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.ci_mode = ci_mode
@@ -2066,11 +2066,6 @@ class NicotineFrame:
     def on_settings_uploads(self, *args):
         self.on_settings(page='Uploads')
 
-    def set_clipboard_url(self, user, path):
-        import urllib.parse
-        self.clip.set_text("slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/"))), -1)
-        self.clip_data = "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
-
     """ Log Window """
 
     def log_callback(self, timestamp_format, debug_level, msg):
@@ -2111,19 +2106,10 @@ class NicotineFrame:
         self.LogSearchBar.set_search_mode(True)
 
     def on_copy_log_window(self, *args):
-
-        bound = self.LogWindow.get_buffer().get_selection_bounds()
-
-        if bound is not None and len(bound) == 2:
-            start, end = bound
-            log = self.LogWindow.get_buffer().get_text(start, end, True)
-            self.clip.set_text(log, -1)
+        self.LogWindow.emit("copy-clipboard")
 
     def on_copy_all_log_window(self, *args):
-
-        start, end = self.LogWindow.get_buffer().get_bounds()
-        log = self.LogWindow.get_buffer().get_text(start, end, True)
-        self.clip.set_text(log, -1)
+        copy_all_text(self.LogWindow, self.clipboard)
 
     def on_view_debug_logs(self, *args):
 

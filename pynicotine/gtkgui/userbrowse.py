@@ -33,6 +33,7 @@ from pynicotine import slskmessages
 from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.fileproperties import FileProperties
+from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import human_size
 from pynicotine.gtkgui.utils import InfoBar
 from pynicotine.gtkgui.utils import initialise_columns
@@ -648,7 +649,7 @@ class UserBrowse:
         if is_file and self.selected_files:
             text = "\\".join([self.selected_folder, self.selected_files[0]])
 
-        self.frame.clip.set_text(text, -1)
+        self.frame.clipboard.set_text(text, -1)
 
     def tab_popup(self, user):
         self.popup_menu_users.toggle_user_items()
@@ -1022,7 +1023,7 @@ class UserBrowse:
 
         if self.selected_files:
             path = "\\".join([self.selected_folder, self.selected_files[0]])
-            self.frame.set_clipboard_url(self.user, path)
+            copy_file_url(self.user, path, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
 
@@ -1030,10 +1031,7 @@ class UserBrowse:
             return
 
         path = self.selected_folder
-        if path[:-1] != "/":
-            path += "/"
-
-        self.frame.set_clipboard_url(self.user, path)
+        copy_file_url(self.user, path, self.frame.clipboard)
 
     def on_file_manager(self, *args):
 
