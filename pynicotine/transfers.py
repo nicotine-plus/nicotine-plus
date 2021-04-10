@@ -471,7 +471,7 @@ class Transfers:
             if msg.user == i.user and i.status in ("Queued", "Getting status", "Establishing connection", "User logged off", "Connection closed by peer", "Cannot connect"):
                 if msg.status <= 0:
                     i.status = "User logged off"
-                    self.abort_transfer(i, send_fail_message=False)
+                    self.abort_transfer(i)
                     self.downloadsview.update(i)
 
                 elif i.status in ("Getting status", "User logged off", "Connection closed by peer", "Cannot connect"):
@@ -481,7 +481,7 @@ class Transfers:
             if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "User logged off", "Cannot connect", "Cancelled"):
                 if msg.status <= 0:
                     i.status = "User logged off"
-                    self.abort_transfer(i, send_fail_message=False)
+                    self.abort_transfer(i)
 
                     if not self.auto_clear_upload(i):
                         self.uploadsview.update(i)
@@ -977,7 +977,7 @@ class Transfers:
             if i.conn != msg.conn.conn:
                 continue
 
-            self.abort_transfer(i, send_fail_message=False)
+            self.abort_transfer(i)
             i.status = "Local file error"
 
             log.add(_("I/O error: %s"), msg.strerror)
@@ -1043,7 +1043,7 @@ class Transfers:
             except OSError as strerror:
                 log.add(_("OS error: %s"), strerror)
 
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.status = "Download directory error"
 
                 if self.notifications:
@@ -1075,7 +1075,7 @@ class Transfers:
                 except IOError as strerror:
                     log.add(_("Download I/O error: %s"), strerror)
 
-                    self.abort_transfer(i, send_fail_message=False)
+                    self.abort_transfer(i)
                     i.status = "Local file error"
 
                 else:
@@ -1135,7 +1135,7 @@ class Transfers:
             except IOError as strerror:
                 log.add(_("Upload I/O error: %s"), strerror)
 
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.status = "Local file error"
 
             else:
@@ -1207,7 +1207,7 @@ class Transfers:
                                      "filename": i.filename
                                  })
 
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
                 break
@@ -1247,7 +1247,7 @@ class Transfers:
             if not i.legacy_attempt:
                 """ Attempt to request file name encoded as latin-1 once. """
 
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
                 break
@@ -1326,7 +1326,7 @@ class Transfers:
             except IOError as strerror:
                 log.add(_("Download I/O error: %s"), strerror)
 
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.status = "Local file error"
 
             if needupdate:
@@ -1419,7 +1419,7 @@ class Transfers:
 
     def _conn_close(self, conn, addr, i, type):
 
-        self.abort_transfer(i, send_fail_message=False)  # Don't send "Cancelled" message, let remote user recover
+        self.abort_transfer(i)
         auto_clear = False
 
         if i.status != "Finished":
@@ -2134,7 +2134,7 @@ class Transfers:
 
             if self.user_logged_out(user):
                 upload_candidate.status = "User logged off"
-                self.abort_transfer(upload_candidate, send_fail_message=False)
+                self.abort_transfer(upload_candidate)
 
                 if not self.auto_clear_upload(upload_candidate):
                     self.uploadsview.update(upload_candidate)
@@ -2166,7 +2166,7 @@ class Transfers:
             if upload.user != user:
                 continue
 
-            self.abort_transfer(upload, reason=banmsg)
+            self.abort_transfer(upload, reason=banmsg, send_fail_message=True)
 
         if self.uploadsview is not None:
             self.uploadsview.clear_by_user(user)
@@ -2182,7 +2182,7 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
-            self.abort_transfer(transfer, send_fail_message=False)
+            self.abort_transfer(transfer)
             self.downloadsview.update(transfer)
             return
 
@@ -2203,7 +2203,7 @@ class Transfers:
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
-            self.abort_transfer(transfer, send_fail_message=False)
+            self.abort_transfer(transfer)
 
             if not self.auto_clear_upload(transfer):
                 self.uploadsview.update(transfer)
@@ -2211,7 +2211,7 @@ class Transfers:
 
         self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
 
-    def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=True):
+    def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=False):
 
         transfer.legacy_attempt = False
         transfer.req = None
@@ -2246,7 +2246,7 @@ class Transfers:
                     show_ui=1
                 )
 
-        elif send_fail_message and transfer in self.uploads:
+        elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
     def log_transfer(self, message, show_ui=0):
@@ -2265,11 +2265,11 @@ class Transfers:
 
         for i in self.downloads + self.uploads:
             if i.status in ("Aborted", "Paused"):
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.status = "Paused"
 
             elif i.status != "Finished":
-                self.abort_transfer(i, send_fail_message=False)
+                self.abort_transfer(i)
                 i.status = "Old"
 
     def get_downloads(self):

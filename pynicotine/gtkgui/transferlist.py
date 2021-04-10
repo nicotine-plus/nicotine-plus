@@ -588,7 +588,7 @@ class TransferList:
 
         for i in self.selected_transfers:
             if i.status != "Finished":
-                self.frame.np.transfers.abort_transfer(i)
+                self.frame.np.transfers.abort_transfer(i, send_fail_message=True)
 
                 if not clear:
                     i.status = "Aborted"
@@ -614,9 +614,7 @@ class TransferList:
 
         for i in self.list[:]:
             if i.status in status:
-                if i.status == "Queued":
-                    self.frame.np.transfers.abort_transfer(i)
-
+                self.frame.np.transfers.abort_transfer(i, send_fail_message=True)
                 self.remove_specific(i)
 
     def clear(self):
