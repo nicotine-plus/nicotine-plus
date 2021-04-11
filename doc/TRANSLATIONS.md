@@ -20,16 +20,16 @@ Once your translations have been approved, they will be merged into Nicotine+'s 
 
 Nicotine+ will try to autodetect your language based on what locale you're using.
 
-For testing purposes Nicotine+ can be forced to use a specific language. You can do it by setting your locale before starting Nicotine+ ex:
+For testing purposes Nicotine+ can be forced to use a specific language. You can do it by setting your locale before starting Nicotine+, e.g.:
 
-* English: `LC_ALL=en_US.UTF-8 python nicotine`
-* French: `LC_ALL=fr_FR.UTF-8 python nicotine`
+* English: `LANGUAGE=en_US.UTF-8 python nicotine`
+* French: `LANGUAGE=fr_FR.UTF-8 python nicotine`
 * ...
 
 Nicotine+ will first try to find your translation files in your project folder.
 It's particularly useful for testing translations from the git source tree or if your are using Python virtualenv framework.
 
-To use translations when running Nicotine+ from your project folder, you need to generate .mo files by running
+To use translations when running Nicotine+ from your project folder, you first need to generate .mo files by running
 
 ```console
 python3 setup.py build

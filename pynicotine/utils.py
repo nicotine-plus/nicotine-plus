@@ -271,41 +271,33 @@ def apply_translation():
     $(PROJECT_PATH)/mo/$(LANG)/LC_MESSAGES/nicotine.mo
 
     If no translations are found we fall back to the system path for locates:
-    GNU/Linux: /usr/share/locale/$(LANG)/LC_MESSAGES
-    Windows: %PYTHONHOME%\\share\\locale\\$(LANG)\\LC_MESSAGES
+    /usr/share/locale/$(LANG)/LC_MESSAGES
 
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
-    # Locales handling: We let the system handle the locales
-    try:
-        locale.setlocale(locale.LC_ALL, '')
-
-    except Exception as e:
-        print("Error while attempting to set locale: %s" % e)
-
-    # package name for gettext
+    # Package name for gettext
     package = 'nicotine'
 
     # Local path where to find translation (mo) files
     local_mo_path = 'mo'
 
-    # Gettext handling
-    if gettext.find(package, localedir=local_mo_path) is None:
+    # Enable translation support in GtkBuilder (ui files)
+    locale.textdomain(package)
 
-        # Locales are not in the current dir
-        # We let gettext handle the situation: if if found them in the system dir
-        # the app will be trnaslated, if not it will be untranslated.
-        gettext.install(package)
+    if gettext.find(package, localedir=local_mo_path):
 
-    else:
-
-        # Locales are in the current dir: install them
-        gettext.bindtextdomain(package, local_mo_path)
+        # Locales are in the current dir, use them
         gettext.install(package, local_mo_path)
 
-    gettext.textdomain(package)
+        # Tell GtkBuilder where to find our translations (ui files)
+        locale.bindtextdomain(package, local_mo_path)
+        return
 
+    # Locales are not in the current dir
+    # We let gettext handle the situation: if found them in the system dir
+    # the app will be translated, if not, it will be untranslated
+    gettext.install(package)
 
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""

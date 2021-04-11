@@ -57,10 +57,7 @@ NICOTINE = None
 def load_ui_elements(ui_class, filename):
 
     try:
-        builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(filename)
+        builder = Gtk.Builder().new_from_file(filename)
 
         for i in builder.get_objects():
             try:
