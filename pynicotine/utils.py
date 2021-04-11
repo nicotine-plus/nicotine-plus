@@ -299,6 +299,7 @@ def apply_translation():
     # the app will be translated, if not, it will be untranslated
     gettext.install(package)
 
+
 def unescape(string):
     """Removes quotes from the beginning and end of strings, and unescapes it."""
 
