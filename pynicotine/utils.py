@@ -27,7 +27,6 @@ This module contains utility functions.
 
 import errno
 import gettext
-import locale
 import os
 import pickle
 import sys
@@ -41,6 +40,13 @@ win32 = sys.platform.startswith("win")
 illegalpathchars = ["?", ":", ">", "<", "|", "*", '"']
 illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
+
+if win32:
+    # No locale module on Windows
+    import ctypes
+    locale = ctypes.cdll.LoadLibrary("libintl-8.dll")
+else:
+    import locale
 
 
 def clean_file(filename):
@@ -283,7 +289,11 @@ def apply_translation():
     local_mo_path = 'mo'
 
     # Enable translation support in GtkBuilder (ui files)
-    locale.textdomain(package)
+    try:
+        locale.textdomain(package)
+    except AttributeError:
+        # No locale module
+        pass
 
     if gettext.find(package, localedir=local_mo_path):
 
@@ -291,7 +301,12 @@ def apply_translation():
         gettext.install(package, local_mo_path)
 
         # Tell GtkBuilder where to find our translations (ui files)
-        locale.bindtextdomain(package, local_mo_path)
+        try:
+            locale.bindtextdomain(package, local_mo_path)
+        except AttributeError:
+            # No locale module
+            pass
+
         return
 
     # Locales are not in the current dir
