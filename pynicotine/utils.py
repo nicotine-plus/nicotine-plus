@@ -27,6 +27,7 @@ This module contains utility functions.
 
 import errno
 import gettext
+import locale
 import os
 import pickle
 import sys
@@ -40,13 +41,6 @@ win32 = sys.platform.startswith("win")
 illegalpathchars = ["?", ":", ">", "<", "|", "*", '"']
 illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
-
-if win32:
-    # No locale module on Windows
-    import ctypes
-    locale = ctypes.cdll.LoadLibrary("libintl-8.dll")
-else:
-    import locale
 
 
 def clean_file(filename):
@@ -282,31 +276,34 @@ def apply_translation():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
+    # Load library for translating non-Python content, e.g. GTK ui files
+    if hasattr(locale, 'bindtextdomain') and hasattr(locale, 'textdomain'):
+        libintl = locale
+
+    elif win32:
+        import ctypes
+        libintl = ctypes.cdll.LoadLibrary('libintl-8.dll')
+
+    else:
+        libintl = None
+
     # Package name for gettext
     package = 'nicotine'
 
     # Local path where to find translation (mo) files
     local_mo_path = 'mo'
 
-    # Enable translation support in GtkBuilder (ui files)
-    try:
-        locale.textdomain(package)
-    except AttributeError:
-        # No locale module
-        pass
+    if libintl:
+        # Enable translation support in GtkBuilder (ui files)
+        libintl.textdomain(package)
 
     if gettext.find(package, localedir=local_mo_path):
+        if libintl:
+            # Tell GtkBuilder where to find our translations (ui files)
+            libintl.bindtextdomain(package, local_mo_path)
 
         # Locales are in the current dir, use them
         gettext.install(package, local_mo_path)
-
-        # Tell GtkBuilder where to find our translations (ui files)
-        try:
-            locale.bindtextdomain(package, local_mo_path)
-        except AttributeError:
-            # No locale module
-            pass
-
         return
 
     # Locales are not in the current dir
