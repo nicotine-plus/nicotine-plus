@@ -91,8 +91,8 @@ modules:
        - '*'
     sources:
       - url: https://github.com/freedesktop/dbus-glib.git
-        tag: dbus-glib-0.110
-        commit: ffeb6909967ff79585a7ede85227da94f04ecb01
+        tag: dbus-glib-0.112
+        commit: f16a4ec9a37d067aea4772ce35ae5b88d9416cab
         type: git
 
   - name: libayatana-appindicator
