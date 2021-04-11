@@ -93,8 +93,10 @@ class NicotineFrame:
         self.data_dir = data_dir
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.ci_mode = ci_mode
+        self.current_page_id = "Default"
         self.current_tab_label = None
         self.checking_update = False
+        self.away = False
         self.autoaway = False
         self.awaytimerid = None
         self.shutdown = False
@@ -106,6 +108,10 @@ class NicotineFrame:
         self.fastconfigure = None
         self.settingswindow = None
         self.spell_checker = None
+
+        """ Load UI """
+
+        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
 
         """ Logging """
 
@@ -131,24 +137,17 @@ class NicotineFrame:
 
         """ GTK Settings """
 
+        gtk_settings = Gtk.Settings.get_default()
+        gtk_settings.set_property("gtk-dialogs-use-header", config["ui"]["header_bar"])
+
         dark_mode = config["ui"]["dark_mode"]
         global_font = config["ui"]["globalfont"]
-
-        if dark_mode or global_font:
-            gtk_settings = Gtk.Settings.get_default()
 
         if dark_mode:
             gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode)
 
         if global_font and global_font != "Normal":
             gtk_settings.set_property("gtk-font-name", global_font)
-
-        """ Main Window UI """
-
-        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
-        self.current_page_id = "Default"
-
-        Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", config["ui"]["header_bar"])
 
         """ Actions and Menu """
 
