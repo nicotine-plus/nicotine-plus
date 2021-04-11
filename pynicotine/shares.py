@@ -930,10 +930,8 @@ class Shares:
 
         # Scanning done, load shares in the main process again
         if sharestype == "normal":
-            self.public_rescanning = False
             self.load_shares(self.share_dbs, self.public_share_dbs)
         else:
-            self.buddy_rescanning = False
             self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
         self.create_compressed_shares_message(sharestype)
@@ -950,6 +948,11 @@ class Shares:
                 log.add(_("Finished rescanning public shares"))
             else:
                 log.add(_("Finished rescanning buddy shares"))
+
+        if sharestype == "normal":
+            self.public_rescanning = False
+        else:
+            self.buddy_rescanning = False
 
         if self.ui_callback:
             self.ui_callback.hide_scan_progress(sharestype)
