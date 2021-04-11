@@ -100,7 +100,7 @@ class UserBrowse:
 
         cols["folders"].set_sort_column_id(0)
 
-        self.popup_menu_users = popup = PopupMenu(self.frame)
+        self.user_popup = popup = PopupMenu(self.frame)
         popup.setup_user_menu(user, page="userbrowse")
         popup.setup(
             ("", None),
@@ -158,7 +158,7 @@ class UserBrowse:
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.popup_menu_users)
+                (">" + _("User"), self.user_popup)
             )
         else:
             self.folder_popup_menu.setup(
@@ -170,7 +170,7 @@ class UserBrowse:
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
                 ("", None),
-                (">" + _("User"), self.popup_menu_users)
+                (">" + _("User"), self.user_popup)
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
@@ -218,7 +218,7 @@ class UserBrowse:
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.popup_menu_users)
+                (">" + _("User"), self.user_popup)
             )
         else:
             self.file_popup_menu.setup(
@@ -231,7 +231,7 @@ class UserBrowse:
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
                 ("", None),
-                (">" + _("User"), self.popup_menu_users)
+                (">" + _("User"), self.user_popup)
             )
 
         self.update_visuals()
@@ -288,7 +288,7 @@ class UserBrowse:
                       _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
 
-        self.popup_menu_users.toggle_user_items()
+        self.user_popup.toggle_user_items()
         self.folder_popup_menu.popup()
         return True
 
@@ -336,7 +336,7 @@ class UserBrowse:
 
         self.file_popup_menu.set_num_selected_files(num_selected_files)
 
-        self.popup_menu_users.toggle_user_items()
+        self.user_popup.toggle_user_items()
         self.file_popup_menu.popup()
         return True
 
@@ -650,10 +650,6 @@ class UserBrowse:
             text = "\\".join([self.selected_folder, self.selected_files[0]])
 
         self.frame.clipboard.set_text(text, -1)
-
-    def tab_popup(self, user):
-        self.popup_menu_users.toggle_user_items()
-        return self.popup_menu_users
 
     def on_select_dir(self, selection):
 
