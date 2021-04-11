@@ -3,6 +3,26 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.5 (unstable)
+-----------------------------
+
+Changes
+
+ * Replaced previous country flag icons with clearer ones
+ * Improved performance when selecting a large number of transfers
+ * Queue positions and failed downloads are now checked every three minutes instead of every minute, to reduce stress on the uploading user
+
+Corrections
+
+ * Fixed an issue where scanning of shared files malfunctioned if the UI didn't load in time
+ * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
+ * Minor behavioral corrections related to file transfers
+
+Issues closed on GitHub
+
+ * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
+ * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
+
 Version 3.0.4 (April 7, 2021)
 -----------------------------
 
