@@ -3050,14 +3050,13 @@ class Settings:
 
         self.update_visuals()
 
-    def update_visuals(self):
+    def update_visuals(self, scope=None):
 
-        for widget in self.__dict__.values():
+        if not scope:
+            scope = self
+
+        for widget in list(scope.__dict__.values()):
             update_widget_visuals(widget)
-
-        for name, page in self.pages.items():
-            for widget in page.__dict__.values():
-                update_widget_visuals(widget)
 
     def switch_page(self, widget):
 
@@ -3072,17 +3071,18 @@ class Settings:
             self.viewport1.add(self.empty_label)
             return
 
-        page = model.get_value(iterator, 1)
+        page_id = model.get_value(iterator, 1)
 
-        if page not in self.pages:
+        if page_id not in self.pages:
             try:
-                self.pages[page] = getattr(sys.modules[__name__], page + "Frame")(self)
+                self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             except AttributeError:
                 return
 
-            self.pages[page].set_settings(self.frame.np.config.sections)
+            page.set_settings(self.frame.np.config.sections)
+            self.update_visuals(page)
 
-        self.viewport1.add(self.pages[page].Main)
+        self.viewport1.add(self.pages[page_id].Main)
 
     def set_active_page(self, page):
 

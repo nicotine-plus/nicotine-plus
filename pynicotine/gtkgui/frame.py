@@ -207,8 +207,6 @@ class NicotineFrame:
         self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
         self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
 
-        self.update_visuals()
-
         """ Entry Completion """
 
         for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
@@ -300,15 +298,19 @@ class NicotineFrame:
         self.MainNotebook.connect("page-reordered", self.on_page_reordered)
         self.MainNotebook.connect("page-added", self.on_page_added)
 
+        """ Plugins: loaded here to ensure all requirements are initialized """
+
+        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
+
+        """ Apply UI Customizations """
+
+        self.update_visuals()
+
         """ Show Window """
 
         # Check command line option and config option
         if not start_hidden and not config["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-
-        """ Plugins: loaded here to ensure all requirements are initialized """
-
-        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
 
         """ Connect """
 
@@ -556,7 +558,7 @@ class NicotineFrame:
                 screen, self.global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
     """ General """

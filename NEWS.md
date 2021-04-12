@@ -15,11 +15,14 @@ Changes
 Corrections
 
  * Fixed an issue where scanning of shared files malfunctioned if the UI didn't load in time
+ * Fixed a rare case where Nicotine+ could crash on startup
  * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
+ * Fixed an issue where UI customizations were not applied to the preferences dialog
  * Minor behavioral corrections related to file transfers
 
 Issues closed on GitHub
 
+ * Crash on startup ([#1041](https://github.com/Nicotine-Plus/nicotine-plus/issues/1041))
  * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
 

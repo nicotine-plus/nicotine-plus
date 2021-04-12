@@ -789,7 +789,7 @@ class PrivateChat:
 
     def update_visuals(self):
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, update_text_tags=False)
 
     def create_tag(self, buffer, color):

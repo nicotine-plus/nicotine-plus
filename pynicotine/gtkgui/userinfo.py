@@ -293,7 +293,7 @@ class UserInfo:
 
     def update_visuals(self):
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
     def show_interests(self, likes, hates):

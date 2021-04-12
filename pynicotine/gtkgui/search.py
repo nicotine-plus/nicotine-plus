@@ -1055,7 +1055,7 @@ class Search:
 
     def update_visuals(self):
 
-        for widget in self.__dict__.values():
+        for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="searchfont")
 
     def save_columns(self):
