@@ -326,22 +326,29 @@ class NicotineFrame:
 
         self.update_bandwidth()
 
-    """ Window """
+    """ Window State """
 
     def on_focus_in(self, widget, event):
         if self.MainWindow.get_urgency_hint():
             self.MainWindow.set_urgency_hint(False)
 
-    def on_window_change(self, widget, blag):
+    def save_window_state(self):
+
+        config = self.np.config.sections["ui"]
         width, height = self.MainWindow.get_size()
-
-        self.np.config.sections["ui"]["height"] = height
-        self.np.config.sections["ui"]["width"] = width
-
         xpos, ypos = self.MainWindow.get_position()
 
-        self.np.config.sections["ui"]["xposition"] = xpos
-        self.np.config.sections["ui"]["yposition"] = ypos
+        config["height"] = height
+        config["width"] = width
+
+        config["xposition"] = xpos
+        config["yposition"] = ypos
+
+        config["maximized"] = self.MainWindow.is_maximized()
+        config["last_tab_id"] = self.MainNotebook.get_current_page()
+
+        for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
+            page.save_columns()
 
     """ Init UI """
 
@@ -2515,23 +2522,17 @@ class NicotineFrame:
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)
 
-        self.np.config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
-        self.np.config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
-
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray.hide()
 
-        self.save_columns()
+        # Save window state (window size, position, columns)
+        self.save_window_state()
 
         self.np.config.write_configuration()
 
         # Closing up all shelves db
         self.np.shares.close_shares("normal")
         self.np.shares.close_shares("buddy")
-
-    def save_columns(self):
-        for i in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
-            i.save_columns()
 
 
 class MainApp(Gtk.Application):
