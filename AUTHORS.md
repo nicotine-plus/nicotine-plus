@@ -141,7 +141,7 @@ Nir Arbel
   course he designed and impemented the whole
   system.
 - [nir(at)slsk(dot)org]
-			    
+
 Zip (Brett W. Thompson)
 - I used his client code to get an initial impression
   of how the system works.
