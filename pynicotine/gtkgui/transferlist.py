@@ -316,7 +316,7 @@ class TransferList:
                 self.update_parent_row(pathiter)
 
         for username, useriter in list(self.users.items()):
-            if not isinstance(useriter, list):
+            if isinstance(useriter, Gtk.TreeIter):
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
@@ -560,12 +560,7 @@ class TransferList:
             else:
                 # No grouping
                 # We use this list to get the total number of users
-                try:
-                    self.users[user].append(transfer)
-
-                except KeyError:
-                    self.users[user] = [transfer]
-
+                self.users.setdefault(user, set()).add(transfer)
                 parent = None
 
             # Add a new transfer
@@ -607,7 +602,6 @@ class TransferList:
 
                 if self.tree_users == "folder_grouping":
                     # Group by folder, we need the user path to expand it
-
                     user_path = self.transfersmodel.get_path(self.users[user])
                 else:
                     user_path = None
@@ -633,17 +627,17 @@ class TransferList:
 
     def remove_specific(self, transfer, cleartreeviewonly=False):
 
+        user = transfer.user
+
+        if user in self.users and not isinstance(self.users[user], Gtk.TreeIter):
+            # No grouping
+            self.users[user].discard(transfer)
+
         if transfer in self.frame.np.transfers.transfer_request_times:
             del self.frame.np.transfers.transfer_request_times[transfer]
 
         if not cleartreeviewonly:
             self.list.remove(transfer)
-
-        try:
-            self.users[transfer.user].remove(transfer)
-
-        except (KeyError, AttributeError):
-            pass
 
         if transfer.iter is not None:
             self.transfersmodel.remove(transfer.iter)
