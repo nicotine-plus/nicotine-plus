@@ -18,8 +18,9 @@ Corrections
  * Fixed a critical error when a new room was joined while country flags were disabled
  * Fixed a critical error when attempting to add wishlist items while disconnected from the server
  * Fixed a rare case where Nicotine+ could crash on startup
+ * Column widths of the currently selected user browse tab are now saved
+ * UI customizations are once again applied to the preferences dialog
  * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
- * Fixed an issue where UI customizations were not applied to the preferences dialog
  * Minor behavioral corrections related to file transfers
 
 Issues closed on GitHub
