@@ -258,7 +258,7 @@ class RoomList:
         set_treeview_selected_row(widget, event)
 
         if triggers_context_menu(event):
-            return self.on_popup_menu()
+            return self.on_popup_menu(widget)
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             room = self.get_selected_room(widget)
@@ -321,10 +321,10 @@ class RoomList:
     def on_popup_leave(self, *args):
         self.frame.np.queue.append(slskmessages.LeaveRoom(self.popup_room))
 
-    def on_search_room(self, widget):
+    def on_search_room(self, *args):
         self.room_filter.refilter()
 
-    def on_refresh(self, widget):
+    def on_refresh(self, *args):
         self.frame.np.queue.append(slskmessages.RoomList())
 
     def on_toggle_accept_private_room(self, widget):
