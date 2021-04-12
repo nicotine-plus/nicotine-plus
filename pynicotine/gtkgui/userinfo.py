@@ -107,8 +107,14 @@ class UserTabs(IconNotebook):
             self.users[user].show_connection_error()
 
     def save_columns(self):
-        for user in self.users:
-            self.users[user].save_columns()
+        """ Save the treeview state of the currently selected tab """
+
+        current_page = self.get_nth_page(self.get_current_page())
+
+        for tab in self.users.values():
+            if tab.Main == current_page:
+                tab.save_columns()
+                break
 
     def get_user_stats(self, msg):
 

@@ -295,6 +295,7 @@ def hide_columns(treeview, cols, config):
 
 
 def save_columns(treeview_name, columns, subpage=None):
+    """ Save a treeview's column widths and visibilities for the next session """
 
     saved_columns = {}
     column_config = NICOTINE.np.config.sections["columns"]

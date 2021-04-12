@@ -309,19 +309,17 @@ class Searches(IconNotebook):
         self.wish_list.update_visuals()
 
     def save_columns(self):
+        """ Save the treeview state of the currently selected tab """
 
-        page_num = self.get_current_page()
+        current_page = self.get_nth_page(self.get_current_page())
 
-        if page_num is not None:
-            page = self.get_nth_page(page_num)
+        for search in self.searches.values():
+            if search["tab"] is None:
+                continue
 
-            for search in self.searches.values():
-                if search["tab"] is None:
-                    continue
-
-                if search["tab"].Main == page:
-                    search["tab"].save_columns()
-                    break
+            if search["tab"].Main == current_page:
+                search["tab"].save_columns()
+                break
 
     def get_search_id(self, child):
 
