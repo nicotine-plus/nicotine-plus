@@ -2301,29 +2301,27 @@ class Statistics:
 
         self.config = config
         self.ui_callback = ui_callback
+        self.session_stats = {}
 
-        self.init_stats()
-
-    def init_stats(self):
         for stat_id in self.config.defaults["statistics"]:
-            setattr(self, stat_id, 0)
+            self.session_stats[stat_id] = 0
 
     def append_stat_value(self, stat_id, stat_value):
 
-        self.__dict__[stat_id] += stat_value
+        self.session_stats[stat_id] += stat_value
         self.config.sections["statistics"][stat_id] += stat_value
         self.update_ui(stat_id)
 
     def update_ui(self, stat_id):
 
         if self.ui_callback:
-            stat_value = getattr(self, stat_id)
+            stat_value = self.session_stats[stat_id]
             self.ui_callback.update_stat_value(stat_id, stat_value)
 
     def reset_stats(self):
 
         for stat_id in self.config.defaults["statistics"]:
-            setattr(self, stat_id, 0)
+            self.session_stats[stat_id] = 0
             self.config.sections["statistics"][stat_id] = 0
 
             self.update_ui(stat_id)
