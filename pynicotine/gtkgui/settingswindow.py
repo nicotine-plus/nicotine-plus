@@ -2685,11 +2685,6 @@ class BuildDialog(Gtk.Dialog):
                     print("No2 " + name + ", " + repr(list(self.settings.frame.np.config.sections["plugins"][plugin].keys())))
                 continue
 
-            # There's no reason more widgets cannot be added,
-            # and we can use self.settings.set_widget and self.settings.get_widget_data to set and get values
-            #
-            # Todo: Gtk.ComboBox
-
             value = self.settings.frame.np.config.sections["plugins"][plugin][name]
 
             if data["type"] in ("integer", "int", "float"):
@@ -2724,6 +2719,17 @@ class BuildDialog(Gtk.Dialog):
                     vbox.add(radio)
 
                 self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+
+            elif data["type"] in ("dropdown",):
+                self.generate_widget_container(data["description"], c)
+
+                self.tw[name] = Gtk.ComboBoxText()
+
+                for label in data["options"]:
+                    self.tw[name].append_text(label)
+
+                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.tw["box%d" % c].add(self.tw[name])
 
             elif data["type"] in ("str", "string"):
                 self.generate_widget_container(data["description"], c)
@@ -3100,7 +3106,6 @@ class Settings:
 
             for radio in radio_list:
                 if radio.get_active():
-                    print(radio_list.index(radio))
                     return radio_list.index(radio)
 
             return 0
@@ -3179,6 +3184,10 @@ class Settings:
 
             elif isinstance(value, int):
                 widget.set_active(value)
+
+            # If an invalid value was provided, select first item
+            if widget.get_active() < 0:
+                widget.set_active(0)
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font(value)

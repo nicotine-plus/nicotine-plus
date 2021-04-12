@@ -12,14 +12,23 @@ def disable(plugins):
 
 
 class Plugin(BasePlugin):
-    __name__ = "Radio Button Example"
+    __name__ = "Radio Button/Dropdown Example"
     settings = {
-        'player': 2,
+        'player_radio': 2,                # id, starts from 0
+        'player_dropdown': 'Clementine',  # can be either string or id starting from 0
     }
     metasettings = {
-        'player': {
+        'player_radio': {
             'description': 'Choose an audio player',
             'type': 'radio',
+            'options': (
+                'Exaile',
+                'Audacious',
+                'Clementine'
+            )},
+        'player_dropdown': {
+            'description': 'Choose an audio player',
+            'type': 'dropdown',
             'options': (
                 'Exaile',
                 'Audacious',
