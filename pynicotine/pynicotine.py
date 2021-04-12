@@ -150,6 +150,7 @@ class NetworkEventProcessor:
         self.network_filter = NetworkFilter(self, self.config, self.users, self.queue, self.geoip)
         self.statistics = Statistics(self.config, self.ui_callback)
         self.shares = Shares(self, self.config, self.queue, self.ui_callback)
+        self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
         self.pluginhandler = None  # Initialized when the GUI is ready
         self.now_playing = NowPlaying(self.config)
 
@@ -821,7 +822,7 @@ class NetworkEventProcessor:
             if self.transfers is not None:
                 self.transfers.disconnect()
 
-            self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.search = self.transfers = self.userlist = None
+            self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = self.userlist = None
             self.ui_callback.conn_close(conn, addr)
             self.pluginhandler.server_disconnect_notification(userchoice)
 
@@ -1106,7 +1107,6 @@ class NetworkEventProcessor:
             self.queue.append(slskmessages.SetStatus((not self.ui_callback.away) + 1))
             self.watch_user(self.config.sections["server"]["login"])
 
-            self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
             self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
             self.shares.set_connected(True)
