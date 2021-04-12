@@ -1075,14 +1075,20 @@ class BanListFrame(BuildFrame):
         }
 
         self.banlist = []
-        self.banlist_model = Gtk.ListStore(GObject.TYPE_STRING)
-        column = Gtk.TreeViewColumn(_("Users"), Gtk.CellRendererText(), text=0)
-        self.BannedList.append_column(column)
+        self.banlist_model = Gtk.ListStore(str)
+
+        initialise_columns(
+            None,
+            self.BannedList,
+            ["users", _("Users"), -1, "text", None]
+        )
+
         self.BannedList.set_model(self.banlist_model)
         self.BannedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.blocked_list = {}
         self.blocked_list_model = Gtk.ListStore(str, str)
+
         cols = initialise_columns(
             None,
             self.BlockedList,
@@ -2976,31 +2982,20 @@ class Settings:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", "settingswindow.ui"))
+        self.SettingsWindow.set_transient_for(frame.MainWindow)
 
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
-
-        # Connect the custom handlers
-        self.SettingsWindow.set_transient_for(frame.MainWindow)
-        self.SettingsWindow.connect("delete-event", self.on_delete)
         self.SettingsWindow.connect("settings-updated", self.frame.on_settings_updated)
-
-        # This is ?
-        self.empty_label = Gtk.Label.new("")
-        self.empty_label.show()
-        self.viewport1.add(self.empty_label)
 
         # Treeview of the settings
         self.tree = {}
-
-        # Pages
         self.pages = {}
-        self.handler_ids = {}
 
         # Model of the treeview
         model = Gtk.TreeStore(str, str)
+        self.SettingsTreeview.set_model(model)
 
-        # Fill up the model
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
         self.tree["Server"] = model.append(row, [_("Server"), "Server"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
@@ -3032,21 +3027,15 @@ class Settings:
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
         self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
 
-        # Title of the treeview
-        column = Gtk.TreeViewColumn(_("Categories"), Gtk.CellRendererText(), text=0)
-
-        # set the model on the treeview
-        self.SettingsTreeview.set_model(model)
-        self.SettingsTreeview.append_column(column)
-
-        # Expand all
-        self.SettingsTreeview.expand_all()
-
-        # Connect the signal when a page/category is changed
-        self.SettingsTreeview.get_selection().connect("changed", self.switch_page)
+        initialise_columns(
+            None,
+            self.SettingsTreeview,
+            ["categories", _("Categories"), -1, "text", None]
+        )
 
         # Set the cursor to the second element of the TreeViewColumn.
         self.SettingsTreeview.set_cursor((0, 0))
+        self.SettingsTreeview.expand_all()
 
         self.update_visuals()
 
@@ -3058,48 +3047,22 @@ class Settings:
         for widget in list(scope.__dict__.values()):
             update_widget_visuals(widget)
 
-    def switch_page(self, widget):
-
-        child = self.viewport1.get_child()
-
-        if child:
-            self.viewport1.remove(child)
-
-        model, iterator = widget.get_selected()
-
-        if iterator is None:
-            self.viewport1.add(self.empty_label)
-            return
-
-        page_id = model.get_value(iterator, 1)
-
-        if page_id not in self.pages:
-            try:
-                self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
-            except AttributeError:
-                return
-
-            page.set_settings(self.frame.np.config.sections)
-            self.update_visuals(page)
-
-        self.viewport1.add(self.pages[page_id].Main)
-
     def set_active_page(self, page):
 
         # Unminimize window
         self.SettingsWindow.deiconify()
 
         model = self.SettingsTreeview.get_model()
-        sel = self.SettingsTreeview.get_selection()
-        sel.unselect_all()
+        selection = self.SettingsTreeview.get_selection()
+        selection.unselect_all()
         path = model.get_path(self.tree[page])
 
         self.SettingsTreeview.expand_to_path(path)
 
         if path is not None:
-            sel.select_path(path)
+            selection.select_path(path)
 
-        self.switch_page(sel)
+        self.on_switch_page(selection)
 
     def get_position(self, combobox, option):
 
@@ -3182,6 +3145,7 @@ class Settings:
             return widget.get_path()
 
     def clear_widget(self, widget):
+
         if isinstance(widget, Gtk.SpinButton):
             widget.set_value(0)
 
@@ -3302,6 +3266,31 @@ class Settings:
             need_completion = False
 
         return need_portmap, need_rescan, need_colors, need_completion, config
+
+    def on_switch_page(self, selection):
+
+        child = self.viewport1.get_child()
+
+        if child:
+            self.viewport1.remove(child)
+
+        model, iterator = selection.get_selected()
+
+        if iterator is None:
+            return
+
+        page_id = model.get_value(iterator, 1)
+
+        if page_id not in self.pages:
+            try:
+                self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
+            except AttributeError:
+                return
+
+            page.set_settings(self.frame.np.config.sections)
+            self.update_visuals(page)
+
+        self.viewport1.add(self.pages[page_id].Main)
 
     def on_backup_config(self, *args):
 

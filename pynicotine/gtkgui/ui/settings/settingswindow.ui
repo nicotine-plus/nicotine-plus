@@ -6,6 +6,7 @@
     <property name="window-position">center</property>
     <property name="default-width">1050</property>
     <property name="default-height">700</property>
+    <signal name="delete-event" handler="on_delete" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="Main">
         <property name="visible">1</property>
@@ -30,6 +31,11 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="headers-visible">0</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection">
+                        <signal name="changed" handler="on_switch_page" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
