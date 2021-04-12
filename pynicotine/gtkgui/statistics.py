@@ -50,8 +50,8 @@ class Statistics:
             session_value = str(session_value)
             total_value = str(total_value)
 
-        self.__dict__[stat_id + "_session"].set_text(session_value)
-        self.__dict__[stat_id + "_total"].set_text(total_value)
+        getattr(self, stat_id + "_session").set_text(session_value)
+        getattr(self, stat_id + "_total").set_text(total_value)
 
     def reset_stats_response(self, dialog, response, data):
 

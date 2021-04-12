@@ -1475,7 +1475,7 @@ class FontsColorsFrame(BuildFrame):
 
     def on_default_font(self, widget):
 
-        font_button = self.__dict__[Gtk.Buildable.get_name(widget).replace("Default", "Select")]
+        font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
         font_button.set_font_name("")
 
         self.needcolors = 1
@@ -1526,12 +1526,12 @@ class FontsColorsFrame(BuildFrame):
 
         rgba = widget.get_rgba()
         color = "#%02X%02X%02X" % (round(rgba.red * 255), round(rgba.green * 255), round(rgba.blue * 255))
-        entry = self.__dict__[Gtk.Buildable.get_name(widget).replace("Pick", "Entry")]
+        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Pick", "Entry"))
         entry.set_text(color)
 
     def on_default_color(self, widget):
 
-        entry = self.__dict__[Gtk.Buildable.get_name(widget).replace("Default", "Entry")]
+        entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Entry"))
 
         for section in self.options:
             for key, value in self.options[section].items():
@@ -1586,7 +1586,7 @@ class FontsColorsFrame(BuildFrame):
             rgba = Gdk.RGBA()
             rgba.parse(widget.get_text())
 
-            color_button = self.__dict__[Gtk.Buildable.get_name(widget).replace("Entry", "Pick")]
+            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
             color_button.set_rgba(rgba)
 
         self.needcolors = 1

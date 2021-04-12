@@ -61,12 +61,12 @@ def load_ui_elements(ui_class, filename):
         builder.set_translation_domain('nicotine')
         builder.add_from_file(filename)
 
-        for i in builder.get_objects():
+        for obj in builder.get_objects():
             try:
-                obj_name = Gtk.Buildable.get_name(i)
+                obj_name = Gtk.Buildable.get_name(obj)
 
                 if not obj_name.startswith("_"):
-                    ui_class.__dict__[obj_name] = i
+                    setattr(ui_class, obj_name, obj)
 
             except TypeError:
                 pass

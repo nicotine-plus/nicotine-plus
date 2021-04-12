@@ -56,9 +56,9 @@ class TransferList:
         self.frame = frame
         self.type = type
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", type + "s.ui"))
-        self.frame.__dict__[type + "svbox"].add(self.Main)
-        self.widget = widget = self.__dict__[type.title() + "List"]
+        load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
+        getattr(frame, type + "svbox").add(self.Main)
+        self.widget = widget = getattr(self, type.title() + "List")
 
         self.last_ui_update = self.last_save = 0
         self.list = []
@@ -139,8 +139,8 @@ class TransferList:
 
         widget.set_model(self.transfersmodel)
 
-        self.group_dropdown = frame.__dict__["ToggleTree%ss" % self.type.title()]
-        self.expand_button = frame.__dict__["Expand%ss" % self.type.title()]
+        self.group_dropdown = getattr(frame, "ToggleTree%ss" % self.type.title())
+        self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
         self.group_dropdown.connect("changed", self.on_toggle_tree)
         self.group_dropdown.set_active(frame.np.config.sections["transfers"]["group%ss" % self.type])
@@ -713,7 +713,7 @@ class TransferList:
 
     def on_expand_tree(self, widget):
 
-        expand_button_icon = self.frame.__dict__["Expand%ssImage" % self.type.title()]
+        expand_button_icon = getattr(self.frame, "Expand%ssImage" % self.type.title())
         expanded = widget.get_active()
 
         if expanded:

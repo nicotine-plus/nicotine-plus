@@ -210,8 +210,8 @@ class NicotineFrame:
         """ Entry Completion """
 
         for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
-            completion = self.__dict__[entry_name + "Completion"]
-            model = self.__dict__[entry_name + "Combo"].get_model()
+            completion = getattr(self, entry_name + "Completion")
+            model = getattr(self, entry_name + "Combo").get_model()
 
             completion.set_model(model)
             completion.set_text_column(0)
@@ -1280,13 +1280,13 @@ class NicotineFrame:
         if menu_parent is not None:
             menu_parent.remove(self.HeaderMenu)
 
-        end_widget = self.__dict__[page_id + "End"]
+        end_widget = getattr(self, page_id + "End")
         end_widget.add(self.HeaderMenu)
 
         key, mod = Gtk.accelerator_parse("F10")
         self.HeaderMenu.add_accelerator("clicked", self.accel_group, key, mod, Gtk.AccelFlags.VISIBLE)
 
-        header_bar = self.__dict__["Header" + page_id]
+        header_bar = getattr(self, "Header" + page_id)
         header_bar.set_title(GLib.get_application_name())
         self.MainWindow.set_titlebar(header_bar)
 
@@ -1302,17 +1302,17 @@ class NicotineFrame:
             # No toolbar needed for this page
             return
 
-        header_bar = self.__dict__["Header" + page_id]
-        toolbar = self.__dict__[page_id + "Toolbar"]
-        toolbar_contents = self.__dict__[page_id + "ToolbarContents"]
+        header_bar = getattr(self, "Header" + page_id)
+        toolbar = getattr(self, page_id + "Toolbar")
+        toolbar_contents = getattr(self, page_id + "ToolbarContents")
 
-        title_widget = self.__dict__[page_id + "Title"]
+        title_widget = getattr(self, page_id + "Title")
         title_widget.set_hexpand(True)
         header_bar.set_custom_title(None)
         toolbar_contents.add(title_widget)
 
         try:
-            start_widget = self.__dict__[page_id + "Start"]
+            start_widget = getattr(self, page_id + "Start")
             header_bar.remove(start_widget)
             toolbar_contents.add(start_widget)
 
@@ -1320,7 +1320,7 @@ class NicotineFrame:
             # No start widget
             pass
 
-        end_widget = self.__dict__[page_id + "End"]
+        end_widget = getattr(self, page_id + "End")
         header_bar.remove(end_widget)
         toolbar_contents.add(end_widget)
 
@@ -1346,17 +1346,17 @@ class NicotineFrame:
             # No toolbar on this page
             return
 
-        header_bar = self.__dict__["Header" + self.current_page_id]
-        toolbar = self.__dict__[self.current_page_id + "Toolbar"]
-        toolbar_contents = self.__dict__[self.current_page_id + "ToolbarContents"]
+        header_bar = getattr(self, "Header" + self.current_page_id)
+        toolbar = getattr(self, self.current_page_id + "Toolbar")
+        toolbar_contents = getattr(self, self.current_page_id + "ToolbarContents")
 
-        title_widget = self.__dict__[self.current_page_id + "Title"]
+        title_widget = getattr(self, self.current_page_id + "Title")
         title_widget.set_hexpand(False)
         toolbar_contents.remove(title_widget)
         header_bar.set_custom_title(title_widget)
 
         try:
-            start_widget = self.__dict__[self.current_page_id + "Start"]
+            start_widget = getattr(self, self.current_page_id + "Start")
             toolbar_contents.remove(start_widget)
             header_bar.add(start_widget)
 
@@ -1364,7 +1364,7 @@ class NicotineFrame:
             # No start widget
             pass
 
-        end_widget = self.__dict__[self.current_page_id + "End"]
+        end_widget = getattr(self, self.current_page_id + "End")
         toolbar_contents.remove(end_widget)
         header_bar.pack_end(end_widget)
 
@@ -1388,6 +1388,7 @@ class NicotineFrame:
 
     def initialize_main_tabs(self):
 
+        self.tab_popups = {}
         self.hidden_tabs = {}
         hide_tab_template = _("Hide %(tab)s")
 
@@ -1411,11 +1412,12 @@ class NicotineFrame:
             tab_text, tab_icon_name = tab_data[tab_label]
 
             # Initialize the image label
-            self.__dict__[tab_label_id] = tab_label = ImageLabel(
+            tab_label = ImageLabel(
                 tab_text, angle=self.np.config.sections["ui"]["labelmain"],
                 show_hilite_image=self.np.config.sections["notifications"]["notification_tab_icons"],
                 show_status_image=True
             )
+            setattr(self, tab_label_id, tab_label)
 
             tab_label.set_icon(tab_icon_name)
             tab_label.set_text_color()
@@ -1430,7 +1432,7 @@ class NicotineFrame:
             tab_label.connect('popup_menu', self.on_tab_popup, popup_id)
             tab_label.connect('touch_event', self.on_tab_click, popup_id)
 
-            self.__dict__[popup_id] = popup = PopupMenu(self)
+            self.tab_popups[popup_id] = popup = PopupMenu(self)
             popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
 
     def request_tab_icon(self, tab_label, status=1):
@@ -1632,7 +1634,7 @@ class NicotineFrame:
         del self.hidden_tabs[tab_box]
 
     def on_tab_popup(self, widget, popup_id):
-        self.__dict__[popup_id].popup()
+        self.tab_popups[popup_id].popup()
 
     def on_tab_click(self, widget, event, popup_id):
 
