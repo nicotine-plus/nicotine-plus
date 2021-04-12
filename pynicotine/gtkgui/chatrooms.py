@@ -216,8 +216,7 @@ class ChatRooms(IconNotebook):
             return
 
         meta = (msg.room == "Public ")
-        tab = ChatRoom(self, msg.room, msg.users, meta)
-        self.joinedrooms[msg.room] = tab
+        self.joinedrooms[msg.room] = tab = ChatRoom(self, msg.room, msg.users, meta)
 
         try:
             angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
@@ -409,6 +408,10 @@ class ChatRooms(IconNotebook):
 
         room.say_chat_room(msg, text, public=True)
 
+    def toggle_chat_buttons(self):
+        for room in self.joinedrooms.values():
+            room.toggle_chat_buttons()
+
     def update_visuals(self):
 
         for room in self.joinedrooms.values():
@@ -483,21 +486,18 @@ class ChatRoom:
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame
+        self.room = room
+        self.meta = meta  # not a real room if set to True
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)
-
-        self.room = room
-        self.leaving = 0
-        self.meta = meta  # not a real room if set to True
-        config = self.frame.np.config.sections
-
-        self.on_show_chat_buttons()
+        self.leaving = False
 
         self.clist = []
+        self.users = {}
 
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
@@ -505,11 +505,13 @@ class ChatRoom:
         # Chat Text Search
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
+        config = self.frame.np.config.sections
+
         # Spell Check
         if self.frame.spell_checker is None:
             self.frame.init_spell_checker()
 
-        if self.frame.spell_checker and self.frame.np.config.sections["ui"]["spellcheck"]:
+        if self.frame.spell_checker and config["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
             spell_buffer.set_spell_checker(self.frame.spell_checker)
@@ -518,21 +520,18 @@ class ChatRoom:
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin
-        completion = Gtk.EntryCompletion()
-        self.ChatEntry.set_completion(completion)
-        liststore = Gtk.ListStore(GObject.TYPE_STRING)
-        completion.set_model(liststore)
-        completion.set_text_column(0)
 
-        completion.set_match_func(entry_completion_find_match)
-        completion.connect("match-selected", entry_completion_found_match)
+        self.ChatCompletion.set_model(Gtk.ListStore(str))
+        self.ChatCompletion.set_match_func(entry_completion_find_match)
+        self.ChatCompletion.connect("match-selected", entry_completion_found_match)
 
         self.Log.set_active(config["logging"]["chatrooms"])
         if not self.Log.get_active():
             self.Log.set_active((self.room in config["logging"]["rooms"]))
 
-        if room in config["server"]["autojoin"]:
-            self.AutoJoin.set_active(True)
+        self.AutoJoin.set_active((room in config["server"]["autojoin"]))
+
+        self.toggle_chat_buttons()
 
         if room not in config["columns"]["chat_room"]:
             config["columns"]["chat_room"][room] = {}
@@ -548,6 +547,7 @@ class ChatRoom:
             GObject.TYPE_UINT64,  # (7)  files
             str                   # (8)  country
         )
+        self.UserList.set_model(self.usersmodel)
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
@@ -570,20 +570,12 @@ class ChatRoom:
         cols["country"].get_widget().hide()
 
         if config["columns"]["hideflags"]:
-            cols["country"].set_visible(0)
-            config["columns"]["chat_room"][room]["country"]["visible"] = False
-
-        self.users = {}
+            cols["country"].set_visible(False)
 
         for userdata in users:
             self.add_user_row(userdata)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-
-        self.create_tags()
-        self.update_visuals()
-
-        self.UserList.set_model(self.usersmodel)
 
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
@@ -594,8 +586,6 @@ class ChatRoom:
             ("#" + _("Sear_ch User's Files"), popup.on_search_user),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
-
-        self.ChatEntry.grab_focus()
 
         self.activitylogpopupmenu = PopupMenu(self.frame)
         self.activitylogpopupmenu.setup(
@@ -628,14 +618,13 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.buildingcompletion = False
-
+        self.ChatEntry.grab_focus()
         self.get_completion_list(clist=list(self.chatrooms.clist))
 
-        if config["logging"]["readroomlogs"]:
-            self.read_room_logs()
-
         self.count_users()
+        self.create_tags()
+        self.update_visuals()
+        self.read_room_logs()
 
     def add_user_row(self, userdata):
 
@@ -673,6 +662,10 @@ class ChatRoom:
     def read_room_logs(self):
 
         config = self.frame.np.config.sections
+
+        if not config["logging"]["readroomlogs"]:
+            return
+
         filename = self.room.replace(os.sep, "-") + ".log"
 
         try:
@@ -808,12 +801,8 @@ class ChatRoom:
             self.AboutChatRoomCommandsPopover.set_transitions_enabled(True)
             self.AboutChatRoomCommandsPopover.show()
 
-    def on_show_chat_buttons(self, show=True):
-
-        if self.frame.np.config.sections["ui"]["speechenabled"]:
-            self.Speech.show()
-        else:
-            self.Speech.hide()
+    def toggle_chat_buttons(self):
+        self.Speech.set_visible(self.frame.np.config.sections["ui"]["speechenabled"])
 
     def ticker_set(self, msg):
 
@@ -1353,7 +1342,7 @@ class ChatRoom:
         if self.leaving:
             return
 
-        self.leaving = 1
+        self.leaving = True
 
         config = self.frame.np.config.sections
 

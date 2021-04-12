@@ -15,6 +15,8 @@ Changes
 Corrections
 
  * Fixed an issue where scanning of shared files malfunctioned if the UI didn't load in time
+ * Fixed a critical error when a new room was joined while country flags were disabled
+ * Fixed a critical error when attempting to add wishlist items while disconnected from the server
  * Fixed a rare case where Nicotine+ could crash on startup
  * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
  * Fixed an issue where UI customizations were not applied to the preferences dialog

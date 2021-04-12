@@ -64,6 +64,7 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
+                <property name="completion">ChatCompletion</property>
                 <signal name="activate" handler="on_enter" swapped="no"/>
                 <signal name="key-press-event" handler="on_key_press" swapped="no"/>
               </object>
@@ -106,5 +107,9 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkEntryCompletion" id="ChatCompletion">
+    <property name="inline-completion">1</property>
+    <property name="text-column">0</property>
   </object>
 </interface>

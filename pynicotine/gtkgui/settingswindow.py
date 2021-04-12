@@ -192,8 +192,8 @@ class DownloadsFrame(BuildFrame):
         }
 
         self.filterlist = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_BOOLEAN
+            str,
+            bool
         )
         self.downloadfilters = []
 
@@ -212,7 +212,6 @@ class DownloadsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.filterlist, 1)
 
         self.FilterView.set_model(self.filterlist)
-        self.FilterView.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
 
@@ -503,7 +502,6 @@ class SharesFrame(BuildFrame):
         )
 
         self.Shares.set_model(self.shareslist)
-        self.Shares.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         initialise_columns(
             None,
@@ -513,7 +511,6 @@ class SharesFrame(BuildFrame):
         )
 
         self.BuddyShares.set_model(self.bshareslist)
-        self.BuddyShares.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.options = {
             "transfers": {
@@ -1084,7 +1081,6 @@ class BanListFrame(BuildFrame):
         )
 
         self.BannedList.set_model(self.banlist_model)
-        self.BannedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         self.blocked_list = {}
         self.blocked_list_model = Gtk.ListStore(str, str)
@@ -1099,7 +1095,6 @@ class BanListFrame(BuildFrame):
         cols["users"].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
-        self.BlockedList.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
     def set_settings(self, config):
         server = config["server"]
@@ -1608,7 +1603,7 @@ class TabsFrame(BuildFrame):
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
         # the second is a GtkPositionType
-        self.pos_list = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.pos_list = Gtk.ListStore(str, str)
         self.pos_list.append([_("Top"), "Top"])
         self.pos_list.append([_("Bottom"), "Bottom"])
         self.pos_list.append([_("Left"), "Left"])
@@ -1971,10 +1966,7 @@ class UrlCatchingFrame(BuildFrame):
             }
         }
 
-        self.protocolmodel = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING
-        )
+        self.protocolmodel = Gtk.ListStore(str, str)
 
         self.protocols = {}
 
@@ -1989,7 +1981,6 @@ class UrlCatchingFrame(BuildFrame):
         cols["handler"].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
-        self.ProtocolHandlers.get_selection().connect("changed", self.on_select)
 
         renderers = cols["handler"].get_cells()
         for render in renderers:
@@ -2120,7 +2111,7 @@ class CensorListFrame(BuildFrame):
             }
         }
 
-        self.censor_list_model = Gtk.ListStore(GObject.TYPE_STRING)
+        self.censor_list_model = Gtk.ListStore(str)
 
         cols = initialise_columns(
             None,
@@ -2221,10 +2212,7 @@ class AutoReplaceListFrame(BuildFrame):
             }
         }
 
-        self.replacelist = Gtk.ListStore(
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING
-        )
+        self.replacelist = Gtk.ListStore(str, str)
 
         cols = initialise_columns(
             None,
@@ -2641,7 +2629,7 @@ class BuildDialog(Gtk.Dialog):
         self.tw[name + "SW"].set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
         self.tw[name] = Gtk.TreeView()
-        self.tw[name].set_model(Gtk.ListStore(GObject.TYPE_STRING))
+        self.tw[name].set_model(Gtk.ListStore(str))
         self.tw[name + "SW"].add(self.tw[name])
 
         self.tw["box%d" % c].add(self.tw[name + "SW"])
@@ -2829,9 +2817,9 @@ class PluginsFrame(BuildFrame):
         }
 
         self.plugins_model = Gtk.ListStore(
-            GObject.TYPE_BOOLEAN,
-            GObject.TYPE_STRING,
-            GObject.TYPE_STRING
+            bool,
+            str,
+            str
         )
 
         self.plugins = []
@@ -2854,7 +2842,6 @@ class PluginsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
-        self.PluginTreeView.get_selection().connect("changed", self.on_select_plugin)
 
     def on_plugin_properties(self, widget):
 

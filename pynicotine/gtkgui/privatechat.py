@@ -30,7 +30,6 @@ from time import daylight
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -148,8 +147,7 @@ class PrivateChats(IconNotebook):
                 # Offline
                 status = 0
 
-            tab = PrivateChat(self, user, status)
-            self.users[user] = tab
+            self.users[user] = tab = PrivateChat(self, user, status)
 
             if user not in self.frame.np.config.sections["privatechat"]["users"]:
                 self.frame.np.config.sections["privatechat"]["users"].append(user)
@@ -336,13 +334,10 @@ class PrivateChat:
         self.chats = chats
         self.frame = chats.frame
 
-        # We should reference the user as soon as possible
-        self.chats.users[self.user] = self
-
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
 
-        self.autoreplied = 0
-        self.offlinemessage = 0
+        self.autoreplied = False
+        self.offlinemessage = False
         self.status = status
         self.clist = []
 
@@ -360,14 +355,9 @@ class PrivateChat:
             spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatLine)
             spell_view.set_inline_spell_checking(True)
 
-        completion = Gtk.EntryCompletion()
-        self.ChatLine.set_completion(completion)
-        liststore = Gtk.ListStore(GObject.TYPE_STRING)
-        completion.set_model(liststore)
-
-        completion.set_text_column(0)
-        completion.set_match_func(entry_completion_find_match)
-        completion.connect("match-selected", entry_completion_found_match)
+        self.ChatCompletion.set_model(Gtk.ListStore(str))
+        self.ChatCompletion.set_match_func(entry_completion_find_match)
+        self.ChatCompletion.connect("match-selected", entry_completion_found_match)
 
         self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
 
@@ -393,14 +383,12 @@ class PrivateChat:
             ("", None),
             (">" + _("User"), self.popup_menu_user),
         )
-
         popup.set_user(user)
 
         self.create_tags()
         self.update_visuals()
 
         self.chats.update_completions()
-
         self.read_private_log()
 
     def read_private_log(self):
@@ -448,7 +436,7 @@ class PrivateChat:
         timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
-        self.offlinemessage = 0
+        self.offlinemessage = False
         self.update_tags()
 
     def on_message_view_clicked(self, widget, event):
@@ -529,7 +517,7 @@ class PrivateChat:
                 self.tag_hilite,
                 timestamp_format=timestamp_format
             )
-            self.offlinemessage = 1
+            self.offlinemessage = True
 
         if newmessage and self.offlinemessage:
             self.offlinemessage = False
@@ -554,7 +542,7 @@ class PrivateChat:
         autoreply = self.frame.np.config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
             self.send_message("[Auto-Message] %s" % autoreply)
-            self.autoreplied = 1
+            self.autoreplied = True
 
         self.frame.notifications.new_tts(
             self.frame.np.config.sections["ui"]["speechprivate"] % {

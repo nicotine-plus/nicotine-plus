@@ -273,7 +273,6 @@ class Config:
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
                 "tab_status_icons": True,
-                "chat_hidebuttons": False,
                 "labelmain": 0,
                 "labelrooms": 0,
                 "labelprivate": 0,
@@ -651,6 +650,9 @@ class Config:
 
         # Remove option to reopen closed search tabs when new results come in
         self.remove_old_option("searches", "reopen_tabs")
+
+        # Remove option to toggle chatroom arrow buttons, since they no longer exist
+        self.remove_old_option("ui", "chat_hidebuttons")
 
     def remove_old_option(self, section, option):
 

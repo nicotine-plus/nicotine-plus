@@ -36,6 +36,11 @@
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                     <property name="search-column">1</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection">
+                        <signal name="changed" handler="on_select_plugin" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

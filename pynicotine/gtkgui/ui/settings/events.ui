@@ -143,7 +143,15 @@
             <child>
               <object class="GtkComboBoxText" id="DownloadDoubleClick">
                 <property name="visible">1</property>
-                <property name="model">liststore_DownloadDoubleClick</property>
+                <items>
+                  <item>Nothing</item>
+                  <item>Send to Player</item>
+                  <item>Open Folder</item>
+                  <item>Search</item>
+                  <item>Abort</item>
+                  <item>Clear</item>
+                  <item>Retry</item>
+                </items>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -153,7 +161,14 @@
             <child>
               <object class="GtkComboBoxText" id="UploadDoubleClick">
                 <property name="visible">1</property>
-                <property name="model">liststore_UploadDoubleClick</property>
+                <items>
+                  <item>Nothing</item>
+                  <item>Send to Player</item>
+                  <item>Open Folder</item>
+                  <item>Search</item>
+                  <item>Abort</item>
+                  <item>Clear</item>
+                </items>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -164,60 +179,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="liststore_DownloadDoubleClick">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Nothing</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Send to Player</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Open Folder</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Search</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Abort</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Clear</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Retry</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="liststore_UploadDoubleClick">
-    <columns>
-      <!-- column-name item -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Nothing</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Send to Player</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Open Folder</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Search</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Abort</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Clear</col>
-      </row>
-    </data>
   </object>
 </interface>

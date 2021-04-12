@@ -106,8 +106,7 @@ class UserList:
         cols["country"].get_widget().hide()
 
         if config["columns"]["hideflags"]:
-            cols["country"].set_visible(0)
-            config["columns"]["buddy_list"]["country"]["visible"] = 0
+            cols["country"].set_visible(False)
 
         for render in cols["trusted"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)

@@ -1007,12 +1007,11 @@ class NicotineFrame:
         self.np.config.sections["logging"]["debug"] = not state
 
     def set_show_flags(self, state):
+
         for room in self.chatrooms.joinedrooms:
             self.chatrooms.joinedrooms[room].cols["country"].set_visible(state)
-            self.np.config.sections["columns"]["chat_room"][room][1] = int(state)
 
         self.userlist.cols["country"].set_visible(state)
-        self.np.config.sections["columns"]["buddy_list"][1] = int(state)
 
     def on_show_flags(self, action, *args):
 
@@ -1976,15 +1975,6 @@ class NicotineFrame:
         self.np.queue.append(slskmessages.JoinRoom(room, private))
         widget.set_text("")
 
-    def on_show_chat_buttons(self, widget=None):
-
-        if widget is not None:
-            show = widget.get_active()
-            self.np.config.sections["ui"]["chat_hidebuttons"] = (not show)
-
-        for room in self.chatrooms.joinedrooms.values():
-            room.on_show_chat_buttons(not self.np.config.sections["ui"]["chat_hidebuttons"])
-
     """ Away Timer """
 
     def remove_away_timer(self, timerid):
@@ -2371,7 +2361,7 @@ class NicotineFrame:
             self.settingswindow.update_visuals()
             self.update_visuals()
 
-        self.on_show_chat_buttons()
+        self.chatrooms.toggle_chat_buttons()
 
         # Other notebooks
         for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):
