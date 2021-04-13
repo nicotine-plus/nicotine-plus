@@ -699,7 +699,7 @@ class UserBrowse:
             self.download_directory(self.selected_folder)
 
     def on_download_directory_recursive(self, *args):
-        self.download_directory(self.selected_folder, "", 1)
+        self.download_directory(self.selected_folder, prefix="", recurse=True)
 
     def on_download_directory_to(self, *args):
 
@@ -709,7 +709,7 @@ class UserBrowse:
             return
 
         try:
-            self.download_directory(self.selected_folder, os.path.join(folder[0], ""))
+            self.download_directory(self.selected_folder, prefix=os.path.join(folder[0], ""))
         except IOError:  # failed to open
             log.add('Failed to open %r for reading', folder[0])  # notify user
 
@@ -721,22 +721,22 @@ class UserBrowse:
             return
 
         try:
-            self.download_directory(self.selected_folder, os.path.join(folder[0], ""), 1)
+            self.download_directory(self.selected_folder, prefix=os.path.join(folder[0], ""), recurse=True)
         except IOError:  # failed to open
             log.add('Failed to open %r for reading', folder[0])  # notify user
 
-    def download_directory(self, folder, prefix="", recurse=0):
+    def download_directory(self, folder, prefix="", recurse=False):
 
         if self.frame.np.transfers is None or folder is None:
             return
 
-        ldir = prefix + folder.split("\\")[-1]
+        # Remember custom download location
+        self.frame.np.transfers.requested_folders[self.user][folder] = prefix
 
-        # Check if folder already exists on system
-        ldir = self.frame.np.transfers.get_folder_destination(self.user, ldir)
+        # Get final download destination
+        destination = self.frame.np.transfers.get_folder_destination(self.user, folder)
 
         for d, files in self.shares:
-
             # Find the wanted directory
             if d != folder:
                 continue
@@ -745,19 +745,13 @@ class UserBrowse:
                 files.sort(key=lambda x: x[1], reverse=True)
 
             for file in files:
-
-                path = "\\".join([folder, file[1]])
+                virtualpath = "\\".join([folder, file[1]])
                 size = file[2]
                 h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                 self.frame.np.transfers.get_file(
-                    self.user,
-                    path,
-                    ldir,
-                    size=size,
-                    bitrate=h_bitrate,
-                    length=h_length,
-                    checkduplicate=True
+                    self.user, virtualpath, destination,
+                    size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
                 )
 
         if not recurse:
@@ -765,7 +759,7 @@ class UserBrowse:
 
         for subdir, subf in self.shares:
             if folder in subdir and folder != subdir:
-                self.download_directory(subdir, os.path.join(ldir, ""))
+                self.download_directory(subdir, prefix=os.path.join(destination, ""))
 
     def on_download_files(self, *args, prefix=""):
 
@@ -775,23 +769,24 @@ class UserBrowse:
         folder = self.selected_folder
 
         for d, f in self.shares:
-
             # Find the wanted directory
             if d != folder:
                 continue
 
             for file in f:
-
                 # Find the wanted file
                 if file[1] not in self.selected_files:
                     continue
 
-                path = "\\".join([folder, file[1]])
+                virtualpath = "\\".join([folder, file[1]])
                 size = file[2]
                 h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
                 # Get the file
-                self.frame.np.transfers.get_file(self.user, path, prefix, size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True)
+                self.frame.np.transfers.get_file(
+                    self.user, virtualpath, prefix,
+                    size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
+                )
 
             # We have found the wanted directory: we can break out of the loop
             break

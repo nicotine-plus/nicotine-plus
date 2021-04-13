@@ -35,6 +35,7 @@ import stat
 import threading
 import time
 
+from collections import defaultdict
 from hashlib import md5
 from time import sleep
 
@@ -118,6 +119,7 @@ class Transfers:
         self.downloads = []
         self.uploads = []
         self.privilegedusers = set()
+        self.requested_folders = defaultdict(dict)
         userstatus = set()
 
         self.update_limits()
@@ -553,23 +555,14 @@ class Transfers:
                         files.sort(key=lambda x: x[1], reverse=True)
 
                     for file in files:
+                        virtualpath = directory.rstrip('\\') + '\\' + file[1]
                         destination = self.get_folder_destination(username, directory)
                         size = file[2]
                         h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
-                        if directory[-1] == '\\':
-                            filename = directory + file[1]
-                        else:
-                            filename = directory + '\\' + file[1]
-
                         self.get_file(
-                            username,
-                            filename,
-                            destination,
-                            size=size,
-                            bitrate=h_bitrate,
-                            length=h_length,
-                            checkduplicate=True
+                            username, virtualpath, destination,
+                            size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
                         )
 
                     log.add_transfer(
@@ -1636,7 +1629,10 @@ class Transfers:
         if status is None:
             self.eventprocessor.watch_user(user)
 
-        if transfer.status != "Filtered":
+        elif self.user_logged_out(user):
+            transfer.status = "User logged off"
+
+        if transfer.status not in ("Filtered", "User logged off"):
             if direction == 0:
                 log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
                     "filename": filename,
@@ -1738,28 +1734,21 @@ class Transfers:
 
     def get_folder_destination(self, user, directory):
 
-        destination = ""
+        # Check if a custom download location was specified
+        if user in self.requested_folders and directory in self.requested_folders[user] and self.requested_folders[user][directory]:
+            download_location = self.requested_folders[user][directory]
 
-        if user in self.eventprocessor.requested_folders:
-            if directory in self.eventprocessor.requested_folders[user]:
-                destination += self.eventprocessor.requested_folders[user][directory]
-
-        if directory[-1] == '\\':
-            parent = directory.split('\\')[-2]
         else:
-            parent = directory.split('\\')[-1]
+            download_location = self.eventprocessor.config.sections["transfers"]["downloaddir"]
 
-        destination = os.path.join(destination, parent)
+        # Get the last folder in directory path
+        target_name = directory.rstrip('\\').split('\\')[-1]
 
-        if destination[0] != '/':
-            destination = os.path.join(
-                self.eventprocessor.config.sections["transfers"]["downloaddir"],
-                destination
-            )
+        # Merge download path with target folder name
+        destination = os.path.join(download_location, target_name)
 
-        """ Make sure the target folder doesn't exist
-        If it exists, append a number to the folder name """
-
+        # Make sure the target folder doesn't exist
+        # If it exists, append a number to the folder name
         orig_destination = destination
         counter = 1
 

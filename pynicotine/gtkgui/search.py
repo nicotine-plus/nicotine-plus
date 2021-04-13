@@ -26,6 +26,8 @@ import os
 import re
 import sre_constants
 
+from collections import defaultdict
+
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject
@@ -1230,48 +1232,62 @@ class Search:
             self.on_download_files(prefix=folders)
             break
 
-    def on_download_folders(self, *args):
+    def on_download_folders(self, *args, download_location=""):
 
-        requested_folders = {}
+        if not self.frame.np.transfers:
+            return
+
+        if download_location:
+            """ Custom download location specified, remember it when peer sends a folder
+            contents reply """
+
+            requested_folders = self.frame.np.transfers.requested_folders
+        else:
+            requested_folders = defaultdict(dict)
 
         for i in self.selected_results:
-
             user = i[0]
             folder = i[1].rsplit('\\', 1)[0]
 
-            if user not in requested_folders:
-                requested_folders[user] = []
-
-            if folder not in requested_folders[user]:
+            if folder in requested_folders[user]:
                 """ Ensure we don't send folder content requests for a folder more than once,
                 e.g. when several selected resuls belong to the same folder. """
+                continue
 
-                self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
-                requested_folders[user].append(folder)
+            requested_folders[user][folder] = download_location
+
+            # First queue the visible search results
+            files = []
+            for row in self.all_data:
+
+                # Find the wanted directory
+                if folder != row[12].rsplit('\\', 1)[0]:
+                    continue
+
+                destination = self.frame.np.transfers.get_folder_destination(user, folder)
+                counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
+                files.append((user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
+
+            if self.frame.np.config.sections["transfers"]["reverseorder"]:
+                files.sort(key=lambda x: x[1], reverse=True)
+
+            for file in files:
+                user, fullpath, destination, size, bitrate, length = file
+
+                self.frame.np.transfers.get_file(
+                    user, fullpath, destination,
+                    size=size, bitrate=bitrate, length=length, checkduplicate=True
+                )
+
+            # Ask for the rest of the files in the folder
+            self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def on_download_folders_to(self, *args):
 
         directories = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
 
-        if not directories:
-            return
-
-        destination = directories[0]
-
-        for i in self.selected_results:
-
-            user = i[0]
-            folder = i[1].rsplit('\\', 1)[0]
-
-            if user not in self.frame.np.requested_folders:
-                self.frame.np.requested_folders[user] = {}
-
-            if folder not in self.frame.np.requested_folders[user]:
-                """ Ensure we don't send folder content requests for a folder more than once,
-                e.g. when several selected resuls belong to the same folder. """
-
-                self.frame.np.requested_folders[user][folder] = destination
-                self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+        if directories:
+            self.on_download_folders(download_location=directories[0])
 
     def on_copy_file_path(self, *args):
         user, path = next(iter(self.selected_results))[:2]

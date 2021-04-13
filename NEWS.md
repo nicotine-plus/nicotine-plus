@@ -18,6 +18,7 @@ Corrections
  * Fixed a critical error when a new room was joined while country flags were disabled
  * Fixed a critical error when attempting to add wishlist items while disconnected from the server
  * Fixed a rare case where Nicotine+ could crash on startup
+ * Attempting to download files of disconnected users now displays the 'User logged off' status immediately
  * Column widths of the currently selected user browse tab are now saved
  * UI customizations are once again applied to the preferences dialog
  * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
@@ -25,6 +26,7 @@ Corrections
 
 Issues closed on GitHub
 
+ * Download Folder function doesn't work from search when uploader is offline ([#511](https://github.com/Nicotine-Plus/nicotine-plus/issues/511))
  * Crash on startup ([#1041](https://github.com/Nicotine-Plus/nicotine-plus/issues/1041))
  * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))

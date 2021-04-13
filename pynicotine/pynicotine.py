@@ -184,7 +184,6 @@ class NetworkEventProcessor:
         self.has_parent = False
 
         self.requested_info = {}
-        self.requested_folders = {}
         self.speed = 0
 
         # Callback handlers for messages
