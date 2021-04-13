@@ -32,6 +32,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
@@ -40,6 +41,7 @@ from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
@@ -80,11 +82,11 @@ class ServerFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
-        server = config["server"]
+        server = config.sections["server"]
 
         if server["server"] is not None:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
@@ -116,7 +118,7 @@ class ServerFrame(BuildFrame):
             server = tuple(server)
 
         except Exception:
-            server = self.frame.np.config.defaults["server"]["server"]
+            server = config.defaults["server"]["server"]
 
         firstport = min(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
         lastport = max(self.FirstPort.get_value_as_int(), self.LastPort.get_value_as_int())
@@ -213,17 +215,17 @@ class DownloadsFrame(BuildFrame):
 
         self.FilterView.set_model(self.filterlist)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
 
         self.filtersiters = {}
         self.filterlist.clear()
 
-        if config["transfers"]["downloadfilters"]:
-            for dfilter in config["transfers"]["downloadfilters"]:
+        if config.sections["transfers"]["downloadfilters"]:
+            for dfilter in config.sections["transfers"]["downloadfilters"]:
                 dfilter, escaped = dfilter
                 self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
@@ -264,7 +266,7 @@ class DownloadsFrame(BuildFrame):
         """
 
         # Get the transfers section
-        transfers = self.frame.np.config.sections["transfers"]
+        transfers = config.sections["transfers"]
 
         # This function will be called upon creating the settings window,
         # so only force a scan if the user changes his donwload directory
@@ -397,9 +399,7 @@ class DownloadsFrame(BuildFrame):
         self.filtersiters = {}
         self.filterlist.clear()
 
-        defaults = self.frame.np.config.defaults
-
-        for dfilter in defaults["transfers"]["downloadfilters"]:
+        for dfilter in config.defaults["transfers"]["downloadfilters"]:
             dfilter, escaped = dfilter
             self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
 
@@ -522,13 +522,13 @@ class SharesFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        transfers = config["transfers"]
+        transfers = config.sections["transfers"]
         self.shareslist.clear()
         self.bshareslist.clear()
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
         self.on_enabled_buddy_shares_toggled(self.enableBuddyShares)
 
         if transfers["shared"] is not None:
@@ -623,17 +623,11 @@ class SharesFrame(BuildFrame):
 
             # If the directory is already shared
             if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
-
-                dlg = Gtk.MessageDialog(
-                    transient_for=self.Main.get_toplevel(),
-                    flags=0,
-                    type=Gtk.MessageType.WARNING,
-                    buttons=Gtk.ButtonsType.OK,
-                    text=_("Warning")
+                message_dialog(
+                    parent=self.Main.get_toplevel(),
+                    title=_("Unable to Share Folder"),
+                    message=_("The chosen folder is already shared")
                 )
-                dlg.format_secondary_text(_("The chosen folder is already shared"))
-                dlg.run()
-                dlg.destroy()
                 return
 
             virtual = combo_box_dialog(
@@ -648,17 +642,11 @@ class SharesFrame(BuildFrame):
 
             # If the virtual share name is not already used
             if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
-
-                dlg = Gtk.MessageDialog(
-                    transient_for=self.Main.get_toplevel(),
-                    flags=0,
-                    type=Gtk.MessageType.WARNING,
-                    buttons=Gtk.ButtonsType.OK,
-                    text=_("Warning")
+                message_dialog(
+                    parent=self.Main.get_toplevel(),
+                    title=_("Unable to Share Folder"),
+                    message=_("The chosen virtual name is either empty or already exists")
                 )
-                dlg.format_secondary_text(_("The chosen virtual name is either empty or already exists"))
-                dlg.run()
-                dlg.destroy()
                 return
 
             shareslist.append(
@@ -798,9 +786,9 @@ class UploadsFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         self.on_queue_use_slots_toggled(self.QueueUseSlots)
         self.on_limit_toggled(self.Limit)
@@ -855,12 +843,11 @@ class GeoBlockFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
-        transfers = config["transfers"]
-        self.p.set_widgets_data(config, self.options)
+    def set_settings(self):
+        self.p.set_widgets_data(self.options)
 
-        if transfers["geoblockcc"] is not None:
-            self.GeoBlockCC.set_text(transfers["geoblockcc"][0])
+        if config.sections["transfers"]["geoblockcc"] is not None:
+            self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
 
         self.on_geo_block_toggled(self.GeoBlock)
 
@@ -896,12 +883,12 @@ class UserInfoFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
-        if config["userinfo"]["descr"] is not None:
-            descr = unescape(config["userinfo"]["descr"])
+        if config.sections["userinfo"]["descr"] is not None:
+            descr = unescape(config.sections["userinfo"]["descr"])
             self.Description.get_buffer().set_text(descr)
 
     def get_settings(self):
@@ -961,14 +948,14 @@ class IgnoreListFrame(BuildFrame):
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
-    def set_settings(self, config):
-        server = config["server"]
+    def set_settings(self):
+        server = config.sections["server"]
 
         self.ignorelist.clear()
         self.ignored_ips_list.clear()
         self.ignored_users = []
         self.ignored_ips = {}
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         if server["ignorelist"] is not None:
             self.ignored_users = server["ignorelist"][:]
@@ -1096,14 +1083,14 @@ class BanListFrame(BuildFrame):
 
         self.BlockedList.set_model(self.blocked_list_model)
 
-    def set_settings(self, config):
-        server = config["server"]
-        transfers = config["transfers"]
+    def set_settings(self):
+        server = config.sections["server"]
+        transfers = config.sections["transfers"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
 
         self.banlist = server["banlist"][:]
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         if server["ipblocklist"] is not None:
             self.blocked_list = server["ipblocklist"].copy()
@@ -1219,16 +1206,13 @@ class TextToSpeechFrame(BuildFrame):
         }
 
     def on_default_private(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.PrivateMessage.set_text(defaults["ui"]["speechprivate"])
+        self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
 
     def on_default_rooms(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.RoomMessage.set_text(defaults["ui"]["speechrooms"])
+        self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
 
     def on_default_tts(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.TTSCommand.get_child().set_text(defaults["ui"]["speechcommand"])
+        self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
     def on_text_to_speech_toggled(self, widget):
 
@@ -1236,18 +1220,16 @@ class TextToSpeechFrame(BuildFrame):
 
         self.TTSGrid.set_sensitive(sensitive)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        ui = config["ui"]
-
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         for i in ["%(user)s", "%(message)s"]:
 
-            if i not in ui["speechprivate"]:
+            if i not in config.sections["ui"]["speechprivate"]:
                 self.default_private(None)
 
-            if i not in ui["speechrooms"]:
+            if i not in config.sections["ui"]["speechrooms"]:
                 self.default_rooms(None)
 
         self.on_text_to_speech_toggled(self.TextToSpeech)
@@ -1295,13 +1277,13 @@ class IconsFrame(BuildFrame):
         self.Trayicon_Msg.set_from_pixbuf(self.frame.images["trayicon_msg"])
         self.Notify.set_from_pixbuf(self.frame.images["notify"])
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
-        if config["ui"]["exitdialog"] is not None:
+        if config.sections["ui"]["exitdialog"] is not None:
 
-            exitdialog = int(config["ui"]["exitdialog"])
+            exitdialog = int(config.sections["ui"]["exitdialog"])
 
             if exitdialog == 1:
                 self.DialogOnClose.set_active(True)
@@ -1429,11 +1411,11 @@ class FontsColorsFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
-        self.update_color_buttons(config)
+        self.update_color_buttons()
         self.on_toggled_away_colors(self.DisplayAwayColors)
         self.needcolors = 0
 
@@ -1496,15 +1478,15 @@ class FontsColorsFrame(BuildFrame):
                 color_button.set_rgba(rgba)
                 break
 
-    def update_color_buttons(self, config):
+    def update_color_buttons(self):
 
         for section, color_ids in self.colorsd.items():
             for color_id in color_ids:
-                self.update_color_button(config, color_id)
+                self.update_color_button(config.sections, color_id)
 
     def set_default_color(self, section, color_id):
 
-        defaults = self.frame.np.config.defaults
+        defaults = config.defaults
         widget = self.options[section][color_id]
 
         if isinstance(widget, Gtk.Entry):
@@ -1656,9 +1638,9 @@ class TabsFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         # Function to set the default iter from the value found in the config file
         def set_active_conf(model, path, iterator, data):
@@ -1671,7 +1653,7 @@ class TabsFrame(BuildFrame):
             "tabsearch", "tabinfo", "tabbrowse"
         ]:
             # Get the value in the config file
-            config_val = config["ui"][opt]
+            config_val = config.sections["ui"][opt]
 
             # Iterate over entries to find which one should be active
             self.options["ui"][opt].get_model().foreach(set_active_conf, {
@@ -1747,8 +1729,8 @@ class LoggingFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
-        self.p.set_widgets_data(config, self.options)
+    def set_settings(self):
+        self.p.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -1776,16 +1758,13 @@ class LoggingFrame(BuildFrame):
         }
 
     def on_default_timestamp(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.LogFileFormat.set_text(defaults["logging"]["log_timestamp"])
+        self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
 
     def on_room_default_timestamp(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.ChatRoomFormat.set_text(defaults["logging"]["rooms_timestamp"])
+        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
 
     def on_private_default_timestamp(self, widget):
-        defaults = self.frame.np.config.defaults
-        self.PrivateChatFormat.set_text(defaults["logging"]["private_timestamp"])
+        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
 
 class SearchesFrame(BuildFrame):
@@ -1807,13 +1786,13 @@ class SearchesFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
         try:
-            searches = config["searches"]
+            searches = config.sections["searches"]
         except Exception:
             searches = None
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         if searches["defilter"] is not None:
             self.FilterIn.set_text(str(searches["defilter"][0]))
@@ -1890,8 +1869,8 @@ class AwayModeFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
-        self.p.set_widgets_data(config, self.options)
+    def set_settings(self):
+        self.p.set_widgets_data(self.options)
 
     def get_settings(self):
         try:
@@ -1929,8 +1908,8 @@ class EventsFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
-        self.p.set_widgets_data(config, self.options)
+    def set_settings(self):
+        self.p.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -1991,13 +1970,13 @@ class UrlCatchingFrame(BuildFrame):
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
         self.protocolmodel.clear()
         self.protocols.clear()
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
-        urls = config["urls"]
+        urls = config.sections["urls"]
 
         if urls["protocols"] is not None:
 
@@ -2137,11 +2116,11 @@ class CensorListFrame(BuildFrame):
         else:
             store.remove(iterator)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
         self.censor_list_model.clear()
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         self.on_censor_check(self.CensorCheck)
 
@@ -2239,10 +2218,10 @@ class AutoReplaceListFrame(BuildFrame):
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def set_settings(self, config):
+    def set_settings(self):
         self.replacelist.clear()
-        self.p.set_widgets_data(config, self.options)
-        words = config["words"]
+        self.p.set_widgets_data(self.options)
+        words = config.sections["words"]
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
                 try:
@@ -2301,9 +2280,8 @@ class AutoReplaceListFrame(BuildFrame):
     def on_defaults(self, widget):
 
         self.replacelist.clear()
-        defaults = self.frame.np.config.defaults
 
-        for word, replacement in defaults["words"]["autoreplaced"].items():
+        for word, replacement in config.defaults["words"]["autoreplaced"].items():
             self.replacelist.append([word, replacement])
 
 
@@ -2332,12 +2310,12 @@ class CompletionFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
+    def set_settings(self):
         self.needcompletion = 0
 
         self.SpellCheck.set_sensitive(True if self.frame.spell_checker else False)
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
     def on_completion_changed(self, widget):
         self.needcompletion = 1
@@ -2419,15 +2397,15 @@ class NowPlayingFrame(BuildFrame):
             self.get_format                # Callback to retrieve format text
         )
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
 
         # Save reference to format list for get_settings()
-        self.custom_format_list = config["players"]["npformatlist"]
+        self.custom_format_list = config.sections["players"]["npformatlist"]
 
         # Update UI with saved player
-        self.set_player(config["players"]["npplayer"])
+        self.set_player(config.sections["players"]["npplayer"])
         self.update_now_playing_info()
 
         # Add formats
@@ -2440,13 +2418,13 @@ class NowPlayingFrame(BuildFrame):
             for item in self.custom_format_list:
                 self.NPFormat.append_text(str(item))
 
-        if config["players"]["npformat"] == "":
+        if config.sections["players"]["npformat"] == "":
             # If there's no default format in the config: set the first of the list
             self.NPFormat.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
             for (i, v) in enumerate(self.NPFormat.get_model()):
-                if v[0] == config["players"]["npformat"]:
+                if v[0] == config.sections["players"]["npformat"]:
                     self.NPFormat.set_active(i)
 
     def get_player(self):
@@ -2565,8 +2543,8 @@ class NotificationsFrame(BuildFrame):
             }
         }
 
-    def set_settings(self, config):
-        self.p.set_widgets_data(config, self.options)
+    def set_settings(self):
+        self.p.set_widgets_data(self.options)
 
     def get_settings(self):
 
@@ -2678,27 +2656,27 @@ class BuildDialog(Gtk.Dialog):
         c = 0
 
         for name, data in options.items():
-            if plugin not in self.settings.frame.np.config.sections["plugins"] or name not in self.settings.frame.np.config.sections["plugins"][plugin]:
-                if plugin not in self.settings.frame.np.config.sections["plugins"]:
-                    print("No1 " + plugin + ", " + repr(list(self.settings.frame.np.config.sections["plugins"].keys())))
-                elif name not in self.settings.frame.np.config.sections["plugins"][plugin]:
-                    print("No2 " + name + ", " + repr(list(self.settings.frame.np.config.sections["plugins"][plugin].keys())))
+            if plugin not in config.sections["plugins"] or name not in config.sections["plugins"][plugin]:
+                if plugin not in config.sections["plugins"]:
+                    print("No1 " + plugin + ", " + repr(list(config.sections["plugins"].keys())))
+                elif name not in config.sections["plugins"][plugin]:
+                    print("No2 " + name + ", " + repr(list(config.sections["plugins"][plugin].keys())))
                 continue
 
-            value = self.settings.frame.np.config.sections["plugins"][plugin][name]
+            value = config.sections["plugins"][plugin][name]
 
             if data["type"] in ("integer", "int", "float"):
                 self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
 
             elif data["type"] in ("bool",):
                 self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.CheckButton()
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
 
             elif data["type"] in ("radio",):
@@ -2718,7 +2696,7 @@ class BuildDialog(Gtk.Dialog):
 
                     vbox.add(radio)
 
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
             elif data["type"] in ("dropdown",):
                 self.generate_widget_container(data["description"], c)
@@ -2728,21 +2706,21 @@ class BuildDialog(Gtk.Dialog):
                 for label in data["options"]:
                     self.tw[name].append_text(label)
 
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
 
             elif data["type"] in ("str", "string"):
                 self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.Entry()
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(self.tw[name])
 
             elif data["type"] in ("textview"):
                 self.generate_widget_container(data["description"], c)
 
                 self.tw[name] = Gtk.TextView()
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
                 self.tw["scrolledwindow%d" % c] = Gtk.ScrolledWindow()
                 self.tw["scrolledwindow%d" % c].set_hexpand(True)
@@ -2769,7 +2747,7 @@ class BuildDialog(Gtk.Dialog):
                     chooser = None
 
                 self.tw[name] = FileChooserButton(button_widget, self.PluginProperties, chooser)
-                self.settings.set_widget(self.tw[name], self.settings.frame.np.config.sections["plugins"][plugin][name])
+                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(button_widget)
 
             else:
@@ -2800,7 +2778,7 @@ class BuildDialog(Gtk.Dialog):
         for name in self.options:
             value = self.settings.get_widget_data(self.tw[name])
             if value is not None:
-                self.settings.frame.np.config.sections["plugins"][self.plugin][name] = value
+                config.sections["plugins"][self.plugin][name] = value
 
         self.PluginProperties.destroy()
         self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
@@ -2913,9 +2891,9 @@ class PluginsFrame(BuildFrame):
         else:
             self.PluginProperties.set_sensitive(False)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
-        self.p.set_widgets_data(config, self.options)
+        self.p.set_widgets_data(self.options)
         self.on_plugins_enable(None)
         self.pluginsiters = {}
         self.plugins_model.clear()
@@ -2926,7 +2904,7 @@ class PluginsFrame(BuildFrame):
                 info = self.frame.np.pluginhandler.get_plugin_info(plugin)
             except IOError:
                 continue
-            enabled = (plugin in config["plugins"]["enabled"])
+            enabled = (plugin in config.sections["plugins"]["enabled"])
             self.pluginsiters[filter] = self.plugins_model.append([enabled, info['Name'], plugin])
 
         return {}
@@ -3070,10 +3048,10 @@ class Settings:
 
             iterator = combobox.get_model().iter_next(iterator)
 
-    def set_widgets_data(self, config, options):
+    def set_widgets_data(self, options):
 
         for section, keys in options.items():
-            if section not in config:
+            if section not in config.sections:
                 continue
 
             for key in keys:
@@ -3082,10 +3060,10 @@ class Settings:
                 if widget is None:
                     continue
 
-                if config[section][key] is None:
+                if config.sections[section][key] is None:
                     self.clear_widget(widget)
                 else:
-                    self.set_widget(widget, config[section][key])
+                    self.set_widget(widget, config.sections[section][key])
 
     def get_widget_data(self, widget):
 
@@ -3203,10 +3181,10 @@ class Settings:
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)
 
-    def set_settings(self, config):
+    def set_settings(self):
 
         for page in self.pages.values():
-            page.set_settings(config)
+            page.set_settings()
 
     def get_settings(self):
 
@@ -3283,7 +3261,7 @@ class Settings:
             except AttributeError:
                 return
 
-            page.set_settings(self.frame.np.config.sections)
+            page.set_settings()
             self.update_visuals(page)
 
         self.viewport1.add(self.pages[page_id].Main)
@@ -3292,7 +3270,7 @@ class Settings:
 
         response = save_file(
             self.SettingsWindow.get_toplevel(),
-            os.path.dirname(self.frame.np.config.filename),
+            os.path.dirname(config.filename),
             "config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
             title=_("Pick a File Name for Config Backup")
         )
@@ -3300,7 +3278,7 @@ class Settings:
         if not response:
             return
 
-        error, message = self.frame.np.config.write_config_backup(response[0])
+        error, message = config.write_config_backup(response[0])
 
         if error:
             log.add(_("Error backing up config: %s"), message)

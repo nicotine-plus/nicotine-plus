@@ -37,6 +37,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
+from pynicotine.config import config
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
@@ -116,6 +117,24 @@ class NicotineFrame:
 
         log.add_listener(self.log_callback)
 
+        """ Configuration """
+
+        try:
+            config.load_config()
+
+        except Exception:
+            corruptfile = ".".join([config.filename, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
+
+            import shutil
+            shutil.move(config.filename, corruptfile)
+
+            short_message = _("Your config file is corrupt")
+            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
+
+            message_dialog(parent=self.MainWindow, title=short_message, message=long_message)
+
+            config.load_config()
+
         """ Network Event Processor """
 
         self.np = NetworkEventProcessor(
@@ -126,19 +145,17 @@ class NicotineFrame:
             self.port
         )
 
-        config = self.np.config.sections
-
         """ Previous away state """
 
-        self.away = config["server"]["away"]
+        self.away = config.sections["server"]["away"]
 
         """ GTK Settings """
 
         gtk_settings = Gtk.Settings.get_default()
-        gtk_settings.set_property("gtk-dialogs-use-header", config["ui"]["header_bar"])
+        gtk_settings.set_property("gtk-dialogs-use-header", config.sections["ui"]["header_bar"])
 
-        dark_mode = config["ui"]["dark_mode"]
-        global_font = config["ui"]["globalfont"]
+        dark_mode = config.sections["ui"]["dark_mode"]
+        global_font = config.sections["ui"]["globalfont"]
 
         if dark_mode:
             gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode)
@@ -172,12 +189,12 @@ class NicotineFrame:
             signal.signal(signal_type, self.on_quit)
 
         self.MainWindow.resize(
-            config["ui"]["width"],
-            config["ui"]["height"]
+            config.sections["ui"]["width"],
+            config.sections["ui"]["height"]
         )
 
-        xpos = config["ui"]["xposition"]
-        ypos = config["ui"]["yposition"]
+        xpos = config.sections["ui"]["xposition"]
+        ypos = config.sections["ui"]["yposition"]
 
         # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
         if min(xpos, ypos) < 0:
@@ -185,7 +202,7 @@ class NicotineFrame:
         else:
             self.MainWindow.move(xpos, ypos)
 
-        if config["ui"]["maximized"]:
+        if config.sections["ui"]["maximized"]:
             self.MainWindow.maximize()
 
         """ Notebooks """
@@ -230,16 +247,16 @@ class NicotineFrame:
         # Create the trayicon if needed
         # Tray icons don't work as expected on macOS
         if sys.platform != "darwin" and \
-                use_trayicon and config["ui"]["trayicon"]:
+                use_trayicon and config.sections["ui"]["trayicon"]:
             self.tray_icon.load()
 
         """ Element Visibility """
 
-        self.set_show_log(not config["logging"]["logcollapsed"])
-        self.set_show_debug(config["logging"]["debug"])
-        self.set_show_flags(not config["columns"]["hideflags"])
-        self.set_show_transfer_buttons(config["transfers"]["enabletransferbuttons"])
-        self.set_toggle_buddy_list(config["ui"]["buddylistinchatrooms"])
+        self.set_show_log(not config.sections["logging"]["logcollapsed"])
+        self.set_show_debug(config.sections["logging"]["debug"])
+        self.set_show_flags(not config.sections["columns"]["hideflags"])
+        self.set_show_transfer_buttons(config.sections["transfers"]["enabletransferbuttons"])
+        self.set_toggle_buddy_list(config.sections["ui"]["buddylistinchatrooms"])
 
         """ Tab Visibility/Order """
 
@@ -276,18 +293,18 @@ class NicotineFrame:
         """ Scanning """
 
         # Deactivate public shares related menu entries if we don't use them
-        if config["transfers"]["friendsonly"]:
+        if config.sections["transfers"]["friendsonly"]:
             self.rescan_public_action.set_enabled(False)
             self.browse_public_shares_action.set_enabled(False)
 
         # Deactivate buddy shares related menu entries if we don't use them
-        if not config["transfers"]["enablebuddyshares"]:
+        if not config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy_action.set_enabled(False)
             self.browse_buddy_shares_action.set_enabled(False)
 
         """ Transfer Statistics """
 
-        self.statistics = Statistics(self, self.np.config)
+        self.statistics = Statistics(self)
 
         """ Tab Signals """
 
@@ -297,7 +314,7 @@ class NicotineFrame:
 
         """ Plugins: loaded here to ensure all requirements are initialized """
 
-        self.np.pluginhandler = PluginHandler(self, self.np.config)
+        self.np.pluginhandler = PluginHandler(self, config)
 
         """ Apply UI Customizations """
 
@@ -306,19 +323,19 @@ class NicotineFrame:
         """ Show Window """
 
         # Check command line option and config option
-        if not start_hidden and not config["ui"]["startup_hidden"]:
+        if not start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
         """ Connect """
 
-        if self.np.config.need_config():
+        if config.need_config():
             self.connect_action.set_enabled(False)
             self.rescan_public_action.set_enabled(True)
 
             # Set up fast configure dialog
             self.on_fast_configure()
 
-        elif config["server"]["auto_connect_startup"]:
+        elif config.sections["server"]["auto_connect_startup"]:
             self.on_connect()
 
         self.update_bandwidth()
@@ -331,18 +348,17 @@ class NicotineFrame:
 
     def save_window_state(self):
 
-        config = self.np.config.sections["ui"]
         width, height = self.MainWindow.get_size()
         xpos, ypos = self.MainWindow.get_position()
 
-        config["height"] = height
-        config["width"] = width
+        config.sections["ui"]["height"] = height
+        config.sections["ui"]["width"] = width
 
-        config["xposition"] = xpos
-        config["yposition"] = ypos
+        config.sections["ui"]["xposition"] = xpos
+        config.sections["ui"]["yposition"] = ypos
 
-        config["maximized"] = self.MainWindow.is_maximized()
-        config["last_tab_id"] = self.MainNotebook.get_current_page()
+        config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
+        config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
 
         for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
             page.save_columns()
@@ -354,7 +370,7 @@ class NicotineFrame:
         if not self.away:
             self.set_user_status(_("Online"))
 
-            autoaway = self.np.config.sections["server"]["autoaway"]
+            autoaway = config.sections["server"]["autoaway"]
 
             if autoaway > 0:
                 self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
@@ -427,7 +443,7 @@ class NicotineFrame:
     def load_custom_icons(self, names):
         """ Load custom icon theme if one is selected """
 
-        if self.np.config.sections["ui"].get("icontheme"):
+        if config.sections["ui"].get("icontheme"):
             log.add_debug("Loading custom icons when available")
             extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
@@ -437,7 +453,7 @@ class NicotineFrame:
                 loaded = False
 
                 while not path or (exts and not loaded):
-                    path = os.path.expanduser(os.path.join(self.np.config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
+                    path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
 
                     if os.path.isfile(path):
                         try:
@@ -568,12 +584,7 @@ class NicotineFrame:
     """ General """
 
     def show_info_message(self, title, message):
-
-        dialog = Gtk.MessageDialog(type=Gtk.MessageType.WARNING, buttons=Gtk.ButtonsType.OK, message_format=title)
-        dialog.set_transient_for(self.application.get_active_window())
-        dialog.format_secondary_text(message)
-        dialog.run()
-        dialog.destroy()
+        message_dialog(parent=self.application.get_active_window(), title=title, message=message)
 
     """ Connection """
 
@@ -677,8 +688,6 @@ class NicotineFrame:
 
     def set_up_actions(self):
 
-        config = self.np.config.sections
-
         # File
 
         self.connect_action = Gio.SimpleAction.new("connect", None)
@@ -689,7 +698,7 @@ class NicotineFrame:
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
 
-        state = config["server"]["away"]
+        state = config.sections["server"]["away"]
         self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
@@ -716,32 +725,32 @@ class NicotineFrame:
 
         # View
 
-        state = config["ui"]["header_bar"]
+        state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_header_bar)
         self.MainWindow.add_action(action)
 
-        state = not config["logging"]["logcollapsed"]
+        state = not config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_log)
         self.MainWindow.add_action(action)
 
-        state = config["logging"]["debug"]
+        state = config.sections["logging"]["debug"]
         action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_debug)
         self.MainWindow.add_action(action)
 
-        state = not config["columns"]["hideflags"]
+        state = not config.sections["columns"]["hideflags"]
         action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_flags)
         self.MainWindow.add_action(action)
 
-        state = config["transfers"]["enabletransferbuttons"]
+        state = config.sections["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
 
-        state = self.verify_buddy_list_mode(config["ui"]["buddylistinchatrooms"])
+        state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
         self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
@@ -831,32 +840,32 @@ class NicotineFrame:
 
         # Debug Logging
 
-        state = (1 in config["logging"]["debugmodes"])
+        state = (1 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugwarnings", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_warnings)
         self.application.add_action(action)
 
-        state = (2 in config["logging"]["debugmodes"])
+        state = (2 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_searches)
         self.application.add_action(action)
 
-        state = (3 in config["logging"]["debugmodes"])
+        state = (3 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_connections)
         self.application.add_action(action)
 
-        state = (4 in config["logging"]["debugmodes"])
+        state = (4 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_messages)
         self.application.add_action(action)
 
-        state = (5 in config["logging"]["debugmodes"])
+        state = (5 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_transfers)
         self.application.add_action(action)
 
-        state = (6 in config["logging"]["debugmodes"])
+        state = (6 in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugstatistics", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_statistics)
         self.application.add_action(action)
@@ -893,7 +902,7 @@ class NicotineFrame:
 
         self.set_user_status("...")
 
-        server = self.np.config.sections["server"]["server"]
+        server = config.sections["server"]["server"]
         self.set_status_text(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
         self.np.queue.append(slskmessages.ServerConn(None, server))
 
@@ -908,7 +917,7 @@ class NicotineFrame:
 
     def on_away(self, *args):
         self.away = not self.away
-        self.np.config.sections["server"]["away"] = self.away
+        config.sections["server"]["away"] = self.away
         self._apply_away_state()
 
     def _apply_away_state(self):
@@ -931,7 +940,7 @@ class NicotineFrame:
         import urllib.parse
 
         url = "%(url)s" % {
-            'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(self.np.config.sections["server"]["login"])
+            'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(config.sections["server"]["login"])
         }
         open_uri(url, self.MainWindow)
 
@@ -953,7 +962,7 @@ class NicotineFrame:
                 self.fastconfigure.FastConfigureDialog.get_property("visible"):
             return
 
-        self.settingswindow.set_settings(self.np.config.sections)
+        self.settingswindow.set_settings()
 
         if page:
             self.settingswindow.set_active_page(page)
@@ -977,11 +986,11 @@ class NicotineFrame:
 
     def on_show_header_bar(self, action, *args):
 
-        state = self.np.config.sections["ui"]["header_bar"]
+        state = config.sections["ui"]["header_bar"]
         self.set_show_header_bar(not state)
         action.set_state(GLib.Variant.new_boolean(not state))
 
-        self.np.config.sections["ui"]["header_bar"] = not state
+        config.sections["ui"]["header_bar"] = not state
 
     def set_show_log(self, show):
         if show:
@@ -993,22 +1002,22 @@ class NicotineFrame:
 
     def on_show_log(self, action, *args):
 
-        state = self.np.config.sections["logging"]["logcollapsed"]
+        state = config.sections["logging"]["logcollapsed"]
         self.set_show_log(state)
         action.set_state(GLib.Variant.new_boolean(state))
 
-        self.np.config.sections["logging"]["logcollapsed"] = not state
+        config.sections["logging"]["logcollapsed"] = not state
 
     def set_show_debug(self, show):
         self.debugButtonsBox.set_visible(show)
 
     def on_show_debug(self, action, *args):
 
-        state = self.np.config.sections["logging"]["debug"]
+        state = config.sections["logging"]["debug"]
         self.set_show_debug(not state)
         action.set_state(GLib.Variant.new_boolean(not state))
 
-        self.np.config.sections["logging"]["debug"] = not state
+        config.sections["logging"]["debug"] = not state
 
     def set_show_flags(self, state):
 
@@ -1019,11 +1028,11 @@ class NicotineFrame:
 
     def on_show_flags(self, action, *args):
 
-        state = self.np.config.sections["columns"]["hideflags"]
+        state = config.sections["columns"]["hideflags"]
         self.set_show_flags(state)
         action.set_state(GLib.Variant.new_boolean(state))
 
-        self.np.config.sections["columns"]["hideflags"] = not state
+        config.sections["columns"]["hideflags"] = not state
 
     def set_show_transfer_buttons(self, show):
         self.downloads.DownloadButtons.set_visible(show)
@@ -1031,11 +1040,11 @@ class NicotineFrame:
 
     def on_show_transfer_buttons(self, action, *args):
 
-        state = self.np.config.sections["transfers"]["enabletransferbuttons"]
+        state = config.sections["transfers"]["enabletransferbuttons"]
         self.set_show_transfer_buttons(not state)
         action.set_state(GLib.Variant.new_boolean(not state))
 
-        self.np.config.sections["transfers"]["enabletransferbuttons"] = not state
+        config.sections["transfers"]["enabletransferbuttons"] = not state
 
     def set_toggle_buddy_list(self, mode):
 
@@ -1095,7 +1104,7 @@ class NicotineFrame:
         self.set_toggle_buddy_list(mode)
         action.set_state(state)
 
-        self.np.config.sections["ui"]["buddylistinchatrooms"] = mode
+        config.sections["ui"]["buddylistinchatrooms"] = mode
 
     # Shares
 
@@ -1111,10 +1120,10 @@ class NicotineFrame:
     def on_browse_public_shares(self, *args, folder=None):
         """ Browse your own public shares """
 
-        login = self.np.config.sections["server"]["login"]
+        login = config.sections["server"]["login"]
 
         # Deactivate if we only share with buddies
-        if self.np.config.sections["transfers"]["friendsonly"]:
+        if config.sections["transfers"]["friendsonly"]:
             msg = slskmessages.SharedFileList(None, {})
         else:
             msg = self.np.shares.get_compressed_shares_message("normal")
@@ -1129,10 +1138,10 @@ class NicotineFrame:
     def on_browse_buddy_shares(self, *args, folder=None):
         """ Browse your own buddy shares """
 
-        login = self.np.config.sections["server"]["login"]
+        login = config.sections["server"]["login"]
 
         # Show public shares if we don't have specific shares for buddies
-        if not self.np.config.sections["transfers"]["enablebuddyshares"]:
+        if not config.sections["transfers"]["enablebuddyshares"]:
             msg = self.np.shares.get_compressed_shares_message("normal")
         else:
             msg = self.np.shares.get_compressed_shares_message("buddy")
@@ -1379,7 +1388,7 @@ class NicotineFrame:
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
-        if self.np.config.sections["ui"]["header_bar"]:
+        if config.sections["ui"]["header_bar"]:
             self.set_header_bar(page_id)
 
         else:
@@ -1417,8 +1426,8 @@ class NicotineFrame:
 
             # Initialize the image label
             tab_label = ImageLabel(
-                tab_text, angle=self.np.config.sections["ui"]["labelmain"],
-                show_hilite_image=self.np.config.sections["notifications"]["notification_tab_icons"],
+                tab_text, angle=config.sections["ui"]["labelmain"],
+                show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
                 show_status_image=True
             )
             setattr(self, tab_label_id, tab_label)
@@ -1515,14 +1524,14 @@ class NicotineFrame:
     def on_page_removed(self, main_notebook, child, page_num):
 
         name = self.match_main_notebox(child)
-        self.np.config.sections["ui"]["modes_visible"][name] = False
+        config.sections["ui"]["modes_visible"][name] = False
 
         self.on_page_reordered(main_notebook, child, page_num)
 
     def on_page_added(self, main_notebook, child, page_num):
 
         name = self.match_main_notebox(child)
-        self.np.config.sections["ui"]["modes_visible"][name] = True
+        config.sections["ui"]["modes_visible"][name] = True
 
         self.on_page_reordered(main_notebook, child, page_num)
 
@@ -1534,7 +1543,7 @@ class NicotineFrame:
             tab_box = self.MainNotebook.get_nth_page(i)
             tab_names.append(self.match_main_notebox(tab_box))
 
-        self.np.config.sections["ui"]["modes_order"] = tab_names
+        config.sections["ui"]["modes_order"] = tab_names
 
         if main_notebook.get_n_pages() <= 1:
             main_notebook.set_show_tabs(False)
@@ -1558,7 +1567,7 @@ class NicotineFrame:
 
     def set_main_tabs_reorderable(self):
 
-        reorderable = self.np.config.sections["ui"]["tab_reorderable"]
+        reorderable = config.sections["ui"]["tab_reorderable"]
 
         for i in range(self.MainNotebook.get_n_pages()):
             tab_box = self.MainNotebook.get_nth_page(i)
@@ -1566,7 +1575,7 @@ class NicotineFrame:
 
     def set_main_tabs_order(self):
 
-        tab_names = self.np.config.sections["ui"]["modes_order"]
+        tab_names = config.sections["ui"]["modes_order"]
         order = 0
 
         for name in tab_names:
@@ -1576,7 +1585,7 @@ class NicotineFrame:
 
     def set_main_tabs_visibility(self):
 
-        tab_names = self.np.config.sections["ui"]["modes_visible"]
+        tab_names = config.sections["ui"]["modes_visible"]
 
         for name in tab_names:
             if tab_names[name]:
@@ -1598,10 +1607,10 @@ class NicotineFrame:
         default_page = self.MainNotebook.get_nth_page(0)
         self.MainNotebook.emit("switch-page", default_page, 0)
 
-        if not self.np.config.sections["ui"]["tab_select_previous"]:
+        if not config.sections["ui"]["tab_select_previous"]:
             return
 
-        last_tab_id = int(self.np.config.sections["ui"]["last_tab_id"])
+        last_tab_id = int(config.sections["ui"]["last_tab_id"])
 
         if 0 <= last_tab_id <= self.MainNotebook.get_n_pages():
             self.MainNotebook.set_current_page(last_tab_id)
@@ -1633,7 +1642,7 @@ class NicotineFrame:
 
         self.MainNotebook.append_page(tab_box, event_box)
         self.set_tab_expand(tab_box)
-        self.MainNotebook.set_tab_reorderable(tab_box, self.np.config.sections["ui"]["tab_reorderable"])
+        self.MainNotebook.set_tab_reorderable(tab_box, config.sections["ui"]["tab_reorderable"])
 
         del self.hidden_tabs[tab_box]
 
@@ -1651,7 +1660,7 @@ class NicotineFrame:
     def set_tab_expand(self, tab_box):
 
         tab_label = self.MainNotebook.get_tab_label(tab_box)
-        tab_position = self.np.config.sections["ui"]["tabmain"]
+        tab_position = config.sections["ui"]["tabmain"]
 
         if tab_position in ("Left", "left", _("Left")) or \
                 tab_position in ("Right", "right", _("Right")):
@@ -1683,7 +1692,7 @@ class NicotineFrame:
 
     def set_tab_positions(self):
 
-        ui = self.np.config.sections["ui"]
+        ui = config.sections["ui"]
 
         # Main notebook
         tab_position = ui["tabmain"]
@@ -1835,10 +1844,10 @@ class NicotineFrame:
         msg = slskmessages.UserInfoRequest(None)
 
         # Hack for local userinfo requests, for extra security
-        if user == self.np.config.sections["server"]["login"]:
+        if user == config.sections["server"]["login"]:
             try:
-                if self.np.config.sections["userinfo"]["pic"] != "":
-                    userpic = self.np.config.sections["userinfo"]["pic"]
+                if config.sections["userinfo"]["pic"] != "":
+                    userpic = config.sections["userinfo"]["pic"]
                     if os.path.exists(userpic):
                         msg.has_pic = True
                         with open(userpic, 'rb') as f:
@@ -1852,16 +1861,16 @@ class NicotineFrame:
             except Exception:
                 msg.pic = None
 
-            msg.descr = unescape(self.np.config.sections["userinfo"]["descr"])
+            msg.descr = unescape(config.sections["userinfo"]["descr"])
 
             if self.np.transfers is not None:
 
                 msg.totalupl = self.np.transfers.get_total_uploads_allowed()
                 msg.queuesize = self.np.transfers.get_upload_queue_size()
                 msg.slotsavail = self.np.transfers.allow_new_uploads()
-                ua = self.np.config.sections["transfers"]["remotedownloads"]
+                ua = config.sections["transfers"]["remotedownloads"]
                 if ua:
-                    msg.uploadallowed = self.np.config.sections["transfers"]["uploadallowed"]
+                    msg.uploadallowed = config.sections["transfers"]["uploadallowed"]
                 else:
                     msg.uploadallowed = ua
 
@@ -1876,11 +1885,11 @@ class NicotineFrame:
     def browse_user(self, user, folder=None, local_shares_type=None):
         """ Browse a user shares """
 
-        login = self.np.config.sections["server"]["login"]
+        login = config.sections["server"]["login"]
 
         if user is not None:
             if user == login:
-                if local_shares_type == "normal" or not self.np.config.sections["transfers"]["enablebuddyshares"]:
+                if local_shares_type == "normal" or not config.sections["transfers"]["enablebuddyshares"]:
                     self.on_browse_public_shares(folder=folder)
                 else:
                     self.on_browse_buddy_shares(folder=folder)
@@ -1911,7 +1920,7 @@ class NicotineFrame:
 
     def on_load_from_disk(self, *args):
 
-        sharesdir = os.path.join(self.np.config.data_dir, "usershares")
+        sharesdir = os.path.join(config.data_dir, "usershares")
         try:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
@@ -2010,7 +2019,7 @@ class NicotineFrame:
         if self.awaytimerid is not None:
             self.remove_away_timer(self.awaytimerid)
 
-            autoaway = self.np.config.sections["server"]["autoaway"]
+            autoaway = config.sections["server"]["autoaway"]
             if autoaway > 0:
                 self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
             else:
@@ -2075,7 +2084,7 @@ class NicotineFrame:
         pydoc pynicotine.logfacility.logger.add
         '''
 
-        if self.np.config.sections["logging"]["logcollapsed"]:
+        if config.sections["logging"]["logcollapsed"]:
             # Make sure we don't attempt to scroll in the log window
             # if it's hidden, to prevent those nasty GTK warnings :)
 
@@ -2110,34 +2119,32 @@ class NicotineFrame:
 
     def on_view_debug_logs(self, *args):
 
-        log_path = self.np.config.sections["logging"]["debuglogsdir"]
+        log_path = config.sections["logging"]["debuglogsdir"]
 
         try:
             if not os.path.isdir(log_path):
                 os.makedirs(log_path)
 
-            open_file_path(self.np.config.sections["logging"]["debuglogsdir"])
+            open_file_path(config.sections["logging"]["debuglogsdir"])
 
         except Exception as e:
             log.add("Failed to open debug log folder: %s", e)
 
     def on_view_transfer_log(self, *args):
-        open_log(self.np.config.sections["logging"]["transferslogsdir"], "transfers")
+        open_log(config.sections["logging"]["transferslogsdir"], "transfers")
 
     def on_clear_log_window(self, *args):
         self.LogWindow.get_buffer().set_text("")
 
     def add_debug_level(self, debug_level):
 
-        if debug_level not in self.np.config.sections["logging"]["debugmodes"]:
-            self.np.config.sections["logging"]["debugmodes"].append(debug_level)
-            log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
+        if debug_level not in config.sections["logging"]["debugmodes"]:
+            config.sections["logging"]["debugmodes"].append(debug_level)
 
     def remove_debug_level(self, debug_level):
 
-        if debug_level in self.np.config.sections["logging"]["debugmodes"]:
-            self.np.config.sections["logging"]["debugmodes"].remove(debug_level)
-            log.set_log_levels(self.np.config.sections["logging"]["debugmodes"])
+        if debug_level in config.sections["logging"]["debugmodes"]:
+            config.sections["logging"]["debugmodes"].remove(debug_level)
 
     def on_debug_warnings(self, action, state):
 
@@ -2300,21 +2307,13 @@ class NicotineFrame:
         if not isinstance(output, tuple):
             return
 
-        needportmap, needrescan, needcolors, needcompletion, config = output
+        needportmap, needrescan, needcolors, needcompletion, new_config = output
 
-        for key, data in config.items():
-            self.np.config.sections[key].update(data)
-
-        config = self.np.config.sections
-
-        should_log = config["logging"]["debug_file_output"]
-        log_folder = config["logging"]["debuglogsdir"]
-        timestamp_format = config["logging"]["log_timestamp"]
-
-        log.update_debug_log_options(should_log, log_folder, timestamp_format)
+        for key, data in new_config.items():
+            config.sections[key].update(data)
 
         # UPnP
-        if not config["server"]["upnp"] and self.np.upnp_timer:
+        if not config.sections["server"]["upnp"] and self.np.upnp_timer:
             self.np.upnp_timer.cancel()
 
         if needportmap:
@@ -2324,35 +2323,32 @@ class NicotineFrame:
         if self.np.transfers:
             self.np.transfers.update_limits()
 
-        # Search
-        if self.searches:
-            self.searches.maxdisplayedresults = config["searches"]["max_displayed_results"]
-            self.searches.maxstoredresults = config["searches"]["max_stored_results"]
-
         # Modify GUI
         self.downloads.update_download_filters()
-        self.np.config.write_configuration()
+        config.write_configuration()
 
-        if not config["ui"]["trayicon"] and self.tray_icon.is_visible():
+        if not config.sections["ui"]["trayicon"] and self.tray_icon.is_visible():
             self.tray_icon.hide()
 
-        elif config["ui"]["trayicon"] and not self.tray_icon.is_visible():
+        elif config.sections["ui"]["trayicon"] and not self.tray_icon.is_visible():
             self.tray_icon.load()
 
         if needcompletion:
             self.chatrooms.update_completions()
             self.privatechats.update_completions()
 
-        dark_mode_state = config["ui"]["dark_mode"]
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        gtk_settings = Gtk.Settings.get_default()
+
+        dark_mode_state = config.sections["ui"]["dark_mode"]
+        gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode_state)
 
         if needcolors:
-            global_font = config["ui"]["globalfont"]
+            global_font = config.sections["ui"]["globalfont"]
 
             if global_font == "Normal":
-                Gtk.Settings.get_default().reset_property("gtk-font-name")
+                gtk_settings.reset_property("gtk-font-name")
             else:
-                Gtk.Settings.get_default().set_property("gtk-font-name", global_font)
+                gtk_settings.set_property("gtk-font-name", global_font)
 
             self.chatrooms.update_visuals()
             self.privatechats.update_visuals()
@@ -2371,23 +2367,23 @@ class NicotineFrame:
 
         # Other notebooks
         for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):
-            w.set_tab_closers(config["ui"]["tabclosers"])
-            w.set_reorderable(config["ui"]["tab_reorderable"])
-            w.show_hilite_images(config["notifications"]["notification_tab_icons"])
+            w.set_tab_closers(config.sections["ui"]["tabclosers"])
+            w.set_reorderable(config.sections["ui"]["tab_reorderable"])
+            w.show_hilite_images(config.sections["notifications"]["notification_tab_icons"])
             w.set_text_colors(None)
 
         for w in (self.privatechats, self.userinfo, self.userbrowse):
-            w.show_status_images(config["ui"]["tab_status_icons"])
+            w.show_status_images(config.sections["ui"]["tab_status_icons"])
 
         # Main notebook
         for i in range(self.MainNotebook.get_n_pages()):
             tab_box = self.MainNotebook.get_nth_page(i)
             tab_label = self.MainNotebook.get_tab_label(tab_box)
 
-            tab_label.show_hilite_image(config["notifications"]["notification_tab_icons"])
+            tab_label.show_hilite_image(config.sections["notifications"]["notification_tab_icons"])
             tab_label.set_text_color(0)
 
-            self.MainNotebook.set_tab_reorderable(tab_box, config["ui"]["tab_reorderable"])
+            self.MainNotebook.set_tab_reorderable(tab_box, config.sections["ui"]["tab_reorderable"])
 
         self.set_tab_positions()
 
@@ -2397,14 +2393,14 @@ class NicotineFrame:
         if msg == "ok" and needrescan:
 
             # Rescan public shares if needed
-            if not self.np.config.sections["transfers"]["friendsonly"]:
+            if not config.sections["transfers"]["friendsonly"]:
                 self.on_rescan()
 
             # Rescan buddy shares if needed
-            if self.np.config.sections["transfers"]["enablebuddyshares"]:
+            if config.sections["transfers"]["enablebuddyshares"]:
                 self.on_buddy_rescan()
 
-        if self.np.config.need_config():
+        if config.need_config():
             if self.np.transfers is not None:
                 self.connect_action.set_enabled(False)
 
@@ -2414,7 +2410,7 @@ class NicotineFrame:
             if self.np.transfers is None:
                 self.connect_action.set_enabled(True)
 
-        if msg == "ok" and not self.np.config.sections["ui"]["trayicon"]:
+        if msg == "ok" and not config.sections["ui"]["trayicon"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
     """ Exit """
@@ -2448,11 +2444,11 @@ class NicotineFrame:
 
     def on_delete_event(self, widget, event):
 
-        if not self.np.config.sections["ui"]["exitdialog"]:
+        if not config.sections["ui"]["exitdialog"]:
             self.save_state()
             return False
 
-        if self.np.config.sections["ui"]["exitdialog"] == 2:
+        if config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
             return True
@@ -2482,13 +2478,13 @@ class NicotineFrame:
         if response == Gtk.ResponseType.OK:
 
             if checkbox:
-                self.np.config.sections["ui"]["exitdialog"] = 0
+                config.sections["ui"]["exitdialog"] = 0
 
             self.on_quit()
 
         elif response == Gtk.ResponseType.REJECT:
             if checkbox:
-                self.np.config.sections["ui"]["exitdialog"] = 2
+                config.sections["ui"]["exitdialog"] = 2
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
 
@@ -2525,7 +2521,7 @@ class NicotineFrame:
         # Save window state (window size, position, columns)
         self.save_window_state()
 
-        self.np.config.write_configuration()
+        config.write_configuration()
 
         # Closing up all shelves db
         self.np.shares.close_shares("normal")

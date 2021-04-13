@@ -26,6 +26,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -136,11 +137,11 @@ class Interests:
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
-        for thing in self.np.config.sections["interests"]["likes"]:
+        for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
                 self.likes[thing] = self.likes_model.append([thing])
 
-        for thing in self.np.config.sections["interests"]["dislikes"]:
+        for thing in config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
                 self.dislikes[thing] = self.dislikes_model.append([thing])
 
@@ -184,11 +185,11 @@ class Interests:
         thing = widget.get_text()
         widget.set_text("")
 
-        if thing and thing.lower() not in self.np.config.sections["interests"]["likes"]:
+        if thing and thing.lower() not in config.sections["interests"]["likes"]:
             thing = thing.lower()
-            self.np.config.sections["interests"]["likes"].append(thing)
+            config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget, *args):
@@ -196,25 +197,25 @@ class Interests:
         thing = widget.get_text()
         widget.set_text("")
 
-        if thing and thing.lower() not in self.np.config.sections["interests"]["dislikes"]:
+        if thing and thing.lower() not in config.sections["interests"]["dislikes"]:
             thing = thing.lower()
-            self.np.config.sections["interests"]["dislikes"].append(thing)
+            config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
 
     def on_remove_thing_i_like(self, *args):
 
         thing = self.til_popup_menu.get_user()
 
-        if thing not in self.np.config.sections["interests"]["likes"]:
+        if thing not in config.sections["interests"]["likes"]:
             return
 
         self.likes_model.remove(self.likes[thing])
         del self.likes[thing]
-        self.np.config.sections["interests"]["likes"].remove(thing)
+        config.sections["interests"]["likes"].remove(thing)
 
-        self.np.config.write_configuration()
+        config.write_configuration()
         self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
     def on_til_recommend_search(self, *args):
@@ -224,14 +225,14 @@ class Interests:
 
         thing = self.tidl_popup_menu.get_user()
 
-        if thing not in self.np.config.sections["interests"]["dislikes"]:
+        if thing not in config.sections["interests"]["dislikes"]:
             return
 
         self.dislikes_model.remove(self.dislikes[thing])
         del self.dislikes[thing]
-        self.np.config.sections["interests"]["dislikes"].remove(thing)
+        config.sections["interests"]["dislikes"].remove(thing)
 
-        self.np.config.write_configuration()
+        config.write_configuration()
         self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
     def on_tidl_recommend_search(self, *args):
@@ -242,20 +243,20 @@ class Interests:
         thing = self.r_popup_menu.get_user()
 
         if state.get_boolean() and \
-                thing and thing not in self.np.config.sections["interests"]["likes"]:
-            self.np.config.sections["interests"]["likes"].append(thing)
+                thing and thing not in config.sections["interests"]["likes"]:
+            config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.append([thing])
 
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.AddThingILike(thing))
 
         elif not state and \
-                thing and thing in self.np.config.sections["interests"]["likes"]:
+                thing and thing in config.sections["interests"]["likes"]:
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
-            self.np.config.sections["interests"]["likes"].remove(thing)
+            config.sections["interests"]["likes"].remove(thing)
 
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.RemoveThingILike(thing))
 
         action.set_state(state)
@@ -265,20 +266,20 @@ class Interests:
         thing = self.r_popup_menu.get_user()
 
         if state.get_boolean() and \
-                thing and thing not in self.np.config.sections["interests"]["dislikes"]:
-            self.np.config.sections["interests"]["dislikes"].append(thing)
+                thing and thing not in config.sections["interests"]["dislikes"]:
+            config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.append([thing])
 
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
 
         elif not state and \
-                thing and thing in self.np.config.sections["interests"]["dislikes"]:
+                thing and thing in config.sections["interests"]["dislikes"]:
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
-            self.np.config.sections["interests"]["dislikes"].remove(thing)
+            config.sections["interests"]["dislikes"].remove(thing)
 
-            self.np.config.write_configuration()
+            config.write_configuration()
             self.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
         action.set_state(state)
@@ -416,10 +417,10 @@ class Interests:
 
         actions = self.r_popup_menu.get_actions()
         actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in self.np.config.sections["interests"]["likes"])
+            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
         actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in self.np.config.sections["interests"]["dislikes"])
+            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
         self.r_popup_menu.popup()

@@ -1,4 +1,5 @@
 from gi.repository import Gio
+from pynicotine.config import config
 from pynicotine.pluginsystem import BasePlugin
 
 
@@ -55,7 +56,7 @@ class Plugin(BasePlugin):
     def get_current_mpris_player(self):
         """ Returns the MPRIS client currently selected in Now Playing """
 
-        player = self.frame.np.config.sections["players"]["npothercommand"]
+        player = config.sections["players"]["npothercommand"]
 
         if not player:
             dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
@@ -102,7 +103,7 @@ class Plugin(BasePlugin):
 
     def song_change(self, connection, sender_name, object_path, interface_name, signal_name, parameters):
 
-        if self.frame.np.config.sections["players"]["npplayer"] != "mpris":
+        if config.sections["players"]["npplayer"] != "mpris":
             # MPRIS is not active, exit
             return
 

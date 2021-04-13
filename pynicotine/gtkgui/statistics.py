@@ -20,6 +20,7 @@ import os
 
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.utils import human_size
@@ -27,21 +28,20 @@ from pynicotine.utils import human_size
 
 class Statistics:
 
-    def __init__(self, frame, config):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.config = config
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "statistics.ui"))
         self.StatisticsDialog.set_transient_for(frame.MainWindow)
 
         # Initialize stats
-        for stat_id in self.config.defaults["statistics"]:
+        for stat_id in config.defaults["statistics"]:
             self.update_stat_value(stat_id, 0)
 
     def update_stat_value(self, stat_id, session_value):
 
-        total_value = self.config.sections["statistics"][stat_id]
+        total_value = config.sections["statistics"][stat_id]
 
         if stat_id == "downloaded_size" or stat_id == "uploaded_size":
             session_value = human_size(session_value)

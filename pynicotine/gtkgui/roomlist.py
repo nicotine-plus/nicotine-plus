@@ -29,6 +29,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -82,7 +83,7 @@ class RoomList:
         self.search_iter = None
         self.query = ""
 
-        self.AcceptPrivateRoom.set_active(self.frame.np.config.sections["server"]["private_chatrooms"])
+        self.AcceptPrivateRoom.set_active(config.sections["server"]["private_chatrooms"])
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
         frame.RoomList.connect("clicked", self.show)
@@ -100,7 +101,7 @@ class RoomList:
     def is_private_room_owned(self, room):
 
         if room in self.private_rooms:
-            if self.private_rooms[room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+            if self.private_rooms[room]["owner"] == config.sections["server"]["login"]:
                 return True
 
         return False
@@ -115,7 +116,7 @@ class RoomList:
     def is_private_room_operator(self, room):
 
         if room in self.private_rooms:
-            if self.frame.np.config.sections["server"]["login"] in self.private_rooms[room]["operators"]:
+            if config.sections["server"]["login"] in self.private_rooms[room]["operators"]:
                 return True
 
         return False
@@ -191,7 +192,7 @@ class RoomList:
 
     def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
 
-        myusername = self.frame.np.config.sections["server"]["login"]
+        myusername = config.sections["server"]["login"]
 
         for room in ownedrooms:
             try:

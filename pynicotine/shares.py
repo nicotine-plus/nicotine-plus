@@ -658,8 +658,7 @@ class Shares:
     def add_file_to_shared(self, name):
         """ Add a file to the normal shares database """
 
-        config = self.config.sections
-        if not config["transfers"]["sharedownloaddir"]:
+        if not self.config.sections["transfers"]["sharedownloaddir"]:
             return
 
         if not self.initiated_shares or self.public_rescanning:
@@ -667,8 +666,8 @@ class Shares:
 
         shared = self.share_dbs["files"]
 
-        shareddirs = [path for _name, path in config["transfers"]["shared"]]
-        shareddirs.append(config["transfers"]["downloaddir"])
+        shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
+        shareddirs.append(self.config.sections["transfers"]["downloaddir"])
 
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
@@ -696,14 +695,13 @@ class Shares:
             self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
 
-        if config["transfers"]["enablebuddyshares"]:
+        if self.config.sections["transfers"]["enablebuddyshares"]:
             self.add_file_to_buddy_shared(name)
 
     def add_file_to_buddy_shared(self, name):
         """ Add a file to the buddy shares database """
 
-        config = self.config.sections
-        if not config["transfers"]["sharedownloaddir"]:
+        if not self.config.sections["transfers"]["sharedownloaddir"]:
             return
 
         if not self.initiated_shares or self.buddy_rescanning:
@@ -711,9 +709,9 @@ class Shares:
 
         bshared = self.share_dbs["buddyfiles"]
 
-        bshareddirs = [path for _name, path in config["transfers"]["shared"]]
-        bshareddirs += [path for _name, path in config["transfers"]["buddyshared"]]
-        bshareddirs.append(config["transfers"]["downloaddir"])
+        bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
+        bshareddirs += [path for _name, path in self.config.sections["transfers"]["buddyshared"]]
+        bshareddirs.append(self.config.sections["transfers"]["downloaddir"])
 
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
@@ -811,9 +809,7 @@ class Shares:
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        config = self.config.sections
-
-        if config["transfers"]["enablebuddyshares"] and config["transfers"]["friendsonly"]:
+        if self.config.sections["transfers"]["enablebuddyshares"] and self.config.sections["transfers"]["friendsonly"]:
             # No public shares
             files = folders = 0
             self.queue.append(slskmessages.SharedFoldersFiles(files, folders))

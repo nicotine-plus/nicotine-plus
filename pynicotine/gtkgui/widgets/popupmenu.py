@@ -28,6 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 
 
@@ -211,7 +212,7 @@ class PopupMenu(Gio.Menu):
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(
                 GLib.Variant.new_boolean(
-                    self.user in (i[0] for i in self.frame.np.config.sections["server"]["userlist"])
+                    self.user in (i[0] for i in config.sections["server"]["userlist"])
                 )
             )
 

@@ -28,6 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
@@ -50,16 +51,14 @@ class UserTabs(IconNotebook):
 
         self.frame = frame
 
-        ui = frame.np.config.sections["ui"]
-
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=ui["labelinfo"],
-            tabclosers=ui["tabclosers"],
-            show_hilite_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
-            reorderable=ui["tab_reorderable"],
-            show_status_image=ui["tab_status_icons"],
+            angle=config.sections["ui"]["labelinfo"],
+            tabclosers=config.sections["ui"]["tabclosers"],
+            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
+            reorderable=config.sections["ui"]["tab_reorderable"],
+            show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=notebookraw
         )
 
@@ -280,10 +279,10 @@ class UserInfo:
 
         actions = self.interest_popup_menu.get_actions()
         actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in self.frame.np.config.sections["interests"]["likes"])
+            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
         actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in self.frame.np.config.sections["interests"]["dislikes"])
+            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
         self.interest_popup_menu.popup()
@@ -442,7 +441,7 @@ class UserInfo:
 
         response = save_file(
             self.frame.MainWindow,
-            self.frame.np.config.sections["transfers"]["downloaddir"],
+            config.sections["transfers"]["downloaddir"],
             "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
             title="Save as..."
         )

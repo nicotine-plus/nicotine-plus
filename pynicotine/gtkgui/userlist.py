@@ -30,6 +30,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
@@ -51,7 +52,6 @@ class UserList:
 
         # Build the window
         self.frame = frame
-        config = self.frame.np.config.sections
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "buddylist.ui"))
 
@@ -105,7 +105,7 @@ class UserList:
         cols["status"].get_widget().hide()
         cols["country"].get_widget().hide()
 
-        if config["columns"]["hideflags"]:
+        if config.sections["columns"]["hideflags"]:
             cols["country"].set_visible(False)
 
         for render in cols["trusted"].get_cells():
@@ -124,7 +124,7 @@ class UserList:
 
         """ Buddy list """
 
-        for user in self.frame.np.config.sections["server"]["userlist"]:
+        for user in config.sections["server"]["userlist"]:
             try:
                 username, comment, notify, privileged, trusted, last_seen, country = user
             except ValueError:
@@ -190,7 +190,7 @@ class UserList:
             widget.remove_all()
             widget.append_text("")
 
-            for user in self.frame.np.config.sections["server"]["userlist"]:
+            for user in config.sections["server"]["userlist"]:
                 widget.append_text(str(user[0]))
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
@@ -341,7 +341,7 @@ class UserList:
 
         actions[_("Private Rooms")].set_enabled(
             status or
-            self.popup_menu.user != self.frame.np.config.sections["server"]["login"]
+            self.popup_menu.user != config.sections["server"]["login"]
         )
 
         actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
@@ -466,7 +466,7 @@ class UserList:
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
 
-        if self.frame.np.config.sections["words"]["buddies"]:
+        if config.sections["words"]["buddies"]:
             GLib.idle_add(self.frame.chatrooms.update_completions)
             GLib.idle_add(self.frame.privatechats.update_completions)
 
@@ -481,7 +481,7 @@ class UserList:
 
         self.buddies_combos_fill()
 
-        if self.frame.np.config.sections["words"]["buddies"]:
+        if config.sections["words"]["buddies"]:
             GLib.idle_add(self.frame.chatrooms.update_completions)
             GLib.idle_add(self.frame.privatechats.update_completions)
 
@@ -493,8 +493,8 @@ class UserList:
             status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, hlast_seen, comments, status, speed, file_count, last_seen, country = i
             user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
 
-        self.frame.np.config.sections["server"]["userlist"] = user_list
-        self.frame.np.config.write_configuration()
+        config.sections["server"]["userlist"] = user_list
+        config.write_configuration()
 
     def save_columns(self):
         save_columns("buddy_list", self.UserListTree.get_columns())

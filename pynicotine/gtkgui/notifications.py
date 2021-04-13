@@ -23,6 +23,7 @@ from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 
@@ -53,7 +54,7 @@ class Notifications:
                 self.frame.hilites[location].append(user)
                 self.frame.tray_icon.set_image()
 
-        if self.frame.np.config.sections["ui"]["urgencyhint"] and \
+        if config.sections["ui"]["urgencyhint"] and \
                 not self.frame.MainWindow.is_active():
             self.frame.MainWindow.set_urgency_hint(True)
 
@@ -84,7 +85,7 @@ class Notifications:
             self.frame.MainWindow.set_title(app_name)
             return
 
-        if not self.frame.np.config.sections["notifications"]["notification_window_title"]:
+        if not config.sections["notifications"]["notification_window_title"]:
             return
 
         if self.frame.hilites["private"]:
@@ -110,7 +111,7 @@ class Notifications:
 
     def new_tts(self, message):
 
-        if not self.frame.np.config.sections["ui"]["speechenabled"]:
+        if not config.sections["ui"]["speechenabled"]:
             return
 
         if message not in self.tts:
@@ -149,7 +150,7 @@ class Notifications:
 
         self.tts_playing = True
 
-        execute_command(self.frame.np.config.sections["ui"]["speechcommand"], message)
+        execute_command(config.sections["ui"]["speechcommand"], message)
 
     def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
@@ -170,7 +171,7 @@ class Notifications:
                     message=message
                 )
 
-                if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+                if config.sections["notifications"]["notification_popup_sound"]:
                     import winsound
                     winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
                 return
@@ -185,7 +186,7 @@ class Notifications:
 
             self.application.send_notification(None, notification_popup)
 
-            if self.frame.np.config.sections["notifications"]["notification_popup_sound"]:
+            if config.sections["notifications"]["notification_popup_sound"]:
                 Gdk.beep()
 
         except Exception as error:

@@ -149,7 +149,7 @@ def rescan_shares():
     config.load_config()
 
     # Show normal log messages in console
-    console.set_log_levels((0, 1))
+    console.log_levels = (0, 1)
 
     print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
 your shares this way, keep Nicotine+ closed until rescanning is done."""))

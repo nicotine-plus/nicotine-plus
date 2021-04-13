@@ -28,6 +28,7 @@ import re
 
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
@@ -83,7 +84,7 @@ class Downloads(TransferList):
         proccessedfilters = []
         outfilter = "(\\\\("
         failed = {}
-        df = sorted(self.frame.np.config.sections["transfers"]["downloadfilters"])
+        df = sorted(config.sections["transfers"]["downloadfilters"])
         # Get Filters from config file and check their escaped status
         # Test if they are valid regular expressions and save error messages
 
@@ -112,7 +113,7 @@ class Downloads(TransferList):
         outfilter += ")$)"
         try:
             re.compile(outfilter)
-            self.frame.np.config.sections["transfers"]["downloadregexp"] = outfilter
+            config.sections["transfers"]["downloadregexp"] = outfilter
             # Send error messages for each failed filter to log window
             if failed:
                 errors = ""
@@ -125,12 +126,12 @@ class Downloads(TransferList):
         except Exception as e:
             # Strange that individual filters _and_ the composite filter both fail
             log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), e)
-            self.frame.np.config.sections["transfers"]["downloadregexp"] = ""
+            config.sections["transfers"]["downloadregexp"] = ""
 
     def on_open_directory(self, *args):
 
-        downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
-        incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
+        downloaddir = config.sections["transfers"]["downloaddir"]
+        incompletedir = config.sections["transfers"]["incompletedir"]
 
         if incompletedir == "":
             incompletedir = downloaddir
@@ -150,12 +151,12 @@ class Downloads(TransferList):
             final_path = incompletedir
 
         # Finally, try to open the directory we got...
-        command = self.frame.np.config.sections["ui"]["filemanager"]
+        command = config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
     def on_play_files(self, *args):
 
-        downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
+        downloaddir = config.sections["transfers"]["downloaddir"]
 
         for transfer in self.selected_transfers:
 
@@ -173,7 +174,7 @@ class Downloads(TransferList):
                     playfile = path
 
             if playfile:
-                command = self.frame.np.config.sections["players"]["default"]
+                command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
     def on_clear_aborted(self, *args):

@@ -30,6 +30,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
@@ -143,7 +144,7 @@ class UserBrowse:
 
         self.folder_popup_menu = PopupMenu(self.frame)
 
-        if user == self.frame.np.config.sections["server"]["login"]:
+        if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
                 ("#" + _("Download Folder _To..."), self.on_download_directory_to),
@@ -204,7 +205,7 @@ class UserBrowse:
 
         self.file_popup_menu = PopupMenu(self.frame)
 
-        if user == self.frame.np.config.sections["server"]["login"]:
+        if user == config.sections["server"]["login"]:
             self.file_popup_menu.setup(
                 ("#" + "selected_files", None),
                 ("", None),
@@ -268,7 +269,7 @@ class UserBrowse:
             return self.on_folder_popup_menu(widget)
 
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            if self.user != self.frame.np.config.sections["server"]["login"]:
+            if self.user != config.sections["server"]["login"]:
                 self.on_download_directory()
                 return True
 
@@ -278,7 +279,7 @@ class UserBrowse:
 
         actions = self.folder_popup_menu.get_actions()
 
-        if self.user == self.frame.np.config.sections["server"]["login"]:
+        if self.user == config.sections["server"]["login"]:
             for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
                       _("Upload Folder To..."), _("Upload Folder Recursive To..."), _("Open in File _Manager"),
                       _("Copy _Folder Path"), _("Copy _URL")):
@@ -309,7 +310,7 @@ class UserBrowse:
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.select_files()
 
-            if self.user == self.frame.np.config.sections["server"]["login"]:
+            if self.user == config.sections["server"]["login"]:
                 self.on_play_files()
             else:
                 self.on_download_files()
@@ -324,7 +325,7 @@ class UserBrowse:
 
         actions = self.file_popup_menu.get_actions()
 
-        if self.user == self.frame.np.config.sections["server"]["login"]:
+        if self.user == config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
                       _("Copy _File Path"), _("Copy _URL")):
                 actions[i].set_enabled(num_selected_files)
@@ -532,7 +533,7 @@ class UserBrowse:
 
     def on_save(self, *args):
 
-        sharesdir = os.path.join(self.frame.np.config.data_dir, "usershares")
+        sharesdir = os.path.join(config.data_dir, "usershares")
 
         try:
             if not os.path.exists(sharesdir):
@@ -703,7 +704,7 @@ class UserBrowse:
 
     def on_download_directory_to(self, *args):
 
-        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if folder is None:
             return
@@ -715,7 +716,7 @@ class UserBrowse:
 
     def on_download_directory_recursive_to(self, *args):
 
-        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if folder is None:
             return
@@ -741,7 +742,7 @@ class UserBrowse:
             if d != folder:
                 continue
 
-            if self.frame.np.config.sections["transfers"]["reverseorder"]:
+            if config.sections["transfers"]["reverseorder"]:
                 files.sort(key=lambda x: x[1], reverse=True)
 
             for file in files:
@@ -798,12 +799,12 @@ class UserBrowse:
         except ValueError:
             folder = self.selected_folder
 
-        path = os.path.join(self.frame.np.config.sections["transfers"]["downloaddir"], folder)
+        path = os.path.join(config.sections["transfers"]["downloaddir"], folder)
 
         if os.path.exists(path) and os.path.isdir(path):
             ldir = choose_dir(self.frame.MainWindow, path, multichoice=False)
         else:
-            ldir = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+            ldir = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if ldir is None:
             return
@@ -821,7 +822,7 @@ class UserBrowse:
             return
 
         users = []
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -884,7 +885,7 @@ class UserBrowse:
 
         users = []
 
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -927,7 +928,7 @@ class UserBrowse:
             playfile = os.sep.join([path, fn])
 
             if os.path.exists(playfile):
-                command = self.frame.np.config.sections["players"]["default"]
+                command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
     def find_matches(self):
@@ -1030,7 +1031,7 @@ class UserBrowse:
             return
 
         path = self.frame.np.shares.virtual2real(self.selected_folder)
-        command = self.frame.np.config.sections["ui"]["filemanager"]
+        command = config.sections["ui"]["filemanager"]
 
         open_file_path(path, command)
 

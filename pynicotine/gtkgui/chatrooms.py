@@ -37,6 +37,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
@@ -104,11 +105,10 @@ class ChatRooms(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        config = self.frame.np.config.sections
 
         self.joinedrooms = {}
         self.autojoin = True
-        self.private_rooms = config["private_rooms"]["rooms"]
+        self.private_rooms = config.sections["private_rooms"]["rooms"]
         self.switch_tab = True
 
         # Config cleanup
@@ -125,16 +125,16 @@ class ChatRooms(IconNotebook):
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=config["ui"]["labelrooms"],
-            tabclosers=config["ui"]["tabclosers"],
-            show_hilite_image=config["notifications"]["notification_tab_icons"],
-            reorderable=config["ui"]["tab_reorderable"],
+            angle=config.sections["ui"]["labelrooms"],
+            tabclosers=config.sections["ui"]["tabclosers"],
+            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
+            reorderable=config.sections["ui"]["tab_reorderable"],
             notebookraw=self.frame.ChatNotebookRaw
         )
 
         self.popup_enable()
 
-        self.set_tab_pos(self.frame.get_tab_position(config["ui"]["tabrooms"]))
+        self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))
 
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
@@ -159,7 +159,7 @@ class ChatRooms(IconNotebook):
         # Find position of opened autojoined rooms
         for name, room in self.joinedrooms.items():
 
-            if name not in self.frame.np.config.sections["server"]["autojoin"]:
+            if name not in config.sections["server"]["autojoin"]:
                 continue
 
             room_tab_order[notebook.page_num(room.Main)] = name
@@ -167,7 +167,7 @@ class ChatRooms(IconNotebook):
         pos = 1000
 
         # Add closed autojoined rooms as well
-        for name in self.frame.np.config.sections["server"]["autojoin"]:
+        for name in config.sections["server"]["autojoin"]:
             if name not in self.joinedrooms:
                 room_tab_order[pos] = name
                 pos += 1
@@ -179,7 +179,7 @@ class ChatRooms(IconNotebook):
             new_autojoin.append(room_tab_order[roomplace])
 
         # Save
-        self.frame.np.config.sections["server"]["autojoin"] = new_autojoin
+        config.sections["server"]["autojoin"] = new_autojoin
 
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
@@ -219,7 +219,7 @@ class ChatRooms(IconNotebook):
         self.joinedrooms[msg.room] = tab = ChatRoom(self, msg.room, msg.users, meta)
 
         try:
-            angle = int(self.frame.np.config.sections["ui"]["labelrooms"])
+            angle = int(config.sections["ui"]["labelrooms"])
         except Exception:
             angle = 0
 
@@ -243,7 +243,7 @@ class ChatRooms(IconNotebook):
             if self.joinedrooms:
                 room_list = list(self.joinedrooms.keys())
             else:
-                room_list = self.frame.np.config.sections["server"]["autojoin"]
+                room_list = config.sections["server"]["autojoin"]
                 if room_list:
                     # Disable tab focusing while joining rooms
                     self.switch_tab = False
@@ -262,7 +262,7 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
-        if self.frame.np.config.sections["words"]["roomnames"]:
+        if config.sections["words"]["roomnames"]:
             self.frame.chatrooms.update_completions()
             self.frame.privatechats.update_completions()
 
@@ -316,15 +316,15 @@ class ChatRooms(IconNotebook):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms and self.frame.np.config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].append(self.frame.np.config.sections["server"]["login"])
+        if msg.room in rooms and config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].append(config.sections["server"]["login"])
 
     def private_room_operator_removed(self, msg):
 
         rooms = self.private_rooms
 
-        if msg.room in rooms and self.frame.np.config.sections["server"]["login"] in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].remove(self.frame.np.config.sections["server"]["login"])
+        if msg.room in rooms and config.sections["server"]["login"] in rooms[msg.room]["operators"]:
+            rooms[msg.room]["operators"].remove(config.sections["server"]["login"])
 
     def private_room_add_operator(self, msg):
 
@@ -361,10 +361,10 @@ class ChatRooms(IconNotebook):
         self.roomlist.set_private_rooms()
 
     def toggle_private_rooms(self, enabled):
-        self.frame.np.config.sections["server"]["private_chatrooms"] = enabled
+        config.sections["server"]["private_chatrooms"] = enabled
 
     def private_room_disown(self, msg):
-        if msg.room in self.private_rooms and self.private_rooms[msg.room]["owner"] == self.frame.np.config.sections["server"]["login"]:
+        if msg.room in self.private_rooms and self.private_rooms[msg.room]["owner"] == config.sections["server"]["login"]:
             self.private_rooms[msg.room]["owner"] = None
 
     def get_user_stats(self, msg):
@@ -422,9 +422,9 @@ class ChatRooms(IconNotebook):
 
     def save_columns(self):
 
-        for room in list(self.frame.np.config.sections["columns"]["chat_room"].keys())[:]:
+        for room in list(config.sections["columns"]["chat_room"].keys())[:]:
             if room not in self.joinedrooms:
-                del self.frame.np.config.sections["columns"]["chat_room"][room]
+                del config.sections["columns"]["chat_room"][room]
 
         for room in self.joinedrooms.values():
             room.save_columns()
@@ -455,23 +455,22 @@ class ChatRooms(IconNotebook):
     def update_completions(self):
 
         self.clist = []
-        config = self.frame.np.config.sections["words"]
+        config_words = config.sections["words"]
 
-        if config["tab"]:
+        if config_words["tab"]:
 
-            config = self.frame.np.config.sections["words"]
-            clist = [self.frame.np.config.sections["server"]["login"], "nicotine"]
+            clist = [config.sections["server"]["login"], "nicotine"]
 
-            if config["roomnames"]:
+            if config_words["roomnames"]:
                 clist += self.roomlist.server_rooms
 
-            if config["buddies"]:
-                clist += [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]
+            if config_words["buddies"]:
+                clist += [i[0] for i in config.sections["server"]["userlist"]]
 
-            if config["aliases"]:
-                clist += ["/" + k for k in list(self.frame.np.config.sections["server"]["command_aliases"].keys())]
+            if config_words["aliases"]:
+                clist += ["/" + k for k in list(config.sections["server"]["command_aliases"].keys())]
 
-            if config["commands"]:
+            if config_words["commands"]:
                 clist += self.CMDS
 
             self.clist = clist
@@ -505,13 +504,11 @@ class ChatRoom:
         # Chat Text Search
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
-        config = self.frame.np.config.sections
-
         # Spell Check
         if self.frame.spell_checker is None:
             self.frame.init_spell_checker()
 
-        if self.frame.spell_checker and config["ui"]["spellcheck"]:
+        if self.frame.spell_checker and config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
             spell_buffer.set_spell_checker(self.frame.spell_checker)
@@ -526,16 +523,16 @@ class ChatRoom:
         self.ChatCompletion.set_match_func(entry_completion_find_match)
         self.ChatCompletion.connect("match-selected", entry_completion_found_match)
 
-        self.Log.set_active(config["logging"]["chatrooms"])
+        self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
-            self.Log.set_active((self.room in config["logging"]["rooms"]))
+            self.Log.set_active((self.room in config.sections["logging"]["rooms"]))
 
-        self.AutoJoin.set_active((room in config["server"]["autojoin"]))
+        self.AutoJoin.set_active((room in config.sections["server"]["autojoin"]))
 
         self.toggle_chat_buttons()
 
-        if room not in config["columns"]["chat_room"]:
-            config["columns"]["chat_room"][room] = {}
+        if room not in config.sections["columns"]["chat_room"]:
+            config.sections["columns"]["chat_room"][room] = {}
 
         self.usersmodel = Gtk.ListStore(
             GObject.TYPE_OBJECT,  # (0)  status_image
@@ -570,7 +567,7 @@ class ChatRoom:
         cols["status"].get_widget().hide()
         cols["country"].get_widget().hide()
 
-        if config["columns"]["hideflags"]:
+        if config.sections["columns"]["hideflags"]:
             cols["country"].set_visible(False)
 
         for userdata in users:
@@ -662,20 +659,18 @@ class ChatRoom:
 
     def read_room_logs(self):
 
-        config = self.frame.np.config.sections
-
-        if not config["logging"]["readroomlogs"]:
+        if not config.sections["logging"]["readroomlogs"]:
             return
 
         filename = self.room.replace(os.sep, "-") + ".log"
 
         try:
-            numlines = int(config["logging"]["readroomlines"])
+            numlines = int(config.sections["logging"]["readroomlines"])
         except Exception:
             numlines = 15
 
         try:
-            get_path(config["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
+            get_path(config.sections["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
 
         except IOError:
             pass
@@ -691,8 +686,6 @@ class ChatRoom:
             self._append_log_lines(path, numlines, 'latin-1')
 
     def _append_log_lines(self, path, numlines, encoding='utf-8'):
-
-        config = self.frame.np.config.sections
 
         with open(path, 'r', encoding=encoding) as lines:
             # Only show as many log lines as specified in config
@@ -712,11 +705,11 @@ class ChatRoom:
                         user = None
                         usertag = None
 
-                    if user == config["server"]["login"]:
+                    if user == config.sections["server"]["login"]:
                         tag = self.tag_local
                     elif line[20] == "*":
                         tag = self.tag_me
-                    elif line[20 + namepos:].upper().find(config["server"]["login"].upper()) > -1:
+                    elif line[20 + namepos:].upper().find(config.sections["server"]["login"].upper()) > -1:
                         tag = self.tag_hilite
                     else:
                         tag = self.tag_remote
@@ -727,7 +720,7 @@ class ChatRoom:
 
                 line = re.sub(r"\\s\\s+", "  ", line)
 
-                if user != config["server"]["login"]:
+                if user != config.sections["server"]["login"]:
                     append_line(self.ChatScroll, censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
                 else:
                     append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
@@ -740,7 +733,7 @@ class ChatRoom:
         self.popup_menu.set_user(user)
         self.popup_menu.toggle_user_items()
 
-        me = (self.popup_menu.user is None or self.popup_menu.user == self.frame.np.config.sections["server"]["login"])
+        me = (self.popup_menu.user is None or self.popup_menu.user == config.sections["server"]["login"])
         self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(not me)
         self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
 
@@ -803,7 +796,7 @@ class ChatRoom:
             self.AboutChatRoomCommandsPopover.show()
 
     def toggle_chat_buttons(self):
-        self.Speech.set_visible(self.frame.np.config.sections["ui"]["speechenabled"])
+        self.Speech.set_visible(config.sections["ui"]["speechenabled"])
 
     def ticker_set(self, msg):
 
@@ -840,7 +833,7 @@ class ChatRoom:
             # Hilight sub-level tab label
             self.chatrooms.request_hilite(self.Main)
 
-            if self.frame.np.config.sections["notifications"]["notification_popup_chatroom_mention"]:
+            if config.sections["notifications"]["notification_popup_chatroom_mention"]:
                 self.frame.notifications.new_notification(
                     text,
                     title=_("%s mentioned you in the %s room") % (user, self.room),
@@ -865,7 +858,7 @@ class ChatRoom:
             # We were mentioned, update tray icon and show urgency hint
             self.frame.notifications.add("rooms", user, self.room)
 
-        elif self.frame.np.config.sections["notifications"]["notification_popup_chatroom"]:
+        elif config.sections["notifications"]["notification_popup_chatroom"]:
             self.frame.notifications.new_notification(
                 text,
                 title=_("Message by %s in the %s room") % (user, self.room),
@@ -883,7 +876,7 @@ class ChatRoom:
             return
 
         text = re.sub("\\s\\s+", "  ", text)
-        login = self.frame.np.config.sections["server"]["login"]
+        login = config.sections["server"]["login"]
 
         if user == login:
             tag = self.tag_local
@@ -914,12 +907,12 @@ class ChatRoom:
 
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
-            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            log.write_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
 
         self.get_user_tag(user)
 
-        timestamp_format = self.frame.np.config.sections["logging"]["rooms_timestamp"]
+        timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
         if user != login:
 
@@ -931,7 +924,7 @@ class ChatRoom:
             if self.Speech.get_active():
 
                 self.frame.notifications.new_tts(
-                    self.frame.np.config.sections["ui"]["speechrooms"] % {
+                    config.sections["ui"]["speechrooms"] % {
                         "room": self.room,
                         "user": self.frame.notifications.tts_clean(user),
                         "message": self.frame.notifications.tts_clean(speech)
@@ -988,14 +981,14 @@ class ChatRoom:
         if cmd in ("/alias", "/al"):
             append_line(self.ChatScroll, add_alias(args), self.tag_remote, "")
 
-            if self.frame.np.config.sections["words"]["aliases"]:
+            if config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             append_line(self.ChatScroll, unalias(args), self.tag_remote, "")
 
-            if self.frame.np.config.sections["words"]["aliases"]:
+            if config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
@@ -1109,11 +1102,11 @@ class ChatRoom:
 
         elif cmd == "/rescan":
             # Rescan public shares if needed
-            if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
+            if not config.sections["transfers"]["friendsonly"] and config.sections["transfers"]["shared"]:
                 self.frame.on_rescan()
 
             # Rescan buddy shares if needed
-            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
+            if config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
         elif cmd in ("/tick", "/t"):
@@ -1165,10 +1158,10 @@ class ChatRoom:
             return
 
         # Add to completion list, and completion drop-down
-        if self.frame.np.config.sections["words"]["tab"]:
+        if config.sections["words"]["tab"]:
             if username not in self.clist:
                 self.clist.append(username)
-                if self.frame.np.config.sections["words"]["dropdown"]:
+                if config.sections["words"]["dropdown"]:
                     self.ChatEntry.get_completion().get_model().append([username])
 
         if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
@@ -1186,12 +1179,12 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if self.frame.np.config.sections["words"]["tab"] and \
-                username in self.clist and username not in (i[0] for i in self.frame.np.config.sections["server"]["userlist"]):
+        if config.sections["words"]["tab"] and \
+                username in self.clist and username not in (i[0] for i in config.sections["server"]["userlist"]):
 
             self.clist.remove(username)
 
-            if self.frame.np.config.sections["words"]["dropdown"]:
+            if config.sections["words"]["dropdown"]:
                 liststore = self.ChatEntry.get_completion().get_model()
 
                 iterator = liststore.get_iter_first()
@@ -1345,10 +1338,8 @@ class ChatRoom:
 
         self.leaving = True
 
-        config = self.frame.np.config.sections
-
-        if self.room in config["columns"]["chat_room"]:
-            del config["columns"]["chat_room"][self.room]
+        if self.room in config.sections["columns"]["chat_room"]:
+            del config.sections["columns"]["chat_room"][self.room]
 
         if not self.meta:
             self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
@@ -1372,9 +1363,8 @@ class ChatRoom:
         self.users.clear()
         self.count_users()
 
-        config = self.frame.np.config.sections
-        if not self.AutoJoin.get_active() and self.room in config["columns"]["chat_room"]:
-            del config["columns"]["chat_room"][self.room]
+        if not self.AutoJoin.get_active() and self.room in config.sections["columns"]["chat_room"]:
+            del config.sections["columns"]["chat_room"][self.room]
 
         for tag in self.tag_users.values():
             update_tag_visuals(tag, "useroffline")
@@ -1416,7 +1406,7 @@ class ChatRoom:
 
     def on_autojoin(self, widget):
 
-        autojoin = self.frame.np.config.sections["server"]["autojoin"]
+        autojoin = config.sections["server"]["autojoin"]
 
         if not widget.get_active():
             if self.room in autojoin:
@@ -1425,15 +1415,15 @@ class ChatRoom:
             if self.room not in autojoin:
                 autojoin.append(self.room)
 
-        self.frame.np.config.write_configuration()
+        config.write_configuration()
 
     def get_completion_list(self, ix=0, text="", clist=None):
 
-        config = self.frame.np.config.sections["words"]
+        config_words = config.sections["words"]
 
         completion = self.ChatEntry.get_completion()
-        completion.set_popup_single_match(not config["onematch"])
-        completion.set_minimum_key_length(config["characters"])
+        completion.set_popup_single_match(not config_words["onematch"])
+        completion.set_minimum_key_length(config_words["characters"])
 
         liststore = completion.get_model()
         liststore.clear()
@@ -1441,10 +1431,10 @@ class ChatRoom:
         if clist is None:
             clist = []
 
-        if not config["tab"]:
+        if not config_words["tab"]:
             return
 
-        if config["roomusers"]:
+        if config_words["roomusers"]:
             clist += list(self.users.keys())
 
         # no duplicates
@@ -1459,7 +1449,7 @@ class ChatRoom:
 
         completion.set_popup_completion(False)
 
-        if config["dropdown"]:
+        if config_words["dropdown"]:
             for word in clist:
                 liststore.append([word])
 
@@ -1477,8 +1467,8 @@ class ChatRoom:
                 self.midwaycompletion = False
             return False
 
-        config = self.frame.np.config.sections["words"]
-        if not config["tab"]:
+        config_words = config.sections["words"]
+        if not config_words["tab"]:
             return False
 
         # "Hello there Miss<tab> how are you doing"
@@ -1493,7 +1483,7 @@ class ChatRoom:
         text = widget.get_text()[:ix].split(" ")[-1]
         preix = ix - len(text)
 
-        if not config["cycle"]:
+        if not config_words["cycle"]:
             completion, single = get_completion(text, self.clist)
             if completion:
                 if single and ix == len(text) and text[:1] != "/":
@@ -1543,12 +1533,12 @@ class ChatRoom:
     def on_log_toggled(self, widget):
 
         if not widget.get_active():
-            if self.room in self.frame.np.config.sections["logging"]["rooms"]:
-                self.frame.np.config.sections["logging"]["rooms"].remove(self.room)
+            if self.room in config.sections["logging"]["rooms"]:
+                config.sections["logging"]["rooms"].remove(self.room)
             return
 
-        if self.room not in self.frame.np.config.sections["logging"]["rooms"]:
-            self.frame.np.config.sections["logging"]["rooms"].append(self.room)
+        if self.room not in config.sections["logging"]["rooms"]:
+            config.sections["logging"]["rooms"].append(self.room)
 
     def on_room_log_clicked(self, widget, event):
 
@@ -1585,12 +1575,12 @@ class ChatRoom:
         self.ChatScroll.emit("copy-clipboard")
 
     def on_view_room_log(self, *args):
-        open_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room)
+        open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
     def delete_room_log_response(self, dialog, response, data):
 
         if response == Gtk.ResponseType.OK:
-            delete_log(self.frame.np.config.sections["logging"]["roomlogsdir"], self.room)
+            delete_log(config.sections["logging"]["roomlogsdir"], self.room)
             self.on_clear_messages(dialog)
             self.on_clear_activity_log(dialog)
 

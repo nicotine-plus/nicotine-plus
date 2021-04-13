@@ -25,11 +25,7 @@ class Logger(object):
     def __init__(self):
 
         self.listeners = set()
-        self.log_to_file = False
-        self.folder = ""
         self.file_name = "debug_" + str(int(time.time()))
-        self.timestamp_format = "%Y-%m-%d %H:%M:%S"
-        self.log_levels = (0, 1)
 
     def set_msg_prefix(self, level, msg):
 
@@ -65,7 +61,9 @@ class Logger(object):
         6    - Statistics
         """
 
-        if level not in self.log_levels:
+        from pynicotine.config import config
+
+        if level not in config.sections["logging"]["debugmodes"]:
             return
 
         if not msg_args and level == 4:
@@ -77,12 +75,16 @@ class Logger(object):
         if msg_args:
             msg = msg % msg_args
 
-        if self.log_to_file:
-            self.write_log(self.folder, self.file_name, msg, self.timestamp_format)
+        timestamp_format = config.sections["logging"]["log_timestamp"]
+
+        if config.sections["logging"]["debug_file_output"]:
+            folder = config.sections["logging"]["debuglogsdir"]
+
+            self.write_log(folder, self.file_name, msg, timestamp_format)
 
         for callback in self.listeners:
             try:
-                callback(self.timestamp_format, level, msg)
+                callback(timestamp_format, level, msg)
             except Exception as e:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
 
@@ -120,16 +122,6 @@ class Logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
-    def set_log_levels(self, levels):
-        self.log_levels = levels
-
-    def update_debug_log_options(self, should_log, log_folder, timestamp_format):
-        """ Gives the logger updated logging settings """
-
-        self.log_to_file = should_log
-        self.folder = log_folder
-        self.timestamp_format = timestamp_format
-
     def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
         try:
@@ -165,9 +157,6 @@ class Console(object):
     def console_logger(self, timestamp_format, level, msg):
         if level in self.log_levels:
             print("[" + time.strftime(timestamp_format) + "] " + msg)
-
-    def set_log_levels(self, levels):
-        self.log_levels = levels
 
 
 log = Logger()

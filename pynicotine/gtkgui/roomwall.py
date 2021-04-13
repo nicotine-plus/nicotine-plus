@@ -19,6 +19,7 @@
 import os
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -39,14 +40,13 @@ class RoomWall:
         result = self.RoomWallEntry.get_text()
         self.RoomWallEntry.set_text("")
 
-        config = self.frame.np.config.sections
         room_name = self.room.room
 
         self.frame.np.queue.append(slskmessages.RoomTickerSet(room_name, result))
 
         self.RoomWallList.get_buffer().set_text("")
 
-        login = config["server"]["login"]
+        login = config.sections["server"]["login"]
 
         if result:
             append_line(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False, scroll=False)

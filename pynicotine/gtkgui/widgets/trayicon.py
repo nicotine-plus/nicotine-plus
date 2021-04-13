@@ -26,6 +26,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.logfacility import log
@@ -113,7 +114,7 @@ class TrayIcon:
 
         # popup
         users = []
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -133,7 +134,7 @@ class TrayIcon:
 
         # popup
         users = []
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -151,7 +152,7 @@ class TrayIcon:
     def on_get_a_users_ip(self, *args):
         users = []
 
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -170,7 +171,7 @@ class TrayIcon:
     def on_get_a_users_shares(self, *args):
 
         users = []
-        for entry in self.frame.np.config.sections["server"]["userlist"]:
+        for entry in config.sections["server"]["userlist"]:
             users.append(entry[0])
 
         users.sort()
@@ -227,7 +228,7 @@ class TrayIcon:
         """ Returns an icon path to use for tray icons, or None to fall back to
         system-wide icons. """
 
-        custom_icon_path = self.frame.np.config.sections["ui"]["icontheme"]
+        custom_icon_path = config.sections["ui"]["icontheme"]
 
         if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
             # Virtual environment

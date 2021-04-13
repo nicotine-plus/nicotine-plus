@@ -31,6 +31,7 @@ from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
@@ -143,10 +144,10 @@ class TransferList:
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
         self.group_dropdown.connect("changed", self.on_toggle_tree)
-        self.group_dropdown.set_active(frame.np.config.sections["transfers"]["group%ss" % self.type])
+        self.group_dropdown.set_active(config.sections["transfers"]["group%ss" % self.type])
 
         self.expand_button.connect("toggled", self.on_expand_tree)
-        self.expand_button.set_active(frame.np.config.sections["transfers"]["%ssexpanded" % self.type])
+        self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % self.type])
 
         self.popup_menu_users = PopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
@@ -666,7 +667,7 @@ class TransferList:
     def double_click(self, event):
 
         self.select_transfers()
-        dc = self.frame.np.config.sections["transfers"]["%s_doubleclick" % self.type]
+        dc = config.sections["transfers"]["%s_doubleclick" % self.type]
 
         if dc == 1:  # Send to player
             self.on_play_files()
@@ -723,14 +724,14 @@ class TransferList:
             collapse_treeview(self.widget, self.tree_users)
             expand_button_icon.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
-        self.frame.np.config.sections["transfers"]["%ssexpanded" % self.type] = expanded
-        self.frame.np.config.write_configuration()
+        config.sections["transfers"]["%ssexpanded" % self.type] = expanded
+        config.write_configuration()
 
     def on_toggle_tree(self, widget):
 
         active = widget.get_active()
 
-        self.frame.np.config.sections["transfers"]["group%ss" % self.type] = active
+        config.sections["transfers"]["group%ss" % self.type] = active
         self.widget.set_show_expanders(active)
         self.expand_button.set_visible(active)
 

@@ -33,6 +33,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.gtkgui.chatrooms import get_completion
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
@@ -79,16 +80,14 @@ class PrivateChats(IconNotebook):
 
         self.frame = frame
 
-        config = frame.np.config.sections
-
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=config["ui"]["labelprivate"],
-            tabclosers=config["ui"]["tabclosers"],
-            show_hilite_image=config["notifications"]["notification_tab_icons"],
-            reorderable=config["ui"]["tab_reorderable"],
-            show_status_image=config["ui"]["tab_status_icons"],
+            angle=config.sections["ui"]["labelprivate"],
+            tabclosers=config.sections["ui"]["tabclosers"],
+            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
+            reorderable=config.sections["ui"]["tab_reorderable"],
+            show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.PrivatechatNotebookRaw
         )
 
@@ -102,8 +101,8 @@ class PrivateChats(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         # Clear list of previously open chats if we don't want to restore them
-        if not frame.np.config.sections["privatechat"]["store"]:
-            frame.np.config.sections["privatechat"]["users"].clear()
+        if not config.sections["privatechat"]["store"]:
+            config.sections["privatechat"]["users"].clear()
 
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
@@ -149,8 +148,8 @@ class PrivateChats(IconNotebook):
 
             self.users[user] = tab = PrivateChat(self, user, status)
 
-            if user not in self.frame.np.config.sections["privatechat"]["users"]:
-                self.frame.np.config.sections["privatechat"]["users"].append(user)
+            if user not in config.sections["privatechat"]["users"]:
+                config.sections["privatechat"]["users"].append(user)
 
             # Get notified of user status
             self.frame.np.watch_user(user)
@@ -215,7 +214,7 @@ class PrivateChats(IconNotebook):
         # Update tray icon and show urgency hint
         self.frame.notifications.add("private", user)
 
-        if self.frame.np.config.sections["notifications"]["notification_popup_private_message"]:
+        if config.sections["notifications"]["notification_popup_private_message"]:
             self.frame.notifications.new_notification(
                 text,
                 title=_("Private message from %s") % user,
@@ -254,7 +253,7 @@ class PrivateChats(IconNotebook):
 
         self.users[msg.user].show_message(text, newmessage, msg.timestamp)
 
-        if ctcpversion and self.frame.np.config.sections["server"]["ctcpmsgs"] == 0:
+        if ctcpversion and config.sections["server"]["ctcpmsgs"] == 0:
             self.send_message(msg.user, GLib.get_application_name() + " " + version)
 
         self.frame.np.pluginhandler.incoming_private_chat_notification(msg.user, text)
@@ -274,8 +273,8 @@ class PrivateChats(IconNotebook):
         # Update completions on exit
         self.update_completions()
 
-        if tab.user in self.frame.np.config.sections["privatechat"]["users"]:
-            self.frame.np.config.sections["privatechat"]["users"].remove(tab.user)
+        if tab.user in config.sections["privatechat"]["users"]:
+            config.sections["privatechat"]["users"].remove(tab.user)
 
         self.remove_page(tab.Main)
 
@@ -289,10 +288,10 @@ class PrivateChats(IconNotebook):
             # Get notified of user status
             self.frame.np.watch_user(user)
 
-        if not self.frame.np.config.sections["privatechat"]["store"]:
+        if not config.sections["privatechat"]["store"]:
             return
 
-        for user in self.frame.np.config.sections["privatechat"]["users"]:
+        for user in config.sections["privatechat"]["users"]:
             if isinstance(user, str) and user not in self.users:
                 self.send_message(user)
 
@@ -308,16 +307,16 @@ class PrivateChats(IconNotebook):
 
     def update_completions(self):
 
-        config = self.frame.np.config.sections["words"]
-        clist = [self.frame.np.config.sections["server"]["login"], "nicotine"] + list(self.users.keys())
+        config_words = config.sections["words"]
+        clist = [config.sections["server"]["login"], "nicotine"] + list(self.users.keys())
 
-        if config["buddies"]:
-            clist += [i[0] for i in self.frame.np.config.sections["server"]["userlist"]]
+        if config_words["buddies"]:
+            clist += [i[0] for i in config.sections["server"]["userlist"]]
 
-        if config["aliases"]:
-            clist += ["/" + k for k in list(self.frame.np.config.sections["server"]["command_aliases"].keys())]
+        if config_words["aliases"]:
+            clist += ["/" + k for k in list(config.sections["server"]["command_aliases"].keys())]
 
-        if config["commands"]:
+        if config_words["commands"]:
             clist += self.CMDS
 
         self.clist = clist
@@ -348,7 +347,7 @@ class PrivateChat:
         if self.frame.spell_checker is None:
             self.frame.init_spell_checker()
 
-        if self.frame.spell_checker and self.frame.np.config.sections["ui"]["spellcheck"]:
+        if self.frame.spell_checker and config.sections["ui"]["spellcheck"]:
             from gi.repository import Gspell
             spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatLine.get_buffer())
             spell_buffer.set_spell_checker(self.frame.spell_checker)
@@ -360,7 +359,7 @@ class PrivateChat:
         self.ChatCompletion.set_match_func(entry_completion_find_match)
         self.ChatCompletion.connect("match-selected", entry_completion_found_match)
 
-        self.Log.set_active(self.frame.np.config.sections["logging"]["privatechat"])
+        self.Log.set_active(config.sections["logging"]["privatechat"])
 
         self.popup_menu_user = popup = PopupMenu(self.frame)
         popup.setup_user_menu(user, page="privatechat")
@@ -395,16 +394,15 @@ class PrivateChat:
     def read_private_log(self):
 
         # Read log file
-        config = self.frame.np.config.sections
         filename = self.user.replace(os.sep, "-") + ".log"
 
         try:
-            numlines = int(config["logging"]["readprivatelines"])
+            numlines = int(config.sections["logging"]["readprivatelines"])
         except Exception:
             numlines = 15
 
         try:
-            get_path(config["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
+            get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
 
         except IOError:
             pass
@@ -429,12 +427,12 @@ class PrivateChat:
                 append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite, scroll=False)
 
     def login(self):
-        timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
+        timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.update_tags()
 
     def conn_close(self):
-        timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
+        timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
         self.offlinemessage = False
@@ -463,12 +461,12 @@ class PrivateChat:
         copy_all_text(self.ChatScroll, self.frame.clipboard)
 
     def on_view_chat_log(self, *args):
-        open_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user)
+        open_log(config.sections["logging"]["privatelogsdir"], self.user)
 
     def delete_chat_log_response(self, dialog, response, data):
 
         if response == Gtk.ResponseType.OK:
-            delete_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user)
+            delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.on_clear_messages(dialog)
 
         dialog.destroy()
@@ -510,7 +508,7 @@ class PrivateChat:
             speech = censor_chat(text)
             tag = self.tag_remote
 
-        timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
+        timestamp_format = config.sections["logging"]["private_timestamp"]
         if not newmessage and not self.offlinemessage:
             append_line(
                 self.ChatScroll,
@@ -537,16 +535,16 @@ class PrivateChat:
             append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
 
         if self.Log.get_active():
-            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            log.write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
-        autoreply = self.frame.np.config.sections["server"]["autoreply"]
+        autoreply = config.sections["server"]["autoreply"]
         if self.frame.away and not self.autoreplied and autoreply:
             self.send_message("[Auto-Message] %s" % autoreply)
             self.autoreplied = True
 
         self.frame.notifications.new_tts(
-            self.frame.np.config.sections["ui"]["speechprivate"] % {
+            config.sections["ui"]["speechprivate"] % {
                 "user": self.frame.notifications.tts_clean(self.user),
                 "message": self.frame.notifications.tts_clean(speech)
             }
@@ -560,7 +558,7 @@ class PrivateChat:
 
         (u, text) = user_text
 
-        my_username = self.frame.np.config.sections["server"]["login"]
+        my_username = config.sections["server"]["login"]
 
         if text[:4] == "/me ":
             line = "* %s %s" % (my_username, text[4:])
@@ -576,12 +574,12 @@ class PrivateChat:
             usertag = self.tag_my_username
             line = "[%s] %s" % (my_username, line)
 
-        timestamp_format = self.frame.np.config.sections["logging"]["private_timestamp"]
+        timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
 
         if self.Log.get_active():
-            timestamp_format = self.frame.np.config.sections["logging"]["log_timestamp"]
-            log.write_log(self.frame.np.config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         if bytestring:
             payload = text
@@ -629,14 +627,14 @@ class PrivateChat:
         if cmd in ("/alias", "/al"):
 
             append_line(self.ChatScroll, add_alias(args), None, "")
-            if self.frame.np.config.sections["words"]["aliases"]:
+            if config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
         elif cmd in ("/unalias", "/un"):
 
             append_line(self.ChatScroll, unalias(args), None, "")
-            if self.frame.np.config.sections["words"]["aliases"]:
+            if config.sections["words"]["aliases"]:
                 self.frame.chatrooms.update_completions()
                 self.frame.privatechats.update_completions()
 
@@ -747,11 +745,11 @@ class PrivateChat:
 
         elif cmd == "/rescan":
             # Rescan public shares if needed
-            if not self.frame.np.config.sections["transfers"]["friendsonly"] and self.np.config.sections["transfers"]["shared"]:
+            if not config.sections["transfers"]["friendsonly"] and config.sections["transfers"]["shared"]:
                 self.frame.on_rescan()
 
             # Rescan buddy shares if needed
-            if self.frame.np.config.sections["transfers"]["enablebuddyshares"]:
+            if config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
         elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_private_command_event(self.user, cmd[1:], args):
@@ -800,7 +798,7 @@ class PrivateChat:
         self.tag_username = self.create_tag(buffer, color)
 
         if self.chats.connected:
-            if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
+            if self.frame.away and config.sections["ui"]["showaway"]:
                 self.tag_my_username = self.create_tag(buffer, "useraway")
             else:
                 self.tag_my_username = self.create_tag(buffer, "useronline")
@@ -818,7 +816,7 @@ class PrivateChat:
         update_tag_visuals(self.tag_username, color)
 
         if self.chats.connected:
-            if self.frame.away and self.frame.np.config.sections["ui"]["showaway"]:
+            if self.frame.away and config.sections["ui"]["showaway"]:
                 update_tag_visuals(self.tag_my_username, "useraway")
             else:
                 update_tag_visuals(self.tag_my_username, "useronline")
@@ -837,11 +835,11 @@ class PrivateChat:
 
     def get_completion_list(self, ix=0, text="", clist=None):
 
-        config = self.frame.np.config.sections["words"]
+        config_words = config.sections["words"]
 
         completion = self.ChatLine.get_completion()
-        completion.set_popup_single_match(not config["onematch"])
-        completion.set_minimum_key_length(config["characters"])
+        completion.set_popup_single_match(not config_words["onematch"])
+        completion.set_minimum_key_length(config_words["characters"])
 
         liststore = completion.get_model()
         liststore.clear()
@@ -849,7 +847,7 @@ class PrivateChat:
         if clist is None:
             clist = []
 
-        if not config["tab"]:
+        if not config_words["tab"]:
             return
 
         # no duplicates
@@ -864,7 +862,7 @@ class PrivateChat:
 
         completion.set_popup_completion(False)
 
-        if config["dropdown"]:
+        if config_words["dropdown"]:
             for word in clist:
                 liststore.append([word])
 
@@ -879,8 +877,7 @@ class PrivateChat:
         if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Tab):
             return False
 
-        config = self.frame.np.config.sections["words"]
-        if not config["tab"]:
+        if not config.sections["words"]["tab"]:
             return False
 
         ix = widget.get_position()
