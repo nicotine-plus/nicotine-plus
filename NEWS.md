@@ -18,6 +18,7 @@ Corrections
  * Fixed a critical error when a new room was joined while country flags were disabled
  * Fixed a critical error when attempting to add wishlist items while disconnected from the server
  * Fixed a rare case where Nicotine+ could crash on startup
+ * When browsing your own shares, viewing recently shared downloads no longer requires a restart
  * Attempting to download files of disconnected users now displays the 'User logged off' status immediately
  * Column widths of the currently selected user browse tab are now saved
  * UI customizations are once again applied to the preferences dialog
