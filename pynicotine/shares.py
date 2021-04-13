@@ -745,7 +745,6 @@ class Shares:
             self.newbuddyshares = True
 
     def create_compressed_shares_message(self, sharestype):
-
         """ Create a message that will later contain a compressed list of our shares """
 
         if sharestype == "normal":
@@ -760,8 +759,23 @@ class Shares:
                 self.share_dbs["buddystreams"]
             )
 
-    def compress_shares(self, sharestype):
+    def get_compressed_shares_message(self, sharestype):
+        """ Returns the compressed shares message. Creates a new one if necessary, e.g.
+        if an individual file was added to our shares. """
 
+        if sharestype == "normal" and self.newnormalshares or \
+                sharestype == "buddy" and self.newbuddyshares:
+            self.create_compressed_shares_message(sharestype)
+
+        if sharestype == "normal":
+            self.newnormalshares = False
+            return self.compressed_shares_normal
+
+        if sharestype == "buddy":
+            self.newbuddyshares = False
+            return self.compressed_shares_buddy
+
+    def compress_shares(self, sharestype):
         """ Begin compressing the shares list. This compressed list will be used to
         quickly send our file list to users. """
 

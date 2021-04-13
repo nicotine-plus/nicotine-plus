@@ -1120,7 +1120,7 @@ class NicotineFrame:
         if self.np.config.sections["transfers"]["friendsonly"]:
             msg = slskmessages.SharedFileList(None, {})
         else:
-            msg = self.np.shares.compressed_shares_normal
+            msg = self.np.shares.get_compressed_shares_message("normal")
 
         thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "normal"))
         thread.name = "LocalShareParser"
@@ -1136,9 +1136,9 @@ class NicotineFrame:
 
         # Show public shares if we don't have specific shares for buddies
         if not self.np.config.sections["transfers"]["enablebuddyshares"]:
-            msg = self.np.shares.compressed_shares_normal
+            msg = self.np.shares.get_compressed_shares_message("normal")
         else:
-            msg = self.np.shares.compressed_shares_buddy
+            msg = self.np.shares.get_compressed_shares_message("buddy")
 
         thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "buddy"))
         thread.name = "LocalBuddyShareParser"

@@ -1660,24 +1660,15 @@ class NetworkEventProcessor:
 
         if checkuser == 1 and self.shares.initiated_shares:
             # Send Normal Shares
-            if self.shares.newnormalshares:
-                self.shares.create_compressed_shares_message("normal")
-                self.shares.compress_shares("normal")
-                self.shares.newnormalshares = False
-            m = self.shares.compressed_shares_normal
+            m = self.shares.get_compressed_shares_message("normal")
 
         elif checkuser == 2 and self.shares.initiated_shares:
             # Send Buddy Shares
-            if self.shares.newbuddyshares:
-                self.shares.create_compressed_shares_message("buddy")
-                self.shares.compress_shares("buddy")
-                self.shares.newbuddyshares = False
-            m = self.shares.compressed_shares_buddy
+            m = self.shares.get_compressed_shares_message("buddy")
 
         else:
             # Nyah, Nyah
             m = slskmessages.SharedFileList(conn, {})
-            m.make_network_message(nozlib=0)
 
         m.conn = conn
         self.queue.append(m)
