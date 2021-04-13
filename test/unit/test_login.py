@@ -25,9 +25,9 @@ from unittest.mock import Mock
 
 import pytest
 
+from pynicotine.i18n import apply_translation
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
-from pynicotine.utils import apply_translation
 from test.unit.mock_socket import monkeypatch_socket, monkeypatch_select
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once

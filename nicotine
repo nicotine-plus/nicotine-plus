@@ -30,8 +30,8 @@ import importlib
 import multiprocessing
 import sys
 
-from pynicotine.utils import apply_translation
-from pynicotine.utils import get_user_directories
+from pynicotine.config import config
+from pynicotine.i18n import apply_translation
 
 
 def usage():
@@ -140,15 +140,13 @@ def renameprocess(newname, debug=False):
         print('\n'.join(msg))
 
 
-def rescanshares(config, data_dir):
+def rescan_shares():
     from collections import deque
 
-    from pynicotine.config import Config
     from pynicotine.logfacility import console
     from pynicotine.shares import Shares
 
-    config = Config(config, data_dir)
-    config.parse_config()
+    config.load_config()
 
     # Show normal log messages in console
     console.set_log_levels((0, 1))
@@ -200,10 +198,6 @@ def run():
         usage()
         sys.exit(2)
 
-    config_dir, data_dir = get_user_directories()
-    config = os.path.join(config_dir, 'config')
-    plugins = os.path.join(data_dir, 'plugins')
-
     profile = False
     ci_mode = False
     trayicon = True
@@ -218,10 +212,10 @@ def run():
             sys.exit()
 
         if o in ("-c", "--config"):
-            config = a
+            config.filename = a
 
         if o in ("-p", "--plugins"):
-            plugins = a
+            config.plugin_dir = a
 
         if o in ("-b", "--bindip"):
             bindip = a
@@ -260,17 +254,17 @@ def run():
     if result is None:
 
         if rescan:
-            rescanshares(config, data_dir)
+            rescan_shares()
             return
 
         from pynicotine.gtkgui import frame
-        app = frame.MainApp(data_dir, config, plugins, trayicon, hidden, ci_mode, bindip, port)
+        app = frame.MainApp(trayicon, hidden, ci_mode, bindip, port)
 
         if profile:
 
             import cProfile
 
-            dumpfile = os.path.expanduser(config) + ".profile"
+            dumpfile = os.path.expanduser(config.filename) + ".profile"
             profiler = cProfile.Profile()
 
             print(_("Starting using the profiler (saving dump to %s)") % dumpfile)

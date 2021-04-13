@@ -35,29 +35,29 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.geoip.countrycodes import code2name
-from pynicotine.gtkgui.dialogs import choose_dir
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import collapse_treeview
 from pynicotine.gtkgui.utils import copy_file_url
-from pynicotine.gtkgui.utils import humanize
-from pynicotine.gtkgui.utils import human_size
-from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import save_columns
-from pynicotine.gtkgui.utils import select_user_row_iter
-from pynicotine.gtkgui.utils import set_widget_fg_bg_css
-from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import show_country_tooltip
-from pynicotine.gtkgui.utils import show_file_path_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
+from pynicotine.gtkgui.widgets.treeview import collapse_treeview
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
+from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
+from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import humanize
+from pynicotine.utils import human_size
+from pynicotine.utils import human_speed
 
 
 class Searches(IconNotebook):

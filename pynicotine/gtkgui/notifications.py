@@ -42,7 +42,7 @@ class Notifications:
         if location == "rooms" and room is not None and user is not None:
             if room not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(room)
-                self.frame.tray.set_image()
+                self.frame.tray_icon.set_image()
 
         elif location == "private":
             if user in self.frame.hilites[location]:
@@ -51,7 +51,7 @@ class Notifications:
 
             elif user not in self.frame.hilites[location]:
                 self.frame.hilites[location].append(user)
-                self.frame.tray.set_image()
+                self.frame.tray_icon.set_image()
 
         if self.frame.np.config.sections["ui"]["urgencyhint"] and \
                 not self.frame.MainWindow.is_active():
@@ -73,7 +73,7 @@ class Notifications:
 
             self.set_title(user)
 
-        self.frame.tray.set_image()
+        self.frame.tray_icon.set_image()
 
     def set_title(self, user=None):
 

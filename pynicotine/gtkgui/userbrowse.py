@@ -30,24 +30,24 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import choose_dir
-from pynicotine.gtkgui.dialogs import combo_box_dialog
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
-from pynicotine.gtkgui.utils import human_size
-from pynicotine.gtkgui.utils import InfoBar
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import save_columns
-from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.infobar import InfoBar
+from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import human_size
 
 
 class UserBrowse:
@@ -532,7 +532,7 @@ class UserBrowse:
 
     def on_save(self, *args):
 
-        sharesdir = os.path.join(self.frame.data_dir, "usershares")
+        sharesdir = os.path.join(self.frame.np.config.data_dir, "usershares")
 
         try:
             if not os.path.exists(sharesdir):

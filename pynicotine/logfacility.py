@@ -170,8 +170,5 @@ class Console(object):
         self.log_levels = levels
 
 
-try:
-    log
-except NameError:
-    log = Logger()
-    console = Console(log)
+log = Logger()
+console = Console(log)

@@ -22,9 +22,9 @@ import pytest
 
 from collections import deque
 
-from pynicotine.shares import Shares
 from pynicotine.config import Config
-from pynicotine.utils import apply_translation
+from pynicotine.i18n import apply_translation
+from pynicotine.shares import Shares
 
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
 
@@ -40,10 +40,12 @@ def setup():
 
 @pytest.fixture
 def config():
-    data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
-    config_path = os.path.join(data_path, "temp_config")
+    config = Config()
+    config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
+    config.filename = os.path.join(config.data_dir, "temp_config")
 
-    return Config(config_path, data_path)
+    config.load_config()
+    return config
 
 
 def test_shares_scan(config):

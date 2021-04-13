@@ -1,8 +1,4 @@
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2009 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
-# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -26,147 +22,7 @@ from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 
 
-""" General Dialogs """
-
-
-def activate(self, dialog):
-    dialog.response(Gtk.ResponseType.OK)
-
-
-def combo_box_dialog(parent, title, message, default_text="",
-                     option=False, optionmessage="",
-                     optionvalue=False, droplist=[]):
-
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
-        buttons=Gtk.ButtonsType.OK_CANCEL,
-        text=title,
-        secondary_text=message
-    )
-    self.set_default_size(500, -1)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
-
-    self.gotoption = option
-
-    self.combo = Gtk.ComboBoxText.new_with_entry()
-
-    for i in droplist:
-        self.combo.append_text(i)
-
-    self.combo.get_child().connect("activate", activate, self)
-    self.combo.get_child().set_text(default_text)
-
-    self.get_message_area().add(self.combo)
-
-    self.combo.show()
-    self.combo.grab_focus()
-
-    if self.gotoption:
-
-        self.option = Gtk.CheckButton()
-        self.option.set_active(optionvalue)
-        self.option.set_label(optionmessage)
-        self.option.show()
-
-        self.get_message_area().add(self.option)
-
-    result = None
-    if self.run() == Gtk.ResponseType.OK:
-        if self.gotoption:
-            result = [self.combo.get_child().get_text(), self.option.get_active()]
-        else:
-            result = self.combo.get_child().get_text()
-
-    self.destroy()
-
-    return result
-
-
-def entry_dialog(parent, title, message, default=""):
-
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
-        buttons=Gtk.ButtonsType.OK_CANCEL,
-        text=title,
-        secondary_text=message
-    )
-    self.set_default_size(500, -1)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
-
-    entry = Gtk.Entry()
-    entry.connect("activate", activate, self)
-    entry.set_activates_default(True)
-    entry.set_text(default)
-    self.get_message_area().add(entry)
-    entry.show()
-
-    result = None
-    if self.run() == Gtk.ResponseType.OK:
-        result = entry.get_text()
-
-    self.destroy()
-
-    return result
-
-
-def message_dialog(parent, title, message):
-
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.INFO,
-        buttons=Gtk.ButtonsType.OK,
-        text=title,
-        secondary_text=message
-    )
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
-
-    label = self.get_message_area().get_children()[-1]
-    label.set_selectable(True)
-
-    self.run()
-    self.destroy()
-
-
-def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", cancel=True, third=""):
-
-    if cancel:
-        buttons = Gtk.ButtonsType.OK_CANCEL
-    else:
-        buttons = Gtk.ButtonsType.OK
-
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
-        buttons=buttons,
-        text=title,
-        secondary_text=message
-    )
-    self.connect("response", callback, callback_data)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
-
-    label = self.get_message_area().get_children()[-1]
-    label.set_selectable(True)
-
-    if checkbox_label:
-        self.checkbox = Gtk.CheckButton()
-        self.checkbox.set_label(checkbox_label)
-        self.get_message_area().add(self.checkbox)
-        self.checkbox.show()
-
-    if third:
-        self.add_button(third, Gtk.ResponseType.REJECT)
-
-    self.run()
-    self.destroy()
-
-
-""" File Chooser Dialogs """
+""" File Choosers """
 
 
 def choose_dir(parent=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
@@ -346,3 +202,80 @@ def save_file(parent=None, initialdir="~", initialfile="", title=None):
     dialog.destroy()
 
     return res
+
+
+class FileChooserButton:
+    """ This class expands the functionality of a GtkButton to open a file
+    chooser and display the name of a selected folder or file """
+
+    def __init__(self, button, parent, chooser_type="file", selected_function=None):
+
+        self.parent = parent
+        self.button = button
+        self.chooser_type = chooser_type
+        self.selected_function = selected_function
+        self.path = ""
+
+        box = Gtk.Box()
+        box.set_spacing(6)
+        self.icon = Gtk.Image.new()
+
+        if chooser_type == "folder":
+            self.icon.set_from_icon_name("folder-symbolic", Gtk.IconSize.BUTTON)
+
+        elif chooser_type == "image":
+            self.icon.set_from_icon_name("image-x-generic-symbolic", Gtk.IconSize.BUTTON)
+
+        else:
+            self.icon.set_from_icon_name("text-x-generic-symbolic", Gtk.IconSize.BUTTON)
+
+        self.label = Gtk.Label.new(_("(None)"))
+
+        box.add(self.icon)
+        box.add(self.label)
+
+        self.button.add(box)
+        self.button.show_all()
+
+        self.button.connect("clicked", self.open_file_chooser)
+
+    def open_file_chooser(self, *args):
+
+        if self.chooser_type == "folder":
+            selected = choose_dir(self.parent, self.path, multichoice=False)
+
+        else:
+            if self.path:
+                folder_path = os.path.dirname(self.path)
+            else:
+                folder_path = ""
+
+            if self.chooser_type == "image":
+                selected = choose_image(self.parent, folder_path)
+            else:
+                selected = choose_file(self.parent, folder_path)
+
+        if selected:
+            self.set_path(selected[0])
+
+            try:
+                self.selected_function()
+
+            except TypeError:
+                # No fucntion defined
+                return
+
+    def get_path(self):
+        return self.path
+
+    def set_path(self, path):
+
+        if not path:
+            return
+
+        self.path = path
+        self.label.set_label(os.path.basename(path))
+
+    def clear(self):
+        self.path = ""
+        self.label.set_label(_("(None)"))

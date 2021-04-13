@@ -26,12 +26,11 @@ This module contains utility functions.
 """
 
 import errno
-import gettext
-import locale
 import os
 import pickle
 import sys
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 
 version = "3.0.5.dev1"
@@ -124,40 +123,6 @@ def make_version(version):
         stable = 0
 
     return (major << 24) + (minor << 16) + (patch << 8) + stable
-
-
-def get_user_directories():
-    """Returns a tuple:
-    - the config directory
-    - the data directory"""
-
-    if win32:
-        try:
-            data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
-        except KeyError:
-            data_dir, x = os.path.split(sys.argv[0])
-
-        config_dir = os.path.join(data_dir, "config")
-        return config_dir, data_dir
-
-    home = os.path.expanduser("~")
-
-    legacy_dir = os.path.join(home, '.nicotine')
-
-    if os.path.isdir(legacy_dir):
-        return legacy_dir, legacy_dir
-
-    def xdg_path(xdg, default):
-        path = os.environ.get(xdg)
-
-        path = path.split(':')[0] if path else default
-
-        return os.path.join(path, 'nicotine')
-
-    config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
-    data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
-
-    return config_dir, data_dir
 
 
 def get_result_bitrate_length(filesize, attributes):
@@ -260,56 +225,63 @@ def get_result_bitrate_length(filesize, attributes):
     return h_bitrate, bitrate, h_length, length
 
 
-def apply_translation():
-    """Function dealing with translations and locales.
+size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 
-    We try to autodetect the language and fix the locale.
 
-    If something goes wrong we fall back to no translation.
+def human_size(filesize):
+    try:
+        step_unit = 1024.0
 
-    This function also try to find translation files in the project path first:
-    $(PROJECT_PATH)/mo/$(LANG)/LC_MESSAGES/nicotine.mo
+        for i in size_suffixes:
+            if filesize < step_unit:
+                return "%3.1f %s" % (filesize, i)
 
-    If no translations are found we fall back to the system path for locates:
-    /usr/share/locale/$(LANG)/LC_MESSAGES
+            filesize /= step_unit
+    except TypeError:
+        return filesize
 
-    Note: To the best of my knowledge when we are in a python venv
-    falling back to the system path does not work."""
 
-    # Load library for translating non-Python content, e.g. GTK ui files
-    if hasattr(locale, 'bindtextdomain') and hasattr(locale, 'textdomain'):
-        libintl = locale
+speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
 
-    elif win32:
-        import ctypes
-        libintl = ctypes.cdll.LoadLibrary('libintl-8.dll')
 
+def human_speed(filesize):
+    try:
+        step_unit = 1024.0
+
+        for i in speed_suffixes:
+            if filesize < step_unit:
+                return "%3.1f %s" % (filesize, i)
+
+            filesize /= step_unit
+    except TypeError:
+        return filesize
+
+
+def humanize(number):
+
+    fashion = config.sections["ui"]["decimalsep"]
+
+    if fashion == "" or fashion == "<None>":
+        return str(number)
+
+    elif fashion == "<space>":
+        fashion = " "
+
+    number = str(number)
+
+    if number[0] == "-":
+        neg = "-"
+        number = number[1:]
     else:
-        libintl = None
+        neg = ""
 
-    # Package name for gettext
-    package = 'nicotine'
+    ret = ""
 
-    # Local path where to find translation (mo) files
-    local_mo_path = 'mo'
+    while number[-3:]:
+        part, number = number[-3:], number[:-3]
+        ret = "%s%s%s" % (part, fashion, ret)
 
-    if libintl:
-        # Enable translation support in GtkBuilder (ui files)
-        libintl.textdomain(package)
-
-    if gettext.find(package, localedir=local_mo_path):
-        if libintl:
-            # Tell GtkBuilder where to find our translations (ui files)
-            libintl.bindtextdomain(package, local_mo_path)
-
-        # Locales are in the current dir, use them
-        gettext.install(package, local_mo_path)
-        return
-
-    # Locales are not in the current dir
-    # We let gettext handle the situation: if found them in the system dir
-    # the app will be translated, if not, it will be untranslated
-    gettext.install(package)
+    return neg + ret[:-1]
 
 
 def unescape(string):
@@ -513,6 +485,137 @@ class RestrictedUnpickler(pickle.Unpickler):
         # Forbid all globals
         raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
                                      (module, name))
+
+
+""" Command Aliases """
+
+
+def add_alias(rest):
+
+    aliases = config.sections["server"]["command_aliases"]
+
+    if rest:
+        args = rest.split(" ", 1)
+
+        if len(args) == 2:
+            if args[0] in ("alias", "unalias"):
+                return "I will not alias that!\n"
+
+            aliases[args[0]] = args[1]
+
+        if args[0] in aliases:
+            return "Alias %s: %s\n" % (args[0], aliases[args[0]])
+        else:
+            return _("No such alias (%s)") % rest + "\n"
+
+    else:
+        m = "\n" + _("Aliases:") + "\n"
+
+        for (key, value) in aliases.items():
+            m = m + "%s: %s\n" % (key, value)
+
+        return m + "\n"
+
+
+def unalias(rest):
+
+    aliases = config.sections["server"]["command_aliases"]
+
+    if rest and rest in aliases:
+        x = aliases[rest]
+        del aliases[rest]
+
+        return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
+
+    else:
+        return _("No such alias (%(alias)s)\n") % {'alias': rest}
+
+
+def is_alias(cmd):
+
+    if not cmd:
+        return False
+
+    if cmd[0] != "/":
+        return False
+
+    cmd = cmd[1:].split(" ")
+
+    if cmd[0] in config.sections["server"]["command_aliases"]:
+        return True
+
+    return False
+
+
+def expand_alias(cmd):
+    output = _expand_alias(config.sections["server"]["command_aliases"], cmd)
+    return output
+
+
+def _expand_alias(aliases, cmd):
+
+    def getpart(line):
+        if line[0] != "(":
+            return ""
+        ix = 1
+        ret = ""
+        level = 0
+        while ix < len(line):
+            if line[ix] == "(":
+                level = level + 1
+            if line[ix] == ")":
+                if level == 0:
+                    return ret
+                else:
+                    level = level - 1
+            ret = ret + line[ix]
+            ix = ix + 1
+        return ""
+
+    if not is_alias(cmd):
+        return None
+    try:
+        cmd = cmd[1:].split(" ")
+        alias = aliases[cmd[0]]
+        ret = ""
+        i = 0
+        while i < len(alias):
+            if alias[i:i + 2] == "$(":
+                arg = getpart(alias[i + 1:])
+                if not arg:
+                    ret = ret + "$"
+                    i = i + 1
+                    continue
+                i = i + len(arg) + 3
+                args = arg.split("=", 1)
+                if len(args) > 1:
+                    default = args[1]
+                else:
+                    default = ""
+                args = args[0].split(":")
+                if len(args) == 1:
+                    first = last = int(args[0])
+                else:
+                    if args[0]:
+                        first = int(args[0])
+                    else:
+                        first = 1
+                    if args[1]:
+                        last = int(args[1])
+                    else:
+                        last = len(cmd)
+                v = " ".join(cmd[first:last + 1])
+                if not v:
+                    v = default
+                ret = ret + v
+            else:
+                ret = ret + alias[i]
+                i = i + 1
+        return ret
+    except Exception as error:
+        log.add_warning("%s", error)
+
+    return ""
 
 
 """ Debugging """

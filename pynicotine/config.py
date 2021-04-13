@@ -36,8 +36,6 @@ from ast import literal_eval
 from collections import defaultdict
 
 from pynicotine.logfacility import log
-from pynicotine.utils import RestrictedUnpickler
-from pynicotine.utils import write_file_and_backup
 
 
 class Config:
@@ -54,24 +52,15 @@ class Config:
     parameters.
     """
 
-    def __init__(self, filename, data_dir):
+    def __init__(self):
 
-        self.filename = filename
-        self.data_dir = data_dir
+        config_dir, self.data_dir = self.get_user_directories()
+        self.filename = os.path.join(config_dir, 'config')
+        self.plugin_dir = os.path.join(self.data_dir, 'plugins')
+
         self.parser = configparser.RawConfigParser(strict=False)
 
-        self.create_config_folder()
-        self.create_data_folder()
-
-        try:
-            self.parse_config()
-
-        except UnicodeDecodeError:
-            self.convert_config()
-            self.parse_config()
-
-        log_dir = os.path.join(data_dir, "logs")
-
+        log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
             "server": {
                 "server": ('server.slsknet.org', 2242),
@@ -97,9 +86,9 @@ class Config:
             },
 
             "transfers": {
-                "incompletedir": os.path.join(data_dir, 'incomplete'),
-                "downloaddir": os.path.join(data_dir, 'downloads'),
-                "uploaddir": os.path.join(data_dir, 'received'),
+                "incompletedir": os.path.join(self.data_dir, 'incomplete'),
+                "downloaddir": os.path.join(self.data_dir, 'downloads'),
+                "uploaddir": os.path.join(self.data_dir, 'received'),
                 "sharedownloaddir": False,
                 "shared": [],
                 "buddyshared": [],
@@ -381,26 +370,44 @@ class Config:
         if sys.platform == "win32":
             self.defaults['players']['npplayer'] = 'other'
 
-        # Clean up old config options
-        self.remove_old_options()
-
         # Initialize config with default values
         self.sections = defaultdict(dict)
 
         for key, value in self.defaults.items():
             self.sections[key] = value.copy()
 
-        # Update config values from file
-        self.set_config()
+    def get_user_directories(self):
+        """ Returns a tuple:
+        - the config directory
+        - the data directory """
 
-        # Load command aliases from legacy file
-        try:
-            if not self.sections["server"]["command_aliases"] and os.path.exists(filename + ".alias"):
-                with open(filename + ".alias", 'rb') as f:
-                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(f, encoding='utf-8').load()
+        if sys.platform == "win32":
+            try:
+                data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
+            except KeyError:
+                data_dir, x = os.path.split(sys.argv[0])
 
-        except Exception:
-            return
+            config_dir = os.path.join(data_dir, "config")
+            return config_dir, data_dir
+
+        home = os.path.expanduser("~")
+
+        legacy_dir = os.path.join(home, '.nicotine')
+
+        if os.path.isdir(legacy_dir):
+            return legacy_dir, legacy_dir
+
+        def xdg_path(xdg, default):
+            path = os.environ.get(xdg)
+
+            path = path.split(':')[0] if path else default
+
+            return os.path.join(path, 'nicotine')
+
+        config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+        data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
+
+        return config_dir, data_dir
 
     def create_config_folder(self):
         """ Create the folder for storing the config file in, if the folder
@@ -427,6 +434,34 @@ class Config:
 
         except OSError as msg:
             log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': self.data_dir, 'error': msg})
+
+    def load_config(self):
+
+        self.create_config_folder()
+        self.create_data_folder()
+
+        try:
+            self.parse_config()
+
+        except UnicodeDecodeError:
+            self.convert_config()
+            self.parse_config()
+
+        # Clean up old config options
+        self.remove_old_options()
+
+        # Update config values from file
+        self.set_config()
+
+        # Load command aliases from legacy file
+        try:
+            if not self.sections["server"]["command_aliases"] and os.path.exists(self.filename + ".alias"):
+                with open(self.filename + ".alias", 'rb') as f:
+                    from pynicotine.utils import RestrictedUnpickler
+                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(f, encoding='utf-8').load()
+
+        except Exception:
+            return
 
     def parse_config(self):
         """ Parses the config file """
@@ -679,6 +714,7 @@ class Config:
         if not self.create_config_folder():
             return
 
+        from pynicotine.utils import write_file_and_backup
         write_file_and_backup(self.filename, self.write_config_callback, protect=True)
 
     def write_config_backup(self, filename):
@@ -702,3 +738,6 @@ class Config:
             return (True, "Cannot write backup archive: %s" % e)
 
         return (False, filename)
+
+
+config = Config()

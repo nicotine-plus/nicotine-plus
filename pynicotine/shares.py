@@ -32,8 +32,8 @@ import threading
 import time
 
 from pynicotine import slskmessages
+from pynicotine.i18n import apply_translation
 from pynicotine.logfacility import log
-from pynicotine.utils import apply_translation
 
 """ Check if there's an appropriate (performant) database type for shelves """
 

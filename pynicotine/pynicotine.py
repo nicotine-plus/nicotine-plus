@@ -38,7 +38,7 @@ from collections import deque
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
-from pynicotine.config import Config
+from pynicotine.config import config
 from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
@@ -48,6 +48,9 @@ from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
 from pynicotine.transfers import Statistics
 from pynicotine.utils import unescape
+
+
+global config
 
 
 class UserAddr:
@@ -106,7 +109,7 @@ class ConnectToPeerTimeout:
 class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking thread """
 
-    def __init__(self, ui_callback, network_callback, setstatus, bindip, port, data_dir, config):
+    def __init__(self, ui_callback, network_callback, setstatus, bindip, port):
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback
@@ -116,20 +119,21 @@ class NetworkEventProcessor:
         # Tell threads when we're disconnecting
         self.exit = threading.Event()
 
+        self.config = config
         try:
-            self.config = Config(config, data_dir)
+            config.load_config()
 
         except Exception:
             corruptfile = ".".join([config, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
 
             import shutil
-            shutil.move(config, corruptfile)
+            shutil.move(config.filename, corruptfile)
 
             short_message = _("Your config file is corrupt")
             long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
             self.ui_callback.show_info_message(short_message, long_message)
 
-            self.config = Config(config, data_dir)
+            config.load_config()
 
         self.bindip = bindip
         self.port = port

@@ -32,16 +32,16 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import choose_dir
-from pynicotine.gtkgui.dialogs import combo_box_dialog
-from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.dialogs import save_file
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import FileChooserButton
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
 from pynicotine.utils import unescape
 

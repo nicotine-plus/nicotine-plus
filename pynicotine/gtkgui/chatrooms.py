@@ -37,11 +37,9 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
-from pynicotine.gtkgui.utils import add_alias
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
@@ -49,29 +47,31 @@ from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import entry_completion_find_match
 from pynicotine.gtkgui.utils import entry_completion_found_match
-from pynicotine.gtkgui.utils import get_user_status_color
-from pynicotine.gtkgui.utils import humanize
-from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
-from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import TextSearchBar
-from pynicotine.gtkgui.utils import expand_alias
-from pynicotine.gtkgui.utils import is_alias
-from pynicotine.gtkgui.utils import save_columns
-from pynicotine.gtkgui.utils import show_country_tooltip
-from pynicotine.gtkgui.utils import show_user_status_tooltip
-from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import unalias
-from pynicotine.gtkgui.utils import update_tag_visuals
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import TextSearchBar
+from pynicotine.gtkgui.widgets.theme import get_user_status_color
+from pynicotine.gtkgui.widgets.theme import update_tag_visuals
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
+from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
+from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
+from pynicotine.utils import add_alias
+from pynicotine.utils import expand_alias
 from pynicotine.utils import get_path
+from pynicotine.utils import humanize
+from pynicotine.utils import human_speed
+from pynicotine.utils import is_alias
+from pynicotine.utils import unalias
 
 
 def get_completion(part, list):

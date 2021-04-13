@@ -28,19 +28,19 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import save_file
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import humanize
-from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import IconNotebook
-from pynicotine.gtkgui.utils import InfoBar
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import set_treeview_selected_row
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
+from pynicotine.gtkgui.widgets.infobar import InfoBar
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
+from pynicotine.utils import humanize
+from pynicotine.utils import human_speed
 
 
 # User Info and User Browse Notebooks

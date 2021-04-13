@@ -40,7 +40,7 @@ returncode = {
 
 class PluginHandler(object):
 
-    def __init__(self, frame, plugindir, config):
+    def __init__(self, frame, config):
         self.frame = frame
         self.config = config
 
@@ -52,7 +52,7 @@ class PluginHandler(object):
         self.loaded_plugins = {}
 
         try:
-            os.makedirs(plugindir)
+            os.makedirs(config.plugin_dir)
         except Exception:
             pass
 
@@ -61,12 +61,12 @@ class PluginHandler(object):
         self.plugindirs.append(os.path.join(prefix, "plugins"))
 
         # Load home directory plugins
-        self.plugindirs.append(plugindir)
+        self.plugindirs.append(config.plugin_dir)
 
-        if os.path.isdir(plugindir):
+        if os.path.isdir(config.plugin_dir):
             self.load_enabled()
         else:
-            log.add(_("It appears '%s' is not a directory, not loading plugins."), plugindir)
+            log.add(_("It appears '%s' is not a directory, not loading plugins."), config.plugin_dir)
 
     def __findplugin(self, pluginname):
         for directory in self.plugindirs:
