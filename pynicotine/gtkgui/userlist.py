@@ -30,19 +30,19 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import entry_dialog
-from pynicotine.gtkgui.utils import humanize
-from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import PopupMenu
-from pynicotine.gtkgui.utils import save_columns
-from pynicotine.gtkgui.utils import set_treeview_selected_row
-from pynicotine.gtkgui.utils import show_country_tooltip
-from pynicotine.gtkgui.utils import show_user_status_tooltip
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
+from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.logfacility import log
+from pynicotine.utils import humanize
+from pynicotine.utils import human_speed
 
 
 class UserList:

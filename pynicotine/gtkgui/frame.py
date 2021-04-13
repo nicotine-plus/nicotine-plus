@@ -40,9 +40,6 @@ from pynicotine import slskproto
 from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
-from pynicotine.gtkgui.dialogs import choose_file
-from pynicotine.gtkgui.dialogs import message_dialog
-from pynicotine.gtkgui.dialogs import option_dialog
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.notifications import Notifications
@@ -50,30 +47,33 @@ from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import Settings
 from pynicotine.gtkgui.statistics import Statistics
-from pynicotine.gtkgui.tray import Tray
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowse
 from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import clear_entry
 from pynicotine.gtkgui.utils import copy_all_text
-from pynicotine.gtkgui.utils import human_speed
-from pynicotine.gtkgui.utils import ImageLabel
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import open_uri
-from pynicotine.gtkgui.utils import PopupMenu
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import TextSearchBar
 from pynicotine.gtkgui.utils import triggers_context_menu
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.filechooser import choose_file
+from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
+from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import clear_entry
+from pynicotine.gtkgui.widgets.textentry import TextSearchBar
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.logfacility import log
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.utils import get_latest_version
+from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import RestrictedUnpickler
 from pynicotine.utils import unescape
@@ -82,7 +82,7 @@ from pynicotine.utils import version
 
 class NicotineFrame:
 
-    def __init__(self, application, data_dir, config, plugins, use_trayicon, start_hidden, ci_mode, bindip=None, port=None):
+    def __init__(self, application, use_trayicon, start_hidden, ci_mode, bindip=None, port=None):
 
         if not ci_mode:
             # Show errors in the GUI from here on
@@ -90,7 +90,6 @@ class NicotineFrame:
 
         self.application = application
         self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        self.data_dir = data_dir
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.ci_mode = ci_mode
         self.current_page_id = "Default"
@@ -124,9 +123,7 @@ class NicotineFrame:
             self.network_callback,
             self.set_status_text,
             self.bindip,
-            self.port,
-            data_dir,
-            config
+            self.port
         )
 
         config = self.np.config.sections
@@ -216,13 +213,13 @@ class NicotineFrame:
             completion.set_model(model)
             completion.set_text_column(0)
 
-        """ Tray/Notifications """
+        """ Tray Icon/Notifications """
 
         # Commonly accessed strings
         self.tray_download_template = _("Downloads: %(speed)s")
         self.tray_upload_template = _("Uploads: %(speed)s")
 
-        self.tray = Tray(self)
+        self.tray_icon = TrayIcon(self)
         self.notifications = Notifications(self)
 
         self.hilites = {
@@ -234,7 +231,7 @@ class NicotineFrame:
         # Tray icons don't work as expected on macOS
         if sys.platform != "darwin" and \
                 use_trayicon and config["ui"]["trayicon"]:
-            self.tray.load()
+            self.tray_icon.load()
 
         """ Element Visibility """
 
@@ -300,7 +297,7 @@ class NicotineFrame:
 
         """ Plugins: loaded here to ensure all requirements are initialized """
 
-        self.np.pluginhandler = PluginHandler(self, plugins, self.np.config)
+        self.np.pluginhandler = PluginHandler(self, self.np.config)
 
         """ Apply UI Customizations """
 
@@ -367,7 +364,7 @@ class NicotineFrame:
             self.set_user_status(_("Away"))
 
         self.set_widget_online_status(True)
-        self.tray.set_away(self.away)
+        self.tray_icon.set_away(self.away)
 
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
@@ -614,7 +611,7 @@ class NicotineFrame:
             return
 
         self.set_widget_online_status(False)
-        self.tray.set_connected(False)
+        self.tray_icon.set_connected(False)
 
         self.set_user_status(_("Offline"))
 
@@ -664,12 +661,12 @@ class NicotineFrame:
         self.JoinRoomEntry.set_sensitive(status)
         self.RoomList.set_sensitive(status)
 
-        self.tray.set_server_actions_sensitive(status)
+        self.tray_icon.set_server_actions_sensitive(status)
 
     def connect_error(self, conn):
 
         self.set_widget_online_status(False)
-        self.tray.set_connected(False)
+        self.tray_icon.set_connected(False)
 
         self.set_user_status(_("Offline"))
 
@@ -884,7 +881,7 @@ class NicotineFrame:
 
     def on_connect(self, *args):
 
-        self.tray.set_connected(True)
+        self.tray_icon.set_connected(True)
         self.np.protothread.server_connect()
 
         if self.np.active_server_conn is not None:
@@ -921,7 +918,7 @@ class NicotineFrame:
         else:
             self.set_user_status(_("Away"))
 
-        self.tray.set_away(self.away)
+        self.tray_icon.set_away(self.away)
 
         self.np.queue.append(slskmessages.SetStatus(self.away and 1 or 2))
         self.away_action.set_state(GLib.Variant.new_boolean(self.away))
@@ -1914,7 +1911,7 @@ class NicotineFrame:
 
     def on_load_from_disk(self, *args):
 
-        sharesdir = os.path.join(self.data_dir, "usershares")
+        sharesdir = os.path.join(self.np.config.data_dir, "usershares")
         try:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
@@ -2292,7 +2289,7 @@ class NicotineFrame:
         self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersdown, 'speed': down})
         self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
 
-        self.tray.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
+        self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
 
     """ Settings """
 
@@ -2336,11 +2333,11 @@ class NicotineFrame:
         self.downloads.update_download_filters()
         self.np.config.write_configuration()
 
-        if not config["ui"]["trayicon"] and self.tray.is_tray_icon_visible():
-            self.tray.hide()
+        if not config["ui"]["trayicon"] and self.tray_icon.is_visible():
+            self.tray_icon.hide()
 
-        elif config["ui"]["trayicon"] and not self.tray.is_tray_icon_visible():
-            self.tray.load()
+        elif config["ui"]["trayicon"] and not self.tray_icon.is_visible():
+            self.tray_icon.load()
 
         if needcompletion:
             self.chatrooms.update_completions()
@@ -2523,7 +2520,7 @@ class NicotineFrame:
         self.MainNotebook.disconnect(self.page_removed_signal)
 
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray.hide()
+        self.tray_icon.hide()
 
         # Save window state (window size, position, columns)
         self.save_window_state()
@@ -2537,7 +2534,7 @@ class NicotineFrame:
 
 class MainApp(Gtk.Application):
 
-    def __init__(self, data_dir, config, plugins, trayicon, start_hidden, ci_mode, bindip, port):
+    def __init__(self, tray_icon, start_hidden, ci_mode, bindip, port):
 
         application_id = "org.nicotine_plus.Nicotine"
 
@@ -2545,10 +2542,7 @@ class MainApp(Gtk.Application):
         GLib.set_application_name("Nicotine+")
         GLib.set_prgname(application_id)
 
-        self.data_dir = data_dir
-        self.config = config
-        self.plugins = plugins
-        self.trayicon = trayicon
+        self.tray_icon = tray_icon
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
         self.bindip = bindip
@@ -2560,10 +2554,7 @@ class MainApp(Gtk.Application):
 
             NicotineFrame(
                 self,
-                self.data_dir,
-                self.config,
-                self.plugins,
-                self.trayicon,
+                self.tray_icon,
                 self.start_hidden,
                 self.ci_mode,
                 self.bindip,

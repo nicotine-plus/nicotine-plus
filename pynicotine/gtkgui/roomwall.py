@@ -21,7 +21,7 @@ import os
 from pynicotine import slskmessages
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 
 
 class RoomWall:

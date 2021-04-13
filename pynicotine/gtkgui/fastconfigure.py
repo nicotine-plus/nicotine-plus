@@ -22,12 +22,12 @@ import os
 
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.dialogs import choose_dir
-from pynicotine.gtkgui.dialogs import combo_box_dialog
-from pynicotine.gtkgui.utils import FileChooserButton
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
+from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
 
 
 class FastConfigureAssistant(object):

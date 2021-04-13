@@ -26,12 +26,15 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
-from pynicotine.gtkgui.dialogs import combo_box_dialog
-from pynicotine.gtkgui.utils import PopupMenu
+from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.logfacility import log
 
 
-class Tray:
+""" Status Icon / AppIndicator """
+
+
+class TrayIcon:
 
     def __init__(self, frame):
 
@@ -293,7 +296,7 @@ class Tray:
 
     def hide(self):
 
-        if not self.is_tray_icon_visible():
+        if not self.is_visible():
             return
 
         if self.appindicator is not None:
@@ -308,7 +311,7 @@ class Tray:
         self.frame.chatrooms.clear_notifications()
         self.frame.privatechats.clear_notifications()
 
-    def is_tray_icon_visible(self):
+    def is_visible(self):
 
         if self.trayicon is None:
             return False
@@ -323,7 +326,7 @@ class Tray:
 
     def set_image(self, status=None):
 
-        if not self.is_tray_icon_visible():
+        if not self.is_visible():
             return
 
         try:

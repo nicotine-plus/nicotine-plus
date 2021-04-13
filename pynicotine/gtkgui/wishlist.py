@@ -26,10 +26,10 @@ import os
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.dialogs import option_dialog
-from pynicotine.gtkgui.utils import initialise_columns
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import update_widget_visuals
+from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
 
 
