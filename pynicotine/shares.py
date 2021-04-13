@@ -666,36 +666,34 @@ class Shares:
             return
 
         shared = self.share_dbs["files"]
-        sharedstreams = self.share_dbs["streams"]
-        wordindex = self.share_dbs["wordindex"]
-        fileindex = self.share_dbs["fileindex"]
 
         shareddirs = [path for _name, path in config["transfers"]["shared"]]
         shareddirs.append(config["transfers"]["downloaddir"])
-
-        sharedmtimes = self.share_dbs["mtimes"]
 
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        shared[vdir] = shared.get(vdir, [])
+        if not shared.get(vdir):
+            shared[vdir] = []
 
         if file not in (i[0] for i in shared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             shared[vdir] += [fileinfo]
 
-            sharedstreams[vdir] = Scanner.get_dir_stream(shared[vdir])
+            self.share_dbs["streams"][vdir] = Scanner.get_dir_stream(shared[vdir])
+
+            fileindex = self.share_dbs["fileindex"]
 
             try:
                 index = len(fileindex)
             except TypeError:
                 index = len(list(fileindex))
 
-            Scanner.add_file_to_index(index, file, vdir, fileinfo, wordindex, fileindex, self.translatepunctuation)
+            Scanner.add_file_to_index(index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
 
-            sharedmtimes[vdir] = os.path.getmtime(rdir)
+            self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
 
         if config["transfers"]["enablebuddyshares"]:
@@ -712,37 +710,38 @@ class Shares:
             return
 
         bshared = self.share_dbs["buddyfiles"]
-        bsharedstreams = self.share_dbs["buddystreams"]
-        bwordindex = self.share_dbs["buddywordindex"]
-        bfileindex = self.share_dbs["buddyfileindex"]
 
         bshareddirs = [path for _name, path in config["transfers"]["shared"]]
         bshareddirs += [path for _name, path in config["transfers"]["buddyshared"]]
         bshareddirs.append(config["transfers"]["downloaddir"])
 
-        bsharedmtimes = self.share_dbs["buddymtimes"]
-
         rdir = str(os.path.expanduser(os.path.dirname(name)))
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        bshared[vdir] = bshared.get(vdir, [])
+        if not bshared.get(vdir):
+            bshared[vdir] = []
 
         if file not in (i[0] for i in bshared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             bshared[vdir] += [fileinfo]
 
-            bsharedstreams[vdir] = Scanner.get_dir_stream(bshared[vdir])
+            self.share_dbs["buddystreams"][vdir] = Scanner.get_dir_stream(bshared[vdir])
+
+            bfileindex = self.share_dbs["buddyfileindex"]
 
             try:
                 index = len(bfileindex)
             except TypeError:
                 index = len(list(bfileindex))
 
-            Scanner.add_file_to_index(index, file, vdir, fileinfo, bwordindex, bfileindex, self.translatepunctuation)
+            Scanner.add_file_to_index(
+                index, file, vdir, fileinfo,
+                self.share_dbs["buddywordindex"], bfileindex, self.translatepunctuation
+            )
 
-            bsharedmtimes[vdir] = os.path.getmtime(rdir)
+            self.share_dbs["buddymtimes"][vdir] = os.path.getmtime(rdir)
             self.newbuddyshares = True
 
     def create_compressed_shares_message(self, sharestype):
