@@ -356,6 +356,7 @@ class PrivateChat:
             spell_view.set_inline_spell_checking(True)
 
         self.ChatCompletion.set_model(Gtk.ListStore(str))
+        self.ChatCompletion.set_text_column(0)
         self.ChatCompletion.set_match_func(entry_completion_find_match)
         self.ChatCompletion.connect("match-selected", entry_completion_found_match)
 

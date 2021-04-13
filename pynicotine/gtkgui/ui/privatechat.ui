@@ -110,6 +110,5 @@
   </object>
   <object class="GtkEntryCompletion" id="ChatCompletion">
     <property name="inline-completion">1</property>
-    <property name="text-column">0</property>
   </object>
 </interface>
