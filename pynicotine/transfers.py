@@ -550,13 +550,13 @@ class Transfers:
 
                 if os.path.commonprefix([i, directory]) == directory:
                     files = file_list[i][directory][:]
+                    destination = self.get_folder_destination(username, directory)
 
                     if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
                         files.sort(key=lambda x: x[1], reverse=True)
 
                     for file in files:
                         virtualpath = directory.rstrip('\\') + '\\' + file[1]
-                        destination = self.get_folder_destination(username, directory)
                         size = file[2]
                         h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 

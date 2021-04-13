@@ -1021,7 +1021,7 @@ class UserBrowse:
         if self.selected_folder is None:
             return
 
-        path = self.selected_folder
+        path = self.selected_folder + '\\'
         copy_file_url(self.user, path, self.frame.clipboard)
 
     def on_file_manager(self, *args):

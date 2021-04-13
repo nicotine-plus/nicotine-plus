@@ -153,6 +153,7 @@ def open_uri(uri, window):
 
     if protocol == "slsk":
         on_soul_seek_uri(uri.strip())
+        return
 
     # Situation 2, user did not define a way of handling the protocol
     try:
@@ -179,6 +180,8 @@ def on_soul_seek_uri(url):
             NICOTINE.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
         else:
             NICOTINE.np.transfers.get_file(user, file.replace("/", "\\"), "")
+
+        NICOTINE.change_main_page("downloads")
 
     except Exception:
         log.add(_("Invalid SoulSeek meta-url: %s"), url)

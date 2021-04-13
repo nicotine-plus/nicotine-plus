@@ -890,7 +890,7 @@ class TransferList:
 
     def on_copy_dir_url(self, *args):
         transfer = next(iter(self.selected_transfers))
-        copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0], self.frame.clipboard)
+        copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
     def on_retry_transfer(self, *args):
         self.select_transfers()

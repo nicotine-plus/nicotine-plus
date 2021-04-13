@@ -1299,7 +1299,7 @@ class Search:
 
     def on_copy_dir_url(self, *args):
         user, path = next(iter(self.selected_results))[:2]
-        copy_file_url(user, path.rsplit('\\', 1)[0], self.frame.clipboard)
+        copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
     def on_group(self, widget):
 
