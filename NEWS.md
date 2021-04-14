@@ -14,6 +14,7 @@ Changes
 
 Corrections
 
+ * Custom media player and file manager commands no longer reset after a restart
  * Fixed an issue where scanning of shared files malfunctioned if the UI didn't load in time
  * Fixed a critical error when a new room was joined while country flags were disabled
  * Fixed a critical error when attempting to add wishlist items while disconnected from the server
@@ -33,6 +34,7 @@ Issues closed on GitHub
  * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
  * critical error crash ([#1333](https://github.com/Nicotine-Plus/nicotine-plus/issues/1333))
+ * File Manager and Media Player events are buggy ([#1335](https://github.com/Nicotine-Plus/nicotine-plus/issues/1335))
 
 Version 3.0.4 (April 7, 2021)
 -----------------------------

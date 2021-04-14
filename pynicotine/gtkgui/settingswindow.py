@@ -3035,8 +3035,9 @@ class Settings:
 
         self.on_switch_page(selection)
 
-    def get_position(self, combobox, option):
+    def set_combobox_value(self, combobox, option):
 
+        # Attempt to match the value with an existing item
         iterator = combobox.get_model().get_iter_first()
 
         while iterator is not None:
@@ -3047,6 +3048,10 @@ class Settings:
                 break
 
             iterator = combobox.get_model().iter_next(iterator)
+
+        # Custom value provided
+        if combobox.get_has_entry():
+            combobox.get_children()[0].set_text(option)
 
     def set_widgets_data(self, options):
 
@@ -3129,7 +3134,7 @@ class Settings:
             widget.set_active(0)
 
         elif isinstance(widget, Gtk.ComboBox):
-            self.get_position(widget, "")
+            self.set_combobox_item(widget, "")
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
@@ -3158,7 +3163,7 @@ class Settings:
 
         elif isinstance(widget, Gtk.ComboBox):
             if isinstance(value, str):
-                self.get_position(widget, value)
+                self.set_combobox_value(widget, value)
 
             elif isinstance(value, int):
                 widget.set_active(value)
