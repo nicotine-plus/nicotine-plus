@@ -3027,8 +3027,8 @@ class Settings:
         )
 
         # Set the cursor to the second element of the TreeViewColumn.
-        self.SettingsTreeview.set_cursor((0, 0))
         self.SettingsTreeview.expand_all()
+        self.SettingsTreeview.set_cursor((0, 0))
 
         self.update_visuals()
 
