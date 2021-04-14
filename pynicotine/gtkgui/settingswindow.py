@@ -3164,7 +3164,7 @@ class Settings:
                 widget.set_active(value)
 
             # If an invalid value was provided, select first item
-            if widget.get_active() < 0:
+            if not widget.get_has_entry() and widget.get_active() < 0:
                 widget.set_active(0)
 
         elif isinstance(widget, Gtk.FontButton):
