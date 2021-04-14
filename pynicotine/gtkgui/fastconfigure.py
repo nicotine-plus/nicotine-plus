@@ -242,8 +242,8 @@ class FastConfigureAssistant(object):
 
         model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
-        for path in paths:
-            self.sharelist.remove(self.sharelist.get_iter(path))
+        for path in reversed(paths):
+            model.remove(model.get_iter(path))
 
     def on_apply(self, *args):
 
