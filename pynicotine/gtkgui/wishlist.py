@@ -26,6 +26,7 @@ import os
 from gi.repository import GLib
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -59,7 +60,7 @@ class WishList:
 
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        for wish in self.frame.np.config.sections["server"]["autosearch"]:
+        for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
             self.wishes[wish] = self.store.append([wish])
 
@@ -145,9 +146,9 @@ class WishList:
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
 
-        if wish in self.frame.np.config.sections["server"]["autosearch"]:
+        if wish in config.sections["server"]["autosearch"]:
 
-            self.frame.np.config.sections["server"]["autosearch"].remove(wish)
+            config.sections["server"]["autosearch"].remove(wish)
 
             for number, search in self.searches.searches.items():
 
@@ -169,7 +170,7 @@ class WishList:
 
         if not self.disconnected:
             # Create wishlist searches (without tabs)
-            for term in self.frame.np.config.sections["server"]["autosearch"]:
+            for term in config.sections["server"]["autosearch"]:
                 search_id = self.frame.np.search.increment_search_id()
 
                 self.searches.searches[search_id] = {
@@ -191,7 +192,7 @@ class WishList:
             log.add_warning(_("The server forbid us from doing wishlist searches."))
             return False
 
-        searches = self.frame.np.config.sections["server"]["autosearch"]
+        searches = config.sections["server"]["autosearch"]
 
         if not searches:
             return True

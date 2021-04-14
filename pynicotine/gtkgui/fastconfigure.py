@@ -22,11 +22,13 @@ import os
 
 from gi.repository import Gtk
 
+from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 
 
@@ -35,7 +37,6 @@ class FastConfigureAssistant(object):
     def __init__(self, frame):
 
         self.frame = frame
-        self.config = frame.np.config
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
         self.FastConfigureDialog.set_transient_for(self.frame.MainWindow)
@@ -61,21 +62,21 @@ class FastConfigureAssistant(object):
 
         # userpasspage
         self.username.set_text(
-            self.config.sections["server"]["login"]
+            config.sections["server"]["login"]
         )
         self.password.set_text(
-            self.config.sections["server"]["passw"]
+            config.sections["server"]["passw"]
         )
 
         # sharepage
-        if self.config.sections['transfers']['downloaddir']:
+        if config.sections['transfers']['downloaddir']:
             self.downloaddir.set_path(
-                self.config.sections['transfers']['downloaddir']
+                config.sections['transfers']['downloaddir']
             )
 
         self.sharelist.clear()
 
-        for directory in self.config.sections["transfers"]["shared"]:
+        for directory in config.sections["transfers"]["shared"]:
             self.add_shared_folder(directory)
 
         self.FastConfigureDialog.show()
@@ -83,12 +84,12 @@ class FastConfigureAssistant(object):
     def store(self):
 
         # userpasspage
-        self.config.sections["server"]["login"] = self.username.get_text()
-        self.config.sections["server"]["passw"] = self.password.get_text()
+        config.sections["server"]["login"] = self.username.get_text()
+        config.sections["server"]["passw"] = self.password.get_text()
 
         # sharepage
-        self.config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
-        self.config.sections["transfers"]["shared"] = self.get_shared_folders()
+        config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
+        config.sections["transfers"]["shared"] = self.get_shared_folders()
 
     def reset_completeness(self):
         """Turns on the complete flag if everything required is filled in."""
@@ -188,17 +189,11 @@ class FastConfigureAssistant(object):
 
                 # If the virtual name is empty
                 if virtual == '' or virtual is None:
-
-                    dlg = Gtk.MessageDialog(
-                        transient_for=self.FastConfigureDialog,
-                        flags=0,
-                        type=Gtk.MessageType.WARNING,
-                        buttons=Gtk.ButtonsType.OK,
-                        text=_("Warning")
+                    message_dialog(
+                        parent=self.FastConfigureDialog,
+                        title=_("Unable to Share Folder"),
+                        message=_("The chosen virtual name is empty")
                     )
-                    dlg.format_secondary_text(_("The chosen virtual name is empty"))
-                    dlg.run()
-                    dlg.destroy()
 
                 else:
                     # Remove slashes from share name to avoid path conflicts
@@ -213,32 +208,20 @@ class FastConfigureAssistant(object):
 
                         # We reject the share if the virtual share name is already used
                         if virtual == model.get_value(iterator, 0):
-
-                            dlg = Gtk.MessageDialog(
-                                transient_for=self.FastConfigureDialog,
-                                flags=0,
-                                type=Gtk.MessageType.WARNING,
-                                buttons=Gtk.ButtonsType.OK,
-                                text=_("Warning")
+                            message_dialog(
+                                parent=self.FastConfigureDialog,
+                                title=_("Unable to Share Folder"),
+                                message=_("The chosen virtual name already exists")
                             )
-                            dlg.format_secondary_text(_("The chosen virtual name already exists"))
-                            dlg.run()
-                            dlg.destroy()
                             return
 
                         # We also reject the share if the directory is already used
                         elif directory == model.get_value(iterator, 1):
-
-                            dlg = Gtk.MessageDialog(
-                                transient_for=self.FastConfigureDialog,
-                                flags=0,
-                                type=Gtk.MessageType.WARNING,
-                                buttons=Gtk.ButtonsType.OK,
-                                text=_("Warning")
+                            message_dialog(
+                                parent=self.FastConfigureDialog,
+                                title=_("Unable to Share Folder"),
+                                message=_("The chosen folder is already shared")
                             )
-                            dlg.format_secondary_text(_("The chosen folder is already shared"))
-                            dlg.run()
-                            dlg.destroy()
                             return
 
                         else:
@@ -260,11 +243,11 @@ class FastConfigureAssistant(object):
         self.FastConfigureDialog.hide()
 
         # Rescan public shares if needed
-        if not self.config.sections["transfers"]["friendsonly"]:
+        if not config.sections["transfers"]["friendsonly"]:
             self.frame.on_rescan()
 
         # Rescan buddy shares if needed
-        if self.config.sections["transfers"]["enablebuddyshares"]:
+        if config.sections["transfers"]["enablebuddyshares"]:
             self.frame.on_buddy_rescan()
 
         if not self.frame.np.active_server_conn:

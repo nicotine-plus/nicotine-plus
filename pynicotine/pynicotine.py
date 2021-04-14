@@ -119,26 +119,8 @@ class NetworkEventProcessor:
         # Tell threads when we're disconnecting
         self.exit = threading.Event()
 
-        self.config = config
-        try:
-            config.load_config()
-
-        except Exception:
-            corruptfile = ".".join([config, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
-
-            import shutil
-            shutil.move(config.filename, corruptfile)
-
-            short_message = _("Your config file is corrupt")
-            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
-            self.ui_callback.show_info_message(short_message, long_message)
-
-            config.load_config()
-
         self.bindip = bindip
         self.port = port
-
-        log.set_log_levels(self.config.sections["logging"]["debugmodes"])
 
         self.peerconns = []
         self.watchedusers = set()
@@ -151,21 +133,14 @@ class NetworkEventProcessor:
         self.geoip = IP2Location(file_path, "SHARED_MEMORY")
 
         self.queue = deque()
-        self.network_filter = NetworkFilter(self, self.config, self.users, self.queue, self.geoip)
-        self.statistics = Statistics(self.config, self.ui_callback)
-        self.shares = Shares(self, self.config, self.queue, self.ui_callback)
-        self.search = Search(self, self.config, self.queue, self.shares.share_dbs, self.ui_callback)
+        self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
+        self.statistics = Statistics(config, self.ui_callback)
+        self.shares = Shares(self, config, self.queue, self.ui_callback)
+        self.search = Search(self, config, self.queue, self.shares.share_dbs, self.ui_callback)
         self.pluginhandler = None  # Initialized when the GUI is ready
-        self.now_playing = NowPlaying(self.config)
+        self.now_playing = NowPlaying(config)
 
-        # Give the logger information about log folder
-        should_log = self.config.sections["logging"]["debug_file_output"]
-        log_folder = self.config.sections["logging"]["debuglogsdir"]
-        timestamp_format = self.config.sections["logging"]["log_timestamp"]
-
-        log.update_debug_log_options(should_log, log_folder, timestamp_format)
-
-        port_range = self.config.sections["server"]["portrange"]
+        port_range = config.sections["server"]["portrange"]
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
         # UPnP
@@ -332,7 +307,7 @@ class NetworkEventProcessor:
         msg_type = msg.type
         found_conn = False
 
-        if user != self.config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
+        if user != config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
             for i in self.peerconns:
                 if i.username == user and i.type != 'F' and i.type == msg_type:
                     i.addr = addr
@@ -420,7 +395,7 @@ class NetworkEventProcessor:
         else:
             message_type = 'P'
 
-        init = slskmessages.PeerInit(None, self.config.sections["server"]["login"], message_type, 0)
+        init = slskmessages.PeerInit(None, config.sections["server"]["login"], message_type, 0)
         addr = None
 
         if user in self.users:
@@ -492,7 +467,7 @@ class NetworkEventProcessor:
 
         init = slskmessages.PeerInit(None, user, msg_type, 0)
 
-        if user != self.config.sections["server"]["login"]:
+        if user != config.sections["server"]["login"]:
             for i in self.peerconns:
                 if i.username == user and i.type != 'F' and i.type == msg_type:
                     """ Only update existing connection if it hasn't been established yet,
@@ -912,7 +887,7 @@ class NetworkEventProcessor:
         if self.upnp_timer:
             self.upnp_timer.cancel()
 
-        upnp_interval = self.config.sections["server"]["upnp_interval"]
+        upnp_interval = config.sections["server"]["upnp_interval"]
 
         if upnp_interval < 1:
             return
@@ -927,7 +902,7 @@ class NetworkEventProcessor:
     def add_upnp_portmapping(self):
 
         # Test if we want to do a port mapping
-        if not self.config.sections["server"]["upnp"]:
+        if not config.sections["server"]["upnp"]:
             return
 
         # Do the port mapping
@@ -961,7 +936,7 @@ class NetworkEventProcessor:
         self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))
 
     def server_timeout(self):
-        if not self.config.need_config():
+        if not config.need_config():
             self.ui_callback.on_connect()
 
     def transfer_timeout(self, msg):
@@ -1021,8 +996,8 @@ class NetworkEventProcessor:
         self.users.clear()
         self.queue.append(
             slskmessages.Login(
-                self.config.sections["server"]["login"],
-                self.config.sections["server"]["passw"],
+                config.sections["server"]["login"],
+                config.sections["server"]["passw"],
 
                 # Soulseek client version; 155, 156, 157
                 # SoulseekQt seems to be using 157
@@ -1108,16 +1083,16 @@ class NetworkEventProcessor:
             thread.start()
 
             self.queue.append(slskmessages.SetStatus((not self.ui_callback.away) + 1))
-            self.watch_user(self.config.sections["server"]["login"])
+            self.watch_user(config.sections["server"]["login"])
 
-            self.transfers = transfers.Transfers(self.peerconns, self.queue, self, self.users,
+            self.transfers = transfers.Transfers(config, self.peerconns, self.queue, self, self.users,
                                                  self.network_callback, self.ui_callback.notifications, self.pluginhandler)
             self.shares.set_connected(True)
 
             if msg.ip is not None:
                 self.ipaddress = msg.ip
 
-            for i in self.config.sections["server"]["userlist"]:
+            for i in config.sections["server"]["userlist"]:
                 user = i[0]
                 self.watch_user(user)
 
@@ -1125,11 +1100,11 @@ class NetworkEventProcessor:
 
             self.transfers.set_transfer_views(downloads, uploads)
 
-            for thing in self.config.sections["interests"]["likes"]:
+            for thing in config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
                     self.queue.append(slskmessages.AddThingILike(thing))
 
-            for thing in self.config.sections["interests"]["dislikes"]:
+            for thing in config.sections["interests"]["dislikes"]:
                 if thing and isinstance(thing, str):
                     self.queue.append(slskmessages.AddThingIHate(thing))
 
@@ -1152,7 +1127,7 @@ class NetworkEventProcessor:
             requests contain all rooms. """
             self.queue.append(slskmessages.RoomList())
 
-            self.queue.append(slskmessages.PrivateRoomToggle(self.config.sections["server"]["private_chatrooms"]))
+            self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
             self.set_status("")
         else:
@@ -1288,7 +1263,7 @@ class NetworkEventProcessor:
         if log_contents:
             log.add_msg_contents(msg)
 
-        if msg.user == self.config.sections["server"]["login"]:
+        if msg.user == config.sections["server"]["login"]:
             self.speed = msg.avgspeed
 
         if self.interests is not None:
@@ -1556,8 +1531,8 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         password = msg.password
-        self.config.sections["server"]["passw"] = password
-        self.config.write_configuration()
+        config.sections["server"]["passw"] = password
+        config.write_configuration()
 
         self.ui_callback.show_info_message(_("Your password has been changed"), _("Password is %s") % password)
 
@@ -1637,7 +1612,7 @@ class NetworkEventProcessor:
             return
 
         # Check address is spoofed, if possible
-        if user == self.config.sections["server"]["login"]:
+        if user == config.sections["server"]["login"]:
             if ip is not None and port is not None:
                 log.add(
                     _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s"), {
@@ -1684,7 +1659,7 @@ class NetworkEventProcessor:
 
         for i in self.peerconns:
             if i.conn is conn and self.userbrowse is not None:
-                if i.username != self.config.sections["server"]["login"]:
+                if i.username != config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
                     self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
@@ -1761,7 +1736,7 @@ class NetworkEventProcessor:
         self.requested_info[user] = request_time
 
         # Check address is spoofed, if possible
-        if user == self.config.sections["server"]["login"]:
+        if user == config.sections["server"]["login"]:
 
             if ip is not None and port is not None:
                 log.add(
@@ -1789,7 +1764,7 @@ class NetworkEventProcessor:
             return
 
         try:
-            userpic = self.config.sections["userinfo"]["pic"]
+            userpic = config.sections["userinfo"]["pic"]
 
             with open(userpic, 'rb') as f:
                 pic = f.read()
@@ -1797,15 +1772,15 @@ class NetworkEventProcessor:
         except Exception:
             pic = None
 
-        descr = unescape(self.config.sections["userinfo"]["descr"])
+        descr = unescape(config.sections["userinfo"]["descr"])
 
         if self.transfers is not None:
             totalupl = self.transfers.get_total_uploads_allowed()
             queuesize = self.transfers.get_upload_queue_size()
             slotsavail = self.transfers.allow_new_uploads()
 
-            if self.config.sections["transfers"]["remotedownloads"]:
-                uploadallowed = self.config.sections["transfers"]["uploadallowed"]
+            if config.sections["transfers"]["remotedownloads"]:
+                uploadallowed = config.sections["transfers"]["uploadallowed"]
             else:
                 uploadallowed = 0
 
@@ -1827,7 +1802,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
-                if i.username != self.config.sections["server"]["login"]:
+                if i.username != config.sections["server"]["login"]:
                     indeterminate_progress = change_page = False
                     self.userinfo.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
@@ -2034,7 +2009,7 @@ class NetworkEventProcessor:
         log.add_conn("We have no parent, requesting a new one")
 
         self.queue.append(slskmessages.HaveNoParent(1))
-        self.queue.append(slskmessages.BranchRoot(self.config.sections["server"]["login"]))
+        self.queue.append(slskmessages.BranchRoot(config.sections["server"]["login"]))
         self.queue.append(slskmessages.BranchLevel(0))
 
     def distrib_branch_level(self, msg):

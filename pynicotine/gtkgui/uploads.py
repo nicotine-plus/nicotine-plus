@@ -24,6 +24,7 @@
 
 import os
 
+from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
@@ -56,8 +57,8 @@ class Uploads(TransferList):
 
     def on_open_directory(self, *args):
 
-        downloaddir = self.frame.np.config.sections["transfers"]["downloaddir"]
-        incompletedir = self.frame.np.config.sections["transfers"]["incompletedir"]
+        downloaddir = config.sections["transfers"]["downloaddir"]
+        incompletedir = config.sections["transfers"]["incompletedir"]
 
         if incompletedir == "":
             incompletedir = downloaddir
@@ -70,7 +71,7 @@ class Uploads(TransferList):
             final_path = incompletedir
 
         # Finally, try to open the directory we got...
-        command = self.frame.np.config.sections["ui"]["filemanager"]
+        command = config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
     def on_play_files(self, *args):
@@ -79,7 +80,7 @@ class Uploads(TransferList):
             playfile = transfer.realfilename
 
             if os.path.exists(playfile):
-                command = self.frame.np.config.sections["players"]["default"]
+                command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
     def on_abort_user(self, *args):

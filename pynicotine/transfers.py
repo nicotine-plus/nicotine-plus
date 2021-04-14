@@ -111,8 +111,9 @@ class TransferTimeout:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
+    def __init__(self, config, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
 
+        self.config = config
         self.peerconns = peerconns
         self.queue = queue
         self.eventprocessor = eventprocessor
@@ -203,7 +204,7 @@ class Transfers:
 
     def get_download_queue_file_name(self):
 
-        data_dir = self.eventprocessor.config.data_dir
+        data_dir = self.config.data_dir
         downloads_file_json = os.path.join(data_dir, 'downloads.json')
         downloads_file_1_4_2 = os.path.join(data_dir, 'config.transfers.pickle')
         downloads_file_1_4_1 = os.path.join(data_dir, 'transfers.pickle')
@@ -292,10 +293,10 @@ class Transfers:
         if not user:
             return False
 
-        for i in self.eventprocessor.config.sections["server"]["userlist"]:
+        for i in self.config.sections["server"]["userlist"]:
             if user == i[0]:
                 # All users
-                if self.eventprocessor.config.sections["transfers"]["preferfriends"]:
+                if self.config.sections["transfers"]["preferfriends"]:
                     return True
 
                 # Only privileged users
@@ -323,9 +324,9 @@ class Transfers:
 
         if self.eventprocessor.shares.initiated_shares:
 
-            if self.eventprocessor.config.sections["transfers"]["enablebuddyshares"] and \
+            if self.config.sections["transfers"]["enablebuddyshares"] and \
                     not self.eventprocessor.shares.buddy_rescanning:
-                if user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
+                if user in (i[0] for i in self.config.sections["server"]["userlist"]):
                     bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
 
                     for i in bshared.get(str(folder), ''):
@@ -376,16 +377,16 @@ class Transfers:
     def update_limits(self):
         """ Sends the updated speed limits to the networking thread """
 
-        uselimit = self.eventprocessor.config.sections["transfers"]["uselimit"]
-        uploadlimit = self.eventprocessor.config.sections["transfers"]["uploadlimit"]
-        limitby = self.eventprocessor.config.sections["transfers"]["limitby"]
+        uselimit = self.config.sections["transfers"]["uselimit"]
+        uploadlimit = self.config.sections["transfers"]["uploadlimit"]
+        limitby = self.config.sections["transfers"]["limitby"]
 
         self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
-        self.queue.append(slskmessages.SetDownloadLimit(self.eventprocessor.config.sections["transfers"]["downloadlimit"]))
+        self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
 
     def queue_limit_reached(self, user):
 
-        uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"] * 1024 * 1024
+        uploadslimit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
         if not uploadslimit:
             return False
@@ -396,7 +397,7 @@ class Transfers:
 
     def file_limit_reached(self, user):
 
-        filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+        filelimit = self.config.sections["transfers"]["filelimit"]
 
         if not filelimit:
             return False
@@ -407,7 +408,7 @@ class Transfers:
 
     def slot_limit_reached(self):
 
-        maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+        maxupslots = self.config.sections["transfers"]["uploadslots"]
         in_progress_count = 0
         now = time.time()
 
@@ -432,7 +433,7 @@ class Transfers:
 
     def bandwidth_limit_reached(self):
 
-        bandwidthlimit = self.eventprocessor.config.sections["transfers"]["uploadbandwidth"] * 1024
+        bandwidthlimit = self.config.sections["transfers"]["uploadbandwidth"] * 1024
 
         if not bandwidthlimit:
             return False
@@ -443,7 +444,7 @@ class Transfers:
 
     def allow_new_uploads(self):
 
-        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
+        if self.config.sections["transfers"]["useupslots"]:
             # Limit by upload slots
             if self.slot_limit_reached():
                 return False
@@ -552,7 +553,7 @@ class Transfers:
                     files = file_list[i][directory][:]
                     destination = self.get_folder_destination(username, directory)
 
-                    if self.eventprocessor.config.sections["transfers"]["reverseorder"]:
+                    if self.config.sections["transfers"]["reverseorder"]:
                         files.sort(key=lambda x: x[1], reverse=True)
 
                     for file in files:
@@ -615,8 +616,8 @@ class Transfers:
 
             limits = True
 
-            if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-                friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+            if self.config.sections["transfers"]["friendsnolimits"]:
+                friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
 
                 if friend:
                     limits = False
@@ -629,14 +630,14 @@ class Transfers:
                 )
 
             elif limits and self.queue_limit_reached(user):
-                uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
+                uploadslimit = self.config.sections["transfers"]["queuelimit"]
                 limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
                 self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
             elif limits and self.file_limit_reached(user):
-                filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+                filelimit = self.config.sections["transfers"]["filelimit"]
                 limitmsg = "User limit of %i files exceeded" % (filelimit)
                 self.queue.append(
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
@@ -755,9 +756,9 @@ class Transfers:
         # a remotely initated download and someone is manually uploading to you
         if self.can_upload(user):
             path = ""
-            if self.eventprocessor.config.sections["transfers"]["uploadsinsubdirs"]:
+            if self.config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = msg.file.replace('/', '\\').split('\\')[-2]
-                path = os.path.join(self.eventprocessor.config.sections["transfers"]["uploaddir"], user, parentdir)
+                path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(
                 user=user, filename=msg.file, path=path,
@@ -811,18 +812,18 @@ class Transfers:
         # Has user hit queue limit?
         limits = True
 
-        if self.eventprocessor.config.sections["transfers"]["friendsnolimits"]:
-            friend = user in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"])
+        if self.config.sections["transfers"]["friendsnolimits"]:
+            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
 
             if friend:
                 limits = False
 
         if limits and self.queue_limit_reached(user):
-            uploadslimit = self.eventprocessor.config.sections["transfers"]["queuelimit"]
+            uploadslimit = self.config.sections["transfers"]["queuelimit"]
             return slskmessages.TransferResponse(None, 0, reason="User limit of %i megabytes exceeded" % (uploadslimit), req=msg.req)
 
         if limits and self.file_limit_reached(user):
-            filelimit = self.eventprocessor.config.sections["transfers"]["filelimit"]
+            filelimit = self.config.sections["transfers"]["filelimit"]
             limitmsg = "User limit of %i files exceeded" % (filelimit)
             return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
 
@@ -1010,8 +1011,8 @@ class Transfers:
             "user": i.user
         })
 
-        downloaddir = self.eventprocessor.config.sections["transfers"]["downloaddir"]
-        incompletedir = self.eventprocessor.config.sections["transfers"]["incompletedir"]
+        downloaddir = self.config.sections["transfers"]["downloaddir"]
+        incompletedir = self.config.sections["transfers"]["incompletedir"]
         needupdate = True
 
         if i.conn is None and i.size is not None:
@@ -1052,7 +1053,7 @@ class Transfers:
                     fname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
                     f = open(fname, 'ab+')
 
-                    if self.eventprocessor.config.sections["transfers"]["lock"]:
+                    if self.config.sections["transfers"]["lock"]:
                         try:
                             import fcntl
                             try:
@@ -1465,7 +1466,7 @@ class Transfers:
         privileged_user = self.is_privileged(user)
         place = 0
 
-        if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+        if self.config.sections["transfers"]["fifoqueue"]:
             for i in self.uploads:
                 # Ignore non-queued files
                 if i.status != "Queued":
@@ -1612,10 +1613,10 @@ class Transfers:
 
         shouldupdate = True
 
-        if not direction and self.eventprocessor.config.sections["transfers"]["enablefilters"]:
+        if not direction and self.config.sections["transfers"]["enablefilters"]:
             # Only filter downloads, never uploads!
             try:
-                downloadregexp = re.compile(self.eventprocessor.config.sections["transfers"]["downloadregexp"], re.I)
+                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], re.I)
                 if downloadregexp.search(filename) is not None:
                     log.add_transfer("Filtering: %s", filename)
                     self.abort_transfer(transfer)
@@ -1689,14 +1690,14 @@ class Transfers:
 
     def can_upload(self, user):
 
-        transfers = self.eventprocessor.config.sections["transfers"]
+        transfers = self.config.sections["transfers"]
 
         if transfers["remotedownloads"]:
 
             # Remote Uploads only for users in list
             if transfers["uploadallowed"] == 2:
                 # Users in userlist
-                if user not in (i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]):
+                if user not in (i[0] for i in self.config.sections["server"]["userlist"]):
                     # Not a buddy
                     return False
 
@@ -1710,12 +1711,12 @@ class Transfers:
 
             if transfers["uploadallowed"] == 3:
                 # Trusted Users
-                userlist = [i[0] for i in self.eventprocessor.config.sections["server"]["userlist"]]
+                userlist = [i[0] for i in self.config.sections["server"]["userlist"]]
 
                 if user not in userlist:
                     # Not a buddy
                     return False
-                if not self.eventprocessor.config.sections["server"]["userlist"][userlist.index(user)][4]:
+                if not self.config.sections["server"]["userlist"][userlist.index(user)][4]:
                     # Not Trusted
                     return False
 
@@ -1739,7 +1740,7 @@ class Transfers:
             download_location = self.requested_folders[user][directory]
 
         else:
-            download_location = self.eventprocessor.config.sections["transfers"]["downloaddir"]
+            download_location = self.config.sections["transfers"]["downloaddir"]
 
         # Get the last folder in directory path
         target_name = directory.rstrip('\\').split('\\')[-1]
@@ -1760,8 +1761,8 @@ class Transfers:
 
     def get_total_uploads_allowed(self):
 
-        if self.eventprocessor.config.sections["transfers"]["useupslots"]:
-            maxupslots = self.eventprocessor.config.sections["transfers"]["uploadslots"]
+        if self.config.sections["transfers"]["useupslots"]:
+            maxupslots = self.config.sections["transfers"]["uploadslots"]
             return maxupslots
         else:
             lstlen = sum(1 for i in self.uploads if i.conn is not None)
@@ -1815,7 +1816,7 @@ class Transfers:
 
     def file_downloaded_actions(self, user, filepath):
 
-        config = self.eventprocessor.config.sections
+        config = self.config.sections
 
         if self.notifications and config["notifications"]["notification_popup_file"]:
             self.notifications.new_notification(
@@ -1839,7 +1840,7 @@ class Transfers:
             if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path == folderpath:
                 return
 
-        config = self.eventprocessor.config.sections
+        config = self.config.sections
 
         if config["transfers"]["sharedownloaddir"]:
             """ Folder downloaded and shared. Notify the server of new stats. The
@@ -1869,8 +1870,7 @@ class Transfers:
 
         self.close_file(file, i)
 
-        config = self.eventprocessor.config.sections
-        downloaddir = config["transfers"]["downloaddir"]
+        downloaddir = self.config.sections["transfers"]["downloaddir"]
         basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
 
         if i.path and i.path[0] == '/':
@@ -1972,7 +1972,7 @@ class Transfers:
         self.check_upload_queue()
 
     def auto_clear_download(self, transfer):
-        if self.eventprocessor.config.sections["transfers"]["autoclear_downloads"]:
+        if self.config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(transfer)
             self.downloadsview.remove_specific(transfer, True)
             return True
@@ -1980,7 +1980,7 @@ class Transfers:
         return False
 
     def auto_clear_upload(self, transfer):
-        if self.eventprocessor.config.sections["transfers"]["autoclear_uploads"]:
+        if self.config.sections["transfers"]["autoclear_uploads"]:
             self.uploads.remove(transfer)
             self.uploadsview.remove_specific(transfer, True)
             return True
@@ -2080,7 +2080,7 @@ class Transfers:
         if not queued_uploads:
             return None
 
-        if self.eventprocessor.config.sections["transfers"]["fifoqueue"]:
+        if self.config.sections["transfers"]["fifoqueue"]:
             # FIFO
             # Get the first item in the list
             upload_candidate = queued_uploads[0]
@@ -2150,8 +2150,8 @@ class Transfers:
 
         if ban_message:
             banmsg = _("Banned (%s)") % ban_message
-        elif self.eventprocessor.config.sections["transfers"]["usecustomban"]:
-            banmsg = _("Banned (%s)") % self.eventprocessor.config.sections["transfers"]["customban"]
+        elif self.config.sections["transfers"]["usecustomban"]:
+            banmsg = _("Banned (%s)") % self.config.sections["transfers"]["customban"]
         else:
             banmsg = _("Banned")
 
@@ -2242,9 +2242,9 @@ class Transfers:
 
     def log_transfer(self, message, show_ui=0):
 
-        if self.eventprocessor.config.sections["logging"]["transfers"]:
-            timestamp_format = self.eventprocessor.config.sections["logging"]["log_timestamp"]
-            log.write_log(self.eventprocessor.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
+        if self.config.sections["logging"]["transfers"]:
+            timestamp_format = self.config.sections["logging"]["log_timestamp"]
+            log.write_log(self.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
 
         if show_ui:
             log.add(message)
@@ -2274,8 +2274,8 @@ class Transfers:
     def save_downloads(self):
         """ Save list of files to be downloaded """
 
-        self.eventprocessor.config.create_data_folder()
-        downloads_file = os.path.join(self.eventprocessor.config.data_dir, 'downloads.json')
+        self.config.create_data_folder()
+        downloads_file = os.path.join(self.config.data_dir, 'downloads.json')
 
         write_file_and_backup(downloads_file, self.save_downloads_callback)
 

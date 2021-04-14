@@ -34,6 +34,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
+from pynicotine.config import config
 from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
@@ -69,18 +70,14 @@ class Searches(IconNotebook):
         self.searches = {}
         self.usersearches = {}
         self.users = {}
-        self.maxdisplayedresults = self.frame.np.config.sections['searches']["max_displayed_results"]
-        self.maxstoredresults = self.frame.np.config.sections['searches']["max_stored_results"]
-
-        ui = self.frame.np.config.sections["ui"]
 
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=ui["labelsearch"],
-            tabclosers=ui["tabclosers"],
-            show_hilite_image=self.frame.np.config.sections["notifications"]["notification_tab_icons"],
-            reorderable=ui["tab_reorderable"],
+            angle=config.sections["ui"]["labelsearch"],
+            tabclosers=config.sections["ui"]["tabclosers"],
+            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
+            reorderable=config.sections["ui"]["tab_reorderable"],
             notebookraw=self.frame.SearchNotebookRaw
         )
 
@@ -96,7 +93,7 @@ class Searches(IconNotebook):
         Add search history to SearchCombo later and connect Wishlist,
         after widgets have been created.
         """
-        items = self.frame.np.config.sections["searches"]["history"]
+        items = config.sections["searches"]["history"]
         templist = []
 
         for i in items:
@@ -176,7 +173,7 @@ class Searches(IconNotebook):
         # Repopulate the combo list
         self.frame.SearchCombo.remove_all()
 
-        items = self.frame.np.config.sections["searches"]["history"]
+        items = config.sections["searches"]["history"]
 
         for i in items:
             if not isinstance(i, str):
@@ -194,21 +191,21 @@ class Searches(IconNotebook):
 
         self.frame.SearchEntry.set_text("")
 
-        self.frame.np.config.sections["searches"]["history"] = []
-        self.frame.np.config.write_configuration()
+        config.sections["searches"]["history"] = []
+        config.write_configuration()
 
         self.frame.SearchCombo.remove_all()
 
     def clear_filter_history(self):
 
         # Clear filter history in config
-        self.frame.np.config.sections["searches"]["filterin"] = []
-        self.frame.np.config.sections["searches"]["filterout"] = []
-        self.frame.np.config.sections["searches"]["filtertype"] = []
-        self.frame.np.config.sections["searches"]["filtersize"] = []
-        self.frame.np.config.sections["searches"]["filterbr"] = []
-        self.frame.np.config.sections["searches"]["filtercc"] = []
-        self.frame.np.config.write_configuration()
+        config.sections["searches"]["filterin"] = []
+        config.sections["searches"]["filterout"] = []
+        config.sections["searches"]["filtertype"] = []
+        config.sections["searches"]["filtersize"] = []
+        config.sections["searches"]["filterbr"] = []
+        config.sections["searches"]["filtercc"] = []
+        config.write_configuration()
 
         # Update filters in search tabs
         for id in self.searches.values():
@@ -283,7 +280,7 @@ class Searches(IconNotebook):
         counter = len(search["tab"].all_data) + 1
 
         # No more things to add because we've reached the max_stored_results limit
-        if counter > self.maxstoredresults:
+        if counter > config.sections["searches"]["max_stored_results"]:
             return
 
         search["tab"].add_user_results(msg, username, country)
@@ -293,7 +290,7 @@ class Searches(IconNotebook):
         if tab.id in self.searches:
             search = self.searches[tab.id]
 
-            if tab.text not in self.frame.np.config.sections["server"]["autosearch"]:
+            if tab.text not in config.sections["server"]["autosearch"]:
                 del self.searches[tab.id]
             else:
                 search["tab"] = None
@@ -456,7 +453,7 @@ class Search:
 
         """ Filters """
 
-        self.ShowFilters.set_active(self.frame.np.config.sections["searches"]["filters_visible"])
+        self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
 
         """ Popup """
@@ -492,8 +489,8 @@ class Search:
 
         """ Grouping """
 
-        self.ResultGrouping.set_active(self.frame.np.config.sections["searches"]["group_searches"])
-        self.ExpandButton.set_active(self.frame.np.config.sections["searches"]["expand_searches"])
+        self.ResultGrouping.set_active(config.sections["searches"]["group_searches"])
+        self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
@@ -512,9 +509,9 @@ class Search:
                          self.FilterBitrate, self.FilterCountry):
             combobox.remove_all()
 
-        if set_default_filters and self.frame.np.config.sections["searches"]["enablefilters"]:
+        if set_default_filters and config.sections["searches"]["enablefilters"]:
 
-            sfilter = self.frame.np.config.sections["searches"]["defilter"]
+            sfilter = config.sections["searches"]["defilter"]
 
             self.FilterInEntry.set_text(str(sfilter[0]))
             self.FilterOutEntry.set_text(str(sfilter[1]))
@@ -539,24 +536,22 @@ class Search:
         for i in ['flac|wav|ape|aiff|wv|cue', 'mp3|m4a|aac|ogg|opus|wma', '!mp3']:
             self.FilterType.append_text(i)
 
-        s_config = self.frame.np.config.sections["searches"]
-
-        for i in s_config["filterin"]:
+        for i in config.sections["searches"]["filterin"]:
             self.add_combo(self.FilterIn, i, True)
 
-        for i in s_config["filterout"]:
+        for i in config.sections["searches"]["filterout"]:
             self.add_combo(self.FilterOut, i, True)
 
-        for i in s_config["filtersize"]:
+        for i in config.sections["searches"]["filtersize"]:
             self.add_combo(self.FilterSize, i, True)
 
-        for i in s_config["filterbr"]:
+        for i in config.sections["searches"]["filterbr"]:
             self.add_combo(self.FilterBitrate, i, True)
 
-        for i in s_config["filtercc"]:
+        for i in config.sections["searches"]["filtercc"]:
             self.add_combo(self.FilterCountry, i, True)
 
-        for i in s_config["filtertype"]:
+        for i in config.sections["searches"]["filtertype"]:
             self.add_combo(self.FilterType, i, True)
 
     def focus_combobox(self, button):
@@ -620,12 +615,12 @@ class Search:
             imdl = "N"
 
         color_id = (imdl == "Y" and "search" or "searchq")
-        color = self.frame.np.config.sections["ui"][color_id] or None
+        color = config.sections["ui"][color_id] or None
 
         h_queue = humanize(inqueue)
 
         update_ui = False
-        maxstoredresults = self.searches.maxstoredresults
+        maxstoredresults = config.sections["searches"]["max_stored_results"]
 
         for result in msg.list:
 
@@ -699,7 +694,7 @@ class Search:
 
         self.all_data.append(row)
 
-        if self.numvisibleresults >= self.searches.maxdisplayedresults:
+        if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
             return False
 
         if not self.check_filter(row):
@@ -1223,7 +1218,7 @@ class Search:
 
     def on_download_files_to(self, *args):
 
-        folder = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if folder is None:
             return
@@ -1268,7 +1263,7 @@ class Search:
                 counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
                 files.append((user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
 
-            if self.frame.np.config.sections["transfers"]["reverseorder"]:
+            if config.sections["transfers"]["reverseorder"]:
                 files.sort(key=lambda x: x[1], reverse=True)
 
             for file in files:
@@ -1284,7 +1279,7 @@ class Search:
 
     def on_download_folders_to(self, *args):
 
-        directories = choose_dir(self.frame.MainWindow, self.frame.np.config.sections["transfers"]["downloaddir"], multichoice=False)
+        directories = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
 
         if directories:
             self.on_download_folders(download_location=directories[0])
@@ -1308,7 +1303,7 @@ class Search:
         active = widget.get_active()
 
         self.ResultsList.set_show_expanders(active)
-        self.frame.np.config.sections["searches"]["group_searches"] = active
+        config.sections["searches"]["group_searches"] = active
         self.cols["id"].set_visible(not active)
         self.ExpandButton.set_visible(active)
 
@@ -1323,13 +1318,13 @@ class Search:
             collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
             self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
-        self.frame.np.config.sections["searches"]["expand_searches"] = active
+        config.sections["searches"]["expand_searches"] = active
 
     def on_toggle_filters(self, widget):
 
         visible = widget.get_active()
         self.FiltersContainer.set_visible(visible)
-        self.frame.np.config.sections["searches"]["filters_visible"] = visible
+        config.sections["searches"]["filters_visible"] = visible
 
     def on_copy_search_term(self, *args):
         self.frame.clip.set_text(self.text, -1)
@@ -1351,7 +1346,7 @@ class Search:
             return None
 
         text = text.strip()
-        history = self.frame.np.config.sections["searches"][title]
+        history = config.sections["searches"][title]
 
         if text in history:
             history.remove(text)
@@ -1359,7 +1354,7 @@ class Search:
             del history[-1]
 
         history.insert(0, text)
-        self.frame.np.config.write_configuration()
+        config.write_configuration()
 
         self.add_combo(widget, text)
         widget.get_child().set_text(text)
