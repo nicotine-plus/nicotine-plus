@@ -35,6 +35,7 @@ Issues closed on GitHub
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
  * critical error crash ([#1333](https://github.com/Nicotine-Plus/nicotine-plus/issues/1333))
  * File Manager and Media Player events are buggy ([#1335](https://github.com/Nicotine-Plus/nicotine-plus/issues/1335))
+ * Filtering on file type causes crash ([#1337](https://github.com/Nicotine-Plus/nicotine-plus/issues/1337))
 
 Version 3.0.4 (April 7, 2021)
 -----------------------------

@@ -990,7 +990,7 @@ class Search:
         self.numvisibleresults = 0
 
         for row in self.all_data:
-            if self.numvisibleresults >= self.searches.maxdisplayedresults:
+            if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
                 break
 
             if self.check_filter(row):
