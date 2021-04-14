@@ -1320,7 +1320,7 @@ class NicotineFrame:
             header_bar.remove(start_widget)
             toolbar_contents.add(start_widget)
 
-        except KeyError:
+        except AttributeError:
             # No start widget
             pass
 
@@ -1364,7 +1364,7 @@ class NicotineFrame:
             toolbar_contents.remove(start_widget)
             header_bar.add(start_widget)
 
-        except KeyError:
+        except AttributeError:
             # No start widget
             pass
 

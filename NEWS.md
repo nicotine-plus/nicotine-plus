@@ -31,6 +31,7 @@ Issues closed on GitHub
  * Crash on startup ([#1041](https://github.com/Nicotine-Plus/nicotine-plus/issues/1041))
  * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
+ * critical error crash ([#1333](https://github.com/Nicotine-Plus/nicotine-plus/issues/1333))
 
 Version 3.0.4 (April 7, 2021)
 -----------------------------
