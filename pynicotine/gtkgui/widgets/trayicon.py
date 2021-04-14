@@ -110,81 +110,96 @@ class TrayIcon:
         self.frame.on_uploads()
         self.show_window()
 
-    def on_open_private_chat(self, *args):
+    def on_open_private_chat_response(self, dialog, response_id, data):
 
-        # popup
-        users = []
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
+        user = dialog.get_response_value()
+        dialog.destroy()
 
-        users.sort()
-        user = combo_box_dialog(
-            parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Start Messaging"),
-            message=_('Enter the User who you wish to send a private message:'),
-            droplist=users
-        )
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if user:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
             self.show_window()
 
-    def on_get_a_users_info(self, *args):
+    def on_open_private_chat(self, *args):
 
-        # popup
-        users = []
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
-
-        users.sort()
-
-        user = combo_box_dialog(
+        users = (i[0] for i in config.sections["server"]["userlist"])
+        combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get User Info"),
-            message=_('Enter the User whose User Info you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Start Messaging"),
+            message=_('Enter the User who you wish to send a private message:'),
+            callback=self.on_open_private_chat_response,
             droplist=users
         )
+
+    def on_get_a_users_info_response(self, dialog, response_id, data):
+
+        user = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if user:
             self.frame.local_user_info_request(user)
 
-    def on_get_a_users_ip(self, *args):
-        users = []
+    def on_get_a_users_info(self, *args):
 
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
-
-        users.sort()
-
-        user = combo_box_dialog(
+        users = (i[0] for i in config.sections["server"]["userlist"])
+        combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get A User's IP"),
-            message=_('Enter the User whose IP Address you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Get User Info"),
+            message=_('Enter the User whose User Info you wish to receive:'),
+            callback=self.on_get_a_users_info_response,
             droplist=users
         )
+
+    def on_get_a_users_ip_response(self, dialog, response_id, data):
+
+        user = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if user:
             self.frame.np.ip_requested.add(user)
             self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
 
-    def on_get_a_users_shares(self, *args):
+    def on_get_a_users_ip(self, *args):
 
-        users = []
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
-
-        users.sort()
-
-        user = combo_box_dialog(
+        users = (i[0] for i in config.sections["server"]["userlist"])
+        combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get A User's Shares List"),
-            message=_('Enter the User whose Shares List you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Get A User's IP"),
+            message=_('Enter the User whose IP Address you wish to receive:'),
+            callback=self.on_get_a_users_ip_response,
             droplist=users
         )
 
+    def on_get_a_users_shares_response(self, dialog, response_id, data):
+
+        user = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
         if user:
             self.frame.browse_user(user)
+
+    def on_get_a_users_shares(self, *args):
+
+        users = (i[0] for i in config.sections["server"]["userlist"])
+        combo_box_dialog(
+            parent=self.frame.application.get_active_window(),
+            title=GLib.get_application_name() + ": " + _("Get A User's Shares List"),
+            message=_('Enter the User whose Shares List you wish to receive:'),
+            callback=self.on_get_a_users_shares_response,
+            droplist=users
+        )
 
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):

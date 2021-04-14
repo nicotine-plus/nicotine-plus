@@ -23,6 +23,7 @@
 
 import os
 
+from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
@@ -103,15 +104,16 @@ class WishList:
     def _remove_wish(self, model, path, iterator, line):
         line.append(iterator)
 
-    def clear_wishlist_response(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            for wish in self.wishes.copy():
-                self.remove_wish(wish)
+    def clear_wishlist_response(self, dialog, response_id, data):
 
         dialog.destroy()
 
+        if response_id == Gtk.ResponseType.OK:
+            for wish in self.wishes.copy():
+                self.remove_wish(wish)
+
     def on_clear_wishlist(self, *args):
+
         option_dialog(
             parent=self.WishListDialog,
             title=_('Clear Wishlist?'),
@@ -223,7 +225,7 @@ class WishList:
             update_widget_visuals(widget)
 
     def show(self, *args):
-        self.WishListDialog.show()
+        self.WishListDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def quit(self, *args):
         self.WishListDialog.hide()

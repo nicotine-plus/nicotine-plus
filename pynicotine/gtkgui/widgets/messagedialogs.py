@@ -16,19 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 
 
 """ Message Dialogs """
 
 
-def activate(self, dialog):
-    dialog.response(Gtk.ResponseType.OK)
-
-
-def combo_box_dialog(parent, title, message, default_text="",
-                     option=False, optionmessage="",
-                     optionvalue=False, droplist=[]):
+def combo_box_dialog(parent, title, message, callback, callback_data=None, default_text="",
+                     option=False, optionmessage="", optionvalue=False, droplist=[]):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
@@ -37,18 +33,23 @@ def combo_box_dialog(parent, title, message, default_text="",
         text=title,
         secondary_text=message
     )
+    self.connect("response", callback, callback_data)
     self.set_default_size(500, -1)
     self.set_destroy_with_parent(True)
     self.set_modal(True)
 
+    label = self.get_message_area().get_children()[-1]
+    label.set_selectable(True)
+
     self.gotoption = option
 
     self.combo = Gtk.ComboBoxText.new_with_entry()
+    self.get_response_value = self.combo.get_child().get_text
 
     for i in droplist:
         self.combo.append_text(i)
 
-    self.combo.get_child().connect("activate", activate, self)
+    self.combo.get_child().connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
     self.combo.get_child().set_text(default_text)
 
     self.get_message_area().add(self.combo)
@@ -64,20 +65,12 @@ def combo_box_dialog(parent, title, message, default_text="",
         self.option.show()
 
         self.get_message_area().add(self.option)
+        self.get_second_response_value = self.option.get_active
 
-    result = None
-    if self.run() == Gtk.ResponseType.OK:
-        if self.gotoption:
-            result = [self.combo.get_child().get_text(), self.option.get_active()]
-        else:
-            result = self.combo.get_child().get_text()
-
-    self.destroy()
-
-    return result
+    self.present_with_time(Gdk.CURRENT_TIME)
 
 
-def entry_dialog(parent, title, message, default=""):
+def entry_dialog(parent, title, message, callback, callback_data=None, default=""):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
@@ -86,27 +79,26 @@ def entry_dialog(parent, title, message, default=""):
         text=title,
         secondary_text=message
     )
+    self.connect("response", callback, callback_data)
     self.set_default_size(500, -1)
     self.set_destroy_with_parent(True)
     self.set_modal(True)
 
+    label = self.get_message_area().get_children()[-1]
+    label.set_selectable(True)
+
     entry = Gtk.Entry()
-    entry.connect("activate", activate, self)
+    entry.connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
     entry.set_activates_default(True)
     entry.set_text(default)
     self.get_message_area().add(entry)
     entry.show()
 
-    result = None
-    if self.run() == Gtk.ResponseType.OK:
-        result = entry.get_text()
-
-    self.destroy()
-
-    return result
+    self.get_response_value = entry.get_text
+    self.present_with_time(Gdk.CURRENT_TIME)
 
 
-def message_dialog(parent, title, message):
+def message_dialog(parent, title, message, callback=None):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
@@ -115,17 +107,23 @@ def message_dialog(parent, title, message):
         text=title,
         secondary_text=message
     )
+
+    if not callback:
+        def callback(x, y):
+            x.destroy()
+
+    self.connect("response", callback)
     self.set_destroy_with_parent(True)
     self.set_modal(True)
 
     label = self.get_message_area().get_children()[-1]
     label.set_selectable(True)
 
-    self.run()
-    self.destroy()
+    self.present_with_time(Gdk.CURRENT_TIME)
 
 
-def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", cancel=True, third=""):
+def option_dialog(parent, title, message, callback, callback_data=None,
+                  checkbox_label="", cancel=True, third=""):
 
     if cancel:
         buttons = Gtk.ButtonsType.OK_CANCEL
@@ -155,5 +153,4 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
     if third:
         self.add_button(third, Gtk.ResponseType.REJECT)
 
-    self.run()
-    self.destroy()
+    self.present_with_time(Gdk.CURRENT_TIME)

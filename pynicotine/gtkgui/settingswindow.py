@@ -295,29 +295,34 @@ class DownloadsFrame(BuildFrame):
         self.AddFilter.set_sensitive(sensitive)
         self.FilterView.set_sensitive(sensitive)
 
+    def on_add_filter_response(self, dialog, response_id, data):
+
+        dfilter = dialog.get_response_value()
+        escaped = dialog.get_second_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if dfilter in self.filtersiters:
+            self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
+        else:
+            self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
+
+        self.on_verify_filter(self.VerifyFilters)
+
     def on_add_filter(self, widget):
 
-        response = combo_box_dialog(
+        combo_box_dialog(
             parent=self.Main.get_toplevel(),
             title=_('Add a Download Filter'),
             message=_('Enter a new download filter:'),
+            callback=self.on_add_filter_response,
             option=True,
             optionvalue=True,
             optionmessage="Escape this filter?",
             droplist=list(self.filtersiters.keys())
         )
-
-        if isinstance(response, list):
-
-            dfilter = response[0]
-            escaped = response[1]
-
-            if dfilter in self.filtersiters:
-                self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
-            else:
-                self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
-
-            self.on_verify_filter(self.VerifyFilters)
 
     def get_filter_list(self):
 
@@ -333,38 +338,52 @@ class DownloadsFrame(BuildFrame):
 
         return self.downloadfilters
 
+    def on_edit_filter_response(self, dialog, response_id, data):
+
+        new_dfilter = dialog.get_response_value()
+        escaped = dialog.get_second_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        dfilter = self.get_selected_filter()
+
+        if not dfilter:
+            return
+
+        iterator = self.filtersiters[dfilter]
+
+        if new_dfilter in self.filtersiters:
+            self.filterlist.set(self.filtersiters[new_dfilter], 0, new_dfilter, 1, escaped)
+        else:
+            self.filtersiters[new_dfilter] = self.filterlist.append([new_dfilter, escaped])
+            del self.filtersiters[dfilter]
+            self.filterlist.remove(iterator)
+
+        self.on_verify_filter(self.VerifyFilters)
+
     def on_edit_filter(self, widget):
 
         dfilter = self.get_selected_filter()
 
-        if dfilter:
+        if not dfilter:
+            return
 
-            iterator = self.filtersiters[dfilter]
-            escapedvalue = self.filterlist.get_value(iterator, 1)
+        iterator = self.filtersiters[dfilter]
+        escapedvalue = self.filterlist.get_value(iterator, 1)
 
-            response = combo_box_dialog(
-                parent=self.Main.get_toplevel(),
-                title=_('Edit a Download Filter'),
-                message=_('Modify this download filter:'),
-                default_text=dfilter,
-                option=True,
-                optionvalue=escapedvalue,
-                optionmessage="Escape this filter?",
-                droplist=list(self.filtersiters.keys())
-            )
-
-            if isinstance(response, list):
-
-                new_dfilter, escaped = response
-
-                if new_dfilter in self.filtersiters:
-                    self.filterlist.set(self.filtersiters[new_dfilter], 0, new_dfilter, 1, escaped)
-                else:
-                    self.filtersiters[new_dfilter] = self.filterlist.append([new_dfilter, escaped])
-                    del self.filtersiters[dfilter]
-                    self.filterlist.remove(iterator)
-
-                self.on_verify_filter(self.VerifyFilters)
+        combo_box_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_('Edit a Download Filter'),
+            message=_('Modify this download filter:'),
+            callback=self.on_edit_filter_response,
+            default_text=dfilter,
+            option=True,
+            optionvalue=escapedvalue,
+            optionmessage="Escape this filter?",
+            droplist=list(self.filtersiters.keys())
+        )
 
     def _selected_filter(self, model, path, iterator, list):
         list.append(iterator)
@@ -614,123 +633,136 @@ class SharesFrame(BuildFrame):
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
 
+    def add_shared_dir_response(self, dialog, response_id, data):
+
+        virtual = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        # Remove slashes from share name to avoid path conflicts
+        if virtual:
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+
+        # If the virtual share name is not already used
+        if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
+            message_dialog(
+                parent=self.Main.get_toplevel(),
+                title=_("Unable to Share Folder"),
+                message=_("The chosen virtual name is either empty or already exists")
+            )
+            return
+
+        directory, shareslist, shareddirs = data
+
+        shareslist.append(
+            [
+                virtual,
+                directory
+            ]
+        )
+
+        shareddirs.append((virtual, directory))
+        self.needrescan = True
+
     def add_shared_dir(self, folder, shareslist, shareddirs):
 
         if folder is None:
             return
 
-        for directory in folder:
-
-            # If the directory is already shared
-            if directory in (x[1] for x in self.shareddirs + self.bshareddirs):
-                message_dialog(
-                    parent=self.Main.get_toplevel(),
-                    title=_("Unable to Share Folder"),
-                    message=_("The chosen folder is already shared")
-                )
-                return
-
-            virtual = combo_box_dialog(
+        # If the directory is already shared
+        if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
+            message_dialog(
                 parent=self.Main.get_toplevel(),
-                title=_("Virtual Name"),
-                message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
+                title=_("Unable to Share Folder"),
+                message=_("The chosen folder is already shared")
             )
+            return
 
-            # Remove slashes from share name to avoid path conflicts
-            if virtual:
-                virtual = virtual.replace('/', '_').replace('\\', '_')
+        combo_box_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_("Virtual Name"),
+            message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
+            callback=self.add_shared_dir_response,
+            callback_data=(folder, shareslist, shareddirs)
+        )
 
-            # If the virtual share name is not already used
-            if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
-                message_dialog(
-                    parent=self.Main.get_toplevel(),
-                    title=_("Unable to Share Folder"),
-                    message=_("The chosen virtual name is either empty or already exists")
-                )
-                return
+    def on_add_shared_dir_selected(self, selected, data):
 
-            shareslist.append(
-                [
-                    virtual,
-                    directory
-                ]
-            )
+        for folder in selected:
+            self.add_shared_dir(folder, self.shareslist, self.shareddirs)
 
-            shareddirs.append((virtual, directory))
-            self.needrescan = True
+    def on_add_shared_dir(self, *args):
 
-    def on_add_shared_dir(self, widget):
-
-        folder = choose_dir(
-            self.Main.get_toplevel(),
+        choose_dir(
+            parent=self.Main.get_toplevel(),
+            callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder")
         )
 
-        self.add_shared_dir(folder, self.shareslist, self.shareddirs)
+    def on_add_shared_buddy_dir_selected(self, selected, data):
+
+        for folder in selected:
+            self.add_shared_dir(folder, self.bshareslist, self.bshareddirs)
 
     def on_add_shared_buddy_dir(self, widget):
 
-        folder = choose_dir(
-            self.Main.get_toplevel(),
+        choose_dir(
+            parent=self.Main.get_toplevel(),
+            callback=self.on_add_shared_buddy_dir_selected,
             title=_("Add a Shared Buddy Folder")
         )
-
-        self.add_shared_dir(folder, self.bshareslist, self.bshareddirs)
 
     def _remove_shared_dir(self, model, path, iterator, list):
         list.append(iterator)
 
-    def on_rename_virtuals(self, widget):
+    def rename_virtuals_response(self, dialog, response_id, data):
+
+        virtual = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not virtual:
+            return
+
+        iterator, shares_list, shared_dirs = data
+
+        # Remove slashes from share name to avoid path conflicts
+        virtual = virtual.replace('/', '_').replace('\\', '_')
+        directory = shares_list.get_value(iterator, 1)
+        oldvirtual = shares_list.get_value(iterator, 0)
+        oldmapping = (oldvirtual, directory)
+        newmapping = (virtual, directory)
+
+        shares_list.set_value(iterator, 0, virtual)
+        shared_dirs.remove(oldmapping)
+        shared_dirs.append(newmapping)
+        self.needrescan = True
+
+    def rename_virtuals(self, shares_widget, shares_list, shared_dirs):
 
         iters = []
-        self.Shares.get_selection().selected_foreach(self._remove_shared_dir, iters)
+        shares_widget.get_selection().selected_foreach(self._remove_shared_dir, iters)
 
         for iterator in iters:
-            oldvirtual = self.shareslist.get_value(iterator, 0)
-            directory = self.shareslist.get_value(iterator, 1)
-            oldmapping = (oldvirtual, directory)
+            directory = shares_list.get_value(iterator, 1)
 
-            virtual = combo_box_dialog(
+            combo_box_dialog(
                 parent=self.Main.get_toplevel(),
                 title=_("Virtual Name"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory},
+                callback=self.rename_virtuals_response,
+                callback_data=(iterator, shares_list, shared_dirs)
             )
 
-            if virtual:
-                # Remove slashes from share name to avoid path conflicts
-                virtual = virtual.replace('/', '_').replace('\\', '_')
-
-                newmapping = (virtual, directory)
-                self.shareslist.set_value(iterator, 0, virtual)
-                self.shareddirs.remove(oldmapping)
-                self.shareddirs.append(newmapping)
-                self.needrescan = True
+    def on_rename_virtuals(self, widget):
+        self.rename_virtuals(self.Shares, self.shareslist, self.shareddirs)
 
     def on_rename_buddy_virtuals(self, widget):
-
-        iters = []
-        self.BuddyShares.get_selection().selected_foreach(self._remove_shared_dir, iters)
-
-        for iterator in iters:
-            oldvirtual = self.bshareslist.get_value(iterator, 0)
-            directory = self.bshareslist.get_value(iterator, 1)
-            oldmapping = (oldvirtual, directory)
-
-            virtual = combo_box_dialog(
-                parent=self.Main.get_toplevel(),
-                title=_("Virtual Name"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory}
-            )
-
-            if virtual:
-                # Remove slashes from share name to avoid path conflicts
-                virtual = virtual.replace('/', '_').replace('\\', '_')
-
-                newmapping = (virtual, directory)
-                self.bshareslist.set_value(iterator, 0, virtual)
-                self.bshareslist.remove(oldmapping)
-                self.bshareslist.append(newmapping)
-                self.needrescan = True
+        self.rename_virtuals(self.BuddyShares, self.bshareslist, self.bshareddirs)
 
     def on_remove_shared_dir(self, widget):
         iters = []
@@ -976,17 +1008,26 @@ class IgnoreListFrame(BuildFrame):
     def _append_item(self, model, path, iterator, line):
         line.append(iterator)
 
-    def on_add_ignored(self, widget):
+    def on_add_ignored_response(self, dialog, response_id, data):
 
-        user = entry_dialog(
-            self.Main.get_toplevel(),
-            _("Ignore User..."),
-            _("User:")
-        )
+        user = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
             self.ignorelist.append([user])
+
+    def on_add_ignored(self, widget):
+
+        entry_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_("Ignore User..."),
+            message=_("User:"),
+            callback=self.on_add_ignored_response
+        )
 
     def on_remove_ignored(self, widget):
         iters = []
@@ -1000,13 +1041,13 @@ class IgnoreListFrame(BuildFrame):
         self.ignored_users = []
         self.ignorelist.clear()
 
-    def on_add_ignored_ip(self, widget):
+    def on_add_ignored_ip_response(self, dialog, response_id, data):
 
-        ip = entry_dialog(
-            self.Main.get_toplevel(),
-            _("Ignore IP Address..."),
-            _("IP:") + " " + _("* is a wildcard")
-        )
+        ip = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if ip is None or ip == "" or ip.count(".") != 3:
             return
@@ -1027,6 +1068,15 @@ class IgnoreListFrame(BuildFrame):
         if ip not in self.ignored_ips:
             self.ignored_ips[ip] = ""
             self.ignored_ips_list.append([ip, ""])
+
+    def on_add_ignored_ip(self, widget):
+
+        entry_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_("Ignore IP Address..."),
+            message=_("IP:") + " " + _("* is a wildcard"),
+            callback=self.on_add_ignored_ip_response
+        )
 
     def on_remove_ignored_ip(self, widget):
         iters = []
@@ -1117,17 +1167,26 @@ class BanListFrame(BuildFrame):
             }
         }
 
-    def on_add_banned(self, widget):
+    def on_add_banned_response(self, dialog, response_id, data):
 
-        user = entry_dialog(
-            self.Main.get_toplevel(),
-            _("Ban User..."),
-            _("User:")
-        )
+        user = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if user and user not in self.banlist:
             self.banlist.append(user)
             self.banlist_model.append([user])
+
+    def on_add_banned(self, widget):
+
+        entry_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_("Ban User..."),
+            message=_("User:"),
+            callback=self.on_add_banned_response
+        )
 
     def _append_item(self, model, path, iterator, line):
         line.append(iterator)
@@ -1147,13 +1206,13 @@ class BanListFrame(BuildFrame):
     def on_use_custom_ban_toggled(self, widget):
         self.CustomBan.set_sensitive(widget.get_active())
 
-    def on_add_blocked(self, widget):
+    def on_add_blocked_response(self, dialog, response_id, data):
 
-        ip = entry_dialog(
-            self.Main.get_toplevel(),
-            _("Block IP Address..."),
-            _("IP:") + " " + _("* is a wildcard")
-        )
+        ip = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
 
         if ip is None or ip == "" or ip.count(".") != 3:
             return
@@ -1174,6 +1233,15 @@ class BanListFrame(BuildFrame):
         if ip not in self.blocked_list:
             self.blocked_list[ip] = ""
             self.blocked_list_model.append([ip, ""])
+
+    def on_add_blocked(self, widget):
+
+        entry_dialog(
+            parent=self.Main.get_toplevel(),
+            title=_("Block IP Address..."),
+            message=_("IP:") + " " + _("* is a wildcard"),
+            callback=self.on_add_blocked_response
+        )
 
     def on_remove_blocked(self, widget):
         iters = []
@@ -2784,7 +2852,7 @@ class BuildDialog(Gtk.Dialog):
         self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
     def show(self):
-        self.PluginProperties.show()
+        self.PluginProperties.present_with_time(Gdk.CURRENT_TIME)
 
 
 class PluginsFrame(BuildFrame):
@@ -3019,9 +3087,6 @@ class Settings:
             update_widget_visuals(widget)
 
     def set_active_page(self, page):
-
-        # Unminimize window
-        self.SettingsWindow.deiconify()
 
         model = self.SettingsTreeview.get_model()
         selection = self.SettingsTreeview.get_selection()
@@ -3266,24 +3331,24 @@ class Settings:
 
         self.viewport1.add(self.pages[page_id].Main)
 
-    def on_backup_config(self, *args):
+    def on_backup_config_response(self, selected, data):
 
-        response = save_file(
-            self.SettingsWindow.get_toplevel(),
-            os.path.dirname(config.filename),
-            "config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Pick a File Name for Config Backup")
-        )
-
-        if not response:
-            return
-
-        error, message = config.write_config_backup(response[0])
+        error, message = config.write_config_backup(selected)
 
         if error:
             log.add(_("Error backing up config: %s"), message)
         else:
             log.add(_("Config backed up to: %s"), message)
+
+    def on_backup_config(self, *args):
+
+        save_file(
+            parent=self.SettingsWindow.get_toplevel(),
+            callback=self.on_backup_config_response,
+            initialdir=os.path.dirname(config.filename),
+            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            title=_("Pick a File Name for Config Backup")
+        )
 
     def on_apply(self, widget):
         self.SettingsWindow.emit("settings-updated", "apply")
@@ -3299,3 +3364,6 @@ class Settings:
         self.on_cancel(widget)
         widget.stop_emission_by_name("delete-event")
         return True
+
+    def show(self, *args):
+        self.SettingsWindow.present_with_time(Gdk.CURRENT_TIME)

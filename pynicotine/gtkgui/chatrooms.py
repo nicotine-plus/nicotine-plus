@@ -1577,14 +1577,14 @@ class ChatRoom:
     def on_view_room_log(self, *args):
         open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
-    def delete_room_log_response(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            delete_log(config.sections["logging"]["roomlogsdir"], self.room)
-            self.on_clear_messages(dialog)
-            self.on_clear_activity_log(dialog)
+    def on_delete_room_log_response(self, dialog, response_id, data):
 
         dialog.destroy()
+
+        if response_id == Gtk.ResponseType.OK:
+            delete_log(config.sections["logging"]["roomlogsdir"], self.room)
+            self.on_clear_messages()
+            self.on_clear_activity_log()
 
     def on_delete_room_log(self, *args):
 
@@ -1592,7 +1592,7 @@ class ChatRoom:
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
             message=_('Are you sure you wish to permanently delete all logged messages for this room?'),
-            callback=self.delete_room_log_response
+            callback=self.on_delete_room_log_response
         )
 
     def on_clear_messages(self, *args):

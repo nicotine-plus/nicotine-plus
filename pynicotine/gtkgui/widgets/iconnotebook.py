@@ -359,23 +359,23 @@ class IconNotebook:
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
 
+    def remove_all_pages_response(self, dialog, response_id, data):
+
+        dialog.destroy()
+
+        if response_id == Gtk.ResponseType.OK:
+            for page in self.notebook.get_children():
+                tab_label, menu_label = self.get_labels(page)
+                tab_label.onclose(dialog)
+
     def remove_all_pages(self):
 
         option_dialog(
             parent=self.notebook.get_toplevel(),
             title=_('Close All Tabs?'),
             message=_('Are you sure you wish to close all tabs?'),
-            callback=self.remove_all_pages_cb
+            callback=self.remove_all_pages_response
         )
-
-    def remove_all_pages_cb(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            for page in self.notebook.get_children():
-                tab_label, menu_label = self.get_labels(page)
-                tab_label.onclose(dialog)
-
-        dialog.destroy()
 
     def get_page_owner(self, page, items):
 

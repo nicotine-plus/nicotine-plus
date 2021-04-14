@@ -395,7 +395,22 @@ class PopupMenu(Gio.Menu):
     def on_copy_user(self, *args):
         self.frame.clip.set_text(self.user, -1)
 
-    def on_give_privileges(self, action, state, error=None):
+    def on_give_privileges_response(self, dialog, response_id, data):
+
+        days = dialog.get_response_value()
+        dialog.destroy()
+
+        if not days:
+            return
+
+        try:
+            days = int(days)
+            self.frame.np.queue.append(slskmessages.GivePrivileges(self.user, days))
+
+        except ValueError:
+            self.on_give_privileges(error=_("Please enter a whole number!"))
+
+    def on_give_privileges(self, *args, error=None):
 
         self.frame.np.queue.append(slskmessages.CheckPrivileges())
 
@@ -409,16 +424,9 @@ class PopupMenu(Gio.Menu):
         if error:
             message += "\n\n" + error
 
-        days = entry_dialog(
-            self.window,
-            _("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
-            message
+        entry_dialog(
+            parent=self.window,
+            title=_("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
+            message=message,
+            callback=self.on_give_privileges_response
         )
-
-        if days:
-            try:
-                days = int(days)
-                self.frame.np.queue.append(slskmessages.GivePrivileges(self.user, days))
-
-            except ValueError:
-                self.on_give_privileges(action, state, error=_("Please enter a whole number!"))
