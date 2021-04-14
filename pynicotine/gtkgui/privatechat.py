@@ -463,13 +463,13 @@ class PrivateChat:
     def on_view_chat_log(self, *args):
         open_log(config.sections["logging"]["privatelogsdir"], self.user)
 
-    def delete_chat_log_response(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            delete_log(config.sections["logging"]["privatelogsdir"], self.user)
-            self.on_clear_messages(dialog)
+    def on_delete_chat_log_response(self, dialog, response_id, data):
 
         dialog.destroy()
+
+        if response_id == Gtk.ResponseType.OK:
+            delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+            self.on_clear_messages()
 
     def on_delete_chat_log(self, *args):
 
@@ -477,7 +477,7 @@ class PrivateChat:
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
             message=_('Are you sure you wish to permanently delete all logged messages for this user?'),
-            callback=self.delete_chat_log_response
+            callback=self.on_delete_chat_log_response
         )
 
     def on_clear_messages(self, *args):

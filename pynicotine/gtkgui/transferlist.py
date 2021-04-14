@@ -905,11 +905,12 @@ class TransferList:
         self.select_transfers()
         self.abort_transfers(clear=True)
 
-    def on_clear_response(self, dialog, response, data=None):
-        if response == Gtk.ResponseType.OK:
-            self.clear_transfers(["Queued"])
+    def on_clear_response(self, dialog, response_id, data):
 
         dialog.destroy()
+
+        if response_id == Gtk.ResponseType.OK:
+            self.clear_transfers(["Queued"])
 
     def on_clear_queued(self, *args):
         self.clear_transfers(["Queued"])

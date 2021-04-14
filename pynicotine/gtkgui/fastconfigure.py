@@ -20,6 +20,7 @@
 
 import os
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -79,7 +80,7 @@ class FastConfigureAssistant(object):
         for directory in config.sections["transfers"]["shared"]:
             self.add_shared_folder(directory)
 
-        self.FastConfigureDialog.show()
+        self.FastConfigureDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def store(self):
 
@@ -170,65 +171,72 @@ class FastConfigureAssistant(object):
             self.FastConfigureDialog
         )
 
+    def on_add_share_response(self, dialog, response_id, directory):
+
+        virtual = dialog.get_response_value()
+        dialog.destroy()
+
+        # If the virtual name is empty
+        if not virtual:
+            message_dialog(
+                parent=self.FastConfigureDialog,
+                title=_("Unable to Share Folder"),
+                message=_("The chosen virtual name is empty")
+            )
+            return
+
+        # Remove slashes from share name to avoid path conflicts
+        virtual = virtual.replace('/', '_').replace('\\', '_')
+
+        # We get the current defined shares from the treeview
+        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
+
+        iterator = model.get_iter_first()
+
+        while iterator is not None:
+
+            # We reject the share if the virtual share name is already used
+            if virtual == model.get_value(iterator, 0):
+                message_dialog(
+                    parent=self.FastConfigureDialog,
+                    title=_("Unable to Share Folder"),
+                    message=_("The chosen virtual name already exists")
+                )
+                return
+
+            # We also reject the share if the directory is already used
+            if directory == model.get_value(iterator, 1):
+                message_dialog(
+                    parent=self.FastConfigureDialog,
+                    title=_("Unable to Share Folder"),
+                    message=_("The chosen folder is already shared")
+                )
+                return
+
+            iterator = model.iter_next(iterator)
+
+        # The share is unique: we can add it
+        self.add_shared_folder((virtual, directory))
+
+    def on_add_share_selected(self, selected, data):
+
+        for folder in selected:
+
+            combo_box_dialog(
+                parent=self.FastConfigureDialog,
+                title=_("Virtual Name"),
+                message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
+                callback=self.on_add_share_response,
+                callback_data=folder
+            )
+
     def on_add_share(self, *args):
 
-        selected = choose_dir(
-            self.FastConfigureDialog.get_toplevel(),
-            title=_("Add a Shared Folder")
+        choose_dir(
+            parent=self.FastConfigureDialog.get_toplevel(),
+            title=_("Add a Shared Folder"),
+            callback=self.on_add_share_selected
         )
-
-        if selected:
-
-            for directory in selected:
-
-                virtual = combo_box_dialog(
-                    parent=self.FastConfigureDialog,
-                    title=_("Virtual Name"),
-                    message=_("Enter virtual name for '%(dir)s':") % {'dir': directory}
-                )
-
-                # If the virtual name is empty
-                if virtual == '' or virtual is None:
-                    message_dialog(
-                        parent=self.FastConfigureDialog,
-                        title=_("Unable to Share Folder"),
-                        message=_("The chosen virtual name is empty")
-                    )
-
-                else:
-                    # Remove slashes from share name to avoid path conflicts
-                    virtual = virtual.replace('/', '_').replace('\\', '_')
-
-                    # We get the current defined shares from the treeview
-                    model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
-
-                    iterator = model.get_iter_first()
-
-                    while iterator is not None:
-
-                        # We reject the share if the virtual share name is already used
-                        if virtual == model.get_value(iterator, 0):
-                            message_dialog(
-                                parent=self.FastConfigureDialog,
-                                title=_("Unable to Share Folder"),
-                                message=_("The chosen virtual name already exists")
-                            )
-                            return
-
-                        # We also reject the share if the directory is already used
-                        elif directory == model.get_value(iterator, 1):
-                            message_dialog(
-                                parent=self.FastConfigureDialog,
-                                title=_("Unable to Share Folder"),
-                                message=_("The chosen folder is already shared")
-                            )
-                            return
-
-                        else:
-                            iterator = model.iter_next(iterator)
-
-                    # The share is unique: we can add it
-                    self.add_shared_folder((virtual, directory))
 
     def on_remove_share(self, *args):
 

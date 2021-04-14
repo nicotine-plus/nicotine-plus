@@ -25,101 +25,94 @@ from gi.repository import Gtk
 """ File Choosers """
 
 
-def choose_dir(parent=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
+# We need to keep a reference to GtkFileChooserNative, as GTK does not keep it alive
+active_chooser = None
+
+
+def _on_selected(dialog, response_id, callback, callback_data):
+
+    if dialog.get_select_multiple():
+        selected = dialog.get_filenames()
+    else:
+        selected = dialog.get_filename()
+
+    dialog.destroy()
+
+    if response_id != Gtk.ResponseType.ACCEPT or not selected:
+        return
+
+    callback(selected, callback_data)
+
+
+def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
+
     try:
-        dialog = Gtk.FileChooserNative.new(
-            title,
-            parent,
-            Gtk.FileChooserAction.SELECT_FOLDER,
-            _("_Open"),
-            _("_Cancel")
+        self = Gtk.FileChooserNative.new(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
     except AttributeError:
-        dialog = Gtk.FileChooserDialog(
-            title,
-            parent,
-            Gtk.FileChooserAction.SELECT_FOLDER
+        self = Gtk.FileChooserDialog(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
         )
-        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+
+    global active_chooser
+    active_chooser = self
+
+    self.connect("response", _on_selected, callback, callback_data)
+    self.set_modal(True)
 
     if multichoice:
-        dialog.set_select_multiple(True)
+        self.set_select_multiple(True)
 
     folder = os.path.expanduser(initialdir)
 
     if os.path.isdir(folder):
-        dialog.set_current_folder(folder)
+        self.set_current_folder(folder)
     else:
-        dialog.set_current_folder(os.path.expanduser("~"))
+        self.set_current_folder(os.path.expanduser("~"))
 
-    response = dialog.run()
-
-    if response == Gtk.ResponseType.ACCEPT:
-        res = dialog.get_filenames()
-    else:
-        res = None
-
-    dialog.destroy()
-
-    return res
+    self.show()
 
 
-def choose_file(parent=None, initialdir="~", title=_("Select a File"), multiple=False):
+def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("Select a File"), multiple=False):
+
     try:
-        dialog = Gtk.FileChooserNative.new(
-            title,
-            parent,
-            Gtk.FileChooserAction.OPEN,
-            _("_Open"),
-            _("_Cancel")
+        self = Gtk.FileChooserNative.new(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
-        dialog = Gtk.FileChooserDialog(
-            title,
-            parent,
-            Gtk.FileChooserAction.OPEN
+        self = Gtk.FileChooserDialog(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.OPEN
         )
-        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
+        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
 
-    dialog.set_select_multiple(multiple)
+    global active_chooser
+    active_chooser = self
+
+    self.connect("response", _on_selected, callback, callback_data)
+    self.set_modal(True)
+    self.set_select_multiple(multiple)
+
     folder = os.path.expanduser(initialdir)
 
     if os.path.isdir(folder):
-        dialog.set_current_folder(folder)
+        self.set_current_folder(folder)
     else:
-        dialog.set_current_folder(os.path.expanduser("~"))
+        self.set_current_folder(os.path.expanduser("~"))
 
-    response = dialog.run()
-
-    if response == Gtk.ResponseType.ACCEPT:
-        res = dialog.get_filenames()
-    else:
-        res = None
-
-    dialog.destroy()
-
-    return res
+    self.show()
 
 
-def choose_image(parent=None, initialdir="~", title=_("Select an Image"), multiple=False):
-    try:
-        dialog = Gtk.FileChooserNative.new(
-            title,
-            parent,
-            Gtk.FileChooserAction.OPEN,
-            _("_Open"),
-            _("_Cancel")
-        )
-    except AttributeError:
-        dialog = Gtk.FileChooserDialog(
-            title,
-            parent,
-            Gtk.FileChooserAction.OPEN
-        )
-        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
-
-    preview = Gtk.Image()
-    dialog.set_preview_widget(preview)
+def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("Select an Image"), multiple=False):
 
     def on_update_image_preview(chooser):
         path = chooser.get_preview_filename()
@@ -141,67 +134,75 @@ def choose_image(parent=None, initialdir="~", title=_("Select an Image"), multip
         except Exception:
             chooser.set_preview_widget_active(False)
 
-    dialog.connect("update-preview", on_update_image_preview)
-
-    dialog.set_select_multiple(multiple)
-    folder = os.path.expanduser(initialdir)
-
-    if os.path.isdir(folder):
-        dialog.set_current_folder(folder)
-    else:
-        dialog.set_current_folder(os.path.expanduser("~"))
-
-    response = dialog.run()
-
-    if response == Gtk.ResponseType.ACCEPT:
-        res = dialog.get_filenames()
-    else:
-        res = None
-
-    dialog.destroy()
-
-    return res
-
-
-def save_file(parent=None, initialdir="~", initialfile="", title=None):
     try:
-        dialog = Gtk.FileChooserNative.new(
-            title,
-            parent,
-            Gtk.FileChooserAction.SAVE,
-            _("_Save"),
-            _("_Cancel")
+        self = Gtk.FileChooserNative.new(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
-        dialog = Gtk.FileChooserDialog(
-            title,
-            parent,
-            Gtk.FileChooserAction.SAVE
+        self = Gtk.FileChooserDialog(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.OPEN
         )
-        dialog.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Save"), Gtk.ResponseType.ACCEPT)
+        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
 
-    dialog.set_select_multiple(False)
-    dialog.set_show_hidden(True)
+    global active_chooser
+    active_chooser = self
+
+    self.connect("response", _on_selected, callback, callback_data)
+    self.connect("update-preview", on_update_image_preview)
+    self.set_modal(True)
+
+    preview = Gtk.Image()
+    self.set_preview_widget(preview)
+    self.set_select_multiple(multiple)
 
     folder = os.path.expanduser(initialdir)
 
     if os.path.isdir(folder):
-        dialog.set_current_folder(folder)
+        self.set_current_folder(folder)
     else:
-        dialog.set_current_folder(os.path.expanduser("~"))
+        self.set_current_folder(os.path.expanduser("~"))
 
-    dialog.set_current_name(initialfile)
+    self.show()
 
-    response = dialog.run()
 
-    if response == Gtk.ResponseType.ACCEPT:
-        res = dialog.get_filenames()
+def save_file(parent, callback, callback_data=None, initialdir="~", initialfile="", title=None):
+
+    try:
+        self = Gtk.FileChooserNative.new(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.SAVE
+        )
+    except AttributeError:
+        self = Gtk.FileChooserDialog(
+            parent=parent,
+            title=title,
+            action=Gtk.FileChooserAction.SAVE
+        )
+        self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Save"), Gtk.ResponseType.ACCEPT)
+
+    global active_chooser
+    active_chooser = self
+
+    self.connect("response", _on_selected, callback, callback_data)
+    self.set_modal(True)
+    self.set_select_multiple(False)
+    self.set_show_hidden(True)
+
+    folder = os.path.expanduser(initialdir)
+
+    if os.path.isdir(folder):
+        self.set_current_folder(folder)
     else:
-        res = None
+        self.set_current_folder(os.path.expanduser("~"))
 
-    dialog.destroy()
+    self.set_current_name(initialfile)
 
-    return res
+    self.show()
 
 
 class FileChooserButton:
@@ -239,31 +240,46 @@ class FileChooserButton:
 
         self.button.connect("clicked", self.open_file_chooser)
 
+    def open_file_chooser_response(self, selected, data):
+
+        self.set_path(selected)
+
+        try:
+            self.selected_function()
+
+        except TypeError:
+            # No function defined
+            return
+
     def open_file_chooser(self, *args):
 
         if self.chooser_type == "folder":
-            selected = choose_dir(self.parent, self.path, multichoice=False)
+            choose_dir(
+                parent=self.parent,
+                callback=self.open_file_chooser_response,
+                initialdir=self.path,
+                multichoice=False
+            )
+            return
 
+        if self.path:
+            folder_path = os.path.dirname(self.path)
         else:
-            if self.path:
-                folder_path = os.path.dirname(self.path)
-            else:
-                folder_path = ""
+            folder_path = ""
 
-            if self.chooser_type == "image":
-                selected = choose_image(self.parent, folder_path)
-            else:
-                selected = choose_file(self.parent, folder_path)
+        if self.chooser_type == "image":
+            choose_image(
+                parent=self.parent,
+                callback=self.open_file_chooser_response,
+                initialdir=folder_path
+            )
+            return
 
-        if selected:
-            self.set_path(selected[0])
-
-            try:
-                self.selected_function()
-
-            except TypeError:
-                # No fucntion defined
-                return
+        choose_file(
+            parent=self.parent,
+            callback=self.open_file_chooser_response,
+            initialdir=folder_path
+        )
 
     def get_path(self):
         return self.path

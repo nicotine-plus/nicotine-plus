@@ -702,29 +702,25 @@ class UserBrowse:
     def on_download_directory_recursive(self, *args):
         self.download_directory(self.selected_folder, prefix="", recurse=True)
 
-    def on_download_directory_to(self, *args):
-
-        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
-
-        if folder is None:
-            return
+    def on_download_directory_to_selected(self, selected, recurse):
 
         try:
-            self.download_directory(self.selected_folder, prefix=os.path.join(folder[0], ""))
+            self.download_directory(self.selected_folder, prefix=os.path.join(selected, ""), recurse=recurse)
         except IOError:  # failed to open
-            log.add('Failed to open %r for reading', folder[0])  # notify user
+            log.add('Failed to open %r for reading', selected)  # notify user
+
+    def on_download_directory_to(self, *args, recurse=False):
+
+        choose_dir(
+            parent=self.frame.MainWindow,
+            callback=self.on_download_directory_to_selected,
+            callback_data=recurse,
+            initialdir=config.sections["transfers"]["downloaddir"],
+            multichoice=False
+        )
 
     def on_download_directory_recursive_to(self, *args):
-
-        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
-
-        if folder is None:
-            return
-
-        try:
-            self.download_directory(self.selected_folder, prefix=os.path.join(folder[0], ""), recurse=True)
-        except IOError:  # failed to open
-            log.add('Failed to open %r for reading', folder[0])  # notify user
+        self.on_download_directory_to(recurse=True)
 
     def download_directory(self, folder, prefix="", recurse=False):
 
@@ -792,6 +788,13 @@ class UserBrowse:
             # We have found the wanted directory: we can break out of the loop
             break
 
+    def on_download_files_to_selected(self, selected, data):
+
+        try:
+            self.on_download_files(prefix=selected)
+        except IOError:  # failed to open
+            log.add('failed to open %r for reading', selected)  # notify user
+
     def on_download_files_to(self, *args):
 
         try:
@@ -799,22 +802,32 @@ class UserBrowse:
         except ValueError:
             folder = self.selected_folder
 
-        path = os.path.join(config.sections["transfers"]["downloaddir"], folder)
+        download_folder = config.sections["transfers"]["downloaddir"]
+        path = os.path.join(download_folder, folder)
 
-        if os.path.exists(path) and os.path.isdir(path):
-            ldir = choose_dir(self.frame.MainWindow, path, multichoice=False)
-        else:
-            ldir = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
+        if not os.path.exists(path) or not os.path.isdir(path):
+            path = download_folder
 
-        if ldir is None:
+        choose_dir(
+            parent=self.frame.MainWindow,
+            callback=self.on_download_files_to_selected,
+            initialdir=path,
+            multichoice=False
+        )
+
+    def on_upload_directory_to_response(self, dialog, response_id, recurse):
+
+        user = dialog.get_response_value()
+        folder = self.selected_folder
+        dialog.destroy()
+
+        if not user or folder is None:
             return
 
-        try:
-            self.on_download_files(prefix=ldir[0])
-        except IOError:  # failed to open
-            log.add('failed to open %r for reading', ldir[0])  # notify user
+        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.upload_directory_to(user, folder, recurse)
 
-    def on_upload_directory_to(self, *args, recurse=0):
+    def on_upload_directory_to(self, *args, recurse=False):
 
         folder = self.selected_folder
 
@@ -826,24 +839,19 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = combo_box_dialog(
+        combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_("Upload Folder's Contents"),
             message=_('Enter the User you wish to upload to:'),
+            callback=self.on_upload_directory_to_response,
+            callback_data=recurse,
             droplist=users
         )
 
-        if user is None or user == "":
-            return
-
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
-
-        self.upload_directory_to(user, folder, recurse)
-
     def on_upload_directory_recursive_to(self, *args):
-        self.on_upload_directory_to(recurse=1)
+        self.on_upload_directory_to(recurse=True)
 
-    def upload_directory_to(self, user, folder, recurse=0):
+    def upload_directory_to(self, user, folder, recurse=False):
 
         if not self.frame.np.transfers:
             return
@@ -875,13 +883,29 @@ class UserBrowse:
             if folder in subdir and folder != subdir:
                 self.upload_directory_to(user, subdir, recurse)
 
-    def on_upload_files(self, *args, prefix=""):
+    def on_upload_files_response(self, dialog, response_id, data):
+
+        user = dialog.get_response_value()
+        folder = self.selected_folder
+        realpath = self.frame.np.shares.virtual2real(folder)
+        dialog.destroy()
+
+        if not user or folder is None:
+            return
+
+        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+
+        locally_queued = False
+        prefix = ""
+
+        for fn in self.selected_files:
+            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix, locally_queued=locally_queued)
+            locally_queued = True
+
+    def on_upload_files(self, *args):
 
         if not self.frame.np.transfers:
             return
-
-        folder = self.selected_folder
-        realpath = self.frame.np.shares.virtual2real(folder)
 
         users = []
 
@@ -889,22 +913,13 @@ class UserBrowse:
             users.append(entry[0])
 
         users.sort()
-        user = combo_box_dialog(
+        combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s)'),
             message=_('Enter the User you wish to upload to:'),
+            callback=self.on_upload_files_response,
             droplist=users
         )
-
-        if user is None or user == "":
-            return
-
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
-
-        locally_queued = False
-        for fn in self.selected_files:
-            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix, locally_queued=locally_queued)
-            locally_queued = True
 
     def on_key_press_event(self, widget, event):
 

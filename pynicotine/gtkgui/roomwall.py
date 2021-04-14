@@ -18,6 +18,8 @@
 
 import os
 
+from gi.repository import Gdk
+
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
@@ -69,7 +71,7 @@ class RoomWall:
 
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
-        self.RoomWallDialog.show()
+        self.RoomWallDialog.present_with_time(Gdk.CURRENT_TIME)
 
 
 class Tickers:

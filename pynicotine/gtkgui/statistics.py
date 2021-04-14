@@ -18,6 +18,7 @@
 
 import os
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -53,19 +54,20 @@ class Statistics:
         getattr(self, stat_id + "_session").set_text(session_value)
         getattr(self, stat_id + "_total").set_text(total_value)
 
-    def reset_stats_response(self, dialog, response, data):
-
-        if response == Gtk.ResponseType.OK:
-            self.frame.np.statistics.reset_stats()
+    def on_reset_statistics_response(self, dialog, response_id, data):
 
         dialog.destroy()
 
+        if response_id == Gtk.ResponseType.OK:
+            self.frame.np.statistics.reset_stats()
+
     def on_reset_statistics(self, *args):
+
         option_dialog(
             parent=self.StatisticsDialog,
             title=_('Reset Transfer Statistics?'),
             message=_('Are you sure you wish to reset transfer statistics?'),
-            callback=self.reset_stats_response
+            callback=self.on_reset_statistics_response
         )
 
     def hide(self, *args):
@@ -73,4 +75,4 @@ class Statistics:
         return True
 
     def show(self):
-        self.StatisticsDialog.show()
+        self.StatisticsDialog.present_with_time(Gdk.CURRENT_TIME)

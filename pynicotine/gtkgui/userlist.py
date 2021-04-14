@@ -535,6 +535,22 @@ class UserList:
         self.save_user_list()
         action.set_state(state)
 
+    def on_edit_comments_response(self, dialog, response_id, user):
+
+        comments = dialog.get_response_value()
+        dialog.destroy()
+
+        if comments is None:
+            return
+
+        for i in self.usersmodel:
+            if i[2] == user:
+                i[9] = comments
+                self.usersmodel.set_value(i.iter, 9, comments)
+                break
+
+        self.save_user_list()
+
     def on_edit_comments(self, *args):
 
         user = self.popup_menu.get_user()
@@ -546,16 +562,14 @@ class UserList:
         else:
             comments = ""
 
-        comments = entry_dialog(self.frame.MainWindow, _("Edit comments") + "...", _("Comments") + ":", comments)
-
-        if comments is not None:
-            for i in self.usersmodel:
-                if i[2] == user:
-                    i[9] = comments
-                    self.usersmodel.set_value(i.iter, 9, comments)
-                    break
-
-            self.save_user_list()
+        entry_dialog(
+            parent=self.frame.MainWindow,
+            title=_("Edit comments") + "...",
+            message=_("Comments") + ":",
+            callback=self.on_edit_comments_response,
+            callback_data=user,
+            default=comments
+        )
 
     def on_remove_user(self, *args):
         self.remove_from_list(self.popup_menu.get_user())

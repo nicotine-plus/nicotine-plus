@@ -1216,16 +1216,17 @@ class Search:
             if not file[1].endswith('\\'):
                 self.frame.np.transfers.get_file(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
+    def on_download_files_to_selected(self, selected, data):
+        self.on_download_files(prefix=selected)
+
     def on_download_files_to(self, *args):
 
-        folder = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
-
-        if folder is None:
-            return
-
-        for folders in folder:
-            self.on_download_files(prefix=folders)
-            break
+        choose_dir(
+            parent=self.frame.MainWindow,
+            callback=self.on_download_files_to_selected,
+            initialdir=config.sections["transfers"]["downloaddir"],
+            multichoice=False
+        )
 
     def on_download_folders(self, *args, download_location=""):
 
@@ -1277,12 +1278,17 @@ class Search:
             # Ask for the rest of the files in the folder
             self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
+    def on_download_folders_to_selected(self, selected, data):
+        self.on_download_folders(download_location=selected)
+
     def on_download_folders_to(self, *args):
 
-        directories = choose_dir(self.frame.MainWindow, config.sections["transfers"]["downloaddir"], multichoice=False)
-
-        if directories:
-            self.on_download_folders(download_location=directories[0])
+        choose_dir(
+            parent=self.frame.MainWindow,
+            callback=self.on_download_folders_to_selected,
+            initialdir=config.sections["transfers"]["downloaddir"],
+            multichoice=False
+        )
 
     def on_copy_file_path(self, *args):
         user, path = next(iter(self.selected_results))[:2]

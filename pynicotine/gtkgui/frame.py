@@ -120,6 +120,7 @@ class NicotineFrame:
         """ Configuration """
 
         try:
+            corruptfile = None
             config.load_config()
 
         except Exception:
@@ -127,11 +128,6 @@ class NicotineFrame:
 
             import shutil
             shutil.move(config.filename, corruptfile)
-
-            short_message = _("Your config file is corrupt")
-            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
-
-            message_dialog(parent=self.MainWindow, title=short_message, message=long_message)
 
             config.load_config()
 
@@ -325,6 +321,16 @@ class NicotineFrame:
         # Check command line option and config option
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+        if corruptfile:
+            short_message = _("Your config file is corrupt")
+            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
+
+            message_dialog(
+                parent=self.MainWindow,
+                title=short_message,
+                message=long_message
+            )
 
         """ Connect """
 
@@ -967,8 +973,7 @@ class NicotineFrame:
         if page:
             self.settingswindow.set_active_page(page)
 
-        self.settingswindow.SettingsWindow.show()
-        self.settingswindow.SettingsWindow.deiconify()
+        self.settingswindow.show()
 
     # View
 
@@ -1191,7 +1196,7 @@ class NicotineFrame:
             load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
             self.KeyboardShortcutsDialog.set_transient_for(self.MainWindow)
 
-        self.KeyboardShortcutsDialog.show()
+        self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
@@ -1263,6 +1268,7 @@ class NicotineFrame:
 
         # Override link handler with our own
         self.AboutDialog.connect("activate-link", self.on_about_uri)
+        self.AboutDialog.connect("response", lambda x, y: x.destroy())
 
         if self.images["n"]:
             self.AboutDialog.set_logo(self.images["n"])
@@ -1272,8 +1278,7 @@ class NicotineFrame:
         self.AboutDialog.set_transient_for(self.MainWindow)
         self.AboutDialog.set_version(version)
 
-        self.AboutDialog.run()
-        self.AboutDialog.destroy()
+        self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_about_uri(self, widget, uri):
         open_uri(uri, self.MainWindow)
@@ -1918,19 +1923,9 @@ class NicotineFrame:
         self.browse_user(text)
         clear_entry(widget)
 
-    def on_load_from_disk(self, *args):
+    def on_load_from_disk_selected(self, selected, data):
 
-        sharesdir = os.path.join(config.data_dir, "usershares")
-        try:
-            if not os.path.exists(sharesdir):
-                os.makedirs(sharesdir)
-        except Exception as msg:
-            log.add_warning(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
-
-        shares = choose_file(self.MainWindow.get_toplevel(), sharesdir, multiple=True)
-        if shares is None:
-            return
-        for share in shares:
+        for share in selected:
             try:
                 try:
                     # Try legacy format first
@@ -1957,6 +1952,22 @@ class NicotineFrame:
 
             except Exception as msg:
                 log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
+
+    def on_load_from_disk(self, *args):
+
+        sharesdir = os.path.join(config.data_dir, "usershares")
+        try:
+            if not os.path.exists(sharesdir):
+                os.makedirs(sharesdir)
+        except Exception as msg:
+            log.add_warning(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
+
+        choose_file(
+            parent=self.MainWindow.get_toplevel(),
+            callback=self.on_load_from_disk_selected,
+            initialdir=sharesdir,
+            multiple=True
+        )
 
     """ Buddy List """
 
@@ -2415,9 +2426,21 @@ class NicotineFrame:
 
     """ Exit """
 
+    def on_critical_error_response(self, dialog, response_id, loop):
+
+        dialog.destroy()
+
+        if response_id == Gtk.ResponseType.REJECT:
+            self.on_report_bug()
+            return
+
+        loop.quit()
+        self.on_quit()
+
     def on_critical_error(self, exc_type, value, tb):
 
         from traceback import format_tb
+        loop = GLib.MainLoop()
 
         option_dialog(
             parent=self.application.get_active_window(),
@@ -2426,21 +2449,32 @@ class NicotineFrame:
             "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
             third=_("Report Bug"),
             cancel=False,
-            callback=self.on_critical_error_response
+            callback=self.on_critical_error_response,
+            callback_data=loop
         )
+
+        # Keep dialog open if error occurs on startup
+        loop.run()
 
         raise value
 
-    def on_critical_error_response(self, dialog, response, data):
+    def on_quit_response(self, dialog, response_id, data):
 
-        if response == Gtk.ResponseType.OK:
+        checkbox = dialog.checkbox.get_active()
+        dialog.destroy()
 
-            dialog.destroy()
+        if response_id == Gtk.ResponseType.OK:
+            if checkbox:
+                config.sections["ui"]["exitdialog"] = 0
+
             self.on_quit()
 
-        elif response == Gtk.ResponseType.REJECT:
+        elif response_id == Gtk.ResponseType.REJECT:
+            if checkbox:
+                config.sections["ui"]["exitdialog"] = 2
 
-            self.on_report_bug()
+            if self.MainWindow.get_property("visible"):
+                self.MainWindow.hide()
 
     def on_delete_event(self, widget, event):
 
@@ -2471,24 +2505,6 @@ class NicotineFrame:
     def on_quit(self, *args):
         self.save_state()
         self.application.quit()
-
-    def on_quit_response(self, dialog, response, data):
-        checkbox = dialog.checkbox.get_active()
-
-        if response == Gtk.ResponseType.OK:
-
-            if checkbox:
-                config.sections["ui"]["exitdialog"] = 0
-
-            self.on_quit()
-
-        elif response == Gtk.ResponseType.REJECT:
-            if checkbox:
-                config.sections["ui"]["exitdialog"] = 2
-            if self.MainWindow.get_property("visible"):
-                self.MainWindow.hide()
-
-        dialog.destroy()
 
     def save_state(self):
 

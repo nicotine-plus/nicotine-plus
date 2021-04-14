@@ -21,6 +21,8 @@
 
 import os
 
+from gi.repository import Gdk
+
 from pynicotine.gtkgui.utils import load_ui_elements
 
 
@@ -142,4 +144,4 @@ class FileProperties:
 
     def show(self):
         self.update_current_file()
-        self.FilePropertiesDialog.show()
+        self.FilePropertiesDialog.present_with_time(Gdk.CURRENT_TIME)

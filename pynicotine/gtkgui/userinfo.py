@@ -434,28 +434,26 @@ class UserInfo:
     def on_ignore_user(self, *args):
         self.frame.np.network_filter.ignore_user(self.user)
 
+    def on_save_picture_response(self, selected, data):
+
+        if not os.path.exists(selected):
+            self.image_pixbuf.savev(selected, "jpeg", ["quality"], ["100"])
+            log.add(_("Picture saved to %s"), selected)
+        else:
+            log.add(_("Picture not saved, %s already exists."), selected)
+
     def on_save_picture(self, *args):
 
         if self.image is None or self.image_pixbuf is None:
             return
 
-        response = save_file(
-            self.frame.MainWindow,
-            config.sections["transfers"]["downloaddir"],
-            "%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
+        save_file(
+            parent=self.frame.MainWindow,
+            callback=self.on_save_picture_response,
+            initialdir=config.sections["transfers"]["downloaddir"],
+            initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
             title="Save as..."
         )
-
-        if not response:
-            return
-
-        pathname = response[0]
-
-        if not os.path.exists(pathname):
-            self.image_pixbuf.savev(pathname, "jpeg", ["quality"], ["100"])
-            log.add(_("Picture saved to %s"), pathname)
-        else:
-            log.add(_("Picture not saved, %s already exists."), pathname)
 
     def on_image_click(self, widget, event):
 
