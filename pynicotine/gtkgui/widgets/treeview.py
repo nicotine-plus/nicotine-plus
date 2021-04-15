@@ -313,7 +313,9 @@ def press_header(widget, event):
         actions[title].set_state(
             GLib.Variant.new_boolean(column in visible_columns)
         )
-        actions[title].set_enabled(len(visible_columns) > 1)
+
+        if column in visible_columns:
+            actions[title].set_enabled(len(visible_columns) > 1)
 
         actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
         pos += 1

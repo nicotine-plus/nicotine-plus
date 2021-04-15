@@ -42,10 +42,15 @@ class PopupMenu(Gio.Menu):
         Gio.Menu.__init__(self)
 
         self.frame = frame
-        self.window = window
 
-        if not self.window:
+        if not window:
             self.window = frame.MainWindow
+
+        elif isinstance(window, Gtk.Dialog):
+            self.window = window.get_transient_for()
+
+        else:
+            self.window = window
 
         self.actions = {}
         self.items = {}
