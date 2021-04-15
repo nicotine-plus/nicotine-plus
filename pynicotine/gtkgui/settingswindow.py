@@ -2632,8 +2632,28 @@ class BuildDialog(Gtk.Dialog):
         self.settings = parent.p
 
         # Build the window
-        load_ui_elements(self, os.path.join(self.settings.frame.gui_dir, "ui", "settings", "pluginproperties.ui"))
-        self.PluginProperties.set_transient_for(self.settings.SettingsWindow)
+        Gtk.Dialog.__init__(
+            self,
+            title=_("Plugin Properties"),
+            transient_for=self.settings.SettingsWindow,
+            modal=True,
+            window_position=Gtk.WindowPosition.CENTER,
+            use_header_bar=config.sections["ui"]["header_bar"]
+        )
+
+        self.add_buttons(
+            _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
+        )
+
+        self.set_default_response(Gtk.ResponseType.OK)
+        self.connect("response", self.on_response)
+
+        content_area = self.get_content_area()
+        content_area.set_margin_top(10)
+        content_area.set_margin_bottom(10)
+        content_area.set_margin_start(10)
+        content_area.set_margin_end(10)
+        content_area.set_spacing(10)
 
         self.tw = {}
         self.options = {}
@@ -2652,7 +2672,7 @@ class BuildDialog(Gtk.Dialog):
         self.tw["label%d" % count] = self.generate_label(description)
         self.tw["box%d" % count].add(self.tw["label%d" % count])
 
-        self.Main.add(self.tw["box%d" % count])
+        self.get_content_area().add(self.tw["box%d" % count])
 
     def generate_tree_view(self, name, description, value, c=0):
 
@@ -2691,8 +2711,8 @@ class BuildDialog(Gtk.Dialog):
         self.tw["vbox%d" % c].add(self.add_button)
         self.tw["vbox%d" % c].add(self.remove_button)
 
-        self.Main.add(self.tw["box%d" % c])
-        self.Main.add(self.tw["vbox%d" % c])
+        self.get_content_area().add(self.tw["box%d" % c])
+        self.get_content_area().add(self.tw["vbox%d" % c])
 
         renderers = cols[description].get_cells()
         for render in renderers:
@@ -2807,7 +2827,7 @@ class BuildDialog(Gtk.Dialog):
                 except KeyError:
                     chooser = None
 
-                self.tw[name] = FileChooserButton(button_widget, self.PluginProperties, chooser)
+                self.tw[name] = FileChooserButton(button_widget, self, chooser)
                 self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
                 self.tw["box%d" % c].add(button_widget)
 
@@ -2816,7 +2836,7 @@ class BuildDialog(Gtk.Dialog):
 
             c += 1
 
-        self.PluginProperties.show_all()
+        self.show_all()
 
     def on_add(self, widget, treeview):
 
@@ -2831,21 +2851,20 @@ class BuildDialog(Gtk.Dialog):
         if iterator is not None:
             treeview.get_model().remove(iterator)
 
-    def on_cancel(self, widget):
-        self.PluginProperties.destroy()
+    def on_response(self, dialog, response_id):
 
-    def on_okay(self, widget):
+        if response_id == Gtk.ResponseType.OK:
+            for name in self.options:
+                value = self.settings.get_widget_data(self.tw[name])
+                if value is not None:
+                    config.sections["plugins"][self.plugin][name] = value
 
-        for name in self.options:
-            value = self.settings.get_widget_data(self.tw[name])
-            if value is not None:
-                config.sections["plugins"][self.plugin][name] = value
+            self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
-        self.PluginProperties.destroy()
-        self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+        self.destroy()
 
     def show(self):
-        self.PluginProperties.present_with_time(Gdk.CURRENT_TIME)
+        self.present_with_time(Gdk.CURRENT_TIME)
 
 
 class PluginsFrame(BuildFrame):
@@ -3013,8 +3032,36 @@ class Settings:
         self.frame = frame
 
         # Build the window
+        self.SettingsWindow = dialog = Gtk.Dialog(
+            use_header_bar=config.sections["ui"]["header_bar"]
+        )
+        dialog.set_title(_("Preferences"))
+        dialog.set_transient_for(frame.MainWindow)
+        dialog.set_default_size(1050, 700)
+        dialog.set_position(Gtk.WindowPosition.CENTER)
+
+        dialog.add_buttons(
+            _("Cancel"), Gtk.ResponseType.CANCEL,
+            _("Export"), Gtk.ResponseType.HELP,
+            _("Apply"), Gtk.ResponseType.APPLY,
+            _("OK"), Gtk.ResponseType.OK
+        )
+
+        dialog.set_default_response(Gtk.ResponseType.OK)
+        dialog.connect("delete-event", self.on_delete)
+        dialog.connect("response", self.on_response)
+
+        content_area = dialog.get_content_area()
+        content_area.set_border_width(0)
+
+        action_area = dialog.get_action_area()
+        action_area.set_margin_top(10)
+        action_area.set_margin_bottom(10)
+        action_area.set_margin_start(10)
+        action_area.set_margin_end(10)
+
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", "settingswindow.ui"))
-        self.SettingsWindow.set_transient_for(frame.MainWindow)
+        content_area.add(self.Main)
 
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
@@ -3348,19 +3395,23 @@ class Settings:
             title=_("Pick a File Name for Config Backup")
         )
 
-    def on_apply(self, widget):
-        self.SettingsWindow.emit("settings-updated", "apply")
+    def on_response(self, dialog, response_id):
 
-    def on_ok(self, widget):
-        self.SettingsWindow.hide()
-        self.SettingsWindow.emit("settings-updated", "ok")
+        if response_id == Gtk.ResponseType.OK:
+            self.SettingsWindow.hide()
+            self.SettingsWindow.emit("settings-updated", "ok")
 
-    def on_cancel(self, widget):
-        self.SettingsWindow.hide()
+        elif response_id == Gtk.ResponseType.APPLY:
+            self.SettingsWindow.emit("settings-updated", "apply")
+
+        elif response_id == Gtk.ResponseType.HELP:
+            self.on_backup_config()
+
+        else:
+            self.SettingsWindow.hide()
 
     def on_delete(self, widget, event):
-        self.on_cancel(widget)
-        widget.stop_emission_by_name("delete-event")
+        self.SettingsWindow.hide()
         return True
 
     def show(self, *args):

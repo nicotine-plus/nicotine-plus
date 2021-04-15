@@ -1,126 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="SettingsWindow">
-    <property name="title" translatable="yes">Preferences</property>
-    <property name="window-position">center</property>
-    <property name="default-width">1050</property>
-    <property name="default-height">700</property>
-    <signal name="delete-event" handler="on_delete" swapped="no"/>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="Main">
+  <object class="GtkPaned" id="Main">
+    <property name="visible">1</property>
+    <property name="can-focus">1</property>
+    <property name="vexpand">1</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="width-request">250</property>
         <property name="visible">1</property>
-        <property name="orientation">vertical</property>
-        <property name="margin-start">10</property>
-        <property name="margin-top">10</property>
-        <property name="margin-bottom">10</property>
+        <property name="can-focus">1</property>
+        <property name="vexpand">1</property>
         <child>
-          <object class="GtkPaned">
+          <object class="GtkTreeView" id="SettingsTreeview">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="vexpand">1</property>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="width-request">250</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="shadow-type">in</property>
-                <property name="margin-end">10</property>
-                <child>
-                  <object class="GtkTreeView" id="SettingsTreeview">
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="headers-visible">0</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection">
-                        <signal name="changed" handler="on_switch_page" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="resize">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <child>
-                  <object class="GtkViewport" id="viewport1">
-                    <property name="margin-start">15</property>
-                    <property name="margin-end">15</property>
-                    <property name="margin-top">5</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="width-request">600</property>
-                    <property name="visible">1</property>
-                  </object>
-                </child>
+            <property name="headers-visible">0</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection">
+                <signal name="changed" handler="on_switch_page" swapped="no"/>
               </object>
             </child>
           </object>
         </child>
+      </object>
+      <packing>
+        <property name="resize">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">1</property>
+        <property name="can-focus">1</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkViewport" id="viewport1">
+            <property name="margin-start">15</property>
+            <property name="margin-end">15</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="width-request">600</property>
             <property name="visible">1</property>
-            <property name="spacing">5</property>
-            <property name="margin-top">10</property>
-            <child>
-              <object class="GtkButtonBox">
-                <property name="visible">1</property>
-                <property name="halign">start</property>
-                <property name="hexpand">1</property>
-                <child>
-                  <object class="GtkButton" id="BackupButton">
-                    <property name="label" translatable="yes">Back Up Config File</property>
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="can-default">1</property>
-                    <signal name="clicked" handler="on_backup_config" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButtonBox">
-                <property name="visible">1</property>
-                <property name="margin-end">10</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkButton" id="ApplyButton">
-                    <property name="label" translatable="yes">Apply</property>
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="can-default">1</property>
-                    <signal name="clicked" handler="on_apply" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="CancelButton">
-                    <property name="label" translatable="yes">Cancel</property>
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="can-default">1</property>
-                    <signal name="clicked" handler="on_cancel" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="OkButton">
-                    <property name="label" translatable="yes">OK</property>
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="can-default">1</property>
-                    <signal name="clicked" handler="on_ok" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkBox">
-            <property name="visible">0</property>
           </object>
         </child>
       </object>
