@@ -150,8 +150,14 @@ class Notifications:
         return message
 
     def tts_player(self, message):
+
         self.tts_playing = True
-        execute_command(config.sections["ui"]["speechcommand"], message, background=False)
+
+        try:
+            execute_command(config.sections["ui"]["speechcommand"], message, background=False)
+
+        except Exception as error:
+            log.add_warning(_("Text-to-speech for message failed: %s"), str(error))
 
     def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
