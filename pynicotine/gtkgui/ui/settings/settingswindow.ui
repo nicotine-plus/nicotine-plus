@@ -34,10 +34,10 @@
         <property name="can-focus">1</property>
         <child>
           <object class="GtkViewport" id="viewport1">
-            <property name="margin-start">15</property>
-            <property name="margin-end">15</property>
-            <property name="margin-top">12</property>
-            <property name="margin-bottom">12</property>
+            <property name="margin-start">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-top">16</property>
+            <property name="margin-bottom">16</property>
             <property name="width-request">600</property>
             <property name="visible">1</property>
           </object>
