@@ -164,9 +164,6 @@ class NicotineFrame:
         self.set_up_actions()
         self.set_up_menu()
 
-        self.accel_group = Gtk.AccelGroup()
-        self.MainWindow.add_accel_group(self.accel_group)
-
         """ Icons """
 
         self.load_icons()
@@ -694,20 +691,29 @@ class NicotineFrame:
 
     def set_up_actions(self):
 
+        # Menu Button
+
+        action = Gio.SimpleAction.new("menu", None)
+        action.connect("activate", self.on_menu)
+        self.application.add_action(action)
+
         # File
 
         self.connect_action = Gio.SimpleAction.new("connect", None)
         self.connect_action.connect("activate", self.on_connect)
         self.application.add_action(self.connect_action)
+        self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
 
         self.disconnect_action = Gio.SimpleAction.new("disconnect", None)
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
+        self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
         state = config.sections["server"]["away"]
         self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
         self.application.add_action(self.away_action)
+        self.application.set_accels_for_action("app.away", ["<Primary>h"])
 
         self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
         self.check_privileges_action.connect("activate", self.on_check_privileges)
@@ -724,10 +730,12 @@ class NicotineFrame:
         action = Gio.SimpleAction.new("settings", None)
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
+        self.application.set_accels_for_action("app.settings", ["<Primary>p"])
 
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.on_quit)
         self.application.add_action(action)
+        self.application.set_accels_for_action("app.quit", ["<Primary>q"])
 
         # View
 
@@ -740,6 +748,7 @@ class NicotineFrame:
         action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_log)
         self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
 
         state = config.sections["logging"]["debug"]
         action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
@@ -750,11 +759,13 @@ class NicotineFrame:
         action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_flags)
         self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showflags", ["<Primary>u"])
 
         state = config.sections["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
 
         state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
         self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
@@ -770,10 +781,12 @@ class NicotineFrame:
         self.rescan_public_action = Gio.SimpleAction.new("publicrescan", None)
         self.rescan_public_action.connect("activate", self.on_rescan)
         self.application.add_action(self.rescan_public_action)
+        self.application.set_accels_for_action("app.publicrescan", ["<Shift><Primary>p"])
 
         self.rescan_buddy_action = Gio.SimpleAction.new("buddyrescan", None)
         self.rescan_buddy_action.connect("activate", self.on_buddy_rescan)
         self.application.add_action(self.rescan_buddy_action)
+        self.application.set_accels_for_action("app.buddyrescan", ["<Shift><Primary>b"])
 
         self.browse_public_shares_action = Gio.SimpleAction.new("browsepublicshares", None)
         self.browse_public_shares_action.connect("activate", self.on_browse_public_shares)
@@ -827,6 +840,7 @@ class NicotineFrame:
         action.connect("activate", self.on_keyboard_shortcuts)
         action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
         self.application.add_action(action)
+        self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question"])
 
         action = Gio.SimpleAction.new("transferstatistics", None)
         action.connect("activate", self.on_transfer_statistics)
@@ -891,6 +905,9 @@ class NicotineFrame:
         builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
 
         self.application.set_menubar(builder.get_object("menubar"))
+
+    def on_menu(self, *args):
+        self.HeaderMenu.set_active(not self.HeaderMenu.get_active())
 
     # File
 
@@ -1294,15 +1311,14 @@ class NicotineFrame:
         self.MainWindow.set_show_menubar(False)
         self.HeaderMenu.show()
 
+        self.application.set_accels_for_action("app.menu", ["F10"])
+
         menu_parent = self.HeaderMenu.get_parent()
         if menu_parent is not None:
             menu_parent.remove(self.HeaderMenu)
 
         end_widget = getattr(self, page_id + "End")
         end_widget.add(self.HeaderMenu)
-
-        key, mod = Gtk.accelerator_parse("F10")
-        self.HeaderMenu.add_accelerator("clicked", self.accel_group, key, mod, Gtk.AccelFlags.VISIBLE)
 
         header_bar = getattr(self, "Header" + page_id)
         header_bar.set_title(GLib.get_application_name())
@@ -1315,6 +1331,9 @@ class NicotineFrame:
 
         self.MainWindow.set_show_menubar(True)
         self.HeaderMenu.hide()
+
+        # Don't override builtin accelerator for menu bar
+        self.application.set_accels_for_action("app.menu", [])
 
         if page_id == "Default":
             # No toolbar needed for this page
@@ -1347,9 +1366,6 @@ class NicotineFrame:
     def remove_header_bar(self):
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
-
-        key, mod = Gtk.accelerator_parse("F10")
-        self.HeaderMenu.remove_accelerator(self.accel_group, key, mod)
 
         self.MainWindow.unrealize()
         self.MainWindow.set_titlebar(None)

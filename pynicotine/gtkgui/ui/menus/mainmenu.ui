@@ -5,19 +5,16 @@
       <item>
         <attribute name="label" translatable="yes">_Connect</attribute>
         <attribute name="action">app.connect</attribute>
-        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;c</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Disconnect</attribute>
         <attribute name="action">app.disconnect</attribute>
-        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;d</attribute>
       </item>
     </section>
     <section>
       <item>
         <attribute name="label" translatable="yes">_Away</attribute>
         <attribute name="action">app.away</attribute>
-        <attribute name="accel">&lt;Primary&gt;h</attribute>
       </item>
     </section>
     <section>
@@ -41,7 +38,6 @@
           <item>
             <attribute name="label" translatable="yes">Show _Log Pane</attribute>
             <attribute name="action">win.showlog</attribute>
-            <attribute name="accel">&lt;Primary&gt;l</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Show _Debug Log Controls</attribute>
@@ -52,12 +48,10 @@
           <item>
             <attribute name="label" translatable="yes">Show _Flag Columns in User Lists</attribute>
             <attribute name="action">win.showflags</attribute>
-            <attribute name="accel">&lt;Primary&gt;u</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Show _Buttons in Transfer Tabs</attribute>
             <attribute name="action">win.showtransferbuttons</attribute>
-            <attribute name="accel">&lt;Primary&gt;b</attribute>
           </item>
         </section>
         <section>
@@ -134,7 +128,6 @@
       <item>
         <attribute name="label" translatable="yes">_Rescan Public Shares</attribute>
         <attribute name="action">app.publicrescan</attribute>
-        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;p</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Browse Public Shares</attribute>
@@ -145,7 +138,6 @@
       <item>
         <attribute name="label" translatable="yes">Rescan B_uddy Shares</attribute>
         <attribute name="action">app.buddyrescan</attribute>
-        <attribute name="accel">&lt;Shift&gt;&lt;Primary&gt;b</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">Bro_wse Buddy Shares</attribute>
@@ -159,7 +151,6 @@
           <item>
             <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
             <attribute name="action">app.keyboardshortcuts</attribute>
-            <attribute name="accel">&lt;Primary&gt;question</attribute>
             <attribute name="hidden-when">action-disabled</attribute>
           </item>
           <item>
@@ -175,7 +166,6 @@
       <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>
         <attribute name="action">app.settings</attribute>
-        <attribute name="accel">&lt;Primary&gt;p</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">About _Nicotine+</attribute>
@@ -184,7 +174,6 @@
       <item>
         <attribute name="label" translatable="yes">_Quit</attribute>
         <attribute name="action">app.quit</attribute>
-        <attribute name="accel">&lt;Primary&gt;q</attribute>
       </item>
     </section>
   </menu>
