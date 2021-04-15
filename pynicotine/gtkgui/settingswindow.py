@@ -2624,17 +2624,17 @@ class NotificationsFrame(BuildFrame):
         }
 
 
-class BuildDialog(Gtk.Dialog):
+class PluginPreferencesDialog(Gtk.Dialog):
     """ Class used to build a custom dialog for the plugins """
 
-    def __init__(self, parent):
+    def __init__(self, parent, name):
 
         self.settings = parent.p
 
         # Build the window
         Gtk.Dialog.__init__(
             self,
-            title=_("Plugin Properties"),
+            title=_("%s Properties") % name,
             transient_for=self.settings.SettingsWindow,
             modal=True,
             window_position=Gtk.WindowPosition.CENTER_ON_PARENT,
@@ -2649,11 +2649,11 @@ class BuildDialog(Gtk.Dialog):
         self.connect("response", self.on_response)
 
         content_area = self.get_content_area()
-        content_area.set_margin_top(10)
-        content_area.set_margin_bottom(10)
-        content_area.set_margin_start(10)
-        content_area.set_margin_end(10)
-        content_area.set_spacing(10)
+        content_area.set_margin_top(14)
+        content_area.set_margin_bottom(14)
+        content_area.set_margin_start(18)
+        content_area.set_margin_end(18)
+        content_area.set_spacing(12)
 
         self.tw = {}
         self.options = {}
@@ -2912,7 +2912,8 @@ class PluginsFrame(BuildFrame):
         if self.selected_plugin is None:
             return
 
-        dialog = BuildDialog(self)
+        plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
+        dialog = PluginPreferencesDialog(self, plugin_info["Name"])
 
         dialog.add_options(
             self.selected_plugin,
