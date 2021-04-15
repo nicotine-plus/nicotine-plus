@@ -2637,7 +2637,7 @@ class BuildDialog(Gtk.Dialog):
             title=_("Plugin Properties"),
             transient_for=self.settings.SettingsWindow,
             modal=True,
-            window_position=Gtk.WindowPosition.CENTER,
+            window_position=Gtk.WindowPosition.CENTER_ON_PARENT,
             use_header_bar=config.sections["ui"]["header_bar"]
         )
 
@@ -3038,7 +3038,7 @@ class Settings:
         dialog.set_title(_("Preferences"))
         dialog.set_transient_for(frame.MainWindow)
         dialog.set_default_size(1050, 700)
-        dialog.set_position(Gtk.WindowPosition.CENTER)
+        dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
 
         dialog.add_buttons(
             _("Cancel"), Gtk.ResponseType.CANCEL,
