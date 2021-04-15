@@ -3121,6 +3121,9 @@ class Settings:
     def update_visuals(self, scope=None):
 
         if not scope:
+            for page in self.pages.values():
+                self.update_visuals(page)
+
             scope = self
 
         for widget in list(scope.__dict__.values()):
