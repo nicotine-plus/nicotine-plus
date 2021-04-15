@@ -114,19 +114,22 @@ class Notifications:
         if not config.sections["ui"]["speechenabled"]:
             return
 
-        if message not in self.tts:
-            self.tts.append(message)
+        if message in self.tts:
+            return
 
-            thread = threading.Thread(target=self.play_tts)
-            thread.name = "TTS"
-            thread.daemon = True
-            thread.start()
-
-    def play_tts(self):
+        self.tts.append(message)
 
         if self.tts_playing:
+            # Avoid spinning up useless threads
             self.continue_playing = True
             return
+
+        thread = threading.Thread(target=self.play_tts)
+        thread.name = "TTS"
+        thread.daemon = True
+        thread.start()
+
+    def play_tts(self):
 
         for message in self.tts[:]:
             self.tts_player(message)
@@ -147,10 +150,8 @@ class Notifications:
         return message
 
     def tts_player(self, message):
-
         self.tts_playing = True
-
-        execute_command(config.sections["ui"]["speechcommand"], message)
+        execute_command(config.sections["ui"]["speechcommand"], message, background=False)
 
     def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 

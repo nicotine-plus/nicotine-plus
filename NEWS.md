@@ -25,6 +25,7 @@ Corrections
  * Column widths of the currently selected user browse tab are now saved
  * UI customizations are once again applied to the preferences dialog
  * Corrected the behavior of 'Abort User's Uploads' button in the uploads view
+ * Text-To-Speech messages no longer overlap each other
  * Minor behavioral corrections related to file transfers
 
 Issues closed on GitHub

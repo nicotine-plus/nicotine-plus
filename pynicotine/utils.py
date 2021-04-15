@@ -326,6 +326,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     from subprocess import PIPE
     from subprocess import Popen
 
+    if not command:
+        return False
+
     # Example command: "C:\Program Files\WinAmp\WinAmp.exe" --xforce "--title=My Title" $ | flite -t
     if returnoutput:
         background = False
