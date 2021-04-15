@@ -209,15 +209,15 @@ class TransferList:
         self.selected_transfers = set()
         self.selected_users = set()
 
-        self.widget.get_selection().selected_foreach(self.selected_transfers_callback)
+        model, paths = self.widget.get_selection().get_selected_rows()
 
-    def selected_transfers_callback(self, model, path, iterator):
+        for path in paths:
+            iterator = model.get_iter(path)
+            self.select_transfer(model, iterator, select_user=True)
 
-        self.select_transfer(model, iterator, select_user=True)
-
-        # If we're in grouping mode, select any transfers under the selected
-        # user or folder
-        self.select_child_transfers(model, model.iter_children(iterator))
+            # If we're in grouping mode, select any transfers under the selected
+            # user or folder
+            self.select_child_transfers(model, model.iter_children(iterator))
 
     def select_child_transfers(self, model, iterator):
 
@@ -833,52 +833,52 @@ class TransferList:
         widget.stop_emission_by_name("key_press_event")
         return True
 
-    def selected_results_all_data(self, model, path, iterator, data):
-
-        transfer = model.get_value(iterator, 18)
-
-        if not isinstance(transfer, Transfer):
-            return
-
-        user = model.get_value(iterator, 0)
-        filename = model.get_value(iterator, 2)
-        fullname = model.get_value(iterator, 10)
-        size = speed = length = queue = immediate = num = country = bitratestr = ""
-
-        size = str(human_size(transfer.size))
-
-        if transfer.speed:
-            speed = str(human_speed(transfer.speed))
-
-        bitratestr = str(transfer.bitrate)
-        length = str(transfer.length)
-
-        directory = fullname.rsplit("\\", 1)[0]
-
-        data.append({
-            "user": user,
-            "fn": fullname,
-            "position": num,
-            "filename": filename,
-            "directory": directory,
-            "size": size,
-            "speed": speed,
-            "queue": queue,
-            "immediate": immediate,
-            "bitrate": bitratestr,
-            "length": length,
-            "country": country
-        })
-
     def on_file_properties(self, *args):
 
         if not self.frame.np.transfers:
             return
 
         data = []
-        self.widget.get_selection().selected_foreach(self.selected_results_all_data, data)
+        model, paths = self.widget.get_selection().get_selected_rows()
 
-        if data:
+        for path in paths:
+            iterator = model.get_iter(path)
+            transfer = model.get_value(iterator, 18)
+
+            if not isinstance(transfer, Transfer):
+                continue
+
+            user = model.get_value(iterator, 0)
+            filename = model.get_value(iterator, 2)
+            fullname = model.get_value(iterator, 10)
+            size = speed = length = queue = immediate = num = country = bitratestr = ""
+
+            size = str(human_size(transfer.size))
+
+            if transfer.speed:
+                speed = str(human_speed(transfer.speed))
+
+            bitratestr = str(transfer.bitrate)
+            length = str(transfer.length)
+
+            directory = fullname.rsplit("\\", 1)[0]
+
+            data.append({
+                "user": user,
+                "fn": fullname,
+                "position": num,
+                "filename": filename,
+                "directory": directory,
+                "size": size,
+                "speed": speed,
+                "queue": queue,
+                "immediate": immediate,
+                "bitrate": bitratestr,
+                "length": length,
+                "country": country
+            })
+
+        if paths:
             FileProperties(self.frame, data).show()
 
     def on_copy_file_path(self, *args):

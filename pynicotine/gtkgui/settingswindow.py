@@ -385,33 +385,29 @@ class DownloadsFrame(BuildFrame):
             droplist=list(self.filtersiters.keys())
         )
 
-    def _selected_filter(self, model, path, iterator, list):
-        list.append(iterator)
-
     def get_selected_filter(self):
 
-        iters = []
-        self.FilterView.get_selection().selected_foreach(self._selected_filter, iters)
+        model, paths = self.FilterView.get_selection().get_selected_rows()
 
-        if not iters:
-            return None
+        for path in paths:
+            iterator = model.get_iter(path)
+            return model.get_value(iterator, 0)
 
-        dfilter = self.filterlist.get_value(iters[0], 0)
-
-        return dfilter
+        return None
 
     def on_remove_filter(self, widget):
 
         dfilter = self.get_selected_filter()
 
-        if dfilter:
+        if not dfilter:
+            return
 
-            iterator = self.filtersiters[dfilter]
-            self.filterlist.remove(iterator)
+        iterator = self.filtersiters[dfilter]
+        self.filterlist.remove(iterator)
 
-            del self.filtersiters[dfilter]
+        del self.filtersiters[dfilter]
 
-            self.on_verify_filter(self.VerifyFilters)
+        self.on_verify_filter(self.VerifyFilters)
 
     def on_default_filters(self, widget):
 
@@ -714,9 +710,6 @@ class SharesFrame(BuildFrame):
             title=_("Add a Shared Buddy Folder")
         )
 
-    def _remove_shared_dir(self, model, path, iterator, list):
-        list.append(iterator)
-
     def rename_virtuals_response(self, dialog, response_id, data):
 
         virtual = dialog.get_response_value()
@@ -742,55 +735,49 @@ class SharesFrame(BuildFrame):
         shared_dirs.append(newmapping)
         self.needrescan = True
 
-    def rename_virtuals(self, shares_widget, shares_list, shared_dirs):
+    def rename_virtuals(self, shares_widget, shared_dirs):
 
-        iters = []
-        shares_widget.get_selection().selected_foreach(self._remove_shared_dir, iters)
+        model, paths = shares_widget.get_selection().get_selected_rows()
 
-        for iterator in iters:
-            directory = shares_list.get_value(iterator, 1)
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            folder = model.get_value(iterator, 1)
 
             combo_box_dialog(
                 parent=self.Main.get_toplevel(),
                 title=_("Virtual Name"),
-                message=_("Enter new virtual name for '%(dir)s':") % {'dir': directory},
+                message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 callback=self.rename_virtuals_response,
-                callback_data=(iterator, shares_list, shared_dirs)
+                callback_data=(iterator, model, shared_dirs)
             )
 
     def on_rename_virtuals(self, widget):
-        self.rename_virtuals(self.Shares, self.shareslist, self.shareddirs)
+        self.rename_virtuals(self.Shares, self.shareddirs)
 
     def on_rename_buddy_virtuals(self, widget):
-        self.rename_virtuals(self.BuddyShares, self.bshareslist, self.bshareddirs)
+        self.rename_virtuals(self.BuddyShares, self.bshareddirs)
+
+    def remove_shared_dir(self, shares_widget, shared_dirs):
+
+        model, paths = shares_widget.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            virtual = model.get_value(iterator, 0)
+            actual = model.get_value(iterator, 1)
+            mapping = (virtual, actual)
+
+            shared_dirs.remove(mapping)
+            model.remove(iterator)
+
+        if paths:
+            self.needrescan = True
 
     def on_remove_shared_dir(self, widget):
-        iters = []
-        self.Shares.get_selection().selected_foreach(self._remove_shared_dir, iters)
-
-        for iterator in iters:
-            virtual = self.shareslist.get_value(iterator, 0)
-            actual = self.shareslist.get_value(iterator, 1)
-            mapping = (virtual, actual)
-            self.shareddirs.remove(mapping)
-            self.shareslist.remove(iterator)
-
-        if iters:
-            self.needrescan = True
+        self.remove_shared_dir(self.Shares, self.shareddirs)
 
     def on_remove_shared_buddy_dir(self, widget):
-        iters = []
-        self.BuddyShares.get_selection().selected_foreach(self._remove_shared_dir, iters)
-
-        for iterator in iters:
-            virtual = self.bshareslist.get_value(iterator, 0)
-            actual = self.bshareslist.get_value(iterator, 1)
-            mapping = (virtual, actual)
-            self.bshareddirs.remove(mapping)
-            self.bshareslist.remove(iterator)
-
-        if iters:
-            self.needrescan = True
+        self.remove_shared_dir(self.BuddyShares, self.bshareddirs)
 
 
 class UploadsFrame(BuildFrame):
@@ -1005,9 +992,6 @@ class IgnoreListFrame(BuildFrame):
             }
         }
 
-    def _append_item(self, model, path, iterator, line):
-        line.append(iterator)
-
     def on_add_ignored_response(self, dialog, response_id, data):
 
         user = dialog.get_response_value()
@@ -1030,12 +1014,15 @@ class IgnoreListFrame(BuildFrame):
         )
 
     def on_remove_ignored(self, widget):
-        iters = []
-        self.IgnoredUsers.get_selection().selected_foreach(self._append_item, iters)
-        for iterator in iters:
-            user = self.ignorelist.get_value(iterator, 0)
+
+        model, paths = self.IgnoredUsers.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            user = model.get_value(iterator, 0)
+
+            model.remove(iterator)
             self.ignored_users.remove(user)
-            self.ignorelist.remove(iterator)
 
     def on_clear_ignored(self, widget):
         self.ignored_users = []
@@ -1079,12 +1066,15 @@ class IgnoreListFrame(BuildFrame):
         )
 
     def on_remove_ignored_ip(self, widget):
-        iters = []
-        self.IgnoredIPs.get_selection().selected_foreach(self._append_item, iters)
-        for iterator in iters:
-            ip = self.ignored_ips_list.get_value(iterator, 0)
+
+        model, paths = self.IgnoredIPs.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            ip = model.get_value(iterator, 0)
+
+            model.remove(iterator)
             del self.ignored_ips[ip]
-            self.ignored_ips_list.remove(iterator)
 
     def on_clear_ignored_ip(self, widget):
         self.ignored_ips = {}
@@ -1188,16 +1178,16 @@ class BanListFrame(BuildFrame):
             callback=self.on_add_banned_response
         )
 
-    def _append_item(self, model, path, iterator, line):
-        line.append(iterator)
-
     def on_remove_banned(self, widget):
-        iters = []
-        self.BannedList.get_selection().selected_foreach(self._append_item, iters)
-        for iterator in iters:
-            user = self.banlist_model.get_value(iterator, 0)
+
+        model, paths = self.BlockedList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            user = model.get_value(iterator, 0)
+
+            model.remove(iterator)
             self.banlist.remove(user)
-            self.banlist_model.remove(iterator)
 
     def on_clear_banned(self, widget):
         self.banlist = []
@@ -1244,12 +1234,15 @@ class BanListFrame(BuildFrame):
         )
 
     def on_remove_blocked(self, widget):
-        iters = []
-        self.BlockedList.get_selection().selected_foreach(self._append_item, iters)
-        for iterator in iters:
-            ip = self.blocked_list_model.get_value(iterator, 0)
-            del self.blocked_list[ip]
+
+        model, paths = self.BlockedList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            ip = model.get_value(iterator, 0)
+
             self.blocked_list_model.remove(iterator)
+            del self.blocked_list[ip]
 
     def on_clear_blocked(self, widget):
         self.blocked_list = {}

@@ -294,12 +294,14 @@ class UserBrowse:
         return True
 
     def select_files(self):
-        self.selected_files = []
-        self.FileTreeView.get_selection().selected_foreach(self.selected_files_callback)
 
-    def selected_files_callback(self, model, path, iterator):
-        rawfilename = self.file_store.get_value(iterator, 0)
-        self.selected_files.append(rawfilename)
+        self.selected_files = []
+        model, paths = self.FileTreeView.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            rawfilename = model.get_value(iterator, 0)
+            self.selected_files.append(rawfilename)
 
     def on_file_clicked(self, widget, event):
 
@@ -665,33 +667,33 @@ class UserBrowse:
         self.FolderTreeView.expand_to_path(path)
         self.set_directory(directory)
 
-    def selected_results_all_data(self, model, path, iterator, data):
-
-        filename = model.get_value(iterator, 0)
-        fn = "\\".join([self.selected_folder, filename])
-        size = model.get_value(iterator, 1)
-        bitratestr = model.get_value(iterator, 2)
-        length = model.get_value(iterator, 3)
-
-        data.append({
-            "user": self.user,
-            "fn": fn,
-            "filename": filename,
-            "directory": self.selected_folder,
-            "size": size,
-            "bitrate": bitratestr,
-            "length": length,
-            "immediate": None,
-            "speed": None,
-            "country": None
-        })
-
     def on_file_properties(self, *args):
 
         data = []
-        self.FileTreeView.get_selection().selected_foreach(self.selected_results_all_data, data)
+        model, paths = self.FileTreeView.get_selection().get_selected_rows()
 
-        if data:
+        for path in paths:
+            iterator = model.get_iter(path)
+            filename = model.get_value(iterator, 0)
+            fn = "\\".join([self.selected_folder, filename])
+            size = model.get_value(iterator, 1)
+            bitratestr = model.get_value(iterator, 2)
+            length = model.get_value(iterator, 3)
+
+            data.append({
+                "user": self.user,
+                "fn": fn,
+                "filename": filename,
+                "directory": self.selected_folder,
+                "size": size,
+                "bitrate": bitratestr,
+                "length": length,
+                "immediate": None,
+                "speed": None,
+                "country": None
+            })
+
+        if paths:
             FileProperties(self.frame, data).show()
 
     def on_download_directory(self, *args):

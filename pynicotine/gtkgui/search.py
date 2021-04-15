@@ -1043,7 +1043,33 @@ class Search:
         self.selected_users = set()
         self.selected_files_count = 0
 
-        self.ResultsList.get_selection().selected_foreach(self.selected_results_callback)
+        model, paths = self.ResultsList.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            user = model.get_value(iterator, 1)
+
+            if user is None:
+                continue
+
+            self.selected_users.add(user)
+
+            filepath = model.get_value(iterator, 12)
+
+            if not filepath:
+                # Result is not a file or directory, don't add it
+                continue
+
+            bitrate = model.get_value(iterator, 9)
+            length = model.get_value(iterator, 10)
+            size = model.get_value(iterator, 14)
+
+            self.selected_results.add((user, filepath, size, bitrate, length))
+
+            filename = model.get_value(iterator, 7)
+
+            if filename:
+                self.selected_files_count += 1
 
     def update_result_counter(self):
         self.Counter.set_text(str(self.numvisibleresults))
@@ -1055,32 +1081,6 @@ class Search:
 
     def save_columns(self):
         save_columns("file_search", self.ResultsList.get_columns())
-
-    def selected_results_callback(self, model, path, iterator):
-
-        user = model.get_value(iterator, 1)
-
-        if user is None:
-            return
-
-        self.selected_users.add(user)
-
-        filepath = model.get_value(iterator, 12)
-
-        if filepath == "":
-            # Result is not a file or directory, don't add it
-            return
-
-        bitrate = model.get_value(iterator, 9)
-        length = model.get_value(iterator, 10)
-        size = model.get_value(iterator, 14)
-
-        self.selected_results.add((user, filepath, size, bitrate, length))
-
-        filename = model.get_value(iterator, 7)
-
-        if filename:
-            self.selected_files_count += 1
 
     def on_list_clicked(self, widget, event):
 
@@ -1161,12 +1161,22 @@ class Search:
                 self.frame.browse_user(user, folder)
                 requested_folders.add(folder)
 
-    def selected_results_all_data(self, model, path, iterator, data):
+    def on_file_properties(self, *args):
 
-        filename = model.get_value(iterator, 7)
+        if not self.frame.np.transfers:
+            return
 
-        # We only want to see the metadata of files, not directories
-        if filename != "":
+        data = []
+        model, paths = self.ResultsList.get_selection().get_selected_rows()
+
+        for path in paths:
+            iterator = model.get_iter(path)
+            filename = model.get_value(iterator, 7)
+
+            # We only want to see the metadata of files, not directories
+            if not filename:
+                continue
+
             num = model.get_value(iterator, 0)
             user = model.get_value(iterator, 1)
             immediate = model.get_value(iterator, 3)
@@ -1195,15 +1205,7 @@ class Search:
                 "country": country
             })
 
-    def on_file_properties(self, *args):
-
-        if not self.frame.np.transfers:
-            return
-
-        data = []
-        self.ResultsList.get_selection().selected_foreach(self.selected_results_all_data, data)
-
-        if data:
+        if paths:
             FileProperties(self.frame, data).show()
 
     def on_download_files(self, *args, prefix=""):

@@ -94,15 +94,12 @@ class WishList:
 
     def on_remove_wish(self, *args):
 
-        iters = []
-        self.WishlistView.get_selection().selected_foreach(self._remove_wish, iters)
+        model, paths = self.WishlistView.get_selection().get_selected_rows()
 
-        for iterator in iters:
-            wish = self.store.get_value(iterator, 0)
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            wish = model.get_value(iterator, 0)
             self.remove_wish(wish)
-
-    def _remove_wish(self, model, path, iterator, line):
-        line.append(iterator)
 
     def clear_wishlist_response(self, dialog, response_id, data):
 
