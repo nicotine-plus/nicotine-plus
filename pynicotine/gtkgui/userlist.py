@@ -57,6 +57,7 @@ class UserList:
 
         """ Columns """
 
+        self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
             GObject.TYPE_OBJECT,  # (0)  status icon
             GObject.TYPE_OBJECT,  # (1)  flag
@@ -137,15 +138,16 @@ class UserList:
                 last_seen = _("Never seen")
                 time_from_epoch = 0
 
+            username = str(username)
             row = [
-                self.frame.get_status_image(0),
-                self.frame.get_flag_image(country),
-                str(username),
+                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
+                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
+                username,
                 "",
                 "",
-                trusted,
-                notify,
-                privileged,
+                bool(trusted),
+                bool(notify),
+                bool(privileged),
                 str(last_seen),
                 str(comment),
                 0,
@@ -155,7 +157,7 @@ class UserList:
                 str(country)
             ]
 
-            self.usersmodel.insert(0, row)
+            self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -224,22 +226,30 @@ class UserList:
 
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
-        iterator = self.usersmodel.get_iter(index)
-        value = self.usersmodel.get_value(iterator, pos)
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
 
+        value = self.usersmodel.get_value(iterator, pos)
         self.usersmodel.set_value(iterator, pos, not value)
 
         self.save_user_list()
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
+        if pos != 9:
+            return
+
         store = treeview.get_model()
         iterator = store.get_iter(index)
 
-        if pos == 9:
-            self.set_comment(iterator, store, value)
+        self.set_comment(iterator, store, value)
 
     def set_last_seen(self, user, online=False):
+
+        iterator = self.user_iterators.get(user)
+
+        if iterator is None:
+            return
 
         last_seen = ""
         time_from_epoch = 2147483647  # Gtk only allows range -2147483648 to 2147483647 in set()
@@ -248,26 +258,16 @@ class UserList:
             last_seen = time.strftime("%m/%d/%Y %H:%M:%S")
             time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 8, last_seen)
-                self.usersmodel.set_value(i.iter, 13, int(time_from_epoch))
-                break
+        self.usersmodel.set_value(iterator, 8, last_seen)
+        self.usersmodel.set_value(iterator, 13, int(time_from_epoch))
 
         if not online:
             self.save_user_list()
 
     def set_comment(self, iterator, store, comments=None):
 
-        user = store.get_value(iterator, 2)
-
         if comments is not None:
-
-            for i in self.usersmodel:
-                if i[2] == user:
-                    self.usersmodel.set_value(iterator, 9, comments)
-                    break
-
+            store.set_value(iterator, 9, comments)
             self.save_user_list()
 
     def conn_close(self):
@@ -282,8 +282,8 @@ class UserList:
             self.usersmodel.set_value(iterator, 11, 0)
             self.usersmodel.set_value(iterator, 12, 0)
 
-            if self.usersmodel.get(iterator, 8)[0] == "":
-                user = i[2]
+            if not self.usersmodel.get_value(iterator, 8):
+                user = self.usersmodel.get_value(iterator, 2)
                 self.set_last_seen(user)
 
     def get_selected_username(self, treeview):
@@ -351,14 +351,6 @@ class UserList:
         self.popup_menu.popup()
         return True
 
-    def get_iter(self, user):
-
-        for i in self.usersmodel:
-            if i[2] == user:
-                return i.iter
-
-        return None
-
     def get_user_status(self, msg):
 
         status = msg.status
@@ -368,7 +360,7 @@ class UserList:
             return
 
         user = msg.user
-        iterator = self.get_iter(user)
+        iterator = self.user_iterators.get(user)
 
         if iterator is None:
             return
@@ -395,13 +387,14 @@ class UserList:
 
         if status:  # online
             self.set_last_seen(user, online=True)
-        elif self.usersmodel.get(iterator, 8)[0] == "":  # disconnected
+
+        elif not self.usersmodel.get_value(iterator, 8):  # disconnected
             self.set_last_seen(user)
 
     def get_user_stats(self, msg):
 
         user = msg.user
-        iterator = self.get_iter(user)
+        iterator = self.user_iterators.get(user)
 
         if iterator is None:
             return
@@ -416,11 +409,9 @@ class UserList:
 
     def set_user_flag(self, user, country):
 
-        iterator = self.get_iter(user)
-        if iterator is None:
-            return
+        iterator = self.user_iterators.get(user)
 
-        if user not in (i[2] for i in self.usersmodel):
+        if iterator is None:
             return
 
         self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
@@ -428,13 +419,13 @@ class UserList:
 
     def add_to_list(self, user):
 
-        if user in (i[2] for i in self.usersmodel):
+        if user in self.user_iterators:
             return
 
         empty_int = 0
         empty_str = ""
 
-        self.usersmodel.insert_with_valuesv(
+        self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
                 GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
@@ -472,13 +463,11 @@ class UserList:
 
     def remove_from_list(self, user):
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.remove(i.iter)
-                break
+        if user in self.user_iterators:
+            self.usersmodel.remove(self.user_iterators[user])
+            del self.user_iterators[user]
 
         self.save_user_list()
-
         self.buddies_combos_fill()
 
         if config.sections["words"]["buddies"]:
@@ -502,11 +491,12 @@ class UserList:
     def on_trusted(self, action, state):
 
         user = self.popup_menu.get_user()
+        iterator = self.user_iterators.get(user)
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 5, state)
-                break
+        if iterator is None:
+            return
+
+        self.usersmodel.set_value(iterator, 5, state)
 
         self.save_user_list()
         action.set_state(state)
@@ -514,11 +504,12 @@ class UserList:
     def on_notify(self, action, state):
 
         user = self.popup_menu.get_user()
+        iterator = self.user_iterators.get(user)
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 6, state)
-                break
+        if iterator is None:
+            return
+
+        self.usersmodel.set_value(iterator, 6, state)
 
         self.save_user_list()
         action.set_state(state)
@@ -526,16 +517,22 @@ class UserList:
     def on_privileged(self, action, state):
 
         user = self.popup_menu.get_user()
+        iterator = self.user_iterators.get(user)
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                self.usersmodel.set_value(i.iter, 7, state)
-                break
+        if iterator is None:
+            return
+
+        self.usersmodel.set_value(iterator, 7, state)
 
         self.save_user_list()
         action.set_state(state)
 
     def on_edit_comments_response(self, dialog, response_id, user):
+
+        iterator = self.user_iterators.get(user)
+
+        if iterator is None:
+            return
 
         comments = dialog.get_response_value()
         dialog.destroy()
@@ -543,24 +540,18 @@ class UserList:
         if comments is None:
             return
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                i[9] = comments
-                self.usersmodel.set_value(i.iter, 9, comments)
-                break
-
+        self.usersmodel.set_value(iterator, 9, comments)
         self.save_user_list()
 
     def on_edit_comments(self, *args):
 
         user = self.popup_menu.get_user()
+        iterator = self.user_iterators.get(user)
 
-        for i in self.usersmodel:
-            if i[2] == user:
-                comments = i[9]
-                break
-        else:
-            comments = ""
+        if iterator is None:
+            return
+
+        comments = self.usersmodel.get_value(iterator, 9) or ""
 
         entry_dialog(
             parent=self.frame.MainWindow,
