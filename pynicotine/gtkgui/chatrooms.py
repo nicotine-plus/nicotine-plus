@@ -27,7 +27,6 @@ import re
 import threading
 
 from collections import deque
-from os.path import commonprefix
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -46,9 +45,6 @@ from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
-from pynicotine.gtkgui.utils import entry_completion_find_match
-from pynicotine.gtkgui.utils import entry_completion_found_match
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
@@ -56,6 +52,7 @@ from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
@@ -66,46 +63,29 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
-from pynicotine.utils import add_alias
-from pynicotine.utils import expand_alias
+from pynicotine.utils import get_completion_list
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
-from pynicotine.utils import is_alias
-from pynicotine.utils import unalias
 
 
-def get_completion(part, list):
-    matches = get_completions(part, list)
-
-    if not matches:
-        return None, 0
-
-    if len(matches) == 1:
-        return matches[0], 1
-    else:
-        return commonprefix([x.lower() for x in matches]), 0
-
-
-def get_completions(part, list):
-    lowerpart = part.lower()
-    matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
-    return matches
+# List of allowed commands. The implementation for them is in the ChatEntry class.
+CMDS = [
+    "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
+    "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ", "/leave ",
+    "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
+    "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ", "/tick ", "/t ",
+    "/info ", "/toggle ", "/tickers "
+]
 
 
 class ChatRooms(IconNotebook):
-
-    CMDS = {
-        "/alias ", "/unalias ", "/whois ", "/browse ", "/ip ", "/pm ", "/msg ", "/search ",
-        "/usearch ", "/rsearch ", "/bsearch ", "/join ", "/leave ", "/add ", "/buddy ", "/rem ",
-        "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ", "/unignore ", "/clear ",
-        "/part ", "/quit ", "/exit ", "/rescan ", "/tick ", "/info ", "/toggle", "/tickers"
-    }
 
     def __init__(self, frame):
 
         self.frame = frame
 
+        self.completion_list = []
         self.joinedrooms = {}
         self.autojoin = True
         self.private_rooms = config.sections["private_rooms"]["rooms"]
@@ -119,8 +99,6 @@ class ChatRooms(IconNotebook):
                 del self.private_rooms[room]["operator"]
 
         self.roomlist = RoomList(self.frame, self.joinedrooms, self.private_rooms)
-
-        self.clist = []
 
         IconNotebook.__init__(
             self,
@@ -263,7 +241,7 @@ class ChatRooms(IconNotebook):
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
         if config.sections["words"]["roomnames"]:
-            self.frame.chatrooms.update_completions()
+            self.update_completions()
             self.frame.privatechats.update_completions()
 
     def create_private_room(self, room, owner=None, operators=[]):
@@ -454,29 +432,11 @@ class ChatRooms(IconNotebook):
 
     def update_completions(self):
 
-        self.clist = []
-        config_words = config.sections["words"]
-
-        if config_words["tab"]:
-
-            clist = [config.sections["server"]["login"], "nicotine"]
-
-            if config_words["roomnames"]:
-                clist += self.roomlist.server_rooms
-
-            if config_words["buddies"]:
-                clist += [i[0] for i in config.sections["server"]["userlist"]]
-
-            if config_words["aliases"]:
-                clist += ["/" + k for k in list(config.sections["server"]["command_aliases"].keys())]
-
-            if config_words["commands"]:
-                clist += self.CMDS
-
-            self.clist = clist
+        self.completion_list = get_completion_list(CMDS, self.roomlist.server_rooms)
 
         for room in self.joinedrooms.values():
-            room.get_completion_list(clist=list(self.clist))
+            # We need to create a copy of the completion list, due to unique room usernames
+            room.set_completion_list(list(self.completion_list))
 
 
 class ChatRoom:
@@ -495,7 +455,6 @@ class ChatRoom:
         self.room_wall = RoomWall(self.frame, self)
         self.leaving = False
 
-        self.clist = []
         self.users = {}
 
         # Log Text Search
@@ -504,24 +463,8 @@ class ChatRoom:
         # Chat Text Search
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
-        # Spell Check
-        if self.frame.spell_checker is None:
-            self.frame.init_spell_checker()
-
-        if self.frame.spell_checker and config.sections["ui"]["spellcheck"]:
-            from gi.repository import Gspell
-            spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(self.ChatEntry.get_buffer())
-            spell_buffer.set_spell_checker(self.frame.spell_checker)
-            spell_view = Gspell.Entry.get_from_gtk_entry(self.ChatEntry)
-            spell_view.set_inline_spell_checking(True)
-
-        self.midwaycompletion = False  # True if the user just used tab completion
-        self.completions = {}  # Holds temp. information about tab completoin
-
-        self.ChatCompletion.set_model(Gtk.ListStore(str))
-        self.ChatCompletion.set_text_column(0)
-        self.ChatCompletion.set_match_func(entry_completion_find_match)
-        self.ChatCompletion.connect("match-selected", entry_completion_found_match)
+        # Chat Entry
+        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom, self.send_message, CMDS, self.ChatScroll, is_chatroom=True)
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -617,7 +560,7 @@ class ChatRoom:
         )
 
         self.ChatEntry.grab_focus()
-        self.get_completion_list(clist=list(self.chatrooms.clist))
+        self.set_completion_list(list(self.chatrooms.completion_list))
 
         self.count_users()
         self.create_tags()
@@ -948,200 +891,18 @@ class ChatRoom:
         else:
             update_tag_visuals(self.tag_users[user], color)
 
-    def on_enter(self, widget):
-
-        text = widget.get_text()
-
-        if not text:
-            widget.set_text("")
-            return
-
-        if is_alias(text):
-            new_text = expand_alias(text)
-
-            if not new_text:
-                log.add(_('Alias "%s" returned nothing'), text)
-                return
-
-            if new_text[:2] == "//":
-                new_text = new_text[1:]
-
-            self.frame.np.queue.append(slskmessages.SayChatroom(self.room, auto_replace(new_text)))
-            widget.set_text("")
-            return
-
-        s = text.split(" ", 1)
-        cmd = s[0]
-
-        if len(s) == 2:
-            args = s[1]
-        else:
-            args = ""
-
-        if cmd in ("/alias", "/al"):
-            append_line(self.ChatScroll, add_alias(args), self.tag_remote, "")
-
-            if config.sections["words"]["aliases"]:
-                self.frame.chatrooms.update_completions()
-                self.frame.privatechats.update_completions()
-
-        elif cmd in ("/unalias", "/un"):
-            append_line(self.ChatScroll, unalias(args), self.tag_remote, "")
-
-            if config.sections["words"]["aliases"]:
-                self.frame.chatrooms.update_completions()
-                self.frame.privatechats.update_completions()
-
-        elif cmd in ("/w", "/whois", "/info"):
-            if args:
-                self.frame.local_user_info_request(args)
-                self.frame.change_main_page("userinfo")
-
-        elif cmd in ("/b", "/browse"):
-            if args:
-                self.frame.browse_user(args)
-                self.frame.change_main_page("userbrowse")
-
-        elif cmd == "/ip":
-            if args:
-                user = args
-                self.frame.np.ip_requested.add(user)
-                self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
-
-        elif cmd == "/pm":
-            if args:
-                self.frame.privatechats.send_message(args, show_user=True)
-                self.frame.change_main_page("private")
-
-        elif cmd in ("/m", "/msg"):
-            if args:
-                s = args.split(" ", 1)
-                user = s[0]
-                if len(s) == 2:
-                    msg = s[1]
-                else:
-                    msg = None
-                self.frame.privatechats.send_message(user, msg, show_user=True)
-                self.frame.change_main_page("private")
-
-        elif cmd in ("/s", "/search"):
-            if args:
-                self.frame.searches.do_search(args, 0)
-                self.frame.on_search(None)
-                self.frame.change_main_page("search")
-
-        elif cmd in ("/us", "/usearch"):
-            s = args.split(" ", 1)
-            if len(s) == 2:
-                self.frame.searches.do_search(s[1], 3, [s[0]])
-                self.frame.on_search(None)
-                self.frame.change_main_page("search")
-
-        elif cmd in ("/rs", "/rsearch"):
-            if args:
-                self.frame.searches.do_search(args, 1)
-                self.frame.on_search(None)
-                self.frame.change_main_page("search")
-
-        elif cmd in ("/bs", "/bsearch"):
-            if args:
-                self.frame.searches.do_search(args, 2)
-                self.frame.on_search(None)
-                self.frame.change_main_page("search")
-
-        elif cmd in ("/j", "/join"):
-            if args:
-                self.frame.np.queue.append(slskmessages.JoinRoom(args))
-
-        elif cmd in ("/l", "/leave", "/p", "/part"):
-            if args:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(args))
-            else:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
-
-        elif cmd in ("/ad", "/add", "/buddy"):
-            if args:
-                self.frame.userlist.add_to_list(args)
-
-        elif cmd in ("/rem", "/unbuddy"):
-            if args:
-                self.frame.userlist.remove_from_list(args)
-
-        elif cmd == "/ban":
-            if args:
-                self.frame.np.network_filter.ban_user(args)
-
-        elif cmd == "/ignore":
-            if args:
-                self.frame.np.network_filter.ignore_user(args)
-
-        elif cmd == "/ignoreip":
-            if args:
-                self.frame.np.network_filter.ignore_ip(args)
-
-        elif cmd == "/unban":
-            if args:
-                self.frame.np.network_filter.unban_user(args)
-
-        elif cmd == "/unignore":
-            if args:
-                self.frame.np.network_filter.unignore_user(args)
-
-        elif cmd in ("/clear", "/cl"):
-            self.ChatScroll.get_buffer().set_text("")
-
-        elif cmd in ("/a", "/away"):
-            self.frame.on_away(None)
-
-        elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.on_quit(None)
-            return  # Avoid gsignal warning
-
-        elif cmd == "/now":
-            self.display_now_playing()
-
-        elif cmd == "/rescan":
-            # Rescan public shares if needed
-            if not config.sections["transfers"]["friendsonly"] and config.sections["transfers"]["shared"]:
-                self.frame.on_rescan()
-
-            # Rescan buddy shares if needed
-            if config.sections["transfers"]["enablebuddyshares"]:
-                self.frame.on_buddy_rescan()
-
-        elif cmd in ("/tick", "/t"):
-            self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room, args))
-
-        elif cmd == "/tickers":
-            self.show_tickers()
-
-        elif cmd == "/toggle":
-            if args:
-                self.frame.np.pluginhandler.toggle_plugin(args)
-
-        elif cmd[:1] == "/" and self.frame.np.pluginhandler.trigger_public_command_event(self.room, cmd[1:], args):
-            pass
-
-        elif cmd[:1] == "/" and cmd != "/me" and cmd[:2] != "//":
-            log.add(_("Command %s is not recognized"), text)
-            return
-
-        else:
-            if text[:2] == "//":
-                text = text[1:]
-
-            event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
-            if event is not None:
-                (r, text) = event
-                self.say(auto_replace(text))
-                self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
-
-        self.ChatEntry.set_text("")
-
     def show_tickers(self):
         tickers = self.tickers.get_tickers()
         header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
         log.add("%s\n%s", (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
+
+    def send_message(self, text):
+
+        event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
+        if event is not None:
+            (r, text) = event
+            self.say(auto_replace(text))
+            self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
 
     def say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
@@ -1158,11 +919,7 @@ class ChatRoom:
             return
 
         # Add to completion list, and completion drop-down
-        if config.sections["words"]["tab"]:
-            if username not in self.clist:
-                self.clist.append(username)
-                if config.sections["words"]["dropdown"]:
-                    self.ChatEntry.get_completion().get_model().append([username])
+        self.entry.add_completion(username)
 
         if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
@@ -1179,21 +936,8 @@ class ChatRoom:
             return
 
         # Remove from completion list, and completion drop-down
-        if config.sections["words"]["tab"] and \
-                username in self.clist and username not in (i[0] for i in config.sections["server"]["userlist"]):
-
-            self.clist.remove(username)
-
-            if config.sections["words"]["dropdown"]:
-                liststore = self.ChatEntry.get_completion().get_model()
-
-                iterator = liststore.get_iter_first()
-                while iterator is not None:
-                    name = liststore.get_value(iterator, 0)
-                    if name == username:
-                        liststore.remove(iterator)
-                        break
-                    iterator = liststore.iter_next(iterator)
+        if username not in (i[0] for i in config.sections["server"]["userlist"]):
+            self.entry.remove_completion(username)
 
         if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
@@ -1398,7 +1142,7 @@ class ChatRoom:
         self.count_users()
 
         # Build completion list
-        self.get_completion_list(clist=self.chatrooms.clist)
+        self.set_completion_list(list(self.chatrooms.completion_list))
 
         # Update all username tags in chat log
         for user in self.tag_users:
@@ -1416,108 +1160,6 @@ class ChatRoom:
                 autojoin.append(self.room)
 
         config.write_configuration()
-
-    def get_completion_list(self, ix=0, text="", clist=None):
-
-        config_words = config.sections["words"]
-
-        completion = self.ChatEntry.get_completion()
-        completion.set_popup_single_match(not config_words["onematch"])
-        completion.set_minimum_key_length(config_words["characters"])
-
-        liststore = completion.get_model()
-        liststore.clear()
-
-        if clist is None:
-            clist = []
-
-        if not config_words["tab"]:
-            return
-
-        if config_words["roomusers"]:
-            clist += list(self.users.keys())
-
-        # no duplicates
-        def _combilower(x):
-            try:
-                return x.lower()
-            except Exception:
-                return x
-
-        clist = list(set(clist))
-        clist.sort(key=_combilower)
-
-        completion.set_popup_completion(False)
-
-        if config_words["dropdown"]:
-            for word in clist:
-                liststore.append([word])
-
-            completion.set_popup_completion(True)
-
-        self.clist = clist
-
-    def on_key_press(self, widget, event):
-
-        keycode = event.hardware_keycode
-
-        if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Tab):
-            if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_L) and \
-                    keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_R):
-                self.midwaycompletion = False
-            return False
-
-        config_words = config.sections["words"]
-        if not config_words["tab"]:
-            return False
-
-        # "Hello there Miss<tab> how are you doing"
-        # "0  3  6  9  12 15      18 21 24 27 30 33
-        #   1  4  7  10 13      16 19 22 25 28 31
-        #    2  5  8  11 14      17 20 23 26 29 32
-        #
-        # ix = 16
-        # text = Miss
-        # preix = 12
-        ix = widget.get_position()
-        text = widget.get_text()[:ix].split(" ")[-1]
-        preix = ix - len(text)
-
-        if not config_words["cycle"]:
-            completion, single = get_completion(text, self.clist)
-            if completion:
-                if single and ix == len(text) and text[:1] != "/":
-                    completion += ": "
-                widget.delete_text(preix, ix)
-                widget.insert_text(completion, preix)
-                widget.set_position(preix + len(completion))
-        else:
-
-            if not self.midwaycompletion:
-                self.completions['completions'] = get_completions(text, self.clist)
-                if self.completions['completions']:
-                    self.midwaycompletion = True
-                    self.completions['currentindex'] = -1
-                    currentnick = text
-            else:
-                currentnick = self.completions['completions'][self.completions['currentindex']]
-
-            if self.midwaycompletion:
-
-                widget.delete_text(ix - len(currentnick), ix)
-                direction = 1  # Forward cycle
-
-                if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
-                    direction = -1  # Backward cycle
-
-                self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
-
-                newnick = self.completions['completions'][self.completions['currentindex']]
-                widget.insert_text(newnick, preix)
-                widget.set_position(preix + len(newnick))
-
-        widget.stop_emission_by_name("key_press_event")
-        return True
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
@@ -1600,3 +1242,23 @@ class ChatRoom:
 
     def on_clear_activity_log(self, *args):
         self.RoomLog.get_buffer().set_text("")
+
+    def set_completion_list(self, completion_list):
+
+        if completion_list is None:
+            completion_list = []
+
+        if config.sections["words"]["roomusers"]:
+            completion_list += self.users.keys()
+
+        # no duplicates
+        def _combilower(x):
+            try:
+                return str.lower(x)
+            except Exception:
+                return str.lower(x)
+
+        completion_list = list(set(completion_list))
+        completion_list.sort(key=_combilower)
+
+        self.entry.set_completion_list(completion_list)

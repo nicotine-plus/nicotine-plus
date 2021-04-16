@@ -950,6 +950,9 @@ class NetworkEventProcessor:
         """ Tell the server we want to be notified of status/stat updates
         for a user """
 
+        if not isinstance(user, str):
+            return
+
         if not force_update and user in self.watchedusers:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
