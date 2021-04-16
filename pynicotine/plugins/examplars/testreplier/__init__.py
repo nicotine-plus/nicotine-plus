@@ -28,6 +28,6 @@ class Plugin(BasePlugin):
 
     def IncomingPublicChatEvent(self, room, nick, line):  # noqa
         if line.lower() == 'test':
-            if self.throttle.ok_to_respond(room, nick, line):
+            if self.throttle.ok_to_respond(room, nick, line, 10):
                 self.throttle.responded()
                 self.saypublic(room, choice(self.settings['replies']))
