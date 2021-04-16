@@ -2802,9 +2802,10 @@ class PluginsFrame(BuildFrame):
                 elif data["type"] in ("str", "string"):
                     container = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = Gtk.Entry()
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                    container.add(self.tw[name])
+                    self.tw[name] = entry = Gtk.Entry()
+                    entry.set_hexpand(True)
+                    self.settings.set_widget(entry, config.sections["plugins"][plugin][name])
+                    container.add(entry)
 
                 elif data["type"] in ("textview"):
                     container = self.generate_widget_container(data["description"], vertical=True)
