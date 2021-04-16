@@ -11,6 +11,7 @@ Changes
  * Replaced previous country flag icons with clearer ones
  * Improved performance when selecting a large number of transfers
  * Queue positions and failed downloads are now checked every three minutes instead of every minute, to reduce stress on the uploading user
+ * Performance improvements for long buddy lists
 
 Corrections
 
