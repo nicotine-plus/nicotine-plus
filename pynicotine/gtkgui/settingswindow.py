@@ -2624,250 +2624,253 @@ class NotificationsFrame(BuildFrame):
         }
 
 
-class PluginPreferencesDialog(Gtk.Dialog):
-    """ Class used to build a custom dialog for the plugins """
-
-    def __init__(self, parent, name):
-
-        self.settings = parent.p
-
-        # Build the window
-        Gtk.Dialog.__init__(
-            self,
-            title=_("%s Properties") % name,
-            transient_for=self.settings.SettingsWindow,
-            modal=True,
-            window_position=Gtk.WindowPosition.CENTER_ON_PARENT,
-            use_header_bar=config.sections["ui"]["header_bar"]
-        )
-
-        self.add_buttons(
-            _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
-        )
-
-        self.set_default_response(Gtk.ResponseType.OK)
-        self.connect("response", self.on_response)
-
-        content_area = self.get_content_area()
-        content_area.set_margin_top(14)
-        content_area.set_margin_bottom(14)
-        content_area.set_margin_start(18)
-        content_area.set_margin_end(18)
-        content_area.set_spacing(12)
-
-        self.tw = {}
-        self.options = {}
-        self.plugin = None
-
-    def generate_label(self, text):
-
-        label = Gtk.Label(text)
-        label.set_justify(Gtk.Justification.FILL)
-        label.set_line_wrap(True)
-        return label
-
-    def generate_widget_container(self, description, count):
-
-        self.tw["box%d" % count] = Gtk.Box(False, 5)
-        self.tw["label%d" % count] = self.generate_label(description)
-        self.tw["box%d" % count].add(self.tw["label%d" % count])
-
-        self.get_content_area().add(self.tw["box%d" % count])
-
-    def generate_tree_view(self, name, description, value, c=0):
-
-        self.tw["box%d" % c] = Gtk.Box(False, 5)
-        self.tw["box%d" % c].set_orientation(Gtk.Orientation.VERTICAL)
-
-        self.tw[name + "SW"] = Gtk.ScrolledWindow()
-        self.tw[name + "SW"].set_hexpand(True)
-        self.tw[name + "SW"].set_vexpand(True)
-        self.tw[name + "SW"].set_min_content_height(200)
-        self.tw[name + "SW"].set_min_content_width(350)
-        self.tw[name + "SW"].set_shadow_type(Gtk.ShadowType.IN)
-        self.tw[name + "SW"].set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-
-        self.tw[name] = Gtk.TreeView()
-        self.tw[name].set_model(Gtk.ListStore(str))
-        self.tw[name + "SW"].add(self.tw[name])
-
-        self.tw["box%d" % c].add(self.tw[name + "SW"])
-
-        cols = initialise_columns(
-            None,
-            self.tw[name],
-            [description, description, 150, "edit", None]
-        )
-
-        try:
-            self.settings.set_widget(self.tw[name], value)
-        except Exception:
-            pass
-
-        self.add_button = Gtk.Button(_("Add"), Gtk.STOCK_ADD)
-        self.remove_button = Gtk.Button(_("Remove"), Gtk.STOCK_REMOVE)
-
-        self.tw["vbox%d" % c] = Gtk.Box(False, 5)
-        self.tw["vbox%d" % c].add(self.add_button)
-        self.tw["vbox%d" % c].add(self.remove_button)
-
-        self.get_content_area().add(self.tw["box%d" % c])
-        self.get_content_area().add(self.tw["vbox%d" % c])
-
-        renderers = cols[description].get_cells()
-        for render in renderers:
-            render.connect('edited', self.cell_edited_callback, self.tw[name])
-
-        self.add_button.connect("clicked", self.on_add, self.tw[name])
-        self.remove_button.connect("clicked", self.on_remove, self.tw[name])
-
-    def cell_edited_callback(self, widget, index, value, treeview):
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, 0, value)
-
-    def add_options(self, plugin, options=None):
-
-        if options is None:
-            options = {}
-
-        self.options = options
-        self.plugin = plugin
-
-        c = 0
-
-        for name, data in options.items():
-            if plugin not in config.sections["plugins"] or name not in config.sections["plugins"][plugin]:
-                if plugin not in config.sections["plugins"]:
-                    print("No1 " + plugin + ", " + repr(list(config.sections["plugins"].keys())))
-                elif name not in config.sections["plugins"][plugin]:
-                    print("No2 " + name + ", " + repr(list(config.sections["plugins"][plugin].keys())))
-                continue
-
-            value = config.sections["plugins"][plugin][name]
-
-            if data["type"] in ("integer", "int", "float"):
-                self.generate_widget_container(data["description"], c)
-
-                self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].add(self.tw[name])
-
-            elif data["type"] in ("bool",):
-                self.generate_widget_container(data["description"], c)
-
-                self.tw[name] = Gtk.CheckButton()
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].add(self.tw[name])
-
-            elif data["type"] in ("radio",):
-                self.generate_widget_container(data["description"], c)
-
-                vbox = Gtk.Box(False, 5)
-                vbox.set_orientation(Gtk.Orientation.VERTICAL)
-                self.tw["box%d" % c].add(vbox)
-
-                initial = False
-                for label in data["options"]:
-                    if not initial:
-                        self.tw[name] = radio = Gtk.RadioButton.new_with_label(None, label)
-                        initial = True
-                    else:
-                        radio = Gtk.RadioButton.new_with_label_from_widget(self.tw[name], label)
-
-                    vbox.add(radio)
-
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-
-            elif data["type"] in ("dropdown",):
-                self.generate_widget_container(data["description"], c)
-
-                self.tw[name] = Gtk.ComboBoxText()
-
-                for label in data["options"]:
-                    self.tw[name].append_text(label)
-
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].add(self.tw[name])
-
-            elif data["type"] in ("str", "string"):
-                self.generate_widget_container(data["description"], c)
-
-                self.tw[name] = Gtk.Entry()
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].add(self.tw[name])
-
-            elif data["type"] in ("textview"):
-                self.generate_widget_container(data["description"], c)
-
-                self.tw[name] = Gtk.TextView()
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-
-                self.tw["scrolledwindow%d" % c] = Gtk.ScrolledWindow()
-                self.tw["scrolledwindow%d" % c].set_hexpand(True)
-                self.tw["scrolledwindow%d" % c].set_vexpand(True)
-                self.tw["scrolledwindow%d" % c].set_min_content_height(200)
-                self.tw["scrolledwindow%d" % c].set_min_content_width(600)
-                self.tw["scrolledwindow%d" % c].set_shadow_type(Gtk.ShadowType.IN)
-                self.tw["scrolledwindow%d" % c].add(self.tw[name])
-
-                self.tw["box%d" % c].add(self.tw["scrolledwindow%d" % c])
-
-            elif data["type"] in ("list string",):
-                self.generate_tree_view(name, data["description"], value, c)
-
-            elif data["type"] in ("file",):
-                self.generate_widget_container(data["description"], c)
-
-                button_widget = Gtk.Button()
-                button_widget.set_hexpand(True)
-
-                try:
-                    chooser = data["chooser"]
-                except KeyError:
-                    chooser = None
-
-                self.tw[name] = FileChooserButton(button_widget, self, chooser)
-                self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                self.tw["box%d" % c].add(button_widget)
-
-            else:
-                print("Unknown setting type '%s', data '%s'" % (name, data))
-
-            c += 1
-
-        self.show_all()
-
-    def on_add(self, widget, treeview):
-
-        iterator = treeview.get_model().append([""])
-        col = treeview.get_column(0)
-
-        treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
-
-    def on_remove(self, widget, treeview):
-        selection = treeview.get_selection()
-        iterator = selection.get_selected()[1]
-        if iterator is not None:
-            treeview.get_model().remove(iterator)
-
-    def on_response(self, dialog, response_id):
-
-        if response_id == Gtk.ResponseType.OK:
-            for name in self.options:
-                value = self.settings.get_widget_data(self.tw[name])
-                if value is not None:
-                    config.sections["plugins"][self.plugin][name] = value
-
-            self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
-
-        self.destroy()
-
-    def show(self):
-        self.present_with_time(Gdk.CURRENT_TIME)
-
-
 class PluginsFrame(BuildFrame):
+
+    """ Plugin preferences dialog """
+
+    class PluginPreferencesDialog(Gtk.Dialog):
+        """ Class used to build a custom dialog for the plugins """
+
+        def __init__(self, parent, name):
+
+            self.settings = parent.p
+
+            # Build the window
+            Gtk.Dialog.__init__(
+                self,
+                title=_("%s Properties") % name,
+                transient_for=self.settings.SettingsWindow,
+                modal=True,
+                default_width=600,
+                window_position=Gtk.WindowPosition.CENTER_ON_PARENT,
+                use_header_bar=config.sections["ui"]["header_bar"]
+            )
+
+            self.add_buttons(
+                _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
+            )
+
+            self.set_default_response(Gtk.ResponseType.OK)
+            self.connect("response", self.on_response)
+
+            content_area = self.get_content_area()
+            content_area.set_margin_top(14)
+            content_area.set_margin_bottom(14)
+            content_area.set_margin_start(18)
+            content_area.set_margin_end(18)
+            content_area.set_spacing(12)
+
+            self.tw = {}
+            self.options = {}
+            self.plugin = None
+
+        def generate_label(self, text):
+
+            label = Gtk.Label(text)
+            label.set_hexpand(True)
+            label.set_xalign(0)
+            label.set_line_wrap(True)
+            return label
+
+        def generate_widget_container(self, description, vertical=False):
+
+            container = Gtk.Box(False, 12)
+
+            if vertical:
+                container.set_orientation(Gtk.Orientation.VERTICAL)
+
+            label = self.generate_label(description)
+            container.add(label)
+
+            self.get_content_area().add(container)
+            return container
+
+        def generate_tree_view(self, name, description, value):
+
+            container = Gtk.Box(False, 5)
+            container.set_orientation(Gtk.Orientation.VERTICAL)
+
+            scrolled_window = Gtk.ScrolledWindow()
+            scrolled_window.set_hexpand(True)
+            scrolled_window.set_vexpand(True)
+            scrolled_window.set_min_content_height(200)
+            scrolled_window.set_min_content_width(350)
+            scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
+            scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+            self.tw[name] = Gtk.TreeView()
+            self.tw[name].set_model(Gtk.ListStore(str))
+            scrolled_window.add(self.tw[name])
+
+            container.add(scrolled_window)
+
+            cols = initialise_columns(
+                None,
+                self.tw[name],
+                [description, description, 150, "edit", None]
+            )
+
+            try:
+                self.settings.set_widget(self.tw[name], value)
+            except Exception:
+                pass
+
+            self.add_button = Gtk.Button(_("Add"), Gtk.STOCK_ADD)
+            self.remove_button = Gtk.Button(_("Remove"), Gtk.STOCK_REMOVE)
+
+            box = Gtk.Box(False, 6)
+            box.add(self.add_button)
+            box.add(self.remove_button)
+
+            self.get_content_area().add(container)
+            self.get_content_area().add(box)
+
+            renderers = cols[description].get_cells()
+            for render in renderers:
+                render.connect('edited', self.cell_edited_callback, self.tw[name])
+
+            self.add_button.connect("clicked", self.on_add, self.tw[name])
+            self.remove_button.connect("clicked", self.on_remove, self.tw[name])
+
+        def cell_edited_callback(self, widget, index, value, treeview):
+            store = treeview.get_model()
+            iterator = store.get_iter(index)
+            store.set(iterator, 0, value)
+
+        def add_options(self, plugin, options=None):
+
+            if options is None:
+                options = {}
+
+            self.options = options
+            self.plugin = plugin
+
+            for name, data in options.items():
+                if plugin not in config.sections["plugins"] or name not in config.sections["plugins"][plugin]:
+                    if plugin not in config.sections["plugins"]:
+                        print("No1 " + plugin + ", " + repr(list(config.sections["plugins"].keys())))
+                    elif name not in config.sections["plugins"][plugin]:
+                        print("No2 " + name + ", " + repr(list(config.sections["plugins"][plugin].keys())))
+                    continue
+
+                value = config.sections["plugins"][plugin][name]
+
+                if data["type"] in ("integer", "int", "float"):
+                    container = self.generate_widget_container(data["description"])
+
+                    self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    container.add(self.tw[name])
+
+                elif data["type"] in ("bool",):
+                    container = self.generate_widget_container(data["description"])
+
+                    self.tw[name] = Gtk.CheckButton()
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    container.add(self.tw[name])
+
+                elif data["type"] in ("radio",):
+                    container = self.generate_widget_container(data["description"])
+
+                    vbox = Gtk.Box(False, 6)
+                    vbox.set_orientation(Gtk.Orientation.VERTICAL)
+                    container.add(vbox)
+
+                    initial = False
+                    for label in data["options"]:
+                        if not initial:
+                            self.tw[name] = radio = Gtk.RadioButton.new_with_label(None, label)
+                            initial = True
+                        else:
+                            radio = Gtk.RadioButton.new_with_label_from_widget(self.tw[name], label)
+
+                        vbox.add(radio)
+
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+
+                elif data["type"] in ("dropdown",):
+                    container = self.generate_widget_container(data["description"])
+
+                    self.tw[name] = Gtk.ComboBoxText()
+
+                    for label in data["options"]:
+                        self.tw[name].append_text(label)
+
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    container.add(self.tw[name])
+
+                elif data["type"] in ("str", "string"):
+                    container = self.generate_widget_container(data["description"])
+
+                    self.tw[name] = Gtk.Entry()
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    container.add(self.tw[name])
+
+                elif data["type"] in ("textview"):
+                    container = self.generate_widget_container(data["description"], vertical=True)
+
+                    self.tw[name] = Gtk.TextView()
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+
+                    scrolled_window = Gtk.ScrolledWindow()
+                    scrolled_window.set_hexpand(True)
+                    scrolled_window.set_vexpand(True)
+                    scrolled_window.set_min_content_height(200)
+                    scrolled_window.set_min_content_width(600)
+                    scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
+                    scrolled_window.add(self.tw[name])
+
+                    container.add(scrolled_window)
+
+                elif data["type"] in ("list string",):
+                    self.generate_tree_view(name, data["description"], value)
+
+                elif data["type"] in ("file",):
+                    container = self.generate_widget_container(data["description"])
+
+                    button_widget = Gtk.Button()
+                    button_widget.set_hexpand(True)
+
+                    try:
+                        chooser = data["chooser"]
+                    except KeyError:
+                        chooser = None
+
+                    self.tw[name] = FileChooserButton(button_widget, self, chooser)
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    container.add(button_widget)
+
+                else:
+                    print("Unknown setting type '%s', data '%s'" % (name, data))
+
+            self.show_all()
+
+        def on_add(self, widget, treeview):
+
+            iterator = treeview.get_model().append([""])
+            col = treeview.get_column(0)
+
+            treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
+
+        def on_remove(self, widget, treeview):
+            selection = treeview.get_selection()
+            iterator = selection.get_selected()[1]
+            if iterator is not None:
+                treeview.get_model().remove(iterator)
+
+        def on_response(self, dialog, response_id):
+
+            if response_id == Gtk.ResponseType.OK:
+                for name in self.options:
+                    value = self.settings.get_widget_data(self.tw[name])
+                    if value is not None:
+                        config.sections["plugins"][self.plugin][name] = value
+
+                self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+
+            self.destroy()
+
+    """ Initialize plugin list """
 
     def __init__(self, parent):
 
@@ -2880,12 +2883,7 @@ class PluginsFrame(BuildFrame):
             }
         }
 
-        self.plugins_model = Gtk.ListStore(
-            bool,
-            str,
-            str
-        )
-
+        self.plugins_model = Gtk.ListStore(bool, str, str)
         self.plugins = []
         self.pluginsiters = {}
         self.selected_plugin = None
@@ -2901,8 +2899,9 @@ class PluginsFrame(BuildFrame):
         cols["plugins"].set_sort_column_id(1)
 
         renderers = cols["enabled"].get_cells()
+        column_pos = 0
+
         for render in renderers:
-            column_pos = 0
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
@@ -2913,14 +2912,14 @@ class PluginsFrame(BuildFrame):
             return
 
         plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
-        dialog = PluginPreferencesDialog(self, plugin_info["Name"])
+        dialog = self.PluginPreferencesDialog(self, plugin_info["Name"])
 
         dialog.add_options(
             self.selected_plugin,
             self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
-        dialog.show()
+        dialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_select_plugin(self, selection):
 
@@ -2995,15 +2994,16 @@ class PluginsFrame(BuildFrame):
         enabled_plugins = []
 
         for plugin in self.plugins_model:
-            enabled = self.plugins_model.get(plugin.iter, 0)[0]
+            enabled = self.plugins_model.get_value(plugin.iter, 0)
 
             if enabled:
-                plugin_name = self.plugins_model.get(plugin.iter, 2)[0]
+                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
                 enabled_plugins.append(plugin_name)
 
         return enabled_plugins
 
     def on_plugins_enable(self, widget):
+
         self.PluginList.set_sensitive(self.PluginsEnable.get_active())
 
         if self.PluginsEnable.get_active():
@@ -3011,10 +3011,11 @@ class PluginsFrame(BuildFrame):
             for plugin in self.get_enabled_plugins():
                 self.frame.np.pluginhandler.enable_plugin(plugin)
 
-        else:
-            # Disable all plugins
-            for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
-                self.frame.np.pluginhandler.disable_plugin(plugin)
+            return
+
+        # Disable all plugins
+        for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
+            self.frame.np.pluginhandler.disable_plugin(plugin)
 
     def get_settings(self):
 

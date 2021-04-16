@@ -19,7 +19,7 @@ class Plugin(BasePlugin):
     }
     metasettings = {
         'message': {
-            'description': 'Message to send to leechers\n(new lines are sent as separate\nmessages, too many lines may\nget you tempbanned for spam)',
+            'description': 'Message to send to leechers (new lines are sent as separate messages, too many lines may get you tempbanned for spam)',
             'type': 'textview'},
     }
 
