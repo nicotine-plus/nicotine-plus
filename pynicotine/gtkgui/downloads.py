@@ -46,7 +46,6 @@ class Downloads(TransferList):
             ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
             ("#" + _("Clear Finished"), self.on_clear_finished),
             ("#" + _("Clear Aborted"), self.on_clear_aborted),
-            ("#" + _("Clear Paused"), self.on_clear_paused),
             ("#" + _("Clear Filtered"), self.on_clear_filtered),
             ("#" + _("Clear Queued"), self.on_clear_queued)
         )
@@ -183,3 +182,6 @@ class Downloads(TransferList):
 
     def on_clear_finished_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])
+
+    def on_clear_filtered(self, *args):
+        self.clear_transfers(["Filtered"])

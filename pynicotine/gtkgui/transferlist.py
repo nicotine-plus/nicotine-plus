@@ -77,7 +77,6 @@ class TransferList:
         self.statuses["Connection closed by peer"] = _("Connection closed by peer")
         self.statuses["Aborted"] = _("Aborted")
         self.statuses["Finished"] = _("Finished")
-        self.statuses["Paused"] = _("Paused")
         self.statuses["Filtered"] = _("Filtered")
         self.statuses["File not shared"] = _("File not shared")
         self.statuses["File not shared."] = _("File not shared")  # The official client sends a variant containing a dot
@@ -917,9 +916,3 @@ class TransferList:
 
     def on_clear_finished(self, *args):
         self.clear_transfers(["Finished"])
-
-    def on_clear_filtered(self, *args):
-        self.clear_transfers(["Filtered"])
-
-    def on_clear_paused(self, *args):
-        self.clear_transfers(["Paused"])

@@ -149,7 +149,7 @@ class Transfers:
                 pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
-                status = "Paused"
+                status = "Aborted"
             elif len(i) >= 4 and i[3] == "Filtered":
                 status = "Filtered"
             else:
@@ -729,7 +729,7 @@ class Transfers:
                     # This download already finished
                     return slskmessages.TransferResponse(None, 0, reason="Complete", req=msg.req)
 
-                if i.status in ("Aborted", "Paused"):
+                if i.status == "Aborted":
                     # We aborted this download
                     return slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
 
@@ -1206,7 +1206,7 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-            elif i.status not in ("Aborted", "Paused"):
+            elif i.status != "Aborted":
                 if i.status == "Transferring":
                     self.abort_transfer(i, reason=msg.reason)
 
@@ -1235,7 +1235,7 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status in ("Aborted", "Paused", "Local file error", "User logged off"):
+            if i.status in ("Aborted", "Local file error", "User logged off"):
                 continue
 
             if not i.legacy_attempt:
@@ -1837,7 +1837,7 @@ class Transfers:
 
         # walk through downloads and break if any file in the same folder exists, else execute
         for i in self.downloads:
-            if i.status not in ("Finished", "Aborted", "Paused", "Filtered") and i.path == folderpath:
+            if i.status not in ("Finished", "Aborted", "Filtered") and i.path == folderpath:
                 return
 
         config = self.config.sections
@@ -2255,7 +2255,7 @@ class Transfers:
         """ Stop all transfers on disconnect/shutdown """
 
         for i in self.downloads + self.uploads:
-            if i.status in ("Aborted", "Paused"):
+            if i.status == "Aborted":
                 self.abort_transfer(i)
                 i.status = "Paused"
 
