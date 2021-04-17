@@ -2111,6 +2111,9 @@ class NicotineFrame:
         pydoc pynicotine.logfacility.logger.add
         '''
 
+        if self.shutdown:
+            return
+
         if config.sections["logging"]["logcollapsed"]:
             # Make sure we don't attempt to scroll in the log window
             # if it's hidden, to prevent those nasty GTK warnings :)
@@ -2527,6 +2530,7 @@ class NicotineFrame:
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
         self.np.manualdisconnect = True
+        log.remove_listener(self.log_callback)
 
         # Notify plugins
         self.np.pluginhandler.shutdown_notification()
