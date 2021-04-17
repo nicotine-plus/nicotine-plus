@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.0.5 (unstable)
+Version 3.0.5 (April 24, 2021)
 -----------------------------
 
 Changes
@@ -36,12 +36,15 @@ Corrections
 Issues closed on GitHub
 
  * Download Folder function doesn't work from search when uploader is offline ([#511](https://github.com/Nicotine-Plus/nicotine-plus/issues/511))
+ * nicotine crash, ([#1040](https://github.com/Nicotine-Plus/nicotine-plus/issues/1040))
  * Crash on startup ([#1041](https://github.com/Nicotine-Plus/nicotine-plus/issues/1041))
  * Replace usage of Gtk.Menu with Gio.Menu ([#1045](https://github.com/Nicotine-Plus/nicotine-plus/issues/1045))
  * critical error when exit user browse tab ([#1192](https://github.com/Nicotine-Plus/nicotine-plus/issues/1192))
+ * Version 3.0.4 flagged by Windows Defender ([#1329](https://github.com/Nicotine-Plus/nicotine-plus/issues/1329))
  * critical error crash ([#1333](https://github.com/Nicotine-Plus/nicotine-plus/issues/1333))
  * File Manager and Media Player events are buggy ([#1335](https://github.com/Nicotine-Plus/nicotine-plus/issues/1335))
  * Filtering on file type causes crash ([#1337](https://github.com/Nicotine-Plus/nicotine-plus/issues/1337))
+ * The shared folders are not shared anymore ([#1338](https://github.com/Nicotine-Plus/nicotine-plus/issues/1338))
  * Pausing a download ([#1339](https://github.com/Nicotine-Plus/nicotine-plus/issues/1339))
  * copy search team Bug ([#1348](https://github.com/Nicotine-Plus/nicotine-plus/issues/1348))
  * Can't save files.db: [Errno 13] ([#1352](https://github.com/Nicotine-Plus/nicotine-plus/issues/1352))

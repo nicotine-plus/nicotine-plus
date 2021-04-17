@@ -66,10 +66,10 @@ On Debian based distributions, `autopkgtest` implements the DEP-8 standard. To c
 sudo apt install autopkgtest
 ```
 
-Next create the test image, substituting `groovy` or `amd64` for other releases or architectures:
+Next create the test image, substituting `hirsute` or `amd64` for other releases or architectures:
 
 ```sh
-autopkgtest-buildvm-ubuntu-cloud -r groovy -a amd64
+autopkgtest-buildvm-ubuntu-cloud -r hirsute -a amd64
 ```
 
 Test your changes on the host architecture in QEMU with KVM support and 8GB of RAM and four CPUs:
