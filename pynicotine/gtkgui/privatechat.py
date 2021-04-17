@@ -352,6 +352,7 @@ class PrivateChat:
 
         self.create_tags()
         self.update_visuals()
+        self.set_completion_list(self.chats.completion_list)
 
         self.read_private_log()
 
