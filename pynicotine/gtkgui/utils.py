@@ -188,8 +188,14 @@ def on_soul_seek_uri(url):
 
 
 def scroll_bottom(widget):
-    adjustment = widget.get_vadjustment()
-    adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+
+    try:
+        adjustment = widget.get_vadjustment()
+        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+
+    except AttributeError:
+        # Nicotine+ is exiting
+        pass
 
 
 def url_event(tag, widget, event, iterator, url):
