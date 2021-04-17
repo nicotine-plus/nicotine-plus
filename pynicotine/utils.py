@@ -618,6 +618,48 @@ def _expand_alias(aliases, cmd):
     return ""
 
 
+""" Chat Completion """
+
+
+def get_completion_list(commands, rooms):
+
+    config_words = config.sections["words"]
+
+    if not config_words["tab"]:
+        return []
+
+    completion_list = [config.sections["server"]["login"], "nicotine"]
+
+    if config_words["roomnames"]:
+        completion_list += rooms
+
+    if config_words["buddies"]:
+        for i in config.sections["server"]["userlist"]:
+            user = i[0]
+            if isinstance(user, str):
+                completion_list.append(user)
+
+    if config_words["aliases"]:
+        for k in config.sections["server"]["command_aliases"].keys():
+            if isinstance(k, str):
+                completion_list.append("/" + k)
+
+    if config_words["commands"]:
+        completion_list += commands
+
+    # no duplicates
+    def _combilower(x):
+        try:
+            return str.lower(x)
+        except Exception:
+            return str.lower(x)
+
+    completion_list = list(set(completion_list))
+    completion_list.sort(key=_combilower)
+
+    return completion_list
+
+
 """ Debugging """
 
 

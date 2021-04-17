@@ -85,7 +85,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
-            <property name="label" translatable="yes">Complete room names in chat rooms</property>
+            <property name="label" translatable="yes">Complete room names</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>

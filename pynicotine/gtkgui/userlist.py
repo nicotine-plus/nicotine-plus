@@ -458,8 +458,8 @@ class UserList:
             widget.append_text(user)
 
         if config.sections["words"]["buddies"]:
-            GLib.idle_add(self.frame.chatrooms.update_completions)
-            GLib.idle_add(self.frame.privatechats.update_completions)
+            self.frame.chatrooms.update_completions()
+            self.frame.privatechats.update_completions()
 
     def remove_from_list(self, user):
 
@@ -471,8 +471,8 @@ class UserList:
         self.buddies_combos_fill()
 
         if config.sections["words"]["buddies"]:
-            GLib.idle_add(self.frame.chatrooms.update_completions)
-            GLib.idle_add(self.frame.privatechats.update_completions)
+            self.frame.chatrooms.update_completions()
+            self.frame.privatechats.update_completions()
 
     def save_user_list(self):
 
