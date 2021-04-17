@@ -28,6 +28,7 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.config import config
 
 
@@ -264,6 +265,20 @@ class IconNotebook:
         self.notebook.connect("key-press-event", self.on_key_press_event)
         self.notebook.connect("switch-page", self.on_switch_page)
 
+        self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON)
+        self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
+        self.unread_button.set_tooltip_text(_("Unread Tabs"))
+        self.unread_button.set_halign(Gtk.Align.CENTER)
+        self.unread_button.set_valign(Gtk.Align.CENTER)
+        self.unread_button.connect("clicked", self.on_unread_notifications_menu)
+
+        context = self.unread_button.get_style_context()
+        context.add_class("circular")
+
+        self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
+        self.popup_menu_unread = PopupMenu(window=self.notebook.get_toplevel())
+        self.unread_pages = []
+
         self.angle = angle
 
     def get_labels(self, page):
@@ -452,6 +467,19 @@ class IconNotebook:
         tab_label.set_hilite_image(image)
         menu_label.set_hilite_image(image)
 
+        # Determine if button for unread notifications should be shown
+        if image:
+            if page not in self.unread_pages:
+                self.unread_pages.append(page)
+                self.unread_button.show()
+            return
+
+        if page in self.unread_pages:
+            self.unread_pages.remove(page)
+
+        if not self.unread_pages:
+            self.unread_button.hide()
+
     def set_text(self, page, label):
 
         tab_label, menu_label = self.get_labels(page)
@@ -493,6 +521,9 @@ class IconNotebook:
 
     def set_current_page(self, page_num):
         return self.notebook.set_current_page(page_num)
+
+    def set_unread_page(self, action, state, page_num):
+        self.notebook.set_current_page(page_num)
 
     def get_nth_page(self, page_num):
         return self.notebook.get_nth_page(page_num)
@@ -539,3 +570,15 @@ class IconNotebook:
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)
         self.set_text_color(new_page, status=0)
+
+    def on_unread_notifications_menu(self, widget):
+
+        self.popup_menu_unread.clear()
+
+        for page in self.unread_pages:
+            tab_label, menu_label = self.get_labels(page)
+            self.popup_menu_unread.setup(
+                ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
+            )
+
+        self.popup_menu_unread.popup()

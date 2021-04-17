@@ -12,6 +12,7 @@ Changes
  * Improved performance when selecting a large number of transfers
  * Queue positions and failed downloads are now checked every three minutes instead of every minute, to reduce stress on the uploading user
  * Performance improvements for long buddy lists
+ * Added a dropdown menu button in tab bars for unread notifications
 
 Corrections
 
