@@ -150,6 +150,7 @@ class TransferList:
 
         self.popup_menu_users = PopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
+        self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
         self.popup_menu = PopupMenu(frame)
         self.popup_menu.setup(
@@ -921,7 +922,11 @@ class TransferList:
         dialog.destroy()
 
         if response_id == Gtk.ResponseType.OK:
-            self.clear_transfers(["Queued"])
+            if data == "queued":
+                self.clear_transfers(["Queued"])
+
+            elif data == "all":
+                self.clear()
 
     def on_clear_queued(self, *args):
         self.clear_transfers(["Queued"])
