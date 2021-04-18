@@ -28,7 +28,7 @@ def combo_box_dialog(parent, title, message, callback, callback_data=None, defau
 
     self = Gtk.MessageDialog(
         transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
+        message_type=Gtk.MessageType.OTHER,
         buttons=Gtk.ButtonsType.OK_CANCEL,
         text=title,
         secondary_text=message
@@ -74,7 +74,7 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
 
     self = Gtk.MessageDialog(
         transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
+        message_type=Gtk.MessageType.OTHER,
         buttons=Gtk.ButtonsType.OK_CANCEL,
         text=title,
         secondary_text=message
