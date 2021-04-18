@@ -69,17 +69,16 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-# List of allowed commands. The implementation for them is in the ChatEntry class.
-CMDS = [
-    "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-    "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ", "/leave ",
-    "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-    "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ", "/tick ", "/t ",
-    "/info ", "/toggle ", "/tickers "
-]
-
-
 class ChatRooms(IconNotebook):
+
+    # List of allowed commands. The implementation for them is in the ChatEntry class.
+    CMDS = {
+        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
+        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ", "/leave ",
+        "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
+        "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ", "/tick ", "/t ",
+        "/info ", "/toggle ", "/tickers "
+    }
 
     def __init__(self, frame):
 
@@ -432,7 +431,7 @@ class ChatRooms(IconNotebook):
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(CMDS, self.roomlist.server_rooms)
+        self.completion_list = get_completion_list(self.CMDS, self.roomlist.server_rooms)
 
         for room in self.joinedrooms.values():
             # We need to create a copy of the completion list, due to unique room usernames
@@ -464,7 +463,7 @@ class ChatRoom:
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom, self.send_message, CMDS, self.ChatScroll, is_chatroom=True)
+        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom, self.send_message, self.chatrooms.CMDS, self.ChatScroll, is_chatroom=True)
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():

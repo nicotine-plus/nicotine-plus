@@ -58,17 +58,17 @@ from pynicotine.utils import version
 
 CTCP_VERSION = "\x01VERSION\x01"
 
-# List of allowed commands. The implementation for them is in the ChatEntry class.
-CMDS = [
-    "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-    "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
-    "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-    "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
-    "/info ", "/toggle ", "/ctcpversion "
-]
-
 
 class PrivateChats(IconNotebook):
+
+    # List of allowed commands. The implementation for them is in the ChatEntry class.
+    CMDS = {
+        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
+        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
+        "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
+        "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
+        "/info ", "/toggle ", "/ctcpversion "
+    }
 
     def __init__(self, frame):
 
@@ -298,7 +298,7 @@ class PrivateChats(IconNotebook):
 
     def update_completions(self):
 
-        self.completion_list = get_completion_list(CMDS, self.frame.chatrooms.roomlist.server_rooms)
+        self.completion_list = get_completion_list(self.CMDS, self.frame.chatrooms.roomlist.server_rooms)
 
         for user in self.users.values():
             user.set_completion_list(self.completion_list)
@@ -322,7 +322,7 @@ class PrivateChat:
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry)
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser, self.send_message, CMDS, self.ChatScroll)
+        self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser, self.send_message, self.chats.CMDS, self.ChatScroll)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
