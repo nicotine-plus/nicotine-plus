@@ -1335,7 +1335,7 @@ class Search:
         config.sections["searches"]["filters_visible"] = visible
 
     def on_copy_search_term(self, *args):
-        self.frame.clip.set_text(self.text, -1)
+        self.frame.clipboard.set_text(self.text, -1)
 
     def on_toggle_remember(self, widget):
 

@@ -395,7 +395,7 @@ class PopupMenu(Gio.Menu):
         self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
     def on_copy_user(self, *args):
-        self.frame.clip.set_text(self.user, -1)
+        self.frame.clipboard.set_text(self.user, -1)
 
     def on_give_privileges_response(self, dialog, response_id, data):
 
