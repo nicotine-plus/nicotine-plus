@@ -21,14 +21,12 @@ import os
 import sys
 
 from gi.repository import Gdk
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
-from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.logfacility import log
 
 
@@ -69,31 +67,46 @@ class TrayIcon:
         }
         self.create_menu()
 
+    def create_item(self, text, callback, check=False):
+
+        if check:
+            item = Gtk.CheckMenuItem.new_with_label(text)
+        else:
+            item = Gtk.MenuItem.new_with_label(text)
+
+        handler = item.connect("activate", callback)
+        self.tray_popup_menu.append(item)
+        item.show()
+
+        return item, handler
+
     def create_menu(self):
 
-        try:
-            self.tray_popup_menu = PopupMenu(self.frame)
-            self.tray_popup_menu.setup(
-                ("#" + _("Hide / Show Nicotine+"), self.on_hide_unhide_window),
-                ("", None),
-                ("#" + _("Downloads"), self.on_downloads),
-                ("#" + _("Uploads"), self.on_uploads),
-                ("", None),
-                ("#" + _("Connect"), self.frame.on_connect),
-                ("#" + _("Disconnect"), self.frame.on_disconnect),
-                ("$" + _("Away"), self.frame.on_away),
-                ("", None),
-                ("#" + _("Send Message"), self.on_open_private_chat),
-                ("#" + _("Lookup a User's IP"), self.on_get_a_users_ip),
-                ("#" + _("Lookup a User's Info"), self.on_get_a_users_info),
-                ("#" + _("Lookup a User's Shares"), self.on_get_a_users_shares),
-                ("", None),
-                ("#" + _("Preferences"), self.frame.on_settings),
-                ("#" + _("Quit"), self.frame.on_quit)
-            )
+        self.tray_popup_menu = Gtk.Menu()
+        self.hide_show_item, handler = self.create_item(_("Hide / Show Nicotine+"), self.on_hide_unhide_window)
 
-        except Exception as e:
-            log.add_warning(_('ERROR: tray menu, %(error)s'), {'error': e})
+        self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
+
+        self.downloads_item, handler = self.create_item(_("Downloads"), self.on_downloads)
+        self.uploads_item, handler = self.create_item(_("Uploads"), self.on_uploads)
+
+        self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
+
+        self.connect_item, handler = self.create_item(_("Connect"), self.frame.on_connect)
+        self.disconnect_item, handler = self.create_item(_("Disconnect"), self.frame.on_disconnect)
+        self.away_item, self.away_handler = self.create_item(_("Away"), self.frame.on_away, check=True)
+
+        self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
+
+        self.send_message_item, handler = self.create_item(_("Send Message"), self.on_open_private_chat)
+        self.lookup_ip_item, handler = self.create_item(_("Lookup a User's IP"), self.on_get_a_users_ip)
+        self.lookup_info_item, handler = self.create_item(_("Lookup a User's Info"), self.on_get_a_users_info)
+        self.lookup_shares_item, handler = self.create_item(_("Lookup a User's Shares"), self.on_get_a_users_shares)
+
+        self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
+
+        self.create_item(_("Preferences"), self.frame.on_settings)
+        self.create_item(_("Quit"), self.frame.on_quit)
 
     def on_hide_unhide_window(self, *args):
 
@@ -203,8 +216,10 @@ class TrayIcon:
 
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):
+
         if button == 3:
-            self.tray_popup_menu.popup(use_legacy=True)
+            time = Gtk.get_current_event_time()
+            self.tray_popup_menu.popup(None, None, None, None, button, time)
 
     def check_icon_path(self, icon_name, icon_path, icon_type="local"):
 
@@ -276,13 +291,10 @@ class TrayIcon:
                     GLib.get_application_name(),
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
-                gtk_menu = Gtk.Menu.new_from_model(self.tray_popup_menu)
-                gtk_menu.attach_to_widget(self.frame.MainWindow, None)
-                trayicon.set_menu(gtk_menu)
+                trayicon.set_menu(self.tray_popup_menu)
 
                 # Action to hide/unhide main window when middle clicking the tray icon
-                hide_unhide_item = gtk_menu.get_children()[0]
-                trayicon.set_secondary_activate_target(hide_unhide_item)
+                trayicon.set_secondary_activate_target(self.hide_show_item)
 
             else:
                 # GtkStatusIcon fallback
@@ -389,11 +401,9 @@ class TrayIcon:
 
         self.set_image()
 
-        # Toggle away checkbox in tray menu
-        away_item = self.tray_popup_menu.get_actions()[_("Away")]
-        away_item.set_enabled(False)
-        away_item.set_state(GLib.Variant.new_boolean(enable))
-        away_item.set_enabled(True)
+        with self.away_item.handler_block(self.away_handler):
+            # Temporarily disable handler, we only want to change the visual checkbox appearance
+            self.away_item.set_active(enable)
 
     def set_connected(self, enable):
 
@@ -406,33 +416,18 @@ class TrayIcon:
 
     def set_server_actions_sensitive(self, status):
 
-        items = self.tray_popup_menu.get_actions()
-
-        for i in (_("Send Message"), _("Lookup a User's IP"), _("Lookup a User's Info"),
-                  _("Lookup a User's Shares"), _("Away")):
+        for i in (self.disconnect_item, self.away_item, self.send_message_item, self.lookup_ip_item,
+                  self.lookup_info_item, self.lookup_shares_item):
 
             """ Disable menu items when disconnected from server """
-            items[i].set_enabled(status)
+            i.set_sensitive(status)
 
-        items = self.tray_popup_menu.get_actions()
-
-        items[_("Connect")].set_enabled(not status)
-        items[_("Disconnect")].set_enabled(status)
+        self.connect_item.set_sensitive(not status)
 
     def set_transfer_status(self, download, upload):
 
         if self.trayicon is None:
             return
 
-        items = self.tray_popup_menu.get_items()
-        section = self.tray_popup_menu.get_item_link(1, Gio.MENU_LINK_SECTION)
-
-        if items[_("Downloads")].get_attribute_value("label").get_string() != download:
-            section.remove(0)
-            items[_("Downloads")].set_label(download)
-            section.insert_item(0, items[_("Downloads")])
-
-        if items[_("Uploads")].get_attribute_value("label").get_string() != upload:
-            section.remove(1)
-            items[_("Uploads")].set_label(upload)
-            section.insert_item(1, items[_("Uploads")])
+        self.downloads_item.set_label(download)
+        self.uploads_item.set_label(upload)

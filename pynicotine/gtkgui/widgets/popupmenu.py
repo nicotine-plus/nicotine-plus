@@ -281,16 +281,13 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, button=3, use_legacy=False):
+    def popup(self, button=3):
 
         if not self.popup_menu:
             self.popup_menu = Gtk.Menu.new_from_model(self)
             self.popup_menu.attach_to_widget(self.window, None)
 
         try:
-            if use_legacy:
-                raise AttributeError("Falling back to legacy popup method")
-
             self.popup_menu.popup_at_pointer()
 
         except AttributeError:
