@@ -2447,12 +2447,11 @@ class NicotineFrame:
 
     def on_critical_error_response(self, dialog, response_id, loop):
 
-        dialog.destroy()
-
         if response_id == Gtk.ResponseType.REJECT:
             self.on_report_bug()
             return
 
+        dialog.destroy()
         loop.quit()
 
         try:
