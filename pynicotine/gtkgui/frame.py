@@ -2454,7 +2454,14 @@ class NicotineFrame:
             return
 
         loop.quit()
-        self.on_quit()
+
+        try:
+            self.on_quit()
+        except Exception:
+            """ We attempt a clean shut down, but this may not be possible if
+            the program didn't initialize fully. Ignore any additional errors
+            in that case. """
+            pass
 
     def on_critical_error(self, exc_type, value, tb):
 
