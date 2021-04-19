@@ -907,9 +907,6 @@ class ChatRoom:
         text = re.sub("\\s\\s+", "  ", text)
         self.frame.np.queue.append(slskmessages.SayChatroom(self.room, text))
 
-    def display_now_playing(self):
-        self.frame.np.now_playing.display_now_playing(callback=self.say)
-
     def user_joined_room(self, userdata):
 
         username = userdata.username

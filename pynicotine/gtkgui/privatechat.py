@@ -562,9 +562,6 @@ class PrivateChat:
 
         self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
 
-    def display_now_playing(self):
-        self.frame.np.now_playing.display_now_playing(callback=self.send_message)
-
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
