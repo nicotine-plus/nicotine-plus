@@ -22,6 +22,7 @@ Corrections
  * Fixed a critical error when attempting to add wishlist items while disconnected from the server
  * Fixed a critical error when attempting to use the /rescan chat command
  * Fixed a rare case where Nicotine+ could crash on startup
+ * 'Send to Player' for files downloaded to a custom folder no longer fails
  * When browsing your own shares, viewing recently shared downloads no longer requires a restart
  * Attempting to download files of disconnected users now displays the 'User logged off' status immediately
  * Column widths of the currently selected user browse tab are now saved
