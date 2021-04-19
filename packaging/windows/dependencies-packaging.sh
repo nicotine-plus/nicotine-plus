@@ -32,4 +32,4 @@ pacman --noconfirm -S --needed \
 # Install dependencies with pip
 pip3 install \
   plyer \
-  git+git://github.com/pyinstaller/pyinstaller.git@7d77825f42a5929d08b3337fd7b4550bc5387f42
+  pyinstaller==4.3

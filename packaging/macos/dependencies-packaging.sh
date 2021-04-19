@@ -32,4 +32,4 @@ brew install \
 pip3 install \
   certifi \
   pygobject \
-  pyinstaller==4.2
+  pyinstaller==4.3
