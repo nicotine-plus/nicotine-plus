@@ -647,16 +647,6 @@ def get_completion_list(commands, rooms):
     if config_words["commands"]:
         completion_list += commands
 
-    # no duplicates
-    def _combilower(x):
-        try:
-            return str.lower(x)
-        except Exception:
-            return str.lower(x)
-
-    completion_list = list(set(completion_list))
-    completion_list.sort(key=_combilower)
-
     return completion_list
 
 

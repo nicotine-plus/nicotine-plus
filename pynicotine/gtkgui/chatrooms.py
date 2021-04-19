@@ -1241,20 +1241,12 @@ class ChatRoom:
 
     def set_completion_list(self, completion_list):
 
-        if completion_list is None:
-            completion_list = []
-
+        # We want to include users for this room only
         if config.sections["words"]["roomusers"]:
             completion_list += self.users.keys()
 
-        # no duplicates
-        def _combilower(x):
-            try:
-                return str.lower(x)
-            except Exception:
-                return str.lower(x)
-
+        # No duplicates
         completion_list = list(set(completion_list))
-        completion_list.sort(key=_combilower)
+        completion_list.sort(key=lambda v: v.lower())
 
         self.entry.set_completion_list(completion_list)

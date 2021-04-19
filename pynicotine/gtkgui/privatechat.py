@@ -301,7 +301,7 @@ class PrivateChats(IconNotebook):
         self.completion_list = get_completion_list(self.CMDS, self.frame.chatrooms.roomlist.server_rooms)
 
         for user in self.users.values():
-            user.set_completion_list(self.completion_list)
+            user.set_completion_list(list(self.completion_list))
 
 
 class PrivateChat:
@@ -352,7 +352,7 @@ class PrivateChat:
 
         self.create_tags()
         self.update_visuals()
-        self.set_completion_list(self.chats.completion_list)
+        self.set_completion_list(list(self.chats.completion_list))
 
         self.read_private_log()
 
@@ -628,4 +628,12 @@ class PrivateChat:
         self.chats.remove_all_pages()
 
     def set_completion_list(self, completion_list):
+
+        # Tab-complete the recepient username
+        completion_list.append(self.user)
+
+        # No duplicates
+        completion_list = list(set(completion_list))
+        completion_list.sort(key=lambda v: v.lower())
+
         self.entry.set_completion_list(completion_list)
