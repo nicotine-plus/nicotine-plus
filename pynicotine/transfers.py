@@ -36,6 +36,7 @@ import threading
 import time
 
 from collections import defaultdict
+from collections import deque
 from time import sleep
 
 from pynicotine import slskmessages
@@ -115,8 +116,8 @@ class Transfers:
         self.peerconns = peerconns
         self.queue = queue
         self.eventprocessor = eventprocessor
-        self.downloads = []
-        self.uploads = []
+        self.downloads = deque()
+        self.uploads = deque()
         self.privilegedusers = set()
         self.requested_folders = defaultdict(dict)
         userstatus = set()
@@ -153,7 +154,7 @@ class Transfers:
             else:
                 status = "Getting status"
 
-            self.downloads.append(
+            self.downloads.appendleft(
                 Transfer(
                     user=i[0], filename=i[1], path=i[2], status=status,
                     size=size, currentbytes=currentbytes, bitrate=bitrate,
@@ -680,8 +681,7 @@ class Transfers:
 
     def transfer_request_downloads(self, msg, user):
 
-        # Likely faster to start from the end of the download list in most cases
-        for i in reversed(self.downloads):
+        for i in self.downloads:
             if i.filename == msg.file and user == i.user and i.status not in ("Finished", "Aborted", "Filtered"):
 
                 # Remote peer is signalling a tranfer is ready, attempting to download it
@@ -715,7 +715,7 @@ class Transfers:
                 user=user, filename=msg.file, path=path,
                 status="Queued", size=msg.filesize, req=msg.req
             )
-            self.downloads.append(transfer)
+            self.downloads.appendleft(transfer)
 
             self.eventprocessor.watch_user(user)
 
@@ -1420,7 +1420,7 @@ class Transfers:
         place = 0
 
         if self.config.sections["transfers"]["fifoqueue"]:
-            for i in self.uploads:
+            for i in reversed(self.uploads):
                 # Ignore non-queued files
                 if i.status != "Queued":
                     continue
@@ -1438,7 +1438,7 @@ class Transfers:
             queued_users = set()
             uploading_users = set()
 
-            for i in self.uploads:
+            for i in reversed(self.uploads):
 
                 # Ignore non-queued files
                 if i.status != "Queued":
@@ -1485,8 +1485,7 @@ class Transfers:
 
         filename = msg.filename
 
-        # Likely faster to start from the end of the list in most cases
-        for i in reversed(self.downloads):
+        for i in self.downloads:
             if i.user == username and i.filename == filename and i.status not in ("Finished", "Aborted", "Filtered"):
                 i.place = msg.place
                 self.downloadsview.update(i)
@@ -1543,7 +1542,7 @@ class Transfers:
             )
 
             if direction == 0:
-                self.downloads.append(transfer)
+                self.downloads.appendleft(transfer)
             else:
                 self._append_upload(user, filename, transfer)
         else:
@@ -1637,7 +1636,7 @@ class Transfers:
         if previously_queued:
             self.uploads.insert(old_index, transferobj)
         else:
-            self.uploads.append(transferobj)
+            self.uploads.appendleft(transferobj)
 
     def can_upload(self, user):
 
@@ -1787,7 +1786,7 @@ class Transfers:
     def folder_downloaded_actions(self, user, filepath, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
-        for i in reversed(self.downloads):
+        for i in self.downloads:
             if i.status not in ("Finished", "Aborted", "Filtered") and i.path == folderpath:
                 return
 

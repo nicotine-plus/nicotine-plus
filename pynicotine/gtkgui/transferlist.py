@@ -293,7 +293,7 @@ class TransferList:
             self.update_specific(transfer)
 
         elif self.list is not None:
-            for transfer in self.list:
+            for transfer in reversed(self.list):
                 self.update_specific(transfer)
 
         if forceupdate or finished or \
