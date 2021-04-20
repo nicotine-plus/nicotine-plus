@@ -1857,6 +1857,7 @@ class Transfers:
         i.conn = None
 
         self.eventprocessor.shares.add_file_to_shared(newname)
+        self.eventprocessor.shares.add_file_to_buddy_shared(newname)
         self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
 
         # Attempt to show notification and execute commands

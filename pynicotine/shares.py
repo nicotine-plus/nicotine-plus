@@ -498,7 +498,6 @@ class Shares:
         self.share_dbs = {}
         self.public_rescanning = False
         self.buddy_rescanning = False
-        self.initiated_shares = False
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -609,8 +608,6 @@ class Shares:
                 self.create_compressed_shares_message("buddy")
                 self.compress_shares("buddy")
 
-        self.initiated_shares = True
-
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 
@@ -694,10 +691,10 @@ class Shares:
         if not self.config.sections["transfers"]["sharedownloaddir"]:
             return
 
-        if not self.initiated_shares or self.public_rescanning:
-            return
+        shared = self.share_dbs.get("files")
 
-        shared = self.share_dbs["files"]
+        if not shared:
+            return
 
         shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
         shareddirs.append(self.config.sections["transfers"]["downloaddir"])
@@ -706,7 +703,10 @@ class Shares:
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        if shared.get(vdir) and file not in (i[0] for i in shared[vdir]):
+        if not shared.get(vdir):
+            shared[vdir] = []
+
+        if file not in (i[0] for i in shared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             shared[vdir] += [fileinfo]
@@ -725,19 +725,19 @@ class Shares:
             self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
 
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            self.add_file_to_buddy_shared(name)
-
     def add_file_to_buddy_shared(self, name):
         """ Add a file to the buddy shares database """
 
         if not self.config.sections["transfers"]["sharedownloaddir"]:
             return
 
-        if not self.initiated_shares or self.buddy_rescanning:
+        if not self.config.sections["transfers"]["enablebuddyshares"]:
             return
 
-        bshared = self.share_dbs["buddyfiles"]
+        bshared = self.share_dbs.get("buddyfiles")
+
+        if not bshared:
+            return
 
         bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
         bshareddirs += [path for _name, path in self.config.sections["transfers"]["buddyshared"]]
@@ -747,7 +747,10 @@ class Shares:
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        if bshared.get(vdir) and file not in (i[0] for i in bshared[vdir]):
+        if not bshared.get(vdir):
+            bshared[vdir] = []
+
+        if file not in (i[0] for i in bshared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             bshared[vdir] += [fileinfo]
@@ -772,22 +775,16 @@ class Shares:
     def create_compressed_shares_message(self, sharestype):
         """ Create a message that will later contain a compressed list of our shares """
 
-        self.compressed_shares_normal = None
-        self.compressed_shares_buddy = None
-
-        streams = self.share_dbs.get("streams")
-        buddystreams = self.share_dbs.get("buddystreams")
-
-        if sharestype == "normal" and streams:
+        if sharestype == "normal":
             self.compressed_shares_normal = slskmessages.SharedFileList(
                 None,
-                streams
+                self.share_dbs.get("streams")
             )
 
-        elif sharestype == "buddy" and buddystreams:
+        elif sharestype == "buddy":
             self.compressed_shares_buddy = slskmessages.SharedFileList(
                 None,
-                buddystreams
+                self.share_dbs.get("buddystreams")
             )
 
     def get_compressed_shares_message(self, sharestype):
@@ -836,7 +833,7 @@ class Shares:
         for db in dbs:
             db_file = self.share_dbs.get(db)
 
-            if db_file:
+            if db_file is not None:
                 self.share_dbs[db].close()
                 del self.share_dbs[db]
 

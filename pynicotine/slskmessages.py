@@ -2064,16 +2064,15 @@ class SharedFileList(PeerMessage):
 
         msg = bytearray()
 
-        try:
-            try:
-                msg.extend(self.pack_object(len(self.list)))
-
-            except TypeError:
-                msg.extend(self.pack_object(len(list(self.list))))
-
-        except ValueError:
+        if self.list is None:
             # DB is closed
             return None
+
+        try:
+            msg.extend(self.pack_object(len(self.list)))
+
+        except TypeError:
+            msg.extend(self.pack_object(len(list(self.list))))
 
         for key in self.list:
             try:

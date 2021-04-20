@@ -629,6 +629,8 @@ class SharesFrame(BuildFrame):
         self.removeBuddySharesButton.set_sensitive(buddies)
         self.renameBuddyVirtualsButton.set_sensitive(buddies)
 
+        self.needrescan = True
+
     def add_shared_dir_response(self, dialog, response_id, data):
 
         virtual = dialog.get_response_value()
