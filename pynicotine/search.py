@@ -238,7 +238,7 @@ class Search:
         else:
             wordindex = self.share_dbs.get("wordindex")
 
-        if not wordindex:
+        if wordindex is None:
             return
 
         # Find common file matches for each word in search term
@@ -256,7 +256,7 @@ class Search:
         else:
             fileindex = self.share_dbs.get("fileindex")
 
-        if not fileindex:
+        if fileindex is None:
             return
 
         fifoqueue = self.config.sections["transfers"]["fifoqueue"]

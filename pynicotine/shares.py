@@ -668,13 +668,13 @@ class Shares:
         shared = self.share_dbs.get("files")
         bshared = self.share_dbs.get("buddyfiles")
 
-        if self.config.sections["transfers"]["enablebuddyshares"] and bshared:
+        if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
             if user in (i[0] for i in self.config.sections["server"]["userlist"]):
                 for i in bshared.get(str(folder), ''):
                     if file == i[0]:
                         return True
 
-        if shared:
+        if shared is not None:
             for i in shared.get(str(folder), ''):
                 if file == i[0]:
                     return True
@@ -693,7 +693,7 @@ class Shares:
 
         shared = self.share_dbs.get("files")
 
-        if not shared:
+        if shared is None:
             return
 
         shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
@@ -736,7 +736,7 @@ class Shares:
 
         bshared = self.share_dbs.get("buddyfiles")
 
-        if not bshared:
+        if bshared is None:
             return
 
         bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
@@ -850,7 +850,7 @@ class Shares:
             shared = self.share_dbs.get("files")
             index = self.share_dbs.get("fileindex")
 
-            if not shared or not index:
+            if shared is None or index is None:
                 return
 
             try:

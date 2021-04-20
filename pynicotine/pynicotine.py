@@ -1863,10 +1863,10 @@ class NetworkEventProcessor:
         normalshares = self.shares.share_dbs.get("streams")
         buddyshares = self.shares.share_dbs.get("buddystreams")
 
-        if checkuser == 1 and normalshares:
+        if checkuser == 1 and normalshares is not None:
             shares = normalshares
 
-        elif checkuser == 2 and buddyshares:
+        elif checkuser == 2 and buddyshares is not None:
             shares = buddyshares
 
         else:
