@@ -789,6 +789,9 @@ class Shares:
 
     def close_shares(self, sharestype):
 
+        if not self.initiated_shares:
+            return
+
         if sharestype == "normal":
             dbs = [
                 "files", "streams", "wordindex",
