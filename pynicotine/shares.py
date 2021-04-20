@@ -840,7 +840,7 @@ class Shares:
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        if self.config.sections["transfers"]["enablebuddyshares"] and self.config.sections["transfers"]["friendsonly"]:
+        if self.config.sections["transfers"]["friendsonly"]:
             # No public shares
             files = folders = 0
             self.queue.append(slskmessages.SharedFoldersFiles(files, folders))

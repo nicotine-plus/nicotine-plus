@@ -2425,10 +2425,14 @@ class NicotineFrame:
             # Rescan public shares if needed
             if not config.sections["transfers"]["friendsonly"]:
                 self.on_rescan()
+            else:
+                self.np.shares.close_shares("normal")
 
             # Rescan buddy shares if needed
             if config.sections["transfers"]["enablebuddyshares"]:
                 self.on_buddy_rescan()
+            else:
+                self.np.shares.close_shares("buddy")
 
         if config.need_config():
             if self.np.transfers is not None:
