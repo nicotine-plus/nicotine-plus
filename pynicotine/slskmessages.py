@@ -22,7 +22,6 @@ import socket
 import struct
 import zlib
 
-from hashlib import md5
 from itertools import count
 from itertools import islice
 
@@ -340,6 +339,8 @@ class Login(ServerMessage):
         self.ip = None
 
     def make_network_message(self):
+        from hashlib import md5
+
         msg = bytearray()
         msg.extend(self.pack_object(self.username))
         msg.extend(self.pack_object(self.passwd))

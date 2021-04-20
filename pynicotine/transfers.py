@@ -36,7 +36,6 @@ import threading
 import time
 
 from collections import defaultdict
-from hashlib import md5
 from time import sleep
 
 from pynicotine import slskmessages
@@ -1039,6 +1038,7 @@ class Transfers:
             else:
                 f = None
                 try:
+                    from hashlib import md5
                     m = md5()
                     m.update((i.filename + i.user).encode('utf-8'))
 
