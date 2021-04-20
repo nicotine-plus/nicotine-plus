@@ -79,7 +79,7 @@ class UserBrowse:
         self.search_list = []
         self.query = None
         self.search_position = 0
-        self.selected_files = []
+        self.selected_files = {}
 
         self.shares = []
 
@@ -295,13 +295,15 @@ class UserBrowse:
 
     def select_files(self):
 
-        self.selected_files = []
+        self.selected_files.clear()
         model, paths = self.FileTreeView.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
             rawfilename = model.get_value(iterator, 0)
-            self.selected_files.append(rawfilename)
+            filesize = model.get_value(iterator, 4)
+
+            self.selected_files[rawfilename] = filesize
 
     def on_file_clicked(self, widget, event):
 
@@ -347,7 +349,7 @@ class UserBrowse:
 
         self.shares = list
         self.selected_folder = None
-        self.selected_files = []
+        self.selected_files.clear()
         self.directories.clear()
         self.files.clear()
         self.dir_store.clear()
@@ -650,7 +652,7 @@ class UserBrowse:
         text = self.selected_folder
 
         if is_file and self.selected_files:
-            text = "\\".join([self.selected_folder, self.selected_files[0]])
+            text = "\\".join([self.selected_folder, next(iter(self.selected_files))])
 
         self.frame.clipboard.set_text(text, -1)
 
@@ -861,7 +863,6 @@ class UserBrowse:
         if folder == "" or folder is None or user is None or user == "":
             return
 
-        realpath = self.frame.np.shares.virtual2real(folder)
         ldir = folder.split("\\")[-1]
 
         locally_queued = False
@@ -873,9 +874,8 @@ class UserBrowse:
 
             for file in f:
                 filename = "\\".join([folder, file[1]])
-                realfilename = os.path.join(realpath, file[1])
                 size = file[2]
-                self.frame.np.transfers.push_file(user, filename, realfilename, ldir, size=size, locally_queued=locally_queued)
+                self.frame.np.transfers.push_file(user, filename, ldir, size=size, locally_queued=locally_queued)
                 locally_queued = True
 
         if not recurse:
@@ -889,7 +889,6 @@ class UserBrowse:
 
         user = dialog.get_response_value()
         folder = self.selected_folder
-        realpath = self.frame.np.shares.virtual2real(folder)
         dialog.destroy()
 
         if not user or folder is None:
@@ -900,8 +899,8 @@ class UserBrowse:
         locally_queued = False
         prefix = ""
 
-        for fn in self.selected_files:
-            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), os.path.join(realpath, fn), prefix, locally_queued=locally_queued)
+        for fn, size in self.selected_files.items():
+            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), prefix, size=size, locally_queued=locally_queued)
             locally_queued = True
 
     def on_upload_files(self, *args):
@@ -1031,7 +1030,7 @@ class UserBrowse:
     def on_copy_url(self, *args):
 
         if self.selected_files:
-            path = "\\".join([self.selected_folder, self.selected_files[0]])
+            path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
             copy_file_url(self.user, path, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):

@@ -51,7 +51,7 @@ from pynicotine.utils import write_file_and_backup
 class Transfer(object):
     """ This class holds information about a single transfer. """
 
-    __slots__ = "conn", "user", "realfilename", "filename", \
+    __slots__ = "conn", "user", "filename", \
                 "path", "req", "size", "file", "starttime", "lasttime", \
                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed", \
                 "timeleft", "timequeued", \
@@ -59,14 +59,13 @@ class Transfer(object):
                 "laststatuschange", "legacy_attempt"
 
     def __init__(
-        self, conn=None, user=None, realfilename=None, filename=None,
+        self, conn=None, user=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
         timeleft=None, timequeued=None, requestconn=None,
         modifier=None, place=0, bitrate=None, length=None, iter=None, legacy_attempt=False
     ):
         self.user = user
-        self.realfilename = realfilename  # Sent as is to the user announcing what file we're sending
         self.filename = filename
         self.conn = conn
         self.path = path  # Used for ???
@@ -604,7 +603,7 @@ class Transfers:
 
             elif self.eventprocessor.shares.file_is_shared(user, filename_utf8, realpath):
                 newupload = Transfer(
-                    user=user, filename=msg.file, realfilename=realpath,
+                    user=user, filename=msg.file,
                     path=os.path.dirname(realpath), status="Queued",
                     timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
                 )
@@ -795,7 +794,7 @@ class Transfers:
 
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=msg.req)
             newupload = Transfer(
-                user=user, filename=msg.file, realfilename=realpath,
+                user=user, filename=msg.file,
                 path=os.path.dirname(realpath), status="Queued",
                 timequeued=time.time(), size=self.get_file_size(realpath),
                 place=len(self.uploads)
@@ -809,7 +808,7 @@ class Transfers:
         response = slskmessages.TransferResponse(None, 1, req=msg.req, filesize=size)
 
         transferobj = Transfer(
-            user=user, realfilename=realpath, filename=msg.file,
+            user=user, filename=msg.file,
             path=os.path.dirname(realpath), status="Getting status",
             req=msg.req, size=size, place=len(self.uploads)
         )
@@ -1077,7 +1076,8 @@ class Transfers:
 
             try:
                 # Open File
-                f = open(i.realfilename, "rb")
+                realpath = self.eventprocessor.shares.virtual2real(i.filename)
+                f = open(realpath, "rb")
 
             except IOError as strerror:
                 log.add(_("Upload I/O error: %s"), strerror)
@@ -1527,20 +1527,17 @@ class Transfers:
 
         self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
 
-    def push_file(self, user, filename, realfilename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
-        if size is None:
-            size = self.get_file_size(realfilename)
+    def push_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
+        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, locally_queued)
 
-        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, realfilename, locally_queued)
-
-    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, realfilename=None, locally_queued=False):
+    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None, bitrate=None, length=None, locally_queued=False):
 
         """ Get a single file. path is a local path. if transfer object is
         not None, update it, otherwise create a new one."""
 
         if transfer is None:
             transfer = Transfer(
-                user=user, filename=filename, realfilename=realfilename, path=path,
+                user=user, filename=filename, path=path,
                 status="Queued", size=size, bitrate=bitrate,
                 length=length
             )
@@ -2091,8 +2088,7 @@ class Transfers:
                 continue
 
             self.push_file(
-                user=user, filename=upload_candidate.filename,
-                realfilename=upload_candidate.realfilename, transfer=upload_candidate
+                user=user, filename=upload_candidate.filename, transfer=upload_candidate
             )
             return
 
