@@ -722,16 +722,9 @@ class Transfers:
 
     def transfer_request_downloads(self, msg, user):
 
-        for i in self.downloads:
-            if i.filename == msg.file and user == i.user:
-
-                if i.status == "Finished":
-                    # This download already finished
-                    return slskmessages.TransferResponse(None, 0, reason="Complete", req=msg.req)
-
-                if i.status == "Aborted":
-                    # We aborted this download
-                    return slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
+        # Likely faster to start from the end of the download list in most cases
+        for i in reversed(self.downloads):
+            if i.filename == msg.file and user == i.user and i.status not in ("Finished", "Aborted", "Filtered"):
 
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
@@ -1532,8 +1525,9 @@ class Transfers:
 
         filename = msg.filename
 
-        for i in self.downloads:
-            if i.user == username and i.filename == filename:
+        # Likely faster to start from the end of the list in most cases
+        for i in reversed(self.downloads):
+            if i.user == username and i.filename == filename and i.status not in ("Finished", "Aborted", "Filtered"):
                 i.place = msg.place
                 self.downloadsview.update(i)
                 return
@@ -1836,7 +1830,7 @@ class Transfers:
     def folder_downloaded_actions(self, user, filepath, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
-        for i in self.downloads:
+        for i in reversed(self.downloads):
             if i.status not in ("Finished", "Aborted", "Filtered") and i.path == folderpath:
                 return
 
