@@ -200,6 +200,9 @@ class Search:
         several times a second, please keep it as optimized and memory
         sparse as possible! """
 
+        if self.np.transfers is None:
+            return
+
         if not self.config.sections["searches"]["search_results"]:
             # Don't return _any_ results when this option is disabled
             return
@@ -217,9 +220,6 @@ class Search:
         if maxresults == 0:
             return
 
-        if not self.np.shares.initiated_shares:
-            return
-
         # Don't count excluded words as matches (words starting with -)
         # Strip punctuation
         searchterm = re.sub(r'(\s)-\w+', '', searchterm).lower().translate(self.translatepunctuation).strip()
@@ -234,15 +234,12 @@ class Search:
             return
 
         if checkuser == 2:
-            wordindex = self.share_dbs["buddywordindex"]
-
-            if self.np.shares.buddy_rescanning:
-                return
+            wordindex = self.share_dbs.get("buddywordindex")
         else:
-            wordindex = self.share_dbs["wordindex"]
+            wordindex = self.share_dbs.get("wordindex")
 
-            if self.np.shares.public_rescanning:
-                return
+        if not wordindex:
+            return
 
         # Find common file matches for each word in search term
         resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)
@@ -250,39 +247,40 @@ class Search:
         if not resultlist:
             return
 
-        if self.np.transfers is not None:
+        numresults = min(len(resultlist), maxresults)
+        queuesize = self.np.transfers.get_upload_queue_size()
+        slotsavail = self.np.transfers.allow_new_uploads()
 
-            numresults = min(len(resultlist), maxresults)
-            queuesize = self.np.transfers.get_upload_queue_size()
-            slotsavail = self.np.transfers.allow_new_uploads()
+        if checkuser == 2:
+            fileindex = self.share_dbs.get("buddyfileindex")
+        else:
+            fileindex = self.share_dbs.get("fileindex")
 
-            if checkuser == 2:
-                fileindex = self.share_dbs["buddyfileindex"]
-            else:
-                fileindex = self.share_dbs["fileindex"]
+        if not fileindex:
+            return
 
-            fifoqueue = self.config.sections["transfers"]["fifoqueue"]
+        fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 
-            message = slskmessages.FileSearchResult(
-                None,
-                self.config.sections["server"]["login"],
-                searchid, resultlist, fileindex, slotsavail,
-                self.np.speed, queuesize, fifoqueue, numresults
-            )
+        message = slskmessages.FileSearchResult(
+            None,
+            self.config.sections["server"]["login"],
+            searchid, resultlist, fileindex, slotsavail,
+            self.np.speed, queuesize, fifoqueue, numresults
+        )
 
-            self.np.send_message_to_peer(user, message)
+        self.np.send_message_to_peer(user, message)
 
-            if direct:
-                log.add_search(
-                    _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
-                        'user': user,
-                        'query': searchterm,
-                        'num': numresults
-                    })
-            else:
-                log.add_search(
-                    _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
-                        'user': user,
-                        'query': searchterm,
-                        'num': numresults
-                    })
+        if direct:
+            log.add_search(
+                _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
+                    'user': user,
+                    'query': searchterm,
+                    'num': numresults
+                })
+        else:
+            log.add_search(
+                _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
+                    'user': user,
+                    'query': searchterm,
+                    'num': numresults
+                })

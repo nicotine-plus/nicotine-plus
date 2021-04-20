@@ -1121,9 +1121,7 @@ class NetworkEventProcessor:
             children for now. """
             self.queue.append(slskmessages.AcceptChildren(0))
 
-            if self.shares.initiated_shares and \
-                    not self.shares.public_rescanning and not self.shares.buddy_rescanning:
-                self.shares.send_num_shared_folders_files()
+            self.shares.send_num_shared_folders_files()
 
             """ Request a complete room list. A limited room list not including blacklisted rooms and
             rooms with few users is automatically sent when logging in, but subsequent room list
@@ -1639,16 +1637,17 @@ class NetworkEventProcessor:
 
         ip, port = msg.conn.addr
         checkuser, reason = self.network_filter.check_user(user, ip)
+        m = None
 
-        if checkuser == 1 and self.shares.initiated_shares:
+        if checkuser == 1:
             # Send Normal Shares
             m = self.shares.get_compressed_shares_message("normal")
 
-        elif checkuser == 2 and self.shares.initiated_shares:
+        elif checkuser == 2:
             # Send Buddy Shares
             m = self.shares.get_compressed_shares_message("buddy")
 
-        else:
+        if not m:
             # Nyah, Nyah
             m = slskmessages.SharedFileList(conn, {})
 
@@ -1861,14 +1860,14 @@ class NetworkEventProcessor:
             self.queue.append(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
             return
 
-        if not self.shares.initiated_shares:
-            return
+        normalshares = self.shares.share_dbs.get("streams")
+        buddyshares = self.shares.share_dbs.get("buddystreams")
 
-        if checkuser == 1 and not self.shares.public_rescanning:
-            shares = self.shares.share_dbs["streams"]
+        if checkuser == 1 and normalshares:
+            shares = normalshares
 
-        elif checkuser == 2 and not self.shares.buddy_rescanning:
-            shares = self.shares.share_dbs["buddystreams"]
+        elif checkuser == 2 and buddyshares:
+            shares = buddyshares
 
         else:
             shares = {}

@@ -589,12 +589,6 @@ class Shares:
 
     def init_shares(self):
 
-        self.load_shares(self.share_dbs, self.public_share_dbs)
-        self.load_shares(self.share_dbs, self.buddy_share_dbs)
-
-        self.create_compressed_shares_message("normal")
-        self.create_compressed_shares_message("buddy")
-
         rescan_startup = self.config.sections["transfers"]["rescanonstartup"]
 
         # Rescan public shares if necessary
@@ -602,6 +596,8 @@ class Shares:
             if rescan_startup and not self.public_rescanning:
                 self.rescan_public_shares()
             else:
+                self.load_shares(self.share_dbs, self.public_share_dbs)
+                self.create_compressed_shares_message("normal")
                 self.compress_shares("normal")
 
         # Rescan buddy shares if necessary
@@ -609,6 +605,8 @@ class Shares:
             if rescan_startup and not self.buddy_rescanning:
                 self.rescan_buddy_shares()
             else:
+                self.load_shares(self.share_dbs, self.buddy_share_dbs)
+                self.create_compressed_shares_message("buddy")
                 self.compress_shares("buddy")
 
         self.initiated_shares = True
@@ -655,6 +653,41 @@ class Shares:
             if not reset_shares:
                 cls.load_shares(shares, dbs, reset_shares=True)
 
+    def file_is_shared(self, user, virtualfilename, realfilename):
+
+        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
+
+        if not os.access(realfilename, os.R_OK):
+            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
+            return False
+
+        folder, sep, file = virtualfilename.rpartition('\\')
+        shared = self.share_dbs.get("files")
+        bshared = self.share_dbs.get("buddyfiles")
+
+        if self.config.sections["transfers"]["enablebuddyshares"] and bshared:
+            if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+                for i in bshared.get(str(folder), ''):
+                    if file == i[0]:
+                        return True
+
+        if shared:
+            for i in shared.get(str(folder), ''):
+                if file == i[0]:
+                    return True
+
+        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
+        return False
+
     def add_file_to_shared(self, name):
         """ Add a file to the normal shares database """
 
@@ -673,10 +706,7 @@ class Shares:
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        if not shared.get(vdir):
-            shared[vdir] = []
-
-        if file not in (i[0] for i in shared[vdir]):
+        if shared.get(vdir) and file not in (i[0] for i in shared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             shared[vdir] += [fileinfo]
@@ -717,10 +747,7 @@ class Shares:
         vdir = self.real2virtual(rdir)
         file = str(os.path.basename(name))
 
-        if not bshared.get(vdir):
-            bshared[vdir] = []
-
-        if file not in (i[0] for i in bshared[vdir]):
+        if bshared.get(vdir) and file not in (i[0] for i in bshared[vdir]):
             from pynicotine.metadata.tinytag import TinyTag
             fileinfo = Scanner.get_file_info(file, name, TinyTag())
             bshared[vdir] += [fileinfo]
@@ -745,16 +772,22 @@ class Shares:
     def create_compressed_shares_message(self, sharestype):
         """ Create a message that will later contain a compressed list of our shares """
 
-        if sharestype == "normal":
+        self.compressed_shares_normal = None
+        self.compressed_shares_buddy = None
+
+        streams = self.share_dbs.get("streams")
+        buddystreams = self.share_dbs.get("buddystreams")
+
+        if sharestype == "normal" and streams:
             self.compressed_shares_normal = slskmessages.SharedFileList(
                 None,
-                self.share_dbs["streams"]
+                streams
             )
 
-        elif sharestype == "buddy":
+        elif sharestype == "buddy" and buddystreams:
             self.compressed_shares_buddy = slskmessages.SharedFileList(
                 None,
-                self.share_dbs["buddystreams"]
+                buddystreams
             )
 
     def get_compressed_shares_message(self, sharestype):
@@ -789,9 +822,6 @@ class Shares:
 
     def close_shares(self, sharestype):
 
-        if not self.initiated_shares:
-            return
-
         if sharestype == "normal":
             dbs = [
                 "files", "streams", "wordindex",
@@ -804,10 +834,11 @@ class Shares:
             ]
 
         for db in dbs:
-            try:
+            db_file = self.share_dbs.get(db)
+
+            if db_file:
                 self.share_dbs[db].close()
-            except AttributeError:
-                continue
+                del self.share_dbs[db]
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
@@ -818,17 +849,20 @@ class Shares:
             self.queue.append(slskmessages.SharedFoldersFiles(files, folders))
             return
 
-        shared_db = "files"
-        index_db = "fileindex"
-
         try:
+            shared = self.share_dbs.get("files")
+            index = self.share_dbs.get("fileindex")
+
+            if not shared or not index:
+                return
+
             try:
-                sharedfolders = len(self.share_dbs[shared_db])
-                sharedfiles = len(self.share_dbs[index_db])
+                sharedfolders = len(shared)
+                sharedfiles = len(index)
 
             except TypeError:
-                sharedfolders = len(list(self.share_dbs[shared_db]))
-                sharedfiles = len(list(self.share_dbs[index_db]))
+                sharedfolders = len(list(shared))
+                sharedfiles = len(list(index))
 
             self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 

@@ -305,46 +305,6 @@ class Transfers:
 
     """ File Actions """
 
-    def file_is_shared(self, user, virtualfilename, realfilename):
-
-        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
-        })
-
-        if not os.access(realfilename, os.R_OK):
-            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
-                "virtual_name": virtualfilename,
-                "path": realfilename
-            })
-            return False
-
-        folder, sep, file = virtualfilename.rpartition('\\')
-
-        if self.eventprocessor.shares.initiated_shares:
-
-            if self.config.sections["transfers"]["enablebuddyshares"] and \
-                    not self.eventprocessor.shares.buddy_rescanning:
-                if user in (i[0] for i in self.config.sections["server"]["userlist"]):
-                    bshared = self.eventprocessor.shares.share_dbs["buddyfiles"]
-
-                    for i in bshared.get(str(folder), ''):
-                        if file == i[0]:
-                            return True
-
-            if not self.eventprocessor.shares.public_rescanning:
-                shared = self.eventprocessor.shares.share_dbs["files"]
-
-                for i in shared.get(str(folder), ''):
-                    if file == i[0]:
-                        return True
-
-        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
-        })
-        return False
-
     def get_file_size(self, filename):
 
         try:
@@ -642,7 +602,7 @@ class Transfers:
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
-            elif self.file_is_shared(user, filename_utf8, realpath):
+            elif self.eventprocessor.shares.file_is_shared(user, filename_utf8, realpath):
                 newupload = Transfer(
                     user=user, filename=msg.file, realfilename=realpath,
                     path=os.path.dirname(realpath), status="Queued",
@@ -794,7 +754,7 @@ class Transfers:
         # Do we actually share that file with the world?
         realpath = self.eventprocessor.shares.virtual2real(msg.file)
 
-        if not self.file_is_shared(user, msg.file, realpath):
+        if not self.eventprocessor.shares.file_is_shared(user, msg.file, realpath):
             return slskmessages.TransferResponse(None, 0, reason="File not shared", req=msg.req)
 
         # Is that file already in the queue?
