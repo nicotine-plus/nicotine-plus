@@ -1039,8 +1039,8 @@ class Search:
 
     def select_results(self):
 
-        self.selected_results = set()
-        self.selected_users = set()
+        self.selected_results = []
+        self.selected_users = []
         self.selected_files_count = 0
 
         model, paths = self.ResultsList.get_selection().get_selected_rows()
@@ -1052,7 +1052,8 @@ class Search:
             if user is None:
                 continue
 
-            self.selected_users.add(user)
+            if user not in self.selected_users:
+                self.selected_users.append(user)
 
             filepath = model.get_value(iterator, 12)
 
@@ -1064,7 +1065,7 @@ class Search:
             length = model.get_value(iterator, 10)
             size = model.get_value(iterator, 14)
 
-            self.selected_results.add((user, filepath, size, bitrate, length))
+            self.selected_results.append((user, filepath, size, bitrate, length))
 
             filename = model.get_value(iterator, 7)
 
@@ -1293,15 +1294,15 @@ class Search:
         )
 
     def on_copy_file_path(self, *args):
-        user, path = next(iter(self.selected_results))[:2]
+        user, path = self.selected_results[0][:2]
         self.frame.clipboard.set_text(path, -1)
 
     def on_copy_url(self, *args):
-        user, path = next(iter(self.selected_results))[:2]
+        user, path = self.selected_results[0][:2]
         copy_file_url(user, path, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
-        user, path = next(iter(self.selected_results))[:2]
+        user, path = self.selected_results[0][:2]
         copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
     def on_group(self, widget):
