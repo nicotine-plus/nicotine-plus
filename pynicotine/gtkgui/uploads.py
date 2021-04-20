@@ -57,27 +57,20 @@ class Uploads(TransferList):
 
     def on_open_directory(self, *args):
 
-        downloaddir = config.sections["transfers"]["downloaddir"]
-        incompletedir = config.sections["transfers"]["incompletedir"]
-
-        if incompletedir == "":
-            incompletedir = downloaddir
-
         transfer = next(iter(self.selected_transfers))
 
-        if os.path.exists(transfer.path):
-            final_path = transfer.path
-        else:
-            final_path = incompletedir
+        if not os.path.exists(transfer.path):
+            return
 
         # Finally, try to open the directory we got...
         command = config.sections["ui"]["filemanager"]
-        open_file_path(final_path, command)
+        open_file_path(transfer.path, command)
 
     def on_play_files(self, *args):
 
         for transfer in self.selected_transfers:
-            playfile = transfer.realfilename
+            basename = str.split(transfer.filename, '\\')[-1]
+            playfile = os.path.join(transfer.path, basename)
 
             if os.path.exists(playfile):
                 command = config.sections["players"]["default"]

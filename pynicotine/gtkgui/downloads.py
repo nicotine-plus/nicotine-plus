@@ -131,22 +131,15 @@ class Downloads(TransferList):
     def on_open_directory(self, *args):
 
         downloaddir = config.sections["transfers"]["downloaddir"]
-        incompletedir = config.sections["transfers"]["incompletedir"]
-
-        if incompletedir == "":
-            incompletedir = downloaddir
+        incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
 
         transfer = next(iter(self.selected_transfers))
 
-        complete_path = os.path.join(downloaddir, transfer.path)
-
-        if transfer.path == "":
-            if transfer.status == "Finished":
-                final_path = downloaddir
+        if transfer.status == "Finished":
+            if os.path.exists(transfer.path):
+                final_path = transfer.path
             else:
-                final_path = incompletedir
-        elif os.path.exists(complete_path):  # and tranfer.status is "Finished"
-            final_path = complete_path
+                final_path = downloaddir
         else:
             final_path = incompletedir
 
@@ -168,7 +161,12 @@ class Downloads(TransferList):
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed
                 # try looking in the download directory and match the original filename.
                 basename = str.split(transfer.filename, '\\')[-1]
-                path = os.sep.join([downloaddir, basename])
+
+                if transfer.path:
+                    # Custom download path specified
+                    path = os.sep.join([transfer.path, basename])
+                else:
+                    path = os.sep.join([downloaddir, basename])
 
                 if os.path.exists(path):
                     playfile = path
