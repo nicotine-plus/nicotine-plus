@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from html import escape
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -206,6 +204,7 @@ class ImageLabel(Gtk.Box):
         if not color:
             self.label.set_text("%s" % self.text)
         else:
+            from html import escape
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
 
     def set_hilite_image(self, pixbuf):

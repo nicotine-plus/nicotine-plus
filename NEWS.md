@@ -43,6 +43,7 @@ Issues closed on GitHub
  * Filtering on file type causes crash ([#1337](https://github.com/Nicotine-Plus/nicotine-plus/issues/1337))
  * Pausing a download ([#1339](https://github.com/Nicotine-Plus/nicotine-plus/issues/1339))
  * copy search team Bug ([#1348](https://github.com/Nicotine-Plus/nicotine-plus/issues/1348))
+ * Can't save files.db: [Errno 13] ([#1352](https://github.com/Nicotine-Plus/nicotine-plus/issues/1352))
 
 Version 3.0.4 (April 7, 2021)
 -----------------------------

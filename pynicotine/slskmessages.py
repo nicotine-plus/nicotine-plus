@@ -22,7 +22,6 @@ import socket
 import struct
 import zlib
 
-from hashlib import md5
 from itertools import count
 from itertools import islice
 
@@ -340,6 +339,8 @@ class Login(ServerMessage):
         self.ip = None
 
     def make_network_message(self):
+        from hashlib import md5
+
         msg = bytearray()
         msg.extend(self.pack_object(self.username))
         msg.extend(self.pack_object(self.passwd))
@@ -2063,16 +2064,15 @@ class SharedFileList(PeerMessage):
 
         msg = bytearray()
 
-        try:
-            try:
-                msg.extend(self.pack_object(len(self.list)))
-
-            except TypeError:
-                msg.extend(self.pack_object(len(list(self.list))))
-
-        except ValueError:
+        if self.list is None:
             # DB is closed
             return None
+
+        try:
+            msg.extend(self.pack_object(len(self.list)))
+
+        except TypeError:
+            msg.extend(self.pack_object(len(list(self.list))))
 
         for key in self.list:
             try:

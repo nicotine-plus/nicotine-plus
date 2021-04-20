@@ -20,8 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import random
 import string
-import uuid
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -60,7 +60,7 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.editing = False
 
-        self.popup_id = str(uuid.uuid1())
+        self.popup_id = ''.join(random.choices(string.digits, k=8))
 
         self.user = None
         self.useritem = None
