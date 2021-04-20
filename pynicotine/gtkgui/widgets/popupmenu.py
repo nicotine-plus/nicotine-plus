@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import string
-import uuid
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -41,6 +40,7 @@ class PopupMenu(Gio.Menu):
 
         Gio.Menu.__init__(self)
 
+        import uuid
         self.frame = frame
 
         if not window:
