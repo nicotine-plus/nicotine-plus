@@ -2105,7 +2105,7 @@ class Transfers:
         else:
             banmsg = _("Banned")
 
-        for upload in self.uploads[:]:
+        for upload in self.uploads.copy():
             if upload.user != user:
                 continue
 
