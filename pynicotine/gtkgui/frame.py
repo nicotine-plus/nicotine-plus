@@ -1494,6 +1494,15 @@ class NicotineFrame:
 
     def on_switch_page(self, notebook, page, page_num):
 
+        # Hide widgets on previous page for a performance boost
+        current_page = notebook.get_nth_page(notebook.get_current_page())
+
+        for child in current_page.get_children():
+            child.hide()
+
+        for child in page.get_children():
+            child.show()
+
         GLib.idle_add(notebook.grab_focus)
 
         tab_label = notebook.get_tab_label(page)

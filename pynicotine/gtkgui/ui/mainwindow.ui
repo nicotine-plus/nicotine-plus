@@ -936,29 +936,35 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="SearchToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="SearchToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="SearchToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="SearchToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkNotebook" id="SearchNotebookRaw">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="scrollable">1</property>
+                            <child>
+                              <object class="GtkNotebook" id="SearchNotebookRaw">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="scrollable">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -974,22 +980,28 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="DownloadsToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="DownloadsToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="DownloadsToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="DownloadsToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
                           </object>
                         </child>
                       </object>
@@ -1005,22 +1017,28 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="UploadsToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UploadsToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="UploadsToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="UploadsToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
                           </object>
                         </child>
                       </object>
@@ -1036,29 +1054,35 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="UserBrowseToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserBrowseToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="UserBrowseToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="UserBrowseToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkNotebook" id="UserBrowseNotebookRaw">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="scrollable">1</property>
+                            <child>
+                              <object class="GtkNotebook" id="UserBrowseNotebookRaw">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="scrollable">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1074,29 +1098,35 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="UserInfoToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserInfoToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="UserInfoToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="UserInfoToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkNotebook" id="UserInfoNotebookRaw">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="scrollable">1</property>
+                            <child>
+                              <object class="GtkNotebook" id="UserInfoNotebookRaw">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="scrollable">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1112,29 +1142,35 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="PrivateChatToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="PrivateChatToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="PrivateChatToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="PrivateChatToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkNotebook" id="PrivatechatNotebookRaw">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="scrollable">1</property>
+                            <child>
+                              <object class="GtkNotebook" id="PrivatechatNotebookRaw">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="scrollable">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1150,22 +1186,28 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="UserListToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserListToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="UserListToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="UserListToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
                           </object>
                         </child>
                       </object>
@@ -1181,38 +1223,44 @@
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="ChatroomsToolbar">
+                          <object class="GtkBox">
                             <property name="visible">0</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="ChatroomsToolbarContents">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-end">6</property>
-                                <property name="margin-top">6</property>
-                                <property name="margin-bottom">6</property>
-                                <property name="spacing">6</property>
+                              <object class="GtkBox" id="ChatroomsToolbar">
+                                <property name="visible">0</property>
+                                <child>
+                                  <object class="GtkBox" id="ChatroomsToolbarContents">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="margin-start">6</property>
+                                    <property name="margin-end">6</property>
+                                    <property name="margin-top">6</property>
+                                    <property name="margin-bottom">6</property>
+                                    <property name="spacing">6</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="toolbar"/>
+                                </style>
                               </object>
                             </child>
-                            <style>
-                              <class name="toolbar"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkPaned" id="ChatroomsPane">
-                            <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <child>
-                              <object class="GtkNotebook" id="ChatNotebookRaw">
+                              <object class="GtkPaned" id="ChatroomsPane">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
-                                <property name="show-border">0</property>
-                                <property name="scrollable">1</property>
+                                <child>
+                                  <object class="GtkNotebook" id="ChatNotebookRaw">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <property name="show-border">0</property>
+                                    <property name="scrollable">1</property>
+                                  </object>
+                                  <packing>
+                                    <property name="resize">1</property>
+                                  </packing>
+                                </child>
                               </object>
-                              <packing>
-                                <property name="resize">1</property>
-                              </packing>
                             </child>
                           </object>
                         </child>
