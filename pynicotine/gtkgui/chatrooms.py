@@ -240,8 +240,7 @@ class ChatRooms(IconNotebook):
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
         if config.sections["words"]["roomnames"]:
-            self.update_completions()
-            self.frame.privatechats.update_completions()
+            self.frame.update_completions()
 
     def create_private_room(self, room, owner=None, operators=[]):
 

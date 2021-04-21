@@ -257,15 +257,13 @@ class ChatEntry:
             append_line(self.textview, add_alias(args), None, "")
 
             if config.sections["words"]["aliases"]:
-                self.frame.chatrooms.update_completions()
-                self.frame.privatechats.update_completions()
+                self.frame.update_completions()
 
         elif cmd in ("/unalias", "/un"):
             append_line(self.textview, unalias(args), None, "")
 
             if config.sections["words"]["aliases"]:
-                self.frame.chatrooms.update_completions()
-                self.frame.privatechats.update_completions()
+                self.frame.update_completions()
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
@@ -399,6 +397,9 @@ class ChatEntry:
         elif cmd == "/toggle":
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
+
+                if config.sections["words"]["commands"]:
+                    self.frame.update_completions()
 
         elif cmd[:1] == "/" and self.is_chatroom and self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args):
             pass

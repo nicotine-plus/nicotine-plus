@@ -342,6 +342,7 @@ class NicotineFrame:
             self.on_connect()
 
         self.update_bandwidth()
+        self.update_completions()
 
     """ Window State """
 
@@ -2026,6 +2027,10 @@ class NicotineFrame:
         self.np.queue.append(slskmessages.JoinRoom(room, private))
         widget.set_text("")
 
+    def update_completions(self):
+        self.chatrooms.update_completions()
+        self.privatechats.update_completions()
+
     """ Away Timer """
 
     def remove_away_timer(self, timerid):
@@ -2373,8 +2378,7 @@ class NicotineFrame:
             self.tray_icon.load()
 
         if needcompletion:
-            self.chatrooms.update_completions()
-            self.privatechats.update_completions()
+            self.update_completions()
 
         gtk_settings = Gtk.Settings.get_default()
 
