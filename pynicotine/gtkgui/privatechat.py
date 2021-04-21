@@ -66,7 +66,7 @@ class PrivateChats(IconNotebook):
         "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
         "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
         "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-        "/unignore ", "/clear ", "/cl ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
+        "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
         "/info ", "/toggle ", "/ctcpversion "
     }
 
