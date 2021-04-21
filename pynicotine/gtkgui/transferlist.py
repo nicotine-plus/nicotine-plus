@@ -646,7 +646,7 @@ class TransferList:
 
     def clear_transfers(self, status):
 
-        for transfer in self.list[:]:
+        for transfer in self.list.copy():
             if transfer.status in status:
                 self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
                 self.remove_specific(transfer)
