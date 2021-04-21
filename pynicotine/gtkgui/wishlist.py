@@ -51,6 +51,7 @@ class WishList:
 
         self.store = Gtk.ListStore(str)
 
+        self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
             None,
             self.WishlistView,
@@ -63,7 +64,7 @@ class WishList:
 
         for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
-            self.wishes[wish] = self.store.append([wish])
+            self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
         renderers = cols["wishes"].get_cells()
         for render in renderers:
@@ -78,7 +79,7 @@ class WishList:
         iterator = store.get_iter(index)
         old_value = store.get_value(iterator, 0)
 
-        if value != "" and not value.isspace():
+        if value and not value.isspace():
             self.remove_wish(old_value)
             self.add_wish(value)
 
@@ -126,7 +127,7 @@ class WishList:
             return None
 
         if wish not in self.wishes:
-            self.wishes[wish] = self.store.append([wish])
+            self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
         self.searches.searches[search_id] = {
             "id": search_id,

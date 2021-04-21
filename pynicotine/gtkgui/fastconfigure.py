@@ -50,6 +50,7 @@ class FastConfigureAssistant(object):
             str
         )
 
+        self.column_numbers = list(range(self.sharelist.get_n_columns()))
         initialise_columns(
             None,
             self.shareddirectoriestree,
@@ -77,8 +78,11 @@ class FastConfigureAssistant(object):
 
         self.sharelist.clear()
 
-        for directory in config.sections["transfers"]["shared"]:
-            self.add_shared_folder(directory)
+        for entry in config.sections["transfers"]["shared"]:
+            virtual_name, path = entry
+
+            if isinstance(virtual_name, str) and isinstance(path, str):
+                self.add_shared_folder(virtual_name, path)
 
         self.FastConfigureDialog.present_with_time(Gdk.CURRENT_TIME)
 
@@ -139,21 +143,18 @@ class FastConfigureAssistant(object):
 
         return dirs
 
-    def add_shared_folder(self, directory):
+    def add_shared_folder(self, virtual_name, path):
 
         iterator = self.sharelist.get_iter_first()
 
         while iterator is not None:
 
-            if directory[1] == self.sharelist.get_value(iterator, 1):
+            if path == self.sharelist.get_value(iterator, 1):
                 return
 
             iterator = self.sharelist.iter_next(iterator)
 
-        self.sharelist.append([
-            directory[0],
-            directory[1]
-        ])
+        self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual_name, path])
 
     def on_prepare(self, *args):
         self.reset_completeness()
@@ -216,7 +217,7 @@ class FastConfigureAssistant(object):
             iterator = model.iter_next(iterator)
 
         # The share is unique: we can add it
-        self.add_shared_folder((virtual, directory))
+        self.add_shared_folder(virtual, directory)
 
     def on_add_share_selected(self, selected, data):
 

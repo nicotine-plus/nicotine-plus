@@ -52,6 +52,7 @@ class Interests:
         self.likes_model = Gtk.ListStore(str)
         self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
+        self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
             None,
             self.LikesList,
@@ -65,6 +66,7 @@ class Interests:
         self.dislikes_model = Gtk.ListStore(str)
         self.dislikes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
+        self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
             None,
             self.DislikesList,
@@ -74,6 +76,13 @@ class Interests:
         cols["i_dislike"].set_sort_column_id(0)
         self.DislikesList.set_model(self.dislikes_model)
 
+        self.recommendations_model = Gtk.ListStore(
+            str,  # (0) hrating
+            str,  # (1) item
+            int   # (2) rating
+        )
+
+        self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
         cols = initialise_columns(
             None,
             self.RecommendationsList,
@@ -84,13 +93,15 @@ class Interests:
         cols["rating"].set_sort_column_id(2)
         cols["item"].set_sort_column_id(1)
 
-        self.recommendations_model = Gtk.ListStore(
+        self.RecommendationsList.set_model(self.recommendations_model)
+
+        self.unrecommendations_model = Gtk.ListStore(
             str,  # (0) hrating
             str,  # (1) item
             int   # (2) rating
         )
-        self.RecommendationsList.set_model(self.recommendations_model)
 
+        self.unrecommendations_column_numbers = list(range(self.unrecommendations_model.get_n_columns()))
         cols = initialise_columns(
             None,
             self.UnrecommendationsList,
@@ -101,13 +112,20 @@ class Interests:
         cols["rating"].set_sort_column_id(2)
         cols["item"].set_sort_column_id(1)
 
-        self.unrecommendations_model = Gtk.ListStore(
-            str,  # (0) hrating
-            str,  # (1) item
-            int   # (2) rating
-        )
         self.UnrecommendationsList.set_model(self.unrecommendations_model)
 
+        self.recommendation_users = {}
+        self.recommendation_users_model = Gtk.ListStore(
+            GObject.TYPE_OBJECT,  # (0) status icon
+            str,                  # (1) user
+            str,                  # (2) hspeed
+            str,                  # (3) hfiles
+            int,                  # (4) status
+            GObject.TYPE_UINT64,  # (5) speed
+            GObject.TYPE_UINT64   # (6) file count
+        )
+
+        self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
             None,
             self.RecommendationUsersList,
@@ -124,26 +142,16 @@ class Interests:
 
         cols["status"].get_widget().hide()
 
-        self.recommendation_users = {}
-        self.recommendation_users_model = Gtk.ListStore(
-            GObject.TYPE_OBJECT,  # (0) status icon
-            str,                  # (1) user
-            str,                  # (2) hspeed
-            str,                  # (3) hfiles
-            int,                  # (4) status
-            GObject.TYPE_UINT64,  # (5) speed
-            GObject.TYPE_UINT64   # (6) file count
-        )
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
-                self.likes[thing] = self.likes_model.append([thing])
+                self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
         for thing in config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
-                self.dislikes[thing] = self.dislikes_model.append([thing])
+                self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
         """ Popup """
 
@@ -188,7 +196,7 @@ class Interests:
         if thing and thing.lower() not in config.sections["interests"]["likes"]:
             thing = thing.lower()
             config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likes_model.append([thing])
+            self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
             config.write_configuration()
             self.np.queue.append(slskmessages.AddThingILike(thing))
 
@@ -200,7 +208,7 @@ class Interests:
         if thing and thing.lower() not in config.sections["interests"]["dislikes"]:
             thing = thing.lower()
             config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikes_model.append([thing])
+            self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
             config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
 
@@ -238,14 +246,15 @@ class Interests:
     def on_tidl_recommend_search(self, *args):
         self.recommend_search(self.tidl_popup_menu.get_user())
 
-    def on_like_recommendation(self, action, state):
+    def on_like_recommendation(self, action, state, thing=None):
 
-        thing = self.r_popup_menu.get_user()
+        if thing is None:
+            thing = self.r_popup_menu.get_user()
 
         if state.get_boolean() and \
                 thing and thing not in config.sections["interests"]["likes"]:
             config.sections["interests"]["likes"].append(thing)
-            self.likes[thing] = self.likes_model.append([thing])
+            self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
             config.write_configuration()
             self.np.queue.append(slskmessages.AddThingILike(thing))
@@ -261,14 +270,15 @@ class Interests:
 
         action.set_state(state)
 
-    def on_dislike_recommendation(self, action, state):
+    def on_dislike_recommendation(self, action, state, thing=None):
 
-        thing = self.r_popup_menu.get_user()
+        if thing is None:
+            thing = self.r_popup_menu.get_user()
 
         if state.get_boolean() and \
                 thing and thing not in config.sections["interests"]["dislikes"]:
             config.sections["interests"]["dislikes"].append(thing)
-            self.dislikes[thing] = self.dislikes_model.append([thing])
+            self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
             config.write_configuration()
             self.np.queue.append(slskmessages.AddThingIHate(thing))
@@ -312,7 +322,9 @@ class Interests:
         self.recommendations_model.clear()
 
         for (thing, rating) in recom.items():
-            self.recommendations_model.append([humanize(rating), thing, rating])
+            self.recommendations_model.insert_with_valuesv(
+                -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
+            )
 
         self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
@@ -320,7 +332,9 @@ class Interests:
         self.unrecommendations_model.clear()
 
         for (thing, rating) in recom.items():
-            self.unrecommendations_model.append([humanize(rating), thing, rating])
+            self.unrecommendations_model.insert_with_valuesv(
+                -1, self.unrecommendations_column_numbers, [humanize(rating), thing, rating]
+            )
 
         self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -341,7 +355,9 @@ class Interests:
         self.recommendation_users = {}
 
         for user in msg.users:
-            iterator = self.recommendation_users_model.append([self.frame.images["offline"], user, "0", "0", 0, 0, 0])
+            iterator = self.recommendation_users_model.insert_with_valuesv(
+                -1, self.recommendation_users_column_numbers, [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, "0", "0", 0, 0, 0]
+            )
             self.recommendation_users[user] = iterator
 
             # Request user status, speed and number of shared files

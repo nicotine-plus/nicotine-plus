@@ -210,6 +210,7 @@ class UserInfo:
         self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
 
+        self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
             None,
             self.Hates,
@@ -222,6 +223,7 @@ class UserInfo:
         self.likes_store = Gtk.ListStore(str)
         self.Likes.set_model(self.likes_store)
 
+        self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
             None,
             self.Likes,
@@ -245,10 +247,10 @@ class UserInfo:
 
         self.interest_popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("$" + _("I _Like This"), self.frame.interests.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.frame.interests.on_dislike_recommendation),
+            ("$" + _("I _Like This"), self.on_like_recommendation),
+            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search For Item"), self.frame.interests.on_r_recommend_search)
+            ("#" + _("_Search For Item"), self.on_interest_recommend_search)
         )
 
         self.image_menu = popup = PopupMenu(self.frame)
@@ -259,42 +261,6 @@ class UserInfo:
             ("", None),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
-
-    def get_selected_interest_item(self, treeview):
-
-        model, iterator = treeview.get_selection().get_selected()
-
-        if iterator is None:
-            return None
-
-        return model.get_value(iterator, 0)
-
-    def on_popup_interest_menu(self, widget):
-
-        item = self.get_selected_interest_item(widget)
-        if item is None:
-            return False
-
-        self.interest_popup_menu.set_user(item)
-
-        actions = self.interest_popup_menu.get_actions()
-        actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
-        )
-        actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
-        )
-
-        self.interest_popup_menu.popup()
-        return True
-
-    def on_interest_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_interest_menu(widget)
-
-        return False
 
     def update_visuals(self):
 
@@ -307,10 +273,10 @@ class UserInfo:
         self.hates_store.clear()
 
         for like in likes:
-            self.likes_store.append([like])
+            self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
 
         for hate in hates:
-            self.hates_store.append([hate])
+            self.hates_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
 
     def save_columns(self):
         # Unused
@@ -408,6 +374,48 @@ class UserInfo:
         self.progressbar.set_fraction(fraction)
 
     """ Events """
+
+    def on_popup_interest_menu(self, widget):
+
+        model, iterator = widget.get_selection().get_selected()
+
+        if iterator is None:
+            return False
+
+        item = model.get_value(iterator, 0)
+
+        if item is None:
+            return False
+
+        self.interest_popup_menu.set_user(item)
+
+        actions = self.interest_popup_menu.get_actions()
+        actions[_("I _Like This")].set_state(
+            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
+        )
+        actions[_("I _Dislike This")].set_state(
+            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
+        )
+
+        self.interest_popup_menu.popup()
+        return True
+
+    def on_like_recommendation(self, action, state):
+        self.frame.interests.on_like_recommendation(action, state, self.interest_popup_menu.get_user())
+
+    def on_dislike_recommendation(self, action, state):
+        self.frame.interests.on_dislike_recommendation(action, state, self.interest_popup_menu.get_user())
+
+    def on_interest_recommend_search(self, *args):
+        self.frame.interests.recommend_search(self.interest_popup_menu.get_user())
+
+    def on_interest_list_clicked(self, widget, event):
+
+        if triggers_context_menu(event):
+            set_treeview_selected_row(widget, event)
+            return self.on_popup_interest_menu(widget)
+
+        return False
 
     def on_send_message(self, *args):
         self.frame.privatechats.send_message(self.user, show_user=True)
