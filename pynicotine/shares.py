@@ -498,6 +498,10 @@ class Shares:
         self.share_dbs = {}
         self.public_rescanning = False
         self.buddy_rescanning = False
+        self.newbuddyshares = False
+        self.newnormalshares = False
+        self.compressed_shares_normal = slskmessages.SharedFileList(None, None)
+        self.compressed_shares_buddy = slskmessages.SharedFileList(None, None)
 
         self.convert_shares()
         self.public_share_dbs = [
@@ -523,8 +527,6 @@ class Shares:
             timer.start()
         else:
             self.init_shares()
-
-        self.newbuddyshares = self.newnormalshares = False
 
     def set_connected(self, connected):
         self.connected = connected

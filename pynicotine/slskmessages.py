@@ -2066,20 +2066,21 @@ class SharedFileList(PeerMessage):
 
         if self.list is None:
             # DB is closed
-            return None
+            msg.extend(self.pack_object(0))
 
-        try:
-            msg.extend(self.pack_object(len(self.list)))
-
-        except TypeError:
-            msg.extend(self.pack_object(len(list(self.list))))
-
-        for key in self.list:
+        else:
             try:
-                msg.extend(self.pack_object(key.replace('/', '\\')))
-                msg.extend(self.list[key])
-            except KeyError:
-                pass
+                msg.extend(self.pack_object(len(self.list)))
+
+            except TypeError:
+                msg.extend(self.pack_object(len(list(self.list))))
+
+            for key in self.list:
+                try:
+                    msg.extend(self.pack_object(key.replace('/', '\\')))
+                    msg.extend(self.list[key])
+                except KeyError:
+                    pass
 
         if not nozlib:
             self.built = zlib.compress(msg)
