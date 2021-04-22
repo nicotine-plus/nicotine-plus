@@ -159,6 +159,7 @@ class ChatEntry:
                 liststore.insert_with_valuesv(-1, self.column_numbers, [word])
 
             completion.set_popup_completion(True)
+            completion.set_inline_selection(True)
 
         self.completion_list = completion_list
 
