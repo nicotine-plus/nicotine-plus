@@ -1133,7 +1133,12 @@ class NetworkEventProcessor:
             self.set_status("")
         else:
             self.manualdisconnect = True
-            self.set_status(_("Can not log in, reason: %s"), (msg.reason))
+            self.queue.append(slskmessages.ConnClose(self.active_server_conn))
+
+            title = _("Connection Refused")
+            message = _("Can not log in, reason: %s") % msg.reason
+            self.ui_callback.show_info_message(title, message)
+            log.add(message)
 
     def add_user(self, msg):
         """ Server code: 5 """
