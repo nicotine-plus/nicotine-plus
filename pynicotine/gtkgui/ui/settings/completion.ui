@@ -157,6 +157,7 @@
             <property name="label" translatable="yes">Hide drop-down when only one matches</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
       </object>
