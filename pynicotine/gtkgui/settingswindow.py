@@ -2765,11 +2765,13 @@ class PluginsFrame(BuildFrame):
                     container.add(self.tw[name])
 
                 elif data["type"] in ("bool",):
-                    container = self.generate_widget_container(data["description"])
+                    container = Gtk.Box(False)
+                    self.get_content_area().add(container)
 
-                    self.tw[name] = Gtk.CheckButton()
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                    container.add(self.tw[name])
+                    self.tw[name] = checkbutton = Gtk.CheckButton()
+                    checkbutton.set_label(data["description"])
+                    self.settings.set_widget(checkbutton, config.sections["plugins"][plugin][name])
+                    container.add(checkbutton)
 
                 elif data["type"] in ("radio",):
                     container = self.generate_widget_container(data["description"])
