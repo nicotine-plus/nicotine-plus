@@ -167,7 +167,7 @@ class Config:
                 "roomusers": True,
                 "commands": True,
                 "aliases": True,
-                "onematch": True
+                "onematch": False
             },
 
             "logging": {

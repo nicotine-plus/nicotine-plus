@@ -142,6 +142,7 @@ class ChatEntry:
         completion = self.entry.get_completion()
         completion.set_popup_single_match(not config_words["onematch"])
         completion.set_minimum_key_length(config_words["characters"])
+        completion.set_inline_completion(False)
 
         liststore = completion.get_model()
         liststore.clear()
