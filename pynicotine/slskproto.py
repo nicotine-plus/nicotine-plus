@@ -1283,7 +1283,9 @@ class SlskProtoThread(threading.Thread):
                 try:
                     if connection_in_progress in input_list:
                         # Check if the socket has any data for us
+                        connection_in_progress.setblocking(0)
                         connection_in_progress.recv(1, socket.MSG_PEEK)
+                        connection_in_progress.setblocking(1)
 
                 except socket.error as err:
 
