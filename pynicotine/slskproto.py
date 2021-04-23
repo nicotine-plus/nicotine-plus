@@ -883,6 +883,11 @@ class SlskProtoThread(threading.Thread):
 
     def close_connection(self, connection_list, connection):
         try:
+            if connection is self._server_socket:
+                # Disconnected from server, clean up connections and queue
+                self.server_disconnect()
+                return
+
             connection.close()
             del connection_list[connection]
 
@@ -991,10 +996,6 @@ class SlskProtoThread(threading.Thread):
 
                     if msg_obj.callback:
                         self._ui_callback([ConnClose(conn, conns[conn].addr)])
-
-                    if conn == server_socket:
-                        # Disconnected from server, clean up connections and queue
-                        self.server_disconnect()
 
                     self.close_connection(conns, conn)
 
@@ -1265,8 +1266,12 @@ class SlskProtoThread(threading.Thread):
             curtime = time.time()
 
             for connection_in_progress in connsinprogress.copy():
+                conn_obj = connsinprogress.get(connection_in_progress)
 
-                conn_obj = connsinprogress[connection_in_progress]
+                if not conn_obj:
+                    # Connection was removed, possibly disconnecting from the server
+                    continue
+
                 msg_obj = conn_obj.msg_obj
 
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
@@ -1304,7 +1309,11 @@ class SlskProtoThread(threading.Thread):
             curtime = time.time()
 
             for connection in conns.copy():
-                conn_obj = conns[connection]
+                conn_obj = conns.get(connection)
+
+                if not conn_obj:
+                    # Connection was removed, possibly disconnecting from the server
+                    continue
 
                 if connection in output_list:
                     # Write Output
