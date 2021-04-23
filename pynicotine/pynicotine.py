@@ -1398,7 +1398,7 @@ class NetworkEventProcessor:
         """ This message embeds a distributed message. We unpack the distributed message and
         process it. """
 
-        log.add_msg_contents(msg)
+        # Verbose: log.add_msg_contents(msg)
 
         if msg.distrib_code in self.protothread.distribclasses:
             distrib_class = self.protothread.distribclasses[msg.distrib_code]
@@ -1994,7 +1994,7 @@ class NetworkEventProcessor:
     def distrib_search(self, msg):
         """ Distrib code: 3 """
 
-        log.add_msg_contents(msg)
+        # Verbose: log.add_msg_contents(msg)
 
         if self.search is not None:
             self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
