@@ -1182,7 +1182,7 @@ class BanListFrame(BuildFrame):
 
     def on_remove_banned(self, widget):
 
-        model, paths = self.BlockedList.get_selection().get_selected_rows()
+        model, paths = self.BannedList.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
@@ -2101,6 +2101,7 @@ class UrlCatchingFrame(BuildFrame):
 
         if iterator is None:
             self.ProtocolCombo.get_child().set_text("")
+            self.Handler.get_child().set_text("")
         else:
             protocol = model.get_value(iterator, 0)
             handler = model.get_value(iterator, 1)
