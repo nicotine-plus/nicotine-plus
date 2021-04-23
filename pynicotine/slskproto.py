@@ -1402,12 +1402,13 @@ class SlskProtoThread(threading.Thread):
         self._server_disconnect = True
 
         for i in self._conns.copy():
-            del self._conns[i]
             i.close()
 
         for i in self._connsinprogress.copy():
-            del self._connsinprogress[i]
             i.close()
+
+        self._conns.clear()
+        self._connsinprogress.clear()
 
         while self._queue:
             self._queue.popleft()
