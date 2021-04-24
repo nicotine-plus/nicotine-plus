@@ -330,7 +330,7 @@ class ChatEntry:
             if args:
                 self.frame.np.queue.append(slskmessages.LeaveRoom(args))
             else:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
+                self.frame.np.queue.append(slskmessages.LeaveRoom(self.entity))
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
