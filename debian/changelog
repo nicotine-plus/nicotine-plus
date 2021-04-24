@@ -1,8 +1,8 @@
-nicotine (3.0.5-dev1) groovy; urgency=medium
+nicotine (3.0.5-1) hirsute; urgency=medium
 
-  * Development version.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Sat, 10 Apr 2021 00:53:12 +0300
+ -- Mat <mail@mathias.is>  Sat, 24 Apr 2021 03:03:29 +0300
 
 nicotine (3.0.4-1) groovy; urgency=medium
 
