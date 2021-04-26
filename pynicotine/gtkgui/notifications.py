@@ -38,6 +38,13 @@ class Notifications:
         self.tts_playing = False
         self.continue_playing = False
 
+        if sys.platform == "win32":
+            """ Windows notification popup support via plyer
+            Once https://gitlab.gnome.org/GNOME/glib/-/issues/1234 is implemented, we can drop plyer """
+
+            from plyer import notification
+            self.win_notification = notification
+
     def add(self, location, user, room=None):
 
         if location == "rooms" and room is not None and user is not None:
@@ -166,16 +173,10 @@ class Notifications:
 
         try:
             if sys.platform == "win32":
-
-                """ Windows notification popup support via plyer
-                Once https://gitlab.gnome.org/GNOME/glib/-/issues/1234 is implemented, we can drop plyer """
-
-                from plyer import notification
-
-                notification.notify(
+                self.win_notification.notify(
                     app_name=GLib.get_application_name(),
                     title=title,
-                    message=message
+                    message=message[:256]
                 )
 
                 if config.sections["notifications"]["notification_popup_sound"]:
