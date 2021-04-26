@@ -1294,16 +1294,22 @@ class Search:
         )
 
     def on_copy_file_path(self, *args):
-        user, path = self.selected_results[0][:2]
-        self.frame.clipboard.set_text(path, -1)
+
+        if self.selected_results:
+            user, path = self.selected_results[0][:2]
+            self.frame.clipboard.set_text(path, -1)
 
     def on_copy_url(self, *args):
-        user, path = self.selected_results[0][:2]
-        copy_file_url(user, path, self.frame.clipboard)
+
+        if self.selected_results:
+            user, path = self.selected_results[0][:2]
+            copy_file_url(user, path, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
-        user, path = self.selected_results[0][:2]
-        copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
+
+        if self.selected_results:
+            user, path = self.selected_results[0][:2]
+            copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
     def on_group(self, widget):
 

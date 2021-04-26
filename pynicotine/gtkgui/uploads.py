@@ -57,9 +57,9 @@ class Uploads(TransferList):
 
     def on_open_directory(self, *args):
 
-        transfer = next(iter(self.selected_transfers))
+        transfer = next(iter(self.selected_transfers), None)
 
-        if not os.path.exists(transfer.path):
+        if not transfer or not os.path.exists(transfer.path):
             return
 
         # Finally, try to open the directory we got...

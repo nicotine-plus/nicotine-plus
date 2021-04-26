@@ -248,7 +248,10 @@ class TransferList:
 
     def on_file_search(self, *args):
 
-        transfer = next(iter(self.selected_transfers))
+        transfer = next(iter(self.selected_transfers), None)
+
+        if not transfer:
+            return
 
         self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
         self.frame.change_main_page("search")
@@ -881,16 +884,25 @@ class TransferList:
             FileProperties(self.frame, data).show()
 
     def on_copy_file_path(self, *args):
-        transfer = next(iter(self.selected_transfers))
-        self.frame.clipboard.set_text(transfer.filename, -1)
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if transfer:
+            self.frame.clipboard.set_text(transfer.filename, -1)
 
     def on_copy_url(self, *args):
-        transfer = next(iter(self.selected_transfers))
-        copy_file_url(transfer.user, transfer.filename, self.frame.clipboard)
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if transfer:
+            copy_file_url(transfer.user, transfer.filename, self.frame.clipboard)
 
     def on_copy_dir_url(self, *args):
-        transfer = next(iter(self.selected_transfers))
-        copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if transfer:
+            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
     def on_retry_transfer(self, *args):
         self.select_transfers()
