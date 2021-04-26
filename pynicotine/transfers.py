@@ -439,7 +439,8 @@ class Transfers:
                 elif i.status in ("Getting status", "User logged off", "Connection closed by peer", "Cannot connect"):
                     self.get_file(i.user, i.filename, i.path, i)
 
-        for i in self.uploads:
+        # We need a copy due to upload auto-clearing modifying the deque during iteration
+        for i in self.uploads.copy():
             if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "User logged off", "Cannot connect", "Cancelled"):
                 if msg.status <= 0:
                     i.status = "User logged off"
@@ -1355,7 +1356,8 @@ class Transfers:
             if i.conn == conn:
                 self._conn_close(conn, addr, i, "download")
 
-        for i in self.uploads:
+        # We need a copy due to upload auto-clearing modifying the deque during iteration
+        for i in self.uploads.copy():
             if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
                 continue
 
