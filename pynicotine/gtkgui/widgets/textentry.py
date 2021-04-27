@@ -56,15 +56,16 @@ class ChatEntry:
         entry.connect("key-press-event", self.on_key_press)
 
         # Spell Check
-        if self.frame.spell_checker is None:
-            self.frame.init_spell_checker()
+        if config.sections["ui"]["spellcheck"]:
+            if not self.frame.spell_checker:
+                self.frame.init_spell_checker()
 
-        if self.frame.spell_checker and config.sections["ui"]["spellcheck"]:
-            from gi.repository import Gspell
-            spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
-            spell_buffer.set_spell_checker(self.frame.spell_checker)
-            spell_view = Gspell.Entry.get_from_gtk_entry(entry)
-            spell_view.set_inline_spell_checking(True)
+            if self.frame.spell_checker:
+                from gi.repository import Gspell
+                spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
+                spell_buffer.set_spell_checker(self.frame.spell_checker)
+                spell_view = Gspell.Entry.get_from_gtk_entry(entry)
+                spell_view.set_inline_spell_checking(True)
 
         self.midwaycompletion = False  # True if the user just used tab completion
         self.completions = {}  # Holds temp. information about tab completoin

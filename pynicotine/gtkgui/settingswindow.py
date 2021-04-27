@@ -27,6 +27,7 @@ import re
 import sys
 import time
 
+import gi
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -2380,7 +2381,12 @@ class CompletionFrame(BuildFrame):
     def set_settings(self):
         self.needcompletion = 0
 
-        self.SpellCheck.set_sensitive(True if self.frame.spell_checker else False)
+        try:
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401
+
+        except ImportError:
+            self.SpellCheck.hide()
 
         self.p.set_widgets_data(self.options)
 
