@@ -174,7 +174,7 @@ class NetworkFilter:
 
         if cc == "-":
             if self.config.sections["transfers"]["geopanic"]:
-                return 0, "Sorry, geographical paranoia"
+                return 0, "Blocked country (Sorry, geographical paranoia)"
 
             return 1, ""
 
@@ -182,7 +182,10 @@ class NetworkFilter:
         of an array, separated by commas (no idea why...) """
 
         if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
-            return 0, "Sorry, your country is blocked"
+            if self.config.sections["transfers"]["usecustomgeoblock"]:
+                return 0, "Blocked country (%s)" % self.config.sections["transfers"]["customgeoblock"]
+            else:
+                return 0, "Blocked country"
 
         return 1, ""
 

@@ -107,6 +107,8 @@ class Config:
                 "usecustomban": False,
                 "limitby": True,
                 "customban": "Banned, don't bother retrying",
+                "usecustomgeoblock": False,
+                "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
                 "friendsonly": False,

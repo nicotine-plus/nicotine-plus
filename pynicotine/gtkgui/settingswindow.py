@@ -860,7 +860,9 @@ class GeoBlockFrame(BuildFrame):
             "transfers": {
                 "geoblock": self.GeoBlock,
                 "geopanic": self.GeoPanic,
-                "geoblockcc": self.GeoBlockCC
+                "geoblockcc": self.GeoBlockCC,
+                "usecustomgeoblock": self.UseCustomGeoBlock,
+                "customgeoblock": self.CustomGeoBlock
             }
         }
 
@@ -877,7 +879,9 @@ class GeoBlockFrame(BuildFrame):
             "transfers": {
                 "geoblock": self.GeoBlock.get_active(),
                 "geopanic": self.GeoPanic.get_active(),
-                "geoblockcc": [self.GeoBlockCC.get_text().upper()]
+                "geoblockcc": [self.GeoBlockCC.get_text().upper()],
+                "usecustomgeoblock": self.UseCustomGeoBlock.get_active(),
+                "customgeoblock": self.CustomGeoBlock.get_text()
             }
         }
 
@@ -885,6 +889,12 @@ class GeoBlockFrame(BuildFrame):
         sensitive = widget.get_active()
         self.GeoPanic.set_sensitive(sensitive)
         self.GeoBlockCC.set_sensitive(sensitive)
+
+        self.UseCustomGeoBlock.set_sensitive(sensitive)
+        self.CustomGeoBlock.set_sensitive(sensitive and self.UseCustomGeoBlock.get_active())
+
+    def on_use_custom_geo_block_toggled(self, widget):
+        self.CustomGeoBlock.set_sensitive(widget.get_active())
 
 
 class UserInfoFrame(BuildFrame):
@@ -1127,7 +1137,6 @@ class BanListFrame(BuildFrame):
 
     def set_settings(self):
         server = config.sections["server"]
-        transfers = config.sections["transfers"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
 
@@ -1138,12 +1147,6 @@ class BanListFrame(BuildFrame):
             self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
                 self.blocked_list_model.append([blocked, user])
-
-        if transfers["usecustomban"] is not None:
-            self.UseCustomBan.set_active(transfers["usecustomban"])
-
-        if transfers["customban"] is not None:
-            self.CustomBan.set_text(transfers["customban"])
 
         self.on_use_custom_ban_toggled(self.UseCustomBan)
 

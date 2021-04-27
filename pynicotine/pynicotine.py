@@ -127,6 +127,7 @@ class NetworkEventProcessor:
         self.ip_requested = set()
         self.users = {}
         self.out_indirect_conn_request_times = {}
+        self.automatic_message_times = {}
 
         script_dir = os.path.dirname(__file__)
         file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
@@ -962,6 +963,18 @@ class NetworkEventProcessor:
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
 
+    def send_automatic_message(self, user, message):
+        """ Sends a private message with the prefix 'Automatic Message' to a user.
+        No message is sent if less than five seconds have passed since the last one. """
+
+        send_time = time.time()
+
+        if user in self.automatic_message_times and (send_time - self.automatic_message_times[user]) < 5:
+            return
+
+        self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
+        self.automatic_message_times[user] = send_time
+
     def stop_timers(self):
         if self.servertimer is not None:
             self.servertimer.cancel()
@@ -1642,6 +1655,10 @@ class NetworkEventProcessor:
 
         ip, port = msg.conn.addr
         checkuser, reason = self.network_filter.check_user(user, ip)
+
+        if not checkuser:
+            self.send_automatic_message(user, reason)
+
         m = None
 
         if checkuser == 1:
@@ -1734,11 +1751,10 @@ class NetworkEventProcessor:
 
         request_time = time.time()
 
-        if user in self.requested_info:
-            if not request_time > 10 + self.requested_info[user]:
-                # Ignoring request, because it's 10 or less seconds since the
-                # last one by this user
-                return
+        if user in self.requested_info and not request_time > 10 + self.requested_info[user]:
+            # Ignoring request, because it's 10 or less seconds since the
+            # last one by this user
+            return
 
         self.requested_info[user] = request_time
 
@@ -1862,8 +1878,7 @@ class NetworkEventProcessor:
             return
 
         if not checkuser:
-            self.queue.append(slskmessages.MessageUser(username, "[Automatic Message] " + reason))
-            return
+            self.send_automatic_message(username, reason)
 
         normalshares = self.shares.share_dbs.get("streams")
         buddyshares = self.shares.share_dbs.get("buddystreams")
