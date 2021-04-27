@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib
-import multiprocessing
 import os
 import pickle
 import shelve
@@ -62,14 +61,13 @@ else:
     sys.exit()
 
 
-class Scanner(multiprocessing.Process):
+class Scanner:
     """ Separate process responsible for building shares. It handles scanning of
     folders and files, as well as building databases and writing them to disk. """
 
     def __init__(self, config, queue, shared_folders, sharestype="normal", rebuild=False):
 
         from pynicotine.metadata.tinytag import TinyTag
-        multiprocessing.Process.__init__(self)
 
         self.config = config
         self.queue = queue
@@ -874,6 +872,10 @@ class Shares:
 
     def build_scanner_process(self, shared_folders=None, sharestype="normal", rebuild=False):
 
+        import multiprocessing
+
+        multiprocessing.set_start_method("spawn", force=True)
+
         scanner_queue = multiprocessing.Queue()
         scanner = Scanner(
             self.config,
@@ -882,6 +884,7 @@ class Shares:
             sharestype,
             rebuild
         )
+        scanner = multiprocessing.Process(target=scanner.run)
         scanner.daemon = True
         return scanner, scanner_queue
 

@@ -27,7 +27,6 @@ Nicotine+ Launcher.
 """
 
 import importlib
-import multiprocessing
 import sys
 
 from pynicotine.config import config
@@ -129,9 +128,10 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
 
 def run():
 
-    # Support for file scanning process in frozen Windows and macOS binaries
-    multiprocessing.freeze_support()
-    multiprocessing.set_start_method("spawn")
+    if getattr(sys, 'frozen', False) :
+        # Support for file scanning process in frozen Windows and macOS binaries
+        import multiprocessing
+        multiprocessing.freeze_support()
 
     # Setting gettext and locale
     apply_translation()
