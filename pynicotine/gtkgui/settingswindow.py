@@ -2385,7 +2385,7 @@ class CompletionFrame(BuildFrame):
             gi.require_version('Gspell', '1')
             from gi.repository import Gspell  # noqa: F401
 
-        except ImportError:
+        except (ImportError, ValueError):
             self.SpellCheck.hide()
 
         self.p.set_widgets_data(self.options)

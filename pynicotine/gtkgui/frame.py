@@ -404,6 +404,7 @@ class NicotineFrame:
             gi.require_version('Gspell', '1')
             from gi.repository import Gspell
             self.spell_checker = Gspell.Checker.new()
+
         except (ImportError, ValueError):
             self.spell_checker = False
 
