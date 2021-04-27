@@ -56,9 +56,6 @@ from pynicotine.utils import get_path
 from pynicotine.utils import version
 
 
-CTCP_VERSION = "\x01VERSION\x01"
-
-
 class PrivateChats(IconNotebook):
 
     # List of allowed commands. The implementation for them is in the ChatEntry class.
@@ -69,6 +66,8 @@ class PrivateChats(IconNotebook):
         "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
         "/info ", "/toggle ", "/ctcpversion "
     }
+
+    CTCP_VERSION = "\x01VERSION\x01"
 
     def __init__(self, frame):
 
@@ -241,7 +240,7 @@ class PrivateChats(IconNotebook):
 
         # SEND CLIENT VERSION to user if the following string is sent
         ctcpversion = 0
-        if text == CTCP_VERSION:
+        if text == self.CTCP_VERSION:
             ctcpversion = 1
             text = "CTCP VERSION"
 
@@ -533,7 +532,7 @@ class PrivateChat:
             usertag = tag = self.tag_me
         else:
 
-            if text == CTCP_VERSION:
+            if text == self.chats.CTCP_VERSION:
                 line = "CTCP VERSION"
             else:
                 line = text

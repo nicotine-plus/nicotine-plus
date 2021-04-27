@@ -240,7 +240,8 @@ class ChatEntry:
         s = text.split(" ", 1)
         cmd = s[0]
 
-        if len(s) == 2:
+        # Remove empty items created by split, if command ended with a space, e.g. '/ctcpversion '
+        if len([i for i in s if i]) == 2:
             arg_self = args = s[1]
         else:
             if not self.is_chatroom:
@@ -299,27 +300,32 @@ class ChatEntry:
 
         elif cmd in ("/s", "/search"):
             if args:
-                self.frame.searches.do_search(args, 0)
-                self.frame.on_search(None)
+                self.frame.SearchMethod.set_active(0)
+                self.frame.SearchEntry.set_text(args)
+                self.frame.on_search(self.frame.SearchEntry)
                 self.frame.change_main_page("search")
 
         elif cmd in ("/us", "/usearch"):
             s = args.split(" ", 1)
             if len(s) == 2:
-                self.frame.searches.do_search(s[1], 3, [s[0]])
-                self.frame.on_search(None)
+                self.frame.SearchMethod.set_active(3)
+                self.frame.SearchEntry.set_text(s[1])
+                self.frame.UserSearchEntry.set_text(s[0])
+                self.frame.on_search(self.frame.SearchEntry)
                 self.frame.change_main_page("search")
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
-                self.frame.searches.do_search(args, 1)
-                self.frame.on_search(None)
+                self.frame.SearchMethod.set_active(2)
+                self.frame.SearchEntry.set_text(args)
+                self.frame.on_search(self.frame.SearchEntry)
                 self.frame.change_main_page("search")
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
-                self.frame.searches.do_search(args, 2)
-                self.frame.on_search(None)
+                self.frame.SearchMethod.set_active(1)
+                self.frame.SearchEntry.set_text(args)
+                self.frame.on_search(self.frame.SearchEntry)
                 self.frame.change_main_page("search")
 
         elif cmd in ("/j", "/join"):
