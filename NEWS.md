@@ -3,6 +3,29 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.0.6 (May 1, 2021)
+-----------------------------
+
+Changes
+
+ * The message sent to users attempting to access geo-blocked content can now be customized
+
+Corrections
+
+ * Fixed a few critical errors related to uploads and file selections
+ * Chat search commands and the /ctcpversion command now work properly
+ * Fixed Python 3.5 compatibility
+ * Windows: fixed an issue where duplicate notification icons would appear in the tray
+
+Issues closed on GitHub
+
+ * Geoblock Options ([#1028](https://github.com/Nicotine-Plus/nicotine-plus/issues/1028))
+ * Notifications tray icons aren't removed automatically ([#1354](https://github.com/Nicotine-Plus/nicotine-plus/issues/1354))
+ * critical error ([#1356](https://github.com/Nicotine-Plus/nicotine-plus/issues/1356))
+ * Frequent crashes in 3.0.5 ([#1357](https://github.com/Nicotine-Plus/nicotine-plus/issues/1357))
+ * Unable to search chat room ([#1359](https://github.com/Nicotine-Plus/nicotine-plus/issues/1359))
+ * Critical error ([#1361](https://github.com/Nicotine-Plus/nicotine-plus/issues/1361))
+
 Version 3.0.5 (April 24, 2021)
 -----------------------------
 
