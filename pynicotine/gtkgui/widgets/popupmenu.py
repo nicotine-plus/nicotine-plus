@@ -60,7 +60,7 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.editing = False
 
-        self.popup_id = ''.join(random.choices(string.digits, k=8))
+        self.popup_id = ''.join(random.choice(string.digits) for i in range(8))
 
         self.user = None
         self.useritem = None
