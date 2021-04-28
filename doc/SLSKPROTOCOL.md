@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on April 1, 2021
+Last updated on April 28, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -2862,7 +2862,9 @@ Nicotine: TransferRequest
 
 #### Description
 
-This message is sent when attempting to upload a file. It was formely used to send a download request as well, but Nicotine+, Museek+ and the official clients use QueueUpload for this purpose today.
+This message is sent by a peer once they are ready to start uploading a file. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
+
+This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) message for this purpose today.
 
 #### Data Order
 
@@ -2918,7 +2920,7 @@ Nicotine: TransferResponse
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, use QueueUpload to request files**
 
 Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
 

@@ -2418,9 +2418,13 @@ class FolderContentsResponse(PeerMessage):
 
 class TransferRequest(PeerMessage):
     """ Peer code: 40 """
-    """ This message is sent when attempting to initiate an upload. It was formely used
-    to send a download request as well, but Nicotine+, Museek+ and the official clients
-    use QueueUpload for this purpose today. """
+    """ This message is sent by a peer once they are ready to start uploading a file.
+    A TransferResponse message is expected from the recipient, either allowing or
+    rejecting the upload attempt.
+
+    This message was formely used to send a download request (direction 0) as well,
+    but Nicotine+, Museek+ and the official clients use the QueueUpload message for
+    this purpose today. """
 
     def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None, legacy_client=False):
         self.conn = conn
