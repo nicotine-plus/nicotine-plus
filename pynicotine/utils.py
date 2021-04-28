@@ -42,6 +42,38 @@ illegalfilechars = illegalpathchars + ["\\", "/"]
 replacementchar = '_'
 
 
+def rename_process(new_name, debug=False):
+
+    errors = []
+
+    # Renaming ourselves for pkill et al.
+    try:
+        import ctypes
+        # GNU/Linux style
+        libc = ctypes.CDLL(None)
+        libc.prctl(15, new_name, 0, 0, 0)
+
+    except Exception as e:
+        errors.append(e)
+        errors.append("Failed GNU/Linux style")
+
+    try:
+        import ctypes
+        # BSD style
+        libc = ctypes.CDLL(None)
+        libc.setproctitle(new_name)
+
+    except Exception as e:
+        errors.append(e)
+        errors.append("Failed BSD style")
+
+    if debug and errors:
+        msg = ["Errors occurred while trying to change process name:"]
+        for i in errors:
+            msg.append("%s" % (i,))
+        print('\n'.join(msg))
+
+
 def clean_file(filename):
 
     for char in illegalfilechars:

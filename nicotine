@@ -105,36 +105,6 @@ def version():
         print(_("Cannot find the pynicotine.utils module."))
 
 
-def rename_process(new_name, debug=False):
-
-    errors = []
-
-    # Renaming ourselves for pkill et al.
-    try:
-        import ctypes
-        # GNU/Linux style
-        libc = ctypes.CDLL(None)
-        libc.prctl(15, new_name, 0, 0, 0)
-
-    except Exception:
-        errors.append("Failed GNU/Linux style")
-
-    try:
-        import ctypes
-        # BSD style
-        libc = ctypes.CDLL(None)
-        libc.setproctitle(new_name)
-
-    except Exception:
-        errors.append("Failed BSD style")
-
-    if debug and errors:
-        msg = ["Errors occurred while trying to change process name:"]
-        for i in errors:
-            msg.append("%s" % (i,))
-        print('\n'.join(msg))
-
-
 def rescan_shares():
     from collections import deque
 
@@ -158,8 +128,6 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
 
 
 def run():
-
-    rename_process(b'nicotine')
 
     # Support for file scanning process in frozen Windows and macOS binaries
     multiprocessing.freeze_support()
@@ -246,33 +214,36 @@ def run():
 
     result = check_environment()
 
-    if result is None:
-
-        if rescan:
-            rescan_shares()
-            return
-
-        from pynicotine.gtkgui import frame
-        app = frame.MainApp(trayicon, hidden, ci_mode, bindip, port)
-
-        if profile:
-
-            import cProfile
-
-            dumpfile = os.path.expanduser(config.filename) + ".profile"
-            profiler = cProfile.Profile()
-
-            print("Starting using the profiler (saving dump to %s)" % dumpfile)
-
-            profiler.enable()
-            app.run(None)
-            profiler.disable()
-
-            profiler.dump_stats(dumpfile)
-        else:
-            app.run(None)
-    else:
+    if result is not None:
         print(result)
+        return
+
+    from pynicotine.utils import rename_process
+    rename_process(b'nicotine')
+
+    if rescan:
+        rescan_shares()
+        return
+
+    from pynicotine.gtkgui import frame
+    app = frame.MainApp(trayicon, hidden, ci_mode, bindip, port)
+
+    if profile:
+
+        import cProfile
+
+        dumpfile = os.path.expanduser(config.filename) + ".profile"
+        profiler = cProfile.Profile()
+
+        print("Starting using the profiler (saving dump to %s)" % dumpfile)
+
+        profiler.enable()
+        app.run(None)
+        profiler.disable()
+
+        profiler.dump_stats(dumpfile)
+    else:
+        app.run(None)
 
 
 if __name__ == '__main__':

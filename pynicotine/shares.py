@@ -34,6 +34,7 @@ import time
 from pynicotine import slskmessages
 from pynicotine.i18n import apply_translation
 from pynicotine.logfacility import log
+from pynicotine.utils import rename_process
 
 """ Check if there's an appropriate (performant) database type for shelves """
 
@@ -82,6 +83,7 @@ class Scanner(multiprocessing.Process):
     def run(self):
 
         try:
+            rename_process(b'nicotine-scan')
             apply_translation()
 
             if self.sharestype == "normal":
