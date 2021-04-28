@@ -232,7 +232,7 @@ Send your username, password, and client version.
     1.  **string** <ins>username</ins>
     2.  **string** <ins>password</ins> **A non-empty
         string is required**
-    3.  **uint32** <ins>version number</ins> *183*
+    3.  **uint32** <ins>version number</ins> *178*
         for Museek+ *160* for Nicotine+
     4.  **string** <ins>MD5 hex digest of
         concatenated username & password</ins>
@@ -1801,7 +1801,7 @@ We send this to the server to search files shared by users who have joined a spe
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>ticket</ins>
+    2.  **int** <ins>ticket</ins>
     3.  **string** <ins>search query</ins>
   - Receive
       - *No Message*
@@ -2899,7 +2899,7 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 #### Data Order
 
   - Send
-    1.  **string** <ins>ticket</ins>
+    1.  **int** <ins>ticket</ins>
     2.  **uchar** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **off\_t** <ins>filesize</ins> *if
@@ -2927,7 +2927,7 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 #### Data Order
 
   - Send
-    1.  **string** <ins>ticket</ins>
+    1.  **int** <ins>ticket</ins>
     2.  **uchar** <ins>allowed</ins>
     3.  Check contents of <ins>allowed</ins>
           - **string** <ins>reason</ins> *if allowed
@@ -2953,7 +2953,7 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
   - Send
       - *No Message*
   - Receive
-    1.  **string** <ins>ticket</ins>
+    1.  **int** <ins>ticket</ins>
     2.  **char** <ins>allowed</ins> == 1
     3.  Check contents of <ins>allowed</ins>
           - **off\_t** <ins>filesize</ins> *if
@@ -3018,10 +3018,10 @@ The peer replies with the upload queue placement of the requested file.
 
   - Send
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>place</ins>
+    2.  **uint** <ins>place</ins>
   - Receive
     1.  **string** <ins>filename</ins>
-    2.  **string** <ins>place</ins>
+    2.  **uint** <ins>place</ins>
 
 ### Peer Code 46
 
