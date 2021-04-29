@@ -57,15 +57,15 @@ def rename_process(new_name, debug=False):
         errors.append(e)
         errors.append("Failed GNU/Linux style")
 
-    try:
-        import ctypes
-        # BSD style
-        libc = ctypes.CDLL(None)
-        libc.setproctitle(new_name)
+        try:
+            import ctypes
+            # BSD style
+            libc = ctypes.CDLL(None)
+            libc.setproctitle(new_name)
 
-    except Exception as e:
-        errors.append(e)
-        errors.append("Failed BSD style")
+        except Exception as e:
+            errors.append(e)
+            errors.append("Failed BSD style")
 
     if debug and errors:
         msg = ["Errors occurred while trying to change process name:"]
