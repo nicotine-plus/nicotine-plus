@@ -83,7 +83,7 @@ from pynicotine.utils import version
 
 class NicotineFrame:
 
-    def __init__(self, application, use_trayicon, start_hidden, ci_mode, bindip=None, port=None):
+    def __init__(self, application, use_trayicon, start_hidden, bindip, port, ci_mode):
 
         if not ci_mode:
             # Show errors in the GUI from here on
@@ -239,8 +239,9 @@ class NicotineFrame:
 
         # Create the trayicon if needed
         # Tray icons don't work as expected on macOS
-        if sys.platform != "darwin" and \
-                use_trayicon and config.sections["ui"]["trayicon"]:
+        use_trayicon = use_trayicon or (use_trayicon is None and config.sections["ui"]["trayicon"])
+
+        if sys.platform != "darwin" and use_trayicon:
             self.tray_icon.load()
 
         """ Element Visibility """
@@ -2588,9 +2589,9 @@ class NicotineFrame:
         self.np.shares.close_shares("buddy")
 
 
-class MainApp(Gtk.Application):
+class Application(Gtk.Application):
 
-    def __init__(self, tray_icon, start_hidden, ci_mode, bindip, port):
+    def __init__(self, tray_icon, start_hidden, bindip, port, ci_mode):
 
         application_id = "org.nicotine_plus.Nicotine"
 
@@ -2612,9 +2613,9 @@ class MainApp(Gtk.Application):
                 self,
                 self.tray_icon,
                 self.start_hidden,
-                self.ci_mode,
                 self.bindip,
-                self.port
+                self.port,
+                self.ci_mode
             )
             return
 

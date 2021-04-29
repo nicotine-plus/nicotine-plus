@@ -5,6 +5,8 @@
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2008 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (c) 2001-2003 Alexander Kanavin
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,38 +24,92 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Nicotine+ Launcher.
-"""
-
-import importlib
+import argparse
+import importlib.util
 import sys
 
-from pynicotine.config import config
-from pynicotine.i18n import apply_translation
+
+def check_arguments():
+    """ Parse command line arguments specified by the user """
+
+    from pynicotine.utils import version
+    parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
+
+    # Visible arguments
+    parser.add_argument(
+        "-h", "--help", action="help",
+        help=_("show this help message and exit")
+    )
+    parser.add_argument(
+        "-c", "--config", metavar=_("file"),
+        help=_("use non-default configuration file")
+    )
+    parser.add_argument(
+        "-p", "--plugins", metavar=_("dir"),
+        help=_("use non-default directory for plugins")
+    )
+    parser.add_argument(
+        "-t", "--enable-trayicon", action="store_true",
+        help=_("enable the tray icon")
+    )
+    parser.add_argument(
+        "-d", "--disable-trayicon", action="store_true",
+        help=_("disable the tray icon")
+    )
+    parser.add_argument(
+        "-s", "--hidden", action="store_true",
+        help=_("start the program without showing window")
+    )
+    parser.add_argument(
+        "-b", "--bindip", metavar=_("ip"),
+        help=_("bind sockets to the given IP (useful for VPN)")
+    )
+    parser.add_argument(
+        "-l", "--port", metavar=_("port"), type=int,
+        help=_("listen on the given port")
+    )
+    parser.add_argument(
+        "-v", "--version", action="version", version="Nicotine+ %s" % version,
+        help=_("display version and exit")
+    )
+
+    # Disables critical error dialog; used for integration tests
+    parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
+
+    # Enable cProfile dumps
+    parser.add_argument("--profile", action="store_true", help=argparse.SUPPRESS)
+
+    # Currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation)
+    parser.add_argument("-r", "--rescan", action="store_true", help=argparse.SUPPRESS)
+
+    args = parser.parse_args()
+    trayicon = None
+
+    if args.config:
+        from pynicotine.config import config
+        config.filename = args.config
+
+    if args.plugins:
+        from pynicotine.config import config
+        config.plugin_dir = args.plugins
+
+    if args.enable_trayicon:
+        trayicon = True
+
+    if args.disable_trayicon:
+        trayicon = False
+
+    return trayicon, args.hidden, args.bindip, args.port, args.ci_mode, args.profile, args.rescan
 
 
-def usage():
-    print(_("""Nicotine+ is a Soulseek client.
-Usage: nicotine [OPTION]...
-  -c file, --config=file      Use non-default configuration file
-  -p dir,  --plugins=dir      Use non-default directory for plugins
-  -t,      --enable-trayicon  Enable the tray icon
-  -d,      --disable-trayicon Disable the tray icon
-  -h,      --help             Show help and exit
-  -s,      --hidden           Start the program hidden so only the tray icon is shown
-  -b ip,   --bindip=ip        Bind sockets to the given IP (useful for VPN)
-  -l port, --port=port        Listen on the given port. Overrides the portrange configuration
-  -v,      --version          Display version and exit"""))
-
-
-def check_environment():
+def check_dependencies():
 
     # Require Python 3.5 or newer
     try:
         assert sys.version_info[:2] >= (3, 5), '.'.join(
             map(str, sys.version_info[:3])
         )
+
     except AssertionError as e:
         return _("""You're using an unsupported version of Python (%s).
 You should install Python 3.5 or newer.""") % (e)
@@ -61,8 +117,10 @@ You should install Python 3.5 or newer.""") % (e)
     # Require GTK+ >= 3
     try:
         import gi
+
     except ImportError:
         return _("Cannot find %s, please install it.") % "pygobject"
+
     else:
         try:
             gi.require_version('Gtk', '3.0')
@@ -72,6 +130,7 @@ You should install GTK 3.0 or newer.""") % e
 
     try:
         from gi.repository import Gtk  # noqa: F401
+
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
 
@@ -83,30 +142,14 @@ You should install GTK 3.0 or newer.""") % e
             "option2": "semidbm"
         }
 
-    # Require pynicotine
-    if not importlib.util.find_spec("pynicotine"):
-        return _("""Can not find Nicotine+ modules.
-Perhaps they're installed in a directory which is not
-in an interpreter's module search path.
-(there could be a version mismatch between
-what version of python was used to build the Nicotine
-binary package and what you try to run Nicotine+ with).""")
-
     return None
 
 
-def version():
-    try:
-        import pynicotine.utils
-        print(_("Nicotine+ version %s") % pynicotine.utils.version)
-
-    except ImportError:
-        print(_("Cannot find the pynicotine.utils module."))
-
-
 def rescan_shares():
+
     from collections import deque
 
+    from pynicotine.config import config
     from pynicotine.logfacility import console
     from pynicotine.shares import Shares
 
@@ -125,132 +168,65 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
     if config.sections["transfers"]["enablebuddyshares"]:
         shares.rescan_buddy_shares(thread=False)
 
+    return 0
+
 
 def run():
+    """ Run Nicotine+ and return its exit code """
 
+    # Support file scanning process in frozen Windows and macOS binaries
     if getattr(sys, 'frozen', False) :
-        # Support for file scanning process in frozen Windows and macOS binaries
         import multiprocessing
         multiprocessing.freeze_support()
 
-    # Setting gettext and locale
+    # Require pynicotine module
+    if not importlib.util.find_spec("pynicotine"):
+        print("""Cannot find Nicotine+ modules.
+Perhaps they're installed in a directory which is not
+in an interpreter's module search path.
+(there could be a version mismatch between
+what version of Python was used to build the Nicotine
+binary package and what you try to run Nicotine+ with).""")
+        return 1
+
+    from pynicotine.i18n import apply_translation
+    from pynicotine.utils import rename_process
+
+    rename_process(b'nicotine')
     apply_translation()
 
-    import getopt
-    import os.path
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],
-                                   "hc:p:tdrvswb:",
-                                   [
-                                       "help",
-                                       "rescan",
-                                       "config=",
-                                       "plugins=",
-                                       "profile",
-                                       "ci-mode",
-                                       "enable-trayicon",
-                                       "disable-trayicon",
-                                       "version",
-                                       "hidden",
-                                       "bindip=",
-                                       "port="
-        ]
-        )
-    except getopt.GetoptError:
-        # print help information and exit
-        usage()
-        sys.exit(2)
+    trayicon, hidden, bindip, port, ci_mode, profile, rescan = check_arguments()
+    error = check_dependencies()
 
-    profile = False
-    ci_mode = False
-    trayicon = True
-    rescan = False
-    hidden = False
-    bindip = None
-    port = None
-
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            usage()
-            sys.exit()
-
-        if o in ("-c", "--config"):
-            config.filename = a
-
-        if o in ("-p", "--plugins"):
-            config.plugin_dir = a
-
-        if o in ("-b", "--bindip"):
-            bindip = a
-
-        if o in ("-l", "--port"):
-            port = a
-
-        if o in ("-t", "--enable-trayicon"):
-            trayicon = True
-
-        if o in ("-d", "--disable-trayicon"):
-            trayicon = False
-
-        if o in ('-r', '--rescan'):
-            """ Flag currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation) """
-            rescan = True
-
-        if o in ('-s', '--hidden'):
-            hidden = True
-
-        if o in ("-v", "--version"):
-            version()
-            sys.exit()
-
-        # Developer-related
-
-        if o == "--profile":
-            profile = True
-
-        if o == "--ci-mode":
-            """ Used for integration tests. Disables critical error dialog. """
-            ci_mode = True
-
-    result = check_environment()
-
-    if result is not None:
-        print(result)
-        return
-
-    from pynicotine.utils import rename_process
-    rename_process(b'nicotine')
+    if error:
+        print(error)
+        return 1
 
     if rescan:
-        rescan_shares()
-        return
+        return rescan_shares()
 
-    from pynicotine.gtkgui import frame
-    app = frame.MainApp(trayicon, hidden, ci_mode, bindip, port)
+    # Load GTK-based GUI
+    from pynicotine.gtkgui.frame import Application
+    app = Application(trayicon, hidden, bindip, port, ci_mode)
 
     if profile:
-
         import cProfile
+        from pynicotine.config import config
 
-        dumpfile = os.path.expanduser(config.filename) + ".profile"
+        dumpfile = config.filename + ".profile"
         profiler = cProfile.Profile()
+        profiler.enable()
 
         print("Starting using the profiler (saving dump to %s)" % dumpfile)
 
-        profiler.enable()
-        app.run(None)
+        exit_code = app.run()
         profiler.disable()
 
         profiler.dump_stats(dumpfile)
-    else:
-        app.run(None)
+        return exit_code
+
+    return app.run()
 
 
 if __name__ == '__main__':
-    try:
-        run()
-    except SystemExit:
-        raise
-    except Exception:
-        import traceback
-        traceback.print_exc()
+    sys.exit(run())
