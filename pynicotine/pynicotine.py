@@ -597,7 +597,11 @@ class NetworkEventProcessor:
         else:
             country = ""
 
-        log.add(_("IP address of %(user)s is %(ip)s, port %(port)i%(country)s"), {
+        if msg.ip == "0.0.0.0":
+            log.add(_("IP address of user %s is unknown, since user is offline"), user)
+            return
+
+        log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
             'user': user,
             'ip': msg.ip,
             'port': msg.port,
