@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-18.04, ubuntu-20.04]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,13 +23,7 @@ jobs:
       - name: Run autopkgtest
         run: |
           set +e
-
-          if command -v autopkgtest &> /dev/null; then
-            sudo autopkgtest . -- null
-          else
-            # Ubuntu 16.04 uses adt-run
-            sudo adt-run --unbuilt-tree . --- null
-          fi
+          sudo autopkgtest . -- null
 
           # autopkgtest exit code 2 signifies skipped tests
           if [ $? -gt 2 ]; then
