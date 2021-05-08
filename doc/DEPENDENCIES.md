@@ -4,7 +4,7 @@
 
 ### Required
 
-* [python3](https://www.python.org/) >= 3.5 for interpreter;
+* [python3](https://www.python.org/) >= 3.6 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
 * [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files.
@@ -70,7 +70,7 @@ sudo dnf install python3-flake8 python3-pep8-naming python3-pytest
 ```
 
 #### Check the Python version.
-To check that the Python version you are using is 3.5 or newer, use `python -V`. On a lot of older systems, the response will look something like this:
+To check that the Python version you are using is recent enough, use `python -V`. On a lot of older systems, the response will look something like this:
 
 ```console
 % python -V

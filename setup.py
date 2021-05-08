@@ -133,7 +133,7 @@ functionality while keeping current with the Soulseek protocol."""
         package_data=PACKAGE_DATA,
         scripts=SCRIPTS,
         data_files=DATA_FILES,
-        python_requires=">=3.5",
+        python_requires=">=3.6",
         install_requires=["PyGObject>=3.18"],
         cmdclass={"update_pot": UpdatePot}
     )
