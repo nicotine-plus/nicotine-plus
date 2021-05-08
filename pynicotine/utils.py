@@ -33,7 +33,7 @@ import sys
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
-version = "3.0.6"
+version = "3.0.7.dev1"
 
 win32 = sys.platform.startswith("win")
 
