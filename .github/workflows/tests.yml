@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-18.04, ubuntu-20.04]
         python: [3.5, 3.6, 3.7, 3.8, 3.9]
     steps:
       - name: Checkout code
@@ -25,12 +25,7 @@ jobs:
         run: |
           sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
           sudo apt update
-
-          # Ubuntu 16.04 support
-          if ! sudo apt build-dep .; then
-            BUILD_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\s*/ / or (/^ / and $p)); s/,|\n|\([^)]+\)//mg; print if $p' < debian/control)
-            sudo apt -y install $BUILD_DEPS
-          fi
+          sudo apt build-dep .
 
       - name: Lint with flake8
         run: |
