@@ -1,19 +1,11 @@
 ## DEP-8 continuous integration tests.
 
-# Basic sanity check...
+# Verify that package is installed...
 Test-Command: nicotine --version | grep Nicotine+
 Depends: @
 Restrictions: isolation-container
-Features: test-name=test-version
 
-# Perform local in-tree unit tests...
-Test-Command: py.test-3
-Depends: @, python3-pytest
+# Perform integration and unit tests...
+Test-Command: xvfb-run py.test-3
+Depends: @, python3-gdbm, python3-pytest
 Restrictions: isolation-container
-Features: test-name=unit-tests
-
-# Install the package and try running the GUI in a fake frame buffer...
-Tests: test-installed-artifacts.sh
-Depends: @, python3-pip, xvfb
-Restrictions: isolation-container
-

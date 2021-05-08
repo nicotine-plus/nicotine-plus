@@ -1,5 +1,4 @@
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -20,26 +19,16 @@
 import subprocess
 
 
-# noinspection PyInterpreter
-class nicotine_library:  # noqa
-    def __init__(self):
-        self._result = None
+def test_startup():
 
-    def running_nicotine_starts_a_process(self, command, timeout):
-        if not isinstance(command, list):
-            command = command.split()
+    # Assume failure by default
+    is_success = False
 
-        # Assume failure by default
-        issuccess = False
+    try:
+        subprocess.call(["python3", "nicotine", "--ci-mode"], timeout=5)
 
-        try:
-            subprocess.call(command, timeout=int(timeout))
-        except subprocess.TimeoutExpired:
-            # Program was still running, success!
-            issuccess = True
+    except subprocess.TimeoutExpired:
+        # Program was still running, success!
+        is_success = True
 
-        self._result = issuccess
-
-    def result_should_be(self, expected):
-        assert self._result == expected
-        self._result = None
+    assert is_success is True

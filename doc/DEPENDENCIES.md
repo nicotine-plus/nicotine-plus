@@ -6,20 +6,25 @@
 
 * [python3](https://www.python.org/) >= 3.5 for interpreter;
 * [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
-* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK.
-* [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files;
+* [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
+* [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files.
 
 ### Recommended
 
 * [gir1.2-appindicator3-0.1](https://lazka.github.io/pgi-docs/AppIndicator3-0.1/index.html) or [gir1.2-ayatanaappindicator3-0.1](https://lazka.github.io/pgi-docs/AyatanaAppIndicator3-0.1/index.html) for tray icon;
 * [gir1.2-gspell-1](https://lazka.github.io/pgi-docs/Gspell-1/index.html) for spell checking in chat.
 
+## Building
+
+* [gettext](https://www.gnu.org/software/gettext/) for generating translations.
+
 ## Testing
 
 * [python3-flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
-* [python3-pep8-naming](https://pypi.org/project/pep8-naming/) for checking PEP 8 naming conventions;
-* [python3-pytest](https://docs.pytest.org/en/stable/getting-started.html) for unit tests;
-* [robotframework](https://robotframework.org/) for GUI tests.
+* [python3-pep8-naming](https://pypi.org/project/pep8-naming/) for PEP 8 naming conventions check;
+* [python3-pytest](https://docs.pytest.org/en/stable/getting-started.html) for integration and unit tests;
+* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for integration tests;
+* [gir1.2-gtk-3.0](https://www.gtk.org/) for integration tests.
 
 ## Installing dependencies
 

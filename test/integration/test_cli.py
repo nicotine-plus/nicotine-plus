@@ -1,6 +1,4 @@
-#!/bin/sh
-
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,20 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### This script is used to install core dependencies in MinGW ###
+import subprocess
 
-# Install dependencies from the main MinGW repos
-pacman --noconfirm -S --needed \
-  mingw-w64-$ARCH-gspell \
-  mingw-w64-$ARCH-gtk3 \
-  mingw-w64-$ARCH-python \
-  mingw-w64-$ARCH-python-flake8 \
-  mingw-w64-$ARCH-python-pip \
-  mingw-w64-$ARCH-python-pytest \
-  mingw-w64-$ARCH-python-gobject \
-  mingw-w64-$ARCH-python-setuptools
 
-# Install dependencies with pip
-pip3 install \
-  pep8-naming \
-  semidbm
+def test_cli():
+    """ Verify that CLI-exclusive functionality works """
+
+    output = subprocess.check_output(["python3", "nicotine", "--help"], timeout=1)
+    assert str(output).find("--help") > -1
+
+    output = subprocess.check_output(["python3", "nicotine", "--version"], timeout=1)
+    assert str(output).find("Nicotine+") > -1
