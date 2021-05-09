@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-01 10:17+0200\n"
-"PO-Revision-Date: 2021-05-01 10:25+0200\n"
+"POT-Creation-Date: 2021-05-10 00:13+0200\n"
+"PO-Revision-Date: 2021-05-10 00:15+0200\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: nicola <info@nicoladimaria.info>\n"
 "Language: it_IT\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2020-11-18 22:08+0000\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.3\n"
 
 # pynicotine/gtkgui/frame.py
 # pynicotine/gtkgui/nicotine_glade.py
@@ -171,60 +171,65 @@ msgstr "Soulseek,Nicotine,condivisione file,musica,P2P,peer-to-peer"
 msgid "Couldn't write to log file \"%s\": %s"
 msgstr "Impossibile scrivere su file registro \"%s\": %s"
 
-#: pynicotine/pynicotine.py:98
+#: pynicotine/pynicotine.py:95
 #, python-format
 msgid "Exception in callback %s: %s"
 msgstr "Eccezione nella callback %s: %s"
 
-# pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:600
+#: pynicotine/pynicotine.py:598
 #, python-format
-msgid "IP address of %(user)s is %(ip)s, port %(port)i%(country)s"
-msgstr "L'indirizzo IP di %(user)s  %(ip)s, porta %(port)i%(country)s"
+msgid "IP address of user %s is unknown, since user is offline"
+msgstr "L'indirizzo IP dell'utente %s è sconosciuto, poichè disconnesso"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:777
+#: pynicotine/pynicotine.py:601
+#, python-format
+msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
+msgstr "L'indirizzo IP di %(user)s è %(ip)s, porta %(port)i%(country)s"
+
+# pynicotine/pynicotine.py
+#: pynicotine/pynicotine.py:778
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Disconnesso dal server %(host)s:%(port)s"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:841
+#: pynicotine/pynicotine.py:842
 #, python-format
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Impossibile connettersi al server %(host)s:%(port)s: %(error)s"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:937
+#: pynicotine/pynicotine.py:938
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Il server sembra essere non raggiungibile, tentativo fra %i secondi"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:1004
+#: pynicotine/pynicotine.py:1005
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr "Connesso al server %(host)s:%(port)s, autenticazione..."
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:1035
+#: pynicotine/pynicotine.py:1036
 #, python-format
 msgid "Listening on port %i"
 msgstr "In ascolto sulla porta %i"
 
 # pynicotine/gtkgui/settingswindow.py
-#: pynicotine/pynicotine.py:1151
+#: pynicotine/pynicotine.py:1152
 msgid "Connection Refused"
 msgstr "Connessione Rifiutata"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1153
 #, python-format
 msgid "Can not log in, reason: %s"
 msgstr "Impossibile autenticarsi: %s"
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:1312
+#: pynicotine/pynicotine.py:1313
 msgid ""
 "Someone else is logging in with the same nickname, server is going to "
 "disconnect us"
@@ -238,17 +243,17 @@ msgstr ""
 # pynicotine/gtkgui/uploads.py
 # pynicotine/gtkgui/userbrowse.py
 # pynicotine/gtkgui/userlist.py
-#: pynicotine/pynicotine.py:1351
+#: pynicotine/pynicotine.py:1352
 msgid "Server Message"
 msgstr "Messaggio Server"
 
 # pynicotine/gtkgui/nicotine_glade.py
-#: pynicotine/pynicotine.py:1374
+#: pynicotine/pynicotine.py:1375
 #, python-format
 msgid "%i privileged users"
 msgstr "%i utenti privilegiati"
 
-#: pynicotine/pynicotine.py:1395
+#: pynicotine/pynicotine.py:1396
 msgid ""
 "You have no privileges left. They are not necessary, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -257,7 +262,7 @@ msgstr ""
 "essere accodati prima degli utenti non privilegiati."
 
 # pynicotine/pynicotine.py
-#: pynicotine/pynicotine.py:1399
+#: pynicotine/pynicotine.py:1400
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -266,17 +271,17 @@ msgstr ""
 "%(days)i giorni, %(hours)i ore, %(minutes)i minuti, %(seconds)i secondi di "
 "privilegi di download rimanenti."
 
-#: pynicotine/pynicotine.py:1556
+#: pynicotine/pynicotine.py:1557
 msgid "Your password has been changed"
 msgstr "La tua password è stata cambiata"
 
 # pynicotine/gtkgui/settings_glade.py
-#: pynicotine/pynicotine.py:1556
+#: pynicotine/pynicotine.py:1557
 #, python-format
 msgid "Password is %s"
 msgstr "La password è %s"
 
-#: pynicotine/pynicotine.py:1637
+#: pynicotine/pynicotine.py:1638
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
@@ -285,7 +290,7 @@ msgstr ""
 "%(user)s sta facendo una richiesta BrowseShares, blocco di un possibile "
 "tentativo di spoofing dall'IP %(ip)s porta %(port)s"
 
-#: pynicotine/pynicotine.py:1644
+#: pynicotine/pynicotine.py:1645
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
@@ -294,12 +299,12 @@ msgstr ""
 "%(user)s sta facendo una richiesta BrowseShares, blocco di un possibile "
 "tentativo di spoofing da un IP e porta sconosciuti"
 
-#: pynicotine/pynicotine.py:1652
+#: pynicotine/pynicotine.py:1653
 #, python-format
 msgid "%(user)s is making a BrowseShares request"
 msgstr "%(user)s sta facendo una richiesta BrowseShares"
 
-#: pynicotine/pynicotine.py:1766
+#: pynicotine/pynicotine.py:1767
 #, python-format
 msgid ""
 "Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
@@ -308,7 +313,7 @@ msgstr ""
 "Blocco della richiesta UserInfo di %(user)s, possibile tentativo di spoofing "
 "dall'IP %(ip)s port porta %(port)s"
 
-#: pynicotine/pynicotine.py:1773
+#: pynicotine/pynicotine.py:1774
 #, python-format
 msgid ""
 "Blocking %s from making a UserInfo request, possible spoofing attempt from "
@@ -317,17 +322,17 @@ msgstr ""
 "Blocco %s della richiesta UserInfo, possibile tentativo di spoofing da IP e "
 "porta sconosciuti"
 
-#: pynicotine/pynicotine.py:1782
+#: pynicotine/pynicotine.py:1783
 #, python-format
 msgid "%(user)s is banned, but is making a UserInfo request"
 msgstr "%(user)s è bloccato ma sta facendo una richiesta UserInfo"
 
-#: pynicotine/pynicotine.py:1813
+#: pynicotine/pynicotine.py:1814
 #, python-format
 msgid "%(user)s is making a UserInfo request"
 msgstr "%(user)s sta facendo una richiesta UserInfo"
 
-#: pynicotine/pynicotine.py:1852
+#: pynicotine/pynicotine.py:1853
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
