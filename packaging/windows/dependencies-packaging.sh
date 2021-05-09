@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# COPYRIGHT (C) 2020 Nicotine+ Team
+# COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,16 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### This script is used to install UI and packaing dependencies in MinGW ###
+### This script is used to install packaging dependencies in MinGW ###
 
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
-  git \
-  mingw-w64-$ARCH-gspell \
-  mingw-w64-$ARCH-gtk3 \
   mingw-w64-$ARCH-nsis \
-  mingw-w64-$ARCH-python-certifi \
-  mingw-w64-$ARCH-python-gobject
+  mingw-w64-$ARCH-python-certifi
 
 # Install dependencies with pip
 pip3 install \

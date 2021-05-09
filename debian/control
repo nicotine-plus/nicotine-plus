@@ -8,12 +8,11 @@ Build-Depends:
     debhelper-compat (= 11),
     devscripts,
     dh-python,
-    flake8,
     gettext,
+    gir1.2-gtk-3.0,
     lintian,
     python3 (>= 3.5),
-    python3-gdbm,
-    python3-pep8-naming,
+    python3-gi,
     python3-pytest
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus

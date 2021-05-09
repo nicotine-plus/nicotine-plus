@@ -5,11 +5,10 @@ on: [push, pull_request]
 jobs:
 
   ubuntu:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
-        python: [3.5, 3.6, 3.7, 3.8, 3.9]
+        python: [3.5, 3.6, 3.7, 3.8, 3.9, 3.10.0-beta.1, pypy-3.6, pypy-3.7]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -17,25 +16,23 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
         run: |
-          sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
           sudo apt update
-          sudo apt build-dep .
+          sudo apt install gir1.2-gtk-3.0 libgirepository1.0-dev
+          python -m pip install flake8 pep8-naming pygobject pytest
 
       - name: Lint with flake8
         run: |
-          flake8
+          python -m flake8
 
       - name: Unit tests
-        env:
-          PYTHONPATH: .
         run: |
-          py.test-3
+          xvfb-run python -m pytest
 
   windows:
     runs-on: windows-latest

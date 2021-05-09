@@ -10,9 +10,12 @@ DH_VERBOSE = 1
 export DH_OPTIONS=-v
 
 # Disable shares test, since shares are not saved for some reason...
-# Disable version test during Pybuild process, since Pybuild sets the proxy to 127.0.0.1:9.
-# We don't have internet access...
+# Disable version test, since it requires internet access...
 export PYBUILD_TEST_ARGS=-k "not test_shares and not test_version"
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
+
+# Use Xvfb to test startup without requiring an actual X server...
+override_dh_auto_test:
+	xvfb-run dh_auto_test
