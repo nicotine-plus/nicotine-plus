@@ -50,9 +50,6 @@ from pynicotine.transfers import Statistics
 from pynicotine.utils import unescape
 
 
-global config
-
-
 class UserAddr:
 
     __slots__ = "addr", "status"
