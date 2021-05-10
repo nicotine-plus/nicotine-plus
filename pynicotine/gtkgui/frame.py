@@ -348,6 +348,10 @@ class NicotineFrame:
     """ Window State """
 
     def on_focus_in(self, widget, event):
+
+        self.chatrooms.clear_notifications()
+        self.privatechats.clear_notifications()
+
         if self.MainWindow.get_urgency_hint():
             self.MainWindow.set_urgency_hint(False)
 
@@ -2620,4 +2624,6 @@ class Application(Gtk.Application):
             return
 
         # Show the window of the running Nicotine+ instance
-        self.get_active_window().present_with_time(Gdk.CURRENT_TIME)
+        window = self.get_active_window()
+        window.present_with_time(Gdk.CURRENT_TIME)
+        window.deiconify()

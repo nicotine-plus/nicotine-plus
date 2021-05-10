@@ -335,9 +335,7 @@ class TrayIcon:
 
     def show_window(self):
         self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-
-        self.frame.chatrooms.clear_notifications()
-        self.frame.privatechats.clear_notifications()
+        self.frame.MainWindow.deiconify()
 
     def is_visible(self):
 
