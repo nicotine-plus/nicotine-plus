@@ -12,6 +12,7 @@ Build-Depends:
     gir1.2-gtk-3.0,
     lintian,
     python3 (>= 3.5),
+    python3-gdbm,
     python3-gi,
     python3-pytest,
     xvfb

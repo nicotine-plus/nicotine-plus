@@ -7,5 +7,5 @@ Restrictions: isolation-container
 
 # Perform integration and unit tests...
 Test-Command: xvfb-run py.test-3
-Depends: @, python3-gdbm, python3-pytest
+Depends: @
 Restrictions: isolation-container
