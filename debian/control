@@ -13,7 +13,8 @@ Build-Depends:
     lintian,
     python3 (>= 3.5),
     python3-gi,
-    python3-pytest
+    python3-pytest,
+    xvfb
 Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
 Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
 X-Python-Version: >= 3.5
