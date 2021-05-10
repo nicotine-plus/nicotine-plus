@@ -32,19 +32,13 @@
         <attribute name="label" translatable="yes">_View</attribute>
         <section>
           <item>
+            <attribute name="label" translatable="yes">Prefer Dark _Mode</attribute>
+            <attribute name="action">app.preferdarkmode</attribute>
+          </item>
+          <item>
             <attribute name="label" translatable="yes">Use _Header Bar</attribute>
             <attribute name="action">win.showheaderbar</attribute>
           </item>
-          <item>
-            <attribute name="label" translatable="yes">Show _Log Pane</attribute>
-            <attribute name="action">win.showlog</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Show _Debug Log Controls</attribute>
-            <attribute name="action">win.showdebug</attribute>
-          </item>
-        </section>
-        <section>
           <item>
             <attribute name="label" translatable="yes">Show _Flag Columns in User Lists</attribute>
             <attribute name="action">win.showflags</attribute>
@@ -52,6 +46,16 @@
           <item>
             <attribute name="label" translatable="yes">Show _Buttons in Transfer Tabs</attribute>
             <attribute name="action">win.showtransferbuttons</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Show _Log Pane</attribute>
+            <attribute name="action">win.showlog</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Show _Debug Log Controls</attribute>
+            <attribute name="action">win.showdebug</attribute>
           </item>
         </section>
         <section>

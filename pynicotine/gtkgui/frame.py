@@ -750,6 +750,11 @@ class NicotineFrame:
 
         # View
 
+        state = config.sections["ui"]["dark_mode"]
+        self.dark_mode_action = Gio.SimpleAction.new_stateful("preferdarkmode", None, GLib.Variant.new_boolean(state))
+        self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
+        self.application.add_action(self.dark_mode_action)
+
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_header_bar)
@@ -1004,6 +1009,14 @@ class NicotineFrame:
         self.settingswindow.show()
 
     # View
+
+    def on_prefer_dark_mode(self, action, *args):
+
+        state = config.sections["ui"]["dark_mode"]
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", not state)
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        config.sections["ui"]["dark_mode"] = not state
 
     def set_show_header_bar(self, show):
 
@@ -2395,6 +2408,7 @@ class NicotineFrame:
 
         dark_mode_state = config.sections["ui"]["dark_mode"]
         gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        self.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
 
         if needcolors:
             global_font = config.sections["ui"]["globalfont"]
