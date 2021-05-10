@@ -20,6 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -124,7 +126,9 @@ class ImageLabel(Gtk.Box):
             self.box.reorder_child(self.hilite_image, 2)
 
             if hasattr(self, "button"):
-                self.reorder_child(self.button, 1)
+                # Left align close button on macOS
+                position = 0 if sys.platform == "darwin" else 1
+                self.reorder_child(self.button, position)
 
     def _add_close_button(self):
 

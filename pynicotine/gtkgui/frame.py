@@ -159,6 +159,10 @@ class NicotineFrame:
         if global_font and global_font != "Normal":
             gtk_settings.set_property("gtk-font-name", global_font)
 
+        # Left align window controls on macOS
+        if sys.platform == "darwin":
+            gtk_settings.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+
         """ Actions and Menu """
 
         self.set_up_actions()
@@ -1329,6 +1333,7 @@ class NicotineFrame:
 
         header_bar = getattr(self, "Header" + page_id)
         header_bar.set_title(GLib.get_application_name())
+
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
