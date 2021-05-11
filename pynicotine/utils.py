@@ -442,7 +442,7 @@ def write_file_and_backup(path, callback, protect=False):
                 os.chmod(path + ".old", 0o600)
 
     except Exception as error:
-        log.add_warning(_("Unable to back up file %(path)s: %(error)s"), {
+        log.add(_("Unable to back up file %(path)s: %(error)s"), {
             "path": path,
             "error": error
         })
@@ -456,7 +456,7 @@ def write_file_and_backup(path, callback, protect=False):
             callback(f)
 
     except Exception as error:
-        log.add_warning(_("Unable to save file %(path)s: %(error)s"), {
+        log.add(_("Unable to save file %(path)s: %(error)s"), {
             "path": path,
             "error": error
         })
@@ -467,7 +467,7 @@ def write_file_and_backup(path, callback, protect=False):
                 os.rename(path + ".old", path)
 
         except Exception as error:
-            log.add_warning(_("Unable to restore previous file %(path)s: %(error)s"), {
+            log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
                 "path": path,
                 "error": error
             })
@@ -645,7 +645,7 @@ def _expand_alias(aliases, cmd):
                 i = i + 1
         return ret
     except Exception as error:
-        log.add_warning("%s", error)
+        log.add("%s", error)
 
     return ""
 

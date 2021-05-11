@@ -250,7 +250,7 @@ class SlskMessage:
                     try:
                         string = string.decode("latin-1")
                     except Exception as error:
-                        log.add_warning("Error trying to decode string '%s': %s", (string, error))
+                        log.add("Error trying to decode string '%s': %s", (string, error))
 
                 return length + intsize + start, string
 
@@ -258,7 +258,7 @@ class SlskMessage:
                 return start, None
 
         except struct.error as error:
-            log.add_warning("%s %s trying to unpack %s at '%s' at %s/%s", (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
+            log.add("%s %s trying to unpack %s at '%s' at %s/%s", (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
 
     def pack_object(self, object, unsignedint=False, unsignedlonglong=False, latin1=False):
@@ -288,20 +288,20 @@ class SlskMessage:
 
             return struct.pack("<i", len(encoded)) + encoded
 
-        log.add_warning("Warning: unknown object type %(obj_type)s in message %(msg_type)s", {'obj_type': type(object), 'msg_type': self.__class__})
+        log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s", {'obj_type': type(object), 'msg_type': self.__class__})
         return b""
 
     def make_network_message(self):
         """ Returns binary array, that can be sent over the network"""
 
-        log.add_warning("Empty message made, class %s", self.__class__)
+        log.add("Empty message made, class %s", self.__class__)
         return None
 
     def parse_network_message(self, message):
         """ Extracts information from the message and sets up fields
         in an object"""
 
-        log.add_warning("Can't parse incoming messages, class %s", self.__class__)
+        log.add("Can't parse incoming messages, class %s", self.__class__)
 
     def strrev(self, str):
         strlist = list(str)
@@ -369,7 +369,7 @@ class Login(ServerMessage):
             pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
 
         except Exception as error:
-            log.add_warning("Error unpacking IP address: %s", error)
+            log.add("Error unpacking IP address: %s", error)
 
         # MD5 hexdigest of the password you sent
         if message[pos:]:
@@ -1096,7 +1096,7 @@ class RoomList(ServerMessage):
             return (pos, rooms)
 
         except Exception as error:
-            log.add_warning(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'RoomList', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'RoomList', 'exception': error})
             return (originalpos, [])
 
 
@@ -2010,7 +2010,7 @@ class SharedFileList(PeerMessage):
 
             self._parse_network_message(message)
         except Exception as error:
-            log.add_warning(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'SharedFileList', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'SharedFileList', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2141,7 +2141,7 @@ class FileSearchResult(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add_warning(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FileSearchResult', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FileSearchResult', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2360,7 +2360,7 @@ class FolderContentsResponse(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add_warning(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FolderContentsResponse', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FolderContentsResponse', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2647,7 +2647,7 @@ class DistribSearch(DistribMessage):
         try:
             self._parse_network_message(message)
         except Exception as error:
-            log.add_warning(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'DistribSearch', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'DistribSearch', 'exception': error})
             return False
 
     def _parse_network_message(self, message):

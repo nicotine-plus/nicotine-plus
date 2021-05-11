@@ -198,7 +198,7 @@ class RoomList:
             try:
                 self.private_rooms[room[0]]['joined'] = room[1]
                 if self.private_rooms[room[0]]['owner'] != myusername:
-                    log.add_warning(_("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s."), {
+                    log.add("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.", {
                         'room': room[0],
                         'previous': self.private_rooms[room[0]]['owner'],
                         'new': myusername
@@ -211,7 +211,7 @@ class RoomList:
             try:
                 self.private_rooms[room[0]]['joined'] = room[1]
                 if self.private_rooms[room[0]]['owner'] == myusername:
-                    log.add_warning(_("I remember the room %(room)s being owned by %(old)s, but the server says that's not true."), {
+                    log.add("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.", {
                         'room': room[0],
                         'old': self.private_rooms[room[0]]['owner'],
                     })

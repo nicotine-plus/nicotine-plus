@@ -199,7 +199,7 @@ else:
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (maxfilelimit, maxfilelimit))
     except Exception as e:
-        log.add_warning("Failed to set RLIMIT_NOFILE: %s", e)
+        log.add("Failed to set RLIMIT_NOFILE: %s", e)
 
     """ Set the maximum number of open sockets to a lower value than the hard limit,
     otherwise we just waste resources.
@@ -694,7 +694,7 @@ class SlskProtoThread(threading.Thread):
                     try:
                         msg.parse_network_message(msg_buffer[5:msgsize + 4])
                     except Exception as error:
-                        log.add_warning("%s", error)
+                        log.add("%s", error)
                     else:
                         conn.piercefw = msg
                         msgs.append(msg)
@@ -705,7 +705,7 @@ class SlskProtoThread(threading.Thread):
                     try:
                         msg.parse_network_message(msg_buffer[5:msgsize + 4])
                     except Exception as error:
-                        log.add_warning("%s", error)
+                        log.add("%s", error)
                     else:
                         conn.init = msg
                         msgs.append(msg)
@@ -1228,7 +1228,7 @@ class SlskProtoThread(threading.Thread):
                 print(time.strftime("%H:%M:%S"), "select OSError:", error)
                 self._want_abort = 1
 
-                log.add_warning("Major Socket Error: Networking terminated! %s", str(error))
+                log.add("Major Socket Error: Networking terminated! %s", str(error))
 
             except ValueError as error:
                 # Possibly opened too many sockets

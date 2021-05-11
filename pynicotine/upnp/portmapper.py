@@ -47,8 +47,8 @@ class UPnPPortMapping:
             self._add_port_mapping(np)
 
         except Exception as e:
-            log.add_warning(_('UPnP exception: %(error)s'), {'error': str(e)})
-            log.add_warning(_('Failed to automate the creation of UPnP Port Mapping rule.'))
+            log.add(_('UPnP exception: %(error)s'), {'error': str(e)})
+            log.add(_('Failed to automate the creation of UPnP Port Mapping rule.'))
             return
 
         log.add_debug(

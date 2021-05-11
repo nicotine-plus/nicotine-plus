@@ -92,7 +92,7 @@ class Timeout:
         try:
             self.callback([self])
         except Exception as e:
-            log.add_warning(_("Exception in callback %s: %s"), (self.callback, e))
+            log.add(_("Exception in callback %s: %s"), (self.callback, e))
 
 
 class ConnectToPeerTimeout:
@@ -1218,6 +1218,7 @@ class NetworkEventProcessor:
         """ Server code: 13 """
 
         log.add_msg_contents(msg)
+        log.add_chat(msg)
 
         if self.chatrooms is not None:
             event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
@@ -1263,6 +1264,7 @@ class NetworkEventProcessor:
         """ Server code: 22 """
 
         log.add_msg_contents(msg)
+        log.add_chat(msg)
 
         if self.privatechat is not None:
             self.privatechat.show_message(msg, msg.msg, msg.newmessage)
@@ -1779,7 +1781,7 @@ class NetworkEventProcessor:
             return
 
         if self.network_filter.is_user_banned(user):
-            log.add_warning(
+            log.add(
                 _("%(user)s is banned, but is making a UserInfo request"), {
                     'user': user
                 }

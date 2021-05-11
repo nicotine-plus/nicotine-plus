@@ -174,7 +174,7 @@ class Config:
 
             "logging": {
                 "debug": False,
-                "debugmodes": [0, 1],
+                "debugmodes": [],
                 "debuglogsdir": os.path.join(log_dir, "debug"),
                 "logcollapsed": True,
                 "transferslogsdir": os.path.join(log_dir, "transfers"),
@@ -421,7 +421,7 @@ class Config:
                 os.makedirs(path)
 
         except OSError as msg:
-            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
             return False
 
         return True
@@ -435,7 +435,7 @@ class Config:
                 os.makedirs(self.data_dir)
 
         except OSError as msg:
-            log.add_warning(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': self.data_dir, 'error': msg})
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': self.data_dir, 'error': msg})
 
     def load_config(self):
 
@@ -525,11 +525,11 @@ class Config:
 
                 # Check if config section exists in defaults
                 if i not in self.defaults:
-                    log.add_warning(_("Unknown config section '%s'"), i)
+                    log.add(_("Unknown config section '%s'"), i)
 
                 # Check if config option exists in defaults
                 elif j not in self.defaults[i] and i != "plugins" and j != "filter":
-                    log.add_warning(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
+                    log.add(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
 
                 else:
                     """ Attempt to get the default value for a config option. If there's no default
@@ -571,7 +571,7 @@ class Config:
                         # Value was unexpected, reset option
                         self.sections[i][j] = default_val
 
-                        log.add_warning("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
+                        log.add("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
                             (i[:120] + '..') if len(i) > 120 else i,
                             (j[:120] + '..') if len(j) > 120 else j,
                             (val[:120] + '..') if len(val) > 120 else val

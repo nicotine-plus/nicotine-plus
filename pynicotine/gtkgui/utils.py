@@ -64,7 +64,7 @@ def load_ui_elements(ui_class, filename):
         builder.connect_signals(ui_class)
 
     except Exception as e:
-        log.add_warning(_("Failed to load ui file %(file)s: %(error)s"), {
+        log.add(_("Failed to load ui file %(file)s: %(error)s"), {
             "file": filename,
             "error": e
         })
@@ -92,7 +92,7 @@ def open_file_path(file_path, command=None):
             Gio.AppInfo.launch_default_for_uri("file:///" + file_path.lstrip("/"))
 
     except Exception as error:
-        log.add_warning(_("Failed to open file path: %s"), str(error))
+        log.add(_("Failed to open file path: %s"), str(error))
 
 
 def open_log(folder, filename):
@@ -149,7 +149,7 @@ def open_uri(uri, window):
             execute_command(protocol_handlers[protocol], uri)
             return
         except RuntimeError as e:
-            log.add_warning("%s", e)
+            log.add("%s", e)
 
     if protocol == "slsk":
         on_soul_seek_uri(uri.strip())
@@ -167,7 +167,7 @@ def open_uri(uri, window):
             Gio.AppInfo.launch_default_for_uri(uri)
 
     except Exception as error:
-        log.add_warning(_("Failed to open URL: %s"), str(error))
+        log.add(_("Failed to open URL: %s"), str(error))
 
 
 def on_soul_seek_uri(url):
