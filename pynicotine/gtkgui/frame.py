@@ -162,6 +162,7 @@ class NicotineFrame:
         # Left align window controls on macOS
         if sys.platform == "darwin":
             gtk_settings.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+            gtk_settings.set_property("gtk-key-theme-name", "Mac")
 
         """ Actions and Menu """
 
