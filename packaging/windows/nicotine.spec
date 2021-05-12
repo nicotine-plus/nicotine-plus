@@ -71,9 +71,6 @@ if sys.platform == 'win32':
     if not binaries:
         raise Exception("No SSL libraries found")
 
-    # Notification support on Windows
-    hiddenimports.append('plyer.platforms.win.notification')
-
 
 # Translations
 languages = set()

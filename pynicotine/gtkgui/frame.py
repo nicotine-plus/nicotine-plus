@@ -233,20 +233,15 @@ class NicotineFrame:
         self.tray_download_template = _("Downloads: %(speed)s")
         self.tray_upload_template = _("Uploads: %(speed)s")
 
-        self.tray_icon = TrayIcon(self)
-        self.notifications = Notifications(self)
-
         self.hilites = {
             "rooms": [],
             "private": []
         }
 
-        # Create the trayicon if needed
-        # Tray icons don't work as expected on macOS
-        use_trayicon = use_trayicon or (use_trayicon is None and config.sections["ui"]["trayicon"])
+        self.tray_icon = TrayIcon(self)
+        self.tray_icon.load(use_trayicon)
 
-        if sys.platform != "darwin" and use_trayicon:
-            self.tray_icon.load()
+        self.notifications = Notifications(self)
 
         """ Element Visibility """
 
