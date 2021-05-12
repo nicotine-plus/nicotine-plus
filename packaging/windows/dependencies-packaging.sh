@@ -22,10 +22,24 @@
 
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
+  unzip \
   mingw-w64-$ARCH-nsis \
   mingw-w64-$ARCH-python-certifi
 
 # Install dependencies with pip
 pip3 install \
-  plyer \
-  pyinstaller==4.3
+  plyer
+
+# Install PyInstaller dependency
+# Rebuild bootloader to reduce false positives in anti-malware software
+wget https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.3.zip
+unzip v4.3.zip
+cd pyinstaller-4.3/bootloader/
+
+if [ $ARCH == "i686" ]; then
+  python3 ./waf all --target-arch=32bit
+else
+  python3 ./waf all --target-arch=64bit
+fi
+
+pip3 install ..
