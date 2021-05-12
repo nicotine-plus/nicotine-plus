@@ -25,7 +25,6 @@ import sys
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -546,10 +545,12 @@ class IconNotebook:
     def on_key_press_event(self, widget, event):
 
         keycode = event.hardware_keycode
+        key, codes_w, mods = Gtk.accelerator_parse_with_keycode("<Primary>w")
+        key, codes_f4, mods = Gtk.accelerator_parse_with_keycode("<Primary>F4")
 
-        if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
-            if keycode in keyval_to_hardware_keycode(Gdk.KEY_w) or \
-               keycode in keyval_to_hardware_keycode(Gdk.KEY_F4):
+        if event.get_state() & mods:
+            if keycode in codes_w or \
+               keycode in codes_f4:
                 # Ctrl+W and Ctrl+F4: close current tab
 
                 page = self.get_nth_page(self.get_current_page())

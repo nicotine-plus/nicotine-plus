@@ -38,7 +38,6 @@ from pynicotine.config import config
 from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -1106,8 +1105,10 @@ class Search:
 
         self.select_results()
 
-        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
+        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+
+        if event.get_state() & mods and \
+                event.hardware_keycode in codes:
             self.on_copy_file_path()
         else:
             # No key match, continue event

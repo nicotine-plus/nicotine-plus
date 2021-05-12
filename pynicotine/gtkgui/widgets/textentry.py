@@ -25,7 +25,6 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import expand_alias
@@ -426,10 +425,14 @@ class ChatEntry:
     def on_key_press(self, widget, event):
 
         keycode = event.hardware_keycode
+        key, codes, mods = Gtk.accelerator_parse_with_keycode("Tab")
 
-        if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Tab):
-            if keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_L) and \
-                    keycode not in keyval_to_hardware_keycode(Gdk.KEY_Shift_R):
+        if keycode not in codes:
+            key, codes_shift_l, mods = Gtk.accelerator_parse_with_keycode("Shift_L")
+            key, codes_shift_r, mods = Gtk.accelerator_parse_with_keycode("Shift_R")
+
+            if keycode not in codes_shift_l and \
+                    keycode not in codes_shift_r:
                 self.midwaycompletion = False
             return False
 
@@ -556,8 +559,10 @@ class TextSearchBar:
 
     def on_key_press(self, widget, event):
 
-        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_f):
+        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>f")
+
+        if event.get_state() & mods and \
+                event.hardware_keycode in codes:
             self.show_search_bar()
 
     def show_search_bar(self):

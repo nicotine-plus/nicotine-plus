@@ -294,19 +294,6 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     return linenr
 
 
-def keyval_to_hardware_keycode(keyval):
-    """ This function is used for our custom keyboard shortcuts, such as Ctrl-C
-    in tree views, to ensure that they work on non-Latin keyboard layouts """
-
-    keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
-    valid, keymap_keys = keymap.get_entries_for_keyval(keyval)
-
-    if not valid:
-        return []
-
-    return [key.keycode for key in keymap_keys]
-
-
 """ Clipboard """
 
 

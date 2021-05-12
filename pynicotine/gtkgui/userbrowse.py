@@ -33,7 +33,6 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import triggers_context_menu
@@ -926,8 +925,10 @@ class UserBrowse:
 
         self.select_files()
 
-        if event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                event.hardware_keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
+        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+
+        if event.get_state() & mods and \
+                event.hardware_keycode in codes:
             self.copy_selected_path(is_file=(widget == self.FileTreeView))
         else:
             # No key match, continue event

@@ -1609,7 +1609,7 @@ class NicotineFrame:
 
         self.on_disable_auto_away()
 
-        if event.state & (Gdk.ModifierType.MOD1_MASK | Gdk.ModifierType.CONTROL_MASK) != Gdk.ModifierType.MOD1_MASK:
+        if event.state & (Gdk.ModifierType.MOD1_MASK | Gtk.accelerator_parse("<Primary>")[1]) != Gdk.ModifierType.MOD1_MASK:
             return False
 
         for i in range(1, 10):

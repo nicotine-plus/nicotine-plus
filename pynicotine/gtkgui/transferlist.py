@@ -34,7 +34,6 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
-from pynicotine.gtkgui.utils import keyval_to_hardware_keycode
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -812,20 +811,20 @@ class TransferList:
 
     def on_key_press_event(self, widget, event):
 
-        keycode = event.hardware_keycode
         self.select_transfers()
+        keycode = event.hardware_keycode
 
-        if keycode in keyval_to_hardware_keycode(Gdk.KEY_t):
+        if keycode in Gtk.accelerator_parse_with_keycode("t")[1]:
             self.abort_transfers()
 
-        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_r):
+        elif keycode in Gtk.accelerator_parse_with_keycode("r")[1]:
             self.retry_transfers()
 
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and \
-                keycode in keyval_to_hardware_keycode(Gdk.KEY_c):
+        elif event.get_state() & Gtk.accelerator_parse("<Primary>")[1] and \
+                keycode in Gtk.accelerator_parse_with_keycode("c")[1]:
             self.on_copy_file_path()
 
-        elif keycode in keyval_to_hardware_keycode(Gdk.KEY_Delete):
+        elif keycode in Gtk.accelerator_parse_with_keycode("Delete")[1]:
             self.abort_transfers(clear=True)
 
         else:
