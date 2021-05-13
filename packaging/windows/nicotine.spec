@@ -127,7 +127,7 @@ for file in a.datas[:]:
         theme = file[0].split('/')[2]
 
         # Remove unwanted themes
-        if theme not in ('Adwaita', 'hicolor', 'win32'):
+        if theme not in ('Adwaita', 'Mac', 'hicolor', 'win32'):
             a.datas.remove(file)
 
         elif 'Adwaita/cursors' in file[0]:
