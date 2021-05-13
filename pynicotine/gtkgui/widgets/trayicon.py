@@ -281,9 +281,22 @@ class TrayIcon:
 
         return None
 
-    def load(self):
+    def load(self, use_trayicon=None):
 
-        """ Create """
+        if sys.platform == "darwin":
+            # Tray icons don't work as expected on macOS
+            return
+
+        if sys.platform == "win32":
+            # Always keep tray icon loaded for notification support
+            pass
+
+        elif use_trayicon is None:
+            if not config.sections["ui"]["trayicon"]:
+                return
+
+        elif not use_trayicon:
+            return
 
         if self.trayicon is None:
             if self.appindicator is not None:
@@ -305,22 +318,32 @@ class TrayIcon:
 
             self.trayicon = trayicon
 
-        """ Set up icons """
+            """ Set up icons """
 
-        self.final_icon_path = self.get_final_icon_path()
+            self.final_icon_path = self.get_final_icon_path()
 
-        # If custom icon path was found, use it, otherwise we fall back to system icons
-        if self.appindicator is not None and self.final_icon_path:
-            self.trayicon.set_icon_theme_path(self.final_icon_path)
+            # If custom icon path was found, use it, otherwise we fall back to system icons
+            if self.appindicator is not None and self.final_icon_path:
+                self.trayicon.set_icon_theme_path(self.final_icon_path)
 
-        """ Set visible """
+        if use_trayicon or config.sections["ui"]["trayicon"]:
+            self.set_image(self.tray_status["status"])
+            self.show()
+            return
+
+        self.set_image("msg")
+        self.hide()
+
+    def show(self):
+
+        if self.is_visible():
+            return
+
         if self.appindicator is not None:
             self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
         else:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(True)
-
-        self.set_image(self.tray_status["status"])
 
     def hide(self):
 
@@ -332,10 +355,6 @@ class TrayIcon:
         else:
             # GtkStatusIcon fallback
             self.trayicon.set_visible(False)
-
-    def show_window(self):
-        self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-        self.frame.MainWindow.deiconify()
 
     def is_visible(self):
 
@@ -429,3 +448,7 @@ class TrayIcon:
 
         self.downloads_item.set_label(download)
         self.uploads_item.set_label(upload)
+
+    def show_window(self):
+        self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+        self.frame.MainWindow.deiconify()

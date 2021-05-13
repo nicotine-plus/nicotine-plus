@@ -26,10 +26,6 @@ pacman --noconfirm -S --needed \
   mingw-w64-$ARCH-nsis \
   mingw-w64-$ARCH-python-certifi
 
-# Install dependencies with pip
-pip3 install \
-  plyer
-
 # Install PyInstaller dependency
 # Rebuild bootloader to reduce false positives in anti-malware software
 wget https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.3.zip

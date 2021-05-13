@@ -17,7 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import textwrap
 import threading
+import time
+
+from ctypes import Structure, sizeof
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -39,11 +43,7 @@ class Notifications:
         self.continue_playing = False
 
         if sys.platform == "win32":
-            """ Windows notification popup support via plyer
-            Once https://gitlab.gnome.org/GNOME/glib/-/issues/1234 is implemented, we can drop plyer """
-
-            from plyer import notification
-            self.win_notification = notification
+            self.win_notification = WinNotify(self.frame.tray_icon)
 
     def add(self, location, user, room=None):
 
@@ -174,14 +174,14 @@ class Notifications:
         try:
             if sys.platform == "win32":
                 self.win_notification.notify(
-                    app_name=GLib.get_application_name(),
                     title=title,
-                    message=message[:256]
+                    message=message
                 )
 
                 if config.sections["notifications"]["notification_popup_sound"]:
                     import winsound
                     winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
+
                 return
 
             notification_popup = Gio.Notification.new(title)
@@ -199,3 +199,78 @@ class Notifications:
 
         except Exception as error:
             log.add(_("Unable to show notification popup: %s"), str(error))
+
+
+class WinNotify:
+    """ Implements a Windows balloon tip for GtkStatusIcon """
+
+    NIF_INFO = NIIF_NOSOUND = 0x10
+    NIM_MODIFY = 1
+
+    def __init__(self, tray_icon):
+
+        from ctypes import windll
+        from ctypes.wintypes import DWORD, HICON, HWND, UINT, WCHAR
+
+        class NOTIFYICONDATA(Structure):
+            _fields_ = [
+                ("cbSize", DWORD),
+                ("hWnd", HWND),
+                ("uID", UINT),
+                ("uFlags", UINT),
+                ("uCallbackMessage", UINT),
+                ("hIcon", HICON),
+                ("szTip", WCHAR * 128),
+                ("dwState", DWORD),
+                ("dwStateMask", DWORD),
+                ("szInfo", WCHAR * 256),
+                ("uVersion", UINT),
+                ("szInfoTitle", WCHAR * 64),
+                ("dwInfoFlags", DWORD)
+            ]
+
+        self.tray_icon = tray_icon
+        self.queue = []
+        self.worker = None
+
+        self.nid = NOTIFYICONDATA()
+        self.nid.cbSize = sizeof(NOTIFYICONDATA)
+        self.nid.hWnd = windll.user32.FindWindowExW(None, None, "gtkstatusicon-observer", "")
+        self.nid.uFlags = self.NIF_INFO
+        self.nid.dwInfoFlags = self.NIIF_NOSOUND
+
+    def notify(self, **kwargs):
+
+        self.queue.append(kwargs)
+
+        if self.worker and self.worker.is_alive():
+            return
+
+        self.worker = threading.Thread(target=self.work)
+        self.worker.name = "WinNotify"
+        self.worker.daemon = True
+        self.worker.start()
+
+    def work(self):
+
+        while self.queue:
+            kwargs = self.queue.pop(0)
+            self._notify(**kwargs)
+
+    def _notify(self, title="", message="", timeout=10):
+
+        from ctypes import windll
+        has_tray_icon = config.sections["ui"]["trayicon"]
+
+        if not has_tray_icon:
+            # Tray icon was disabled by the user. Enable it temporarily to show a notification.
+            self.tray_icon.show()
+
+        self.nid.szInfoTitle = textwrap.shorten(title, width=64, placeholder="...")
+        self.nid.szInfo = textwrap.shorten(message, width=256, placeholder="...")
+
+        windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, self.nid)
+        time.sleep(timeout)
+
+        if not has_tray_icon:
+            self.tray_icon.hide()
