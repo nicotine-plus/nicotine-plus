@@ -223,7 +223,11 @@ class WishList:
             update_widget_visuals(widget)
 
     def show(self, *args):
+
         self.WishListDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.WishListDialog.get_window().set_functions(
+            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+        )
 
     def quit(self, *args):
         self.WishListDialog.hide()

@@ -71,7 +71,11 @@ class RoomWall:
 
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
+
         self.RoomWallDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.RoomWallDialog.get_window().set_functions(
+            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+        )
 
 
 class Tickers:

@@ -6,7 +6,7 @@
     <property name="modal">1</property>
     <property name="default-width">600</property>
     <property name="window-position">center-on-parent</property>
-    <property name="type-hint">utility</property>
+    <property name="type-hint">normal</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="visible">1</property>

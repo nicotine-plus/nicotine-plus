@@ -143,5 +143,9 @@ class FileProperties:
         self.update_title()
 
     def show(self):
+
         self.update_current_file()
         self.FilePropertiesDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.FilePropertiesDialog.get_window().set_functions(
+            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+        )
