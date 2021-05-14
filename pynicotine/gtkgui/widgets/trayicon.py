@@ -327,8 +327,8 @@ class TrayIcon:
                 self.trayicon.set_icon_theme_path(self.final_icon_path)
 
         if use_trayicon or config.sections["ui"]["trayicon"]:
-            self.set_image(self.tray_status["status"])
             self.show()
+            self.set_image(self.tray_status["status"])
             return
 
         self.set_image("msg")
