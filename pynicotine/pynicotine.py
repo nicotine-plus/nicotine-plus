@@ -1109,9 +1109,10 @@ class NetworkEventProcessor:
             if msg.ip is not None:
                 self.ipaddress = msg.ip
 
-            for i in config.sections["server"]["userlist"]:
-                user = i[0]
-                self.watch_user(user)
+            for row in config.sections["server"]["userlist"]:
+                if row and isinstance(row, list):
+                    user = str(row[0])
+                    self.watch_user(user)
 
             self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
 

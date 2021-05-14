@@ -667,14 +667,13 @@ def get_completion_list(commands, rooms):
 
     if config_words["buddies"]:
         for i in config.sections["server"]["userlist"]:
-            user = i[0]
-            if isinstance(user, str):
+            if i and isinstance(i, list):
+                user = str(i[0])
                 completion_list.append(user)
 
     if config_words["aliases"]:
         for k in config.sections["server"]["command_aliases"].keys():
-            if isinstance(k, str):
-                completion_list.append("/" + k)
+            completion_list.append("/" + str(k))
 
     if config_words["commands"]:
         completion_list += commands

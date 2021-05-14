@@ -123,41 +123,10 @@ class UserList:
 
         self.UserListTree.set_model(self.usersmodel)
 
-        """ Buddy list """
+        """ Lists """
 
-        for user in config.sections["server"]["userlist"]:
-            try:
-                username, comment, notify, privileged, trusted, last_seen, country = user
-            except ValueError:
-                # Invalid user row
-                continue
-
-            try:
-                time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
-            except ValueError:
-                last_seen = _("Never seen")
-                time_from_epoch = 0
-
-            username = str(username)
-            row = [
-                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
-                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
-                username,
-                "",
-                "",
-                bool(trusted),
-                bool(notify),
-                bool(privileged),
-                str(last_seen),
-                str(comment),
-                0,
-                0,
-                0,
-                time_from_epoch,
-                str(country)
-            ]
-
-            self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
+        for row in config.sections["server"]["userlist"]:
+            self.append_user_row(row)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
@@ -186,14 +155,81 @@ class UserList:
 
         self.update_visuals()
 
+    def append_user_row(self, row):
+
+        if not row or not isinstance(row, list):
+            return
+
+        username = str(row[0])
+
+        if not username:
+            return
+
+        try:
+            comment = str(row[1])
+        except IndexError:
+            comment = ""
+
+        try:
+            notify = bool(row[2])
+        except IndexError:
+            notify = False
+
+        try:
+            privileged = bool(row[3])
+        except IndexError:
+            privileged = False
+
+        try:
+            trusted = bool(row[4])
+        except IndexError:
+            trusted = False
+
+        try:
+            last_seen = str(row[5])
+        except IndexError:
+            last_seen = ""
+
+        try:
+            time_from_epoch = time.mktime(time.strptime(last_seen, "%m/%d/%Y %H:%M:%S"))
+        except ValueError:
+            last_seen = _("Never seen")
+            time_from_epoch = 0
+
+        try:
+            country = str(row[6])
+        except IndexError:
+            country = ""
+
+        row = [
+            GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
+            GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
+            username,
+            "",
+            "",
+            trusted,
+            notify,
+            privileged,
+            last_seen,
+            comment,
+            0,
+            0,
+            0,
+            time_from_epoch,
+            country
+        ]
+
+        self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
+
     def buddies_combos_fill(self):
 
         for widget in self.buddies_combo_entries:
             widget.remove_all()
             widget.append_text("")
 
-            for user in config.sections["server"]["userlist"]:
-                widget.append_text(str(user[0]))
+            for row in config.sections["server"]["userlist"]:
+                if row and isinstance(row, list):
+                    widget.append_text(str(row[0]))
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 

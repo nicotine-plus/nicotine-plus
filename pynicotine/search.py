@@ -114,9 +114,10 @@ class Search:
 
     def do_buddies_search(self, id, text):
 
-        for i in self.config.sections["server"]["userlist"]:
-            user = i[0]
-            self.queue.append(slskmessages.UserSearch(user, id, text))
+        for row in self.config.sections["server"]["userlist"]:
+            if row and isinstance(row, list):
+                user = str(row[0])
+                self.queue.append(slskmessages.UserSearch(user, id, text))
 
     def do_peer_search(self, id, text, users):
         for user in users:

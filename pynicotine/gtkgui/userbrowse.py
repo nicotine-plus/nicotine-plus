@@ -838,8 +838,10 @@ class UserBrowse:
             return
 
         users = []
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
+        for row in config.sections["server"]["userlist"]:
+            if row and isinstance(row, list):
+                user = str(row[0])
+                users.append(user)
 
         users.sort()
         combo_box_dialog(
@@ -909,8 +911,10 @@ class UserBrowse:
 
         users = []
 
-        for entry in config.sections["server"]["userlist"]:
-            users.append(entry[0])
+        for row in config.sections["server"]["userlist"]:
+            if row and isinstance(row, list):
+                user = str(row[0])
+                users.append(user)
 
         users.sort()
         combo_box_dialog(

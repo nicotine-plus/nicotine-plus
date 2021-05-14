@@ -292,14 +292,20 @@ class Transfers:
         if not user:
             return False
 
-        for i in self.config.sections["server"]["userlist"]:
-            if user == i[0]:
+        for row in self.config.sections["server"]["userlist"]:
+            if not row or not isinstance(row, list):
+                continue
+
+            if user == str(row[0]):
                 # All users
                 if self.config.sections["transfers"]["preferfriends"]:
                     return True
 
                 # Only privileged users
-                return i[3]  # Privileged column
+                try:
+                    return bool(row[3])  # Privileged column
+                except IndexError:
+                    return False
 
         return False
 
