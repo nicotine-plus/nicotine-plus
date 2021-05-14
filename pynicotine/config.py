@@ -58,7 +58,7 @@ class Config:
         self.filename = os.path.join(config_dir, 'config')
         self.plugin_dir = os.path.join(self.data_dir, 'plugins')
 
-        self.parser = configparser.RawConfigParser(strict=False)
+        self.parser = configparser.ConfigParser(strict=False, interpolation=None)
 
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
@@ -711,7 +711,7 @@ class Config:
                 self.parser.add_section(i)
 
             for j in self.sections[i]:
-                self.parser.set(i, j, self.sections[i][j])
+                self.parser.set(i, j, str(self.sections[i][j]))
 
         if not self.create_config_folder():
             return
