@@ -1082,12 +1082,10 @@ class ChatRoom:
 
         if not self.meta:
             self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
-        else:
-            if self.room == 'Public ':
-                self.frame.np.queue.append(slskmessages.LeavePublicRoom())
-                self.chatrooms.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
-            else:
-                log.add_warning(_("Unknown meta chatroom closed"))
+
+        elif self.room == 'Public ':
+            self.frame.np.queue.append(slskmessages.LeavePublicRoom())
+            self.chatrooms.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
 
         self.frame.np.pluginhandler.leave_chatroom_notification(self.room)
 

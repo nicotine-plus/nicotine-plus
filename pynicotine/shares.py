@@ -643,11 +643,11 @@ class Shares:
                 exception = format_exc()
 
         if errors:
-            log.add_warning(_("Failed to process the following databases: %(names)s"), {
+            log.add(_("Failed to process the following databases: %(names)s"), {
                 'names': '\n'.join(errors)
             })
-            log.add_warning(exception)
-            log.add_warning(_("Shared files database seems to be corrupted, rescan your shares"))
+            log.add(exception)
+            log.add(_("Shared files database seems to be corrupted, rescan your shares"))
 
             if not reset_shares:
                 cls.load_shares(shares, dbs, reset_shares=True)

@@ -29,18 +29,22 @@ class Logger(object):
 
     def set_msg_prefix(self, level, msg):
 
-        if level == 1:
-            prefix = "Warn"
-        elif level == 2:
+        if level == "download":
+            prefix = "Download"
+        elif level == "upload":
+            prefix = "Upload"
+        elif level == "search":
             prefix = "Search"
-        elif level == 3:
+        elif level == "chat":
+            prefix = "Chat"
+        elif level == "connection":
             prefix = "Conn"
-        elif level == 4:
+        elif level == "message":
             prefix = "Msg"
-        elif level == 5:
+        elif level == "transfer":
             prefix = "Transfer"
-        elif level == 6:
-            prefix = "Stat"
+        elif level == "miscellaneous":
+            prefix = "Misc"
         else:
             prefix = ""
 
@@ -49,24 +53,14 @@ class Logger(object):
 
         return msg
 
-    def add(self, msg, msg_args=None, level=0):
-        """Add a message. The list of logging levels is as follows:
-        None - Deprecated (calls that haven't been updated yet)
-        0    - Normal messages and (Human-Readable) Errors
-        1    - Warnings & Tracebacks
-        2    - Search Results
-        3    - Peer Connections
-        4    - Message Contents
-        5    - Transfers
-        6    - Statistics
-        """
+    def add(self, msg, msg_args=None, level=None):
 
         from pynicotine.config import config
 
-        if level not in config.sections["logging"]["debugmodes"]:
+        if level and level not in config.sections["logging"]["debugmodes"]:
             return
 
-        if not msg_args and level == 4:
+        if not msg_args and level in ("chat", "message"):
             # Compile message contents
             msg = "%s %s" % (msg.__class__, self.contents(msg))
 
@@ -88,23 +82,31 @@ class Logger(object):
             except Exception as e:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
 
-    def add_warning(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=1)
+    def add_download(self, msg, msg_args=None):
+        self.log_transfer(msg)
+        self.add(msg, msg_args=msg_args, level="download")
+
+    def add_upload(self, msg, msg_args=None):
+        self.log_transfer(msg)
+        self.add(msg, msg_args=msg_args, level="upload")
 
     def add_search(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=2)
+        self.add(msg, msg_args=msg_args, level="search")
+
+    def add_chat(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level="chat")
 
     def add_conn(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=3)
+        self.add(msg, msg_args=msg_args, level="connection")
 
     def add_msg_contents(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=4)
+        self.add(msg, msg_args=msg_args, level="message")
 
     def add_transfer(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=5)
+        self.add(msg, msg_args=msg_args, level="transfer")
 
     def add_debug(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level=6)
+        self.add(msg, msg_args=msg_args, level="miscellaneous")
 
     def contents(self, obj):
         """ Returns variables for object, for debug output """
@@ -121,6 +123,16 @@ class Logger(object):
             self.listeners.remove(callback)
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
+
+    def log_transfer(self, msg):
+
+        if not self.config.sections["logging"]["transfers"]:
+            return
+
+        folder = self.config.sections["logging"]["transferslogsdir"]
+        timestamp_format = self.config.sections["logging"]["log_timestamp"]
+
+        self.write_log(folder, "transfers", msg, timestamp_format)
 
     def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
@@ -151,11 +163,11 @@ class Logger(object):
 class Console(object):
 
     def __init__(self, logger):
-        self.log_levels = (1,)
+        self.log_levels = ()
         logger.add_listener(self.console_logger)
 
     def console_logger(self, timestamp_format, level, msg):
-        if level in self.log_levels:
+        if not level or level in self.log_levels:
             print("[" + time.strftime(timestamp_format) + "] " + msg)
 
 

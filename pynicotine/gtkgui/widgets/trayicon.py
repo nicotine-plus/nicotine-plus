@@ -27,7 +27,6 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
-from pynicotine.logfacility import log
 
 
 """ Status Icon / AppIndicator """
@@ -374,40 +373,36 @@ class TrayIcon:
         if not self.is_visible():
             return
 
-        try:
-            if status is not None:
-                self.tray_status["status"] = status
+        if status is not None:
+            self.tray_status["status"] = status
 
-            # Check for hilites, and display hilite icon if there is a room or private hilite
-            if self.frame.hilites["rooms"] or self.frame.hilites["private"]:
-                icon_name = "msg"
+        # Check for hilites, and display hilite icon if there is a room or private hilite
+        if self.frame.hilites["rooms"] or self.frame.hilites["private"]:
+            icon_name = "msg"
+        else:
+            # If there is no hilite, display the status
+            icon_name = self.tray_status["status"]
+
+        if icon_name != self.tray_status["last"]:
+            self.tray_status["last"] = icon_name
+
+        if self.appindicator is not None:
+            if self.custom_icons:
+                icon_name = "trayicon_" + icon_name
             else:
-                # If there is no hilite, display the status
-                icon_name = self.tray_status["status"]
+                icon_name = GLib.get_prgname() + "-" + icon_name
 
-            if icon_name != self.tray_status["last"]:
-                self.tray_status["last"] = icon_name
+            self.trayicon.set_icon_full(icon_name, GLib.get_application_name())
 
-            if self.appindicator is not None:
-                if self.custom_icons:
-                    icon_name = "trayicon_" + icon_name
-                else:
-                    icon_name = GLib.get_prgname() + "-" + icon_name
-
-                self.trayicon.set_icon_full(icon_name, GLib.get_application_name())
+        else:
+            # GtkStatusIcon fallback
+            if self.custom_icons or self.local_icons:
+                self.trayicon.set_from_pixbuf(
+                    self.frame.images["trayicon_" + icon_name]
+                )
 
             else:
-                # GtkStatusIcon fallback
-                if self.custom_icons or self.local_icons:
-                    self.trayicon.set_from_pixbuf(
-                        self.frame.images["trayicon_" + icon_name]
-                    )
-
-                else:
-                    self.trayicon.set_from_icon_name(GLib.get_prgname() + "-" + icon_name)
-
-        except Exception as e:
-            log.add_warning(_("ERROR: cannot set trayicon image: %(error)s"), {'error': e})
+                self.trayicon.set_from_icon_name(GLib.get_prgname() + "-" + icon_name)
 
     def set_away(self, enable):
 

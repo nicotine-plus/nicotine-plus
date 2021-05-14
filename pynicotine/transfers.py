@@ -1044,9 +1044,12 @@ class Transfers:
                         i.status = "Transferring"
                         i.legacy_attempt = False
                         self.queue.append(slskmessages.DownloadFile(i.conn, size, f, i.size))
-                        log.add_transfer("Download started: %s", f.name)
-
-                        self.log_transfer(_("Download started: user %(user)s, file %(file)s") % {'user': i.user, 'file': "%s" % f.name}, show_ui=1)
+                        log.add_download(
+                            _("Download started: user %(user)s, file %(file)s"), {
+                                "user": i.user,
+                                "file": "%s" % f.name
+                            }
+                        )
                     else:
                         self.download_finished(f, i)
                         needupdate = False
@@ -1057,7 +1060,7 @@ class Transfers:
                 self.downloadsview.update(i)
 
         else:
-            log.add_warning("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
+            log.add_transfer("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename
@@ -1110,11 +1113,13 @@ class Transfers:
                         # Connection already closed
                         pass
 
-                self.log_transfer(_("Upload started: user %(user)s, IP address %(ip)s, file %(file)s") % {
-                    'user': i.user,
-                    'ip': ip_address,
-                    'file': i.filename
-                })
+                log.add_upload(
+                    _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                        "user": i.user,
+                        "ip": ip_address,
+                        "file": i.filename
+                    }
+                )
 
             self.uploadsview.new_transfer_notification()
             self.uploadsview.update(i)
@@ -1126,7 +1131,7 @@ class Transfers:
                 self.upload_finished(i, file=f)
 
         else:
-            log.add_warning("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
+            log.add_transfer("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
                 'req': str(vars(msg)),
                 'user': i.user,
                 'file': i.filename
@@ -1872,18 +1877,11 @@ class Transfers:
 
         self.save_downloads()
 
-        log.add_transfer(
-            "Download finished: %(file)s", {
-                'file': newname
-            }
-        )
-
-        self.log_transfer(
-            _("Download finished: user %(user)s, file %(file)s") % {
+        log.add_download(
+            _("Download finished: user %(user)s, file %(file)s"), {
                 'user': i.user,
                 'file': i.filename
-            },
-            show_ui=1
+            }
         )
 
     def upload_finished(self, i, file=None):
@@ -1912,8 +1910,8 @@ class Transfers:
             if j.user == i.user:
                 j.timequeued = i.lasttime
 
-        self.log_transfer(
-            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s") % {
+        log.add_upload(
+            _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
                 'user': i.user,
                 'ip': ip_address,
                 'file': i.filename
@@ -2178,32 +2176,22 @@ class Transfers:
 
             if transfer in self.uploads:
                 self.check_upload_queue()
-                self.log_transfer(
-                    _("Upload aborted, user %(user)s file %(file)s") % {
-                        'user': transfer.user,
-                        'file': transfer.filename
+                log.add_upload(
+                    _("Upload aborted, user %(user)s file %(file)s"), {
+                        "user": transfer.user,
+                        "file": transfer.filename
                     }
                 )
             else:
-                self.log_transfer(
-                    _("Download aborted, user %(user)s file %(file)s") % {
-                        'user': transfer.user,
-                        'file': transfer.filename
-                    },
-                    show_ui=1
+                log.add_download(
+                    _("Download aborted, user %(user)s file %(file)s"), {
+                        "user": transfer.user,
+                        "file": transfer.filename
+                    }
                 )
 
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.eventprocessor.send_message_to_peer(transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
-
-    def log_transfer(self, message, show_ui=0):
-
-        if self.config.sections["logging"]["transfers"]:
-            timestamp_format = self.config.sections["logging"]["log_timestamp"]
-            log.write_log(self.config.sections["logging"]["transferslogsdir"], "transfers", message, timestamp_format)
-
-        if show_ui:
-            log.add(message)
 
     """ Exit """
 

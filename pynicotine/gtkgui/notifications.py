@@ -164,7 +164,7 @@ class Notifications:
             execute_command(config.sections["ui"]["speechcommand"], message, background=False)
 
         except Exception as error:
-            log.add_warning(_("Text-to-speech for message failed: %s"), str(error))
+            log.add(_("Text-to-speech for message failed: %s"), str(error))
 
     def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 

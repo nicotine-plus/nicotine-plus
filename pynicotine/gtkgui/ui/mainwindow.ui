@@ -1298,22 +1298,23 @@
             </child>
             <!-- Log Window -->
             <child>
-              <object class="GtkBox" id="debugLogBox">
+              <object class="GtkBox" id="DebugLog">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFlowBox" id="debugButtonsBox">
+                  <object class="GtkFlowBox" id="DebugButtons">
                     <property name="visible">1</property>
                     <property name="margin-top">3</property>
                     <property name="margin-bottom">3</property>
                     <property name="column-spacing">5</property>
+                    <property name="max-children-per-line">9</property>
                     <property name="selection-mode">none</property>
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
                         <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkLabel" id="debugLabel">
+                          <object class="GtkLabel">
                             <property name="visible">1</property>
                             <property name="label" translatable="yes">Debug Logging</property>
                             <property name="xalign">0</property>
@@ -1332,9 +1333,24 @@
                         <property name="can-focus">0</property>
                         <child>
                           <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Warnings</property>
+                            <property name="label" translatable="yes">Downloads</property>
                             <property name="visible">1</property>
-                            <property name="action-name">app.debugwarnings</property>
+                            <property name="can-focus">1</property>
+                            <property name="action-name">app.debugdownloads</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="label" translatable="yes">Uploads</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="action-name">app.debuguploads</property>
                           </object>
                         </child>
                       </object>
@@ -1349,6 +1365,20 @@
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
                             <property name="action-name">app.debugsearches</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="can-focus">0</property>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="label" translatable="yes">Chat</property>
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="action-name">app.debugchat</property>
                           </object>
                         </child>
                       </object>
@@ -1401,10 +1431,10 @@
                         <property name="can-focus">0</property>
                         <child>
                           <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Statistics</property>
+                            <property name="label" translatable="yes">Miscellaneous</property>
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="action-name">app.debugstatistics</property>
+                            <property name="action-name">app.debugmiscellaneous</property>
                           </object>
                         </child>
                       </object>

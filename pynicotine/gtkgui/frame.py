@@ -872,34 +872,44 @@ class NicotineFrame:
 
         # Debug Logging
 
-        state = (1 in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugwarnings", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_warnings)
+        state = ("download" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugdownloads", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_downloads)
         self.application.add_action(action)
 
-        state = (2 in config.sections["logging"]["debugmodes"])
+        state = ("upload" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debuguploads", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_uploads)
+        self.application.add_action(action)
+
+        state = ("search" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_searches)
         self.application.add_action(action)
 
-        state = (3 in config.sections["logging"]["debugmodes"])
+        state = ("chat" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugchat", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_chat)
+        self.application.add_action(action)
+
+        state = ("connection" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_connections)
         self.application.add_action(action)
 
-        state = (4 in config.sections["logging"]["debugmodes"])
+        state = ("message" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_messages)
         self.application.add_action(action)
 
-        state = (5 in config.sections["logging"]["debugmodes"])
+        state = ("transfer" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_transfers)
         self.application.add_action(action)
 
-        state = (6 in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugstatistics", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_statistics)
+        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugmiscellaneous", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_miscellaneous)
         self.application.add_action(action)
 
     """ Menu """
@@ -1037,10 +1047,10 @@ class NicotineFrame:
     def set_show_log(self, show):
         if show:
             self.set_status_text("")
-            self.debugLogBox.show()
+            self.DebugLog.show()
             scroll_bottom(self.LogScrolledWindow)
         else:
-            self.debugLogBox.hide()
+            self.DebugLog.hide()
 
     def on_show_log(self, action, *args):
 
@@ -1051,7 +1061,7 @@ class NicotineFrame:
         config.sections["logging"]["logcollapsed"] = not state
 
     def set_show_debug(self, show):
-        self.debugButtonsBox.set_visible(show)
+        self.DebugButtons.set_visible(show)
 
     def on_show_debug(self, action, *args):
 
@@ -2006,7 +2016,7 @@ class NicotineFrame:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
         except Exception as msg:
-            log.add_warning(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
 
         choose_file(
             parent=self.MainWindow.get_toplevel(),
@@ -2141,9 +2151,6 @@ class NicotineFrame:
             GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
 
     def update_log(self, msg, debug_level=None):
-        '''For information about debug levels see
-        pydoc pynicotine.logfacility.logger.add
-        '''
 
         if self.shutdown:
             return
@@ -2210,59 +2217,38 @@ class NicotineFrame:
         if debug_level in config.sections["logging"]["debugmodes"]:
             config.sections["logging"]["debugmodes"].remove(debug_level)
 
-    def on_debug_warnings(self, action, state):
+    def set_debug_level(self, action, state, level):
 
         if state.get_boolean():
-            self.add_debug_level(1)
+            self.add_debug_level(level)
         else:
-            self.remove_debug_level(1)
+            self.remove_debug_level(level)
 
         action.set_state(state)
+
+    def on_debug_downloads(self, action, state):
+        self.set_debug_level(action, state, "download")
+
+    def on_debug_uploads(self, action, state):
+        self.set_debug_level(action, state, "upload")
 
     def on_debug_searches(self, action, state):
+        self.set_debug_level(action, state, "search")
 
-        if state.get_boolean():
-            self.add_debug_level(2)
-        else:
-            self.remove_debug_level(2)
-
-        action.set_state(state)
+    def on_debug_chat(self, action, state):
+        self.set_debug_level(action, state, "chat")
 
     def on_debug_connections(self, action, state):
-
-        if state.get_boolean():
-            self.add_debug_level(3)
-        else:
-            self.remove_debug_level(3)
-
-        action.set_state(state)
+        self.set_debug_level(action, state, "connection")
 
     def on_debug_messages(self, action, state):
-
-        if state.get_boolean():
-            self.add_debug_level(4)
-        else:
-            self.remove_debug_level(4)
-
-        action.set_state(state)
+        self.set_debug_level(action, state, "message")
 
     def on_debug_transfers(self, action, state):
+        self.set_debug_level(action, state, "transfer")
 
-        if state.get_boolean():
-            self.add_debug_level(5)
-        else:
-            self.remove_debug_level(5)
-
-        action.set_state(state)
-
-    def on_debug_statistics(self, action, state):
-
-        if state.get_boolean():
-            self.add_debug_level(6)
-        else:
-            self.remove_debug_level(6)
-
-        action.set_state(state)
+    def on_debug_miscellaneous(self, action, state):
+        self.set_debug_level(action, state, "miscellaneous")
 
     """ Status Bar """
 

@@ -157,7 +157,7 @@ class Searches(IconNotebook):
                 (users, text) = feedback
 
         else:
-            log.add_warning("Unknown search mode, not using plugin system. Fix me!")
+            log.add("Unknown search mode, not using plugin system. Fix me!")
             feedback = True
 
         if feedback is None:
@@ -340,7 +340,7 @@ class Searches(IconNotebook):
         search_id = self.get_search_id(child)
 
         if search_id is None:
-            log.add_warning(_("Search ID was none when clicking tab"))
+            log.add("Search ID was none when clicking tab")
             return False
 
         menu = self.searches[search_id]["tab"].tab_menu
@@ -802,7 +802,7 @@ class Search:
             types = []
             for i in row:
                 types.append(type(i))
-            log.add_warning(_("Search row error: %(exception)s %(row)s"), {'exception': e, 'row': row})
+            log.add("Search row error: %(exception)s %(row)s", {'exception': e, 'row': row})
             iterator = None
 
         return iterator
