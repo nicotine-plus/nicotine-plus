@@ -9,7 +9,7 @@
       <object class="GtkLabel">
         <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access your buddy shares in addition to public shares.</property>
+        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access buddy-only shares in addition to public shares.</property>
         <property name="justify">fill</property>
         <property name="wrap">1</property>
       </object>
@@ -25,19 +25,48 @@
       </object>
     </child>
     <child>
-      <object class="GtkCheckButton" id="RescanOnStartup">
-        <property name="label" translatable="yes">Rescan shares on startup</property>
-        <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
-        <property name="use-underline">1</property>
+        <property name="spacing">6</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkCheckButton" id="RescanOnStartup">
+            <property name="label" translatable="yes">Rescan shares on startup</property>
+            <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="EnableBuddyShares">
+            <property name="label" translatable="yes">Enable buddy-only shares</property>
+            <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="has-tooltip">1</property>
+            <property name="use-underline">1</property>
+            <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="FriendsOnly">
+            <property name="label" translatable="yes">Mark each shared folder as buddy-only</property>
+            <property name="tooltip-text" translatable="yes">Overrides the per-share option, useful if you temporarily need to prevent public access to shares.</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="has-tooltip">1</property>
+            <property name="use-underline">1</property>
+            <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
+          </object>
+        </child>
       </object>
     </child>
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">Public Shares</property>
+        <property name="label" translatable="yes">Shares</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
@@ -133,147 +162,6 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-remove-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">15</property>
-        <child>
-          <object class="GtkCheckButton" id="enableBuddyShares">
-            <property name="label" translatable="yes">Buddy Shares</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
-            <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="FriendsOnly">
-            <property name="label" translatable="yes">Make public shares buddy-only</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="has-tooltip">1</property>
-            <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="vexpand">1</property>
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkScrolledWindow">
-            <property name="width-request">250</property>
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="vexpand">1</property>
-            <property name="shadow-type">in</property>
-            <child>
-              <object class="GtkTreeView" id="BuddyShares">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="rubber-banding">1</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection">
-                    <property name="mode">multiple</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="margin-start">6</property>
-            <property name="spacing">6</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkButton" id="addBuddySharesButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_add_shared_buddy_dir" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-add-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add...</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="renameBuddyVirtualsButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_rename_buddy_virtuals" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">document-edit-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Rename</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="removeBuddySharesButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_remove_shared_buddy_dir" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
