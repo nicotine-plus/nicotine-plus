@@ -83,11 +83,11 @@ class Logger(object):
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
 
     def add_download(self, msg, msg_args=None):
-        self.log_transfer(msg)
+        self.log_transfer(msg, msg_args)
         self.add(msg, msg_args=msg_args, level="download")
 
     def add_upload(self, msg, msg_args=None):
-        self.log_transfer(msg)
+        self.log_transfer(msg, msg_args)
         self.add(msg, msg_args=msg_args, level="upload")
 
     def add_search(self, msg, msg_args=None):
@@ -124,13 +124,18 @@ class Logger(object):
         except KeyError:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
-    def log_transfer(self, msg):
+    def log_transfer(self, msg, msg_args=None):
 
-        if not self.config.sections["logging"]["transfers"]:
+        from pynicotine.config import config
+
+        if not config.sections["logging"]["transfers"]:
             return
 
-        folder = self.config.sections["logging"]["transferslogsdir"]
-        timestamp_format = self.config.sections["logging"]["log_timestamp"]
+        folder = config.sections["logging"]["transferslogsdir"]
+        timestamp_format = config.sections["logging"]["log_timestamp"]
+
+        if msg_args:
+            msg = msg % msg_args
 
         self.write_log(folder, "transfers", msg, timestamp_format)
 
