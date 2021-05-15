@@ -235,7 +235,7 @@ class WinNotify:
 
         self.nid = NOTIFYICONDATA()
         self.nid.cbSize = sizeof(NOTIFYICONDATA)
-        self.nid.hWnd = windll.user32.FindWindowExW(None, None, "gtkstatusicon-observer", "")
+        self.nid.hWnd = windll.user32.FindWindowW("gtkstatusicon-observer", None)
         self.nid.uFlags = self.NIF_INFO
         self.nid.dwInfoFlags = self.NIIF_NOSOUND
 
