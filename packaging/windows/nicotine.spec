@@ -141,16 +141,8 @@ coll = COLLECT(exe,
 """ Create macOS .app """
 
 
-if sys.platform == 'darwin':
-
-    info_plist = {
-        "CFBundleDisplayName": name,
-        "NSHighResolutionCapable": True,
-    }
-
-    app = BUNDLE(coll,
-                 name=name + '.app',
-                 icon='nicotine.icns',
-                 info_plist=info_plist,
-                 bundle_identifier='org.nicotine_plus.Nicotine',
-                 version=version)
+app = BUNDLE(coll,
+             name=name + '.app',
+             icon='nicotine.icns',
+             bundle_identifier='org.nicotine_plus.Nicotine',
+             version=version)
