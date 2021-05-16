@@ -483,64 +483,6 @@ class NicotineFrame:
 
         return False
 
-    def load_local_icons(self):
-        """ Attempt to load local window, notification and tray icons.
-        If not found, system-wide icons will be used instead. """
-
-        app_id = GLib.get_prgname()
-
-        if hasattr(sys, "real_prefix") or sys.base_prefix != sys.prefix:
-            # Virtual environment
-            icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
-        else:
-            # Git folder
-            icon_path = os.path.abspath(os.path.join(self.gui_dir, "..", "..", "files"))
-
-        log.add_debug("Loading local icons, using path %s", icon_path)
-
-        # Window and notification icons
-        try:
-            scandir = os.scandir(icon_path)
-
-            for entry in scandir:
-                if entry.is_file() and entry.name == app_id + ".svg":
-                    log.add_debug("Detected Nicotine+ icon: %s", entry.name)
-
-                    try:
-                        scandir.close()
-                    except AttributeError:
-                        # Python 3.5 compatibility
-                        pass
-
-                    for name in ("n", "notify"):
-                        self.images[name] = self.load_pixbuf_from_path(entry.path)
-
-        except FileNotFoundError:
-            pass
-
-        # Tray icons
-        if icon_path.endswith("files"):
-            icon_path = os.path.join(icon_path, "icons", "tray")
-
-        for name in ("away", "connect", "disconnect", "msg"):
-            try:
-                scandir = os.scandir(icon_path)
-
-                for entry in scandir:
-                    if entry.is_file() and entry.name == app_id + "-" + name + ".svg":
-                        log.add_debug("Detected tray icon: %s", entry.name)
-
-                        try:
-                            scandir.close()
-                        except AttributeError:
-                            # Python 3.5 compatibility
-                            pass
-
-                        self.images["trayicon_" + name] = self.load_pixbuf_from_path(entry.path)
-
-            except FileNotFoundError:
-                pass
-
     def load_icons(self):
         """ Load custom icons necessary for Nicotine+ to function """
 
@@ -571,9 +513,15 @@ class NicotineFrame:
         for name in names:
             self.images[name] = self.load_ui_icon(name)
 
-        """ Load local icons, if available """
+        """ Load local app and tray icons, if available """
 
-        self.load_local_icons()
+        icon_theme = Gtk.IconTheme.get_default()
+
+        # Support running from folder, as well as macOS and Windows
+        icon_theme.append_search_path(os.path.join(self.gui_dir, "icons"))
+
+        # Support Python venv
+        icon_theme.append_search_path(os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps"))
 
     def update_visuals(self):
 

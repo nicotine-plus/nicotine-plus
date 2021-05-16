@@ -36,119 +36,6 @@ from distutils.cmd import Command
 from pkgutil import walk_packages
 from pynicotine.utils import version
 
-packages = ["pynicotine"] + \
-    [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
-
-package_data = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in packages)
-data_files = []
-
-
-""" Translations """
-
-# Merge translations into .desktop and metainfo files
-for desktop_file in glob.glob(os.path.join("files", "*.desktop.in")):
-    os.system(
-        "msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3]
-    )
-
-for metainfo_file in glob.glob(os.path.join("files", "*.metainfo.xml.in")):
-    os.system(
-        "msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3]
-    )
-
-# MO translation files
-for po_file in glob.glob(os.path.join("po", "*.po")):
-    lang = os.path.basename(po_file[:-3])
-
-    mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
-    mo_file = os.path.join(mo_dir, "nicotine.mo")
-
-    if not os.path.exists(mo_dir):
-        os.makedirs(mo_dir)
-
-    os.system("msgfmt " + po_file + " -o " + mo_file)
-
-    targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
-    data_files.append(
-        (
-            targetpath,
-            [mo_file]
-        )
-    )
-
-
-""" Data Files """
-
-# Desktop file
-desktop_files = glob.glob(os.path.join("files", "*.desktop"))
-
-for desktop_file in desktop_files:
-    data_files.append(
-        (
-            "share/applications",
-            [desktop_file]
-        )
-    )
-
-# AppStream metainfo
-metainfo_files = glob.glob(os.path.join("files", "*.metainfo.xml"))
-
-for metainfo_file in metainfo_files:
-    data_files.append(
-        (
-            "share/metainfo",
-            [metainfo_file]
-        )
-    )
-
-# Icons
-data_files.append(
-    (
-        "share/icons/hicolor/scalable/apps",
-        ["files/org.nicotine_plus.Nicotine.svg"]
-    )
-)
-
-data_files.append(
-    (
-        "share/icons/hicolor/symbolic/apps",
-        ["files/org.nicotine_plus.Nicotine-symbolic.svg"]
-    )
-)
-
-tray_icons = glob.glob(os.path.join("files", "icons", "tray", "*"))
-
-for icon_name in tray_icons:
-    data_files.append(
-        (
-            "share/icons/hicolor/scalable/apps",
-            [icon_name]
-        )
-    )
-
-# Documentation
-doc_files = glob.glob("[!404.md]*.md") + \
-    glob.glob(os.path.join("doc", "*.md")) + \
-    ["COPYING"]
-
-for doc in doc_files:
-    data_files.append(
-        (
-            "share/doc/nicotine",
-            [doc]
-        )
-    )
-
-manpages = glob.glob(os.path.join("files", "*.1"))
-
-for man in manpages:
-    data_files.append(
-        (
-            "share/man/man1",
-            [man]
-        )
-    )
-
 
 class UpdatePot(Command):
 
@@ -173,6 +60,29 @@ class UpdatePot(Command):
         os.system("xgettext --join-existing -o po/nicotine.pot " + " ".join(files))
 
 
+def generate_mo_translations():
+
+    mo_entries = []
+    languages = []
+
+    for po_file in glob.glob("po/*.po"):
+        lang = os.path.basename(po_file[:-3])
+        languages.append(lang)
+
+        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
+        mo_file = os.path.join(mo_dir, "nicotine.mo")
+
+        if not os.path.exists(mo_dir):
+            os.makedirs(mo_dir)
+
+        os.system("msgfmt " + po_file + " -o " + mo_file)
+
+        targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
+        mo_entries.append((targetpath, [mo_file]))
+
+    return mo_entries, languages
+
+
 if __name__ == '__main__':
 
     LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
@@ -182,6 +92,34 @@ Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
 alternative to the official Soulseek client, providing additional
 functionality while keeping current with the Soulseek protocol."""
 
+    # Specify included files
+    PACKAGES = ["pynicotine"] + \
+        [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
+    PACKAGE_DATA = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in PACKAGES)
+
+    SCRIPTS = ["nicotine"]
+
+    DATA_FILES = [
+        ("share/applications", glob.glob("files/*.desktop")),
+        ("share/metainfo", glob.glob("files/*.metainfo.xml")),
+        ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
+        ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
+        ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md") + ["COPYING"]),
+        ("share/man/man1", glob.glob("files/*.1"))
+    ] + generate_mo_translations()[0]
+
+    # Merge translations into .desktop and metainfo files
+    for desktop_file in glob.glob("files/*.desktop.in"):
+        os.system(
+            "msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3]
+        )
+
+    for metainfo_file in glob.glob("files/*.metainfo.xml.in"):
+        os.system(
+            "msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3]
+        )
+
+    # Run setup
     setup(
         name="nicotine-plus",
         version=version,
@@ -192,10 +130,10 @@ functionality while keeping current with the Soulseek protocol."""
         author_email="nicotine-team@lists.launchpad.net",
         url="https://nicotine-plus.org/",
         platforms="any",
-        packages=packages,
-        package_data=package_data,
-        scripts=["nicotine"],
-        data_files=data_files,
+        packages=PACKAGES,
+        package_data=PACKAGE_DATA,
+        scripts=SCRIPTS,
+        data_files=DATA_FILES,
         python_requires='>=3.5',
         install_requires=['PyGObject>=3.18'],
         cmdclass={
