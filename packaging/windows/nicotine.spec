@@ -30,6 +30,7 @@ sys.path.append('.')
 
 import pynicotine.plugins
 
+from pynicotine.utils import version
 from setup import generate_mo_translations
 
 
@@ -108,17 +109,13 @@ for file in a.datas[:]:
 
 
 pyz = PYZ(a.pure, a.zipped_data,
-             cipher=None)
+          cipher=None)
 
 
 """ Freeze Application """
 
 
 name = 'Nicotine+'
-icon = 'nicotine.ico'
-
-if sys.platform == 'darwin':
-    icon = 'nicotine.icns'
 
 exe = EXE(pyz,
           a.scripts,
@@ -129,7 +126,7 @@ exe = EXE(pyz,
           strip=False,
           upx=False,
           console=False,
-          icon=icon)
+          icon='nicotine.ico')
 
 
 coll = COLLECT(exe,
@@ -152,7 +149,8 @@ if sys.platform == 'darwin':
     }
 
     app = BUNDLE(coll,
-             name=name + '.app',
-             icon=icon,
-             info_plist=info_plist,
-             bundle_identifier='org.nicotine_plus.Nicotine')
+                 name=name + '.app',
+                 icon='nicotine.icns',
+                 info_plist=info_plist,
+                 bundle_identifier='org.nicotine_plus.Nicotine',
+                 version=version)

@@ -71,6 +71,8 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+    env:
+      ARCH: ${{ matrix.arch }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -85,15 +87,13 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          export ARCH=${{ matrix.arch }}
           packaging/windows/dependencies-core.sh
           packaging/windows/dependencies-packaging.sh
 
       - name: Build installer
         run: |
-          export ARCH=${{ matrix.arch }}
           pyinstaller packaging/windows/nicotine.spec
-          makensis -DARCH=${{ matrix.arch }} packaging/windows/nicotine.nsi
+          packaging/windows/create-installer.sh
           mkdir installer
           cp -r packaging/windows/Nicotine*.exe installer/
 
