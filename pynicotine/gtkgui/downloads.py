@@ -43,11 +43,15 @@ class Downloads(TransferList):
         self.tab_label = tab_label
 
         self.popup_menu_clear.setup(
-            ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
-            ("#" + _("Clear Finished"), self.on_clear_finished),
-            ("#" + _("Clear Aborted"), self.on_clear_aborted),
-            ("#" + _("Clear Filtered"), self.on_clear_filtered),
-            ("#" + _("Clear Queued"), self.on_clear_queued)
+            ("#" + _("Finished / Aborted / Filtered"), self.on_clear_finished_aborted),
+            ("", None),
+            ("#" + _("Finished"), self.on_clear_finished),
+            ("#" + _("Aborted"), self.on_clear_aborted),
+            ("#" + _("Failed"), self.on_clear_failed),
+            ("#" + _("Filtered"), self.on_clear_filtered),
+            ("#" + _("Queued"), self.on_try_clear_queued),
+            ("", None),
+            ("#" + _("Clear All"), self.on_try_clear_all),
         )
 
         self.update_download_filters()
@@ -58,7 +62,18 @@ class Downloads(TransferList):
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
             message=_('Are you sure you wish to clear all queued downloads?'),
-            callback=self.on_clear_response
+            callback=self.on_clear_response,
+            callback_data="queued"
+        )
+
+    def on_try_clear_all(self, *args):
+
+        option_dialog(
+            parent=self.frame.MainWindow,
+            title=_('Clear All Downloads'),
+            message=_('Are you sure you wish to clear all downloads?'),
+            callback=self.on_clear_response,
+            callback_data="all"
         )
 
     def folder_download_response(self, dialog, response_id, data):
@@ -183,6 +198,9 @@ class Downloads(TransferList):
 
     def on_clear_finished_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])
+
+    def on_clear_failed(self, *args):
+        self.clear_transfers(["Cannot connect", "Local file error", "Remote file error", "File not shared"])
 
     def on_clear_filtered(self, *args):
         self.clear_transfers(["Filtered"])

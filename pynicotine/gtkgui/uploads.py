@@ -38,12 +38,15 @@ class Uploads(TransferList):
         self.tab_label = tab_label
 
         self.popup_menu_clear.setup(
-            ("#" + _("Clear Finished / Failed"), self.on_clear_finished_failed),
-            ("#" + _("Clear Finished / Aborted"), self.on_clear_finished_aborted),
-            ("#" + _("Clear Finished"), self.on_clear_finished),
-            ("#" + _("Clear Aborted"), self.on_clear_aborted),
-            ("#" + _("Clear Failed"), self.on_clear_failed),
-            ("#" + _("Clear Queued"), self.on_clear_queued)
+            ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
+            ("#" + _("Finished / Aborted"), self.on_clear_finished_aborted),
+            ("", None),
+            ("#" + _("Finished"), self.on_clear_finished),
+            ("#" + _("Aborted"), self.on_clear_aborted),
+            ("#" + _("Failed"), self.on_clear_failed),
+            ("#" + _("Queued"), self.on_try_clear_queued),
+            ("", None),
+            ("#" + _("Clear All"), self.on_try_clear_all),
         )
 
     def on_try_clear_queued(self, *args):
@@ -52,7 +55,18 @@ class Uploads(TransferList):
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
             message=_('Are you sure you wish to clear all queued uploads?'),
-            callback=self.on_clear_response
+            callback=self.on_clear_response,
+            callback_data="queued"
+        )
+
+    def on_try_clear_all(self, *args):
+
+        option_dialog(
+            parent=self.frame.MainWindow,
+            title=_('Clear All Uploads'),
+            message=_('Are you sure you wish to clear all uploads?'),
+            callback=self.on_clear_response,
+            callback_data="all"
         )
 
     def on_open_directory(self, *args):

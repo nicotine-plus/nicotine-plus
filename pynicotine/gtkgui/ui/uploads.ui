@@ -87,7 +87,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Abort User&apos;s Uploads</property>
+                        <property name="label" translatable="yes">Abort User(s)</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -134,61 +134,39 @@
             <property name="visible">1</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_clear_finished_failed"/>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkMenuButton" id="ClearTransfers">
                     <property name="visible">1</property>
-                    <property name="spacing">6</property>
+                    <property name="can-focus">1</property>
+                    <property name="direction">up</property>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Clear Uploads</property>
+                            <property name="tooltip-text">Clear every upload with a specific status.</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">pan-up-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear Finished / Failed</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
+                    <style>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="flat"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_try_clear_queued"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear Queued</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <style>
-                  <class name="flat"/>
-                </style>
               </object>
             </child>
           </object>
