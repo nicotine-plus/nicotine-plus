@@ -30,38 +30,16 @@ sys.path.append('.')
 
 import pynicotine.plugins
 
+from setup import generate_mo_translations
+
 
 """ Add Contents """
 
 
-binaries = []
-hiddenimports = []
-added_files = []
-
-
-# Files to be added to the frozen app
-added_files += [
-
-    # About icon
-    ('../../files/org.nicotine_plus.Nicotine.svg', 'share/icons/hicolor/scalable/apps'),
-
-    # Tray icons
-    ('../../files/icons/tray', 'share/icons/hicolor/scalable/apps'),
-
-    # GTK Builder files, plugins, geoip database
-    ('../../pynicotine', 'pynicotine')
-]
-
-
-# Include plugins
-hiddenimports += [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
-
-
 # SSL support
-hiddenimports.append('certifi')
+binaries = []
 
 if sys.platform == 'win32':
-    # SSL support
     for i in ("libcrypto-1_1", "libssl-1_1", "libcrypto-1_1-x64", "libssl-1_1-x64"):
         lib = find_library(i)
 
@@ -72,36 +50,24 @@ if sys.platform == 'win32':
         raise Exception("No SSL libraries found")
 
 
-# Translations
-languages = set()
+# Add plugins and SSL support
+hiddenimports = ["certifi"] + \
+    [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
 
-for po_file in glob.glob("po/*.po"):
-    lang = os.path.basename(po_file[:-3])
-    languages.add(lang)
 
-    mo_dir = "mo/" + lang + "/LC_MESSAGES"
-    mo_file = mo_dir + "/" + "nicotine.mo"
+# GTK Builder files, plugins, geoip database, translations
+datas = [("../../pynicotine", "pynicotine")]
+mo_entries, languages = generate_mo_translations()
 
-    if not os.path.exists(mo_dir):
-        os.makedirs(mo_dir)
-
-    os.system("msgfmt " + po_file + " -o " + mo_file)
-
-    targetpath = "share/locale/" + lang + "/LC_MESSAGES"
-
-    added_files.append(
-        (
-            "../../" + mo_file,
-            targetpath
-        )
-    )
+for target_path, mo_files in mo_entries:
+    datas.append(("../../" + mo_files[0], target_path))
 
 
 # Analyze required files
 a = Analysis(['../../nicotine'],
              pathex=['.'],
              binaries=binaries,
-             datas=added_files,
+             datas=datas,
              hiddenimports=hiddenimports,
              hookspath=[],
              runtime_hooks=[],
@@ -113,9 +79,9 @@ a = Analysis(['../../nicotine'],
 
 
 # Remove unwanted files added in previous step
-for file in a.datas[:]:
-    excluded = ('.ani', '.cur', '.md', '.png', '.py', '.pyc')
+excluded = ('.ani', '.cur', '.md', '.png', '.py', '.pyc')
 
+for file in a.datas[:]:
     if file[0].endswith(excluded):
         a.datas.remove(file)
 

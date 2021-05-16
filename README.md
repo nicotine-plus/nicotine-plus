@@ -1,5 +1,5 @@
 # Nicotine+
-<img src="files/org.nicotine_plus.Nicotine.svg" align="right" width="128" style="margin: 0 10px">
+<img src="pynicotine/gtkgui/icons/hicolor/scalable/apps/org.nicotine_plus.Nicotine.svg" align="right" width="128" style="margin: 0 10px">
 
 Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/) peer-to-peer file sharing network.
 
