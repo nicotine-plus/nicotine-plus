@@ -84,6 +84,7 @@ First, follow the instructions on installing MSYS2: [https://pygobject.readthedo
 Then, install dependencies:
 
 ```console
+export ARCH=x86_64
 packaging/windows/dependencies-core.sh
 packaging/windows/dependencies-packaging.sh
 ```
@@ -111,8 +112,7 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 Run the following:
 
 ```console
-cd packaging/windows
-makensis -DARCH=x86_64 nicotine.nsi
+packaging/windows/create-installer.sh
 ```
 
 You should now find a `Nicotine+-$(version).exe` installer in the `packaging/windows` directory.
