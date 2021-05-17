@@ -334,7 +334,7 @@ class UserInfo:
         elif msg.uploadallowed == 2:
             allowed = _("Buddies")
         elif msg.uploadallowed == 3:
-            allowed = _("Trusted Users")
+            allowed = _("Trusted Buddies")
         else:
             allowed = _("unknown")
 

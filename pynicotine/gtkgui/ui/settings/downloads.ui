@@ -99,7 +99,7 @@
                   <item translatable="yes">No one</item>
                   <item translatable="yes">Everyone</item>
                   <item translatable="yes">Buddies</item>
-                  <item translatable="yes">Trusted Users</item>
+                  <item translatable="yes">Trusted Buddies</item>
                 </items>
               </object>
               <packing>

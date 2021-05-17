@@ -1671,7 +1671,7 @@ class Transfers:
                 return True
 
             if transfers["uploadallowed"] == 3:
-                # Trusted Users
+                # Trusted buddies
                 userlist = [i[0] for i in self.config.sections["server"]["userlist"]]
 
                 if user not in userlist:
