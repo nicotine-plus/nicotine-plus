@@ -1,0 +1,3 @@
+[flake8]
+builtins = _
+ignore = E501, W504
