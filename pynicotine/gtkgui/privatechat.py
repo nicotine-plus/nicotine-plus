@@ -329,19 +329,19 @@ class PrivateChat:
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
-            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
         self.popup_menu = popup = PopupMenu(self.frame)
         popup.setup(
-            ("#" + _("Find"), self.on_find_chat_log),
+            ("#" + _("Find..."), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_chat_log),
             ("#" + _("Copy All"), self.on_copy_all_chat_log),
             ("", None),
             ("#" + _("View Chat Log"), self.on_view_chat_log),
-            ("#" + _("Delete Chat Log"), self.on_delete_chat_log),
+            ("#" + _("Delete Chat Log..."), self.on_delete_chat_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),
             ("", None),

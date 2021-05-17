@@ -149,7 +149,7 @@ class UserList:
             ("$" + _("_Trusted"), self.on_trusted),
             ("", None),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("Edit _Comments"), self.on_edit_comments),
+            ("#" + _("Edit _Comments..."), self.on_edit_comments),
             ("#" + _("_Remove"), self.on_remove_user)
         )
 
@@ -589,7 +589,7 @@ class UserList:
 
         entry_dialog(
             parent=self.frame.MainWindow,
-            title=_("Edit comments") + "...",
+            title=_("Edit Comments"),
             message=_("Comments") + ":",
             callback=self.on_edit_comments_response,
             callback_data=user,

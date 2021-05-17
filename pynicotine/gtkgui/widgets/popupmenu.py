@@ -161,7 +161,7 @@ class PopupMenu(Gio.Menu):
             self.append_item(("#" + _("Brow_se Files"), self.on_browse_user))
 
         self.setup(
-            ("#" + _("Gi_ve Privileges"), self.on_give_privileges),
+            ("#" + _("Gi_ve Privileges..."), self.on_give_privileges),
             ("", None),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
             ("#" + _("Client Version"), self.on_version),
@@ -252,17 +252,17 @@ class PopupMenu(Gio.Menu):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
-                popup.append_item(("#" + _("Remove from private room %s") % room, popup.on_private_room_remove_user, room))
+                popup.append_item(("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
             else:
-                popup.append_item(("#" + _("Add to private room %s") % room, popup.on_private_room_add_user, room))
+                popup.append_item(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
 
             if not self.frame.chatrooms.roomlist.is_private_room_owned(room):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
-                popup.append_item(("#" + _("Remove as operator of %s") % room, popup.on_private_room_remove_operator, room))
+                popup.append_item(("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
             else:
-                popup.append_item(("#" + _("Add as operator of %s") % room, popup.on_private_room_add_operator, room))
+                popup.append_item(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
 
     def clear(self):
 
@@ -429,7 +429,7 @@ class PopupMenu(Gio.Menu):
 
         entry_dialog(
             parent=self.window,
-            title=_("Give privileges") + " " + _("to %(user)s") % {"user": self.user},
+            title=_("Give Privileges to %(user)s") % {"user": self.user},
             message=message,
             callback=self.on_give_privileges_response
         )

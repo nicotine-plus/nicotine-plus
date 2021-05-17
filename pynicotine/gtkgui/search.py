@@ -482,7 +482,7 @@ class Search:
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
-            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 

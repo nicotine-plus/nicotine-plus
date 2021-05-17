@@ -528,7 +528,7 @@ class ChatRoom:
 
         self.activitylogpopupmenu = PopupMenu(self.frame)
         self.activitylogpopupmenu.setup(
-            ("#" + _("Find"), self.on_find_activity_log),
+            ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_activity_log),
             ("#" + _("Copy All"), self.on_copy_all_activity_log),
@@ -540,13 +540,13 @@ class ChatRoom:
 
         self.roomlogpopmenu = PopupMenu(self.frame)
         self.roomlogpopmenu.setup(
-            ("#" + _("Find"), self.on_find_room_log),
+            ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_room_log),
             ("#" + _("Copy All"), self.on_copy_all_room_log),
             ("", None),
             ("#" + _("View Room Log"), self.on_view_room_log),
-            ("#" + _("Delete Room Log"), self.on_delete_room_log),
+            ("#" + _("Delete Room Log..."), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.on_clear_messages),
             ("#" + _("_Leave Room"), self.on_leave)

@@ -270,7 +270,7 @@ class NicotineFrame:
         # Popup menu on the log windows
         self.logpopupmenu = PopupMenu(self)
         self.logpopupmenu.setup(
-            ("#" + _("Find"), self.on_find_log_window),
+            ("#" + _("Find..."), self.on_find_log_window),
             ("", None),
             ("#" + _("Copy"), self.on_copy_log_window),
             ("#" + _("Copy All"), self.on_copy_all_log_window),

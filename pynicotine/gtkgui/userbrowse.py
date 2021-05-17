@@ -104,8 +104,8 @@ class UserBrowse:
         popup.setup_user_menu(user, page="userbrowse")
         popup.setup(
             ("", None),
-            ("#" + _("_Save Shares List To Disk"), self.on_save),
-            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("_Save Shares List to Disk"), self.on_save),
+            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 

@@ -241,7 +241,7 @@ class UserInfo:
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
             ("", None),
-            ("#" + _("Close All Tabs"), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
