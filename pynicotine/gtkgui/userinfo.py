@@ -250,7 +250,7 @@ class UserInfo:
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
             ("", None),
-            ("#" + _("_Search For Item"), self.on_interest_recommend_search)
+            ("#" + _("_Search for Item"), self.on_interest_recommend_search)
         )
 
         self.image_menu = popup = PopupMenu(self.frame)
