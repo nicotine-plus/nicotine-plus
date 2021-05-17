@@ -169,7 +169,7 @@ class PopupMenu(Gio.Menu):
         )
 
         if page != "userlist":
-            self.append_item(("$" + _("_Add User To List"), self.on_add_to_list))
+            self.append_item(("$" + _("_Add to Buddy List"), self.on_add_to_list))
 
         self.setup(
             ("$" + _("_Ban User"), self.on_ban_user),
@@ -212,7 +212,7 @@ class PopupMenu(Gio.Menu):
     def toggle_user_items(self):
 
         self.editing = True
-        add_to_list = _("_Add User To List")
+        add_to_list = _("_Add to Buddy List")
 
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(

@@ -191,7 +191,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Wishlist</property>
+                    <property name="label" translatable="yes">_Wishlist</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -711,7 +711,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Load from Disk</property>
+                    <property name="label" translatable="yes">Load from _Disk</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -882,7 +882,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Room List</property>
+                    <property name="label" translatable="yes">_Room List</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -1574,7 +1574,6 @@
                     <child>
                       <object class="GtkLabel" id="DownStatus">
                         <property name="visible">1</property>
-                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
@@ -1605,7 +1604,6 @@
                     <child>
                       <object class="GtkLabel" id="UpStatus">
                         <property name="visible">1</property>
-                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
@@ -1626,7 +1624,7 @@
                 <child>
                   <object class="GtkLabel" id="UserStatus">
                     <property name="visible">1</property>
-                    <property name="label">Offline</property>
+                    <property name="label" translatable="yes">Offline</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>

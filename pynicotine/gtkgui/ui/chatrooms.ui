@@ -282,7 +282,7 @@
                     <property name="spacing">4</property>
                     <child>
                       <object class="GtkCheckButton" id="AutoJoin">
-                        <property name="label" translatable="yes">Auto-join Room</property>
+                        <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="use-underline">1</property>
@@ -291,7 +291,7 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="Log">
-                        <property name="label" translatable="yes">Log Conversation</property>
+                        <property name="label" translatable="yes">_Log Conversation</property>
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="use-underline">1</property>

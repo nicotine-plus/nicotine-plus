@@ -64,7 +64,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="RememberCheckButton">
-                <property name="label" translatable="yes">Add Wish</property>
+                <property name="label" translatable="yes">_Add Wish</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">This search term will be requested at regular intervals</property>
@@ -90,7 +90,7 @@
                     <child>
                       <object class="GtkLabel" id="FilterLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Result Filters</property>
+                        <property name="label" translatable="yes">Result _Filters</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
@@ -344,7 +344,7 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="FilterFreeSlot">
-                        <property name="label" translatable="yes">Free Slot</property>
+                        <property name="label" translatable="yes">Free _Slot</property>
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="use-underline">1</property>

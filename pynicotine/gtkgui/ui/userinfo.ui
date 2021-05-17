@@ -340,7 +340,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Send Message</property>
+                            <property name="label" translatable="yes">Send _Message</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -366,7 +366,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Browse Files</property>
+                            <property name="label" translatable="yes">Brow_se Files</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -392,7 +392,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Show IP Address</property>
+                            <property name="label" translatable="yes">Show IP A_ddress</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -418,7 +418,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Add to Buddy List</property>
+                            <property name="label" translatable="yes">_Add to Buddy List</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -444,7 +444,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Ban User</property>
+                            <property name="label" translatable="yes">_Ban User</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -470,7 +470,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Ignore User</property>
+                            <property name="label" translatable="yes">_Ignore User</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -497,7 +497,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Save Picture</property>
+                            <property name="label" translatable="yes">Save _Picture</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -529,7 +529,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Refresh Info</property>
+                            <property name="label" translatable="yes">_Refresh Info</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
