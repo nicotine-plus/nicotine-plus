@@ -30,6 +30,7 @@
 import glob
 import os
 import pynicotine
+import sys
 
 from distutils.core import setup
 from distutils.cmd import Command
@@ -60,7 +61,7 @@ class UpdatePot(Command):
         os.system("xgettext --join-existing -o po/nicotine.pot " + " ".join(files))
 
 
-def generate_mo_translations():
+def generate_translations():
 
     mo_entries = []
     languages = []
@@ -75,10 +76,20 @@ def generate_mo_translations():
         if not os.path.exists(mo_dir):
             os.makedirs(mo_dir)
 
-        os.system("msgfmt " + po_file + " -o " + mo_file)
+        exit_code = os.system("msgfmt --check " + po_file + " -o " + mo_file)
+
+        if exit_code > 0:
+            sys.exit(exit)
 
         targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
         mo_entries.append((targetpath, [mo_file]))
+
+    # Merge translations into .desktop and metainfo files
+    for desktop_file in glob.glob("files/*.desktop.in"):
+        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
+
+    for metainfo_file in glob.glob("files/*.metainfo.xml.in"):
+        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
 
     return mo_entries, languages
 
@@ -93,8 +104,7 @@ alternative to the official Soulseek client, providing additional
 functionality while keeping current with the Soulseek protocol."""
 
     # Specify included files
-    PACKAGES = ["pynicotine"] + \
-        [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
+    PACKAGES = ["pynicotine"] + [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
     PACKAGE_DATA = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in PACKAGES)
 
     SCRIPTS = ["nicotine"]
@@ -106,18 +116,7 @@ functionality while keeping current with the Soulseek protocol."""
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
         ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md") + ["COPYING"]),
         ("share/man/man1", glob.glob("files/*.1"))
-    ] + generate_mo_translations()[0]
-
-    # Merge translations into .desktop and metainfo files
-    for desktop_file in glob.glob("files/*.desktop.in"):
-        os.system(
-            "msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3]
-        )
-
-    for metainfo_file in glob.glob("files/*.metainfo.xml.in"):
-        os.system(
-            "msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3]
-        )
+    ] + generate_translations()[0]
 
     # Run setup
     setup(
@@ -134,9 +133,7 @@ functionality while keeping current with the Soulseek protocol."""
         package_data=PACKAGE_DATA,
         scripts=SCRIPTS,
         data_files=DATA_FILES,
-        python_requires='>=3.5',
-        install_requires=['PyGObject>=3.18'],
-        cmdclass={
-            'update_pot': UpdatePot,
-        }
+        python_requires=">=3.5",
+        install_requires=["PyGObject>=3.18"],
+        cmdclass={"update_pot": UpdatePot}
     )

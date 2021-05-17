@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2020-11-18 22:08+0000\n"
 "X-Generator: Launchpad (build c35ff22711d15549e2303ae18ae521fd91f6bf00)\n"
-"Language: \n"
+"Language: sk\n"
 
 #: ../nicotine:66 ../nicotine:81
 #, c-format
@@ -390,7 +390,7 @@ msgstr ""
 #: ../pynicotine/pynicotine.py:1039
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
-msgstr "(Varovanie: %realuser)s sa pokúša vydávať sa za %(fakeuser)s) "
+msgstr "(Varovanie: %(realuser)s sa pokúša vydávať sa za %(fakeuser)s) "
 
 #: ../pynicotine/pynicotine.py:1239
 #, python-format

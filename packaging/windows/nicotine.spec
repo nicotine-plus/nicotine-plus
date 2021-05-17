@@ -31,7 +31,7 @@ sys.path.append('.')
 import pynicotine.plugins
 
 from pynicotine.utils import version
-from setup import generate_mo_translations
+from setup import generate_translations
 
 
 """ Add Contents """
@@ -58,7 +58,7 @@ hiddenimports = ["certifi"] + \
 
 # GTK Builder files, plugins, geoip database, translations
 datas = [("../../pynicotine", "pynicotine")]
-mo_entries, languages = generate_mo_translations()
+mo_entries, languages = generate_translations()
 
 for target_path, mo_files in mo_entries:
     datas.append(("../../" + mo_files[0], target_path))
