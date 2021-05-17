@@ -15,11 +15,6 @@ Kip Warner
 - Debianization
 - [kip(at)thevertigo(dot)com]
 
-Lene Preuss
-- Python3 migration
-- Unit and DEP-8 continuous integration testing
-- [lene.preuss(at)here(dot)com]
-
 mathiascode
 - Developer
 - [mail(at)mathias(dot)is]
@@ -82,6 +77,11 @@ Mutnick
 - Created Nicotine+ GitHub Organization
 - Developer
 - [muhing(at)yahoo(dot)com]
+
+Lene Preuss
+- Python3 migration
+- Unit and DEP-8 continuous integration testing
+- [lene.preuss(at)here(dot)com]
 
 ---
 
