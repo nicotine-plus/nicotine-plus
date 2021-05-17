@@ -59,7 +59,6 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Retry</property>
-                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
@@ -88,7 +87,6 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Abort</property>
-                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
@@ -117,7 +115,6 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Clear</property>
-                        <property name="use-underline">1</property>
                       </object>
                     </child>
                   </object>
@@ -134,6 +131,35 @@
             <property name="visible">1</property>
             <property name="spacing">6</property>
             <child>
+              <object class="GtkButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_clear_finished_aborted"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">edit-clear-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Clear Finished</property>
+                        <property name="tooltip-text">Clear every download that has either finished transferring, been caught by a filter, or been explicitly aborted by us.</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuButton" id="ClearTransfers">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
@@ -145,9 +171,8 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear Downloads</property>
-                        <property name="tooltip-text">Clear every download with a specific status.</property>
-                        <property name="use-underline">1</property>
+                        <property name="label" translatable="yes">Clear Downloads...</property>
+                        <property name="tooltip-text">Clear every download marked with a specific status.</property>
                       </object>
                     </child>
                     <child>
