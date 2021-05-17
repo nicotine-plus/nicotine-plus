@@ -422,14 +422,14 @@ class PopupMenu(Gio.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        message = _("Give how many days of global privileges to this user?") + " (" + _("%(days)s days left") % {'days': days} + ")"
+        message = _("How many days of privileges should user %s be gifted?") % self.user + " (" + _("%(days)s days left") % {'days': days} + ")"
 
         if error:
             message += "\n\n" + error
 
         entry_dialog(
             parent=self.window,
-            title=_("Give Privileges to %(user)s") % {"user": self.user},
+            title=_("Give Privileges"),
             message=message,
             callback=self.on_give_privileges_response
         )

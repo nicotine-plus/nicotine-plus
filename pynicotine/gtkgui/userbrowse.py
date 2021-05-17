@@ -847,7 +847,7 @@ class UserBrowse:
         combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_("Upload Folder's Contents"),
-            message=_('Enter the User you wish to upload to:'),
+            message=_('Enter the name of a user you wish to upload to:'),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=users
@@ -920,7 +920,7 @@ class UserBrowse:
         combo_box_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s)'),
-            message=_('Enter the User you wish to upload to:'),
+            message=_('Enter the name of a user you wish to upload to:'),
             callback=self.on_upload_files_response,
             droplist=users
         )

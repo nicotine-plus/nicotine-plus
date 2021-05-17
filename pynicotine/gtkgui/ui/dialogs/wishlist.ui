@@ -21,7 +21,7 @@
             <property name="margin-end">10</property>
             <property name="margin-top">13</property>
             <property name="margin-bottom">13</property>
-            <property name="label" translatable="yes">The search wishlist can be useful when you are looking for rare content. Search terms in the wishlist are automatically requested at regular intervals.</property>
+            <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, useful for discovering uncommon files.</property>
             <property name="justify">fill</property>
             <property name="wrap">1</property>
           </object>

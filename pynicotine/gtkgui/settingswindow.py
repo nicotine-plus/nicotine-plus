@@ -316,8 +316,8 @@ class DownloadsFrame(BuildFrame):
 
         combo_box_dialog(
             parent=self.Main.get_toplevel(),
-            title=_('Add a Download Filter'),
-            message=_('Enter a new download filter:'),
+            title=_("Add Download Filter"),
+            message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
             option=True,
             optionvalue=True,
@@ -376,8 +376,8 @@ class DownloadsFrame(BuildFrame):
 
         combo_box_dialog(
             parent=self.Main.get_toplevel(),
-            title=_('Edit a Download Filter'),
-            message=_('Modify this download filter:'),
+            title=_("Edit Download Filter"),
+            message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
             default_text=dfilter,
             option=True,
@@ -675,13 +675,13 @@ class SharesFrame(BuildFrame):
             message_dialog(
                 parent=self.Main.get_toplevel(),
                 title=_("Unable to Share Folder"),
-                message=_("The chosen folder is already shared")
+                message=_("The chosen folder is already shared.")
             )
             return
 
-        combo_box_dialog(
+        entry_dialog(
             parent=self.Main.get_toplevel(),
-            title=_("Virtual Name"),
+            title=_("Set Virtual Name"),
             message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
             callback=self.add_shared_dir_response,
             callback_data=(folder, shareslist, shareddirs)
@@ -746,9 +746,9 @@ class SharesFrame(BuildFrame):
             iterator = model.get_iter(path)
             folder = model.get_value(iterator, 1)
 
-            combo_box_dialog(
+            entry_dialog(
                 parent=self.Main.get_toplevel(),
-                title=_("Virtual Name"),
+                title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 callback=self.rename_virtuals_response,
                 callback_data=(iterator, model, shared_dirs)
@@ -1021,8 +1021,8 @@ class IgnoreListFrame(BuildFrame):
 
         entry_dialog(
             parent=self.Main.get_toplevel(),
-            title=_("Ignore User..."),
-            message=_("User:"),
+            title=_("Ignore User"),
+            message=_("Enter the name of a user you wish to ignore:"),
             callback=self.on_add_ignored_response
         )
 
@@ -1073,8 +1073,8 @@ class IgnoreListFrame(BuildFrame):
 
         entry_dialog(
             parent=self.Main.get_toplevel(),
-            title=_("Ignore IP Address..."),
-            message=_("IP:") + " " + _("* is a wildcard"),
+            title=_("Ignore IP Address"),
+            message=_("Enter an IP address you wish to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
         )
 
@@ -1179,8 +1179,8 @@ class BanListFrame(BuildFrame):
 
         entry_dialog(
             parent=self.Main.get_toplevel(),
-            title=_("Ban User..."),
-            message=_("User:"),
+            title=_("Ban User"),
+            message=_("Enter the name of a user you wish to ban:"),
             callback=self.on_add_banned_response
         )
 
@@ -1234,8 +1234,8 @@ class BanListFrame(BuildFrame):
 
         entry_dialog(
             parent=self.Main.get_toplevel(),
-            title=_("Block IP Address..."),
-            message=_("IP:") + " " + _("* is a wildcard"),
+            title=_("Block IP Address"),
+            message=_("Enter an IP address you wish to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
         )
 

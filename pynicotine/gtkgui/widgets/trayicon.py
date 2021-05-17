@@ -97,9 +97,9 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.send_message_item, handler = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_ip_item, handler = self.create_item(_("Lookup a User's IP"), self.on_get_a_users_ip)
-        self.lookup_info_item, handler = self.create_item(_("Lookup a User's Info"), self.on_get_a_users_info)
-        self.lookup_shares_item, handler = self.create_item(_("Lookup a User's Shares"), self.on_get_a_users_shares)
+        self.lookup_ip_item, handler = self.create_item(_("Receive a User's IP Address"), self.on_get_a_users_ip)
+        self.lookup_info_item, handler = self.create_item(_("Receive a User's Info"), self.on_get_a_users_info)
+        self.lookup_shares_item, handler = self.create_item(_("Receive a User's Shares"), self.on_get_a_users_shares)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
@@ -140,7 +140,7 @@ class TrayIcon:
         combo_box_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Start Messaging"),
-            message=_('Enter the User who you wish to send a private message:'),
+            message=_('Enter the name of a user who you wish to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=users
         )
@@ -161,8 +161,8 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get User Info"),
-            message=_('Enter the User whose User Info you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Request User Info"),
+            message=_('Enter the name of a user whose info you wish to receive:'),
             callback=self.on_get_a_users_info_response,
             droplist=users
         )
@@ -184,8 +184,8 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get A User's IP"),
-            message=_('Enter the User whose IP Address you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Request IP Address"),
+            message=_('Enter the name of a user whose IP address you wish to receive:'),
             callback=self.on_get_a_users_ip_response,
             droplist=users
         )
@@ -206,8 +206,8 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         combo_box_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Get A User's Shares List"),
-            message=_('Enter the User whose Shares List you wish to receive:'),
+            title=GLib.get_application_name() + ": " + _("Request Shares List"),
+            message=_('Enter the name of a user whose shares list you wish to receive:'),
             callback=self.on_get_a_users_shares_response,
             droplist=users
         )
