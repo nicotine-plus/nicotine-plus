@@ -83,25 +83,27 @@ a = Analysis(['../../nicotine'],
 excluded = ('.ani', '.cur', '.md', '.png', '.py', '.pyc')
 
 for file in a.datas[:]:
-    if file[0].endswith(excluded):
+    target_path = file[0]
+
+    if target_path.endswith(excluded):
         a.datas.remove(file)
 
-    elif 'share/icons' in file[0] or \
-            'share/themes' in file[0]:
-        theme = file[0].split('/')[2]
+    elif 'share/icons' in target_path or \
+            'share/themes' in target_path:
+        theme = target_path.split('/')[2]
 
         # Remove unwanted themes
         if theme not in ('Adwaita', 'Mac', 'hicolor', 'win32'):
             a.datas.remove(file)
 
-        elif 'Adwaita/cursors' in file[0]:
+        elif 'Adwaita/cursors' in target_path:
             a.datas.remove(file)
 
-    elif 'share/locale' in file[0]:
-        lang = file[0].split('/')[2]
+    elif 'share/locale' in target_path:
+        lang = target_path.split('/')[2]
 
-        # Remove system translations for unsupported languages
-        if lang not in languages:
+        # Remove unnecessary translations
+        if not (lang in languages and target_path.endswith(("nicotine.mo", "gtk30.mo"))):
             a.datas.remove(file)
 
 
