@@ -18,15 +18,15 @@
 
 import datetime
 
+from pynicotine.config import config
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import make_version
-from pynicotine.utils import version
 
 
 def test_version():
 
     # Validate local version
-    local_version = make_version(version)
+    local_version = make_version(config.version)
     assert isinstance(local_version, int)
 
     # Validate version of latest release

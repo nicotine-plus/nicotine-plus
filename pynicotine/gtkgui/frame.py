@@ -78,7 +78,6 @@ from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import RestrictedUnpickler
 from pynicotine.utils import unescape
-from pynicotine.utils import version
 
 
 class NicotineFrame:
@@ -1210,7 +1209,7 @@ class NicotineFrame:
 
         try:
             hlatest, latest, date = get_latest_version()
-            myversion = int(make_version(version))
+            myversion = int(make_version(config.version))
 
         except Exception as m:
             GLib.idle_add(
@@ -1271,7 +1270,7 @@ class NicotineFrame:
             self.AboutDialog.set_logo_icon_name(GLib.get_prgname())
 
         self.AboutDialog.set_transient_for(self.MainWindow)
-        self.AboutDialog.set_version(version)
+        self.AboutDialog.set_version(config.version)
 
         self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
 

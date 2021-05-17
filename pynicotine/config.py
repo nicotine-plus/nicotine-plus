@@ -55,8 +55,9 @@ class Config:
     def __init__(self):
 
         config_dir, self.data_dir = self.get_user_directories()
-        self.filename = os.path.join(config_dir, 'config')
-        self.plugin_dir = os.path.join(self.data_dir, 'plugins')
+        self.filename = os.path.join(config_dir, "config")
+        self.plugin_dir = os.path.join(self.data_dir, "plugins")
+        self.version = "3.1.0.dev1"
 
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
 

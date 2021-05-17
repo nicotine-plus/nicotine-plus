@@ -32,7 +32,7 @@ import sys
 def check_arguments():
     """ Parse command line arguments specified by the user """
 
-    from pynicotine.utils import version
+    from pynicotine.config import config
     parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
 
     # Visible arguments
@@ -69,7 +69,7 @@ def check_arguments():
         help=_("listen on the given port")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version="Nicotine+ %s" % version,
+        "-v", "--version", action="version", version="Nicotine+ %s" % config.version,
         help=_("display version and exit")
     )
 
@@ -86,11 +86,9 @@ def check_arguments():
     trayicon = None
 
     if args.config:
-        from pynicotine.config import config
         config.filename = args.config
 
     if args.plugins:
-        from pynicotine.config import config
         config.plugin_dir = args.plugins
 
     if args.enable_trayicon:

@@ -30,7 +30,7 @@ sys.path.append('.')
 
 import pynicotine.plugins
 
-from pynicotine.utils import version
+from pynicotine.config import config
 from setup import generate_translations
 
 
@@ -147,4 +147,4 @@ app = BUNDLE(coll,
              name=name + '.app',
              icon='nicotine.icns',
              bundle_identifier='org.nicotine_plus.Nicotine',
-             version=version)
+             version=config.version)

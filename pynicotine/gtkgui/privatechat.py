@@ -53,7 +53,6 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import get_completion_list
 from pynicotine.utils import get_path
-from pynicotine.utils import version
 
 
 class PrivateChats(IconNotebook):
@@ -247,7 +246,7 @@ class PrivateChats(IconNotebook):
         self.users[msg.user].show_message(text, newmessage, msg.timestamp)
 
         if ctcpversion and config.sections["server"]["ctcpmsgs"] == 0:
-            self.send_message(msg.user, GLib.get_application_name() + " " + version)
+            self.send_message(msg.user, GLib.get_application_name() + " " + config.version)
 
         self.frame.np.pluginhandler.incoming_private_chat_notification(msg.user, text)
 

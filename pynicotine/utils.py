@@ -33,8 +33,6 @@ import sys
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
-version = "3.1.0.dev1"
-
 win32 = sys.platform.startswith("win")
 
 illegalpathchars = ["?", ":", ">", "<", "|", "*", '"']

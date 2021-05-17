@@ -35,7 +35,7 @@ import sys
 from distutils.core import setup
 from distutils.cmd import Command
 from pkgutil import walk_packages
-from pynicotine.utils import version
+from pynicotine.config import config
 
 
 class UpdatePot(Command):
@@ -121,7 +121,7 @@ functionality while keeping current with the Soulseek protocol."""
     # Run setup
     setup(
         name="nicotine-plus",
-        version=version,
+        version=config.version,
         license="GPLv3+",
         description="Graphical client for the Soulseek file sharing network",
         long_description=LONG_DESCRIPTION,
