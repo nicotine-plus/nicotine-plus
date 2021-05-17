@@ -5,7 +5,7 @@ Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/
 
 Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to the official Soulseek client, providing additional functionality while keeping current with the Soulseek protocol.
 
-Check out the [screenshots](files/screenshots/SCREENSHOTS.md) and [source code](https://github.com/Nicotine-Plus/nicotine-plus).
+Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](https://github.com/Nicotine-Plus/nicotine-plus).
 <br clear="right">
 
 # Download Nicotine+

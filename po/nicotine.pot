@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 19:12+0300\n"
+"POT-Creation-Date: 2021-05-17 19:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,40 +108,40 @@ msgid ""
 "your shares this way, keep Nicotine+ closed until rescanning is done."
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.desktop.in:5
-#: files/org.nicotine_plus.Nicotine.metainfo.xml.in:8
+#: data/org.nicotine_plus.Nicotine.desktop.in:5
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
 msgid "Nicotine+"
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.desktop.in:6
+#: data/org.nicotine_plus.Nicotine.desktop.in:6
 msgid "Soulseek Client"
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.desktop.in:7
-#: files/org.nicotine_plus.Nicotine.metainfo.xml.in:9
+#: data/org.nicotine_plus.Nicotine.desktop.in:7
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
 #: pynicotine/gtkgui/ui/dialogs/about.ui:7
 msgid "Graphical client for the Soulseek file sharing network"
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.desktop.in:12
+#: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek,Nicotine,file sharing,music,P2P,peer-to-peer"
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.metainfo.xml.in:11
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:42
 msgid ""
 "Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing "
 "network."
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.metainfo.xml.in:15
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 msgid ""
 "Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to "
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
 
-#: files/org.nicotine_plus.Nicotine.metainfo.xml.in:43
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:43
 msgid "Nicotine+ Team"
 msgstr ""
 

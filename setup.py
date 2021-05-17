@@ -53,7 +53,7 @@ class UpdatePot(Command):
 
     def run(self):
 
-        files = glob.glob("files/**/*.in", recursive=True) + \
+        files = glob.glob("data/**/*.in", recursive=True) + \
             glob.glob("pynicotine/**/*.py", recursive=True) + \
             glob.glob("pynicotine/**/*.ui", recursive=True)
 
@@ -85,10 +85,10 @@ def generate_translations():
         mo_entries.append((targetpath, [mo_file]))
 
     # Merge translations into .desktop and metainfo files
-    for desktop_file in glob.glob("files/*.desktop.in"):
+    for desktop_file in glob.glob("data/*.desktop.in"):
         os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
 
-    for metainfo_file in glob.glob("files/*.metainfo.xml.in"):
+    for metainfo_file in glob.glob("data/*.metainfo.xml.in"):
         os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
 
     return mo_entries, languages
@@ -110,12 +110,12 @@ functionality while keeping current with the Soulseek protocol."""
     SCRIPTS = ["nicotine"]
 
     DATA_FILES = [
-        ("share/applications", glob.glob("files/*.desktop")),
-        ("share/metainfo", glob.glob("files/*.metainfo.xml")),
+        ("share/applications", glob.glob("data/*.desktop")),
+        ("share/metainfo", glob.glob("data/*.metainfo.xml")),
         ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
         ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md") + ["COPYING"]),
-        ("share/man/man1", glob.glob("files/*.1"))
+        ("share/man/man1", glob.glob("data/*.1"))
     ] + generate_translations()[0]
 
     # Run setup
