@@ -34,6 +34,7 @@ import sys
 
 from distutils.core import setup
 from distutils.cmd import Command
+from os.path import abspath
 from pkgutil import walk_packages
 from pynicotine.config import config
 
@@ -53,9 +54,9 @@ class UpdatePot(Command):
 
     def run(self):
 
-        files = glob.glob("data/**/*.in", recursive=True) + \
-            glob.glob("pynicotine/**/*.py", recursive=True) + \
-            glob.glob("pynicotine/**/*.ui", recursive=True)
+        files = sorted(glob.glob("data/**/*.in", recursive=True), key=abspath) + \
+            sorted(glob.glob("pynicotine/**/*.py", recursive=True), key=abspath) + \
+            sorted(glob.glob("pynicotine/**/*.ui", recursive=True), key=abspath)
 
         os.system("xgettext -L Python -o po/nicotine.pot nicotine")
         os.system("xgettext --join-existing -o po/nicotine.pot " + " ".join(files))
