@@ -1302,139 +1302,146 @@
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFlowBox" id="DebugButtons">
+                  <object class="GtkRevealer" id="DebugButtons">
                     <property name="visible">1</property>
-                    <property name="margin-top">3</property>
-                    <property name="margin-bottom">3</property>
-                    <property name="column-spacing">5</property>
-                    <property name="max-children-per-line">9</property>
-                    <property name="selection-mode">none</property>
+                    <property name="can-focus">0</property>
+                    <property name="transition-type">slide-up</property>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">0</property>
+                        <property name="margin-top">3</property>
+                        <property name="margin-bottom">3</property>
+                        <property name="column-spacing">5</property>
+                        <property name="max-children-per-line">9</property>
+                        <property name="selection-mode">none</property>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Debug Logging</property>
-                            <property name="xalign">0</property>
-                            <property name="margin-start">10</property>
-                            <property name="margin-end">10</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Debug Logging</property>
+                                <property name="xalign">0</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-end">10</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Downloads</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugdownloads</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Downloads</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugdownloads</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Uploads</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debuguploads</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Uploads</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debuguploads</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Search</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugsearches</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Search</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugsearches</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Chat</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugchat</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Chat</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugchat</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Connections</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugconnections</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Connections</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugconnections</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Messages</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugmessages</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Messages</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugmessages</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Transfers</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugtransfers</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Transfers</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugtransfers</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
-                          <object class="GtkCheckButton">
-                            <property name="label" translatable="yes">Miscellaneous</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="action-name">app.debugmiscellaneous</property>
+                            <property name="can-focus">0</property>
+                            <child>
+                              <object class="GtkCheckButton">
+                                <property name="label" translatable="yes">Miscellaneous</property>
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="action-name">app.debugmiscellaneous</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>

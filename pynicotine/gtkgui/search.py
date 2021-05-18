@@ -1339,7 +1339,7 @@ class Search:
     def on_toggle_filters(self, widget):
 
         visible = widget.get_active()
-        self.FiltersContainer.set_visible(visible)
+        self.FiltersContainer.set_reveal_child(visible)
         config.sections["searches"]["filters_visible"] = visible
 
     def on_copy_search_term(self, *args):

@@ -1008,7 +1008,7 @@ class NicotineFrame:
         config.sections["logging"]["logcollapsed"] = not state
 
     def set_show_debug(self, show):
-        self.DebugButtons.set_visible(show)
+        self.DebugButtons.set_reveal_child(show)
 
     def on_show_debug(self, action, *args):
 
