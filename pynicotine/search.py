@@ -43,7 +43,62 @@ class Search:
 
     """ Outgoing search requests """
 
-    def do_search(self, text, mode, users=[], room=None):
+    def process_search_term(self, text, mode, room, user):
+
+        users = []
+        room = room
+        feedback = None
+
+        if mode == "global" and self.np:
+            feedback = self.np.pluginhandler.outgoing_global_search_event(text)
+
+            if feedback is not None:
+                text = feedback[0]
+
+        elif mode == "rooms":
+            # Space after Joined Rooms is important, so it doesn't conflict
+            # with any possible real room
+            if room == _("Joined Rooms ") or room.isspace():
+                room = None
+
+            if self.np:
+                feedback = self.np.pluginhandler.outgoing_room_search_event(room, text)
+
+                if feedback is not None:
+                    room, text = feedback
+
+        elif mode == "buddies" and self.np:
+            feedback = self.np.pluginhandler.outgoing_buddy_search_event(text)
+
+            if feedback is not None:
+                text = feedback[0]
+
+        elif mode == "user":
+            if user:
+                users = [user]
+            else:
+                return
+
+            if self.np:
+                feedback = self.np.pluginhandler.outgoing_user_search_event(users, text)
+
+                if feedback is not None:
+                    users, text = feedback
+
+        else:
+            log.add("Unknown search mode, not using plugin system. Fix me!")
+
+        return text, room, users
+
+    def do_search(self, text, mode, room=None, user=None):
+
+        # Validate search term and run it through plugins
+        processed_search = self.process_search_term(text, mode, room, user)
+
+        if not processed_search:
+            return
+
+        text, room, users = processed_search
 
         # Get a new search ID
         self.increment_search_id()
@@ -94,7 +149,7 @@ class Search:
         elif mode == "user":
             self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
-        return self.searchid, searchterm_with_excluded, searchterm_without_excluded
+        return (self.searchid, searchterm_with_excluded, searchterm_without_excluded)
 
     def do_global_search(self, id, text):
         self.queue.append(slskmessages.FileSearch(id, text))

@@ -68,7 +68,6 @@ class Searches(IconNotebook):
 
         self.searches = {}
         self.usersearches = {}
-        self.users = {}
 
         IconNotebook.__init__(
             self,
@@ -114,58 +113,22 @@ class Searches(IconNotebook):
         if not text:
             return
 
-        users = []
-        room = None
-        search_mode = self.frame.SearchMethod.get_active_id()
-        feedback = None
+        mode = self.frame.SearchMethod.get_active_id()
+        room = self.frame.RoomSearchEntry.get_text()
+        user = self.frame.UserSearchEntry.get_text()
 
-        if search_mode == "global":
-            feedback = self.frame.np.pluginhandler.outgoing_global_search_event(text)
+        search_response = self.frame.np.search.do_search(text, mode, room=room, user=user)
 
-            if feedback is not None:
-                text = feedback[0]
-
-        elif search_mode == "rooms":
-            name = self.frame.RoomSearchEntry.get_text()
-            # Space after Joined Rooms is important, so it doesn't conflict
-            # with any possible real room
-            if name != _("Joined Rooms ") and not name.isspace():
-                room = name
-
-            feedback = self.frame.np.pluginhandler.outgoing_room_search_event(room, text)
-
-            if feedback is not None:
-                (room, text) = feedback
-
-        elif search_mode == "buddies":
-            feedback = self.frame.np.pluginhandler.outgoing_buddy_search_event(text)
-
-            if feedback is not None:
-                text = feedback[0]
-
-        elif search_mode == "user":
-            user = self.frame.UserSearchEntry.get_text().strip()
-
-            if user:
-                users = [user]
-            else:
-                return
-
-            feedback = self.frame.np.pluginhandler.outgoing_user_search_event(users, text)
-
-            if feedback is not None:
-                (users, text) = feedback
-
-        else:
-            log.add("Unknown search mode, not using plugin system. Fix me!")
-            feedback = True
-
-        if feedback is None:
+        if not search_response:
             return
 
-        search_id, searchterm_with_excluded, searchterm_without_excluded = self.frame.np.search.do_search(text, search_mode, users, room)
+        search_id, searchterm_with_excluded, searchterm_without_excluded = search_response
 
-        search = self.create_tab(search_id, searchterm_with_excluded, search_mode, showtab=True)
+        if mode == "user" and user:
+            self.usersearches[search_id] = [user]
+
+        search = self.create_tab(search_id, searchterm_with_excluded, mode, showtab=True)
+
         if search["tab"] is not None:
             self.set_current_page(self.page_num(search["tab"].Main))
 
@@ -179,9 +142,6 @@ class Searches(IconNotebook):
                 continue
 
             self.frame.SearchCombo.append_text(i)
-
-        if search_mode == "user" and users:
-            self.usersearches[search_id] = users
 
     def set_wishlist_interval(self, msg):
         self.wish_list.set_interval(msg)
