@@ -919,7 +919,6 @@ class ChatRoom:
         if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
-        self.frame.np.pluginhandler.user_join_chatroom_notification(self.room, username)
         self.add_user_row(userdata)
 
         self.get_user_tag(username)
@@ -936,8 +935,6 @@ class ChatRoom:
 
         if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
-
-        self.frame.np.pluginhandler.user_leave_chatroom_notification(self.room, username)
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]

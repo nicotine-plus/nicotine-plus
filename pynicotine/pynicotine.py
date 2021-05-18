@@ -1365,6 +1365,8 @@ class NetworkEventProcessor:
         if self.chatrooms is not None:
             self.chatrooms.user_joined_room(msg)
 
+        self.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
+
     def user_left_room(self, msg):
         """ Server code: 17 """
 
@@ -1372,6 +1374,8 @@ class NetworkEventProcessor:
 
         if self.chatrooms is not None:
             self.chatrooms.user_left_room(msg)
+
+        self.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def message_user(self, msg):
         """ Server code: 22 """
