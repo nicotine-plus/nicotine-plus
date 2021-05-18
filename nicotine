@@ -182,15 +182,19 @@ def run_headless(network_processor):
     """ Run Nicotine+ in headless (no GUI) mode """
 
     import signal
+    import time
+
+    from pynicotine.config import config
+
     for signal_type in (signal.SIGINT, signal.SIGTERM):
         signal.signal(signal_type, network_processor.quit)
 
-    from pynicotine.config import config
     config.load_config()
     network_processor.start()
     network_processor.connect()
 
     while not network_processor.shutdown:
+        time.sleep(0.2)
         pass
 
     config.write_configuration()
