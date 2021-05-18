@@ -48,30 +48,6 @@ Build the binary from the source package and upstream tarball via `sbuild`:
 sbuild ../nicotine_*.dsc
 ```
 
-#### Building a RPM package
-
-You need to install the RPM building tools first:
-
-* On Redhat/Fedora based distributions:
-
-```console
-sudo dnf install rpm-build python3-gobject-devel
-```
-
-* On Debian/Ubuntu based distributions:
-
-```console
-sudo apt install rpm
-```
-
-Then you can create an RPM with:
-
-```console
-python setup.py bdist_rpm
-```
-
-The RPM package will be located in the `dist` subdirectory of your git repository.
-
 
 ### Windows
 
