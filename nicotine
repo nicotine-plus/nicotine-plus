@@ -157,19 +157,14 @@ def rescan_shares():
     from collections import deque
 
     from pynicotine.config import config
-    from pynicotine.logfacility import console
     from pynicotine.shares import Shares
 
     config.load_config()
-
-    # Show normal log messages in console
-    console.log_levels = (0, 1)
 
     print(_("""WARNING! Rescanning shares will not work if Nicotine+ is already open. If you need to rescan
 your shares this way, keep Nicotine+ closed until rescanning is done."""))
 
     shares = Shares(None, config, deque())
-
     shares.rescan_public_shares(thread=False)
 
     if config.sections["transfers"]["enablebuddyshares"]:
@@ -185,11 +180,14 @@ def run_headless(network_processor):
     import time
 
     from pynicotine.config import config
+    from pynicotine.logfacility import console
+
+    config.load_config()
+    console.log_levels = ("download", "upload")
 
     for signal_type in (signal.SIGINT, signal.SIGTERM):
         signal.signal(signal_type, network_processor.quit)
 
-    config.load_config()
     network_processor.start()
     network_processor.connect()
 
