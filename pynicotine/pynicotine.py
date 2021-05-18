@@ -111,7 +111,6 @@ class NetworkEventProcessor:
 
         self.ui_callback = None
         self.network_callback = None
-        self.set_status = None
         self.network_filter = None
         self.statistics = None
         self.shares = None
@@ -292,11 +291,6 @@ class NetworkEventProcessor:
         else:
             self.network_callback = self.network_event
 
-        if ui_callback:
-            self.set_status = ui_callback.set_status_text
-        else:
-            self.set_status = log.add
-
         self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
         self.statistics = Statistics(config, ui_callback)
         self.shares = Shares(self, config, self.queue, ui_callback)
@@ -367,6 +361,17 @@ class NetworkEventProcessor:
 
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
+
+    def set_status(self, msg, msg_args=None):
+
+        if msg_args:
+            msg = msg % msg_args
+
+        if self.ui_callback:
+            self.ui_callback.set_status_text(msg)
+
+        if msg:
+            log.add(msg)
 
     def _check_indirect_connection_timeouts(self):
 
@@ -1173,9 +1178,6 @@ class NetworkEventProcessor:
             self.ui_callback.set_socket_status(msg.msg)
 
     def popup_message(self, msg):
-
-        self.set_status(_(msg.title))
-
         if self.ui_callback:
             self.ui_callback.show_info_message(msg.title, msg.message)
 
@@ -1251,6 +1253,7 @@ class NetworkEventProcessor:
 
             self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
+
             self.set_status("")
 
         else:

@@ -2052,7 +2052,7 @@ class NicotineFrame:
             # if it's hidden, to prevent those nasty GTK warnings :)
 
             should_scroll = False
-            self.set_status_text(msg, should_log=False)
+            self.set_status_text(msg)
         else:
             should_scroll = True
 
@@ -2144,17 +2144,9 @@ class NicotineFrame:
 
     """ Status Bar """
 
-    def set_status_text(self, msg, msg_args=None, should_log=True):
-        orig_msg = msg
-
-        if msg_args:
-            msg = msg % msg_args
-
+    def set_status_text(self, msg):
         self.Statusbar.set_text(msg)
         self.Statusbar.set_tooltip_text(msg)
-
-        if orig_msg and should_log:
-            log.add(orig_msg, msg_args)
 
     def set_user_status(self, status):
         self.UserStatus.set_text(status)
