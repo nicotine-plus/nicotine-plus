@@ -126,7 +126,9 @@ class NetworkEventProcessor:
         self.userbrowse = None
         self.transfers = None
         self.userlist = None
+        self.interests = None
 
+        self.shutdown = False
         self.manualdisconnect = False
 
         # Tell threads when we're disconnecting
@@ -281,10 +283,14 @@ class NetworkEventProcessor:
             slskmessages.UnknownPeerMessage: self.ignore
         }
 
-    def start(self, ui_callback, network_callback):
+    def start(self, ui_callback=None, network_callback=None):
 
         self.ui_callback = ui_callback
-        self.network_callback = network_callback
+
+        if network_callback:
+            self.network_callback = network_callback
+        else:
+            self.network_callback = self.network_event
 
         if ui_callback:
             self.set_status = ui_callback.set_status_text
@@ -300,6 +306,32 @@ class NetworkEventProcessor:
 
         port_range = config.sections["server"]["portrange"]
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
+
+    def quit(self, *args):
+
+        # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
+        self.shutdown = True
+        self.manualdisconnect = True
+
+        # Notify plugins
+        self.pluginhandler.shutdown_notification()
+
+        # Disable plugins
+        for plugin in self.pluginhandler.list_installed_plugins():
+            self.pluginhandler.disable_plugin(plugin)
+
+        # Shut down networking thread
+        server_conn = self.active_server_conn
+
+        if server_conn:
+            self.closed_connection(server_conn, server_conn.getsockname())
+
+        self.protothread.abort()
+        self.stop_timers()
+
+        # Closing up all shelves db
+        self.shares.close_shares("normal")
+        self.shares.close_shares("buddy")
 
     def connect(self):
 
@@ -323,6 +355,18 @@ class NetworkEventProcessor:
     def disconnect(self):
         self.manualdisconnect = True
         self.queue.append(slskmessages.ConnClose(self.active_server_conn))
+
+    def network_event(self, msgs):
+
+        for i in msgs:
+            if self.shutdown:
+                return
+
+            elif i.__class__ in self.events:
+                self.events[i.__class__](i)
+
+            else:
+                log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
     def _check_indirect_connection_timeouts(self):
 

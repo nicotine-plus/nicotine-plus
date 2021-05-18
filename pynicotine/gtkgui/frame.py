@@ -96,7 +96,6 @@ class NicotineFrame:
         self.checking_update = False
         self.autoaway = False
         self.awaytimerid = None
-        self.shutdown = False
         self.bindip = bindip
         self.port = port
         utils.NICOTINE = self
@@ -524,20 +523,8 @@ class NicotineFrame:
 
     """ Connection """
 
-    def on_network_event(self, msgs):
-
-        for i in msgs:
-            if self.shutdown:
-                return
-            elif i.__class__ in self.np.events:
-                self.np.events[i.__class__](i)
-            else:
-                log.add("No handler for class %s %s", (i.__class__, dir(i)))
-
     def network_callback(self, msgs):
-
-        if msgs:
-            GLib.idle_add(self.on_network_event, msgs)
+        GLib.idle_add(self.np.network_event, msgs)
 
     def conn_close(self, conn, addr):
 
@@ -553,7 +540,7 @@ class NicotineFrame:
         self.searches.wish_list.conn_close()
         self.userlist.conn_close()
 
-        if self.shutdown:
+        if self.np.shutdown:
             # Application is shutting down, stop here
             return
 
@@ -2052,12 +2039,12 @@ class NicotineFrame:
 
     def log_callback(self, timestamp_format, debug_level, msg):
 
-        if not self.shutdown:
+        if not self.np.shutdown:
             GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
 
     def update_log(self, msg, debug_level=None):
 
-        if self.shutdown:
+        if self.np.shutdown:
             return
 
         if config.sections["logging"]["logcollapsed"]:
@@ -2462,26 +2449,8 @@ class NicotineFrame:
 
     def save_state(self):
 
-        # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
-        self.shutdown = True
-        self.np.manualdisconnect = True
-        log.remove_listener(self.log_callback)
-
-        # Notify plugins
-        self.np.pluginhandler.shutdown_notification()
-
-        # Disable plugins
-        for plugin in self.np.pluginhandler.list_installed_plugins():
-            self.np.pluginhandler.disable_plugin(plugin)
-
-        # Shut down networking thread
-        server_conn = self.np.active_server_conn
-
-        if server_conn:
-            self.np.closed_connection(server_conn, server_conn.getsockname())
-
-        self.np.protothread.abort()
-        self.np.stop_timers()
+        # Shut down event processor/networking
+        self.np.quit()
 
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)
@@ -2493,10 +2462,7 @@ class NicotineFrame:
         self.save_window_state()
 
         config.write_configuration()
-
-        # Closing up all shelves db
-        self.np.shares.close_shares("normal")
-        self.np.shares.close_shares("buddy")
+        log.remove_listener(self.log_callback)
 
 
 class Application(Gtk.Application):

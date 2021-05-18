@@ -73,11 +73,11 @@ def check_arguments():
         help=_("display version and exit")
     )
 
+    # Headless mode
+    parser.add_argument("--headless", action="store_true", help=argparse.SUPPRESS)
+
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
-
-    # Enable cProfile dumps
-    parser.add_argument("--profile", action="store_true", help=argparse.SUPPRESS)
 
     # Currently undocumented, since we can't rescan shares while Nicotine+ is open (shelve limitation)
     parser.add_argument("-r", "--rescan", action="store_true", help=argparse.SUPPRESS)
@@ -97,10 +97,10 @@ def check_arguments():
     if args.disable_trayicon:
         trayicon = False
 
-    return trayicon, args.hidden, args.bindip, args.port, args.ci_mode, args.profile, args.rescan
+    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan
 
 
-def check_dependencies():
+def check_core_dependencies():
 
     # Require Python >= 3.6
     try:
@@ -114,6 +114,19 @@ You should install Python %(min_version)s or newer.""") % {
             "old_version": e,
             "min_version": "3.6"
         }
+
+    # Require gdbm or semidbm, for faster loading of shelves
+    if not importlib.util.find_spec("_gdbm") and \
+            not importlib.util.find_spec("semidbm"):
+        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+            "option1": "gdbm",
+            "option2": "semidbm"
+        }
+
+    return None
+
+
+def check_gui_dependencies():
 
     # Require GTK+ >= 3.18
     try:
@@ -135,14 +148,6 @@ You should install GTK %s or newer.""") % "3.18"
 
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
-
-    # Require gdbm or semidbm, for faster loading of shelves
-    if not importlib.util.find_spec("_gdbm") and \
-            not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-            "option1": "gdbm",
-            "option2": "semidbm"
-        }
 
     return None
 
@@ -173,6 +178,25 @@ your shares this way, keep Nicotine+ closed until rescanning is done."""))
     return 0
 
 
+def run_headless(network_processor):
+    """ Run Nicotine+ in headless (no GUI) mode """
+
+    import signal
+    for signal_type in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(signal_type, network_processor.quit)
+
+    from pynicotine.config import config
+    config.load_config()
+    network_processor.start()
+    network_processor.connect()
+
+    while not network_processor.shutdown:
+        pass
+
+    config.write_configuration()
+    return 0
+
+
 def run():
     """ Run Nicotine+ and return its exit code """
 
@@ -197,8 +221,8 @@ binary package and what you try to run Nicotine+ with).""")
     rename_process(b'nicotine')
     apply_translation()
 
-    trayicon, hidden, bindip, port, ci_mode, profile, rescan = check_arguments()
-    error = check_dependencies()
+    trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
+    error = check_core_dependencies()
 
     if error:
         print(error)
@@ -211,27 +235,19 @@ binary package and what you try to run Nicotine+ with).""")
     from pynicotine.pynicotine import NetworkEventProcessor
     network_processor = NetworkEventProcessor(bindip, port)
 
+    # Run without a GUI (beta)
+    if headless:
+        return run_headless(network_processor)
+
+    error = check_gui_dependencies()
+
+    if error:
+        print(error)
+        return 1
+
     # Initialize GTK-based GUI
     from pynicotine.gtkgui.frame import Application
-    app = Application(network_processor, trayicon, hidden, bindip, port, ci_mode)
-
-    if profile:
-        import cProfile
-        from pynicotine.config import config
-
-        dumpfile = config.filename + ".profile"
-        profiler = cProfile.Profile()
-        profiler.enable()
-
-        print("Starting using the profiler (saving dump to %s)" % dumpfile)
-
-        exit_code = app.run()
-        profiler.disable()
-
-        profiler.dump_stats(dumpfile)
-        return exit_code
-
-    return app.run()
+    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode).run()
 
 
 if __name__ == '__main__':
