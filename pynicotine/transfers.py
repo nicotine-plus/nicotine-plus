@@ -440,7 +440,9 @@ class Transfers:
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i)
-                    self.downloadsview.update(i)
+
+                    if self.downloadsview:
+                        self.downloadsview.update(i)
 
                 elif i.status in ("Getting status", "User logged off", "Connection closed by peer", "Cannot connect"):
                     self.get_file(i.user, i.filename, i.path, i)
@@ -452,13 +454,13 @@ class Transfers:
                     i.status = "User logged off"
                     self.abort_transfer(i)
 
-                    if not self.auto_clear_upload(i):
+                    if not self.auto_clear_upload(i) and self.uploadsview:
                         self.uploadsview.update(i)
 
                 elif i.status == "User logged off":
                     i.status = "Cancelled"
 
-                    if not self.auto_clear_upload(i):
+                    if not self.auto_clear_upload(i) and self.uploadsview:
                         self.uploadsview.update(i)
 
     def got_cant_connect(self, req):
@@ -478,7 +480,9 @@ class Transfers:
 
         i.status = "Cannot connect"
         i.req = None
-        self.downloadsview.update(i)
+
+        if self.downloadsview:
+            self.downloadsview.update(i)
 
         self.eventprocessor.watch_user(i.user)
 
@@ -492,7 +496,8 @@ class Transfers:
             if j.user == i.user:
                 j.timequeued = curtime
 
-        self.uploadsview.update(i)
+        if self.uploadsview:
+            self.uploadsview.update(i)
 
         self.eventprocessor.watch_user(i.user)
         self.check_upload_queue()
@@ -616,7 +621,9 @@ class Transfers:
                     timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
                 )
                 self._append_upload(user, msg.file, newupload)
-                self.uploadsview.update(newupload)
+
+                if self.uploadsview:
+                    self.uploadsview.update(newupload)
 
                 if self.pluginhandler:
                     self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
@@ -705,9 +712,10 @@ class Transfers:
                 i.status = "Getting status"
                 self.transfer_request_times[i] = time.time()
 
-                response = slskmessages.TransferResponse(None, 1, req=i.req)
-                self.downloadsview.update(i)
+                if self.downloadsview:
+                    self.downloadsview.update(i)
 
+                response = slskmessages.TransferResponse(None, 1, req=i.req)
                 return response
 
         # If this file is not in your download queue, then it must be
@@ -727,7 +735,10 @@ class Transfers:
             self.eventprocessor.watch_user(user)
 
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
-            self.downloadsview.update(transfer)
+
+            if self.downloadsview:
+                self.downloadsview.update(transfer)
+
         else:
             response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
             log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
@@ -807,7 +818,10 @@ class Transfers:
                 place=len(self.uploads)
             )
             self._append_upload(user, msg.file, newupload)
-            self.uploadsview.update(newupload)
+
+            if self.uploadsview:
+                self.uploadsview.update(newupload)
+
             return response
 
         # All checks passed, starting a new upload.
@@ -823,7 +837,9 @@ class Transfers:
         self.transfer_request_times[transferobj] = time.time()
         self._append_upload(user, msg.file, transferobj)
 
-        self.uploadsview.update(transferobj)
+        if self.uploadsview:
+            self.uploadsview.update(transferobj)
+
         return response
 
     def transfer_response(self, msg):
@@ -846,7 +862,9 @@ class Transfers:
 
                 i.status = msg.reason
                 i.req = None
-                self.uploadsview.update(i)
+
+                if self.uploadsview:
+                    self.uploadsview.update(i)
 
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
@@ -879,7 +897,10 @@ class Transfers:
 
                 i.status = "Establishing connection"
                 self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
-                self.uploadsview.update(i)
+
+                if self.uploadsview:
+                    self.uploadsview.update(i)
+
                 self.check_upload_queue()
                 break
             else:
@@ -904,7 +925,7 @@ class Transfers:
 
         self.eventprocessor.watch_user(transfer.user)
 
-        if transfer in self.downloads:
+        if transfer in self.downloads and self.downloadsview:
             self.downloadsview.update(transfer)
 
         elif transfer in self.uploads:
@@ -914,7 +935,8 @@ class Transfers:
                 if j.user == transfer.user:
                     j.timequeued = curtime
 
-            self.uploadsview.update(transfer)
+            if self.uploadsview:
+                self.uploadsview.update(transfer)
 
         if transfer in self.transfer_request_times:
             del self.transfer_request_times[transfer]
@@ -934,11 +956,13 @@ class Transfers:
 
             log.add(_("I/O error: %s"), msg.strerror)
 
-            if i in self.downloads:
+            if i in self.downloads and self.downloadsview:
                 self.downloadsview.update(i)
 
             elif i in self.uploads:
-                self.uploadsview.update(i)
+                if self.uploadsview:
+                    self.uploadsview.update(i)
+
                 self.check_upload_queue()
 
     def file_request(self, msg):
@@ -1054,10 +1078,11 @@ class Transfers:
                         self.download_finished(f, i)
                         needupdate = False
 
-            self.downloadsview.new_transfer_notification()
+            if self.downloadsview:
+                self.downloadsview.new_transfer_notification()
 
-            if needupdate:
-                self.downloadsview.update(i)
+                if needupdate:
+                    self.downloadsview.update(i)
 
         else:
             log.add_transfer("Download error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
@@ -1121,8 +1146,9 @@ class Transfers:
                     }
                 )
 
-            self.uploadsview.new_transfer_notification()
-            self.uploadsview.update(i)
+            if self.uploadsview:
+                self.uploadsview.new_transfer_notification()
+                self.uploadsview.update(i)
 
             if i.size == 0:
                 # If filesize is 0, we will not receive a UploadFile message later. Finish now.
@@ -1176,7 +1202,9 @@ class Transfers:
                     self.abort_transfer(i, reason=msg.reason)
 
                 i.status = msg.reason
-                self.downloadsview.update(i)
+
+                if self.downloadsview:
+                    self.downloadsview.update(i)
 
                 log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
                     "user": user,
@@ -1215,7 +1243,9 @@ class Transfers:
                 """ Already failed once previously, give up """
 
                 i.status = "Remote file error"
-                self.downloadsview.update(i)
+
+                if self.downloadsview:
+                    self.downloadsview.update(i)
 
                 log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
                     "filename": i.filename,
@@ -1288,7 +1318,7 @@ class Transfers:
                 self.abort_transfer(i)
                 i.status = "Local file error"
 
-            if needupdate:
+            if needupdate and self.downloadsview:
                 self.downloadsview.update(i)
 
             break
@@ -1354,7 +1384,7 @@ class Transfers:
                 self.upload_finished(i, file=msg.file)
                 needupdate = False
 
-            if needupdate:
+            if needupdate and self.uploadsview:
                 self.uploadsview.update(i)
 
             break
@@ -1401,7 +1431,7 @@ class Transfers:
 
                 auto_clear = True
 
-        if type == "download":
+        if type == "download" and self.downloadsview:
             self.downloadsview.update(i)
 
         elif type == "upload":
@@ -1413,7 +1443,7 @@ class Transfers:
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
                 pass
-            else:
+            elif self.uploadsview:
                 self.uploadsview.update(i)
 
             self.check_upload_queue()
@@ -1501,7 +1531,10 @@ class Transfers:
         for i in self.downloads:
             if i.user == username and i.filename == filename and i.status not in ("Finished", "Aborted", "Filtered"):
                 i.place = msg.place
-                self.downloadsview.update(i)
+
+                if self.downloadsview:
+                    self.downloadsview.update(i)
+
                 return
 
     def upload_queue_notification(self, msg):
@@ -1616,9 +1649,10 @@ class Transfers:
                 self.eventprocessor.send_message_to_peer(user, slskmessages.TransferRequest(None, direction, transfer.req, filename, self.get_file_size(realpath), realpath))
 
         if shouldupdate:
-            if direction == 0:
+            if direction == 0 and self.downloadsview:
                 self.downloadsview.update(transfer)
-            else:
+
+            elif self.uploadsview:
                 self.uploadsview.update(transfer)
 
     def _append_upload(self, user, filename, transferobj):
@@ -1639,7 +1673,10 @@ class Transfers:
                     del self.transfer_request_times[i]
 
                 self.uploads.remove(i)
-                self.uploadsview.remove_specific(i, True)
+
+                if self.uploadsview:
+                    self.uploadsview.remove_specific(i, True)
+
                 break
 
             old_index += 1
@@ -1872,7 +1909,7 @@ class Transfers:
         self.folder_downloaded_actions(i.user, newname, i.path)
 
         # Attempt to autoclear this download, if configured
-        if not self.auto_clear_download(i):
+        if not self.auto_clear_download(i) and self.downloadsview:
             self.downloadsview.update(i)
 
         self.save_downloads()
@@ -1921,7 +1958,7 @@ class Transfers:
         self.eventprocessor.statistics.append_stat_value("completed_uploads", 1)
 
         # Autoclear this upload
-        if not self.auto_clear_upload(i):
+        if not self.auto_clear_upload(i) and self.uploadsview:
             self.uploadsview.update(i)
 
         self.check_upload_queue()
@@ -1929,7 +1966,10 @@ class Transfers:
     def auto_clear_download(self, transfer):
         if self.config.sections["transfers"]["autoclear_downloads"]:
             self.downloads.remove(transfer)
-            self.downloadsview.remove_specific(transfer, True)
+
+            if self.downloadsview:
+                self.downloadsview.remove_specific(transfer, True)
+
             return True
 
         return False
@@ -1937,7 +1977,10 @@ class Transfers:
     def auto_clear_upload(self, transfer):
         if self.config.sections["transfers"]["autoclear_uploads"]:
             self.uploads.remove(transfer)
-            self.uploadsview.remove_specific(transfer, True)
+
+            if self.uploadsview:
+                self.uploadsview.remove_specific(transfer, True)
+
             return True
 
         return False
@@ -2084,7 +2127,7 @@ class Transfers:
                 upload_candidate.status = "User logged off"
                 self.abort_transfer(upload_candidate)
 
-                if not self.auto_clear_upload(upload_candidate):
+                if not self.auto_clear_upload(upload_candidate) and self.uploadsview:
                     self.uploadsview.update(upload_candidate)
 
                 # Check queue again
@@ -2114,7 +2157,9 @@ class Transfers:
                 continue
 
             self.abort_transfer(upload, reason=banmsg, send_fail_message=True)
-            self.uploadsview.remove_specific(upload)
+
+            if self.uploadsview:
+                self.uploadsview.remove_specific(upload)
 
         self.eventprocessor.network_filter.ban_user(user)
 
@@ -2128,7 +2173,10 @@ class Transfers:
         if self.user_logged_out(user):
             transfer.status = "User logged off"
             self.abort_transfer(transfer)
-            self.downloadsview.update(transfer)
+
+            if self.downloadsview:
+                self.downloadsview.update(transfer)
+
             return
 
         self.abort_transfer(transfer)
@@ -2150,7 +2198,7 @@ class Transfers:
             transfer.status = "User logged off"
             self.abort_transfer(transfer)
 
-            if not self.auto_clear_upload(transfer):
+            if not self.auto_clear_upload(transfer) and self.uploadsview:
                 self.uploadsview.update(transfer)
             return
 

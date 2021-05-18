@@ -43,6 +43,7 @@ from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
 from pynicotine.nowplaying import NowPlaying
+from pynicotine.pluginsystem import PluginHandler
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.slskmessages import new_id
@@ -106,11 +107,26 @@ class ConnectToPeerTimeout:
 class NetworkEventProcessor:
     """ This class contains handlers for various messages from the networking thread """
 
-    def __init__(self, ui_callback, network_callback, setstatus, bindip, port):
+    def __init__(self, bindip, port):
 
-        self.ui_callback = ui_callback
-        self.network_callback = network_callback
-        self.set_status = setstatus
+        self.ui_callback = None
+        self.network_callback = None
+        self.set_status = None
+        self.network_filter = None
+        self.statistics = None
+        self.shares = None
+        self.search = None
+        self.pluginhandler = None
+        self.now_playing = None
+        self.protothread = None
+
+        self.chatrooms = None
+        self.privatechat = None
+        self.userinfo = None
+        self.userbrowse = None
+        self.transfers = None
+        self.userlist = None
+
         self.manualdisconnect = False
 
         # Tell threads when we're disconnecting
@@ -131,28 +147,14 @@ class NetworkEventProcessor:
         self.geoip = IP2Location(file_path, "SHARED_MEMORY")
 
         self.queue = deque()
-        self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
-        self.statistics = Statistics(config, self.ui_callback)
-        self.shares = Shares(self, config, self.queue, self.ui_callback)
-        self.search = Search(self, config, self.queue, self.shares.share_dbs, self.ui_callback)
-        self.pluginhandler = None  # Initialized when the GUI is ready
-        self.now_playing = NowPlaying(config)
-
-        port_range = config.sections["server"]["portrange"]
-        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
         # UPnP
         self.upnp_timer = None
         self.add_upnp_portmapping()
 
+        self.away = False
         self.active_server_conn = None
         self.waitport = None
-        self.chatrooms = None
-        self.privatechat = None
-        self.userinfo = None
-        self.userbrowse = None
-        self.transfers = None
-        self.userlist = None
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
@@ -278,6 +280,49 @@ class NetworkEventProcessor:
             slskmessages.PublicRoomMessage: self.public_room_message,
             slskmessages.UnknownPeerMessage: self.ignore
         }
+
+    def start(self, ui_callback, network_callback):
+
+        self.ui_callback = ui_callback
+        self.network_callback = network_callback
+
+        if ui_callback:
+            self.set_status = ui_callback.set_status_text
+        else:
+            self.set_status = log.add
+
+        self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
+        self.statistics = Statistics(config, ui_callback)
+        self.shares = Shares(self, config, self.queue, ui_callback)
+        self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
+        self.pluginhandler = PluginHandler(ui_callback, config)
+        self.now_playing = NowPlaying(config)
+
+        port_range = config.sections["server"]["portrange"]
+        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
+
+    def connect(self):
+
+        self.protothread.server_connect()
+
+        if self.active_server_conn is not None:
+            return
+
+        # Clear any potential messages queued up to this point (should not happen)
+        while self.queue:
+            self.queue.popleft()
+
+        server = config.sections["server"]["server"]
+        self.set_status(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
+        self.queue.append(slskmessages.ServerConn(None, server))
+
+        if self.servertimer is not None:
+            self.servertimer.cancel()
+            self.servertimer = None
+
+    def disconnect(self):
+        self.manualdisconnect = True
+        self.queue.append(slskmessages.ConnClose(self.active_server_conn))
 
     def _check_indirect_connection_timeouts(self):
 
@@ -576,7 +621,8 @@ class NetworkEventProcessor:
         if cc == "-":
             cc = ""
 
-        self.ui_callback.has_user_flag(user, cc)
+        if self.ui_callback:
+            self.ui_callback.has_user_flag(user, cc)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
@@ -803,8 +849,10 @@ class NetworkEventProcessor:
                 self.transfers.disconnect()
 
             self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = self.userlist = None
-            self.ui_callback.conn_close(conn, addr)
             self.pluginhandler.server_disconnect_notification(userchoice)
+
+            if self.ui_callback:
+                self.ui_callback.conn_close(conn, addr)
 
         else:
 
@@ -851,7 +899,8 @@ class NetworkEventProcessor:
             if self.active_server_conn is not None:
                 self.active_server_conn = None
 
-            self.ui_callback.connect_error(msg)
+            if self.ui_callback:
+                self.ui_callback.connect_error(msg)
 
         elif msg.connobj.__class__ is slskmessages.OutConn:
 
@@ -939,7 +988,7 @@ class NetworkEventProcessor:
 
     def server_timeout(self):
         if not config.need_config():
-            self.ui_callback.on_connect()
+            self.connect()
 
     def transfer_timeout(self, msg):
 
@@ -982,7 +1031,7 @@ class NetworkEventProcessor:
 
     def connect_to_server(self, msg):
         log.add_msg_contents(msg)
-        self.ui_callback.on_connect()
+        self.connect()
 
     def dummy_message(self, msg):
         log.add_msg_contents(msg)
@@ -1076,11 +1125,15 @@ class NetworkEventProcessor:
             self.transfers.file_error(msg)
 
     def set_current_connection_count(self, msg):
-        self.ui_callback.set_socket_status(msg.msg)
+        if self.ui_callback:
+            self.ui_callback.set_socket_status(msg.msg)
 
     def popup_message(self, msg):
+
         self.set_status(_(msg.title))
-        self.ui_callback.show_info_message(msg.title, msg.message)
+
+        if self.ui_callback:
+            self.ui_callback.show_info_message(msg.title, msg.message)
 
     """
     Incoming Server Messages
@@ -1099,11 +1152,17 @@ class NetworkEventProcessor:
             thread.daemon = True
             thread.start()
 
-            self.queue.append(slskmessages.SetStatus((not self.ui_callback.away) + 1))
+            self.away = config.sections["server"]["away"]
+            self.queue.append(slskmessages.SetStatus((not self.away) + 1))
             self.watch_user(config.sections["server"]["login"])
 
+            if self.ui_callback:
+                notifications = self.ui_callback.notifications
+            else:
+                notifications = None
+
             self.transfers = transfers.Transfers(config, self.peerconns, self.queue, self, self.users,
-                                                 self.network_callback, self.ui_callback.notifications, self.pluginhandler)
+                                                 self.network_callback, notifications, self.pluginhandler)
             self.shares.set_connected(True)
 
             if msg.ip is not None:
@@ -1114,9 +1173,12 @@ class NetworkEventProcessor:
                     user = str(row[0])
                     self.watch_user(user)
 
-            self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface(msg)
+            if self.ui_callback:
+                self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface()
+                self.transfers.set_transfer_views(downloads, uploads)
 
-            self.transfers.set_transfer_views(downloads, uploads)
+            if msg.banner != "":
+                log.add(msg.banner)
 
             for thing in config.sections["interests"]["likes"]:
                 if thing and isinstance(thing, str):
@@ -1146,13 +1208,14 @@ class NetworkEventProcessor:
             self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
             self.set_status("")
+
         else:
             self.manualdisconnect = True
             self.queue.append(slskmessages.ConnClose(self.active_server_conn))
 
             title = _("Connection Refused")
             message = _("Can not log in, reason: %s") % msg.reason
-            self.ui_callback.show_info_message(title, message)
+            self.network_callback([slskmessages.PopupMessage(title, message)])
             log.add(message)
 
     def add_user(self, msg):
@@ -1352,7 +1415,7 @@ class NetworkEventProcessor:
     def admin_message(self, msg):
         """ Server code: 66 """
 
-        self.ui_callback.show_info_message(_("Server Message"), msg.msg)
+        self.network_callback([slskmessages.PopupMessage(_("Server Message"), msg.msg)])
 
     def tunneled_message(self, msg):
         """ Server code: 68 """
@@ -1557,7 +1620,7 @@ class NetworkEventProcessor:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        self.ui_callback.show_info_message(_("Your password has been changed"), _("Password is %s") % password)
+        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), _("Password is %s") % password)])
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """

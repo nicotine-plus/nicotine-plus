@@ -40,10 +40,9 @@ from pynicotine.utils import human_speed
 
 class Interests:
 
-    def __init__(self, frame, np):
+    def __init__(self, frame):
 
         self.frame = frame
-        self.np = np
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
         self.frame.interestsvbox.add(self.Main)
@@ -198,7 +197,7 @@ class Interests:
             config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
             config.write_configuration()
-            self.np.queue.append(slskmessages.AddThingILike(thing))
+            self.frame.np.queue.append(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget, *args):
 
@@ -210,7 +209,7 @@ class Interests:
             config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
             config.write_configuration()
-            self.np.queue.append(slskmessages.AddThingIHate(thing))
+            self.frame.np.queue.append(slskmessages.AddThingIHate(thing))
 
     def on_remove_thing_i_like(self, *args):
 
@@ -224,7 +223,7 @@ class Interests:
         config.sections["interests"]["likes"].remove(thing)
 
         config.write_configuration()
-        self.np.queue.append(slskmessages.RemoveThingILike(thing))
+        self.frame.np.queue.append(slskmessages.RemoveThingILike(thing))
 
     def on_til_recommend_search(self, *args):
         self.recommend_search(self.til_popup_menu.get_user())
@@ -241,7 +240,7 @@ class Interests:
         config.sections["interests"]["dislikes"].remove(thing)
 
         config.write_configuration()
-        self.np.queue.append(slskmessages.RemoveThingIHate(thing))
+        self.frame.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
     def on_tidl_recommend_search(self, *args):
         self.recommend_search(self.tidl_popup_menu.get_user())
@@ -257,7 +256,7 @@ class Interests:
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
             config.write_configuration()
-            self.np.queue.append(slskmessages.AddThingILike(thing))
+            self.frame.np.queue.append(slskmessages.AddThingILike(thing))
 
         elif not state and \
                 thing and thing in config.sections["interests"]["likes"]:
@@ -266,7 +265,7 @@ class Interests:
             config.sections["interests"]["likes"].remove(thing)
 
             config.write_configuration()
-            self.np.queue.append(slskmessages.RemoveThingILike(thing))
+            self.frame.np.queue.append(slskmessages.RemoveThingILike(thing))
 
         action.set_state(state)
 
@@ -281,7 +280,7 @@ class Interests:
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
             config.write_configuration()
-            self.np.queue.append(slskmessages.AddThingIHate(thing))
+            self.frame.np.queue.append(slskmessages.AddThingIHate(thing))
 
         elif not state and \
                 thing and thing in config.sections["interests"]["dislikes"]:
@@ -290,33 +289,33 @@ class Interests:
             config.sections["interests"]["dislikes"].remove(thing)
 
             config.write_configuration()
-            self.np.queue.append(slskmessages.RemoveThingIHate(thing))
+            self.frame.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
         action.set_state(state)
 
     def on_recommend_item(self, *args):
 
         thing = self.til_popup_menu.get_user()
-        self.np.queue.append(slskmessages.ItemRecommendations(thing))
-        self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
+        self.frame.np.queue.append(slskmessages.ItemRecommendations(thing))
+        self.frame.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
     def on_recommend_recommendation(self, *args):
 
         thing = self.r_popup_menu.get_user()
-        self.np.queue.append(slskmessages.ItemRecommendations(thing))
-        self.np.queue.append(slskmessages.ItemSimilarUsers(thing))
+        self.frame.np.queue.append(slskmessages.ItemRecommendations(thing))
+        self.frame.np.queue.append(slskmessages.ItemSimilarUsers(thing))
 
     def on_r_recommend_search(self, *args):
         self.recommend_search(self.r_popup_menu.get_user())
 
     def on_global_recommendations_clicked(self, *args):
-        self.np.queue.append(slskmessages.GlobalRecommendations())
+        self.frame.np.queue.append(slskmessages.GlobalRecommendations())
 
     def on_recommendations_clicked(self, *args):
-        self.np.queue.append(slskmessages.Recommendations())
+        self.frame.np.queue.append(slskmessages.Recommendations())
 
     def on_similar_users_clicked(self, *args):
-        self.np.queue.append(slskmessages.SimilarUsers())
+        self.frame.np.queue.append(slskmessages.SimilarUsers())
 
     def set_recommendations(self, title, recom):
         self.recommendations_model.clear()
@@ -361,7 +360,7 @@ class Interests:
             self.recommendation_users[user] = iterator
 
             # Request user status, speed and number of shared files
-            self.np.watch_user(user, force_update=True)
+            self.frame.np.watch_user(user, force_update=True)
 
     def get_user_status(self, msg):
         if msg.user not in self.recommendation_users:

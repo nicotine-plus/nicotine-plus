@@ -502,7 +502,7 @@ class PrivateChat:
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
         autoreply = config.sections["server"]["autoreply"]
-        if self.frame.away and not self.autoreplied and autoreply:
+        if self.frame.np.away and not self.autoreplied and autoreply:
             self.send_message("[Auto-Message] %s" % autoreply)
             self.autoreplied = True
 
@@ -584,7 +584,7 @@ class PrivateChat:
         self.tag_username = self.create_tag(buffer, color)
 
         if self.chats.connected:
-            if self.frame.away and config.sections["ui"]["showaway"]:
+            if self.frame.np.away and config.sections["ui"]["showaway"]:
                 self.tag_my_username = self.create_tag(buffer, "useraway")
             else:
                 self.tag_my_username = self.create_tag(buffer, "useronline")
@@ -602,7 +602,7 @@ class PrivateChat:
         update_tag_visuals(self.tag_username, color)
 
         if self.chats.connected:
-            if self.frame.away and config.sections["ui"]["showaway"]:
+            if self.frame.np.away and config.sections["ui"]["showaway"]:
                 update_tag_visuals(self.tag_my_username, "useraway")
             else:
                 update_tag_visuals(self.tag_my_username, "useronline")

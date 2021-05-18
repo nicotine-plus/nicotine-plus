@@ -207,9 +207,13 @@ binary package and what you try to run Nicotine+ with).""")
     if rescan:
         return rescan_shares()
 
-    # Load GTK-based GUI
+    # Initialize network event processor
+    from pynicotine.pynicotine import NetworkEventProcessor
+    network_processor = NetworkEventProcessor(bindip, port)
+
+    # Initialize GTK-based GUI
     from pynicotine.gtkgui.frame import Application
-    app = Application(trayicon, hidden, bindip, port, ci_mode)
+    app = Application(network_processor, trayicon, hidden, bindip, port, ci_mode)
 
     if profile:
         import cProfile

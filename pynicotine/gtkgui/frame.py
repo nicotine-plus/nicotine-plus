@@ -71,8 +71,6 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.logfacility import log
-from pynicotine.pluginsystem import PluginHandler
-from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
@@ -82,20 +80,20 @@ from pynicotine.utils import unescape
 
 class NicotineFrame:
 
-    def __init__(self, application, use_trayicon, start_hidden, bindip, port, ci_mode):
+    def __init__(self, application, network_processor, use_trayicon, start_hidden, bindip, port, ci_mode):
 
         if not ci_mode:
             # Show errors in the GUI from here on
             sys.excepthook = self.on_critical_error
 
         self.application = application
+        self.np = network_processor
         self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.ci_mode = ci_mode
         self.current_page_id = "Default"
         self.current_tab_label = None
         self.checking_update = False
-        self.away = False
         self.autoaway = False
         self.awaytimerid = None
         self.shutdown = False
@@ -129,20 +127,6 @@ class NicotineFrame:
             shutil.move(config.filename, corruptfile)
 
             config.load_config()
-
-        """ Network Event Processor """
-
-        self.np = NetworkEventProcessor(
-            self,
-            self.network_callback,
-            self.set_status_text,
-            self.bindip,
-            self.port
-        )
-
-        """ Previous away state """
-
-        self.away = config.sections["server"]["away"]
 
         """ GTK Settings """
 
@@ -208,7 +192,7 @@ class NicotineFrame:
         self.initialize_main_tabs()
 
         # Initialize other notebooks
-        self.interests = Interests(self, self.np)
+        self.interests = Interests(self)
         self.chatrooms = ChatRooms(self)
         self.searches = Searches(self)
         self.downloads = Downloads(self, self.DownloadsTabLabel)
@@ -305,10 +289,6 @@ class NicotineFrame:
         self.MainNotebook.connect("page-reordered", self.on_page_reordered)
         self.MainNotebook.connect("page-added", self.on_page_added)
 
-        """ Plugins: loaded here to ensure all requirements are initialized """
-
-        self.np.pluginhandler = PluginHandler(self, config)
-
         """ Apply UI Customizations """
 
         self.update_visuals()
@@ -331,6 +311,8 @@ class NicotineFrame:
 
         """ Connect """
 
+        network_processor.start(self, self.network_callback)
+
         if config.need_config():
             self.connect_action.set_enabled(False)
             self.rescan_public_action.set_enabled(True)
@@ -339,7 +321,7 @@ class NicotineFrame:
             self.on_fast_configure()
 
         elif config.sections["server"]["auto_connect_startup"]:
-            self.on_connect()
+            self.np.connect()
 
         self.update_bandwidth()
         self.update_completions()
@@ -373,9 +355,9 @@ class NicotineFrame:
 
     """ Init UI """
 
-    def init_interface(self, msg):
+    def init_interface(self):
 
-        if not self.away:
+        if not self.np.away:
             self.set_user_status(_("Online"))
 
             autoaway = config.sections["server"]["autoaway"]
@@ -388,7 +370,7 @@ class NicotineFrame:
             self.set_user_status(_("Away"))
 
         self.set_widget_online_status(True)
-        self.tray_icon.set_away(self.away)
+        self.tray_icon.set_away(self.np.away)
 
         self.uploads.init_interface(self.np.transfers.uploads)
         self.downloads.init_interface(self.np.transfers.downloads)
@@ -396,9 +378,6 @@ class NicotineFrame:
         self.privatechats.login()
         self.userbrowse.login()
         self.userinfo.login()
-
-        if msg.banner != "":
-            log.add(msg.banner)
 
         return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.downloads, self.uploads, self.userlist, self.interests
 
@@ -567,7 +546,7 @@ class NicotineFrame:
             self.awaytimerid = None
 
         if self.autoaway:
-            self.autoaway = self.away = False
+            self.autoaway = self.np.away = False
 
         self.uploads.conn_close()
         self.downloads.conn_close()
@@ -881,48 +860,27 @@ class NicotineFrame:
     # File
 
     def on_connect(self, *args):
-
-        self.tray_icon.set_connected(True)
-        self.np.protothread.server_connect()
-
-        if self.np.active_server_conn is not None:
-            return
-
-        # Clear any potential messages queued up to this point (should not happen)
-        while self.np.queue:
-            self.np.queue.popleft()
-
-        self.set_user_status("...")
-
-        server = config.sections["server"]["server"]
-        self.set_status_text(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
-        self.np.queue.append(slskmessages.ServerConn(None, server))
-
-        if self.np.servertimer is not None:
-            self.np.servertimer.cancel()
-            self.np.servertimer = None
+        self.np.connect()
 
     def on_disconnect(self, *args):
-        self.disconnect_action.set_enabled(False)
-        self.np.manualdisconnect = True
-        self.np.queue.append(slskmessages.ConnClose(self.np.active_server_conn))
+        self.np.disconnect()
 
     def on_away(self, *args):
-        self.away = not self.away
-        config.sections["server"]["away"] = self.away
+        self.np.away = not self.np.away
+        config.sections["server"]["away"] = self.np.away
         self._apply_away_state()
 
     def _apply_away_state(self):
-        if not self.away:
+        if not self.np.away:
             self.set_user_status(_("Online"))
             self.on_disable_auto_away()
         else:
             self.set_user_status(_("Away"))
 
-        self.tray_icon.set_away(self.away)
+        self.tray_icon.set_away(self.np.away)
 
-        self.np.queue.append(slskmessages.SetStatus(self.away and 1 or 2))
-        self.away_action.set_state(GLib.Variant.new_boolean(self.away))
+        self.np.queue.append(slskmessages.SetStatus(self.np.away and 1 or 2))
+        self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
         self.privatechats.update_visuals()
 
     def on_check_privileges(self, *args):
@@ -2018,9 +1976,9 @@ class NicotineFrame:
             GLib.source_remove(timerid)
 
     def on_auto_away(self):
-        if not self.away:
+        if not self.np.away:
             self.autoaway = True
-            self.away = True
+            self.np.away = True
             self._apply_away_state()
 
         return False
@@ -2029,9 +1987,9 @@ class NicotineFrame:
         if self.autoaway:
             self.autoaway = False
 
-            if self.away:
+            if self.np.away:
                 # Disable away mode if not already done
-                self.away = False
+                self.np.away = False
                 self._apply_away_state()
 
         if self.awaytimerid is not None:
@@ -2543,7 +2501,7 @@ class NicotineFrame:
 
 class Application(Gtk.Application):
 
-    def __init__(self, tray_icon, start_hidden, bindip, port, ci_mode):
+    def __init__(self, network_processor, tray_icon, start_hidden, bindip, port, ci_mode):
 
         application_id = "org.nicotine_plus.Nicotine"
 
@@ -2551,6 +2509,7 @@ class Application(Gtk.Application):
         GLib.set_application_name("Nicotine+")
         GLib.set_prgname(application_id)
 
+        self.network_processor = network_processor
         self.tray_icon = tray_icon
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -2563,6 +2522,7 @@ class Application(Gtk.Application):
 
             NicotineFrame(
                 self,
+                self.network_processor,
                 self.tray_icon,
                 self.start_hidden,
                 self.bindip,
