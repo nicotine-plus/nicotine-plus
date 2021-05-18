@@ -1331,13 +1331,15 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
         log.add_chat(msg)
 
-        if self.chatrooms is not None:
-            event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+        event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
 
-            if event is not None:
-                (r, n, msg.msg) = event
+        if event is not None:
+            (r, n, msg.msg) = event
+
+            if self.chatrooms is not None:
                 self.chatrooms.say_chat_room(msg, msg.msg)
-                self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
+
+            self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def join_room(self, msg):
         """ Server code: 14 """
@@ -1377,9 +1379,10 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
         log.add_chat(msg)
 
+        self.queue.append(slskmessages.MessageAcked(msg.msgid))
+
         if self.privatechat is not None:
             self.privatechat.show_message(msg, msg.msg, msg.newmessage)
-            self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
     def search_request(self, msg):
         """ Server code: 26, 42 and 120 """

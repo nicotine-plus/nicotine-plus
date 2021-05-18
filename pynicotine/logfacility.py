@@ -25,6 +25,7 @@ class Logger(object):
     def __init__(self):
 
         self.listeners = set()
+        self.log_levels = None
         self.file_name = "debug_" + str(int(time.time()))
 
     def set_msg_prefix(self, level, msg):
@@ -57,7 +58,12 @@ class Logger(object):
 
         from pynicotine.config import config
 
-        if level and level not in config.sections["logging"]["debugmodes"]:
+        if self.log_levels:
+            levels = self.log_levels
+        else:
+            levels = config.sections["logging"]["debugmodes"]
+
+        if level and level not in levels:
             return
 
         if not msg_args and level in ("chat", "message"):
@@ -168,12 +174,10 @@ class Logger(object):
 class Console(object):
 
     def __init__(self, logger):
-        self.log_levels = ()
         logger.add_listener(self.console_logger)
 
     def console_logger(self, timestamp_format, level, msg):
-        if not level or level in self.log_levels:
-            print("[" + time.strftime(timestamp_format) + "] " + msg)
+        print("[" + time.strftime(timestamp_format) + "] " + msg)
 
 
 log = Logger()

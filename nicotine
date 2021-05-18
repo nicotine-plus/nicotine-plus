@@ -180,10 +180,10 @@ def run_headless(network_processor):
     import time
 
     from pynicotine.config import config
-    from pynicotine.logfacility import console
+    from pynicotine.logfacility import log
 
     config.load_config()
-    console.log_levels = ("download", "upload")
+    log.log_levels = ("download", "upload")
 
     for signal_type in (signal.SIGINT, signal.SIGTERM):
         signal.signal(signal_type, network_processor.quit)
