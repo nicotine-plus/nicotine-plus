@@ -8,15 +8,22 @@
         <property name="visible">0</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkInfoBar" id="InfoBar">
+          <object class="GtkRevealer">
             <property name="visible">1</property>
-            <child internal-child="content_area">
-              <object class="GtkBox">
-                <property name="spacing">16</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="wrap">1</property>
+            <property name="can-focus">0</property>
+            <property name="transition-type">slide-down</property>
+            <child>
+              <object class="GtkInfoBar" id="InfoBar">
+                <property name="visible">1</property>
+                <child internal-child="content_area">
+                  <object class="GtkBox">
+                    <property name="spacing">16</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="wrap">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

@@ -1,42 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkEntryCompletion" id="RoomSearchCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
-  <object class="GtkEntryCompletion" id="UserSearchCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
-  <object class="GtkEntryCompletion" id="SearchCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
-  <object class="GtkEntryCompletion" id="PrivateChatCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
-  <object class="GtkEntryCompletion" id="UserInfoCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
-  <object class="GtkEntryCompletion" id="UserBrowseCompletion">
-    <property name="inline-completion">1</property>
-    <property name="inline-selection">1</property>
-    <property name="minimum-key-length">0</property>
-    <property name="popup-single-match">0</property>
-  </object>
   <object class="GtkMenuButton" id="HeaderMenu">
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
@@ -1665,5 +1629,41 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkEntryCompletion" id="RoomSearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserSearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="SearchCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="PrivateChatCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserInfoCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
+  </object>
+  <object class="GtkEntryCompletion" id="UserBrowseCompletion">
+    <property name="inline-completion">1</property>
+    <property name="inline-selection">1</property>
+    <property name="minimum-key-length">0</property>
+    <property name="popup-single-match">0</property>
   </object>
 </interface>

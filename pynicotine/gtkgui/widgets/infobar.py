@@ -33,15 +33,7 @@ class InfoBar:
         self.set_visible(False)
 
     def set_visible(self, visible):
-
-        self.info_bar.set_visible(visible)
-
-        try:
-            self.info_bar.set_revealed(visible)
-
-        except AttributeError:
-            # Old GTK version
-            pass
+        self.info_bar.get_parent().set_reveal_child(visible)
 
     def show_message(self, message):
 

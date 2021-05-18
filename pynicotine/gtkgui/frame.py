@@ -1034,8 +1034,8 @@ class NicotineFrame:
         config.sections["columns"]["hideflags"] = not state
 
     def set_show_transfer_buttons(self, show):
-        self.downloads.DownloadButtons.set_visible(show)
-        self.uploads.UploadButtons.set_visible(show)
+        self.downloads.DownloadButtons.set_reveal_child(show)
+        self.uploads.UploadButtons.set_reveal_child(show)
 
     def on_show_transfer_buttons(self, action, *args):
 
