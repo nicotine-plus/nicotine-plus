@@ -39,6 +39,7 @@
 - owczi
 
 ## Swedish
+- mitramai (2021)
 - alimony [markus(at)samsonrourke(dot)com]
 
 ## Hungarian
