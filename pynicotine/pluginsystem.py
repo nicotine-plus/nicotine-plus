@@ -40,8 +40,9 @@ returncode = {
 
 class PluginHandler(object):
 
-    def __init__(self, frame, config):
-        self.frame = frame
+    def __init__(self, np, config):
+
+        self.np = np
         self.config = config
 
         log.add(_("Loading plugin handler"))
@@ -419,15 +420,19 @@ class PluginHandler(object):
         log.add(text)
 
     def saychatroom(self, room, text):
-        self.frame.np.queue.append(slskmessages.SayChatroom(room, text))
+        self.np.queue.append(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
-        '''Send user message in private (showing up in GUI)'''
-        self.frame.privatechats.users[user].send_message(text)
+        """ Send user message in private (showing up in GUI) """
+
+        if self.np.ui_callback:
+            self.np.ui_callback.privatechats.users[user].send_message(text)
 
     def sendprivate(self, user, text):
-        '''Send user message in private (not showing up in GUI)'''
-        self.frame.privatechats.send_message(user, text)
+        """ Send user message in private (not showing up in GUI) """
+
+        if self.np.ui_callback:
+            self.np.ui_callback.privatechats.send_message(user, text)
 
 
 class ResponseThrottle(object):
@@ -444,13 +449,15 @@ class ResponseThrottle(object):
     Some of the throttle logic is guesswork as server code is closed source, but works adequately.
     """
 
-    def __init__(self, frame, plugin_name, logging=False):
-        self.frame = frame
+    def __init__(self, np, plugin_name, logging=False):
+
+        self.np = np
         self.plugin_name = plugin_name
         self.logging = logging
         self.plugin_usage = {}
 
     def ok_to_respond(self, room, nick, request, seconds_limit_min=30):
+
         self.room = room
         self.nick = nick
         self.request = request
@@ -467,14 +474,14 @@ class ResponseThrottle(object):
 
         port = False
         try:
-            ip, port = self.frame.np.users[nick].addr
+            ip, port = self.np.users[nick].addr
         except Exception:
             port = True
 
-        if self.frame.np.network_filter.is_user_ignored(nick):
+        if self.np.network_filter.is_user_ignored(nick):
             willing_to_respond, reason = False, "The nick is ignored"
 
-        elif self.frame.np.network_filter.is_user_ip_ignored(nick):
+        elif self.np.network_filter.is_user_ip_ignored(nick):
             willing_to_respond, reason = False, "The nick's Ip is ignored"
 
         elif not port:
@@ -527,17 +534,21 @@ class BasePlugin(object):
 
         # Never override this function, override init() instead
         self.parent = parent
-        self.frame = parent.frame
+        self.np = parent.np
+        self.frame = parent.np.ui_callback
 
         if not enable_plugin:
             # Plugin was loaded, but not enabled yet
             return
 
         self.init()
-        for (trigger, func) in self.__publiccommands__:
-            self.frame.chatrooms.CMDS.add('/' + trigger + ' ')
-        for (trigger, func) in self.__privatecommands__:
-            self.frame.privatechats.CMDS.add('/' + trigger + ' ')
+
+        if parent.np.ui_callback:
+            for (trigger, func) in self.__publiccommands__:
+                parent.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
+
+            for (trigger, func) in self.__privatecommands__:
+                parent.np.ui_callback.privatechats.CMDS.add('/' + trigger + ' ')
 
     def init(self):
         # Custom init function for plugins
@@ -633,16 +644,16 @@ class BasePlugin(object):
         self.parent.saychatroom(room, text)
 
     def sayprivate(self, user, text):
-        '''Send user message in private (shows up in GUI)'''
+        """ Send user message in private (shows up in GUI) """
         self.parent.sayprivate(user, text)
 
     def sendprivate(self, user, text):
-        '''Send user message in private (doesn't show up in GUI)'''
+        """ Send user message in private (doesn't show up in GUI) """
         self.parent.sendprivate(user, text)
 
     def fakepublic(self, room, user, text):
         try:
-            room = self.frame.chatrooms.joinedrooms[room]
+            room = self.np.chatrooms.joinedrooms[room]
         except KeyError:
             return False
 

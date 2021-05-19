@@ -48,7 +48,7 @@ class Plugin(BasePlugin):
 
     def init(self):
         self.plugin_command = "!reddit"
-        self.responder = ResponseThrottle(self.frame, self.__name__)
+        self.responder = ResponseThrottle(self.np, self.__name__)
 
     def get_feed(self, domain, path):
         import http.client

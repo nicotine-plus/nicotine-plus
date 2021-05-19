@@ -295,7 +295,7 @@ class NetworkEventProcessor:
         self.statistics = Statistics(config, ui_callback)
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
-        self.pluginhandler = PluginHandler(ui_callback, config)
+        self.pluginhandler = PluginHandler(self, config)
         self.now_playing = NowPlaying(config)
 
         port_range = config.sections["server"]["portrange"]
@@ -675,7 +675,8 @@ class NetworkEventProcessor:
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
-        self.privatechat.private_message_queue_process(user)
+        if self.privatechat is not None:
+            self.privatechat.private_message_queue_process(user)
 
         if user not in self.ip_requested:
             self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port)

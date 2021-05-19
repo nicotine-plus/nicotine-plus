@@ -96,7 +96,7 @@ class Plugin(BasePlugin):
         """ Broadcast Now Playing in selected rooms """
 
         for room in self.settings['rooms']:
-            playing = self.frame.np.now_playing.get_np()
+            playing = self.np.now_playing.get_np()
 
             if playing:
                 self.saypublic(room, playing)
