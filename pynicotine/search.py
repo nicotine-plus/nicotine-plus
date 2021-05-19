@@ -222,28 +222,27 @@ class Search:
             word index. If not, exit, since we don't have relevant results. """
 
             largest = 0
+            words = searchterm.split()
 
-            for i in re.finditer(r'\S+', searchterm):
-                i = i.group(0)
-
-                if i not in wordindex:
+            for word in words:
+                if word not in wordindex:
                     return
 
-                list_size = len(wordindex[i])
+                list_size = len(wordindex[word])
 
                 if list_size > largest:
                     largest = list_size
-                    largest_key = i
+                    largest_key = word
 
             """ Stage 2: Start with the word that has the most file matches, which we selected
             in the previous step, and gradually remove matches that other words in the search
             term don't have. Return the remaining matches, if any. """
 
             results = wordindex[largest_key]
-            searchterm.replace(largest_key, '')
+            words.remove(largest_key)
 
-            for i in re.finditer(r'\S+', searchterm):
-                results = set(results).intersection(wordindex[i.group(0)])
+            for word in words:
+                results = set(results).intersection(wordindex[word])
 
             return results
 

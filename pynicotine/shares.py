@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gc
 import importlib.util
 import os
 import pickle
@@ -185,6 +186,9 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(files=newsharedfiles, streams=newsharedfilesstreams, mtimes=newmtimes)
+        del newsharedfilesstreams
+        del newmtimes
+        gc.collect()
 
         # Update Search Index
         # wordindex is a dict in format {word: [num, num, ..], ... } with num matching keys in newfileindex
@@ -193,8 +197,10 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(wordindex=wordindex)
-
         self.queue.put((0, _("%(num)s folders found after rescan"), {"num": len(newsharedfiles)}))
+        del wordindex
+        del newsharedfiles
+        gc.collect()
 
     def is_hidden(self, folder, filename=None, folder_obj=None):
         """ Stop sharing any dot/hidden directories/files """
