@@ -889,16 +889,16 @@ class Shares:
         return scanner, scanner_queue
 
     def rebuild_public_shares(self, thread=True):
-        self.rescan_shares("normal", rebuild=True, use_thread=thread)
+        return self.rescan_shares("normal", rebuild=True, use_thread=thread)
 
     def rescan_public_shares(self, rebuild=False, thread=True):
-        self.rescan_shares("normal", rebuild, thread)
+        return self.rescan_shares("normal", rebuild, thread)
 
     def rebuild_buddy_shares(self, thread=True):
-        self.rescan_shares("buddy", rebuild=True, use_thread=thread)
+        return self.rescan_shares("buddy", rebuild=True, use_thread=thread)
 
     def rescan_buddy_shares(self, rebuild=False, thread=True):
-        self.rescan_shares("buddy", rebuild, thread)
+        return self.rescan_shares("buddy", rebuild, thread)
 
     def get_shared_folders(self, sharestype):
 
@@ -966,8 +966,9 @@ class Shares:
             thread.name = "ProcessShareScanner"
             thread.daemon = True
             thread.start()
-        else:
-            self._process_scanner(scanner, scanner_queue, sharestype)
+            return
+
+        return self._process_scanner(scanner, scanner_queue, sharestype)
 
     def _process_scanner(self, scanner, scanner_queue, sharestype):
 
@@ -1006,3 +1007,5 @@ class Shares:
 
         if self.ui_callback:
             self.ui_callback.hide_scan_progress(sharestype)
+
+        return error
