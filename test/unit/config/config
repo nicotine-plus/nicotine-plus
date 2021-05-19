@@ -1,0 +1,256 @@
+[server]
+server = ('server.slsknet.org', 2242)
+login = user123
+passw = pass123
+ctcpmsgs = False
+autosearch = []
+autoreply = ääääääää
+portrange = (2234, 2239)
+upnp = True
+upnp_interval = 4
+auto_connect_startup = True
+userlist = []
+banlist = []
+ignorelist = []
+ipignorelist = {}
+ipblocklist = {}
+autojoin = ['nicotine']
+autoaway = 15
+away = False
+private_chatrooms = False
+command_aliases = {}
+
+[transfers]
+incompletedir = /home/default/.local/share/nicotine/incomplete
+downloaddir = /home/default/.local/share/nicotine/downloads
+uploaddir = /home/default/.local/share/nicotine/received
+sharedownloaddir = False
+shared = []
+buddyshared = []
+uploadbandwidth = 10
+uselimit = False
+uploadlimit = 150
+downloadlimit = 0
+preferfriends = False
+useupslots = False
+uploadslots = 2
+afterfinish = 
+afterfolder = 
+lock = True
+reverseorder = False
+fifoqueue = False
+usecustomban = False
+limitby = True
+customban = Banned, don't bother retrying
+usecustomgeoblock = False
+customgeoblock = Sorry, your country is blocked
+queuelimit = 10000
+filelimit = 100
+friendsonly = False
+friendsnolimits = False
+enablebuddyshares = False
+enabletransferbuttons = True
+groupdownloads = 1
+groupuploads = 1
+geoblock = False
+geopanic = False
+geoblockcc = ['']
+remotedownloads = True
+uploadallowed = 2
+autoclear_downloads = False
+autoclear_uploads = False
+uploadsinsubdirs = True
+rescanonstartup = True
+enablefilters = True
+downloadregexp = (\\(.*\.url|albumart(_{........-....-....-....-............}_)?(_?(large|small))?\.jpg|desktop\.ini|folder\.jpg|thumbs\.db)$)
+downloadfilters = [['desktop.ini', 1], ['folder.jpg', 1], ['*.url', 1], ['thumbs.db', 1], ['albumart(_{........-....-....-....-............}_)?(_?(large|small))?\\.jpg', 0]]
+download_doubleclick = 1
+upload_doubleclick = 1
+downloadsexpanded = True
+uploadsexpanded = True
+
+[userinfo]
+descr = ''
+pic = 
+
+[words]
+censored = []
+autoreplaced = {'teh ': 'the ', 'taht ': 'that ', 'tihng': 'thing', 'youre': "you're", 'jsut': 'just', 'thier': 'their', 'tihs': 'this'}
+censorfill = *
+censorwords = False
+replacewords = False
+tab = True
+cycle = False
+dropdown = False
+characters = 3
+roomnames = True
+buddies = True
+roomusers = True
+commands = True
+aliases = True
+onematch = False
+
+[logging]
+debug = False
+debugmodes = []
+debuglogsdir = /home/default/.local/share/nicotine/logs/debug
+logcollapsed = True
+transferslogsdir = /home/default/.local/share/nicotine/logs/transfers
+rooms_timestamp = %H:%M:%S
+private_timestamp = %Y-%m-%d %H:%M:%S
+log_timestamp = %Y-%m-%d %H:%M:%S
+timestamps = True
+privatechat = True
+chatrooms = True
+transfers = False
+debug_file_output = False
+roomlogsdir = /home/default/.local/share/nicotine/logs/rooms
+privatelogsdir = /home/default/.local/share/nicotine/logs/private
+readroomlogs = True
+readroomlines = 15
+readprivatelines = 15
+rooms = []
+
+[privatechat]
+store = True
+users = []
+
+[columns]
+file_search = {}
+download = {'user': {'visible': True, 'width': 200}, 'path': {'visible': True, 'width': 400}, 'filename': {'visible': True, 'width': 400}, 'status': {'visible': True, 'width': 140}, 'queue_position': {'visible': True, 'width': 50}, 'percent': {'visible': True, 'width': 70}, 'size': {'visible': True, 'width': 170}, 'speed': {'visible': True, 'width': 90}, 'time_elapsed': {'visible': True, 'width': 140}, 'time_left': {'visible': True, 'width': 260}}
+upload = {'user': {'visible': True, 'width': 200}, 'path': {'visible': True, 'width': 400}, 'filename': {'visible': True, 'width': 400}, 'status': {'visible': True, 'width': 140}, 'queue_position': {'visible': True, 'width': 50}, 'percent': {'visible': True, 'width': 70}, 'size': {'visible': True, 'width': 170}, 'speed': {'visible': True, 'width': 90}, 'time_elapsed': {'visible': True, 'width': 140}, 'time_left': {'visible': True, 'width': 260}}
+user_browse = {}
+buddy_list = {'status': {'visible': True, 'width': 25}, 'country': {'visible': True, 'width': 25}, 'user': {'visible': True, 'width': 250}, 'speed': {'visible': True, 'width': 150}, 'files': {'visible': True, 'width': 150}, 'trusted': {'visible': True, 'width': 72}, 'notify': {'visible': True, 'width': 61}, 'privileged': {'visible': True, 'width': 87}, 'last_seen': {'visible': True, 'width': 160}, 'comments': {'visible': True, 'width': 940}}
+chat_room = {}
+hideflags = False
+
+[searches]
+expand_searches = True
+group_searches = 1
+maxresults = 50
+re_filter = False
+history = []
+enablefilters = False
+filters_visible = False
+defilter = ['', '', '', '', 0, '']
+filtercc = []
+filterin = []
+filterout = []
+filtersize = []
+filterbr = []
+filtertype = []
+search_results = True
+max_displayed_results = 1000
+max_stored_results = 1500
+min_search_chars = 3
+remove_special_chars = True
+
+[ui]
+dark_mode = False
+header_bar = True
+icontheme = 
+chatme = #908e8b
+chatremote = 
+chatlocal = 
+chathilite = #5288ce
+urlcolor = #5288ce
+useronline = #16bb5c
+useraway = #c9ae13
+useroffline = #e04f5e
+usernamehotspots = True
+usernamestyle = bold
+textbg = 
+search = 
+searchq = GREY
+inputcolor = 
+spellcheck = True
+exitdialog = 1
+notexists = True
+tab_default = 
+tab_hilite = #497ec2
+tab_changed = #497ec2
+tab_select_previous = True
+tab_reorderable = True
+tabmain = Top
+tabrooms = Top
+tabprivate = Top
+tabinfo = Top
+tabbrowse = Top
+tabsearch = Top
+tab_status_icons = True
+labelmain = 0
+labelrooms = 0
+labelprivate = 0
+labelinfo = 0
+labelbrowse = 0
+labelsearch = 0
+decimalsep = ,
+globalfont = 
+chatfont = 
+roomlistcollapsed = False
+tabclosers = True
+searchfont = 
+listfont = 
+browserfont = 
+transfersfont = 
+last_tab_id = 0
+modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True}
+modes_order = ['search', 'downloads', 'uploads', 'userbrowse', 'userinfo', 'private', 'userlist', 'chatrooms', 'interests']
+showaway = False
+buddylistinchatrooms = tab
+trayicon = True
+startup_hidden = False
+filemanager = 
+speechenabled = False
+speechprivate = %(user)s told you.. %(message)s
+speechrooms = In %(room)s, %(user)s said %(message)s
+speechcommand = flite -t $
+width = 1920
+height = 1001
+xposition = 0
+yposition = 0
+maximized = True
+urgencyhint = True
+
+[private_rooms]
+rooms = {}
+
+[urls]
+urlcatching = True
+protocols = {}
+humanizeurls = True
+
+[interests]
+likes = []
+dislikes = []
+
+[players]
+default = 
+npothercommand = 
+npplayer = mpris
+npformatlist = []
+npformat = 
+
+[notifications]
+notification_window_title = True
+notification_tab_colors = False
+notification_tab_icons = True
+notification_popup_sound = False
+notification_popup_file = True
+notification_popup_folder = True
+notification_popup_private_message = True
+notification_popup_chatroom = False
+notification_popup_chatroom_mention = True
+
+[plugins]
+enable = True
+enabled = []
+
+[statistics]
+started_downloads = 0
+completed_downloads = 0
+downloaded_size = 0
+started_uploads = 0
+completed_uploads = 0
+uploaded_size = 0
+

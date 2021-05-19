@@ -26,7 +26,7 @@ from pynicotine.config import Config
 def config():
     config = Config()
     config.data_dir = os.path.dirname(os.path.realpath(__file__))
-    config.filename = os.path.join(config.data_dir, "temp_config")
+    config.filename = os.path.join(config.data_dir, "config")
 
     config.load_config()
     return config
