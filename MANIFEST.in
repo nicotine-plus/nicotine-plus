@@ -10,3 +10,5 @@ recursive-exclude * *.desktop
 recursive-exclude * *.metainfo.xml
 recursive-exclude * *.mo
 recursive-exclude * *.pyc
+recursive-exclude test *.db
+recursive-exclude test temp_config*
