@@ -110,7 +110,7 @@ class TransferTimeout:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, config, peerconns, queue, eventprocessor, users, ui_callback, notifications=None, pluginhandler=None):
+    def __init__(self, config, peerconns, queue, eventprocessor, users, network_callback, notifications=None, pluginhandler=None):
 
         self.config = config
         self.peerconns = peerconns
@@ -167,13 +167,11 @@ class Transfers:
             self.eventprocessor.watch_user(user)
 
         self.users = users
-        self.ui_callback = ui_callback
+        self.network_callback = network_callback
         self.notifications = notifications
         self.pluginhandler = pluginhandler
         self.downloadsview = None
         self.uploadsview = None
-
-        self.geoip = self.eventprocessor.geoip
 
         # Check for transfer timeouts
         self.transfer_request_times = {}
@@ -1993,7 +1991,7 @@ class Transfers:
             if self.transfer_request_times:
                 for transfer, start_time in self.transfer_request_times.copy().items():
                     if (curtime - start_time) >= 30:
-                        self.ui_callback([TransferTimeout(transfer)])
+                        self.network_callback([TransferTimeout(transfer)])
 
             if self.eventprocessor.exit.wait(1):
                 # Event set, we're exiting
@@ -2002,7 +2000,7 @@ class Transfers:
     def _check_upload_queue_timer(self):
 
         while True:
-            self.ui_callback([slskmessages.CheckUploadQueue()])
+            self.network_callback([slskmessages.CheckUploadQueue()])
 
             if self.eventprocessor.exit.wait(10):
                 # Event set, we're exiting
@@ -2011,7 +2009,7 @@ class Transfers:
     def _check_download_queue_timer(self):
 
         while True:
-            self.ui_callback([slskmessages.CheckDownloadQueue()])
+            self.network_callback([slskmessages.CheckDownloadQueue()])
 
             if self.eventprocessor.exit.wait(180):
                 # Event set, we're exiting
