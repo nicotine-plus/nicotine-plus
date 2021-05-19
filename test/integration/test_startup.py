@@ -16,16 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pytest
 import subprocess
 
 
-def test_startup():
+commands = (
+    ["python3", "nicotine", "--ci-mode"],  # GUI
+    ["python3", "nicotine", "--headless"]  # Headless
+)
+
+
+@pytest.mark.parametrize("command", commands)
+def test_startup(command):
 
     # Assume failure by default
     is_success = False
 
     try:
-        subprocess.call(["python3", "nicotine", "--ci-mode"], timeout=5)
+        subprocess.call(command, timeout=5)
 
     except subprocess.TimeoutExpired:
         # Program was still running, success!
