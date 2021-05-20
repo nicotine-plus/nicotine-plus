@@ -108,14 +108,18 @@ class Search:
         searchterm_words_ignore = (p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1)
 
         # Remove words starting with "-", results containing these are excluded by us later
-        searchterm_without_excluded = re.sub(r'(\s)-\w+', '', text)
+        searchterm_without_excluded = ' '.join(p for p in searchterm_words if not p.startswith('-'))
 
         if self.config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            searchterm_without_excluded = re.sub(r'\W+', ' ', searchterm_without_excluded)
+            stripped_searchterm = searchterm_without_excluded.translate(self.translatepunctuation)
+
+            # Only modify search term if string also contains non-special characters
+            if stripped_searchterm:
+                searchterm_without_excluded = stripped_searchterm
 
         # Remove trailing whitespace
         searchterm_without_excluded = searchterm_without_excluded.strip()
