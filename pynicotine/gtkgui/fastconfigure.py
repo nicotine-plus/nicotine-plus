@@ -97,7 +97,7 @@ class FastConfigureAssistant(object):
         config.sections["transfers"]["shared"] = self.get_shared_folders()
 
     def reset_completeness(self):
-        """Turns on the complete flag if everything required is filled in."""
+        """ Turns on the complete flag if everything required is filled in. """
 
         complete = False
         pageid = self.FastConfigureDialog.get_current_page()
@@ -245,6 +245,9 @@ class FastConfigureAssistant(object):
 
         for path in reversed(paths):
             model.remove(model.get_iter(path))
+
+    def on_set_up(self, *args):
+        self.FastConfigureDialog.next_page()
 
     def on_apply(self, *args):
 

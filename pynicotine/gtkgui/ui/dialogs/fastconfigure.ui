@@ -16,52 +16,66 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">12</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">20</property>
+        <property name="spacing">24</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkImage">
             <property name="visible">1</property>
             <property name="halign">center</property>
-            <property name="label" translatable="yes">Welcome to Nicotine+!</property>
-            <property name="wrap">1</property>
-            <attributes>
-              <attribute name="weight" value="ultrabold"/>
-              <attribute name="size" value="17408"/>
-            </attributes>
+            <property name="icon-name">org.nicotine_plus.Nicotine</property>
+            <property name="pixel-size">128</property>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="label" translatable="yes">Nicotine+ is a graphical client for the Soulseek peer-to-peer file sharing network.</property>
-            <property name="justify">center</property>
-            <property name="wrap">1</property>
-            <property name="width-chars">36</property>
-            <property name="max-width-chars">60</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">18</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">center</property>
+                <property name="label" translatable="yes">Welcome to Nicotine+</property>
+                <property name="wrap">1</property>
+                <attributes>
+                  <attribute name="weight" value="ultrabold"/>
+                  <attribute name="size" value="20000"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="label" translatable="yes">Graphical client for the Soulseek peer-to-peer file sharing network</property>
+                <property name="justify">center</property>
+                <property name="wrap">1</property>
+                <property name="width-chars">36</property>
+                <property name="max-width-chars">60</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkButton">
             <property name="visible">1</property>
+            <property name="width-request">96</property>
             <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="label" translatable="yes">Press &quot;Next&quot; to start configuring Nicotine+.</property>
-            <property name="justify">center</property>
-            <property name="wrap">1</property>
-            <property name="width-chars">36</property>
-            <property name="max-width-chars">60</property>
+            <property name="margin-top">6</property>
+            <property name="label">Set Up...</property>
+            <signal name="clicked" handler="on_set_up" swapped="no"/>
+            <style>
+              <class name="circular"/>
+            </style>
           </object>
         </child>
       </object>
       <packing>
-        <property name="complete">1</property>
-        <property name="page-type">intro</property>
+        <property name="page-type">custom</property>
       </packing>
     </child>
     <child>
@@ -69,10 +83,10 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>
@@ -176,12 +190,12 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">20</property>
+        <property name="spacing">18</property>
         <child>
           <object class="GtkBox" id="portselection">
             <property name="visible">1</property>
@@ -236,10 +250,10 @@
       <object class="GtkBox" id="sharepage">
         <property name="visible">1</property>
         <property name="valign">center</property>
-        <property name="margin-start">15</property>
-        <property name="margin-end">15</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-start">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
         <property name="spacing">30</property>
         <child>
@@ -313,7 +327,7 @@
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="halign">center</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkButton" id="addshare">
                     <property name="label" translatable="yes">Add</property>
@@ -343,12 +357,12 @@
         <property name="visible">1</property>
         <property name="halign">center</property>
         <property name="valign">center</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">20</property>
+        <property name="spacing">24</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -357,35 +371,42 @@
             <property name="wrap">1</property>
             <attributes>
               <attribute name="weight" value="ultrabold"/>
-              <attribute name="size" value="17408"/>
+              <attribute name="size" value="18000"/>
             </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
-            <property name="justify">fill</property>
-            <property name="wrap">1</property>
-            <property name="width-chars">36</property>
-            <property name="max-width-chars">60</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="labelnoshare">
-            <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Sharing files is crucial for the health of the Soulseek network. Many people will ban you if you download from them without sharing anything yourself.</property>
-            <property name="justify">fill</property>
-            <property name="wrap">1</property>
-            <property name="width-chars">36</property>
-            <property name="max-width-chars">60</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">18</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
+                <property name="justify">fill</property>
+                <property name="wrap">1</property>
+                <property name="width-chars">36</property>
+                <property name="max-width-chars">60</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="labelnoshare">
+                <property name="visible">1</property>
+                <property name="halign">start</property>
+                <property name="label" translatable="yes">Sharing files is crucial for the health of the Soulseek network. Many people will ban you if you download from them without sharing anything yourself.</property>
+                <property name="justify">fill</property>
+                <property name="wrap">1</property>
+                <property name="width-chars">36</property>
+                <property name="max-width-chars">60</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
       <packing>
-        <property name="page-type">confirm</property>
+        <property name="page-type">summary</property>
       </packing>
     </child>
   </object>
