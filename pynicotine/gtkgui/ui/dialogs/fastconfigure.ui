@@ -37,8 +37,8 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="halign">center</property>
                 <property name="label" translatable="yes">Welcome to Nicotine+</property>
+                <property name="justify">center</property>
                 <property name="wrap">1</property>
                 <attributes>
                   <attribute name="weight" value="ultrabold"/>
@@ -49,8 +49,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
                 <property name="label" translatable="yes">Graphical client for the Soulseek peer-to-peer file sharing network</property>
                 <property name="justify">center</property>
                 <property name="wrap">1</property>
@@ -195,53 +193,45 @@
         <property name="margin-top">6</property>
         <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">18</property>
+        <property name="spacing">24</property>
         <child>
-          <object class="GtkBox" id="portselection">
+          <object class="GtkLabel">
             <property name="visible">1</property>
+            <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. An open listening port is crucial to allow users to connect to you without trouble.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">The default listening port should work fine in most cases. If you need to use a different port, you can change it in the preferences later.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Nicotine+ will still work to some degree if your port is closed. However, do keep in mind that you won&apos;t be able to connect to users whose port is also closed.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="checkmyport">
+            <property name="label" translatable="yes">Check Port Status</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="receives-default">1</property>
             <property name="halign">center</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">20</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. An open listening port is crucial to allow users to connect to you without trouble.</property>
-                <property name="justify">center</property>
-                <property name="wrap">1</property>
-                <property name="width-chars">36</property>
-                <property name="max-width-chars">60</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">The default listening port should work fine in most cases. If you need to use a different port, you can change it in the preferences later.</property>
-                <property name="justify">center</property>
-                <property name="wrap">1</property>
-                <property name="width-chars">36</property>
-                <property name="max-width-chars">60</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Nicotine+ will still work to some degree if your port is closed. However, do keep in mind that you won&apos;t be able to connect to users whose port is also closed.</property>
-                <property name="justify">center</property>
-                <property name="wrap">1</property>
-                <property name="width-chars">36</property>
-                <property name="max-width-chars">60</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="checkmyport">
-                <property name="label" translatable="yes">Check Port Status</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="receives-default">1</property>
-                <property name="halign">center</property>
-                <signal name="clicked" handler="on_check_port_status" swapped="no"/>
-              </object>
-            </child>
+            <signal name="clicked" handler="on_check_port_status" swapped="no"/>
           </object>
         </child>
       </object>
@@ -366,8 +356,8 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">center</property>
             <property name="label" translatable="yes">You are ready to use Nicotine+!</property>
+            <property name="justify">center</property>
             <property name="wrap">1</property>
             <attributes>
               <attribute name="weight" value="ultrabold"/>
