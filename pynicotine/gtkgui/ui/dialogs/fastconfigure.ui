@@ -66,7 +66,7 @@
             <property name="width-request">96</property>
             <property name="halign">center</property>
             <property name="margin-top">6</property>
-            <property name="label">Set Up...</property>
+            <property name="label" translatable="yes">Set Up...</property>
             <signal name="clicked" handler="on_set_up" swapped="no"/>
             <style>
               <class name="circular"/>
