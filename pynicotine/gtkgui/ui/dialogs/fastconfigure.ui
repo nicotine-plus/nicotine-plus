@@ -4,7 +4,7 @@
   <object class="GtkAssistant" id="FastConfigureDialog">
     <property name="modal">1</property>
     <property name="window-position">center-on-parent</property>
-    <property name="default-width">900</property>
+    <property name="default-width">800</property>
     <property name="default-height">450</property>
     <property name="type-hint">dialog</property>
     <signal name="apply" handler="on_apply" swapped="no"/>
@@ -383,22 +383,20 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="halign">start</property>
                 <property name="label" translatable="yes">Transfer speeds depend on the users you are downloading from. Some users will be fast while others will be slow.</property>
                 <property name="justify">fill</property>
                 <property name="wrap">1</property>
-                <property name="width-chars">36</property>
+                <property name="width-chars">32</property>
                 <property name="max-width-chars">60</property>
               </object>
             </child>
             <child>
               <object class="GtkLabel" id="labelnoshare">
                 <property name="visible">1</property>
-                <property name="halign">start</property>
                 <property name="label" translatable="yes">Sharing files is crucial for the health of the Soulseek network. Many people will ban you if you download from them without sharing anything yourself.</property>
                 <property name="justify">fill</property>
                 <property name="wrap">1</property>
-                <property name="width-chars">36</property>
+                <property name="width-chars">32</property>
                 <property name="max-width-chars">60</property>
               </object>
             </child>
