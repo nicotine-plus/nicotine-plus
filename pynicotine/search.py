@@ -115,7 +115,7 @@ class Search:
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_searchterm = searchterm_without_excluded.translate(self.translatepunctuation)
+            stripped_searchterm = re.sub(r'\W+', ' ', searchterm_without_excluded)
 
             # Only modify search term if string also contains non-special characters
             if stripped_searchterm:
