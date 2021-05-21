@@ -127,13 +127,12 @@ Unstable macOS installers are generated after every commit to the master branch,
 For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
 
 # Getting Involved
-Please come and join us in the `#nicotine+` channel on Freenode!
 
 If you'd like to contribute, you have a couple of options to get started:
 
 * If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * If you find a problem or have a feature request you can
-  * discuss your findings on the `#nicotine+` channel on the [freenode IRC-Network](https://webchat.freenode.net/)
+  * discuss your findings on the `#nicotine+` channel on the [Libera.Chat IRC network](https://libera.chat/) (`ircs://irc.libera.chat:6697`)
   * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
   * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
 * If you're packaging Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md) for a list of dependencies.
