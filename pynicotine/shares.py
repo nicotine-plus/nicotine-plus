@@ -328,9 +328,9 @@ class Scanner:
                             continue
 
                         # Get the metadata of the file
-                        data = self.get_file_info(filename, entry.path, self.tinytag, self.queue, entry)
-                        if data is not None:
-                            files[virtualdir].append(data)
+                        path = self.get_utf8_path(entry.path)
+                        data = self.get_file_info(filename, path, self.tinytag, self.queue, entry)
+                        files[virtualdir].append(data)
 
                 streams[virtualdir] = self.get_dir_stream(files[virtualdir])
 
@@ -344,11 +344,12 @@ class Scanner:
     def get_file_info(cls, name, pathname, tinytag, queue=None, file=None):
         """ Get file metadata """
 
-        try:
-            audio = None
-            bitrateinfo = None
-            duration = None
+        size = 0
+        audio = None
+        bitrateinfo = None
+        duration = None
 
+        try:
             if file:
                 # Faster way if we use scandir
                 size = file.stat().st_size
@@ -379,8 +380,6 @@ class Scanner:
                 if audio.duration is not None:
                     duration = int(audio.duration)
 
-            return (name, size, bitrateinfo, duration)
-
         except Exception as errtuple:
             error = _("Error while scanning file %(path)s: %(error)s")
             args = {
@@ -392,6 +391,8 @@ class Scanner:
                 queue.put((0, error, args))
             else:
                 log.add(error, args)
+
+        return (name, size, bitrateinfo, duration)
 
     @classmethod
     def get_dir_stream(cls, folder):
