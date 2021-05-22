@@ -28,7 +28,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 
@@ -223,7 +223,7 @@ class FastConfigureAssistant(object):
 
         for folder in selected:
 
-            combo_box_dialog(
+            entry_dialog(
                 parent=self.FastConfigureDialog,
                 title=_("Virtual Name"),
                 message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},

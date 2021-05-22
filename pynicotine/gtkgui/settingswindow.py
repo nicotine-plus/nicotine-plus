@@ -40,7 +40,6 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import save_file
-from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -316,7 +315,7 @@ class DownloadsFrame(BuildFrame):
 
     def on_add_filter(self, widget):
 
-        combo_box_dialog(
+        entry_dialog(
             parent=self.Main.get_toplevel(),
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
@@ -376,12 +375,12 @@ class DownloadsFrame(BuildFrame):
         iterator = self.filtersiters[dfilter]
         escapedvalue = self.filterlist.get_value(iterator, 1)
 
-        combo_box_dialog(
+        entry_dialog(
             parent=self.Main.get_toplevel(),
             title=_("Edit Download Filter"),
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
-            default_text=dfilter,
+            default=dfilter,
             option=True,
             optionvalue=escapedvalue,
             optionmessage="Escape this filter?",

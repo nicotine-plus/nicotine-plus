@@ -26,7 +26,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 
 
 """ Status Icon / AppIndicator """
@@ -137,7 +137,7 @@ class TrayIcon:
     def on_open_private_chat(self, *args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Start Messaging"),
             message=_('Enter the name of a user who you wish to send a message:'),
@@ -159,7 +159,7 @@ class TrayIcon:
     def on_get_a_users_info(self, *args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request User Info"),
             message=_('Enter the name of a user whose info you wish to receive:'),
@@ -182,7 +182,7 @@ class TrayIcon:
     def on_get_a_users_ip(self, *args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request IP Address"),
             message=_('Enter the name of a user whose IP address you wish to receive:'),
@@ -204,7 +204,7 @@ class TrayIcon:
     def on_get_a_users_shares(self, *args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request Shares List"),
             message=_('Enter the name of a user whose shares list you wish to receive:'),

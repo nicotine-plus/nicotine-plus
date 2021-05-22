@@ -38,7 +38,7 @@ from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.infobar import InfoBar
-from pynicotine.gtkgui.widgets.messagedialogs import combo_box_dialog
+from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -824,6 +824,9 @@ class UserBrowse:
         folder = self.selected_folder
         dialog.destroy()
 
+        if response_id != Gtk.ResponseType.OK:
+            return
+
         if not user or folder is None:
             return
 
@@ -844,7 +847,7 @@ class UserBrowse:
                 users.append(user)
 
         users.sort()
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.MainWindow,
             title=_("Upload Folder's Contents"),
             message=_('Enter the name of a user you wish to upload to:'),
@@ -892,6 +895,9 @@ class UserBrowse:
         folder = self.selected_folder
         dialog.destroy()
 
+        if response_id != Gtk.ResponseType.OK:
+            return
+
         if not user or folder is None:
             return
 
@@ -917,7 +923,7 @@ class UserBrowse:
                 users.append(user)
 
         users.sort()
-        combo_box_dialog(
+        entry_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s)'),
             message=_('Enter the name of a user you wish to upload to:'),
