@@ -68,6 +68,7 @@ download_doubleclick = 1
 upload_doubleclick = 1
 downloadsexpanded = True
 uploadsexpanded = True
+buddysharestrustedonly = False
 
 [userinfo]
 descr = ''

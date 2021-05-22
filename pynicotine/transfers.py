@@ -1690,13 +1690,6 @@ class Transfers:
 
         if transfers["remotedownloads"]:
 
-            # Remote Uploads only for users in list
-            if transfers["uploadallowed"] == 2:
-                # Users in userlist
-                if user not in (i[0] for i in self.config.sections["server"]["userlist"]):
-                    # Not a buddy
-                    return False
-
             if transfers["uploadallowed"] == 0:
                 # No One can sent files to you
                 return False
@@ -1705,20 +1698,16 @@ class Transfers:
                 # Everyone can sent files to you
                 return True
 
+            if transfers["uploadallowed"] == 2:
+                # Users in userlist
+                if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+                    return True
+
             if transfers["uploadallowed"] == 3:
                 # Trusted buddies
                 for row in self.config.sections["server"]["userlist"]:
-                    if row[0] != user:
-                        continue
-
-                    if not row[4]:
-                        # Not Trusted
-                        return False
-                else:
-                    # Not a buddy
-                    return False
-
-            return True
+                    if row[0] == user and row[4]:
+                        return True
 
         return False
 
