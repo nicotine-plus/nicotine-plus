@@ -419,6 +419,11 @@ class Config:
         doesn't exist """
 
         path, fn = os.path.split(self.filename)
+
+        if not path:
+            # Only file name specified, use current folder
+            return True
+
         try:
             if not os.path.isdir(path):
                 os.makedirs(path)

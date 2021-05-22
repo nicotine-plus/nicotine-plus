@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import pytest
 import subprocess
 
 
+config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_config")
 commands = (
-    ["python3", "nicotine", "--config=temp_config", "--ci-mode"],  # GUI
-    ["python3", "nicotine", "--config=temp_config", "--headless"]  # Headless
+    ["python3", "nicotine", "--config=" + config_file, "--ci-mode"],  # GUI
+    ["python3", "nicotine", "--config=" + config_file, "--headless"]  # Headless
 )
 
 
