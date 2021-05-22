@@ -1707,13 +1707,15 @@ class Transfers:
 
             if transfers["uploadallowed"] == 3:
                 # Trusted buddies
-                userlist = [i[0] for i in self.config.sections["server"]["userlist"]]
+                for row in self.config.sections["server"]["userlist"]:
+                    if row[0] != user:
+                        continue
 
-                if user not in userlist:
+                    if not row[4]:
+                        # Not Trusted
+                        return False
+                else:
                     # Not a buddy
-                    return False
-                if not self.config.sections["server"]["userlist"][userlist.index(user)][4]:
-                    # Not Trusted
                     return False
 
             return True

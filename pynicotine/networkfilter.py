@@ -157,11 +157,19 @@ class NetworkFilter:
             else:
                 return 0, "Banned"
 
-        if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+        for row in self.config.sections["server"]["userlist"]:
+            if row[0] != user:
+                continue
+
+            if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                # Only trusted buddies allowed, and user isn't trusted
+                return 1, ""
+
             if self.config.sections["transfers"]["enablebuddyshares"]:
                 # For sending buddy-only shares
                 return 2, ""
 
+            # Buddy list users bypass geoblock
             return 1, ""
 
         if self.config.sections["transfers"]["friendsonly"]:

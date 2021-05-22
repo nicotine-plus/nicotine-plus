@@ -524,7 +524,8 @@ class SharesFrame(BuildFrame):
             "transfers": {
                 "friendsonly": self.FriendsOnly,
                 "rescanonstartup": self.RescanOnStartup,
-                "enablebuddyshares": self.EnableBuddyShares
+                "enablebuddyshares": self.EnableBuddyShares,
+                "buddysharestrustedonly": self.BuddySharesTrustedOnly
             }
         }
 
@@ -581,7 +582,8 @@ class SharesFrame(BuildFrame):
                 "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddyshared": self.bshareddirs[:],
                 "enablebuddyshares": buddies,
-                "friendsonly": friendsonly
+                "friendsonly": friendsonly,
+                "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
 
@@ -607,21 +609,18 @@ class SharesFrame(BuildFrame):
         self.bshareddirs.append(share)
 
     def on_enabled_buddy_shares_toggled(self, widget):
-        self.on_friends_only_toggled(widget)
+
+        buddies = widget.get_active()
+
+        if not buddies:
+            self.FriendsOnly.set_active(buddies)
+
+        self.FriendsOnly.set_sensitive(buddies)
+        self.BuddySharesTrustedOnly.set_sensitive(buddies)
+
         self.needrescan = True
 
     def on_friends_only_toggled(self, widget):
-
-        buddies = self.EnableBuddyShares.get_active()
-
-        if buddies:
-            # If buddy shares are enabled let the friends only checkbox be selectable
-            self.FriendsOnly.set_sensitive(True)
-        else:
-            # If not the friend only checkbox should be deactivated and locked
-            self.FriendsOnly.set_active(False)
-            self.FriendsOnly.set_sensitive(False)
-
         self.needrescan = True
 
     def add_shared_dir_response(self, dialog, response_id, data):

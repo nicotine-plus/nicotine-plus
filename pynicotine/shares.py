@@ -678,7 +678,14 @@ class Shares:
         bshared = self.share_dbs.get("buddyfiles")
 
         if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
-            if user in (i[0] for i in self.config.sections["server"]["userlist"]):
+            for row in self.config.sections["server"]["userlist"]:
+                if row[0] != user:
+                    continue
+
+                # Check if buddy is trusted
+                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                    break
+
                 for i in bshared.get(str(folder), ''):
                     if file == i[0]:
                         return True

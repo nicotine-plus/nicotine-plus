@@ -9,15 +9,6 @@
       <object class="GtkLabel">
         <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access buddy-only shares in addition to public shares.</property>
-        <property name="justify">fill</property>
-        <property name="wrap">1</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">1</property>
-        <property name="halign">start</property>
         <property name="label" translatable="yes">General</property>
         <attributes>
           <attribute name="weight" value="bold"/>
@@ -60,6 +51,16 @@
             <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
           </object>
         </child>
+        <child>
+          <object class="GtkCheckButton" id="BuddySharesTrustedOnly">
+            <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
+            <property name="tooltip-text" translatable="yes">Only users marked as trusted on your buddy list can access your buddy-only shares.</property>
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="has-tooltip">1</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -70,6 +71,15 @@
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">1</property>
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access buddy-only shares in addition to public shares.</property>
+        <property name="justify">fill</property>
+        <property name="wrap">1</property>
       </object>
     </child>
     <child>

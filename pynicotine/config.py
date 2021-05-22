@@ -113,6 +113,7 @@ class Config:
                 "queuelimit": 10000,
                 "filelimit": 100,
                 "friendsonly": False,
+                "buddysharestrustedonly": False,
                 "friendsnolimits": False,
                 "enablebuddyshares": False,
                 "enabletransferbuttons": True,
