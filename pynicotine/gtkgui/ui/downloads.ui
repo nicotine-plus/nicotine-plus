@@ -18,11 +18,9 @@
             <property name="enable-tree-lines">1</property>
             <property name="rubber-banding">1</property>
             <property name="sensitive">0</property>
-            <signal name="button-press-event" handler="on_list_clicked"/>
-            <signal name="popup-menu" handler="on_popup_menu"/>
-            <signal name="touch-event" handler="on_list_clicked"/>
             <signal name="key-press-event" handler="on_key_press_event"/>
             <signal name="query-tooltip" handler="on_tooltip"/>
+            <signal name="row-activated" handler="on_row_activated"/>
             <child internal-child="selection">
               <object class="GtkTreeSelection">
                 <property name="mode">multiple</property>

@@ -215,10 +215,8 @@
                         <property name="can-focus">1</property>
                         <property name="enable-tree-lines">1</property>
                         <property name="headers-visible">0</property>
-                        <signal name="button-press-event" handler="on_folder_clicked" swapped="no"/>
                         <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
-                        <signal name="popup-menu" handler="on_folder_popup_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_folder_clicked" swapped="no"/>
+                        <signal name="row-activated" handler="on_folder_row_activated"/>
                       </object>
                     </child>
                   </object>
@@ -255,10 +253,8 @@
                         <property name="sensitive">0</property>
                         <property name="can-focus">1</property>
                         <property name="rubber-banding">1</property>
-                        <signal name="button-press-event" handler="on_file_clicked" swapped="no"/>
                         <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
-                        <signal name="popup-menu" handler="on_file_popup_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_file_clicked" swapped="no"/>
+                        <signal name="row-activated" handler="on_file_row_activated"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection">
                             <property name="mode">multiple</property>

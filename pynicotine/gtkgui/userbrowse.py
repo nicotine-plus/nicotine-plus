@@ -25,7 +25,6 @@ import os
 
 from sys import maxsize
 
-from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -35,7 +34,6 @@ from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
@@ -43,7 +41,6 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
@@ -93,8 +90,7 @@ class UserBrowse:
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.FolderTreeView,
+            None, self.FolderTreeView, self.on_folder_popup_menu,
             ["folders", _("Folders"), -1, "text", None]  # 0
         )
 
@@ -189,8 +185,7 @@ class UserBrowse:
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
-            "user_browse",
-            self.FileTreeView,
+            "user_browse", self.FileTreeView, self.on_file_popup_menu,
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
@@ -261,18 +256,9 @@ class UserBrowse:
             else:
                 self.set_directory(None)
 
-    def on_folder_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_folder_popup_menu(widget)
-
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            if self.user != config.sections["server"]["login"]:
-                self.on_download_directory()
-                return True
-
-        return False
+    def on_folder_row_activated(self, treeview, path, column):
+        if self.user != config.sections["server"]["login"]:
+            self.on_download_directory()
 
     def on_folder_popup_menu(self, *args):
 
@@ -304,22 +290,14 @@ class UserBrowse:
 
             self.selected_files[rawfilename] = filesize
 
-    def on_file_clicked(self, widget, event):
+    def on_file_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_file_popup_menu()
+        self.select_files()
 
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.select_files()
-
-            if self.user == config.sections["server"]["login"]:
-                self.on_play_files()
-            else:
-                self.on_download_files()
-            return True
-
-        return False
+        if self.user == config.sections["server"]["login"]:
+            self.on_play_files()
+        else:
+            self.on_download_files()
 
     def on_file_popup_menu(self, *args):
 

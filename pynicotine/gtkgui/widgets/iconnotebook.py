@@ -558,6 +558,17 @@ class IconNotebook:
                 tab_label.onclose(widget)
                 return True
 
+            key, codes_tab, mods = Gtk.accelerator_parse_with_keycode("Tab")
+            key, codes_shift, mods = Gtk.accelerator_parse_with_keycode("Shift_L")
+
+            if keycode in codes_tab:
+                # Ctrl+Tab: next tab
+
+                page = self.get_nth_page(self.get_current_page())
+                tab_label, menu_label = self.get_labels(page)
+                tab_label.onclose(widget)
+                return True
+
         return False
 
     def on_switch_page(self, notebook, new_page, page_num):

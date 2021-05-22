@@ -20,7 +20,6 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -28,10 +27,8 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.utils import humanize
@@ -53,8 +50,7 @@ class Interests:
 
         self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.LikesList,
+            None, self.LikesList, self.on_popup_til_menu,
             ["i_like", _("I Like"), -1, "text", None]
         )
 
@@ -67,8 +63,7 @@ class Interests:
 
         self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.DislikesList,
+            None, self.DislikesList, self.on_popup_tidl_menu,
             ["i_dislike", _("I Dislike"), -1, "text", None]
         )
 
@@ -83,8 +78,7 @@ class Interests:
 
         self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.RecommendationsList,
+            None, self.RecommendationsList, self.on_popup_r_menu,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -102,8 +96,7 @@ class Interests:
 
         self.unrecommendations_column_numbers = list(range(self.unrecommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.UnrecommendationsList,
+            None, self.UnrecommendationsList, self.on_popup_ru_menu,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -126,8 +119,7 @@ class Interests:
 
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.RecommendationUsersList,
+            None, self.RecommendationUsersList, self.on_popup_ru_menu,
             ["status", _("Status"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],
@@ -395,14 +387,6 @@ class Interests:
         self.til_popup_menu.popup()
         return True
 
-    def on_til_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_til_menu(widget)
-
-        return False
-
     def on_popup_tidl_menu(self, widget):
 
         item = self.get_selected_item(widget, column=0)
@@ -413,14 +397,6 @@ class Interests:
 
         self.tidl_popup_menu.popup()
         return True
-
-    def on_tidl_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_tidl_menu(widget)
-
-        return False
 
     def on_popup_r_menu(self, widget):
 
@@ -441,14 +417,6 @@ class Interests:
         self.r_popup_menu.popup()
         return True
 
-    def on_r_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_r_menu(widget)
-
-        return False
-
     def on_popup_ru_menu(self, widget):
 
         user = self.get_selected_item(widget, column=1)
@@ -461,21 +429,13 @@ class Interests:
         self.ru_popup_menu.popup()
         return True
 
-    def on_ru_list_clicked(self, widget, event):
+    def on_ru_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_ru_menu(widget)
+        user = self.get_selected_item(treeview)
 
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
-            user = self.get_selected_item(widget)
-
-            if user is not None:
-                self.frame.privatechats.send_message(user)
-                self.frame.change_main_page("private")
-                return True
-
-        return False
+        if user is not None:
+            self.frame.privatechats.send_message(user)
+            self.frame.change_main_page("private")
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_user_status_tooltip(widget, x, y, tooltip, 4)

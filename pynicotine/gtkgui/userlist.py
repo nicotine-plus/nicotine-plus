@@ -24,7 +24,6 @@
 import os
 import time
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -32,13 +31,11 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.logfacility import log
@@ -78,8 +75,7 @@ class UserList:
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            "buddy_list",
-            self.UserListTree,
+            "buddy_list", self.UserListTree, self.on_popup_menu,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 250, "text", None],
@@ -347,21 +343,13 @@ class UserList:
 
         return username, trusted, notify, privileged, status
 
-    def on_list_clicked(self, widget, event):
+    def on_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_menu(widget)
+        user = self.get_selected_username(treeview)
 
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
-            user = self.get_selected_username(widget)
-
-            if user is not None:
-                self.frame.privatechats.send_message(user, show_user=True)
-                self.frame.change_main_page("private")
-                return True
-
-        return False
+        if user is not None:
+            self.frame.privatechats.send_message(user, show_user=True)
+            self.frame.change_main_page("private")
 
     def on_popup_menu(self, widget):
 

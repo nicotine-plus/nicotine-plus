@@ -263,10 +263,8 @@
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="has-tooltip">1</property>
-                        <signal name="button-press-event" handler="on_list_clicked" swapped="no"/>
-                        <signal name="popup-menu" handler="on_popup_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_list_clicked" swapped="no"/>
                         <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                        <signal name="row-activated" handler="on_row_activated"/>
                       </object>
                     </child>
                   </object>

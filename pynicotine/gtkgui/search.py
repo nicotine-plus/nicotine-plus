@@ -28,7 +28,6 @@ import sre_constants
 
 from collections import defaultdict
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -39,7 +38,6 @@ from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -48,7 +46,6 @@ from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -377,8 +374,7 @@ class Search:
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 18
         self.cols = cols = initialise_columns(
-            "file_search",
-            self.ResultsList,
+            "file_search", self.ResultsList, self.on_popup_menu,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "pixbuf", None],
@@ -1042,24 +1038,12 @@ class Search:
     def save_columns(self):
         save_columns("file_search", self.ResultsList.get_columns())
 
-    def on_list_clicked(self, widget, event):
+    def on_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_menu()
+        self.select_results()
+        self.on_download_files()
 
-        pathinfo = widget.get_path_at_pos(event.x, event.y)
-
-        if pathinfo is None:
-            widget.get_selection().unselect_all()
-
-        elif event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.select_results()
-            self.on_download_files()
-            self.ResultsList.get_selection().unselect_all()
-            return True
-
-        return False
+        treeview.get_selection().unselect_all()
 
     def on_key_press_event(self, widget, event):
 

@@ -38,7 +38,6 @@ from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -212,8 +211,7 @@ class UserInfo:
 
         self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.Hates,
+            None, self.Hates, self.on_popup_interest_menu,
             ["hates", _("Hates"), 0, "text", None]
         )
         cols["hates"].set_sort_column_id(0)
@@ -225,8 +223,7 @@ class UserInfo:
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
-            None,
-            self.Likes,
+            None, self.Likes, self.on_popup_interest_menu,
             ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
@@ -408,14 +405,6 @@ class UserInfo:
 
     def on_interest_recommend_search(self, *args):
         self.frame.interests.recommend_search(self.interest_popup_menu.get_user())
-
-    def on_interest_list_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_interest_menu(widget)
-
-        return False
 
     def on_send_message(self, *args):
         self.frame.privatechats.send_message(self.user, show_user=True)

@@ -27,7 +27,6 @@ import os
 from sys import maxsize
 from time import time
 
-from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -35,14 +34,12 @@ from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.transfers import Transfer
 from pynicotine.utils import human_size
@@ -111,8 +108,7 @@ class TransferList:
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            type,
-            widget,
+            type, widget, self.on_popup_menu,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -666,24 +662,6 @@ class TransferList:
             for transfer in self.list:
                 transfer.iter = None
 
-    def double_click(self, event):
-
-        self.select_transfers()
-        dc = config.sections["transfers"]["%s_doubleclick" % self.type]
-
-        if dc == 1:  # Send to player
-            self.on_play_files()
-        elif dc == 2:  # File manager
-            self.on_open_directory()
-        elif dc == 3:  # Search
-            self.on_file_search()
-        elif dc == 4:  # Abort
-            self.abort_transfers()
-        elif dc == 5:  # Clear
-            self.abort_transfers(clear=True)
-        elif dc == 6:  # Retry
-            self.retry_transfers()
-
     def populate_popup_menu_users(self):
 
         self.popup_menu_users.clear()
@@ -781,17 +759,23 @@ class TransferList:
         self.popup_menu.popup()
         return True
 
-    def on_list_clicked(self, widget, event):
+    def on_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_menu()
+        self.select_transfers()
+        dc = config.sections["transfers"]["%s_doubleclick" % self.type]
 
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.double_click(event)
-            return True
-
-        return False
+        if dc == 1:  # Send to player
+            self.on_play_files()
+        elif dc == 2:  # File manager
+            self.on_open_directory()
+        elif dc == 3:  # Search
+            self.on_file_search()
+        elif dc == 4:  # Abort
+            self.abort_transfers()
+        elif dc == 5:  # Clear
+            self.abort_transfers(clear=True)
+        elif dc == 6:  # Retry
+            self.retry_transfers()
 
     def on_select_user_transfers(self, *args):
 

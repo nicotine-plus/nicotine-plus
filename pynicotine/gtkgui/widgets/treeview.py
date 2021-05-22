@@ -65,7 +65,7 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(treeview_name, treeview, *args):
+def initialise_columns(treeview_name, treeview, popup_callback, *args):
 
     i = 0
     cols = OrderedDict()
@@ -165,6 +165,11 @@ def initialise_columns(treeview_name, treeview, *args):
 
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
+
+    if popup_callback:
+        treeview.connect("button-press-event", list_clicked, popup_callback)
+        treeview.connect("popup-menu", popup_callback)
+        treeview.connect("touch-event", list_clicked, popup_callback)
 
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
@@ -289,6 +294,15 @@ def save_columns(treeview_name, columns, subpage=None):
         column_config[treeview_name] = saved_columns
 
 
+def list_clicked(widget, event, popup_callback):
+
+    if triggers_context_menu(event):
+        set_treeview_selected_row(widget, event)
+        return popup_callback(widget)
+
+    return False
+
+
 def press_header(widget, event):
 
     if not triggers_context_menu(event):
@@ -333,7 +347,7 @@ def header_toggle(action, state, treeview, columns, index):
 
 
 def set_treeview_selected_row(treeview, event):
-    """Handles row selection when right-clicking in a treeview"""
+    """ Handles row selection when right-clicking in a treeview """
 
     if event is None:
         return

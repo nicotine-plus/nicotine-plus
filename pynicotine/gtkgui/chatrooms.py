@@ -61,7 +61,6 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
 from pynicotine.utils import get_completion_list
 from pynicotine.utils import get_path
@@ -490,8 +489,7 @@ class ChatRoom:
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            ("chat_room", room),
-            self.UserList,
+            ("chat_room", room), self.UserList, self.on_popup_menu,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", self.user_column_draw],
@@ -693,21 +691,13 @@ class ChatRoom:
 
         return model.get_value(iterator, 2)
 
-    def on_list_clicked(self, widget, event):
+    def on_row_activated(self, treeview, path, column):
 
-        if triggers_context_menu(event):
-            set_treeview_selected_row(widget, event)
-            return self.on_popup_menu(widget)
+        user = self.get_selected_username(treeview)
 
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
-            user = self.get_selected_username(widget)
-
-            if user is not None:
-                self.frame.privatechats.send_message(user, show_user=True)
-                self.frame.change_main_page("private")
-                return True
-
-        return False
+        if user is not None:
+            self.frame.privatechats.send_message(user, show_user=True)
+            self.frame.change_main_page("private")
 
     def on_popup_menu(self, widget):
 

@@ -232,9 +232,6 @@
                               <object class="GtkTreeView" id="Likes">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
-                                <signal name="button-press-event" handler="on_interest_list_clicked" swapped="no"/>
-                                <signal name="popup-menu" handler="on_popup_interest_menu" swapped="no"/>
-                                <signal name="touch-event" handler="on_interest_list_clicked" swapped="no"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
                                 </child>
@@ -251,9 +248,6 @@
                               <object class="GtkTreeView" id="Hates">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
-                                <signal name="button-press-event" handler="on_interest_list_clicked" swapped="no"/>
-                                <signal name="popup-menu" handler="on_popup_interest_menu" swapped="no"/>
-                                <signal name="touch-event" handler="on_interest_list_clicked" swapped="no"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
                                 </child>

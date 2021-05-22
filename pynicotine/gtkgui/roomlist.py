@@ -24,18 +24,15 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
-from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 from pynicotine.logfacility import log
 
 
@@ -55,8 +52,7 @@ class RoomList:
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         self.cols = initialise_columns(
-            None,
-            self.RoomsList,
+            None, self.RoomsList, self.on_popup_menu,
             ["room", _("Room"), 260, "text", self.room_status],
             ["users", _("Users"), 100, "number", self.room_status]
         )
@@ -75,9 +71,6 @@ class RoomList:
             ("#" + _("Join Public Room"), self.on_join_public_room)
         )
 
-        self.RoomsList.connect("button_press_event", self.on_list_clicked)
-        self.RoomsList.connect("popup-menu", self.on_popup_menu)
-        self.RoomsList.connect("touch_event", self.on_list_clicked)
         self.RoomsList.set_headers_clickable(True)
 
         self.search_iter = None
@@ -254,22 +247,13 @@ class RoomList:
             self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, user_count, 0])
             self.server_rooms.add(room)
 
-    def on_list_clicked(self, widget, event):
+    def on_row_activated(self, treeview, path, column):
 
-        set_treeview_selected_row(widget, event)
+        room = self.get_selected_room(treeview)
 
-        if triggers_context_menu(event):
-            return self.on_popup_menu(widget)
-
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            room = self.get_selected_room(widget)
-
-            if room is not None and room not in self.joined_rooms:
-                self.popup_room = room
-                self.on_popup_join()
-                return True
-
-        return False
+        if room is not None and room not in self.joined_rooms:
+            self.popup_room = room
+            self.on_popup_join()
 
     def on_popup_menu(self, widget):
 

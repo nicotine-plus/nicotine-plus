@@ -43,9 +43,6 @@
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="enable-search">0</property>
-                        <signal name="button-press-event" handler="on_til_list_clicked" swapped="no"/>
-                        <signal name="popup-menu" handler="on_popup_til_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_til_list_clicked" swapped="no"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection"/>
                         </child>
@@ -91,9 +88,6 @@
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="enable-search">0</property>
-                        <signal name="button-press-event" handler="on_tidl_list_clicked" swapped="no"/>
-                        <signal name="popup-menu" handler="on_popup_tidl_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_tidl_list_clicked" swapped="no"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection"/>
                         </child>
@@ -224,9 +218,6 @@
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
                             <property name="search-column">1</property>
-                            <signal name="button-press-event" handler="on_r_list_clicked" swapped="no"/>
-                            <signal name="popup-menu" handler="on_popup_r_menu" swapped="no"/>
-                            <signal name="touch-event" handler="on_r_list_clicked" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -264,9 +255,6 @@
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
                             <property name="search-column">1</property>
-                            <signal name="button-press-event" handler="on_r_list_clicked" swapped="no"/>
-                            <signal name="popup-menu" handler="on_popup_r_menu" swapped="no"/>
-                            <signal name="touch-event" handler="on_r_list_clicked" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -336,10 +324,8 @@
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
                         <property name="has-tooltip">1</property>
-                        <signal name="button-press-event" handler="on_ru_list_clicked" swapped="no"/>
-                        <signal name="popup-menu" handler="on_popup_ru_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_ru_list_clicked" swapped="no"/>
                         <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                        <signal name="row-activated" handler="on_ru_row_activated"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection"/>
                         </child>

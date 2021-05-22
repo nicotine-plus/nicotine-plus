@@ -42,19 +42,16 @@ class RoomWall:
         result = self.RoomWallEntry.get_text()
         self.RoomWallEntry.set_text("")
 
-        room_name = self.room.room
-
-        self.frame.np.queue.append(slskmessages.RoomTickerSet(room_name, result))
-
-        self.RoomWallList.get_buffer().set_text("")
-
-        login = config.sections["server"]["login"]
+        self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room.room, result))
 
         if result:
-            append_line(self.RoomWallList, "[%s] %s" % (login, result), showstamp=False, scroll=False)
+            login = config.sections["server"]["login"]
+            self.room.tickers.remove_ticker(login)
+            self.room.tickers.add_ticker(login, result)
 
         tickers = self.room.tickers.get_tickers()
-        append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers if not user == login])), showstamp=False, scroll=False)
+        self.RoomWallList.get_buffer().set_text("")
+        append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
 
     def update_visuals(self):
 
@@ -71,6 +68,13 @@ class RoomWall:
 
         tickers = self.room.tickers.get_tickers()
         append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
+
+        login = config.sections["server"]["login"]
+
+        for user, msg in tickers:
+            if user == login:
+                self.RoomWallEntry.set_text(msg)
+                self.RoomWallEntry.select_region(0, -1)
 
         self.RoomWallDialog.present_with_time(Gdk.CURRENT_TIME)
         self.RoomWallDialog.get_window().set_functions(
