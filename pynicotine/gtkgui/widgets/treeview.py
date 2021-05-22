@@ -134,6 +134,7 @@ def initialise_columns(treeview_name, treeview, *args):
 
         if width == -1:
             column.set_resizable(False)
+            column.set_expand(True)
             column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
 
         else:

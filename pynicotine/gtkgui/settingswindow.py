@@ -203,7 +203,7 @@ class DownloadsFrame(BuildFrame):
         cols = initialise_columns(
             None,
             self.FilterView,
-            ["filter", _("Filter"), 250, "text", None],
+            ["filter", _("Filter"), -1, "text", None],
             ["escaped", _("Escaped"), 40, "toggle", None]
         )
 
@@ -495,46 +495,36 @@ class SharesFrame(BuildFrame):
         BuildFrame.__init__(self, "shares")
 
         self.needrescan = False
+        self.shareddirs = []
+        self.bshareddirs = []
 
         self.shareslist = Gtk.ListStore(
             str,
-            str
-        )
-
-        self.shareddirs = []
-
-        self.bshareslist = Gtk.ListStore(
             str,
-            str
-        )
-
-        self.bshareddirs = []
-
-        initialise_columns(
-            None,
-            self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
-            ["folder", _("Folder"), 0, "text", None]
+            bool
         )
 
         self.Shares.set_model(self.shareslist)
-
-        initialise_columns(
+        cols = initialise_columns(
             None,
-            self.BuddyShares,
+            self.Shares,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
-            ["folder", _("Folder"), 0, "text", None]
+            ["folder", _("Folder"), -1, "text", None],
+            ["buddies", _("Buddy-only"), 0, "toggle", None],
         )
 
-        self.BuddyShares.set_model(self.bshareslist)
+        cols["virtual_folder"].set_sort_column_id(0)
+        cols["folder"].set_sort_column_id(1)
+        cols["buddies"].set_sort_column_id(2)
+
+        for render in cols["buddies"].get_cells():
+            render.connect('toggled', self.cell_toggle_callback, self.Shares)
 
         self.options = {
             "transfers": {
-                "shared": self.Shares,
                 "friendsonly": self.FriendsOnly,
                 "rescanonstartup": self.RescanOnStartup,
-                "buddyshared": self.BuddyShares,
-                "enablebuddyshares": self.enableBuddyShares
+                "enablebuddyshares": self.EnableBuddyShares
             }
         }
 
@@ -542,51 +532,48 @@ class SharesFrame(BuildFrame):
 
         transfers = config.sections["transfers"]
         self.shareslist.clear()
-        self.bshareslist.clear()
 
         self.p.set_widgets_data(self.options)
-        self.on_enabled_buddy_shares_toggled(self.enableBuddyShares)
+        self.on_enabled_buddy_shares_toggled(self.EnableBuddyShares)
 
-        if transfers["shared"] is not None:
+        for (virtual, actual, *unused) in transfers["buddyshared"]:
 
-            for (virtual, actual, *unused) in transfers["shared"]:
+            self.shareslist.append(
+                [
+                    virtual,
+                    actual,
+                    True
+                ]
+            )
 
-                self.shareslist.append(
-                    [
-                        virtual,
-                        actual
-                    ]
-                )
+        for (virtual, actual, *unused) in transfers["shared"]:
 
-            self.shareddirs = transfers["shared"][:]
+            self.shareslist.append(
+                [
+                    virtual,
+                    actual,
+                    False
+                ]
+            )
 
-        if transfers["buddyshared"] is not None:
-
-            for (virtual, actual, *unused) in transfers["buddyshared"]:
-                self.bshareslist.append(
-                    [
-                        virtual,
-                        actual
-                    ]
-                )
-
-            self.bshareddirs = transfers["buddyshared"][:]
+        self.shareddirs = transfers["shared"][:]
+        self.bshareddirs = transfers["buddyshared"][:]
 
         self.needrescan = False
 
     def get_settings(self):
-
-        # Buddy shares related menus are activated if needed
-        buddies = self.enableBuddyShares.get_active()
-
-        self.frame.rescan_buddy_action.set_enabled(buddies)
-        self.frame.browse_buddy_shares_action.set_enabled(buddies)
 
         # Public shares related menus are deactivated if we only share with friends
         friendsonly = self.FriendsOnly.get_active()
 
         self.frame.rescan_public_action.set_enabled(not friendsonly)
         self.frame.browse_public_shares_action.set_enabled(not friendsonly)
+
+        # Buddy shares related menus are activated if needed
+        buddies = self.EnableBuddyShares.get_active()
+
+        self.frame.rescan_buddy_action.set_enabled(buddies)
+        self.frame.browse_buddy_shares_action.set_enabled(buddies)
 
         return {
             "transfers": {
@@ -598,23 +585,34 @@ class SharesFrame(BuildFrame):
             }
         }
 
+    def cell_toggle_callback(self, widget, index, treeview):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+
+        buddy = self.shareslist.get_value(iterator, 2)
+        self.shareslist.set_value(iterator, 2, not buddy)
+
+        virtual = self.shareslist.get_value(iterator, 0)
+        directory = self.shareslist.get_value(iterator, 1)
+        share = (virtual, directory)
+        self.needrescan = True
+
+        if buddy:
+            self.bshareddirs.remove(share)
+            self.shareddirs.append(share)
+            return
+
+        self.shareddirs.remove(share)
+        self.bshareddirs.append(share)
+
     def on_enabled_buddy_shares_toggled(self, widget):
         self.on_friends_only_toggled(widget)
         self.needrescan = True
 
     def on_friends_only_toggled(self, widget):
 
-        friendsonly = self.FriendsOnly.get_active()
-
-        if friendsonly:
-            # If sharing only with friends, buddy shares are activated and should be locked
-            self.enableBuddyShares.set_active(True)
-            self.enableBuddyShares.set_sensitive(False)
-        else:
-            # If not let the buddy shares checkbox be selectable
-            self.enableBuddyShares.set_sensitive(True)
-
-        buddies = self.enableBuddyShares.get_active()
+        buddies = self.EnableBuddyShares.get_active()
 
         if buddies:
             # If buddy shares are enabled let the friends only checkbox be selectable
@@ -624,17 +622,12 @@ class SharesFrame(BuildFrame):
             self.FriendsOnly.set_active(False)
             self.FriendsOnly.set_sensitive(False)
 
-        # Buddy shares are activated only if needed
-        self.BuddyShares.set_sensitive(buddies)
-        self.addBuddySharesButton.set_sensitive(buddies)
-        self.removeBuddySharesButton.set_sensitive(buddies)
-        self.renameBuddyVirtualsButton.set_sensitive(buddies)
-
         self.needrescan = True
 
     def add_shared_dir_response(self, dialog, response_id, data):
 
         virtual = dialog.get_response_value()
+        buddy = dialog.get_second_response_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -653,19 +646,25 @@ class SharesFrame(BuildFrame):
             )
             return
 
-        directory, shareslist, shareddirs = data
+        directory = data
 
-        shareslist.append(
+        self.shareslist.append(
             [
                 virtual,
-                directory
+                directory,
+                buddy
             ]
         )
 
-        shareddirs.append((virtual, directory))
+        if buddy:
+            shared_dirs = self.bshareddirs
+        else:
+            shared_dirs = self.shareddirs
+
+        shared_dirs.append((virtual, directory))
         self.needrescan = True
 
-    def add_shared_dir(self, folder, shareslist, shareddirs):
+    def add_shared_dir(self, folder):
 
         if folder is None:
             return
@@ -683,14 +682,16 @@ class SharesFrame(BuildFrame):
             parent=self.Main.get_toplevel(),
             title=_("Set Virtual Name"),
             message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
+            option=True,
+            optionmessage=_("Share with buddies only"),
             callback=self.add_shared_dir_response,
-            callback_data=(folder, shareslist, shareddirs)
+            callback_data=folder
         )
 
     def on_add_shared_dir_selected(self, selected, data):
 
         for folder in selected:
-            self.add_shared_dir(folder, self.shareslist, self.shareddirs)
+            self.add_shared_dir(folder)
 
     def on_add_shared_dir(self, *args):
 
@@ -700,20 +701,7 @@ class SharesFrame(BuildFrame):
             title=_("Add a Shared Folder")
         )
 
-    def on_add_shared_buddy_dir_selected(self, selected, data):
-
-        for folder in selected:
-            self.add_shared_dir(folder, self.bshareslist, self.bshareddirs)
-
-    def on_add_shared_buddy_dir(self, widget):
-
-        choose_dir(
-            parent=self.Main.get_toplevel(),
-            callback=self.on_add_shared_buddy_dir_selected,
-            title=_("Add a Shared Buddy Folder")
-        )
-
-    def rename_virtuals_response(self, dialog, response_id, data):
+    def rename_virtuals_response(self, dialog, response_id, iterator):
 
         virtual = dialog.get_response_value()
         dialog.destroy()
@@ -724,23 +712,28 @@ class SharesFrame(BuildFrame):
         if not virtual:
             return
 
-        iterator, shares_list, shared_dirs = data
-
         # Remove slashes from share name to avoid path conflicts
         virtual = virtual.replace('/', '_').replace('\\', '_')
-        directory = shares_list.get_value(iterator, 1)
-        oldvirtual = shares_list.get_value(iterator, 0)
+        directory = self.shareslist.get_value(iterator, 1)
+        oldvirtual = self.shareslist.get_value(iterator, 0)
         oldmapping = (oldvirtual, directory)
         newmapping = (virtual, directory)
 
-        shares_list.set_value(iterator, 0, virtual)
+        self.shareslist.set_value(iterator, 0, virtual)
+
+        if oldmapping in self.bshareddirs:
+            shared_dirs = self.bshareddirs
+        else:
+            shared_dirs = self.shareddirs
+
         shared_dirs.remove(oldmapping)
         shared_dirs.append(newmapping)
+
         self.needrescan = True
 
-    def rename_virtuals(self, shares_widget, shared_dirs):
+    def rename_virtuals(self):
 
-        model, paths = shares_widget.get_selection().get_selected_rows()
+        model, paths = self.Shares.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
@@ -751,18 +744,15 @@ class SharesFrame(BuildFrame):
                 title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 callback=self.rename_virtuals_response,
-                callback_data=(iterator, model, shared_dirs)
+                callback_data=iterator
             )
 
     def on_rename_virtuals(self, widget):
-        self.rename_virtuals(self.Shares, self.shareddirs)
+        self.rename_virtuals()
 
-    def on_rename_buddy_virtuals(self, widget):
-        self.rename_virtuals(self.BuddyShares, self.bshareddirs)
+    def remove_shared_dir(self):
 
-    def remove_shared_dir(self, shares_widget, shared_dirs):
-
-        model, paths = shares_widget.get_selection().get_selected_rows()
+        model, paths = self.Shares.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
@@ -770,17 +760,18 @@ class SharesFrame(BuildFrame):
             actual = model.get_value(iterator, 1)
             mapping = (virtual, actual)
 
-            shared_dirs.remove(mapping)
+            if mapping in self.bshareddirs:
+                self.bshareddirs.remove(mapping)
+            else:
+                self.shareddirs.remove(mapping)
+
             model.remove(iterator)
 
         if paths:
             self.needrescan = True
 
     def on_remove_shared_dir(self, widget):
-        self.remove_shared_dir(self.Shares, self.shareddirs)
-
-    def on_remove_shared_buddy_dir(self, widget):
-        self.remove_shared_dir(self.BuddyShares, self.bshareddirs)
+        self.remove_shared_dir()
 
 
 class UploadsFrame(BuildFrame):
