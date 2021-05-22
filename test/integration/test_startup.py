@@ -21,8 +21,8 @@ import subprocess
 
 
 commands = (
-    ["python3", "nicotine", "--ci-mode"],  # GUI
-    ["python3", "nicotine", "--headless"]  # Headless
+    ["python3", "nicotine", "--config=temp_config", "--ci-mode"],  # GUI
+    ["python3", "nicotine", "--config=temp_config", "--headless"]  # Headless
 )
 
 
