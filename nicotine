@@ -73,12 +73,13 @@ def check_arguments():
         help=_("rescan shared files")
     )
     parser.add_argument(
+        "-n", "--headless", action="store_true",
+        help=_("start the program in headless mode (no GUI)")
+    )
+    parser.add_argument(
         "-v", "--version", action="version", version="Nicotine+ %s" % config.version,
         help=_("display version and exit")
     )
-
-    # Headless mode
-    parser.add_argument("--headless", action="store_true", help=argparse.SUPPRESS)
 
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
