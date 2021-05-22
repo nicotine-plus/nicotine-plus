@@ -662,9 +662,7 @@ class UserBrowse:
         if iterator is None:
             return
 
-        path = model.get_path(iterator)
         directory = model.get_value(iterator, 1)
-
         self.set_directory(directory)
 
     def on_file_properties(self, *args):
