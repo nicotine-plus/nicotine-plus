@@ -665,7 +665,6 @@ class UserBrowse:
         path = model.get_path(iterator)
         directory = model.get_value(iterator, 1)
 
-        self.FolderTreeView.expand_to_path(path)
         self.set_directory(directory)
 
     def on_file_properties(self, *args):
