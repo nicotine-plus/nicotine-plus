@@ -991,7 +991,6 @@ class Transfers:
             "user": i.user
         })
 
-        downloaddir = self.config.sections["transfers"]["downloaddir"]
         incompletedir = self.config.sections["transfers"]["incompletedir"]
         needupdate = True
 
@@ -1003,10 +1002,10 @@ class Transfers:
                 del self.transfer_request_times[i]
 
             if not incompletedir:
-                if i.path and i.path[0] == '/':
+                if i.path:
                     incompletedir = i.path
                 else:
-                    incompletedir = os.path.join(downloaddir, i.path)
+                    incompletedir = self.get_default_download_folder(i.user)
 
             try:
                 if not os.access(incompletedir, os.F_OK):
@@ -1727,7 +1726,7 @@ class Transfers:
             download_location = self.requested_folders[user][directory]
 
         else:
-            download_location = self.config.sections["transfers"]["downloaddir"]
+            download_location = self.get_default_download_folder(user)
 
         # Get the last folder in directory path
         target_name = directory.rstrip('\\').split('\\')[-1]
@@ -1784,6 +1783,23 @@ class Transfers:
             return queue_size
 
         return sum(1 for i in self.uploads if i.status == "Queued")
+
+    def get_default_download_folder(self, user):
+
+        downloaddir = self.config.sections["transfers"]["downloaddir"]
+
+        # Check if username subfolders should be created for downloads
+        if self.config.sections["transfers"]["usernamesubfolders"]:
+            try:
+                downloaddir = os.path.join(downloaddir, user)
+
+                if not os.path.isdir(downloaddir):
+                    os.makedirs(downloaddir)
+
+            except Exception as e:
+                log.add(_("Unable to save download to username subfolder, falling back to default download folder. Error: %s") % e)
+
+        return downloaddir
 
     def get_renamed(self, name):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
@@ -1857,13 +1873,12 @@ class Transfers:
 
         self.close_file(file, i)
 
-        downloaddir = self.config.sections["transfers"]["downloaddir"]
         basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
 
-        if i.path and i.path[0] == '/':
+        if i.path:
             folder = i.path
         else:
-            folder = os.path.join(downloaddir, i.path)
+            folder = self.get_default_download_folder(i.user)
 
         newname = self.get_renamed(os.path.join(folder, basename))
 

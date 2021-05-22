@@ -190,7 +190,8 @@ class DownloadsFrame(BuildFrame):
                 "uploaddir": self.UploadDir,
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
-                "downloadlimit": self.DownloadSpeed
+                "downloadlimit": self.DownloadSpeed,
+                "usernamesubfolders": self.UsernameSubfolders
             }
         }
 
@@ -257,7 +258,8 @@ class DownloadsFrame(BuildFrame):
                 "uploaddir": self.UploadDir.get_path(),
                 "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
-                "downloadlimit": self.DownloadSpeed.get_value_as_int()
+                "downloadlimit": self.DownloadSpeed.get_value_as_int(),
+                "usernamesubfolders": self.UsernameSubfolders.get_active()
             }
         }
 

@@ -90,6 +90,7 @@ class Config:
                 "incompletedir": os.path.join(self.data_dir, 'incomplete'),
                 "downloaddir": os.path.join(self.data_dir, 'downloads'),
                 "uploaddir": os.path.join(self.data_dir, 'received'),
+                "usernamesubfolders": False,
                 "sharedownloaddir": False,
                 "shared": [],
                 "buddyshared": [],
