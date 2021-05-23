@@ -30,6 +30,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import save_file
@@ -191,6 +192,7 @@ class UserInfo:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
+        connect_context_menu_event(self.UserImage, self.on_image_click, self.on_image_popup_menu)
 
         # Request user status, speed and number of shared files
         self.frame.np.watch_user(user, force_update=True)

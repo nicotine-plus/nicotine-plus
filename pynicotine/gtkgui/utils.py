@@ -376,3 +376,39 @@ def triggers_context_menu(event):
 
     event_touch_started = False
     return True
+
+
+def connect_context_menu_event(widget, callback_press, callback_popup):
+
+    widget.connect("button-press-event", callback_press)
+    widget.connect("popup-menu", callback_popup)
+    widget.connect("touch-event", callback_press)
+
+
+def connect_key_press_event(widget, callback):
+    """ Use event controller or legacy 'key-press-event', depending on GTK version """
+
+    try:
+        controller = Gtk.EventControllerKey.new(widget)
+        controller.connect("key-pressed", callback)
+
+    except AttributeError:
+        # GTK <3.24
+        controller = None
+        widget.connect("key-press-event", callback)
+
+    return controller
+
+
+def get_key_press_event_args(*args):
+
+    try:
+        controller, keyval, keycode, state = args
+
+    except ValueError:
+        # GTK <3.24
+        widget, event = args
+        keyval = event.keyval
+        state = event.state
+
+    return (keyval, keycode, state)

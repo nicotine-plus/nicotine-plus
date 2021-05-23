@@ -25,6 +25,8 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
+from pynicotine.gtkgui.utils import connect_key_press_event
+from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import expand_alias
@@ -52,7 +54,7 @@ class ChatEntry:
         self.completion_list = None
 
         entry.connect("activate", self.on_enter)
-        entry.connect("key-press-event", self.on_key_press)
+        self.key_controller = connect_key_press_event(entry, self.on_key_press_event)
 
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
@@ -422,9 +424,9 @@ class ChatEntry:
 
         self.entry.set_text("")
 
-    def on_key_press(self, widget, event):
+    def on_key_press_event(self, *args):
 
-        keycode = event.hardware_keycode
+        keyval, keycode, state = get_key_press_event_args(*args)
         key, codes, mods = Gtk.accelerator_parse_with_keycode("Tab")
 
         if keycode not in codes:
@@ -448,8 +450,8 @@ class ChatEntry:
         # ix = 16
         # text = Miss
         # preix = 12
-        ix = widget.get_position()
-        text = widget.get_text()[:ix].split(" ")[-1]
+        ix = self.entry.get_position()
+        text = self.entry.get_text()[:ix].split(" ")[-1]
         preix = ix - len(text)
 
         if not config_words["cycle"]:
@@ -457,9 +459,9 @@ class ChatEntry:
             if completion:
                 if single and ix == len(text) and text[:1] != "/":
                     completion += ": "
-                widget.delete_text(preix, ix)
-                widget.insert_text(completion, preix)
-                widget.set_position(preix + len(completion))
+                self.entry.delete_text(preix, ix)
+                self.entry.insert_text(completion, preix)
+                self.entry.set_position(preix + len(completion))
         else:
 
             if not self.midwaycompletion:
@@ -473,19 +475,18 @@ class ChatEntry:
 
             if self.midwaycompletion:
 
-                widget.delete_text(ix - len(currentnick), ix)
+                self.entry.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+                if state & Gdk.ModifierType.SHIFT_MASK:
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
 
                 newnick = self.completions['completions'][self.completions['currentindex']]
-                widget.insert_text(newnick, preix)
-                widget.set_position(preix + len(newnick))
+                self.entry.insert_text(newnick, preix)
+                self.entry.set_position(preix + len(newnick))
 
-        widget.stop_emission_by_name("key_press_event")
         return True
 
 
@@ -505,7 +506,7 @@ class TextSearchBar:
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
 
-        self.textview.connect("key-press-event", self.on_key_press)
+        self.key_controller = connect_key_press_event(self.textview, self.on_key_press_event)
 
     def on_search_match(self, search_type, restarted=False):
 
@@ -557,13 +558,16 @@ class TextSearchBar:
     def on_search_next_match(self, *args):
         self.on_search_match(search_type="next")
 
-    def on_key_press(self, widget, event):
+    def on_key_press_event(self, *args):
 
+        keyval, keycode, state = get_key_press_event_args(*args)
         key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>f")
 
-        if event.get_state() & mods and \
-                event.hardware_keycode in codes:
+        if state & mods and keycode in codes:
             self.show_search_bar()
+            return True
+
+        return False
 
     def show_search_bar(self):
         self.search_bar.set_search_mode(True)

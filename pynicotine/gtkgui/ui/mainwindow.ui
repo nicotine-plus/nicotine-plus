@@ -877,8 +877,6 @@
   <object class="GtkApplicationWindow" id="MainWindow">
     <signal name="delete-event" handler="on_delete_event" swapped="no"/>
     <signal name="focus-in-event" handler="on_focus_in" swapped="no"/>
-    <signal name="key-press-event" handler="on_key_press" swapped="no"/>
-    <signal name="motion-notify-event" handler="on_disable_auto_away" swapped="no"/>
     <child>
       <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>
@@ -1450,9 +1448,6 @@
                         <property name="right-margin">10</property>
                         <property name="top-margin">5</property>
                         <property name="bottom-margin">5</property>
-                        <signal name="button-press-event" handler="on_log_window_clicked" swapped="no"/>
-                        <signal name="popup-menu" handler="on_popup_log_menu" swapped="no"/>
-                        <signal name="touch-event" handler="on_log_window_clicked" swapped="no"/>
                       </object>
                     </child>
                   </object>

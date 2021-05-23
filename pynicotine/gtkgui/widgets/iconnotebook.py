@@ -25,6 +25,8 @@ import sys
 from gi.repository import Gdk
 from gi.repository import Gtk
 
+from pynicotine.gtkgui.utils import connect_key_press_event
+from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -264,7 +266,7 @@ class IconNotebook:
         self._show_hilite_image = show_hilite_image
         self._show_status_image = show_status_image
 
-        self.notebook.connect("key-press-event", self.on_key_press_event)
+        self.key_controller = connect_key_press_event(self.notebook, self.on_key_press_event)
         self.notebook.connect("switch-page", self.on_switch_page)
 
         self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON)
@@ -542,31 +544,20 @@ class IconNotebook:
     def show(self):
         self.notebook.show()
 
-    def on_key_press_event(self, widget, event):
+    def on_key_press_event(self, *args):
 
-        keycode = event.hardware_keycode
+        keyval, keycode, state = get_key_press_event_args(*args)
         key, codes_w, mods = Gtk.accelerator_parse_with_keycode("<Primary>w")
         key, codes_f4, mods = Gtk.accelerator_parse_with_keycode("<Primary>F4")
 
-        if event.get_state() & mods:
+        if state & mods:
             if keycode in codes_w or \
                keycode in codes_f4:
                 # Ctrl+W and Ctrl+F4: close current tab
 
                 page = self.get_nth_page(self.get_current_page())
                 tab_label, menu_label = self.get_labels(page)
-                tab_label.onclose(widget)
-                return True
-
-            key, codes_tab, mods = Gtk.accelerator_parse_with_keycode("Tab")
-            key, codes_shift, mods = Gtk.accelerator_parse_with_keycode("Shift_L")
-
-            if keycode in codes_tab:
-                # Ctrl+Tab: next tab
-
-                page = self.get_nth_page(self.get_current_page())
-                tab_label, menu_label = self.get_labels(page)
-                tab_label.onclose(widget)
+                tab_label.onclose(None)
                 return True
 
         return False

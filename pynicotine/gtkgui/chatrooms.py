@@ -43,6 +43,7 @@ from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -447,6 +448,8 @@ class ChatRoom:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
+        connect_context_menu_event(self.RoomLog, self.on_activity_log_clicked, self.on_popup_activity_log_menu)
+        connect_context_menu_event(self.ChatScroll, self.on_room_log_clicked, self.on_popup_room_log_menu)
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)

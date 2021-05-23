@@ -215,7 +215,6 @@
                         <property name="can-focus">1</property>
                         <property name="enable-tree-lines">1</property>
                         <property name="headers-visible">0</property>
-                        <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
                         <signal name="row-activated" handler="on_folder_row_activated"/>
                       </object>
                     </child>
@@ -253,7 +252,6 @@
                         <property name="sensitive">0</property>
                         <property name="can-focus">1</property>
                         <property name="rubber-banding">1</property>
-                        <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
                         <signal name="row-activated" handler="on_file_row_activated"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection">

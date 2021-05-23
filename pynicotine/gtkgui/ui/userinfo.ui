@@ -290,12 +290,9 @@
                                 <property name="visible">1</property>
                                 <property name="shadow-type">none</property>
                                 <child>
-                                  <object class="GtkEventBox">
+                                  <object class="GtkEventBox" id="UserImage">
                                     <property name="visible">1</property>
                                     <property name="can-focus">1</property>
-                                    <signal name="button-press-event" handler="on_image_click" swapped="no"/>
-                                    <signal name="popup-menu" handler="on_image_popup_menu" swapped="no"/>
-                                    <signal name="touch-event" handler="on_image_click" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="image">
                                         <property name="visible">1</property>

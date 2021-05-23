@@ -54,7 +54,10 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
+from pynicotine.gtkgui.utils import connect_context_menu_event
+from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_all_text
+from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_log
@@ -164,6 +167,17 @@ class NicotineFrame:
 
         self.application.add_window(self.MainWindow)
 
+        # Set up event controllers
+        self.key_controller = connect_key_press_event(self.MainWindow, self.on_key_press_event)
+
+        try:
+            self.motion_controller = Gtk.EventControllerMotion.new(self.MainWindow)
+            self.motion_controller.connect("motion", self.on_disable_auto_away)
+
+        except AttributeError:
+            # GTK <3.24
+            self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.on_quit)
@@ -250,6 +264,7 @@ class NicotineFrame:
         """ Log """
 
         # Popup menu on the log windows
+        connect_context_menu_event(self.LogWindow, self.on_log_window_clicked, self.on_popup_log_menu)
         self.logpopupmenu = PopupMenu(self)
         self.logpopupmenu.setup(
             ("#" + _("Find..."), self.on_find_log_window),
@@ -1503,17 +1518,17 @@ class NicotineFrame:
         else:
             main_notebook.set_show_tabs(True)
 
-    def on_key_press(self, widget, event):
+    def on_key_press_event(self, *args):
 
+        keyval, keycode, state = get_key_press_event_args(*args)
         self.on_disable_auto_away()
 
-        if event.state & (Gdk.ModifierType.MOD1_MASK | Gtk.accelerator_parse("<Primary>")[1]) != Gdk.ModifierType.MOD1_MASK:
+        if state & (Gdk.ModifierType.MOD1_MASK | Gtk.accelerator_parse("<Primary>")[1]) != Gdk.ModifierType.MOD1_MASK:
             return False
 
         for i in range(1, 10):
-            if event.keyval == Gdk.keyval_from_name(str(i)):
+            if keyval == Gdk.keyval_from_name(str(i)):
                 self.MainNotebook.set_current_page(i - 1)
-                widget.stop_emission_by_name("key_press_event")
                 return True
 
         return False
@@ -1956,6 +1971,7 @@ class NicotineFrame:
     """ Away Timer """
 
     def remove_away_timer(self, timerid):
+
         # Check that the away timer hasn't been destroyed already
         # Happens if the timer expires
         context = GLib.MainContext.default()
@@ -1963,6 +1979,7 @@ class NicotineFrame:
             GLib.source_remove(timerid)
 
     def on_auto_away(self):
+
         if not self.np.away:
             self.autoaway = True
             self.np.away = True
@@ -1971,6 +1988,7 @@ class NicotineFrame:
         return False
 
     def on_disable_auto_away(self, *args):
+
         if self.autoaway:
             self.autoaway = False
 

@@ -32,7 +32,9 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
+from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -56,6 +58,7 @@ class TransferList:
         load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
         getattr(frame, type + "svbox").add(self.Main)
         self.widget = widget = getattr(self, type.title() + "List")
+        self.key_controller = connect_key_press_event(widget, self.on_key_press_event)
 
         self.last_ui_update = self.last_save = 0
         self.list = []
@@ -794,10 +797,10 @@ class TransferList:
 
         self.select_transfers()
 
-    def on_key_press_event(self, widget, event):
+    def on_key_press_event(self, *args):
 
+        keyval, keycode, state = get_key_press_event_args(*args)
         self.select_transfers()
-        keycode = event.hardware_keycode
 
         if keycode in Gtk.accelerator_parse_with_keycode("t")[1]:
             self.abort_transfers()
@@ -805,7 +808,7 @@ class TransferList:
         elif keycode in Gtk.accelerator_parse_with_keycode("r")[1]:
             self.retry_transfers()
 
-        elif event.get_state() & Gtk.accelerator_parse("<Primary>")[1] and \
+        elif state & Gtk.accelerator_parse("<Primary>")[1] and \
                 keycode in Gtk.accelerator_parse_with_keycode("c")[1]:
             self.on_copy_file_path()
 
@@ -816,7 +819,6 @@ class TransferList:
             # No key match, continue event
             return False
 
-        widget.stop_emission_by_name("key_press_event")
         return True
 
     def on_file_properties(self, *args):

@@ -36,6 +36,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
+from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -311,6 +312,7 @@ class PrivateChat:
         self.frame = chats.frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
+        connect_context_menu_event(self.ChatScroll, self.on_message_view_clicked, self.on_popup_menu)
 
         self.autoreplied = False
         self.offlinemessage = False
