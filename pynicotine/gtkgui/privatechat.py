@@ -314,7 +314,7 @@ class PrivateChat:
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
         tab_label, menu_label = self.chats.get_labels(self.Main)
-        self.popup_menu_user = popup = PopupMenu(self.frame, tab_label, self.on_tab_popup)
+        self.popup_menu_user = popup = PopupMenu(self.frame, tab_label, self.on_popup_menu)
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
@@ -322,7 +322,7 @@ class PrivateChat:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.popup_menu = popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu)
+        popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu)
         popup.setup(
             ("#" + _("Find..."), self.on_find_chat_log),
             ("", None),
@@ -394,15 +394,8 @@ class PrivateChat:
     def set_label(self, label):
         self.popup_menu_user.set_widget(label)
 
-    def on_tab_popup(self, *args):
+    def on_popup_menu(self, menu, widget):
         self.popup_menu_user.toggle_user_items()
-        self.popup_menu_user.popup()
-        return True
-
-    def on_popup_menu(self, *args):
-        self.popup_menu_user.toggle_user_items()
-        self.popup_menu.popup()
-        return True
 
     def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)

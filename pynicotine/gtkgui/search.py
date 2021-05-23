@@ -410,7 +410,7 @@ class Search:
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.tab_menu = PopupMenu(self.frame, None, self.on_tab_popup)
+        self.tab_menu = PopupMenu(self.frame)
         self.tab_menu.setup(
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
@@ -1041,11 +1041,11 @@ class Search:
 
         return True
 
-    def on_popup_menu(self, *args):
+    def on_popup_menu(self, menu, widget):
 
         self.select_results()
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
@@ -1070,10 +1070,7 @@ class Search:
 
                 break
 
-        self.popup_menu.set_num_selected_files(self.selected_files_count)
-
-        self.popup_menu.popup()
-        return True
+        menu.set_num_selected_files(self.selected_files_count)
 
     def on_browse_folder(self, *args):
 
@@ -1364,10 +1361,6 @@ class Search:
             self.FilterLabel.set_text(_("Result Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
-
-    def on_tab_popup(self, *args):
-        self.tab_menu.popup()
-        return True
 
     def on_clear(self, *args):
 

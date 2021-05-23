@@ -351,29 +351,26 @@ class UserList:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, widget, *args):
+    def on_popup_menu(self, menu, widget):
 
         username, trusted, notify, privileged, status = self.get_selected_username_details(widget)
         if username is None:
-            return False
+            return True
 
-        self.popup_menu.set_user(username)
-        self.popup_menu.toggle_user_items()
-        self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
+        menu.set_user(username)
+        menu.toggle_user_items()
+        menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
 
         actions[_("Private Rooms")].set_enabled(
             status or
-            self.popup_menu.user != config.sections["server"]["login"]
+            menu.user != config.sections["server"]["login"]
         )
 
         actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
         actions[_("_Privileged")].set_state(GLib.Variant.new_boolean(privileged))
         actions[_("_Trusted")].set_state(GLib.Variant.new_boolean(trusted))
-
-        self.popup_menu.popup()
-        return True
 
     def get_user_status(self, msg):
 

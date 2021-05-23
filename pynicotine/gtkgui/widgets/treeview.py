@@ -287,12 +287,11 @@ def save_columns(treeview_name, columns, subpage=None):
         column_config[treeview_name] = saved_columns
 
 
-def press_header(widget, *args):
+def press_header(menu, widget):
 
     treeview = widget.get_parent()
     columns = treeview.get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
-    menu = args[-1]
     menu.clear()
     actions = menu.get_actions()
     pos = 1
@@ -317,9 +316,6 @@ def press_header(widget, *args):
         actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
         pos += 1
 
-    menu.popup()
-    return True
-
 
 def header_toggle(action, state, treeview, columns, index):
 
@@ -328,14 +324,12 @@ def header_toggle(action, state, treeview, columns, index):
     set_last_column_autosize(treeview)
 
 
-def set_treeview_selected_row(treeview, event):
+def set_treeview_selected_row(treeview, x, y):
     """ Handles row selection when right-clicking in a treeview """
 
-    if event is None:
-        return
-
-    pathinfo = treeview.get_path_at_pos(event.x, event.y)
+    pathinfo = treeview.get_path_at_pos(x, y)
     selection = treeview.get_selection()
+    print(selection.count_selected_rows())
 
     if pathinfo is not None:
         path, col, cell_x, cell_y = pathinfo

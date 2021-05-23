@@ -255,10 +255,10 @@ class RoomList:
             self.popup_room = room
             self.on_popup_join()
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, menu, widget):
 
         if self.room_model is None:
-            return False
+            return True
 
         room = self.get_selected_room(widget)
 
@@ -273,16 +273,13 @@ class RoomList:
         self.popup_room = room
         prooms_enabled = True
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
 
         actions[_("Join Room")].set_enabled(act[0])
         actions[_("Leave Room")].set_enabled(act[1])
 
         actions[_("Disown Private Room")].set_enabled(self.is_private_room_owned(self.popup_room))
         actions[_("Cancel Room Membership")].set_enabled((prooms_enabled and self.is_private_room_member(self.popup_room)))
-
-        self.popup_menu.popup()
-        return True
 
     def on_popup_join(self, *args):
         self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))

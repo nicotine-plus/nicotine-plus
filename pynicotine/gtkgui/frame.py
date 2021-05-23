@@ -262,8 +262,7 @@ class NicotineFrame:
         """ Log """
 
         # Popup menu on the log windows
-        self.logpopupmenu = PopupMenu(self, self.LogWindow, self.on_popup_log_menu)
-        self.logpopupmenu.setup(
+        PopupMenu(self, self.LogWindow).setup(
             ("#" + _("Find..."), self.on_find_log_window),
             ("", None),
             ("#" + _("Copy"), self.on_copy_log_window),
@@ -346,6 +345,10 @@ class NicotineFrame:
 
         if self.MainWindow.get_urgency_hint():
             self.MainWindow.set_urgency_hint(False)
+
+    def cancel(self, popup, *args):
+        print(args)
+        del popup
 
     def save_window_state(self):
 
@@ -1395,7 +1398,7 @@ class NicotineFrame:
             tab_label.show()
 
             # Set the menu to hide the tab
-            popup = PopupMenu(self, tab_label, self.on_tab_popup)
+            popup = PopupMenu(self, tab_label)
             popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
 
     def request_tab_icon(self, tab_label, status=1):
@@ -1604,10 +1607,6 @@ class NicotineFrame:
         self.MainNotebook.set_tab_reorderable(tab_box, config.sections["ui"]["tab_reorderable"])
 
         del self.hidden_tabs[tab_box]
-
-    def on_tab_popup(self, widget, *args):
-        menu = args[-1]
-        menu.popup()
 
     def set_tab_expand(self, tab_box):
 
@@ -2061,10 +2060,6 @@ class NicotineFrame:
         append_line(self.LogWindow, msg, scroll=should_scroll, find_urls=False)
 
         return False
-
-    def on_popup_log_menu(self, *args):
-        self.logpopupmenu.popup()
-        return True
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)

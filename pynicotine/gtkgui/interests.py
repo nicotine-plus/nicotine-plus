@@ -376,37 +376,31 @@ class Interests:
 
         return model.get_value(iterator, column)
 
-    def on_popup_til_menu(self, widget):
+    def on_popup_til_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
         if item is None:
-            return False
+            return True
 
-        self.til_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        self.til_popup_menu.popup()
-        return True
-
-    def on_popup_tidl_menu(self, widget):
+    def on_popup_tidl_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
         if item is None:
-            return False
+            return True
 
-        self.tidl_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        self.tidl_popup_menu.popup()
-        return True
-
-    def on_popup_r_menu(self, widget):
+    def on_popup_r_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=1)
         if item is None:
-            return False
+            return True
 
-        self.r_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        actions = self.r_popup_menu.get_actions()
+        actions = menu.get_actions()
         actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
@@ -414,20 +408,14 @@ class Interests:
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
-        self.r_popup_menu.popup()
-        return True
-
-    def on_popup_ru_menu(self, widget):
+    def on_popup_ru_menu(self, menu, widget):
 
         user = self.get_selected_item(widget, column=1)
         if user is None:
-            return False
+            return True
 
-        self.ru_popup_menu.set_user(user)
-        self.ru_popup_menu.toggle_user_items()
-
-        self.ru_popup_menu.popup()
-        return True
+        menu.set_user(user)
+        menu.toggle_user_items()
 
     def on_ru_row_activated(self, treeview, path, column):
 

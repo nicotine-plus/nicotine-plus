@@ -514,8 +514,7 @@ class ChatRoom:
             (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
-        self.activitylogpopupmenu = PopupMenu(self.frame, self.RoomLog, self.on_popup_activity_log_menu)
-        self.activitylogpopupmenu.setup(
+        PopupMenu(self.frame, self.RoomLog).setup(
             ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_activity_log),
@@ -526,8 +525,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.roomlogpopmenu = PopupMenu(self.frame, self.ChatScroll, self.on_popup_room_log_menu)
-        self.roomlogpopmenu.setup(
+        PopupMenu(self.frame, self.ChatScroll).setup(
             ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_room_log),
@@ -540,7 +538,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.tab_menu = PopupMenu(self.frame, None, self.on_tab_popup)
+        self.tab_menu = PopupMenu(self.frame)
         self.tab_menu.setup(
             ("#" + _("_Leave Room"), self.on_leave)
         )
@@ -684,10 +682,6 @@ class ChatRoom:
 
         return model.get_value(iterator, 2)
 
-    def on_tab_popup(self, *args):
-        self.tab_menu.popup()
-        return True
-
     def on_row_activated(self, treeview, path, column):
 
         user = self.get_selected_username(treeview)
@@ -696,15 +690,13 @@ class ChatRoom:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, menu, treeview):
 
-        user = self.get_selected_username(widget)
+        user = self.get_selected_username(treeview)
         if user is None:
-            return False
+            return True
 
         self.populate_user_menu(user)
-        self.popup_menu.popup()
-        return True
 
     def on_show_room_wall(self, *args):
         self.room_wall.show()
@@ -1158,14 +1150,6 @@ class ChatRoom:
 
         if self.room not in config.sections["logging"]["rooms"]:
             config.sections["logging"]["rooms"].append(self.room)
-
-    def on_popup_room_log_menu(self, *args):
-        self.roomlogpopmenu.popup()
-        return True
-
-    def on_popup_activity_log_menu(self, *args):
-        self.activitylogpopupmenu.popup()
-        return True
 
     def on_copy_all_activity_log(self, *args):
         copy_all_text(self.RoomLog, self.frame.clipboard)

@@ -44,9 +44,12 @@ class PopupMenu(Gio.Menu):
         self.frame = frame
         self.widget = widget
         self.callback = callback
+        self.gesture_click = None
+        self.gesture_press = None
+        self.last_controller = None
 
-        if widget and callback:
-            self.connect_context_menu_event(widget, callback)
+        if widget:
+            self.connect_context_menu_events(widget)
 
         if not window:
             self.window = frame.MainWindow
@@ -61,7 +64,6 @@ class PopupMenu(Gio.Menu):
         self.items = {}
         self.submenus = []
 
-        self.gesture = None
         self.popup_menu = None
         self.menu_section = None
         self.editing = False
@@ -70,34 +72,6 @@ class PopupMenu(Gio.Menu):
 
         self.user = None
         self.useritem = None
-
-    def set_widget(self, widget):
-
-        if widget and self.callback:
-            self.connect_context_menu_event(widget, self.callback)
-
-        self.widget = widget
-
-    def callback_clicked(self, widget, event):
-
-        if event.triggers_context_menu():
-            if isinstance(widget, Gtk.TreeView):
-                from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
-                set_treeview_selected_row(widget, event)
-
-            return self.callback(widget, self)
-
-        return False
-
-    def connect_context_menu_event(self, widget, callback_press):
-
-        widget.connect("button-press-event", self.callback_clicked)
-        widget.connect("popup-menu", self.callback, self)
-
-        self.gesture = Gtk.GestureLongPress.new(widget)
-        self.gesture.connect("pressed", self.callback, self)
-        self.gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture.set_touch_only(True)
 
     def create_action(self, action_id, stateful=False):
 
@@ -316,15 +290,17 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, event=None, button=3):
+    def popup(self, button=3):
 
         if not self.popup_menu:
             self.popup_menu = Gtk.Menu.new_from_model(self)
             self.popup_menu.attach_to_widget(self.window, None)
 
-        if self.gesture:
-            sequence = self.gesture.get_current_sequence()
-            event = self.gesture.get_last_event(sequence)
+        if self.last_controller:
+            sequence = self.last_controller.get_current_sequence()
+            event = self.last_controller.get_last_event(sequence)
+        else:
+            event = None
 
         try:
             self.popup_menu.popup_at_pointer(event)
@@ -334,6 +310,54 @@ class PopupMenu(Gio.Menu):
             self.popup_menu.popup(None, None, None, None, button, time)
 
     """ Events """
+
+    def _callback(self, controller, x, y):
+
+        if x and y and isinstance(self.widget, Gtk.TreeView):
+            from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+            set_treeview_selected_row(self.widget, x, y)
+
+        self.last_controller = controller
+
+        if self.callback:
+            cancel = self.callback(self, self.widget)
+
+            if cancel:
+                return
+
+        self.popup()
+
+    def _callback_press(self, controller, x, y):
+
+        if x and y and isinstance(self.widget, Gtk.TreeView):
+            x, y = self.widget.convert_widget_to_bin_window_coords(x, y)
+
+        self._callback(controller, x, y)
+
+    def _callback_click(self, widget, event):
+
+        if event.triggers_context_menu():
+            self._callback(None, event.x, event.y)
+            return True
+
+    def _callback_menu(self, widget):
+        self._callback(None, None, None)
+
+    def connect_context_menu_events(self, widget):
+
+        self.gesture_press = Gtk.GestureLongPress.new(widget)
+        self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_press.set_touch_only(True)
+        self.gesture_press.connect("pressed", self._callback_press)
+
+        widget.connect("button-press-event", self._callback_click)
+        widget.connect("popup-menu", self._callback_menu)
+
+    def set_widget(self, widget):
+
+        if widget:
+            self.connect_context_menu_events(widget)
+            self.widget = widget
 
     def on_search_user(self, *args):
         self.frame.SearchMethod.set_active_id("user")

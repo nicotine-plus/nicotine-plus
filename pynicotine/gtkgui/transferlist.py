@@ -724,12 +724,12 @@ class TransferList:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_file_path_tooltip(widget, x, y, tooltip, 10)
 
-    def on_popup_menu(self, *args):
+    def on_popup_menu(self, menu, widget):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
         users = len(self.selected_users) > 0
         files = num_selected_transfers > 0
 
@@ -757,10 +757,7 @@ class TransferList:
         for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
             actions[i].set_enabled(act)
 
-        self.popup_menu.set_num_selected_files(num_selected_transfers)
-
-        self.popup_menu.popup()
-        return True
+        menu.set_num_selected_files(num_selected_transfers)
 
     def on_row_activated(self, treeview, path, column):
 

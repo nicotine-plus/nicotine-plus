@@ -366,33 +366,28 @@ class UserInfo:
 
     def on_tab_popup(self, *args):
         self.user_popup.toggle_user_items()
-        self.user_popup.popup()
-        return True
 
-    def on_popup_interest_menu(self, widget):
+    def on_popup_interest_menu(self, menu, widget):
 
         model, iterator = widget.get_selection().get_selected()
 
         if iterator is None:
-            return False
+            return True
 
         item = model.get_value(iterator, 0)
 
         if item is None:
-            return False
+            return True
 
-        self.interest_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        actions = self.interest_popup_menu.get_actions()
+        actions = menu.get_actions()
         actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
         actions[_("I _Dislike This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
-
-        self.interest_popup_menu.popup()
-        return True
 
     def on_like_recommendation(self, action, state):
         self.frame.interests.on_like_recommendation(action, state, self.interest_popup_menu.get_user())
@@ -449,19 +444,16 @@ class UserInfo:
             title="Save as..."
         )
 
-    def on_image_popup_menu(self, *args):
+    def on_image_popup_menu(self, menu, widget):
 
         act = True
 
         if self.image is None or self.image_pixbuf is None:
             act = False
 
-        actions = self.image_menu.get_actions()
+        actions = menu.get_actions()
         for (action_id, action) in actions.items():
             action.set_enabled(act)
-
-        self.image_menu.popup()
-        return True
 
     def on_scroll_event(self, widget, event):
 

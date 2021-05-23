@@ -267,9 +267,9 @@ class UserBrowse:
         if self.user != config.sections["server"]["login"]:
             self.on_download_directory()
 
-    def on_folder_popup_menu(self, *args):
+    def on_folder_popup_menu(self, menu, widget):
 
-        actions = self.folder_popup_menu.get_actions()
+        actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
@@ -282,8 +282,6 @@ class UserBrowse:
                 actions[i].set_enabled(self.selected_folder)
 
         self.user_popup.toggle_user_items()
-        self.folder_popup_menu.popup()
-        return True
 
     def select_files(self):
 
@@ -306,12 +304,12 @@ class UserBrowse:
         else:
             self.on_download_files()
 
-    def on_file_popup_menu(self, *args):
+    def on_file_popup_menu(self, menu, widget):
 
         self.select_files()
         num_selected_files = len(self.selected_files)
 
-        actions = self.file_popup_menu.get_actions()
+        actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
@@ -323,11 +321,8 @@ class UserBrowse:
             for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
                 actions[i].set_enabled(num_selected_files)
 
-        self.file_popup_menu.set_num_selected_files(num_selected_files)
-
+        menu.set_num_selected_files(num_selected_files)
         self.user_popup.toggle_user_items()
-        self.file_popup_menu.popup()
-        return True
 
     def make_new_model(self, list):
 
@@ -1054,8 +1049,6 @@ class UserBrowse:
 
     def on_tab_popup(self, *args):
         self.user_popup.toggle_user_items()
-        self.user_popup.popup()
-        return True
 
     def on_close(self, *args):
         del self.userbrowses.users[self.user]
