@@ -29,7 +29,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.geoip.countrycodes import code2name
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -65,7 +64,7 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(treeview_name, treeview, popup_callback, *args):
+def initialise_columns(treeview_name, treeview, *args):
 
     i = 0
     cols = OrderedDict()
@@ -166,11 +165,6 @@ def initialise_columns(treeview_name, treeview, popup_callback, *args):
     append_columns(treeview, cols, column_config)
     hide_columns(treeview, cols, column_config)
 
-    if popup_callback:
-        treeview.connect("button-press-event", list_clicked, popup_callback)
-        treeview.connect("popup-menu", popup_callback)
-        treeview.connect("touch-event", list_clicked, popup_callback)
-
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
@@ -240,8 +234,7 @@ def hide_columns(treeview, cols, config):
     for (column_id, column) in cols.items():
         parent = column.get_widget().get_ancestor(Gtk.Button)
         if parent:
-            parent.connect('button_press_event', press_header)
-            parent.connect('touch_event', press_header)
+            PopupMenu(None, parent, press_header, window=treeview.get_toplevel())
 
         # Read Show / Hide column settings from last session
         if config:
@@ -294,24 +287,13 @@ def save_columns(treeview_name, columns, subpage=None):
         column_config[treeview_name] = saved_columns
 
 
-def list_clicked(widget, event, popup_callback):
-
-    if triggers_context_menu(event):
-        set_treeview_selected_row(widget, event)
-        return popup_callback(widget)
-
-    return False
-
-
-def press_header(widget, event):
-
-    if not triggers_context_menu(event):
-        return False
+def press_header(widget, *args):
 
     treeview = widget.get_parent()
     columns = treeview.get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
-    menu = PopupMenu(window=widget.get_toplevel())
+    menu = args[-1]
+    menu.clear()
     actions = menu.get_actions()
     pos = 1
 

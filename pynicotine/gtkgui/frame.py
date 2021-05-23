@@ -54,7 +54,6 @@ from pynicotine.gtkgui.userinfo import UserInfo
 from pynicotine.gtkgui.userinfo import UserTabs
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
@@ -63,7 +62,6 @@ from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
 from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
@@ -264,8 +262,7 @@ class NicotineFrame:
         """ Log """
 
         # Popup menu on the log windows
-        connect_context_menu_event(self.LogWindow, self.on_log_window_clicked, self.on_popup_log_menu)
-        self.logpopupmenu = PopupMenu(self)
+        self.logpopupmenu = PopupMenu(self, self.LogWindow, self.on_popup_log_menu)
         self.logpopupmenu.setup(
             ("#" + _("Find..."), self.on_find_log_window),
             ("", None),
@@ -1360,7 +1357,6 @@ class NicotineFrame:
 
     def initialize_main_tabs(self):
 
-        self.tab_popups = {}
         self.hidden_tabs = {}
         hide_tab_template = _("Hide %(tab)s")
 
@@ -1399,12 +1395,7 @@ class NicotineFrame:
             tab_label.show()
 
             # Set the menu to hide the tab
-            popup_id = tab_label_id + "Menu"
-            tab_label.connect('button_press_event', self.on_tab_click, popup_id)
-            tab_label.connect('popup_menu', self.on_tab_popup, popup_id)
-            tab_label.connect('touch_event', self.on_tab_click, popup_id)
-
-            self.tab_popups[popup_id] = popup = PopupMenu(self)
+            popup = PopupMenu(self, tab_label, self.on_tab_popup)
             popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
 
     def request_tab_icon(self, tab_label, status=1):
@@ -1614,16 +1605,9 @@ class NicotineFrame:
 
         del self.hidden_tabs[tab_box]
 
-    def on_tab_popup(self, widget, popup_id):
-        self.tab_popups[popup_id].popup()
-
-    def on_tab_click(self, widget, event, popup_id):
-
-        if not triggers_context_menu(event):
-            return False
-
-        self.on_tab_popup(widget, popup_id)
-        return True
+    def on_tab_popup(self, widget, *args):
+        menu = args[-1]
+        menu.popup()
 
     def set_tab_expand(self, tab_box):
 
@@ -2075,13 +2059,6 @@ class NicotineFrame:
             should_scroll = True
 
         append_line(self.LogWindow, msg, scroll=should_scroll, find_urls=False)
-
-        return False
-
-    def on_log_window_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_popup_log_menu()
 
         return False
 

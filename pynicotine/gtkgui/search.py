@@ -221,6 +221,8 @@ class Searches(IconNotebook):
 
         label = fulltext[:length]
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
+        tab_label, menu_label = self.get_labels(tab.Main)
+        tab.set_label(tab_label)
 
     def show_search_result(self, msg, username, country):
 
@@ -277,34 +279,6 @@ class Searches(IconNotebook):
             if search["tab"].Main == current_page:
                 search["tab"].save_columns()
                 break
-
-    def get_search_id(self, child):
-
-        search_id = None
-        n = self.page_num(child)
-        page = self.get_nth_page(n)
-
-        for search, data in self.searches.items():
-
-            if data["tab"] is None:
-                continue
-            if data["tab"].Main is page:
-                search_id = search
-                break
-
-        return search_id
-
-    def on_tab_popup(self, widget, child):
-
-        search_id = self.get_search_id(child)
-
-        if search_id is None:
-            log.add("Search ID was none when clicking tab")
-            return False
-
-        menu = self.searches[search_id]["tab"].tab_menu
-        menu.popup()
-        return True
 
 
 class Search:
@@ -377,7 +351,7 @@ class Search:
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 18
         self.cols = cols = initialise_columns(
-            "file_search", self.ResultsList, self.on_popup_menu,
+            "file_search", self.ResultsList,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "pixbuf", None],
@@ -418,7 +392,7 @@ class Search:
 
         self.popup_menu_users = PopupMenu(self.frame)
 
-        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu = PopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
@@ -436,7 +410,7 @@ class Search:
             (">" + _("User(s)"), self.popup_menu_users)
         )
 
-        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu = PopupMenu(self.frame, None, self.on_tab_popup)
         self.tab_menu.setup(
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
@@ -449,6 +423,9 @@ class Search:
 
         self.ResultGrouping.set_active(config.sections["searches"]["group_searches"])
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
+
+    def set_label(self, label):
+        self.tab_menu.set_widget(label)
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
@@ -1387,6 +1364,10 @@ class Search:
             self.FilterLabel.set_text(_("Result Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
+
+    def on_tab_popup(self, *args):
+        self.tab_menu.popup()
+        return True
 
     def on_clear(self, *args):
 

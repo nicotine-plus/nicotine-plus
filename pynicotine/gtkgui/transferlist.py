@@ -111,7 +111,7 @@ class TransferList:
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            type, widget, self.on_popup_menu,
+            type, widget,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -150,7 +150,7 @@ class TransferList:
         self.popup_menu_clear = PopupMenu(frame)
         self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
-        self.popup_menu = PopupMenu(frame)
+        self.popup_menu = PopupMenu(frame, widget, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),

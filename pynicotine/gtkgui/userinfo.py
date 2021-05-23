@@ -30,9 +30,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -80,6 +78,8 @@ class UserTabs(IconNotebook):
 
         w = self.users[user] = self.subwindow(self, user)
         self.append_page(w.Main, user, w.on_close, status=status)
+        tab_label, menu_label = self.get_labels(w.Main)
+        w.set_label(tab_label)
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
 
@@ -155,18 +155,6 @@ class UserTabs(IconNotebook):
         for i in self.users.values():
             i.update_visuals()
 
-    def on_tab_popup(self, widget, page):
-
-        username = self.get_page_owner(page, self.users)
-
-        if username not in self.users:
-            return False
-
-        menu = self.users[username].user_popup
-        menu.toggle_user_items()
-        menu.popup()
-        return True
-
     def login(self):
 
         for user in self.users:
@@ -192,7 +180,6 @@ class UserInfo:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
-        connect_context_menu_event(self.UserImage, self.on_image_click, self.on_image_popup_menu)
 
         # Request user status, speed and number of shared files
         self.frame.np.watch_user(user, force_update=True)
@@ -213,7 +200,7 @@ class UserInfo:
 
         self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Hates, self.on_popup_interest_menu,
+            None, self.Hates,
             ["hates", _("Hates"), 0, "text", None]
         )
         cols["hates"].set_sort_column_id(0)
@@ -225,7 +212,7 @@ class UserInfo:
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Likes, self.on_popup_interest_menu,
+            None, self.Likes,
             ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
@@ -236,7 +223,7 @@ class UserInfo:
 
         self.update_visuals()
 
-        self.user_popup = popup = PopupMenu(self.frame)
+        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
             ("", None),
@@ -244,7 +231,7 @@ class UserInfo:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.interest_popup_menu = popup = PopupMenu(self.frame)
+        self.interest_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
@@ -252,7 +239,7 @@ class UserInfo:
             ("#" + _("_Search for Item"), self.on_interest_recommend_search)
         )
 
-        self.image_menu = popup = PopupMenu(self.frame)
+        self.image_menu = popup = PopupMenu(self.frame, self.UserImage, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -260,6 +247,9 @@ class UserInfo:
             ("", None),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
+
+    def set_label(self, label):
+        self.user_popup.set_widget(label)
 
     def update_visuals(self):
 
@@ -374,6 +364,11 @@ class UserInfo:
 
     """ Events """
 
+    def on_tab_popup(self, *args):
+        self.user_popup.toggle_user_items()
+        self.user_popup.popup()
+        return True
+
     def on_popup_interest_menu(self, widget):
 
         model, iterator = widget.get_selection().get_selected()
@@ -453,13 +448,6 @@ class UserInfo:
             initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
             title="Save as..."
         )
-
-    def on_image_click(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_image_popup_menu()
-
-        return False
 
     def on_image_popup_menu(self, *args):
 

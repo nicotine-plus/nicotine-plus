@@ -50,7 +50,7 @@ class Interests:
 
         self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.LikesList, self.on_popup_til_menu,
+            None, self.LikesList,
             ["i_like", _("I Like"), -1, "text", None]
         )
 
@@ -63,7 +63,7 @@ class Interests:
 
         self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.DislikesList, self.on_popup_tidl_menu,
+            None, self.DislikesList,
             ["i_dislike", _("I Dislike"), -1, "text", None]
         )
 
@@ -78,7 +78,7 @@ class Interests:
 
         self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationsList, self.on_popup_r_menu,
+            None, self.RecommendationsList,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -96,7 +96,7 @@ class Interests:
 
         self.unrecommendations_column_numbers = list(range(self.unrecommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.UnrecommendationsList, self.on_popup_ru_menu,
+            None, self.UnrecommendationsList,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -119,7 +119,7 @@ class Interests:
 
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationUsersList, self.on_popup_ru_menu,
+            None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],
@@ -146,7 +146,7 @@ class Interests:
 
         """ Popup """
 
-        self.til_popup_menu = popup = PopupMenu(self.frame)
+        self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
         popup.setup(
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),
@@ -154,14 +154,14 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_til_recommend_search)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame)
+        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_tidl_menu)
         popup.setup(
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
             ("", None),
             ("#" + _("_Search for Item"), self.on_tidl_recommend_search)
         )
 
-        self.r_popup_menu = popup = PopupMenu(self.frame)
+        self.r_popup_menu = popup = PopupMenu(self.frame, self.RecommendationsList, self.on_popup_r_menu)
         popup.setup(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
@@ -170,7 +170,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_r_recommend_search)
         )
 
-        self.ru_popup_menu = popup = PopupMenu(self.frame)
+        self.ru_popup_menu = popup = PopupMenu(self.frame, self.RecommendationUsersList, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         self.update_visuals()

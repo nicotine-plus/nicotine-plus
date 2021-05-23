@@ -346,45 +346,6 @@ def censor_chat(message):
 """ Events """
 
 
-event_touch_started = False
-event_time_prev = 0
-
-
-def triggers_context_menu(event):
-    """ Check if a context menu should be allowed to appear """
-
-    global event_touch_started
-    global event_time_prev
-
-    if event.type in (Gdk.EventType.KEY_PRESS, Gdk.EventType.KEY_RELEASE):
-        return True
-
-    elif event.type in (Gdk.EventType.BUTTON_PRESS, Gdk.EventType._2BUTTON_PRESS,
-                        Gdk.EventType._3BUTTON_PRESS, Gdk.EventType.BUTTON_RELEASE):
-        return event.triggers_context_menu()
-
-    elif event.type == Gdk.EventType.TOUCH_BEGIN:
-        event_touch_started = True
-        event_time_prev = event.time
-        return False
-
-    elif not event_touch_started and event.type == Gdk.EventType.TOUCH_END or \
-            event_touch_started and (event.time - event_time_prev) < 300:
-        # Require a 300 ms press before context menu can be revealed
-        event_time_prev = event.time
-        return False
-
-    event_touch_started = False
-    return True
-
-
-def connect_context_menu_event(widget, callback_press, callback_popup):
-
-    widget.connect("button-press-event", callback_press)
-    widget.connect("popup-menu", callback_popup)
-    widget.connect("touch-event", callback_press)
-
-
 def connect_key_press_event(widget, callback):
     """ Use event controller or legacy 'key-press-event', depending on GTK version """
 

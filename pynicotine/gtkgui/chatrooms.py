@@ -43,13 +43,11 @@ from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -117,17 +115,6 @@ class ChatRooms(IconNotebook):
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
         self.update_visuals()
-
-    def on_tab_popup(self, widget, page):
-
-        room = self.get_page_owner(page, self.joinedrooms)
-
-        if room not in self.joinedrooms:
-            return False
-
-        menu = self.joinedrooms[room].tab_menu
-        menu.popup()
-        return True
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -201,6 +188,8 @@ class ChatRooms(IconNotebook):
             angle = 0
 
         self.append_page(tab.Main, msg.room, tab.on_leave, angle)
+        tab_label, menu_label = self.get_labels(tab.Main)
+        tab.set_label(tab_label)
 
         if self.switch_tab:
             page_num = self.page_num(tab.Main)
@@ -448,8 +437,6 @@ class ChatRoom:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
-        connect_context_menu_event(self.RoomLog, self.on_activity_log_clicked, self.on_popup_activity_log_menu)
-        connect_context_menu_event(self.ChatScroll, self.on_room_log_clicked, self.on_popup_room_log_menu)
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)
@@ -492,7 +479,7 @@ class ChatRoom:
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            ("chat_room", room), self.UserList, self.on_popup_menu,
+            ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", self.user_column_draw],
@@ -519,7 +506,7 @@ class ChatRoom:
 
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(self.frame)
+        self.popup_menu = popup = PopupMenu(self.frame, self.UserList, self.on_popup_menu)
         popup.setup_user_menu()
         popup.setup(
             ("", None),
@@ -527,7 +514,7 @@ class ChatRoom:
             (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
-        self.activitylogpopupmenu = PopupMenu(self.frame)
+        self.activitylogpopupmenu = PopupMenu(self.frame, self.RoomLog, self.on_popup_activity_log_menu)
         self.activitylogpopupmenu.setup(
             ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
@@ -539,7 +526,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.roomlogpopmenu = PopupMenu(self.frame)
+        self.roomlogpopmenu = PopupMenu(self.frame, self.ChatScroll, self.on_popup_room_log_menu)
         self.roomlogpopmenu.setup(
             ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
@@ -553,7 +540,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.tab_menu = PopupMenu(self.frame)
+        self.tab_menu = PopupMenu(self.frame, None, self.on_tab_popup)
         self.tab_menu.setup(
             ("#" + _("_Leave Room"), self.on_leave)
         )
@@ -565,6 +552,9 @@ class ChatRoom:
         self.create_tags()
         self.update_visuals()
         self.read_room_logs()
+
+    def set_label(self, label):
+        self.tab_menu.set_widget(label)
 
     def add_user_row(self, userdata):
 
@@ -693,6 +683,10 @@ class ChatRoom:
             return None
 
         return model.get_value(iterator, 2)
+
+    def on_tab_popup(self, *args):
+        self.tab_menu.popup()
+        return True
 
     def on_row_activated(self, treeview, path, column):
 
@@ -1165,23 +1159,9 @@ class ChatRoom:
         if self.room not in config.sections["logging"]["rooms"]:
             config.sections["logging"]["rooms"].append(self.room)
 
-    def on_room_log_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_popup_room_log_menu()
-
-        return False
-
     def on_popup_room_log_menu(self, *args):
         self.roomlogpopmenu.popup()
         return True
-
-    def on_activity_log_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_popup_activity_log_menu()
-
-        return False
 
     def on_popup_activity_log_menu(self, *args):
         self.activitylogpopupmenu.popup()

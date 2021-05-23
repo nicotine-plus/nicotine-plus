@@ -201,7 +201,7 @@ class DownloadsFrame(BuildFrame):
         self.downloadfilters = []
 
         cols = initialise_columns(
-            None, self.FilterView, None,
+            None, self.FilterView,
             ["filter", _("Filter"), -1, "text", None],
             ["escaped", _("Escaped"), 40, "toggle", None]
         )
@@ -506,7 +506,7 @@ class SharesFrame(BuildFrame):
 
         self.Shares.set_model(self.shareslist)
         cols = initialise_columns(
-            None, self.Shares, None,
+            None, self.Shares,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), -1, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
@@ -949,7 +949,7 @@ class IgnoreListFrame(BuildFrame):
         self.ignored_users = []
         self.ignorelist = Gtk.ListStore(str)
         initialise_columns(
-            None, self.IgnoredUsers, None,
+            None, self.IgnoredUsers,
             ["users", _("Users"), -1, "text", None]
         )
 
@@ -958,7 +958,7 @@ class IgnoreListFrame(BuildFrame):
         self.ignored_ips = {}
         self.ignored_ips_list = Gtk.ListStore(str, str)
         cols = initialise_columns(
-            None, self.IgnoredIPs, None,
+            None, self.IgnoredIPs,
             ["addresses", _("Addresses"), -1, "text", None],
             ["users", _("Users"), -1, "text", None]
         )
@@ -1102,7 +1102,7 @@ class BanListFrame(BuildFrame):
         self.banlist_model = Gtk.ListStore(str)
 
         initialise_columns(
-            None, self.BannedList, None,
+            None, self.BannedList,
             ["users", _("Users"), -1, "text", None]
         )
 
@@ -1112,7 +1112,7 @@ class BanListFrame(BuildFrame):
         self.blocked_list_model = Gtk.ListStore(str, str)
 
         cols = initialise_columns(
-            None, self.BlockedList, None,
+            None, self.BlockedList,
             ["addresses", _("Addresses"), -1, "text", None],
             ["users", _("Users"), -1, "text", None]
         )
@@ -2002,7 +2002,7 @@ class UrlCatchingFrame(BuildFrame):
         self.protocols = {}
 
         cols = initialise_columns(
-            None, self.ProtocolHandlers, None,
+            None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
             ["handler", _("Handler"), -1, "combo", None]
         )
@@ -2145,7 +2145,7 @@ class CensorListFrame(BuildFrame):
         self.censor_list_model = Gtk.ListStore(str)
 
         cols = initialise_columns(
-            None, self.CensorList, None,
+            None, self.CensorList,
             ["pattern", _("Pattern"), -1, "edit", None]
         )
 
@@ -2245,7 +2245,7 @@ class AutoReplaceListFrame(BuildFrame):
         self.replacelist = Gtk.ListStore(str, str)
 
         cols = initialise_columns(
-            None, self.ReplacementList, None,
+            None, self.ReplacementList,
             ["pattern", _("Pattern"), 150, "edit", None],
             ["replacement", _("Replacement"), -1, "edit", None]
         )
@@ -2699,7 +2699,7 @@ class PluginsFrame(BuildFrame):
             container.add(scrolled_window)
 
             cols = initialise_columns(
-                None, self.tw[name], None,
+                None, self.tw[name],
                 [description, description, 150, "edit", None]
             )
 
@@ -2885,7 +2885,7 @@ class PluginsFrame(BuildFrame):
         self.selected_plugin = None
 
         cols = initialise_columns(
-            None, self.PluginTreeView, None,
+            None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
             ["plugins", _("Plugins"), 380, "text", None]
         )
@@ -3107,7 +3107,7 @@ class Settings:
         self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
 
         initialise_columns(
-            None, self.SettingsTreeview, None,
+            None, self.SettingsTreeview,
             ["categories", _("Categories"), -1, "text", None]
         )
 

@@ -75,7 +75,7 @@ class UserList:
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            "buddy_list", self.UserListTree, self.on_popup_menu,
+            "buddy_list", self.UserListTree,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 250, "text", None],
@@ -136,7 +136,7 @@ class UserList:
 
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(frame)
+        self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.setup(
             ("", None),
@@ -351,7 +351,7 @@ class UserList:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, widget, *args):
 
         username, trusted, notify, privileged, status = self.get_selected_username_details(widget)
         if username is None:

@@ -27,7 +27,6 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.config import config
@@ -356,9 +355,6 @@ class IconNotebook:
 
         # menu for all tabs
         label_tab_menu = ImageLabel(label)
-        label_tab.connect('button_press_event', self.on_tab_click, page)
-        label_tab.connect('popup_menu', self.on_tab_popup, page)
-        label_tab.connect('touch_event', self.on_tab_click, page)
         label_tab.show()
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
@@ -406,19 +402,6 @@ class IconNotebook:
     def on_tab_popup(self, widget, page):
         # Dummy implementation
         pass
-
-    def on_tab_click(self, widget, event, page):
-
-        if triggers_context_menu(event):
-            return self.on_tab_popup(widget, page)
-
-        elif event.button == 2:
-            # Middle click
-            tab_label, menu_label = self.get_labels(page)
-            tab_label.onclose(widget)
-            return True
-
-        return False
 
     def set_status_image(self, page, status):
 

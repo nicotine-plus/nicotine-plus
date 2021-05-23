@@ -94,13 +94,13 @@ class UserBrowse:
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.FolderTreeView, self.on_folder_popup_menu,
+            None, self.FolderTreeView,
             ["folders", _("Folders"), -1, "text", None]  # 0
         )
 
         cols["folders"].set_sort_column_id(0)
 
-        self.user_popup = popup = PopupMenu(self.frame)
+        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userbrowse")
         popup.setup(
             ("", None),
@@ -141,7 +141,7 @@ class UserBrowse:
             ("#" + _("Up_load File(s)"), self.on_upload_files)
         )
 
-        self.folder_popup_menu = PopupMenu(self.frame)
+        self.folder_popup_menu = PopupMenu(self.frame, self.FolderTreeView, self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
@@ -189,7 +189,7 @@ class UserBrowse:
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
-            "user_browse", self.FileTreeView, self.on_file_popup_menu,
+            "user_browse", self.FileTreeView,
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
@@ -201,7 +201,7 @@ class UserBrowse:
         cols["length"].set_sort_column_id(6)
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.file_popup_menu = PopupMenu(self.frame)
+        self.file_popup_menu = PopupMenu(self.frame, self.FileTreeView, self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.setup(
@@ -238,6 +238,9 @@ class UserBrowse:
         for name, object in self.__dict__.items():
             if isinstance(object, PopupMenu):
                 object.set_user(self.user)
+
+    def set_label(self, label):
+        self.user_popup.set_widget(label)
 
     def update_visuals(self):
 
@@ -1048,6 +1051,11 @@ class UserBrowse:
         command = config.sections["ui"]["filemanager"]
 
         open_file_path(path, command)
+
+    def on_tab_popup(self, *args):
+        self.user_popup.toggle_user_items()
+        self.user_popup.popup()
+        return True
 
     def on_close(self, *args):
         del self.userbrowses.users[self.user]

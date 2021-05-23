@@ -37,11 +37,16 @@ from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 
 class PopupMenu(Gio.Menu):
 
-    def __init__(self, frame=None, window=None):
+    def __init__(self, frame=None, widget=None, callback=None, window=None):
 
         Gio.Menu.__init__(self)
 
         self.frame = frame
+        self.widget = widget
+        self.callback = callback
+
+        if widget and callback:
+            self.connect_context_menu_event(widget, callback)
 
         if not window:
             self.window = frame.MainWindow
@@ -56,6 +61,7 @@ class PopupMenu(Gio.Menu):
         self.items = {}
         self.submenus = []
 
+        self.gesture = None
         self.popup_menu = None
         self.menu_section = None
         self.editing = False
@@ -64,6 +70,34 @@ class PopupMenu(Gio.Menu):
 
         self.user = None
         self.useritem = None
+
+    def set_widget(self, widget):
+
+        if widget and self.callback:
+            self.connect_context_menu_event(widget, self.callback)
+
+        self.widget = widget
+
+    def callback_clicked(self, widget, event):
+
+        if event.triggers_context_menu():
+            if isinstance(widget, Gtk.TreeView):
+                from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+                set_treeview_selected_row(widget, event)
+
+            return self.callback(widget, self)
+
+        return False
+
+    def connect_context_menu_event(self, widget, callback_press):
+
+        widget.connect("button-press-event", self.callback_clicked)
+        widget.connect("popup-menu", self.callback, self)
+
+        self.gesture = Gtk.GestureLongPress.new(widget)
+        self.gesture.connect("pressed", self.callback, self)
+        self.gesture.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture.set_touch_only(True)
 
     def create_action(self, action_id, stateful=False):
 
@@ -282,14 +316,18 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, button=3):
+    def popup(self, event=None, button=3):
 
         if not self.popup_menu:
             self.popup_menu = Gtk.Menu.new_from_model(self)
             self.popup_menu.attach_to_widget(self.window, None)
 
+        if self.gesture:
+            sequence = self.gesture.get_current_sequence()
+            event = self.gesture.get_last_event(sequence)
+
         try:
-            self.popup_menu.popup_at_pointer()
+            self.popup_menu.popup_at_pointer(event)
 
         except AttributeError:
             time = Gtk.get_current_event_time()

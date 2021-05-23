@@ -52,7 +52,7 @@ class RoomList:
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         self.cols = initialise_columns(
-            None, self.RoomsList, self.on_popup_menu,
+            None, self.RoomsList,
             ["room", _("Room"), 260, "text", self.room_status],
             ["users", _("Users"), 100, "number", self.room_status]
         )
@@ -60,7 +60,7 @@ class RoomList:
         self.cols["users"].set_sort_column_id(1)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu = PopupMenu(self.frame, self.RoomsList, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),

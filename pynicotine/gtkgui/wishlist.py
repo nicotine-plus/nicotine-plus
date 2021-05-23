@@ -53,7 +53,7 @@ class WishList:
 
         self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
-            None, self.WishlistView, None,
+            None, self.WishlistView,
             ["wishes", _("Wishes"), -1, "text", None]
         )
 
