@@ -83,6 +83,7 @@ def check_arguments():
 
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--gtk4-unstable", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
     trayicon = None
@@ -99,7 +100,7 @@ def check_arguments():
     if args.disable_trayicon:
         trayicon = False
 
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan
+    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, args.gtk4_unstable
 
 
 def check_core_dependencies():
@@ -128,7 +129,7 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
-def check_gui_dependencies():
+def check_gui_dependencies(use_gtk4=False):
 
     # Require GTK+ >= 3.18
     try:
@@ -139,7 +140,7 @@ def check_gui_dependencies():
 
     else:
         try:
-            gi.require_version('Gtk', '3.0')
+            gi.require_version('Gtk', '4.0' if use_gtk4 else '3.0')
 
         except ValueError as e:
             return _("""You are using an unsupported version of GTK.
@@ -227,7 +228,7 @@ binary package and what you try to run Nicotine+ with).""")
     rename_process(b'nicotine')
     apply_translation()
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
+    trayicon, headless, hidden, bindip, port, ci_mode, rescan, gtk4_unstable = check_arguments()
     error = check_core_dependencies()
 
     if error:
@@ -245,7 +246,7 @@ binary package and what you try to run Nicotine+ with).""")
     if headless:
         return run_headless(network_processor)
 
-    error = check_gui_dependencies()
+    error = check_gui_dependencies(gtk4_unstable)
 
     if error:
         print(error)

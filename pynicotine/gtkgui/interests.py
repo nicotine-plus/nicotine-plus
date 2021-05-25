@@ -42,7 +42,18 @@ class Interests:
         self.frame = frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
-        self.frame.interestsvbox.add(self.Main)
+
+        if Gtk.get_major_version() == 4:
+            self.InterestsPaned.set_property("resize-start-child", False)
+            self.InterestsPanedSecond.set_property("resize-start-child", True)
+            self.InterestsPanedSecond.set_property("resize-end-child", False)
+            self.frame.interestsvbox.append(self.Main)
+
+        else:
+            self.InterestsPaned.child_set_property(self.LikesDislikes, "resize", False)
+            self.InterestsPanedSecond.child_set_property(self.RecommendationsVbox, "resize", True)
+            self.InterestsPanedSecond.child_set_property(self.SimilarUsers, "resize", False)
+            self.frame.interestsvbox.add(self.Main)
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
@@ -135,6 +146,13 @@ class Interests:
 
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
+
+        if Gtk.get_major_version() == 4:
+            self.likes_model.insert_with_valuesv = self.likes_model.insert_with_values
+            self.dislikes_model.insert_with_valuesv = self.dislikes_model.insert_with_values
+            self.recommendations_model.insert_with_valuesv = self.recommendations_model.insert_with_values
+            self.unrecommendations_model.insert_with_valuesv = self.unrecommendations_model.insert_with_values
+            self.recommendation_users_model.insert_with_valuesv = self.recommendation_users_model.insert_with_values
 
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):

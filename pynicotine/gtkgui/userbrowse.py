@@ -36,9 +36,10 @@ from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.infobar import InfoBar
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -61,6 +62,13 @@ class UserBrowse:
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.key_controller_folder = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
         self.key_controller_file = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
+
+        if Gtk.get_major_version() == 4:
+            self.MainPaned.set_property("resize-start-child", True)
+            self.MainPaned.set_property("resize-end-child", True)
+        else:
+            self.MainPaned.child_set_property(self.FolderPane, "resize", True)
+            self.MainPaned.child_set_property(self.FilePane, "resize", True)
 
         # Monitor user online status
         self.frame.np.watch_user(user)
@@ -184,6 +192,9 @@ class UserBrowse:
             GObject.TYPE_UINT64,  # (5) bitrate
             GObject.TYPE_UINT64   # (6) length
         )
+
+        if Gtk.get_major_version() == 4:
+            self.file_store.insert_with_valuesv = self.file_store.insert_with_values
 
         self.FileTreeView.set_model(self.file_store)
 
@@ -921,10 +932,9 @@ class UserBrowse:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_files()
 
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+        key, codes, mods = parse_accelerator("<Primary>c")
 
-        if state & mods and \
-                keycode in codes:
+        if state & mods and keycode in codes:
             self.copy_selected_path(is_file=is_file)
         else:
             # No key match, continue event

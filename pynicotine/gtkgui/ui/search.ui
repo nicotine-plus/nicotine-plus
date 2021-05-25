@@ -122,12 +122,6 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkImage" id="GroupingIcon">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-list-symbolic</property>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkComboBoxText" id="ResultGrouping">
                     <property name="visible">1</property>
                     <property name="has-entry">1</property>
@@ -144,9 +138,7 @@
                       </object>
                     </child>
                     <child internal-child="button">
-                      <object class="GtkButton">
-                        <property name="image">GroupingIcon</property>
-                      </object>
+                      <object class="GtkButton" id="ToggleButton"/>
                     </child>
                   </object>
                 </child>
@@ -160,7 +152,6 @@
         <child>
           <object class="GtkRevealer" id="FiltersContainer">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
             <property name="transition-type">slide-down</property>
             <child>
               <object class="GtkFlowBox">
@@ -174,7 +165,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkComboBoxText" id="FilterIn">
                         <property name="visible">1</property>
@@ -203,7 +194,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkComboBoxText" id="FilterOut">
                         <property name="visible">1</property>
@@ -232,7 +223,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkComboBoxText" id="FilterType">
                         <property name="visible">1</property>
@@ -261,7 +252,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkComboBoxText" id="FilterSize">
                         <property name="visible">1</property>
@@ -290,7 +281,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkComboBoxText" id="FilterBitrate">
                         <property name="visible">1</property>
@@ -319,7 +310,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>

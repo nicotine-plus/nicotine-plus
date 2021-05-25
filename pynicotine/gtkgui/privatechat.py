@@ -43,7 +43,7 @@ from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
@@ -82,8 +82,6 @@ class PrivateChats(IconNotebook):
             notebookraw=self.frame.PrivatechatNotebookRaw
         )
 
-        self.popup_enable()
-
         self.connected = True
         self.users = {}
         self.completion_list = []
@@ -102,7 +100,10 @@ class PrivateChats(IconNotebook):
 
         for user, tab in list(self.users.items()):
             if tab.Main == page:
-                GLib.idle_add(tab.ChatLine.grab_focus)
+                if Gtk.get_major_version() == 3:
+                    # Currently broken in GTK 4
+                    GLib.idle_add(tab.ChatLine.grab_focus)
+
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 if user in self.frame.hilites["private"]:
                     self.frame.notifications.clear("private", tab.user)
@@ -313,8 +314,7 @@ class PrivateChat:
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
-        tab_label, menu_label = self.chats.get_labels(self.Main)
-        self.popup_menu_user = popup = PopupMenu(self.frame, tab_label, self.on_popup_menu)
+        self.popup_menu_user = popup = PopupMenu(self.frame, None, self.on_popup_menu)
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
@@ -433,7 +433,11 @@ class PrivateChat:
 
         if not hasattr(self, "AboutPrivateChatCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
-            self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
+
+            if Gtk.get_major_version() == 4:
+                self.AboutPrivateChatCommandsPopover.set_parent(self.ShowChatHelp)
+            else:
+                self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
 
         try:
             self.AboutPrivateChatCommandsPopover.popup()

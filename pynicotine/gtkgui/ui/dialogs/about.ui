@@ -3,7 +3,6 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAboutDialog" id="AboutDialog">
     <property name="modal">1</property>
-    <property name="window-position">center-on-parent</property>
     <property name="comments" translatable="yes">Graphical client for the Soulseek file sharing network</property>
     <property name="website">https://nicotine-plus.org</property>
     <property name="copyright">© 2001-2003 PySoulSeek Contributors

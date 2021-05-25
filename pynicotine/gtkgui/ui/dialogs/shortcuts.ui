@@ -3,8 +3,6 @@
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkShortcutsWindow" id="KeyboardShortcutsDialog">
     <property name="modal">1</property>
-    <property name="window-position">center-on-parent</property>
-    <signal name="delete-event" handler="on_hide" swapped="no"/>
     <child>
       <object class="GtkShortcutsSection">
         <property name="visible">1</property>

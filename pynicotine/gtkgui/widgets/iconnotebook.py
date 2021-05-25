@@ -27,7 +27,8 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.config import config
 
@@ -49,7 +50,10 @@ class ImageLabel(Gtk.Box):
         self.onclose = onclose
 
         self.label = Gtk.Label()
-        self.label.set_angle(angle)
+
+        if Gtk.get_major_version() == 3:
+            self.label.set_angle(angle)
+
         self.label.set_halign(Gtk.Align.START)
         self.label.set_hexpand(True)
         self.label.show()
@@ -76,23 +80,34 @@ class ImageLabel(Gtk.Box):
     def _pack_children(self):
 
         if hasattr(self, "box"):
-            for widget in self.box.get_children():
-                self.box.remove(widget)
+            if Gtk.get_major_version() == 4:
+                while self.box.get_first_child():
+                    self.box.remove(self.box.get_first_child())
+            else:
+                for widget in self.box.get_children():
+                    self.box.remove(widget)
 
             self.eventbox.remove(self.box)
 
-        self.eventbox = Gtk.EventBox()
-        self.eventbox.show()
-        self.add(self.eventbox)
-
         self.box = Gtk.Box()
         self.box.set_spacing(2)
-        self.eventbox.add(self.box)
 
-        if self.angle in (90, -90):
-            self.set_orientation(Gtk.Orientation.VERTICAL)
+        if Gtk.get_major_version() == 4:
+            self.eventbox = Gtk.Box()
+            self.append(self.eventbox)
+            self.eventbox.append(self.box)
         else:
-            self.set_orientation(Gtk.Orientation.HORIZONTAL)
+            self.eventbox = Gtk.EventBox()
+            self.add(self.eventbox)
+            self.eventbox.add(self.box)
+
+        self.eventbox.show()
+
+        if Gtk.get_major_version() == 3:
+            if self.angle in (90, -90):
+                self.set_orientation(Gtk.Orientation.VERTICAL)
+            else:
+                self.set_orientation(Gtk.Orientation.HORIZONTAL)
 
         if self.centered:
             self.set_halign(Gtk.Align.CENTER)
@@ -101,6 +116,9 @@ class ImageLabel(Gtk.Box):
 
         self.status_image.set_margin_end(5)
         self.hilite_image.set_margin_start(5)
+
+        if Gtk.get_major_version() == 4:
+            self.box.add = self.box.append
 
         self.box.add(self.status_image)
         self.box.add(self.label)
@@ -112,23 +130,24 @@ class ImageLabel(Gtk.Box):
 
     def _order_children(self):
 
-        if self.angle == 90:
-            self.box.reorder_child(self.hilite_image, 0)
-            self.box.reorder_child(self.label, 1)
-            self.box.reorder_child(self.status_image, 2)
+        if Gtk.get_major_version() == 3:
+            if self.angle == 90:
+                self.box.reorder_child(self.hilite_image, 0)
+                self.box.reorder_child(self.label, 1)
+                self.box.reorder_child(self.status_image, 2)
 
-            if hasattr(self, "button"):
-                self.reorder_child(self.button, 0)
+                if hasattr(self, "button"):
+                    self.reorder_child(self.button, 0)
 
-        else:
-            self.box.reorder_child(self.status_image, 0)
-            self.box.reorder_child(self.label, 1)
-            self.box.reorder_child(self.hilite_image, 2)
+            else:
+                self.box.reorder_child(self.status_image, 0)
+                self.box.reorder_child(self.label, 1)
+                self.box.reorder_child(self.hilite_image, 2)
 
-            if hasattr(self, "button"):
-                # Left align close button on macOS
-                position = 0 if sys.platform == "darwin" else 1
-                self.reorder_child(self.button, position)
+                if hasattr(self, "button"):
+                    # Left align close button on macOS
+                    position = 0 if sys.platform == "darwin" else 1
+                    self.reorder_child(self.button, position)
 
     def _add_close_button(self):
 
@@ -136,17 +155,28 @@ class ImageLabel(Gtk.Box):
             return
 
         close_image = Gtk.Image()
-        close_image.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
-
         self.button = Gtk.Button()
-        self.button.add(close_image)
-        self.button.set_relief(Gtk.ReliefStyle.NONE)
-        self.button.show_all()
+
+        if Gtk.get_major_version() == 4:
+            close_image.set_from_icon_name("window-close-symbolic")
+            self.button.set_child(close_image)
+            self.button.set_has_frame(False)
+
+            if sys.platform == "darwin":
+                # Left align close button on macOS
+                self.prepend(self.button)
+            else:
+                self.append(self.button)
+
+        else:
+            close_image.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
+            self.button.add(close_image)
+            self.button.set_relief(Gtk.ReliefStyle.NONE)
+            self.button.show_all()
+            self.add(self.button)
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)
-
-        self.add(self.button)
 
     def _remove_close_button(self):
 
@@ -221,6 +251,7 @@ class ImageLabel(Gtk.Box):
         return self.hilite_pixbuf
 
     def set_status_image(self, pixbuf):
+
         if pixbuf is self.status_pixbuf:
             return
 
@@ -236,7 +267,11 @@ class ImageLabel(Gtk.Box):
         return self.status_pixbuf
 
     def set_icon(self, icon_name):
-        self.status_image.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
+
+        if Gtk.get_major_version() == 4:
+            self.status_image.set_from_icon_name(icon_name)
+        else:
+            self.status_image.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
 
     def set_text(self, lbl):
         self.set_text_color(notify=None, text=lbl)
@@ -268,8 +303,18 @@ class IconNotebook:
         self.key_controller = connect_key_press_event(self.notebook, self.on_key_press_event)
         self.notebook.connect("switch-page", self.on_switch_page)
 
-        self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON)
-        self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
+        if Gtk.get_major_version() == 4:
+            self.window = self.notebook.get_root()
+
+            self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic")
+            self.unread_button.set_has_frame(False)
+        else:
+            self.window = self.notebook.get_toplevel()
+            self.popup_enable()
+
+            self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON)
+            self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
+
         self.unread_button.set_tooltip_text(_("Unread Tabs"))
         self.unread_button.set_halign(Gtk.Align.CENTER)
         self.unread_button.set_valign(Gtk.Align.CENTER)
@@ -279,7 +324,8 @@ class IconNotebook:
         context.add_class("circular")
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
-        self.popup_menu_unread = PopupMenu(window=self.notebook.get_toplevel())
+
+        self.popup_menu_unread = PopupMenu(widget=self.notebook)
         self.unread_pages = []
 
         self.angle = angle
@@ -379,14 +425,15 @@ class IconNotebook:
         dialog.destroy()
 
         if response_id == Gtk.ResponseType.OK:
-            for page in self.notebook.get_children():
+            for i in range(self.notebook.get_n_pages()):
+                page = self.notebook.get_nth_page(i)
                 tab_label, menu_label = self.get_labels(page)
                 tab_label.onclose(dialog)
 
     def remove_all_pages(self):
 
         option_dialog(
-            parent=self.notebook.get_toplevel(),
+            parent=self.window,
             title=_('Close All Tabs?'),
             message=_('Are you sure you wish to close all tabs?'),
             callback=self.remove_all_pages_response
@@ -530,8 +577,8 @@ class IconNotebook:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes_w, mods = Gtk.accelerator_parse_with_keycode("<Primary>w")
-        key, codes_f4, mods = Gtk.accelerator_parse_with_keycode("<Primary>F4")
+        key, codes_w, mods = parse_accelerator("<Primary>w")
+        key, codes_f4, mods = parse_accelerator("<Primary>F4")
 
         if state & mods:
             if keycode in codes_w or \
@@ -550,10 +597,20 @@ class IconNotebook:
         # Hide widgets on previous page for a performance boost
         current_page = self.get_nth_page(self.get_current_page())
 
-        for child in current_page.get_children():
+        if Gtk.get_major_version() == 4:
+            children = current_page
+        else:
+            children = current_page.get_children()
+
+        for child in children:
             child.hide()
 
-        for child in new_page.get_children():
+        if Gtk.get_major_version() == 4:
+            children = new_page
+        else:
+            children = new_page.get_children()
+
+        for child in children:
             child.show()
 
         # Dismiss tab notification

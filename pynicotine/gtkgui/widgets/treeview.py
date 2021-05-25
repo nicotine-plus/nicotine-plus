@@ -86,9 +86,15 @@ def initialise_columns(treeview_name, treeview, *args):
         if not isinstance(width, int):
             width = 0
 
+        if Gtk.get_major_version() == 4:
+            # GTK 4 rows need more padding to match GTK 3
+            height_padding = 5
+        else:
+            height_padding = 3
+
         if type == "text":
             renderer = Gtk.CellRendererText()
-            renderer.set_padding(10, 3)
+            renderer.set_padding(10, height_padding)
 
             column = Gtk.TreeViewColumn(id, renderer, text=i)
 
@@ -107,13 +113,13 @@ def initialise_columns(treeview_name, treeview, *args):
 
         elif type == "edit":
             renderer = Gtk.CellRendererText()
-            renderer.set_padding(10, 3)
+            renderer.set_padding(10, height_padding)
             renderer.set_property('editable', True)
             column = Gtk.TreeViewColumn(id, renderer, text=i)
 
         elif type == "combo":
             renderer = Gtk.CellRendererCombo()
-            renderer.set_padding(10, 3)
+            renderer.set_padding(10, height_padding)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
             column = Gtk.TreeViewColumn(id, renderer, text=i)
@@ -234,7 +240,7 @@ def hide_columns(treeview, cols, config):
     for (column_id, column) in cols.items():
         parent = column.get_widget().get_ancestor(Gtk.Button)
         if parent:
-            PopupMenu(None, parent, press_header, window=treeview.get_toplevel())
+            PopupMenu(widget=parent, callback=press_header)
 
         # Read Show / Hide column settings from last session
         if config:

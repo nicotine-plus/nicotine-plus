@@ -47,7 +47,12 @@ NICOTINE = None
 def load_ui_elements(ui_class, filename):
 
     try:
-        builder = Gtk.Builder()
+        if Gtk.get_major_version() == 4:
+            builder = Gtk.Builder(ui_class)
+            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
+        else:
+            builder = Gtk.Builder()
+
         builder.set_translation_domain('nicotine')
         builder.add_from_file(filename)
 
@@ -61,7 +66,8 @@ def load_ui_elements(ui_class, filename):
             except TypeError:
                 pass
 
-        builder.connect_signals(ui_class)
+        if Gtk.get_major_version() == 3:
+            builder.connect_signals(ui_class)
 
     except Exception as e:
         log.add(_("Failed to load ui file %(file)s: %(error)s"), {
@@ -215,7 +221,9 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
         color = config.sections["ui"]["urlcolor"] or None
         tag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
         tag.last_event_type = -1
-        tag.connect("event", url_event, url)
+
+        if Gtk.get_major_version() == 3:
+            tag.connect("event", url_event, url)
 
         return tag
 
@@ -350,7 +358,12 @@ def connect_key_press_event(widget, callback):
     """ Use event controller or legacy 'key-press-event', depending on GTK version """
 
     try:
-        controller = Gtk.EventControllerKey.new(widget)
+        if Gtk.get_major_version() == 4:
+            controller = Gtk.EventControllerKey()
+            widget.add_controller(controller)
+        else:
+            controller = Gtk.EventControllerKey.new(widget)
+
         controller.connect("key-pressed", callback)
 
     except AttributeError:
@@ -373,3 +386,13 @@ def get_key_press_event_args(*args):
         state = event.state
 
     return (keyval, keycode, state)
+
+
+def parse_accelerator(accelerator):
+
+    if Gtk.get_major_version() == 4:
+        ok, key, codes, mods = Gtk.accelerator_parse_with_keycode(accelerator)
+    else:
+        key, codes, mods = Gtk.accelerator_parse_with_keycode(accelerator)
+
+    return key, codes, mods

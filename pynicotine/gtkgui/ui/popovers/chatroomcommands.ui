@@ -17,14 +17,17 @@
               </object>
             </child>
             <child>
-              <object class="GtkGrid">
+              <object class="GtkFlowBox">
                 <property name="visible">1</property>
                 <property name="margin-start">14</property>
                 <property name="margin-end">14</property>
                 <property name="margin-top">14</property>
                 <property name="margin-bottom">14</property>
-                <property name="row-spacing">10</property>
+                <property name="row-spacing">6</property>
                 <property name="column-spacing">15</property>
+                <property name="min-children-per-line">2</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -35,10 +38,11 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">0</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -50,10 +54,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -62,10 +62,6 @@
                     <property name="label" translatable="yes">Join room &apos;room&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -77,10 +73,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -89,10 +81,6 @@
                     <property name="label" translatable="yes">Leave room &apos;room&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -104,10 +92,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">3</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -116,10 +100,6 @@
                     <property name="label" translatable="yes">Clear the chat window</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">3</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -131,10 +111,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">4</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -143,10 +119,6 @@
                     <property name="label" translatable="yes">Set your personal ticker</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">4</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -158,10 +130,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">5</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -170,10 +138,6 @@
                     <property name="label" translatable="yes">Show all the tickers</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">5</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -185,10 +149,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">6</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -197,19 +157,16 @@
                     <property name="label" translatable="yes">Say something in the third-person</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">6</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">5</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -221,10 +178,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">7</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -233,10 +186,6 @@
                     <property name="label" translatable="yes">Display the Now Playing script&apos;s output</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">7</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -248,10 +197,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">8</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -260,10 +205,6 @@
                     <property name="label" translatable="yes">Toggles your away status</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">8</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -275,10 +216,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">9</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -287,10 +224,6 @@
                     <property name="label" translatable="yes">Rescan shares</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">9</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -302,10 +235,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">10</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -314,19 +243,16 @@
                     <property name="label" translatable="yes">Quit Nicotine+</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">10</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">11</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -338,10 +264,11 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">12</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -353,10 +280,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">13</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -365,10 +288,6 @@
                     <property name="label" translatable="yes">Add user &apos;user&apos; to your user list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">13</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -380,10 +299,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">14</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -392,10 +307,6 @@
                     <property name="label" translatable="yes">Remove user &apos;user&apos; from your user list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">14</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -407,10 +318,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">15</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -419,10 +326,6 @@
                     <property name="label" translatable="yes">Add user &apos;user&apos; to your ban list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">15</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -434,10 +337,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">16</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -446,10 +345,6 @@
                     <property name="label" translatable="yes">Remove user &apos;user&apos; from your ban list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">16</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -461,10 +356,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">17</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -473,10 +364,6 @@
                     <property name="label" translatable="yes">Add user &apos;user&apos; to your ignore list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">17</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -488,10 +375,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">18</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -500,10 +383,6 @@
                     <property name="label" translatable="yes">Remove user &apos;user&apos; from your ignore list</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">18</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -515,10 +394,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">19</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -527,10 +402,6 @@
                     <property name="label" translatable="yes">Browse files of user &apos;user&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">19</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -542,10 +413,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">20</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -554,10 +421,6 @@
                     <property name="label" translatable="yes">Request user info for user &apos;user&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">20</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -569,10 +432,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">21</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -581,19 +440,16 @@
                     <property name="label" translatable="yes">Show IP for user &apos;user&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">21</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">22</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -605,10 +461,11 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">23</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -620,10 +477,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">24</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -632,10 +485,6 @@
                     <property name="label" translatable="yes">Add a new alias</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">24</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -647,10 +496,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">25</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -659,19 +504,16 @@
                     <property name="label" translatable="yes">Remove an alias</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">25</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">26</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -683,10 +525,11 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">27</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -698,10 +541,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">28</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -710,10 +549,6 @@
                     <property name="label" translatable="yes">Start a new search for &apos;query&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">28</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -725,10 +560,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">29</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -737,10 +568,6 @@
                     <property name="label" translatable="yes">Search the joined rooms for &apos;query&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">29</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -752,10 +579,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">30</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -764,10 +587,6 @@
                     <property name="label" translatable="yes">Search the buddy list for &apos;query&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">30</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -779,10 +598,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">31</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -791,19 +606,16 @@
                     <property name="label" translatable="yes">Search a user&apos;s shares for &apos;query&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">31</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">32</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -815,10 +627,11 @@
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">33</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -830,10 +643,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">34</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -842,10 +651,6 @@
                     <property name="label" translatable="yes">Send message &apos;message&apos; to user &apos;user&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">34</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -857,10 +662,6 @@
                       <attribute name="style" value="italic"/>
                     </attributes>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">35</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
@@ -869,10 +670,6 @@
                     <property name="label" translatable="yes">Open private chat window for user &apos;user&apos;</property>
                     <property name="selectable">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">35</property>
-                  </packing>
                 </child>
               </object>
             </child>

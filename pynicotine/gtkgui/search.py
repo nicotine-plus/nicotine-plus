@@ -40,6 +40,7 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -78,7 +79,6 @@ class Searches(IconNotebook):
             notebookraw=self.frame.SearchNotebookRaw
         )
 
-        self.popup_enable()
         self.load_config()
 
         self.wish_list = WishList(frame, self)
@@ -291,6 +291,11 @@ class Search:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
         self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
+
+        if Gtk.get_major_version() == 4:
+            self.ToggleButton.set_icon_name("view-list-symbolic")
+        else:
+            self.ToggleButton.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
 
         self.text = text
         self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
@@ -1030,10 +1035,9 @@ class Search:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_results()
 
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+        key, codes, mods = parse_accelerator("<Primary>c")
 
-        if state & mods and \
-                keycode in codes:
+        if state & mods and keycode in codes:
             self.on_copy_file_path()
         else:
             # No key match, continue event
@@ -1250,10 +1254,18 @@ class Search:
 
         if active:
             self.ResultsList.expand_all()
-            self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+
+            if Gtk.get_major_version() == 4:
+                self.expand.set_from_icon_name("go-up-symbolic")
+            else:
+                self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
         else:
             collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
-            self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+
+            if Gtk.get_major_version() == 4:
+                self.expand.set_from_icon_name("go-down-symbolic")
+            else:
+                self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
         config.sections["searches"]["expand_searches"] = active
 
@@ -1343,7 +1355,11 @@ class Search:
 
         if not hasattr(self, "AboutSearchFiltersPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
-            self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
+
+            if Gtk.get_major_version() == 4:
+                self.AboutSearchFiltersPopover.set_parent(self.ShowChatHelp)
+            else:
+                self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
 
         try:
             self.AboutSearchFiltersPopover.popup()

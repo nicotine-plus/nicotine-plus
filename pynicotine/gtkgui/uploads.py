@@ -27,7 +27,7 @@ import os
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import option_dialog
 
 
 class Uploads(TransferList):

@@ -1,80 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="RoomWallDialog">
-    <property name="title" translatable="yes">Room Wall</property>
-    <property name="modal">1</property>
-    <property name="window-position">center-on-parent</property>
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
-    <property name="type-hint">normal</property>
-    <signal name="delete-event" handler="hide" swapped="no"/>
-    <child internal-child="vbox">
-      <object class="GtkBox">
+  <object class="GtkBox" id="Main">
+    <property name="visible">1</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="orientation">vertical</property>
+        <property name="halign">start</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">13</property>
+        <property name="margin-bottom">13</property>
+        <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others.</property>
+        <property name="justify">fill</property>
+        <property name="wrap">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="RoomWallListWindow">
+        <property name="visible">1</property>
+        <property name="can-focus">1</property>
+        <property name="vexpand">1</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
         <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">13</property>
-            <property name="margin-bottom">13</property>
-            <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others.</property>
-            <property name="justify">fill</property>
-            <property name="wrap">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="RoomWallListWindow">
+          <object class="GtkTextView" id="RoomWallList">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="vexpand">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="shadow-type">in</property>
-            <child>
-              <object class="GtkTextView" id="RoomWallList">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="editable">0</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="cursor-visible">0</property>
-                <property name="pixels-above-lines">4</property>
-                <property name="pixels-below-lines">4</property>
-                <property name="left-margin">10</property>
-                <property name="right-margin">10</property>
-                <property name="top-margin">5</property>
-                <property name="bottom-margin">5</property>
-              </object>
-            </child>
+            <property name="editable">0</property>
+            <property name="wrap-mode">word-char</property>
+            <property name="cursor-visible">0</property>
+            <property name="pixels-above-lines">4</property>
+            <property name="pixels-below-lines">4</property>
+            <property name="left-margin">10</property>
+            <property name="right-margin">10</property>
+            <property name="top-margin">5</property>
+            <property name="bottom-margin">5</property>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <property name="spacing">10</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkEntry" id="RoomWallEntry">
             <property name="visible">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">10</property>
-            <property name="margin-bottom">10</property>
-            <property name="spacing">10</property>
-            <child>
-              <object class="GtkEntry" id="RoomWallEntry">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="placeholder-text" translatable="yes">Set wall message...</property>
-                <property name="primary-icon-name">user-available-symbolic</property>
-                <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
-                <signal name="icon-press" handler="on_set_room_wall_message" swapped="no"/>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkBox">
-            <property name="visible">0</property>
+            <property name="can-focus">1</property>
+            <property name="hexpand">1</property>
+            <property name="placeholder-text" translatable="yes">Set wall message...</property>
+            <property name="primary-icon-name">user-available-symbolic</property>
+            <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
+            <signal name="icon-press" handler="on_set_room_wall_message" swapped="no"/>
           </object>
         </child>
       </object>

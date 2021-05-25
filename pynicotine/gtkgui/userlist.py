@@ -31,7 +31,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -73,6 +73,11 @@ class UserList:
             str                   # (14) country
         )
 
+        if Gtk.get_major_version() == 4:
+            frame.userlistvbox.append(self.Main)
+        else:
+            frame.userlistvbox.add(self.Main)
+
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
             "buddy_list", self.UserListTree,
@@ -87,6 +92,8 @@ class UserList:
             ["last_seen", _("Last seen"), 160, "text", None],
             ["comments", _("Comments"), 400, "edit", None]
         )
+
+        frame.userlistvbox.remove(self.Main)
 
         cols["status"].set_sort_column_id(10)
         cols["country"].set_sort_column_id(14)
@@ -214,6 +221,9 @@ class UserList:
             time_from_epoch,
             country
         ]
+
+        if Gtk.get_major_version() == 4:
+            self.usersmodel.insert_with_valuesv = self.usersmodel.insert_with_values
 
         self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
 
