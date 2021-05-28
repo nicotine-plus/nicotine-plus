@@ -30,12 +30,14 @@ class InfoBar:
         self.info_bar.connect("response", self._hide)
 
         self.label = Gtk.Label()
-        self.label.set_wrap(True)
 
         if Gtk.get_major_version() == 4:
+            self.label.set_wrap(True)
             self.info_bar.add_child(self.label)
         else:
+            self.label.set_line_wrap(True)
             self.info_bar.get_content_area().add(self.label)
+            self.label.show()
 
         self.set_visible(False)
 

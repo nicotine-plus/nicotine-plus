@@ -180,9 +180,33 @@ class UserInfo:
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         if Gtk.get_major_version() == 4:
+            self.image = Gtk.Picture()
+            self.UserImage = Gtk.Box()
+            self.UserImage.append(self.image)
+            self.ImageViewport.set_child(self.UserImage)
+
+            self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+            self.scroll_controller.connect("scroll", self.on_scroll)
+            self.ImageViewport.add_controller(self.scroll_controller)
+
             self.MainPaned.set_property("resize-start-child", False)
             self.SecondPaned.set_property("resize-start-child", False)
+
         else:
+            self.image = Gtk.Image()
+            self.UserImage = Gtk.EventBox()
+            self.UserImage.add(self.image)
+            self.ImageViewport.add(self.UserImage)
+            self.ImageViewport.show_all()
+
+            try:
+                self.scroll_controller = Gtk.EventControllerScroll.new(self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
+                self.scroll_controller.connect("scroll", self.on_scroll)
+
+            except AttributeError:
+                # GTK <3.24
+                self.ImageViewport.connect("scroll-event", self.on_scroll_event)
+
             self.MainPaned.child_set_property(self.InfoVbox, "resize", False)
             self.SecondPaned.child_set_property(self.Interests, "resize", False)
 
@@ -287,7 +311,11 @@ class UserInfo:
                 del data
 
                 self.image_pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
-                self.image.set_from_pixbuf(self.image_pixbuf)
+
+                if Gtk.get_major_version() == 4:
+                    self.image.set_pixbuf(self.image_pixbuf)
+                else:
+                    self.image.set_from_pixbuf(self.image_pixbuf)
 
             gc.collect()
 
@@ -460,6 +488,13 @@ class UserInfo:
         for (action_id, action) in actions.items():
             action.set_enabled(act)
 
+    def on_scroll(self, controller, x, y):
+
+        if y < 0:
+            self.make_zoom_in()
+        else:
+            self.make_zoom_out()
+
     def on_scroll_event(self, widget, event):
 
         if event.get_scroll_deltas().delta_y < 0:
@@ -491,7 +526,11 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
 
         pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.TILES)
-        self.image.set_from_pixbuf(pixbuf_zoomed)
+
+        if Gtk.get_major_version() == 4:
+            self.image.set_pixbuf(pixbuf_zoomed)
+        else:
+            self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
 
@@ -517,7 +556,11 @@ class UserInfo:
             return
 
         pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.TILES)
-        self.image.set_from_pixbuf(pixbuf_zoomed)
+
+        if Gtk.get_major_version() == 4:
+            self.image.set_pixbuf(pixbuf_zoomed)
+        else:
+            self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
 

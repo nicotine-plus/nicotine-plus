@@ -266,22 +266,9 @@
                           <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
                             <property name="vexpand">1</property>
-                            <!--<signal name="scroll-event" handler="on_scroll_event" swapped="no"/>-->
                             <child>
-                              <object class="GtkViewport">
+                              <object class="GtkViewport" id="ImageViewport">
                                 <property name="visible">1</property>
-                                <child>
-                                  <object class="GtkBox" id="UserImage">
-                                    <property name="visible">1</property>
-                                    <property name="can-focus">1</property>
-                                    <child>
-                                      <object class="GtkImage" id="image">
-                                        <property name="visible">1</property>
-                                        <property name="icon-name">action-unavailable-symbolic</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
                               </object>
                             </child>
                           </object>
