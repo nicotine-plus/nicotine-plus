@@ -22,12 +22,11 @@
               </object>
             </child>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="BannedListScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
-                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="BannedList">
                     <property name="visible">1</property>
@@ -141,12 +140,11 @@
               </object>
             </child>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="BlockedListScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
-                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="BlockedList">
                     <property name="visible">1</property>
@@ -260,9 +258,6 @@
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
           </object>
-          <packing>
-            <property name="fill">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkEntry" id="CustomBan">

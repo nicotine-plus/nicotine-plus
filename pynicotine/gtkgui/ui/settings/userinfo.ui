@@ -21,13 +21,12 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="UserInfoScrolledWindow">
                 <property name="width-request">250</property>
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
-                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTextView" id="Description">
                     <property name="visible">1</property>

@@ -80,21 +80,24 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">10</property>
             <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="homogeneous">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel" id="RoomLogDirLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="RoomLogDir">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="PrivateLogDirLabel">
@@ -102,10 +105,11 @@
                 <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="PrivateLogDir">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="TransfersLogDirLabel">
@@ -113,10 +117,11 @@
                 <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">2</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="TransfersLogDir">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="DebugLogDirLabel">
@@ -124,46 +129,11 @@
                 <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="RoomLogDir">
-                <property name="visible">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="PrivateLogDir">
-                <property name="visible">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="TransfersLogDir">
-                <property name="visible">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="DebugLogDir">
                 <property name="visible">1</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">3</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -278,11 +248,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">10</property>
             <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="homogeneous">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -290,10 +262,6 @@
                 <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -303,11 +271,9 @@
                   <object class="GtkEntry" id="ChatRoomFormat">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
-                  <packing>
-                    <property name="expand">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="RoomDefaultTimestamp">
@@ -336,10 +302,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -348,10 +310,6 @@
                 <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -361,11 +319,9 @@
                   <object class="GtkEntry" id="PrivateChatFormat">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
-                  <packing>
-                    <property name="expand">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="PrivateDefaultTimestamp">
@@ -394,10 +350,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -406,10 +358,6 @@
                 <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -419,11 +367,9 @@
                   <object class="GtkEntry" id="LogFileFormat">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
-                  <packing>
-                    <property name="expand">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="DefaultTimestamp">
@@ -452,10 +398,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
           </object>
         </child>

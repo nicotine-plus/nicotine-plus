@@ -317,7 +317,7 @@ class DownloadsFrame(BuildFrame):
     def on_add_filter(self, widget):
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
@@ -377,7 +377,7 @@ class DownloadsFrame(BuildFrame):
         escapedvalue = self.filterlist.get_value(iterator, 1)
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Edit Download Filter"),
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
@@ -506,7 +506,14 @@ class SharesFrame(BuildFrame):
             bool
         )
 
+        if Gtk.get_major_version() == 4:
+            self.SharesScrolledWindow.set_has_frame(True)
+            self.shareslist.insert_with_valuesv = self.shareslist.insert_with_values
+        else:
+            self.SharesScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.Shares.set_model(self.shareslist)
+        self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
             None, self.Shares,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
@@ -540,23 +547,19 @@ class SharesFrame(BuildFrame):
 
         for (virtual, actual, *unused) in transfers["buddyshared"]:
 
-            self.shareslist.append(
-                [
-                    virtual,
-                    actual,
-                    True
-                ]
-            )
+            self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
+                str(virtual),
+                str(actual),
+                True
+            ])
 
         for (virtual, actual, *unused) in transfers["shared"]:
 
-            self.shareslist.append(
-                [
-                    virtual,
-                    actual,
-                    False
-                ]
-            )
+            self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
+                str(virtual),
+                str(actual),
+                False
+            ])
 
         self.shareddirs = transfers["shared"][:]
         self.bshareddirs = transfers["buddyshared"][:]
@@ -640,7 +643,7 @@ class SharesFrame(BuildFrame):
         # If the virtual share name is not already used
         if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
             message_dialog(
-                parent=self.Main.get_toplevel(),
+                parent=self.p.SettingsWindow,
                 title=_("Unable to Share Folder"),
                 message=_("The chosen virtual name is either empty or already exists")
             )
@@ -648,13 +651,11 @@ class SharesFrame(BuildFrame):
 
         directory = data
 
-        self.shareslist.append(
-            [
-                virtual,
-                directory,
-                buddy
-            ]
-        )
+        self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
+            virtual,
+            directory,
+            buddy
+        ])
 
         if buddy:
             shared_dirs = self.bshareddirs
@@ -672,14 +673,14 @@ class SharesFrame(BuildFrame):
         # If the directory is already shared
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             message_dialog(
-                parent=self.Main.get_toplevel(),
+                parent=self.p.SettingsWindow,
                 title=_("Unable to Share Folder"),
                 message=_("The chosen folder is already shared.")
             )
             return
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Set Virtual Name"),
             message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
             option=True,
@@ -696,7 +697,7 @@ class SharesFrame(BuildFrame):
     def on_add_shared_dir(self, *args):
 
         choose_dir(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder")
         )
@@ -740,7 +741,7 @@ class SharesFrame(BuildFrame):
             folder = model.get_value(iterator, 1)
 
             entry_dialog(
-                parent=self.Main.get_toplevel(),
+                parent=self.p.SettingsWindow,
                 title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 callback=self.rename_virtuals_response,
@@ -897,6 +898,11 @@ class UserInfoFrame(BuildFrame):
 
         BuildFrame.__init__(self, "userinfo")
 
+        if Gtk.get_major_version() == 4:
+            self.UserInfoScrolledWindow.set_has_frame(True)
+        else:
+            self.UserInfoScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.ImageChooser = FileChooserButton(self.ImageChooser, parent.SettingsWindow, "image")
 
         self.options = {
@@ -947,6 +953,13 @@ class IgnoreListFrame(BuildFrame):
                 "ipignorelist": self.IgnoredIPs
             }
         }
+
+        if Gtk.get_major_version() == 4:
+            self.IgnoredUsersScrolledWindow.set_has_frame(True)
+            self.IgnoredIPsScrolledWindow.set_has_frame(True)
+        else:
+            self.IgnoredUsersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+            self.IgnoredIPsScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.ignored_users = []
         self.ignorelist = Gtk.ListStore(str)
@@ -1009,7 +1022,7 @@ class IgnoreListFrame(BuildFrame):
     def on_add_ignored(self, widget):
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Ignore User"),
             message=_("Enter the name of a user you wish to ignore:"),
             callback=self.on_add_ignored_response
@@ -1061,7 +1074,7 @@ class IgnoreListFrame(BuildFrame):
     def on_add_ignored_ip(self, widget):
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you wish to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
@@ -1099,6 +1112,13 @@ class BanListFrame(BuildFrame):
                 "customban": self.CustomBan
             }
         }
+
+        if Gtk.get_major_version() == 4:
+            self.BannedListScrolledWindow.set_has_frame(True)
+            self.BlockedListScrolledWindow.set_has_frame(True)
+        else:
+            self.BannedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+            self.BlockedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.banlist = []
         self.banlist_model = Gtk.ListStore(str)
@@ -1165,7 +1185,7 @@ class BanListFrame(BuildFrame):
     def on_add_banned(self, widget):
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Ban User"),
             message=_("Enter the name of a user you wish to ban:"),
             callback=self.on_add_banned_response
@@ -1220,7 +1240,7 @@ class BanListFrame(BuildFrame):
     def on_add_blocked(self, widget):
 
         entry_dialog(
-            parent=self.Main.get_toplevel(),
+            parent=self.p.SettingsWindow,
             title=_("Block IP Address"),
             message=_("Enter an IP address you wish to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
@@ -1999,6 +2019,11 @@ class UrlCatchingFrame(BuildFrame):
             }
         }
 
+        if Gtk.get_major_version() == 4:
+            self.ProtocolHandlersScrolledWindow.set_has_frame(True)
+        else:
+            self.ProtocolHandlersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.protocolmodel = Gtk.ListStore(str, str)
 
         self.protocols = {}
@@ -2144,6 +2169,11 @@ class CensorListFrame(BuildFrame):
             }
         }
 
+        if Gtk.get_major_version() == 4:
+            self.CensorListScrolledWindow.set_has_frame(True)
+        else:
+            self.CensorListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.censor_list_model = Gtk.ListStore(str)
 
         cols = initialise_columns(
@@ -2243,6 +2273,11 @@ class AutoReplaceListFrame(BuildFrame):
                 "replacewords": self.ReplaceCheck
             }
         }
+
+        if Gtk.get_major_version() == 4:
+            self.ReplacementListScrolledWindow.set_has_frame(True)
+        else:
+            self.ReplacementListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.replacelist = Gtk.ListStore(str, str)
 
@@ -2886,11 +2921,20 @@ class PluginsFrame(BuildFrame):
             }
         }
 
+        if Gtk.get_major_version() == 4:
+            self.PluginScrolledWindow.set_has_frame(True)
+            self.PluginDescriptionScrolledWindow.set_has_frame(True)
+            self.plugins_model.insert_with_valuesv = self.plugins_model.insert_with_values
+        else:
+            self.PluginScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+            self.PluginDescriptionScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.plugins_model = Gtk.ListStore(bool, str, str)
         self.plugins = []
         self.pluginsiters = {}
         self.selected_plugin = None
 
+        self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(
             None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
@@ -2987,7 +3031,9 @@ class PluginsFrame(BuildFrame):
             except IOError:
                 continue
             enabled = (plugin in config.sections["plugins"]["enabled"])
-            self.pluginsiters[filter] = self.plugins_model.append([enabled, info['Name'], plugin])
+            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
+                -1, self.column_numbers, [enabled, info['Name'], plugin]
+            )
 
         return {}
 
@@ -3170,7 +3216,12 @@ class Settings:
 
         # Custom value provided
         if combobox.get_has_entry():
-            combobox.get_children()[0].set_text(option)
+            if Gtk.get_major_version() == 4:
+                entry = combobox.get_child()
+            else:
+                entry = combobox.get_children()[0]
+
+            entry.set_text(option)
 
     def set_widgets_data(self, options):
 

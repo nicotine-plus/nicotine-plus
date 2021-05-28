@@ -57,9 +57,6 @@
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_use_custom_geo_block_toggled" swapped="no"/>
           </object>
-          <packing>
-            <property name="fill">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkEntry" id="CustomGeoBlock">

@@ -36,12 +36,11 @@ Protocols handlers: </property>
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="ProtocolHandlersScrolledWindow">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
-            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="ProtocolHandlers">
                 <property name="visible">1</property>
@@ -118,62 +117,18 @@ Protocols handlers: </property>
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkFlowBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
-        <child>
-          <object class="GtkButton" id="addButton">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="halign">start</property>
-            <signal name="clicked" handler="on_add" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">list-add-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Add</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Handler:</property>
-            <property name="xalign">0</property>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
+        <property name="row-spacing">6</property>
+        <property name="column-spacing">6</property>
+        <property name="max-children-per-line">2</property>
+        <property name="selection-mode">none</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Protocol:</property>
             <property name="xalign">0</property>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkComboBoxText" id="ProtocolCombo">
@@ -194,36 +149,68 @@ Protocols handlers: </property>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="Handler">
+          <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="has-entry">1</property>
-            <items>
-              <item>xdg-open $</item>
-              <item>firefox $</item>
-              <item>firefox -a firefox --remote &quot;openURL($,new-tab)&quot;</item>
-              <item>opera $</item>
-              <item>links -g $</item>
-              <item>dillo $</item>
-              <item>konqueror $</item>
-              <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
-            </items>
-            <child internal-child="entry">
-              <object class="GtkEntry">
+            <property name="label" translatable="yes">Handler:</property>
+            <property name="xalign">0</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkComboBoxText" id="Handler">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="has-entry">1</property>
+                <items>
+                  <item>xdg-open $</item>
+                  <item>firefox $</item>
+                  <item>firefox -a firefox --remote &quot;openURL($,new-tab)&quot;</item>
+                  <item>opera $</item>
+                  <item>links -g $</item>
+                  <item>dillo $</item>
+                  <item>konqueror $</item>
+                  <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
+                </items>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="can-focus">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="addButton">
+                <property name="visible">1</property>
                 <property name="can-focus">1</property>
+                <property name="halign">start</property>
+                <signal name="clicked" handler="on_add" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">list-add-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Add</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
       </object>
     </child>

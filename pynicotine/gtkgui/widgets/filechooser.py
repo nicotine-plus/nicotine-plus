@@ -157,11 +157,14 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
     active_chooser = self
 
     self.connect("response", _on_selected, callback, callback_data)
-    self.connect("update-preview", on_update_image_preview)
     self.set_modal(True)
 
-    preview = Gtk.Image()
-    self.set_preview_widget(preview)
+    if Gtk.get_major_version() == 3:
+        self.connect("update-preview", on_update_image_preview)
+
+        preview = Gtk.Image()
+        self.set_preview_widget(preview)
+
     self.set_select_multiple(multiple)
 
     _set_filechooser_folder(self, initialdir)

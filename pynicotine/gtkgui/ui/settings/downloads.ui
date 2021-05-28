@@ -145,11 +145,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">10</property>
             <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="homogeneous">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -157,10 +159,12 @@
                 <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="IncompleteDir">
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
+              </object>
             </child>
             <child>
               <object class="GtkLabel">
@@ -169,10 +173,11 @@
                 <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="DownloadDir">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkLabel">
@@ -180,39 +185,12 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Save buddies&apos; uploads to:</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">3</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="UploadDir">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">Where buddies&apos; uploads will be stored (with a subfolder created for each buddy).</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="IncompleteDir">
-                <property name="visible">1</property>
-                <property name="tooltip-text" translatable="yes">Where incomplete downloads are temporarily stored.</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="DownloadDir">
-                <property name="visible">1</property>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
           </object>
         </child>

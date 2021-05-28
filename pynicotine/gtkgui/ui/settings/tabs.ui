@@ -131,7 +131,6 @@
               <object class="GtkSpinButton" id="MainAngleSpin">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="max-length">3</property>
                 <property name="width-chars">4</property>
                 <property name="adjustment">adjustment_MainAngleSpin</property>
                 <property name="numeric">1</property>

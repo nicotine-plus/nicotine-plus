@@ -60,11 +60,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">10</property>
-            <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="row-spacing">6</property>
+            <property name="column-spacing">6</property>
+            <property name="homogeneous">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkCheckButton" id="Limit">
                 <property name="label" translatable="yes">Limit uploads speed to (KiB/s):</property>
@@ -73,10 +75,6 @@
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="LimitSpeed">
@@ -87,10 +85,11 @@
                 <property name="hexpand">1</property>
                 <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkBox">
@@ -116,10 +115,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -141,11 +136,12 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">10</property>
-            <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="row-spacing">6</property>
+            <property name="column-spacing">6</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -153,10 +149,6 @@
                 <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -184,10 +176,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel" id="QueueBandwidthText1">
@@ -196,10 +184,6 @@
                 <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="QueueBandwidth">
@@ -210,10 +194,6 @@
                 <property name="hexpand">1</property>
                 <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="QueueUseSlots">
@@ -229,10 +209,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="QueueSlots">
@@ -242,10 +218,6 @@
                 <property name="hexpand">1</property>
                 <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
@@ -254,10 +226,6 @@
                 <property name="wrap">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">4</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -281,10 +249,11 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">4</property>
-              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+              </object>
             </child>
             <child>
               <object class="GtkBox">
@@ -307,27 +276,19 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">5</property>
-              </packing>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="FriendsNoLimits">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
             <child>
-              <object class="GtkCheckButton" id="FriendsNoLimits">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Queue size limit does not apply to friends</property>
-                    <property name="wrap">1</property>
-                  </object>
-                </child>
+                <property name="label" translatable="yes">Queue size limit does not apply to friends</property>
+                <property name="wrap">1</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">6</property>
-              </packing>
             </child>
           </object>
         </child>
