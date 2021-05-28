@@ -461,8 +461,8 @@ class Transfers:
                     if not self.auto_clear_upload(i) and self.uploadsview:
                         self.uploadsview.update(i)
 
-    def got_cant_connect(self, req):
-        """ We can't connect to the user, either way. """
+    def get_cant_connect_request(self, req):
+        """ We can't connect to the user, either way (FileRequest, TransferRequest). """
 
         for i in self.downloads:
             if i.req == req:
@@ -472,6 +472,14 @@ class Transfers:
         for i in self.uploads:
             if i.req == req:
                 self._get_cant_connect_upload(i)
+                break
+
+    def get_cant_connect_queue_file(self, username, filename):
+        """ We can't connect to the user, either way (QueueUpload). """
+
+        for i in self.downloads:
+            if i.user == username and i.filename == filename:
+                self._get_cant_connect_download(i)
                 break
 
     def _get_cant_connect_download(self, i):

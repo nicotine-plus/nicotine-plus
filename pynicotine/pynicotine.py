@@ -809,7 +809,10 @@ class NetworkEventProcessor:
 
         for i in conn.msgs:
             if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
-                self.transfers.got_cant_connect(i.req)
+                self.transfers.get_cant_connect_request(i.req)
+
+            elif i.__class__ is slskmessages.QueueUpload and self.transfers is not None:
+                self.transfers.get_cant_connect_queue_file(conn.username, i.file)
 
             elif i.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
                 self.userbrowse.show_connection_error(conn.username)
