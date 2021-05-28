@@ -335,7 +335,6 @@ def set_treeview_selected_row(treeview, x, y):
 
     pathinfo = treeview.get_path_at_pos(x, y)
     selection = treeview.get_selection()
-    print(selection.count_selected_rows())
 
     if pathinfo is not None:
         path, col, cell_x, cell_y = pathinfo
