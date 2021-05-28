@@ -19,11 +19,13 @@
 import os
 
 from gi.repository import Gdk
+from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 
 
@@ -35,7 +37,20 @@ class RoomWall:
         self.room = room
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
-        self.RoomWallDialog.set_transient_for(frame.MainWindow)
+
+        self.RoomWallDialog = generic_dialog(
+            parent=frame.MainWindow,
+            content_box=self.Main,
+            quit_callback=self.hide,
+            title=_("Room Wall"),
+            width=800,
+            height=600
+        )
+
+        if Gtk.get_major_version() == 4:
+            self.RoomWallListWindow.set_has_frame(True)
+        else:
+            self.RoomWallListWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def on_set_room_wall_message(self, *args):
 
@@ -77,9 +92,11 @@ class RoomWall:
                 self.RoomWallEntry.select_region(0, -1)
 
         self.RoomWallDialog.present_with_time(Gdk.CURRENT_TIME)
-        self.RoomWallDialog.get_window().set_functions(
-            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-        )
+
+        if Gtk.get_major_version == 3:
+            self.RoomWallDialog.get_window().set_functions(
+                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+            )
 
 
 class Tickers:

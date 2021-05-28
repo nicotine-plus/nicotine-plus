@@ -42,7 +42,18 @@ class Interests:
         self.frame = frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
-        self.frame.interestsvbox.add(self.Main)
+
+        if Gtk.get_major_version() == 4:
+            self.InterestsPaned.set_property("resize-start-child", False)
+            self.InterestsPanedSecond.set_property("resize-start-child", True)
+            self.InterestsPanedSecond.set_property("resize-end-child", False)
+            self.frame.interestsvbox.append(self.Main)
+
+        else:
+            self.InterestsPaned.child_set_property(self.LikesDislikes, "resize", False)
+            self.InterestsPanedSecond.child_set_property(self.RecommendationsVbox, "resize", True)
+            self.InterestsPanedSecond.child_set_property(self.SimilarUsers, "resize", False)
+            self.frame.interestsvbox.add(self.Main)
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
@@ -50,7 +61,7 @@ class Interests:
 
         self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.LikesList, self.on_popup_til_menu,
+            None, self.LikesList,
             ["i_like", _("I Like"), -1, "text", None]
         )
 
@@ -63,7 +74,7 @@ class Interests:
 
         self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.DislikesList, self.on_popup_tidl_menu,
+            None, self.DislikesList,
             ["i_dislike", _("I Dislike"), -1, "text", None]
         )
 
@@ -78,7 +89,7 @@ class Interests:
 
         self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationsList, self.on_popup_r_menu,
+            None, self.RecommendationsList,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -96,7 +107,7 @@ class Interests:
 
         self.unrecommendations_column_numbers = list(range(self.unrecommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.UnrecommendationsList, self.on_popup_ru_menu,
+            None, self.UnrecommendationsList,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -119,7 +130,7 @@ class Interests:
 
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationUsersList, self.on_popup_ru_menu,
+            None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],
@@ -136,6 +147,13 @@ class Interests:
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
+        if Gtk.get_major_version() == 4:
+            self.likes_model.insert_with_valuesv = self.likes_model.insert_with_values
+            self.dislikes_model.insert_with_valuesv = self.dislikes_model.insert_with_values
+            self.recommendations_model.insert_with_valuesv = self.recommendations_model.insert_with_values
+            self.unrecommendations_model.insert_with_valuesv = self.unrecommendations_model.insert_with_values
+            self.recommendation_users_model.insert_with_valuesv = self.recommendation_users_model.insert_with_values
+
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
                 self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
@@ -146,7 +164,7 @@ class Interests:
 
         """ Popup """
 
-        self.til_popup_menu = popup = PopupMenu(self.frame)
+        self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
         popup.setup(
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),
@@ -154,14 +172,14 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_til_recommend_search)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame)
+        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_tidl_menu)
         popup.setup(
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
             ("", None),
             ("#" + _("_Search for Item"), self.on_tidl_recommend_search)
         )
 
-        self.r_popup_menu = popup = PopupMenu(self.frame)
+        self.r_popup_menu = popup = PopupMenu(self.frame, self.RecommendationsList, self.on_popup_r_menu)
         popup.setup(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
@@ -170,7 +188,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_r_recommend_search)
         )
 
-        self.ru_popup_menu = popup = PopupMenu(self.frame)
+        self.ru_popup_menu = popup = PopupMenu(self.frame, self.RecommendationUsersList, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         self.update_visuals()
@@ -376,37 +394,31 @@ class Interests:
 
         return model.get_value(iterator, column)
 
-    def on_popup_til_menu(self, widget):
+    def on_popup_til_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
         if item is None:
-            return False
+            return True
 
-        self.til_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        self.til_popup_menu.popup()
-        return True
-
-    def on_popup_tidl_menu(self, widget):
+    def on_popup_tidl_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
         if item is None:
-            return False
+            return True
 
-        self.tidl_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        self.tidl_popup_menu.popup()
-        return True
-
-    def on_popup_r_menu(self, widget):
+    def on_popup_r_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=1)
         if item is None:
-            return False
+            return True
 
-        self.r_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        actions = self.r_popup_menu.get_actions()
+        actions = menu.get_actions()
         actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
@@ -414,20 +426,14 @@ class Interests:
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
-        self.r_popup_menu.popup()
-        return True
-
-    def on_popup_ru_menu(self, widget):
+    def on_popup_ru_menu(self, menu, widget):
 
         user = self.get_selected_item(widget, column=1)
         if user is None:
-            return False
+            return True
 
-        self.ru_popup_menu.set_user(user)
-        self.ru_popup_menu.toggle_user_items()
-
-        self.ru_popup_menu.popup()
-        return True
+        menu.set_user(user)
+        menu.toggle_user_items()
 
     def on_ru_row_activated(self, treeview, path, column):
 

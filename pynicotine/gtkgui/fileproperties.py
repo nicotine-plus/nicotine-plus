@@ -22,8 +22,10 @@
 import os
 
 from gi.repository import Gdk
+from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 
 
 class FileProperties:
@@ -35,7 +37,13 @@ class FileProperties:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fileproperties.ui"))
 
-        self.FilePropertiesDialog.set_transient_for(self.frame.MainWindow)
+        self.FilePropertiesDialog = generic_dialog(
+            parent=frame.MainWindow,
+            content_box=self.Main,
+            title=_("File Properties"),
+            width=600,
+            height=0
+        )
 
         self.current_index = 0
 
@@ -146,6 +154,8 @@ class FileProperties:
 
         self.update_current_file()
         self.FilePropertiesDialog.present_with_time(Gdk.CURRENT_TIME)
-        self.FilePropertiesDialog.get_window().set_functions(
-            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-        )
+
+        if Gtk.get_major_version() == 3:
+            self.FilePropertiesDialog.get_window().set_functions(
+                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+            )

@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
+  <object class="GtkImage" id="HeaderMenuIcon">
+    <property name="visible">1</property>
+    <property name="icon-name">open-menu-symbolic</property>
+  </object>
   <object class="GtkMenuButton" id="HeaderMenu">
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">1</property>
-        <property name="icon-name">open-menu-symbolic</property>
-      </object>
-    </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderDefault">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="has-subtitle">0</property>
-    <property name="show-close-button">1</property>
     <child>
       <object class="GtkBox" id="DefaultEnd">
         <property name="visible">1</property>
@@ -36,15 +32,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderSearch">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="SearchTitle">
         <property name="visible">1</property>
@@ -178,15 +170,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderDownloads">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="DownloadsTitle">
         <property name="visible">1</property>
@@ -306,12 +294,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkImage" id="DownloadGroupingIcon">
-                <property name="visible">1</property>
-                <property name="icon-name">view-list-symbolic</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkComboBoxText" id="ToggleTreeDownloads">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
@@ -327,9 +309,7 @@
                   </object>
                 </child>
                 <child internal-child="button">
-                  <object class="GtkButton">
-                    <property name="image">DownloadGroupingIcon</property>
-                  </object>
+                  <object class="GtkButton" id="ToggleButtonDownloads"/>
                 </child>
               </object>
             </child>
@@ -353,15 +333,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderUploads">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UploadsTitle">
         <property name="visible">1</property>
@@ -481,12 +457,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkImage" id="UploadGroupingIcon">
-                <property name="visible">1</property>
-                <property name="icon-name">view-list-symbolic</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkComboBoxText" id="ToggleTreeUploads">
                 <property name="visible">1</property>
                 <property name="has-entry">1</property>
@@ -502,9 +472,7 @@
                   </object>
                 </child>
                 <child internal-child="button">
-                  <object class="GtkButton">
-                    <property name="image">UploadGroupingIcon</property>
-                  </object>
+                  <object class="GtkButton" id="ToggleButtonUploads"/>
                 </child>
               </object>
             </child>
@@ -528,15 +496,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderPrivateChat">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="PrivateChatTitle">
         <property name="visible">1</property>
@@ -586,15 +550,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderUserInfo">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UserInfoTitle">
         <property name="visible">1</property>
@@ -644,15 +604,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderUserBrowse">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child>
       <object class="GtkBox" id="UserBrowseStart">
         <property name="visible">1</property>
@@ -734,15 +690,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderUserList">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="UserListTitle">
         <property name="visible">1</property>
@@ -783,15 +735,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkHeaderBar" id="HeaderChatrooms">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <property name="show-close-button">1</property>
     <child type="title">
       <object class="GtkBox" id="ChatroomsTitle">
         <property name="visible">1</property>
@@ -869,20 +817,15 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="pack-type">end</property>
-      </packing>
     </child>
   </object>
   <object class="GtkApplicationWindow" id="MainWindow">
-    <signal name="delete-event" handler="on_delete_event" swapped="no"/>
-    <signal name="focus-in-event" handler="on_focus_in" swapped="no"/>
     <child>
       <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkPaned">
+          <object class="GtkPaned" id="MainPaned">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="orientation">vertical</property>
@@ -922,7 +865,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -966,7 +909,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1003,7 +946,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1040,7 +983,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1084,7 +1027,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1128,7 +1071,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1172,7 +1115,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1209,7 +1152,7 @@
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="toolbar"/>
+                                  <class name="tab-toolbar"/>
                                 </style>
                               </object>
                             </child>
@@ -1224,9 +1167,6 @@
                                     <property name="show-border">0</property>
                                     <property name="scrollable">1</property>
                                   </object>
-                                  <packing>
-                                    <property name="resize">1</property>
-                                  </packing>
                                 </child>
                               </object>
                             </child>
@@ -1253,10 +1193,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="resize">1</property>
-                <property name="shrink">0</property>
-              </packing>
             </child>
             <!-- Log Window -->
             <child>
@@ -1266,7 +1202,6 @@
                 <child>
                   <object class="GtkRevealer" id="DebugButtons">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
                     <property name="transition-type">slide-up</property>
                     <child>
                       <object class="GtkFlowBox">
@@ -1453,10 +1388,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="resize">0</property>
-                <property name="shrink">0</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -1487,6 +1418,7 @@
             </child>
             <child>
               <object class="GtkProgressBar" id="SharesProgress">
+                <property name="visible">0</property>
                 <property name="valign">center</property>
                 <property name="pulse-step">0.10000000149</property>
                 <property name="text" translatable="yes">Scanning Shares</property>
@@ -1495,6 +1427,7 @@
             </child>
             <child>
               <object class="GtkProgressBar" id="BuddySharesProgress">
+                <property name="visible">0</property>
                 <property name="valign">center</property>
                 <property name="pulse-step">0.10000000149</property>
                 <property name="margin-start">18</property>

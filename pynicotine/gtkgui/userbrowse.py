@@ -36,9 +36,10 @@ from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.infobar import InfoBar
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -61,6 +62,13 @@ class UserBrowse:
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.key_controller_folder = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
         self.key_controller_file = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
+
+        if Gtk.get_major_version() == 4:
+            self.MainPaned.set_property("resize-start-child", True)
+            self.MainPaned.set_property("resize-end-child", True)
+        else:
+            self.MainPaned.child_set_property(self.FolderPane, "resize", True)
+            self.MainPaned.child_set_property(self.FilePane, "resize", True)
 
         # Monitor user online status
         self.frame.np.watch_user(user)
@@ -94,13 +102,13 @@ class UserBrowse:
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.FolderTreeView, self.on_folder_popup_menu,
+            None, self.FolderTreeView,
             ["folders", _("Folders"), -1, "text", None]  # 0
         )
 
         cols["folders"].set_sort_column_id(0)
 
-        self.user_popup = popup = PopupMenu(self.frame)
+        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userbrowse")
         popup.setup(
             ("", None),
@@ -141,7 +149,7 @@ class UserBrowse:
             ("#" + _("Up_load File(s)"), self.on_upload_files)
         )
 
-        self.folder_popup_menu = PopupMenu(self.frame)
+        self.folder_popup_menu = PopupMenu(self.frame, self.FolderTreeView, self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
@@ -185,11 +193,14 @@ class UserBrowse:
             GObject.TYPE_UINT64   # (6) length
         )
 
+        if Gtk.get_major_version() == 4:
+            self.file_store.insert_with_valuesv = self.file_store.insert_with_values
+
         self.FileTreeView.set_model(self.file_store)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
-            "user_browse", self.FileTreeView, self.on_file_popup_menu,
+            "user_browse", self.FileTreeView,
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],
@@ -201,7 +212,7 @@ class UserBrowse:
         cols["length"].set_sort_column_id(6)
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.file_popup_menu = PopupMenu(self.frame)
+        self.file_popup_menu = PopupMenu(self.frame, self.FileTreeView, self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.setup(
@@ -239,6 +250,9 @@ class UserBrowse:
             if isinstance(object, PopupMenu):
                 object.set_user(self.user)
 
+    def set_label(self, label):
+        self.user_popup.set_widget(label)
+
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
@@ -264,9 +278,9 @@ class UserBrowse:
         if self.user != config.sections["server"]["login"]:
             self.on_download_directory()
 
-    def on_folder_popup_menu(self, *args):
+    def on_folder_popup_menu(self, menu, widget):
 
-        actions = self.folder_popup_menu.get_actions()
+        actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
@@ -279,8 +293,6 @@ class UserBrowse:
                 actions[i].set_enabled(self.selected_folder)
 
         self.user_popup.toggle_user_items()
-        self.folder_popup_menu.popup()
-        return True
 
     def select_files(self):
 
@@ -303,12 +315,12 @@ class UserBrowse:
         else:
             self.on_download_files()
 
-    def on_file_popup_menu(self, *args):
+    def on_file_popup_menu(self, menu, widget):
 
         self.select_files()
         num_selected_files = len(self.selected_files)
 
-        actions = self.file_popup_menu.get_actions()
+        actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
@@ -320,11 +332,8 @@ class UserBrowse:
             for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
                 actions[i].set_enabled(num_selected_files)
 
-        self.file_popup_menu.set_num_selected_files(num_selected_files)
-
+        menu.set_num_selected_files(num_selected_files)
         self.user_popup.toggle_user_items()
-        self.file_popup_menu.popup()
-        return True
 
     def make_new_model(self, list):
 
@@ -923,10 +932,9 @@ class UserBrowse:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_files()
 
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+        key, codes, mods = parse_accelerator("<Primary>c")
 
-        if state & mods and \
-                keycode in codes:
+        if state & mods and keycode in codes:
             self.copy_selected_path(is_file=is_file)
         else:
             # No key match, continue event
@@ -1048,6 +1056,9 @@ class UserBrowse:
         command = config.sections["ui"]["filemanager"]
 
         open_file_path(path, command)
+
+    def on_tab_popup(self, *args):
+        self.user_popup.toggle_user_items()
 
     def on_close(self, *args):
         del self.userbrowses.users[self.user]

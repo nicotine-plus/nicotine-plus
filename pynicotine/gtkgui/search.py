@@ -40,6 +40,7 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -78,7 +79,6 @@ class Searches(IconNotebook):
             notebookraw=self.frame.SearchNotebookRaw
         )
 
-        self.popup_enable()
         self.load_config()
 
         self.wish_list = WishList(frame, self)
@@ -221,6 +221,8 @@ class Searches(IconNotebook):
 
         label = fulltext[:length]
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
+        tab_label, menu_label = self.get_labels(tab.Main)
+        tab.set_label(tab_label)
 
     def show_search_result(self, msg, username, country):
 
@@ -278,34 +280,6 @@ class Searches(IconNotebook):
                 search["tab"].save_columns()
                 break
 
-    def get_search_id(self, child):
-
-        search_id = None
-        n = self.page_num(child)
-        page = self.get_nth_page(n)
-
-        for search, data in self.searches.items():
-
-            if data["tab"] is None:
-                continue
-            if data["tab"].Main is page:
-                search_id = search
-                break
-
-        return search_id
-
-    def on_tab_popup(self, widget, child):
-
-        search_id = self.get_search_id(child)
-
-        if search_id is None:
-            log.add("Search ID was none when clicking tab")
-            return False
-
-        menu = self.searches[search_id]["tab"].tab_menu
-        menu.popup()
-        return True
-
 
 class Search:
 
@@ -317,6 +291,11 @@ class Search:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
         self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
+
+        if Gtk.get_major_version() == 4:
+            self.ToggleButton.set_icon_name("view-list-symbolic")
+        else:
+            self.ToggleButton.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
 
         self.text = text
         self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
@@ -377,7 +356,7 @@ class Search:
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 18
         self.cols = cols = initialise_columns(
-            "file_search", self.ResultsList, self.on_popup_menu,
+            "file_search", self.ResultsList,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "pixbuf", None],
@@ -418,7 +397,7 @@ class Search:
 
         self.popup_menu_users = PopupMenu(self.frame)
 
-        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu = PopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
@@ -449,6 +428,9 @@ class Search:
 
         self.ResultGrouping.set_active(config.sections["searches"]["group_searches"])
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
+
+    def set_label(self, label):
+        self.tab_menu.set_widget(label)
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
@@ -1053,10 +1035,9 @@ class Search:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_results()
 
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>c")
+        key, codes, mods = parse_accelerator("<Primary>c")
 
-        if state & mods and \
-                keycode in codes:
+        if state & mods and keycode in codes:
             self.on_copy_file_path()
         else:
             # No key match, continue event
@@ -1064,11 +1045,11 @@ class Search:
 
         return True
 
-    def on_popup_menu(self, *args):
+    def on_popup_menu(self, menu, widget):
 
         self.select_results()
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
@@ -1093,10 +1074,7 @@ class Search:
 
                 break
 
-        self.popup_menu.set_num_selected_files(self.selected_files_count)
-
-        self.popup_menu.popup()
-        return True
+        menu.set_num_selected_files(self.selected_files_count)
 
     def on_browse_folder(self, *args):
 
@@ -1276,10 +1254,18 @@ class Search:
 
         if active:
             self.ResultsList.expand_all()
-            self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+
+            if Gtk.get_major_version() == 4:
+                self.expand.set_from_icon_name("go-up-symbolic")
+            else:
+                self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
         else:
             collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
-            self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+
+            if Gtk.get_major_version() == 4:
+                self.expand.set_from_icon_name("go-down-symbolic")
+            else:
+                self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
 
         config.sections["searches"]["expand_searches"] = active
 
@@ -1369,7 +1355,11 @@ class Search:
 
         if not hasattr(self, "AboutSearchFiltersPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
-            self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
+
+            if Gtk.get_major_version() == 4:
+                self.AboutSearchFiltersPopover.set_parent(self.ShowChatHelp)
+            else:
+                self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
 
         try:
             self.AboutSearchFiltersPopover.popup()

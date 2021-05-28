@@ -48,11 +48,16 @@ class RoomList:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
+        if Gtk.get_major_version() == 4:
+            self.RoomsListScrolledWindow.set_has_frame(True)
+        else:
+            self.RoomsListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.room_model = Gtk.ListStore(str, int, int)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         self.cols = initialise_columns(
-            None, self.RoomsList, self.on_popup_menu,
+            None, self.RoomsList,
             ["room", _("Room"), 260, "text", self.room_status],
             ["users", _("Users"), 100, "number", self.room_status]
         )
@@ -60,7 +65,7 @@ class RoomList:
         self.cols["users"].set_sort_column_id(1)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame)
+        self.popup_menu = PopupMenu(self.frame, self.RoomsList, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
@@ -80,7 +85,11 @@ class RoomList:
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
         frame.RoomList.connect("clicked", self.show)
-        self.RoomListPopover.set_relative_to(frame.RoomList)
+
+        if Gtk.get_major_version() == 4:
+            self.RoomListPopover.set_parent(frame.RoomList)
+        else:
+            self.RoomListPopover.set_relative_to(frame.RoomList)
 
     def get_selected_room(self, treeview):
 
@@ -157,6 +166,9 @@ class RoomList:
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         self.room_model.clear()
+
+        if Gtk.get_major_version() == 4:
+            self.room_model.insert_with_valuesv = self.room_model.insert_with_values
 
         for room, users in rooms:
             self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, users, 0])
@@ -255,10 +267,10 @@ class RoomList:
             self.popup_room = room
             self.on_popup_join()
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, menu, widget):
 
         if self.room_model is None:
-            return False
+            return True
 
         room = self.get_selected_room(widget)
 
@@ -273,16 +285,13 @@ class RoomList:
         self.popup_room = room
         prooms_enabled = True
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
 
         actions[_("Join Room")].set_enabled(act[0])
         actions[_("Leave Room")].set_enabled(act[1])
 
         actions[_("Disown Private Room")].set_enabled(self.is_private_room_owned(self.popup_room))
         actions[_("Cancel Room Membership")].set_enabled((prooms_enabled and self.is_private_room_member(self.popup_room)))
-
-        self.popup_menu.popup()
-        return True
 
     def on_popup_join(self, *args):
         self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))

@@ -8,16 +8,16 @@
         <property name="visible">0</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkPaned">
+          <object class="GtkPaned" id="ChatPaned">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <child>
-              <object class="GtkPaned">
+              <object class="GtkPaned" id="ChatPanedSecond">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="ActivityView">
                     <property name="visible">1</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -62,12 +62,9 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="resize">0</property>
-                  </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="ChatView">
                     <property name="visible">1</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -123,7 +120,6 @@
                           <object class="GtkEntry" id="ChatEntry">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="has-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="width-chars">5</property>
                           </object>
@@ -185,18 +181,11 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="shrink">0</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="resize">1</property>
-                <property name="shrink">0</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="UserView">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
@@ -293,10 +282,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="resize">0</property>
-                <property name="shrink">1</property>
-              </packing>
             </child>
           </object>
         </child>

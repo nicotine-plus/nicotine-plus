@@ -43,15 +43,13 @@ from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -109,25 +107,17 @@ class ChatRooms(IconNotebook):
             notebookraw=self.frame.ChatNotebookRaw
         )
 
-        self.popup_enable()
-
         self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))
 
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
+        if Gtk.get_major_version() == 4:
+            self.frame.ChatroomsPane.set_property("resize-start-child", True)
+        else:
+            self.frame.ChatroomsPane.child_set_property(self.notebook, "resize", True)
+
         self.update_visuals()
-
-    def on_tab_popup(self, widget, page):
-
-        room = self.get_page_owner(page, self.joinedrooms)
-
-        if room not in self.joinedrooms:
-            return False
-
-        menu = self.joinedrooms[room].tab_menu
-        menu.popup()
-        return True
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
 
@@ -165,7 +155,9 @@ class ChatRooms(IconNotebook):
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
-                GLib.idle_add(room.ChatEntry.grab_focus)
+                if Gtk.get_major_version() == 3:
+                    # Currently broken in GTK 4
+                    GLib.idle_add(room.ChatEntry.grab_focus)
 
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
@@ -201,6 +193,8 @@ class ChatRooms(IconNotebook):
             angle = 0
 
         self.append_page(tab.Main, msg.room, tab.on_leave, angle)
+        tab_label, menu_label = self.get_labels(tab.Main)
+        tab.set_label(tab_label)
 
         if self.switch_tab:
             page_num = self.page_num(tab.Main)
@@ -448,8 +442,24 @@ class ChatRoom:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
-        connect_context_menu_event(self.RoomLog, self.on_activity_log_clicked, self.on_popup_activity_log_menu)
-        connect_context_menu_event(self.ChatScroll, self.on_room_log_clicked, self.on_popup_room_log_menu)
+
+        if Gtk.get_major_version() == 4:
+            self.ChatPaned.set_property("resize-start-child", True)
+            self.ChatPaned.set_property("shrink-start-child", False)
+            self.ChatPaned.set_property("resize-end-child", False)
+            self.ChatPaned.set_property("shrink-end-child", True)
+
+            self.ChatPanedSecond.set_property("resize-start-child", False)
+            self.ChatPanedSecond.set_property("shrink-end-child", False)
+
+        else:
+            self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
+            self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
+            self.ChatPaned.child_set_property(self.UserView, "resize", False)
+            self.ChatPaned.child_set_property(self.UserView, "shrink", False)
+
+            self.ChatPanedSecond.child_set_property(self.ActivityView, "resize", False)
+            self.ChatPanedSecond.child_set_property(self.ChatView, "shrink", False)
 
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)
@@ -492,7 +502,7 @@ class ChatRoom:
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            ("chat_room", room), self.UserList, self.on_popup_menu,
+            ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", self.user_column_draw],
@@ -519,7 +529,7 @@ class ChatRoom:
 
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(self.frame)
+        self.popup_menu = popup = PopupMenu(self.frame, self.UserList, self.on_popup_menu)
         popup.setup_user_menu()
         popup.setup(
             ("", None),
@@ -527,8 +537,7 @@ class ChatRoom:
             (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
-        self.activitylogpopupmenu = PopupMenu(self.frame)
-        self.activitylogpopupmenu.setup(
+        PopupMenu(self.frame, self.RoomLog).setup(
             ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_activity_log),
@@ -539,8 +548,7 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        self.roomlogpopmenu = PopupMenu(self.frame)
-        self.roomlogpopmenu.setup(
+        PopupMenu(self.frame, self.ChatScroll).setup(
             ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.on_copy_room_log),
@@ -566,6 +574,9 @@ class ChatRoom:
         self.update_visuals()
         self.read_room_logs()
 
+    def set_label(self, label):
+        self.tab_menu.set_widget(label)
+
     def add_user_row(self, userdata):
 
         username = userdata.username
@@ -581,6 +592,9 @@ class ChatRoom:
         files = userdata.files
         hspeed = human_speed(avgspeed)
         hfiles = humanize(files)
+
+        if Gtk.get_major_version() == 4:
+            self.usersmodel.insert_with_valuesv = self.usersmodel.insert_with_values
 
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
@@ -702,15 +716,13 @@ class ChatRoom:
             self.frame.privatechats.send_message(user, show_user=True)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, widget):
+    def on_popup_menu(self, menu, treeview):
 
-        user = self.get_selected_username(widget)
+        user = self.get_selected_username(treeview)
         if user is None:
-            return False
+            return True
 
         self.populate_user_menu(user)
-        self.popup_menu.popup()
-        return True
 
     def on_show_room_wall(self, *args):
         self.room_wall.show()
@@ -719,7 +731,11 @@ class ChatRoom:
 
         if not hasattr(self, "AboutChatRoomCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
-            self.AboutChatRoomCommandsPopover.set_relative_to(self.ShowChatHelp)
+
+            if Gtk.get_major_version() == 4:
+                self.AboutChatRoomCommandsPopover.set_parent(self.ShowChatHelp)
+            else:
+                self.AboutChatRoomCommandsPopover.set_relative_to(self.ShowChatHelp)
 
         try:
             self.AboutChatRoomCommandsPopover.popup()
@@ -1031,7 +1047,7 @@ class ChatRoom:
         tag = buffer.create_tag()
         update_tag_visuals(tag, color)
 
-        if username:
+        if username and Gtk.get_major_version() == 3:
             tag.connect("event", self.user_name_event, username)
 
         return tag
@@ -1164,28 +1180,6 @@ class ChatRoom:
 
         if self.room not in config.sections["logging"]["rooms"]:
             config.sections["logging"]["rooms"].append(self.room)
-
-    def on_room_log_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_popup_room_log_menu()
-
-        return False
-
-    def on_popup_room_log_menu(self, *args):
-        self.roomlogpopmenu.popup()
-        return True
-
-    def on_activity_log_clicked(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_popup_activity_log_menu()
-
-        return False
-
-    def on_popup_activity_log_menu(self, *args):
-        self.activitylogpopupmenu.popup()
-        return True
 
     def on_copy_all_activity_log(self, *args):
         copy_all_text(self.RoomLog, self.frame.clipboard)

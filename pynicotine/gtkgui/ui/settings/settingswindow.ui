@@ -6,7 +6,7 @@
     <property name="can-focus">1</property>
     <property name="vexpand">1</property>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkScrolledWindow" id="SettingsList">
         <property name="width-request">250</property>
         <property name="visible">1</property>
         <property name="can-focus">1</property>
@@ -24,9 +24,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="resize">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow">

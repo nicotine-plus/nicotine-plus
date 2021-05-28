@@ -27,6 +27,7 @@ from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import expand_alias
@@ -427,11 +428,11 @@ class ChatEntry:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("Tab")
+        key, codes, mods = parse_accelerator("Tab")
 
         if keycode not in codes:
-            key, codes_shift_l, mods = Gtk.accelerator_parse_with_keycode("Shift_L")
-            key, codes_shift_r, mods = Gtk.accelerator_parse_with_keycode("Shift_R")
+            key, codes_shift_l, mods = parse_accelerator("Shift_L")
+            key, codes_shift_r, mods = parse_accelerator("Shift_R")
 
             if keycode not in codes_shift_l and \
                     keycode not in codes_shift_r:
@@ -561,7 +562,7 @@ class TextSearchBar:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes, mods = Gtk.accelerator_parse_with_keycode("<Primary>f")
+        key, codes, mods = parse_accelerator("<Primary>f")
 
         if state & mods and keycode in codes:
             self.show_search_bar()
@@ -571,12 +572,19 @@ class TextSearchBar:
 
     def show_search_bar(self):
         self.search_bar.set_search_mode(True)
-        self.entry.grab_focus_without_selecting()
+        self.entry.grab_focus()
 
 
 def clear_entry(entry):
 
-    completion = entry.get_completion()
-    entry.set_completion(None)
-    entry.set_text("")
-    entry.set_completion(completion)
+    if Gtk.get_major_version() == 4:
+        completion = entry.get_completion()
+        completion.set_minimum_key_length(1)
+        entry.set_text("")
+        completion.set_minimum_key_length(0)
+
+    else:
+        completion = entry.get_completion()
+        entry.set_completion(None)
+        entry.set_text("")
+        entry.set_completion(completion)

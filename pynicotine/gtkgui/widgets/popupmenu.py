@@ -23,13 +23,14 @@
 import random
 import string
 
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 
 """ Popup/Context Menu """
@@ -37,20 +38,28 @@ from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
 
 class PopupMenu(Gio.Menu):
 
-    def __init__(self, frame=None, window=None):
+    def __init__(self, frame=None, widget=None, callback=None):
 
         Gio.Menu.__init__(self)
 
         self.frame = frame
+        self.widget = widget
+        self.callback = callback
 
-        if not window:
+        if frame:
             self.window = frame.MainWindow
-
-        elif isinstance(window, Gtk.Dialog):
-            self.window = window.get_transient_for()
-
         else:
-            self.window = window
+            if Gtk.get_major_version() == 4:
+                self.window = widget.get_root()
+            else:
+                self.window = widget.get_toplevel()
+
+        self.gesture_click = None
+        self.gesture_press = None
+        self.last_controller = None
+
+        if widget:
+            self.connect_context_menu_events(widget)
 
         self.actions = {}
         self.items = {}
@@ -282,20 +291,110 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, button=3):
+    def popup(self, parent, x, y, button=3):
 
-        if not self.popup_menu:
-            self.popup_menu = Gtk.Menu.new_from_model(self)
-            self.popup_menu.attach_to_widget(self.window, None)
+        if not self.widget:
+            return
 
-        try:
-            self.popup_menu.popup_at_pointer()
+        if Gtk.get_major_version() == 4:
+            if isinstance(self.widget, Gtk.TextView):
+                self.widget.set_extra_menu(self)
 
-        except AttributeError:
-            time = Gtk.get_current_event_time()
-            self.popup_menu.popup(None, None, None, None, button, time)
+            else:
+                if not self.popup_menu:
+                    self.popup_menu = Gtk.PopoverMenu.new_from_model(self)
+                    self.popup_menu.set_has_arrow(False)
+                    self.popup_menu.set_position(Gtk.PositionType.BOTTOM)
+                    self.popup_menu.set_parent(parent)
+
+                self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
+                self.popup_menu.set_offset(x, y)
+                self.popup_menu.popup()
+
+        else:
+            if not self.popup_menu:
+                self.popup_menu = Gtk.Menu.new_from_model(self)
+                self.popup_menu.attach_to_widget(self.widget, None)
+
+            if self.last_controller:
+                sequence = self.last_controller.get_current_sequence()
+                event = self.last_controller.get_last_event(sequence)
+            else:
+                event = None
+
+            try:
+                self.popup_menu.popup_at_pointer(event)
+
+            except AttributeError:
+                time = Gtk.get_current_event_time()
+                self.popup_menu.popup(None, None, None, None, button, time)
 
     """ Events """
+
+    def _callback(self, controller, x, y):
+
+        if x and y and isinstance(self.widget, Gtk.TreeView):
+            from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+            set_treeview_selected_row(self.widget, x, y)
+
+        self.last_controller = controller
+
+        if self.callback:
+            cancel = self.callback(self, self.widget)
+
+            if cancel:
+                return
+
+        self.popup(self.widget, x, y)
+
+    def _callback_press(self, controller, x, y):
+
+        if x and y and isinstance(self.widget, Gtk.TreeView):
+            x, y = self.widget.convert_widget_to_bin_window_coords(x, y)
+
+        self._callback(controller, x, y)
+
+    def _callback_click_new(self, controller, num_p, x, y):
+
+        if x and y and isinstance(self.widget, Gtk.TreeView):
+            x, y = self.widget.convert_widget_to_bin_window_coords(x, y)
+
+        self._callback(controller, x, y)
+
+    def _callback_click(self, widget, event):
+
+        if event.triggers_context_menu():
+            self._callback(None, event.x, event.y)
+            return True
+
+    def _callback_menu(self, widget):
+        self._callback(None, None, None)
+
+    def connect_context_menu_events(self, widget):
+
+        if Gtk.get_major_version() == 4:
+            self.gesture_press = Gtk.GestureLongPress()
+            self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
+            self.gesture_click.connect("pressed", self._callback_click_new)
+
+            widget.add_controller(self.gesture_press)
+            widget.add_controller(self.gesture_click)
+        else:
+            self.gesture_press = Gtk.GestureLongPress.new(widget)
+
+            widget.connect("button-press-event", self._callback_click)
+            widget.connect("popup-menu", self._callback_menu)
+
+        self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_press.set_touch_only(True)
+        self.gesture_press.connect("pressed", self._callback_press)
+
+    def set_widget(self, widget):
+
+        if widget:
+            self.connect_context_menu_events(widget)
+            self.widget = widget
 
     def on_search_user(self, *args):
         self.frame.SearchMethod.set_active_id("user")

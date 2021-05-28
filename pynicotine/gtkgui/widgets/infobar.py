@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gtk
+
 
 class InfoBar:
     """ Wrapper for setting up a GtkInfoBar """
@@ -27,6 +29,16 @@ class InfoBar:
         self.info_bar.set_show_close_button(True)
         self.info_bar.connect("response", self._hide)
 
+        self.label = Gtk.Label()
+
+        if Gtk.get_major_version() == 4:
+            self.label.set_wrap(True)
+            self.info_bar.add_child(self.label)
+        else:
+            self.label.set_line_wrap(True)
+            self.info_bar.get_content_area().add(self.label)
+            self.label.show()
+
         self.set_visible(False)
 
     def _hide(self, *args):
@@ -36,8 +48,5 @@ class InfoBar:
         self.info_bar.get_parent().set_reveal_child(visible)
 
     def show_message(self, message):
-
-        label = self.info_bar.get_content_area().get_children()[0]
-        label.set_text(message)
-
+        self.label.set_text(message)
         self.set_visible(True)

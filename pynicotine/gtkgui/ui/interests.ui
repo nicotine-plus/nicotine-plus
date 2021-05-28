@@ -5,12 +5,12 @@
     <property name="visible">1</property>
     <property name="spacing">6</property>
     <child>
-      <object class="GtkPaned">
+      <object class="GtkPaned" id="InterestsPaned">
         <property name="visible">1</property>
         <property name="can-focus">1</property>
         <property name="hexpand">1</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="LikesDislikes">
             <property name="width-request">240</property>
             <property name="visible">1</property>
             <property name="orientation">vertical</property>
@@ -118,12 +118,9 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="resize">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkPaned">
+          <object class="GtkPaned" id="InterestsPanedSecond">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <child>
@@ -265,12 +262,9 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="resize">1</property>
-              </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="SimilarUsers">
                 <property name="width-request">280</property>
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
@@ -334,9 +328,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="resize">0</property>
-              </packing>
             </child>
           </object>
         </child>

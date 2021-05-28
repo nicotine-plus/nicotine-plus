@@ -26,6 +26,7 @@ from ctypes import Structure, sizeof
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
@@ -61,7 +62,7 @@ class Notifications:
                 self.frame.hilites[location].append(user)
                 self.frame.tray_icon.set_image()
 
-        if config.sections["ui"]["urgencyhint"] and \
+        if Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"] and \
                 not self.frame.MainWindow.is_active():
             self.frame.MainWindow.set_urgency_hint(True)
 

@@ -28,8 +28,9 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
-from pynicotine.gtkgui.widgets.messagedialogs import message_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import message_dialog
+from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 
 
@@ -40,11 +41,22 @@ class FastConfigureAssistant(object):
         self.frame = frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
-        self.FastConfigureDialog.set_transient_for(self.frame.MainWindow)
+        set_dialog_properties(self.FastConfigureDialog, frame.MainWindow, type_hint="dialog")
+
+        for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):
+            self.FastConfigureDialog.append_page(page)
+
+        self.FastConfigureDialog.set_page_type(self.welcomepage, Gtk.AssistantPageType.CUSTOM)
+        self.FastConfigureDialog.set_page_type(self.summarypage, Gtk.AssistantPageType.SUMMARY)
+
+        # Page specific, sharepage
+        if Gtk.get_major_version() == 4:
+            self.shareddirectories.set_has_frame(True)
+        else:
+            self.shareddirectories.set_shadow_type(Gtk.ShadowType.IN)
 
         self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")
 
-        # Page specific, sharepage
         self.sharelist = Gtk.ListStore(
             str,
             str
@@ -52,7 +64,7 @@ class FastConfigureAssistant(object):
 
         self.column_numbers = list(range(self.sharelist.get_n_columns()))
         initialise_columns(
-            None, self.shareddirectoriestree, None,
+            None, self.shareddirectoriestree,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), 0, "text", None]
         )
@@ -152,6 +164,9 @@ class FastConfigureAssistant(object):
                 return
 
             iterator = self.sharelist.iter_next(iterator)
+
+        if Gtk.get_major_version() == 4:
+            self.sharelist.insert_with_valuesv = self.sharelist.insert_with_values
 
         self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual_name, path])
 

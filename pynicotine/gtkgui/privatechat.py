@@ -36,16 +36,14 @@ from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.messagedialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
@@ -84,8 +82,6 @@ class PrivateChats(IconNotebook):
             notebookraw=self.frame.PrivatechatNotebookRaw
         )
 
-        self.popup_enable()
-
         self.connected = True
         self.users = {}
         self.completion_list = []
@@ -104,7 +100,10 @@ class PrivateChats(IconNotebook):
 
         for user, tab in list(self.users.items()):
             if tab.Main == page:
-                GLib.idle_add(tab.ChatLine.grab_focus)
+                if Gtk.get_major_version() == 3:
+                    # Currently broken in GTK 4
+                    GLib.idle_add(tab.ChatLine.grab_focus)
+
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 if user in self.frame.hilites["private"]:
                     self.frame.notifications.clear("private", tab.user)
@@ -148,6 +147,8 @@ class PrivateChats(IconNotebook):
             self.frame.np.watch_user(user)
 
             self.append_page(tab.Main, user, tab.on_close, status=status)
+            tab_label, menu_label = self.get_labels(tab.Main)
+            tab.set_label(tab_label)
 
         if show_user:
             if self.get_current_page() != self.page_num(self.users[user].Main):
@@ -155,18 +156,6 @@ class PrivateChats(IconNotebook):
 
         if text is not None:
             self.users[user].send_message(text, bytestring=bytestring)
-
-    def on_tab_popup(self, widget, page):
-
-        username = self.get_page_owner(page, self.users)
-
-        if username not in self.users:
-            return False
-
-        menu = self.users[username].popup_menu_user
-        menu.toggle_user_items()
-        menu.popup()
-        return True
 
     def private_message_queue_add(self, msg, text):
 
@@ -312,7 +301,6 @@ class PrivateChat:
         self.frame = chats.frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
-        connect_context_menu_event(self.ChatScroll, self.on_message_view_clicked, self.on_popup_menu)
 
         self.autoreplied = False
         self.offlinemessage = False
@@ -326,7 +314,7 @@ class PrivateChat:
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame)
+        self.popup_menu_user = popup = PopupMenu(self.frame, None, self.on_popup_menu)
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
@@ -334,7 +322,7 @@ class PrivateChat:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.popup_menu = popup = PopupMenu(self.frame)
+        popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu)
         popup.setup(
             ("#" + _("Find..."), self.on_find_chat_log),
             ("", None),
@@ -403,18 +391,11 @@ class PrivateChat:
         self.offlinemessage = False
         self.update_tags()
 
-    def on_message_view_clicked(self, widget, event):
+    def set_label(self, label):
+        self.popup_menu_user.set_widget(label)
 
-        if triggers_context_menu(event):
-            return self.on_popup_menu()
-
-        return False
-
-    def on_popup_menu(self, *args):
-
+    def on_popup_menu(self, menu, widget):
         self.popup_menu_user.toggle_user_items()
-        self.popup_menu.popup()
-        return True
 
     def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)
@@ -452,7 +433,11 @@ class PrivateChat:
 
         if not hasattr(self, "AboutPrivateChatCommandsPopover"):
             load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
-            self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
+
+            if Gtk.get_major_version() == 4:
+                self.AboutPrivateChatCommandsPopover.set_parent(self.ShowChatHelp)
+            else:
+                self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
 
         try:
             self.AboutPrivateChatCommandsPopover.popup()

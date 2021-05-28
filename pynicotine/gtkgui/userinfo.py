@@ -30,9 +30,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import connect_context_menu_event
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import triggers_context_menu
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -62,8 +60,6 @@ class UserTabs(IconNotebook):
             notebookraw=notebookraw
         )
 
-        self.popup_enable()
-
         self.subwindow = subwindow
 
         self.users = {}
@@ -80,6 +76,8 @@ class UserTabs(IconNotebook):
 
         w = self.users[user] = self.subwindow(self, user)
         self.append_page(w.Main, user, w.on_close, status=status)
+        tab_label, menu_label = self.get_labels(w.Main)
+        w.set_label(tab_label)
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
 
@@ -155,18 +153,6 @@ class UserTabs(IconNotebook):
         for i in self.users.values():
             i.update_visuals()
 
-    def on_tab_popup(self, widget, page):
-
-        username = self.get_page_owner(page, self.users)
-
-        if username not in self.users:
-            return False
-
-        menu = self.users[username].user_popup
-        menu.toggle_user_items()
-        menu.popup()
-        return True
-
     def login(self):
 
         for user in self.users:
@@ -192,7 +178,37 @@ class UserInfo:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
-        connect_context_menu_event(self.UserImage, self.on_image_click, self.on_image_popup_menu)
+
+        if Gtk.get_major_version() == 4:
+            self.image = Gtk.Picture()
+            self.UserImage = Gtk.Box()
+            self.UserImage.append(self.image)
+            self.ImageViewport.set_child(self.UserImage)
+
+            self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+            self.scroll_controller.connect("scroll", self.on_scroll)
+            self.ImageViewport.add_controller(self.scroll_controller)
+
+            self.MainPaned.set_property("resize-start-child", False)
+            self.SecondPaned.set_property("resize-start-child", False)
+
+        else:
+            self.image = Gtk.Image()
+            self.UserImage = Gtk.EventBox()
+            self.UserImage.add(self.image)
+            self.ImageViewport.add(self.UserImage)
+            self.ImageViewport.show_all()
+
+            try:
+                self.scroll_controller = Gtk.EventControllerScroll.new(self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
+                self.scroll_controller.connect("scroll", self.on_scroll)
+
+            except AttributeError:
+                # GTK <3.24
+                self.ImageViewport.connect("scroll-event", self.on_scroll_event)
+
+            self.MainPaned.child_set_property(self.InfoVbox, "resize", False)
+            self.SecondPaned.child_set_property(self.Interests, "resize", False)
 
         # Request user status, speed and number of shared files
         self.frame.np.watch_user(user, force_update=True)
@@ -213,7 +229,7 @@ class UserInfo:
 
         self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Hates, self.on_popup_interest_menu,
+            None, self.Hates,
             ["hates", _("Hates"), 0, "text", None]
         )
         cols["hates"].set_sort_column_id(0)
@@ -225,7 +241,7 @@ class UserInfo:
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Likes, self.on_popup_interest_menu,
+            None, self.Likes,
             ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
@@ -236,7 +252,7 @@ class UserInfo:
 
         self.update_visuals()
 
-        self.user_popup = popup = PopupMenu(self.frame)
+        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
             ("", None),
@@ -244,7 +260,7 @@ class UserInfo:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.interest_popup_menu = popup = PopupMenu(self.frame)
+        self.interest_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
@@ -252,7 +268,7 @@ class UserInfo:
             ("#" + _("_Search for Item"), self.on_interest_recommend_search)
         )
 
-        self.image_menu = popup = PopupMenu(self.frame)
+        self.image_menu = popup = PopupMenu(self.frame, self.UserImage, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -260,6 +276,9 @@ class UserInfo:
             ("", None),
             ("#" + _("Save Picture"), self.on_save_picture)
         )
+
+    def set_label(self, label):
+        self.user_popup.set_widget(label)
 
     def update_visuals(self):
 
@@ -292,7 +311,11 @@ class UserInfo:
                 del data
 
                 self.image_pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
-                self.image.set_from_pixbuf(self.image_pixbuf)
+
+                if Gtk.get_major_version() == 4:
+                    self.image.set_pixbuf(self.image_pixbuf)
+                else:
+                    self.image.set_from_pixbuf(self.image_pixbuf)
 
             gc.collect()
 
@@ -374,30 +397,30 @@ class UserInfo:
 
     """ Events """
 
-    def on_popup_interest_menu(self, widget):
+    def on_tab_popup(self, *args):
+        self.user_popup.toggle_user_items()
+
+    def on_popup_interest_menu(self, menu, widget):
 
         model, iterator = widget.get_selection().get_selected()
 
         if iterator is None:
-            return False
+            return True
 
         item = model.get_value(iterator, 0)
 
         if item is None:
-            return False
+            return True
 
-        self.interest_popup_menu.set_user(item)
+        menu.set_user(item)
 
-        actions = self.interest_popup_menu.get_actions()
+        actions = menu.get_actions()
         actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
         actions[_("I _Dislike This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
-
-        self.interest_popup_menu.popup()
-        return True
 
     def on_like_recommendation(self, action, state):
         self.frame.interests.on_like_recommendation(action, state, self.interest_popup_menu.get_user())
@@ -454,26 +477,23 @@ class UserInfo:
             title="Save as..."
         )
 
-    def on_image_click(self, widget, event):
-
-        if triggers_context_menu(event):
-            return self.on_image_popup_menu()
-
-        return False
-
-    def on_image_popup_menu(self, *args):
+    def on_image_popup_menu(self, menu, widget):
 
         act = True
 
         if self.image is None or self.image_pixbuf is None:
             act = False
 
-        actions = self.image_menu.get_actions()
+        actions = menu.get_actions()
         for (action_id, action) in actions.items():
             action.set_enabled(act)
 
-        self.image_menu.popup()
-        return True
+    def on_scroll(self, controller, x, y):
+
+        if y < 0:
+            self.make_zoom_in()
+        else:
+            self.make_zoom_out()
 
     def on_scroll_event(self, widget, event):
 
@@ -506,7 +526,11 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
 
         pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.TILES)
-        self.image.set_from_pixbuf(pixbuf_zoomed)
+
+        if Gtk.get_major_version() == 4:
+            self.image.set_pixbuf(pixbuf_zoomed)
+        else:
+            self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
 
@@ -532,7 +556,11 @@ class UserInfo:
             return
 
         pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.TILES)
-        self.image.set_from_pixbuf(pixbuf_zoomed)
+
+        if Gtk.get_major_version() == 4:
+            self.image.set_pixbuf(pixbuf_zoomed)
+        else:
+            self.image.set_from_pixbuf(pixbuf_zoomed)
 
         del pixbuf_zoomed
 

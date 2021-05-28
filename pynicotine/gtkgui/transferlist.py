@@ -36,6 +36,7 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -56,7 +57,22 @@ class TransferList:
         self.type = type
 
         load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
-        getattr(frame, type + "svbox").add(self.Main)
+
+        self.ActionBar.remove(self.End)
+        self.ActionBar.pack_end(self.End)
+
+        if Gtk.get_major_version() == 4:
+            getattr(frame, type + "svbox").append(self.Main)
+            getattr(frame, "ToggleButton%ss" % self.type.title()).set_icon_name("view-list-symbolic")
+
+            self.ClearTransfers.set_has_frame(False)
+            self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
+        else:
+            getattr(frame, type + "svbox").add(self.Main)
+            getattr(frame, "ToggleButton%ss" % self.type.title()).set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+
+            self.ClearTransfers.add(self.ClearTransfersLabel)
+
         self.widget = widget = getattr(self, type.title() + "List")
         self.key_controller = connect_key_press_event(widget, self.on_key_press_event)
 
@@ -109,9 +125,12 @@ class TransferList:
             GObject.TYPE_PYOBJECT  # (18) transfer object
         )
 
+        if Gtk.get_major_version() == 4:
+            self.transfersmodel.insert_with_valuesv = self.transfersmodel.insert_with_values
+
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            type, widget, self.on_popup_menu,
+            type, widget,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -150,7 +169,7 @@ class TransferList:
         self.popup_menu_clear = PopupMenu(frame)
         self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
-        self.popup_menu = PopupMenu(frame)
+        self.popup_menu = PopupMenu(frame, widget, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
@@ -701,11 +720,17 @@ class TransferList:
         expanded = widget.get_active()
 
         if expanded:
+            icon_name = "go-up-symbolic"
             self.widget.expand_all()
-            expand_button_icon.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+
         else:
+            icon_name = "go-down-symbolic"
             collapse_treeview(self.widget, self.tree_users)
-            expand_button_icon.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+
+        if Gtk.get_major_version() == 4:
+            expand_button_icon.set_from_icon_name(icon_name)
+        else:
+            expand_button_icon.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
 
         config.sections["transfers"]["%ssexpanded" % self.type] = expanded
         config.write_configuration()
@@ -724,12 +749,12 @@ class TransferList:
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_file_path_tooltip(widget, x, y, tooltip, 10)
 
-    def on_popup_menu(self, *args):
+    def on_popup_menu(self, menu, widget):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
 
-        actions = self.popup_menu.get_actions()
+        actions = menu.get_actions()
         users = len(self.selected_users) > 0
         files = num_selected_transfers > 0
 
@@ -757,10 +782,7 @@ class TransferList:
         for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
             actions[i].set_enabled(act)
 
-        self.popup_menu.set_num_selected_files(num_selected_transfers)
-
-        self.popup_menu.popup()
-        return True
+        menu.set_num_selected_files(num_selected_transfers)
 
     def on_row_activated(self, treeview, path, column):
 
@@ -802,17 +824,17 @@ class TransferList:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_transfers()
 
-        if keycode in Gtk.accelerator_parse_with_keycode("t")[1]:
+        if keycode in parse_accelerator("t")[1]:
             self.abort_transfers()
 
-        elif keycode in Gtk.accelerator_parse_with_keycode("r")[1]:
+        elif keycode in parse_accelerator("r")[1]:
             self.retry_transfers()
 
-        elif state & Gtk.accelerator_parse("<Primary>")[1] and \
-                keycode in Gtk.accelerator_parse_with_keycode("c")[1]:
+        elif state & parse_accelerator("<Primary>")[2] and \
+                keycode in parse_accelerator("c")[1]:
             self.on_copy_file_path()
 
-        elif keycode in Gtk.accelerator_parse_with_keycode("Delete")[1]:
+        elif keycode in parse_accelerator("Delete")[1]:
             self.abort_transfers(clear=True)
 
         else:

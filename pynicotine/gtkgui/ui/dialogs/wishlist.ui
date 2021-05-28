@@ -1,136 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkDialog" id="WishListDialog">
-    <property name="title" translatable="yes">Search Wishlist</property>
-    <property name="modal">1</property>
-    <property name="window-position">center-on-parent</property>
-    <property name="default-width">600</property>
-    <property name="default-height">600</property>
-    <property name="type-hint">normal</property>
-    <signal name="delete-event" handler="quit" swapped="no"/>
-    <child internal-child="vbox">
-      <object class="GtkBox">
+  <object class="GtkBox" id="Main">
+    <property name="visible">1</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="orientation">vertical</property>
+        <property name="halign">start</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">13</property>
+        <property name="margin-bottom">13</property>
+        <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, useful for discovering uncommon files.</property>
+        <property name="justify">fill</property>
+        <property name="wrap">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="WishlistScrolledWindow">
+        <property name="visible">1</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="vexpand">1</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkTreeView" id="WishlistView">
             <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">13</property>
-            <property name="margin-bottom">13</property>
-            <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, useful for discovering uncommon files.</property>
-            <property name="justify">fill</property>
-            <property name="wrap">1</property>
+            <property name="can-focus">1</property>
+            <property name="rubber-banding">1</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection">
+                <property name="mode">multiple</property>
+              </object>
+            </child>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <property name="spacing">10</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="shadow-type">in</property>
-            <property name="vexpand">1</property>
+            <property name="hexpand">1</property>
+            <property name="spacing">10</property>
             <child>
-              <object class="GtkTreeView" id="WishlistView">
+              <object class="GtkEntry" id="AddWishEntry">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="rubber-banding">1</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection">
-                    <property name="mode">multiple</property>
-                  </object>
-                </child>
+                <property name="hexpand">1</property>
+                <property name="margin-end">20</property>
+                <property name="placeholder-text" translatable="yes">Add search term...</property>
+                <property name="primary-icon-name">bookmark-new-symbolic</property>
+                <signal name="activate" handler="on_add_wish" swapped="no"/>
+                <signal name="icon-press" handler="on_add_wish" swapped="no"/>
               </object>
             </child>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">10</property>
-            <property name="margin-bottom">10</property>
-            <property name="spacing">10</property>
+            <property name="can-focus">1</property>
+            <signal name="clicked" handler="on_remove_wish" swapped="no"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="spacing">10</property>
+                <property name="spacing">5</property>
                 <child>
-                  <object class="GtkEntry" id="AddWishEntry">
+                  <object class="GtkImage">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="margin-end">20</property>
-                    <property name="placeholder-text" translatable="yes">Add search term...</property>
-                    <property name="primary-icon-name">bookmark-new-symbolic</property>
-                    <signal name="activate" handler="on_add_wish" swapped="no"/>
-                    <signal name="icon-press" handler="on_add_wish" swapped="no"/>
+                    <property name="icon-name">edit-clear-symbolic</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_remove_wish" swapped="no"/>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">_Remove</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_clear_wishlist" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">_Clear All...</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">_Remove</property>
+                    <property name="use-underline">1</property>
                   </object>
                 </child>
               </object>
             </child>
           </object>
         </child>
-        <child internal-child="action_area">
-          <object class="GtkBox">
-            <property name="visible">0</property>
+        <child>
+          <object class="GtkButton">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <signal name="clicked" handler="on_clear_wishlist" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">edit-clear-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">_Clear All...</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>

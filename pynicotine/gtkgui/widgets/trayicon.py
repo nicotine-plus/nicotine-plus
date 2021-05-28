@@ -26,7 +26,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.messagedialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 
 """ Status Icon / AppIndicator """
@@ -79,6 +79,9 @@ class TrayIcon:
         return item, handler
 
     def create_menu(self):
+
+        if Gtk.get_major_version() == 4:
+            return
 
         self.tray_popup_menu = Gtk.Menu()
         self.hide_show_item, handler = self.create_item(_("Hide / Show Nicotine+"), self.on_hide_unhide_window)
@@ -281,6 +284,9 @@ class TrayIcon:
 
     def load(self, use_trayicon=None):
 
+        if Gtk.get_major_version() == 4:
+            return
+
         if sys.platform == "darwin":
             # Tray icons don't work as expected on macOS
             return
@@ -403,6 +409,9 @@ class TrayIcon:
 
     def set_away(self, enable):
 
+        if self.trayicon is None:
+            return
+
         if enable:
             self.tray_status["status"] = "away"
         else:
@@ -416,6 +425,9 @@ class TrayIcon:
 
     def set_connected(self, enable):
 
+        if self.trayicon is None:
+            return
+
         if enable:
             self.tray_status["status"] = "connect"
         else:
@@ -424,6 +436,9 @@ class TrayIcon:
         self.set_image()
 
     def set_server_actions_sensitive(self, status):
+
+        if self.trayicon is None:
+            return
 
         for i in (self.disconnect_item, self.away_item, self.send_message_item, self.lookup_ip_item,
                   self.lookup_info_item, self.lookup_shares_item):
