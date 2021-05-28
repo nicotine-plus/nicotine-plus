@@ -45,6 +45,7 @@ from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import scroll_bottom
@@ -155,9 +156,7 @@ class ChatRooms(IconNotebook):
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
-                if Gtk.get_major_version() == 3:
-                    # Currently broken in GTK 4
-                    GLib.idle_add(room.ChatEntry.grab_focus)
+                GLib.idle_add(grab_widget_focus, room.ChatEntry)
 
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)

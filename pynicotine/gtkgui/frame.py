@@ -57,6 +57,7 @@ from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_log
@@ -635,19 +636,19 @@ class NicotineFrame:
 
         self.UserBrowseCombo.set_sensitive(status)
 
-        if Gtk.get_major_version() == 3 and self.current_tab_label == self.UserBrowseTabLabel:
-            GLib.idle_add(self.UserBrowseEntry.grab_focus)
+        if self.current_tab_label == self.UserBrowseTabLabel:
+            GLib.idle_add(grab_widget_focus, self.UserBrowseEntry)
 
         self.UserInfoCombo.set_sensitive(status)
 
-        if Gtk.get_major_version() == 3 and self.current_tab_label == self.UserInfoTabLabel:
-            GLib.idle_add(self.UserInfoEntry.grab_focus)
+        if self.current_tab_label == self.UserInfoTabLabel:
+            GLib.idle_add(grab_widget_focus, self.UserInfoEntry)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchCombo.set_sensitive(status)
 
-        if Gtk.get_major_version() == 3 and self.current_tab_label == self.SearchTabLabel:
-            GLib.idle_add(self.SearchEntry.grab_focus)
+        if self.current_tab_label == self.SearchTabLabel:
+            GLib.idle_add(grab_widget_focus, self.SearchEntry)
 
         self.interests.SimilarUsersButton.set_sensitive(status)
         self.interests.GlobalRecommendationsButton.set_sensitive(status)
@@ -1569,9 +1570,7 @@ class NicotineFrame:
         for child in children:
             child.show()
 
-        if Gtk.get_major_version() == 3:
-            # Currently broken in GTK 4
-            GLib.idle_add(notebook.grab_focus)
+        GLib.idle_add(grab_widget_focus, notebook)
 
         tab_label = notebook.get_tab_label(page)
         self.current_tab_label = tab_label
@@ -1605,10 +1604,7 @@ class NicotineFrame:
 
         elif tab_label == self.SearchTabLabel:
             self.set_active_header_bar("Search")
-
-            if Gtk.get_major_version() == 3:
-                # Currently broken in GTK 4
-                GLib.idle_add(self.SearchEntry.grab_focus)
+            GLib.idle_add(grab_widget_focus, self.SearchEntry)
 
         elif tab_label == self.UserInfoTabLabel:
             self.set_active_header_bar("UserInfo")

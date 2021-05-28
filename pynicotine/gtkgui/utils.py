@@ -77,6 +77,13 @@ def load_ui_elements(ui_class, filename):
         sys.exit()
 
 
+def grab_widget_focus(widget):
+    """ Workaround for GTK 4 where a direct call to Gtk.Widget.grab_focus in GLib.idle_add
+    results in endless focus grab attempts and 100% CPU usage """
+
+    widget.grab_focus()
+
+
 def open_file_path(file_path, command=None):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
