@@ -93,7 +93,12 @@ class ChatEntry:
         self.completion_list.append(item)
 
         if config.sections["words"]["dropdown"]:
-            self.entry.get_completion().get_model().insert_with_valuesv(-1, self.column_numbers, [item])
+            model = self.entry.get_completion().get_model()
+
+            if Gtk.get_major_version() == 4:
+                model.insert_with_valuesv = model.insert_with_values
+
+            model.insert_with_valuesv(-1, self.column_numbers, [item])
 
     def get_completion(self, part, list):
 
@@ -126,17 +131,17 @@ class ChatEntry:
         if not config.sections["words"]["dropdown"]:
             return
 
-        liststore = self.entry.get_completion().get_model()
-        iterator = liststore.get_iter_first()
+        model = self.entry.get_completion().get_model()
+        iterator = model.get_iter_first()
 
         while iterator is not None:
-            name = liststore.get_value(iterator, 0)
+            name = model.get_value(iterator, 0)
 
             if name == item:
-                liststore.remove(iterator)
+                model.remove(iterator)
                 break
 
-            iterator = liststore.iter_next(iterator)
+            iterator = model.iter_next(iterator)
 
     def set_completion_list(self, completion_list):
 
@@ -147,8 +152,8 @@ class ChatEntry:
         completion.set_minimum_key_length(config_words["characters"])
         completion.set_inline_completion(False)
 
-        liststore = completion.get_model()
-        liststore.clear()
+        model = completion.get_model()
+        model.clear()
 
         if not config_words["tab"]:
             return
@@ -159,8 +164,11 @@ class ChatEntry:
         completion.set_popup_completion(False)
 
         if config_words["dropdown"]:
+            if Gtk.get_major_version() == 4:
+                model.insert_with_valuesv = model.insert_with_values
+
             for word in completion_list:
-                liststore.insert_with_valuesv(-1, self.column_numbers, [word])
+                model.insert_with_valuesv(-1, self.column_numbers, [word])
 
             completion.set_popup_completion(True)
 
