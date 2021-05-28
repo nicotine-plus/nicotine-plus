@@ -2,7 +2,6 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkPopover" id="RoomListPopover">
-    <!--<property name="modal">1</property>-->
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
@@ -46,12 +45,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="RoomsListScrolledWindow">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="height-request">400</property>
             <property name="width-request">350</property>
-            <!--<property name="shadow-type">in</property>-->
             <child>
               <object class="GtkTreeView" id="RoomsList">
                 <property name="visible">1</property>

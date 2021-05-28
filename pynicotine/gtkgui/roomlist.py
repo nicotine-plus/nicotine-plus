@@ -48,6 +48,11 @@ class RoomList:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
+        if Gtk.get_major_version() == 4:
+            self.RoomsListScrolledWindow.set_has_frame(True)
+        else:
+            self.RoomsListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.room_model = Gtk.ListStore(str, int, int)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
