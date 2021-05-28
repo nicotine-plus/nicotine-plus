@@ -508,6 +508,7 @@
         <child>
           <object class="GtkComboBoxText" id="PrivateChatCombo">
             <property name="visible">1</property>
+            <property name="halign">start</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="PrivateChatEntry">
@@ -562,6 +563,7 @@
         <child>
           <object class="GtkComboBoxText" id="UserInfoCombo">
             <property name="visible">1</property>
+            <property name="halign">start</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserInfoEntry">
@@ -648,6 +650,7 @@
         <child>
           <object class="GtkComboBoxText" id="UserBrowseCombo">
             <property name="visible">1</property>
+            <property name="halign">start</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserBrowseEntry">
