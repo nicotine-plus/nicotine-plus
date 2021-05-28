@@ -40,7 +40,6 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -141,7 +140,6 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
