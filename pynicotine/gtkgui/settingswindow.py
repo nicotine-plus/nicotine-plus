@@ -2772,14 +2772,20 @@ class PluginsFrame(BuildFrame):
                     vbox.set_orientation(Gtk.Orientation.VERTICAL)
                     container.add(vbox)
 
-                    initial = False
+                    last_radio = None
                     for label in data["options"]:
-                        if not initial:
-                            self.tw[name] = radio = Gtk.RadioButton.new_with_label(None, label)
-                            initial = True
+                        if Gtk.get_major_version() == 4:
+                            radio = Gtk.CheckButton.new_with_label(label)
                         else:
-                            radio = Gtk.RadioButton.new_with_label_from_widget(self.tw[name], label)
+                            radio = Gtk.RadioButton.new_with_label_from_widget(last_radio, label)
 
+                        if not last_radio:
+                            self.tw[name] = radio
+
+                        elif Gtk.get_major_version() == 4:
+                            radio.set_group(last_radio)
+
+                        last_radio = radio
                         vbox.add(radio)
 
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
@@ -3197,17 +3203,25 @@ class Settings:
 
             return widget.get_buffer().get_text(start, end, True)
 
-        elif isinstance(widget, Gtk.RadioButton):
-            radio_list = list(reversed(widget.get_group()))
-
-            for radio in radio_list:
-                if radio.get_active():
-                    return radio_list.index(radio)
-
-            return 0
-
         elif isinstance(widget, Gtk.CheckButton):
-            return widget.get_active()
+            try:
+                # Radio button
+                if Gtk.get_major_version() == 4:
+                    group = widget.get_property("group")
+                else:
+                    group = widget.get_group()
+
+                radio_list = list(reversed(group))
+
+                for radio in radio_list:
+                    if radio.get_active():
+                        return radio_list.index(radio)
+
+                return 0
+
+            except (AttributeError, TypeError):
+                # Regular check button
+                return widget.get_active()
 
         elif isinstance(widget, Gtk.ComboBox):
             return widget.get_model().get(widget.get_active_iter(), 0)[0]
@@ -3265,14 +3279,22 @@ class Settings:
             if isinstance(value, (str, int)):
                 widget.get_buffer().set_text(value)
 
-        elif isinstance(widget, Gtk.RadioButton):
-            radio_list = list(reversed(widget.get_group()))
-
-            if isinstance(value, int) and value < len(radio_list):
-                radio_list[value].set_active(True)
-
         elif isinstance(widget, Gtk.CheckButton):
-            widget.set_active(value)
+            try:
+                # Radio button
+                if Gtk.get_major_version() == 4:
+                    group = widget.get_property("group")
+                else:
+                    group = widget.get_group()
+
+                radio_list = list(reversed(group))
+
+                if isinstance(value, int) and value < len(radio_list):
+                    radio_list[value].set_active(True)
+
+            except (AttributeError, TypeError):
+                # Regular check button
+                widget.set_active(value)
 
         elif isinstance(widget, Gtk.ComboBox):
             if isinstance(value, str):
@@ -3363,7 +3385,7 @@ class Settings:
 
         child = self.viewport1.get_child()
 
-        if child:
+        if child and Gtk.get_major_version() == 3:
             self.viewport1.remove(child)
 
         model, iterator = selection.get_selected()
@@ -3382,7 +3404,10 @@ class Settings:
             page.set_settings()
             self.update_visuals(page)
 
-        self.viewport1.add(self.pages[page_id].Main)
+        if Gtk.get_major_version() == 4:
+            self.viewport1.set_child(self.pages[page_id].Main)
+        else:
+            self.viewport1.add(self.pages[page_id].Main)
 
     def on_backup_config_response(self, selected, data):
 
@@ -3396,7 +3421,7 @@ class Settings:
     def on_backup_config(self, *args):
 
         save_file(
-            parent=self.SettingsWindow.get_toplevel(),
+            parent=self.frame.MainWindow,
             callback=self.on_backup_config_response,
             initialdir=os.path.dirname(config.filename),
             initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),

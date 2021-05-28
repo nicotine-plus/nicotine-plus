@@ -33,8 +33,10 @@ active_chooser = None
 def _on_selected(dialog, response_id, callback, callback_data):
 
     if Gtk.get_major_version() == 4:
-        selected = dialog.get_files() if dialog.get_select_multiple() else dialog.get_file()
-        selected = [i.get_path() for i in selected]
+        if dialog.get_select_multiple():
+            selected = [i.get_path() for i in dialog.get_files()]
+        else:
+            selected = dialog.get_file().get_path()
     else:
         selected = dialog.get_filenames() if dialog.get_select_multiple() else dialog.get_filename()
 

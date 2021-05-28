@@ -35,6 +35,7 @@
             <property name="visible">1</property>
             <property name="label" translatable="yes">Login Details</property>
             <property name="halign">start</property>
+            <property name="mnemonic_widget">ServerDescription</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -46,7 +47,7 @@
             <property name="spacing">15</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="ServerDescription">
                 <property name="visible">1</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">You can create a new account by entering your desired details below. Please keep in mind that some usernames may already be taken. If you&apos;re unable to connect with your selected username, try choosing another one. If connecting remains a problem, verify the settings below and those of your internet connection.</property>
@@ -54,41 +55,33 @@
               </object>
             </child>
             <child>
-              <object class="GtkGrid">
+              <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="row-spacing">10</property>
-                <property name="column-homogeneous">1</property>
+                <property name="row-spacing">6</property>
+                <property name="homogeneous">1</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Server:</property>
                     <property name="xalign">0</property>
+                    <property name="mnemonic_widget">Server</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkEntry" id="Server">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">0</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Username:</property>
                     <property name="xalign">0</property>
+                    <property name="mnemonic_widget">Login</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkEntry" id="Login">
@@ -96,21 +89,14 @@
                     <property name="can-focus">1</property>
                     <property name="max-length">28</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Password:</property>
                     <property name="xalign">0</property>
+                    <property name="mnemonic_widget">Password</property>
                   </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox">
@@ -135,10 +121,6 @@
                       </object>
                     </child>
                   </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">2</property>
-                  </packing>
                 </child>
               </object>
             </child>
@@ -219,7 +201,6 @@
                     <property name="label" translatable="yes">Check Port Status</property>
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="can-default">1</property>
                     <signal name="clicked" handler="on_check_port" swapped="no"/>
                   </object>
                 </child>

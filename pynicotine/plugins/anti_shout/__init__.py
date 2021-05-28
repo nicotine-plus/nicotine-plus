@@ -14,16 +14,26 @@ def disable(plugins):
 class Plugin(BasePlugin):
     __name__ = "Anti SHOUT"
     settings = {
-        'maxscore': 0.6,
-        'minlength': 10,
+        'player_radio': 2,                # id, starts from 0
+        'player_dropdown': 'Clementine',  # can be either string or id starting from 0
     }
     metasettings = {
-        'maxscore': {
-            'description': 'The maximum ratio capitals/noncapitals before fixing capitalization',
-            'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1},
-        'minlength': {
-            'description': 'Lines shorter than this never not be altered', 'type': 'integer',
-            'minimum': 0},
+        'player_radio': {
+            'description': 'Choose an audio player',
+            'type': 'radio',
+            'options': (
+                'Exaile',
+                'Audacious',
+                'Clementine'
+            )},
+        'player_dropdown': {
+            'description': 'Choose an audio player',
+            'type': 'dropdown',
+            'options': (
+                'Exaile',
+                'Audacious',
+                'Clementine'
+            )}
     }
 
     def capitalize(self, text):
