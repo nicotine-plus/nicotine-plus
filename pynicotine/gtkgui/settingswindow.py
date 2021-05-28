@@ -970,15 +970,10 @@ class IgnoreListFrame(BuildFrame):
             }
         }
 
-        if Gtk.get_major_version() == 4:
-            self.IgnoredUsersScrolledWindow.set_has_frame(True)
-            self.IgnoredIPsScrolledWindow.set_has_frame(True)
-        else:
-            self.IgnoredUsersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-            self.IgnoredIPsScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.ignored_users = []
         self.ignorelist = Gtk.ListStore(str)
+
+        self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
         initialise_columns(
             None, self.IgnoredUsers,
             ["users", _("Users"), -1, "text", None]
@@ -988,6 +983,8 @@ class IgnoreListFrame(BuildFrame):
 
         self.ignored_ips = {}
         self.ignored_ips_list = Gtk.ListStore(str, str)
+
+        self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
         cols = initialise_columns(
             None, self.IgnoredIPs,
             ["addresses", _("Addresses"), -1, "text", None],
@@ -997,6 +994,15 @@ class IgnoreListFrame(BuildFrame):
         cols["users"].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
+
+        if Gtk.get_major_version() == 4:
+            self.IgnoredUsersScrolledWindow.set_has_frame(True)
+            self.IgnoredIPsScrolledWindow.set_has_frame(True)
+            self.ignorelist.insert_with_valuesv = self.ignorelist.insert_with_values
+            self.ignored_ips_list.insert_with_valuesv = self.ignored_ips_list.insert_with_values
+        else:
+            self.IgnoredUsersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+            self.IgnoredIPsScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def set_settings(self):
         server = config.sections["server"]
@@ -1013,7 +1019,9 @@ class IgnoreListFrame(BuildFrame):
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
             for ip, user in self.ignored_ips.items():
-                self.ignored_ips_list.append([ip, user])
+                self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [
+                    str(ip), str(user)
+                ])
 
     def get_settings(self):
         return {
@@ -1033,7 +1041,7 @@ class IgnoreListFrame(BuildFrame):
 
         if user and user not in self.ignored_users:
             self.ignored_users.append(user)
-            self.ignorelist.append([user])
+            self.ignorelist.insert_with_valuesv(-1, self.user_column_numbers, [str(user)])
 
     def on_add_ignored(self, widget):
 
@@ -1085,7 +1093,7 @@ class IgnoreListFrame(BuildFrame):
 
         if ip not in self.ignored_ips:
             self.ignored_ips[ip] = ""
-            self.ignored_ips_list.append([ip, ""])
+            self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [ip, ""])
 
     def on_add_ignored_ip(self, widget):
 
@@ -1176,7 +1184,7 @@ class BanListFrame(BuildFrame):
         if server["ipblocklist"] is not None:
             self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
-                self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers,[
+                self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [
                     str(blocked),
                     str(user)
                 ])
@@ -1685,10 +1693,13 @@ class TabsFrame(BuildFrame):
         # The first element is the translated string,
         # the second is a GtkPositionType
         self.pos_list = Gtk.ListStore(str, str)
-        self.pos_list.append([_("Top"), "Top"])
-        self.pos_list.append([_("Bottom"), "Bottom"])
-        self.pos_list.append([_("Left"), "Left"])
-        self.pos_list.append([_("Right"), "Right"])
+        column_numbers = list(range(self.pos_list.get_n_columns()))
+
+        if Gtk.get_major_version() == 4:
+            self.pos_list.insert_with_valuesv = self.pos_list.insert_with_values
+
+        for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
+            self.pos_list.insert_with_valuesv(-1, column_numbers, item)
 
         cell = Gtk.CellRendererText()
 
@@ -2044,15 +2055,17 @@ class UrlCatchingFrame(BuildFrame):
             }
         }
 
+        self.protocolmodel = Gtk.ListStore(str, str)
+
         if Gtk.get_major_version() == 4:
             self.ProtocolHandlersScrolledWindow.set_has_frame(True)
+            self.protocolmodel.insert_with_valuesv = self.protocolmodel.insert_with_values
         else:
             self.ProtocolHandlersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
-        self.protocolmodel = Gtk.ListStore(str, str)
-
         self.protocols = {}
 
+        self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
         cols = initialise_columns(
             None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
@@ -2089,7 +2102,9 @@ class UrlCatchingFrame(BuildFrame):
                 else:
                     command = urls["protocols"][key]
 
-                iterator = self.protocolmodel.append([key, command])
+                iterator = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [
+                    str(key), str(command)
+                ])
                 self.protocols[key] = iterator
 
         self.on_url_catching_toggled(self.URLCatching)
@@ -2161,7 +2176,7 @@ class UrlCatchingFrame(BuildFrame):
             if iterator is not None:
                 self.protocolmodel.set(iterator, 1, command)
         else:
-            iterator = self.protocolmodel.append([protocol, command])
+            iterator = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [protocol, command])
             self.protocols[protocol] = iterator
 
     def on_remove(self, widget):
@@ -2341,7 +2356,7 @@ class AutoReplaceListFrame(BuildFrame):
         words = config.sections["words"]
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
-                iter = self.replacelist.insert_with_valuesv(-1, self.column_numbers, [
+                self.replacelist.insert_with_valuesv(-1, self.column_numbers, [
                     str(word),
                     str(replacement)
                 ])
@@ -2380,7 +2395,7 @@ class AutoReplaceListFrame(BuildFrame):
 
     def on_add(self, widget):
 
-        iterator = self.replacelist.append(["", ""])
+        iterator = self.replacelist.insert_with_valuesv(-1, self.column_numbers, ["", ""])
         selection = self.ReplacementList.get_selection()
         selection.unselect_all()
         selection.select_iter(iterator)
@@ -2403,7 +2418,7 @@ class AutoReplaceListFrame(BuildFrame):
         self.replacelist.clear()
 
         for word, replacement in config.defaults["words"]["autoreplaced"].items():
-            self.replacelist.append([word, replacement])
+            self.replacelist.insert_with_valuesv(-1, self.column_numbers, [word, replacement])
 
 
 class CompletionFrame(BuildFrame):
