@@ -310,26 +310,28 @@ class IconNotebook:
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
 
-            self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic")
+            self.unread_button = Gtk.MenuButton.new()
+            self.unread_button.set_icon_name("emblem-important-symbolic")
             self.unread_button.set_has_frame(False)
         else:
             self.window = self.notebook.get_toplevel()
             self.popup_enable()
 
-            self.unread_button = Gtk.Button.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON)
+            self.unread_button = Gtk.MenuButton.new()
+            self.unread_button.set_image(Gtk.Image.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON))
             self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
 
         self.unread_button.set_tooltip_text(_("Unread Tabs"))
         self.unread_button.set_halign(Gtk.Align.CENTER)
         self.unread_button.set_valign(Gtk.Align.CENTER)
-        self.unread_button.connect("clicked", self.on_unread_notifications_menu)
 
         context = self.unread_button.get_style_context()
         context.add_class("circular")
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
-        self.popup_menu_unread = PopupMenu(widget=self.notebook)
+        self.popup_menu_unread = PopupMenu(widget=self.unread_button)
+        self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
         self.angle = angle
@@ -509,6 +511,14 @@ class IconNotebook:
         if image:
             if page not in self.unread_pages:
                 self.unread_pages.append(page)
+                self.popup_menu_unread.clear()
+
+                for page in self.unread_pages:
+                    tab_label, menu_label = self.get_labels(page)
+                    self.popup_menu_unread.setup(
+                        ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
+                    )
+
                 self.unread_button.show()
             return
 
@@ -620,15 +630,3 @@ class IconNotebook:
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)
         self.set_text_color(new_page, status=0)
-
-    def on_unread_notifications_menu(self, widget):
-
-        self.popup_menu_unread.clear()
-
-        for page in self.unread_pages:
-            tab_label, menu_label = self.get_labels(page)
-            self.popup_menu_unread.setup(
-                ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
-            )
-
-        self.popup_menu_unread.popup()
