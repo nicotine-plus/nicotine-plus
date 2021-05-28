@@ -431,7 +431,7 @@ class IconNotebook:
         dialog.destroy()
 
         if response_id == Gtk.ResponseType.OK:
-            for i in range(self.notebook.get_n_pages()):
+            for i in reversed(range(self.notebook.get_n_pages())):
                 page = self.notebook.get_nth_page(i)
                 tab_label, menu_label = self.get_labels(page)
                 tab_label.onclose(dialog)
