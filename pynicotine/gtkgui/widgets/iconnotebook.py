@@ -38,22 +38,17 @@ from pynicotine.config import config
 
 class ImageLabel(Gtk.Box):
 
-    def __init__(self, label="", onclose=None, closebutton=False, angle=0, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
+    def __init__(self, label="", onclose=None, closebutton=False, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
 
         Gtk.Box.__init__(self)
         self.set_hexpand(False)
 
         self.closebutton = closebutton
-        self.angle = angle
         self.centered = False
 
         self.onclose = onclose
 
         self.label = Gtk.Label()
-
-        if Gtk.get_major_version() == 3:
-            self.label.set_angle(angle)
-
         self.label.set_halign(Gtk.Align.START)
         self.label.set_hexpand(True)
         self.label.show()
@@ -79,7 +74,6 @@ class ImageLabel(Gtk.Box):
             self.hilite_image.hide()
 
         self._pack_children()
-        self._order_children()
 
     def _pack_children(self):
 
@@ -107,12 +101,6 @@ class ImageLabel(Gtk.Box):
 
         self.eventbox.show()
 
-        if Gtk.get_major_version() == 3:
-            if self.angle in (90, -90):
-                self.set_orientation(Gtk.Orientation.VERTICAL)
-            else:
-                self.set_orientation(Gtk.Orientation.HORIZONTAL)
-
         if self.centered:
             self.set_halign(Gtk.Align.CENTER)
         else:
@@ -131,27 +119,6 @@ class ImageLabel(Gtk.Box):
 
         if self.closebutton and self.onclose is not None:
             self._add_close_button()
-
-    def _order_children(self):
-
-        if Gtk.get_major_version() == 3:
-            if self.angle == 90:
-                self.box.reorder_child(self.hilite_image, 0)
-                self.box.reorder_child(self.label, 1)
-                self.box.reorder_child(self.status_image, 2)
-
-                if hasattr(self, "button"):
-                    self.reorder_child(self.button, 0)
-
-            else:
-                self.box.reorder_child(self.status_image, 0)
-                self.box.reorder_child(self.label, 1)
-                self.box.reorder_child(self.hilite_image, 2)
-
-                if hasattr(self, "button"):
-                    # Left align close button on macOS
-                    position = 0 if sys.platform == "darwin" else 1
-                    self.reorder_child(self.button, position)
 
     def _add_close_button(self):
 
@@ -198,27 +165,15 @@ class ImageLabel(Gtk.Box):
         else:
             self._remove_close_button()
 
-        self._order_children()
-
     def show_hilite_image(self, show=True):
         if show and self.get_hilite_image() is not None:
             self.hilite_image.show()
         else:
             self.hilite_image.hide()
 
-    def set_angle(self, angle):
-        self.angle = angle
-        self.label.set_angle(self.angle)
-        self._remove_close_button()
-
-        self._pack_children()
-        self._order_children()
-
     def set_centered(self, centered):
         self.centered = centered
-
         self._pack_children()
-        self._order_children()
 
     def set_text_color(self, notify=None, text=None):
 
@@ -288,10 +243,9 @@ class IconNotebook:
     """ This class implements a pseudo Gtk.Notebook
     On top of what a Gtk.Notebook provides:
     - You can have icons on the notebook tab.
-    - You can choose the label orientation (angle).
     """
 
-    def __init__(self, images, angle=0, tabclosers=False, show_hilite_image=True, reorderable=True, show_status_image=False, notebookraw=None):
+    def __init__(self, images, tabclosers=False, show_hilite_image=True, reorderable=True, show_status_image=False, notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
@@ -334,8 +288,6 @@ class IconNotebook:
         self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
-        self.angle = angle
-
     def get_labels(self, page):
         tab_label = self.notebook.get_tab_label(page)
         menu_label = self.notebook.get_menu_label(page)
@@ -374,29 +326,15 @@ class IconNotebook:
 
         self._show_status_image = show_image
 
-    def set_tab_angle(self, angle):
-
-        if angle == self.angle:
-            return
-
-        self.angle = angle
-
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
-            tab_label, menu_label = self.get_labels(page)
-
-            tab_label.set_angle(angle)
-
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
 
-    def append_page(self, page, label, onclose=None, angle=0, fulltext=None, status=None):
+    def append_page(self, page, label, onclose=None, fulltext=None, status=None):
 
-        self.set_tab_angle(angle)
         closebutton = self.tabclosers
 
         label_tab = ImageLabel(
-            label, onclose, closebutton=closebutton, angle=angle,
+            label, onclose, closebutton=closebutton,
             show_hilite_image=self._show_hilite_image,
             status_image=self.images["offline"],
             show_status_image=self._show_status_image

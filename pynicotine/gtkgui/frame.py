@@ -1509,7 +1509,7 @@ class NicotineFrame:
 
             # Initialize the image label
             tab_label = ImageLabel(
-                tab_text, angle=config.sections["ui"]["labelmain"],
+                tab_text,
                 show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
                 show_status_image=True
             )
@@ -1792,25 +1792,12 @@ class NicotineFrame:
             tab_box = self.MainNotebook.get_nth_page(i)
             self.set_tab_expand(tab_box)
 
-            if Gtk.get_major_version() == 3:
-                tab_label = self.MainNotebook.get_tab_label(tab_box)
-                tab_label.set_angle(ui["labelmain"])
-
         # Other notebooks
         self.chatrooms.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
-        self.chatrooms.set_tab_angle(ui["labelrooms"])
-
         self.privatechats.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
-        self.privatechats.set_tab_angle(ui["labelprivate"])
-
         self.userinfo.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
-        self.userinfo.set_tab_angle(ui["labelinfo"])
-
         self.userbrowse.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
-        self.userbrowse.set_tab_angle(ui["labelbrowse"])
-
         self.searches.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
-        self.searches.set_tab_angle(ui["labelsearch"])
 
     def match_main_notebox(self, tab):
 

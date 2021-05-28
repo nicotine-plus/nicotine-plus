@@ -52,7 +52,6 @@ class UserTabs(IconNotebook):
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=config.sections["ui"]["labelinfo"],
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             reorderable=config.sections["ui"]["tab_reorderable"],

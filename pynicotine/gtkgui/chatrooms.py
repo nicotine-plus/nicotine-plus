@@ -101,7 +101,6 @@ class ChatRooms(IconNotebook):
         IconNotebook.__init__(
             self,
             self.frame.images,
-            angle=config.sections["ui"]["labelrooms"],
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             reorderable=config.sections["ui"]["tab_reorderable"],
@@ -186,12 +185,7 @@ class ChatRooms(IconNotebook):
         meta = (msg.room == "Public ")
         self.joinedrooms[msg.room] = tab = ChatRoom(self, msg.room, msg.users, meta)
 
-        try:
-            angle = int(config.sections["ui"]["labelrooms"])
-        except Exception:
-            angle = 0
-
-        self.append_page(tab.Main, msg.room, tab.on_leave, angle)
+        self.append_page(tab.Main, msg.room, tab.on_leave)
         tab_label, menu_label = self.get_labels(tab.Main)
         tab.set_label(tab_label)
 
