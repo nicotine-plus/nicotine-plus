@@ -577,7 +577,14 @@ class TextSearchBar:
 
 def clear_entry(entry):
 
-    completion = entry.get_completion()
-    entry.set_completion(None)
-    entry.set_text("")
-    entry.set_completion(completion)
+    if Gtk.get_major_version() == 4:
+        completion = entry.get_completion()
+        completion.set_minimum_key_length(1)
+        entry.set_text("")
+        completion.set_minimum_key_length(0)
+
+    else:
+        completion = entry.get_completion()
+        entry.set_completion(None)
+        entry.set_text("")
+        entry.set_completion(completion)
