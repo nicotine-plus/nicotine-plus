@@ -46,14 +46,6 @@ class PopupMenu(Gio.Menu):
         self.widget = widget
         self.callback = callback
 
-        if frame:
-            self.window = frame.MainWindow
-        else:
-            if Gtk.get_major_version() == 4:
-                self.window = widget.get_root()
-            else:
-                self.window = widget.get_toplevel()
-
         self.gesture_click = None
         self.gesture_press = None
         self.last_controller = None
@@ -74,6 +66,16 @@ class PopupMenu(Gio.Menu):
         self.user = None
         self.useritem = None
 
+    def get_window(self):
+
+        if self.frame:
+            return self.frame.MainWindow
+
+        if Gtk.get_major_version() == 4:
+            return self.widget.get_root()
+
+        return self.widget.get_toplevel()
+
     def create_action(self, action_id, stateful=False):
 
         if not stateful:
@@ -81,7 +83,7 @@ class PopupMenu(Gio.Menu):
         else:
             action = Gio.SimpleAction.new_stateful(action_id, None, GLib.Variant.new_boolean(False))
 
-        self.window.add_action(action)
+        self.get_window().add_action(action)
         return action
 
     def create_menu_item(self, item):
@@ -283,7 +285,7 @@ class PopupMenu(Gio.Menu):
         self.remove_all()
 
         for action in self.actions:
-            self.window.remove_action(action)
+            self.get_window().remove_action(action)
 
         self.actions.clear()
         self.items.clear()
@@ -527,7 +529,7 @@ class PopupMenu(Gio.Menu):
             message += "\n\n" + error
 
         entry_dialog(
-            parent=self.window,
+            parent=self.get_window(),
             title=_("Give Privileges"),
             message=message,
             callback=self.on_give_privileges_response
