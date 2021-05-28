@@ -19,6 +19,7 @@
 import os
 
 from gi.repository import GdkPixbuf
+from gi.repository import Gio
 from gi.repository import Gtk
 
 
@@ -31,10 +32,11 @@ active_chooser = None
 
 def _on_selected(dialog, response_id, callback, callback_data):
 
-    if dialog.get_select_multiple():
-        selected = dialog.get_filenames()
+    if Gtk.get_major_version() == 4:
+        selected = dialog.get_files() if dialog.get_select_multiple() else dialog.get_file()
+        selected = [i.get_path() for i in selected]
     else:
-        selected = dialog.get_filename()
+        selected = dialog.get_filenames() if dialog.get_select_multiple() else dialog.get_filename()
 
     dialog.destroy()
 
@@ -42,6 +44,19 @@ def _on_selected(dialog, response_id, callback, callback_data):
         return
 
     callback(selected, callback_data)
+
+
+def _set_filechooser_folder(dialog, folder_path):
+
+    folder_path = os.path.expanduser(folder_path)
+
+    if not os.path.isdir(folder_path):
+        folder_path = os.path.expanduser("~")
+
+    if Gtk.get_major_version() == 4:
+        folder_path = Gio.File.new_for_path(folder_path)
+
+    dialog.set_current_folder(folder_path)
 
 
 def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
@@ -69,13 +84,7 @@ def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Se
     if multichoice:
         self.set_select_multiple(True)
 
-    folder = os.path.expanduser(initialdir)
-
-    if os.path.isdir(folder):
-        self.set_current_folder(folder)
-    else:
-        self.set_current_folder(os.path.expanduser("~"))
-
+    _set_filechooser_folder(self, initialdir)
     self.show()
 
 
@@ -102,13 +111,7 @@ def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("S
     self.set_modal(True)
     self.set_select_multiple(multiple)
 
-    folder = os.path.expanduser(initialdir)
-
-    if os.path.isdir(folder):
-        self.set_current_folder(folder)
-    else:
-        self.set_current_folder(os.path.expanduser("~"))
-
+    _set_filechooser_folder(self, initialdir)
     self.show()
 
 
@@ -159,13 +162,7 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
     self.set_preview_widget(preview)
     self.set_select_multiple(multiple)
 
-    folder = os.path.expanduser(initialdir)
-
-    if os.path.isdir(folder):
-        self.set_current_folder(folder)
-    else:
-        self.set_current_folder(os.path.expanduser("~"))
-
+    _set_filechooser_folder(self, initialdir)
     self.show()
 
 
@@ -195,15 +192,8 @@ def save_file(parent, callback, callback_data=None, initialdir="~", initialfile=
     if Gtk.get_major_version() == 3:
         self.set_show_hidden(True)
 
-        folder = os.path.expanduser(initialdir)
-
-        if os.path.isdir(folder):
-            self.set_current_folder(folder)
-        else:
-            self.set_current_folder(os.path.expanduser("~"))
-
+    _set_filechooser_folder(self, initialdir)
     self.set_current_name(initialfile)
-
     self.show()
 
 
