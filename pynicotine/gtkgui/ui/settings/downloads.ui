@@ -49,11 +49,13 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">10</property>
-            <property name="column-spacing">10</property>
-            <property name="column-homogeneous">1</property>
+            <property name="row-spacing">6</property>
+            <property name="column-spacing">6</property>
+            <property name="homogeneous">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -61,10 +63,6 @@
                 <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSpinButton" id="DownloadSpeed">
@@ -74,10 +72,6 @@
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">1</property>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="RemoteDownloads">
@@ -87,10 +81,6 @@
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
               </object>
-              <packing>
-                <property name="top-attach">1</property>
-                <property name="left-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkComboBoxText" id="UploadsAllowed">
@@ -102,10 +92,6 @@
                   <item translatable="yes">Trusted Buddies</item>
                 </items>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
           </object>
         </child>
@@ -147,8 +133,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">10</property>
-            <property name="column-spacing">10</property>
+            <property name="row-spacing">6</property>
+            <property name="column-spacing">6</property>
             <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -199,7 +185,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">5</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -230,54 +216,14 @@
           </object>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="row-spacing">5</property>
-            <property name="column-spacing">5</property>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="margin-start">6</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkButton" id="VerifyFilters">
-                    <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <signal name="clicked" handler="on_verify_filter" swapped="no"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">1</property>
-                            <property name="icon-name">tools-check-spelling-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Verify Filters</property>
-                            <property name="use-underline">1</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="FilterScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
-                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="FilterView">
                     <property name="visible">1</property>
@@ -285,32 +231,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkLabel" id="VerifiedLabel">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="label" translatable="yes">Unverified</property>
-                    <property name="wrap">1</property>
-                    <property name="xalign">1</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox">
@@ -424,10 +344,49 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkButton" id="VerifyFilters">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_verify_filter" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">tools-check-spelling-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Verify Filters</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="VerifiedLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Unverified</property>
+                <property name="wrap">1</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
             </child>
           </object>
         </child>

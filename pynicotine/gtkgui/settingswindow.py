@@ -200,8 +200,16 @@ class DownloadsFrame(BuildFrame):
             str,
             bool
         )
+
+        if Gtk.get_major_version() == 4:
+            self.FilterScrolledWindow.set_has_frame(True)
+            self.filterlist.insert_with_valuesv = self.filterlist.insert_with_values
+        else:
+            self.FilterScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
         self.downloadfilters = []
 
+        self.column_numbers = list(range(self.filterlist.get_n_columns()))
         cols = initialise_columns(
             None, self.FilterView,
             ["filter", _("Filter"), -1, "text", None],
@@ -229,7 +237,9 @@ class DownloadsFrame(BuildFrame):
         if config.sections["transfers"]["downloadfilters"]:
             for dfilter in config.sections["transfers"]["downloadfilters"]:
                 dfilter, escaped = dfilter
-                self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
+                self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
+                    -1, self.column_numbers, [str(dfilter), bool(escaped)]
+                )
 
         self.on_enable_filters_toggle(self.DownloadFilter)
 
@@ -310,7 +320,9 @@ class DownloadsFrame(BuildFrame):
         if dfilter in self.filtersiters:
             self.filterlist.set(self.filtersiters[dfilter], 0, dfilter, 1, escaped)
         else:
-            self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
+            self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
+                -1, self.column_numbers, [dfilter, escaped]
+            )
 
         self.on_verify_filter(self.VerifyFilters)
 
@@ -360,7 +372,9 @@ class DownloadsFrame(BuildFrame):
         if new_dfilter in self.filtersiters:
             self.filterlist.set(self.filtersiters[new_dfilter], 0, new_dfilter, 1, escaped)
         else:
-            self.filtersiters[new_dfilter] = self.filterlist.append([new_dfilter, escaped])
+            self.filtersiters[new_dfilter] = self.filterlist.insert_with_valuesv(
+                -1, self.column_numbers, [new_dfilter, escaped]
+            )
             del self.filtersiters[dfilter]
             self.filterlist.remove(iterator)
 
@@ -419,7 +433,9 @@ class DownloadsFrame(BuildFrame):
 
         for dfilter in config.defaults["transfers"]["downloadfilters"]:
             dfilter, escaped = dfilter
-            self.filtersiters[dfilter] = self.filterlist.append([dfilter, escaped])
+            self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
+                -1, self.column_numbers, [dfilter, escaped]
+            )
 
         self.on_verify_filter(self.VerifyFilters)
 
@@ -1099,6 +1115,7 @@ class IgnoreListFrame(BuildFrame):
 class BanListFrame(BuildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         BuildFrame.__init__(self, "ban")
 
@@ -1113,16 +1130,10 @@ class BanListFrame(BuildFrame):
             }
         }
 
-        if Gtk.get_major_version() == 4:
-            self.BannedListScrolledWindow.set_has_frame(True)
-            self.BlockedListScrolledWindow.set_has_frame(True)
-        else:
-            self.BannedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-            self.BlockedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.banlist = []
         self.banlist_model = Gtk.ListStore(str)
 
+        self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
         initialise_columns(
             None, self.BannedList,
             ["users", _("Users"), -1, "text", None]
@@ -1133,6 +1144,7 @@ class BanListFrame(BuildFrame):
         self.blocked_list = {}
         self.blocked_list_model = Gtk.ListStore(str, str)
 
+        self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
         cols = initialise_columns(
             None, self.BlockedList,
             ["addresses", _("Addresses"), -1, "text", None],
@@ -1143,7 +1155,17 @@ class BanListFrame(BuildFrame):
 
         self.BlockedList.set_model(self.blocked_list_model)
 
+        if Gtk.get_major_version() == 4:
+            self.BannedListScrolledWindow.set_has_frame(True)
+            self.BlockedListScrolledWindow.set_has_frame(True)
+            self.banlist_model.insert_with_valuesv = self.banlist_model.insert_with_values
+            self.blocked_list_model.insert_with_valuesv = self.blocked_list_model.insert_with_values
+        else:
+            self.BannedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+            self.BlockedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
+
     def set_settings(self):
+
         server = config.sections["server"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
@@ -1154,7 +1176,10 @@ class BanListFrame(BuildFrame):
         if server["ipblocklist"] is not None:
             self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
-                self.blocked_list_model.append([blocked, user])
+                self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers,[
+                    str(blocked),
+                    str(user)
+                ])
 
         self.on_use_custom_ban_toggled(self.UseCustomBan)
 
@@ -1180,7 +1205,7 @@ class BanListFrame(BuildFrame):
 
         if user and user not in self.banlist:
             self.banlist.append(user)
-            self.banlist_model.append([user])
+            self.banlist_model.insert_with_valuesv(-1, self.ban_column_numbers, [user])
 
     def on_add_banned(self, widget):
 
@@ -1235,7 +1260,7 @@ class BanListFrame(BuildFrame):
 
         if ip not in self.blocked_list:
             self.blocked_list[ip] = ""
-            self.blocked_list_model.append([ip, ""])
+            self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip, ""])
 
     def on_add_blocked(self, widget):
 
@@ -2274,13 +2299,15 @@ class AutoReplaceListFrame(BuildFrame):
             }
         }
 
+        self.replacelist = Gtk.ListStore(str, str)
+
         if Gtk.get_major_version() == 4:
             self.ReplacementListScrolledWindow.set_has_frame(True)
+            self.replacelist.insert_with_valuesv = self.replacelist.insert_with_values
         else:
             self.ReplacementListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
-        self.replacelist = Gtk.ListStore(str, str)
-
+        self.column_numbers = list(range(self.replacelist.get_n_columns()))
         cols = initialise_columns(
             None, self.ReplacementList,
             ["pattern", _("Pattern"), 150, "edit", None],
@@ -2306,21 +2333,25 @@ class AutoReplaceListFrame(BuildFrame):
         store.set(iterator, pos, value)
 
     def set_settings(self):
+
         self.replacelist.clear()
+
         self.p.set_widgets_data(self.options)
+
         words = config.sections["words"]
         if words["autoreplaced"] is not None:
             for word, replacement in words["autoreplaced"].items():
-                try:
-                    self.replacelist.append([word, replacement])
-                except TypeError:
-                    # Invalid entry
-                    continue
+                iter = self.replacelist.insert_with_valuesv(-1, self.column_numbers, [
+                    str(word),
+                    str(replacement)
+                ])
 
         self.on_replace_check(self.ReplaceCheck)
 
     def on_replace_check(self, widget):
+
         sensitive = widget.get_active()
+
         self.ReplacementList.set_sensitive(sensitive)
         self.RemoveReplacement.set_sensitive(sensitive)
         self.AddReplacement.set_sensitive(sensitive)
@@ -2328,6 +2359,7 @@ class AutoReplaceListFrame(BuildFrame):
         self.DefaultReplacements.set_sensitive(sensitive)
 
     def get_settings(self):
+
         autoreplaced = {}
         try:
             iterator = self.replacelist.get_iter_first()
@@ -2347,6 +2379,7 @@ class AutoReplaceListFrame(BuildFrame):
         }
 
     def on_add(self, widget):
+
         iterator = self.replacelist.append(["", ""])
         selection = self.ReplacementList.get_selection()
         selection.unselect_all()
@@ -2356,6 +2389,7 @@ class AutoReplaceListFrame(BuildFrame):
         self.ReplacementList.set_cursor(self.replacelist.get_path(iterator), col, True)
 
     def on_remove(self, widget):
+
         selection = self.ReplacementList.get_selection()
         iterator = selection.get_selected()[1]
         if iterator is not None:
@@ -2921,6 +2955,11 @@ class PluginsFrame(BuildFrame):
             }
         }
 
+        self.plugins_model = Gtk.ListStore(bool, str, str)
+        self.plugins = []
+        self.pluginsiters = {}
+        self.selected_plugin = None
+
         if Gtk.get_major_version() == 4:
             self.PluginScrolledWindow.set_has_frame(True)
             self.PluginDescriptionScrolledWindow.set_has_frame(True)
@@ -2928,11 +2967,6 @@ class PluginsFrame(BuildFrame):
         else:
             self.PluginScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
             self.PluginDescriptionScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
-        self.plugins_model = Gtk.ListStore(bool, str, str)
-        self.plugins = []
-        self.pluginsiters = {}
-        self.selected_plugin = None
 
         self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(
@@ -3362,12 +3396,14 @@ class Settings:
             widget.set_font(value)
 
         elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
+            model = widget.get_model()
+            column_numbers = list(range(model.get_n_columns()))
+
+            if Gtk.get_major_version() == 4:
+                model.insert_with_valuesv = model.insert_with_values
+
             for item in value:
-                try:
-                    widget.get_model().append([item])
-                except TypeError:
-                    # Invalid input
-                    continue
+                model.insert_with_valuesv(-1, column_numbers, [str(item)])
 
         elif isinstance(widget, FileChooserButton):
             widget.set_path(value)
