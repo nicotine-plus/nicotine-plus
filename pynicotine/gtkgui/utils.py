@@ -388,6 +388,7 @@ def get_key_press_event_args(*args):
         # GTK <3.24
         widget, event = args
         keyval = event.keyval
+        keycode = event.hardware_keycode
         state = event.state
 
     return (keyval, keycode, state)
