@@ -291,12 +291,17 @@ class Search:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
+
         self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
+        self.ShowSearchHelp.set_popover(self.AboutSearchFiltersPopover)
 
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")
+            self.ShowSearchHelp.set_icon_name("dialog-question-symbolic")
         else:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
         self.text = text
         self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
@@ -1360,24 +1365,6 @@ class Search:
         self.clearing_filters = False
         self.FilterInEntry.grab_focus()
         self.on_refilter()
-
-    def on_about_filters(self, *args):
-
-        if not hasattr(self, "AboutSearchFiltersPopover"):
-            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
-
-            if Gtk.get_major_version() == 4:
-                self.AboutSearchFiltersPopover.set_parent(self.ShowChatHelp)
-            else:
-                self.AboutSearchFiltersPopover.set_relative_to(self.ShowChatHelp)
-
-        try:
-            self.AboutSearchFiltersPopover.popup()
-
-        except AttributeError:
-            # GTK <3.22 support
-            self.AboutSearchFiltersPopover.set_transitions_enabled(True)
-            self.AboutSearchFiltersPopover.show()
 
     def update_filter_counter(self, count):
 

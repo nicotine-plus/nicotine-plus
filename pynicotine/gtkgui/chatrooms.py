@@ -435,8 +435,13 @@ class ChatRoom:
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
+
+        self.ShowChatHelp.set_popover(self.AboutChatRoomCommandsPopover)
 
         if Gtk.get_major_version() == 4:
+            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
+
             self.ChatPaned.set_property("resize-start-child", True)
             self.ChatPaned.set_property("shrink-start-child", False)
             self.ChatPaned.set_property("resize-end-child", False)
@@ -446,6 +451,8 @@ class ChatRoom:
             self.ChatPanedSecond.set_property("shrink-end-child", False)
 
         else:
+            self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
+
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
             self.ChatPaned.child_set_property(self.UserView, "resize", False)
@@ -719,24 +726,6 @@ class ChatRoom:
 
     def on_show_room_wall(self, *args):
         self.room_wall.show()
-
-    def on_show_chat_help(self, *args):
-
-        if not hasattr(self, "AboutChatRoomCommandsPopover"):
-            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
-
-            if Gtk.get_major_version() == 4:
-                self.AboutChatRoomCommandsPopover.set_parent(self.ShowChatHelp)
-            else:
-                self.AboutChatRoomCommandsPopover.set_relative_to(self.ShowChatHelp)
-
-        try:
-            self.AboutChatRoomCommandsPopover.popup()
-
-        except AttributeError:
-            # GTK <3.22 support
-            self.AboutChatRoomCommandsPopover.set_transitions_enabled(True)
-            self.AboutChatRoomCommandsPopover.show()
 
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])

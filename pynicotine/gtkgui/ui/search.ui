@@ -373,18 +373,11 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkButton" id="ShowChatHelp">
+                              <object class="GtkMenuButton" id="ShowSearchHelp">
                                 <property name="visible">1</property>
                                 <property name="can-focus">1</property>
                                 <property name="receives-default">1</property>
                                 <property name="tooltip-text" translatable="yes">Search result filter help</property>
-                                <signal name="clicked" handler="on_about_filters" swapped="no"/>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">dialog-question-symbolic</property>
-                                  </object>
-                                </child>
                               </object>
                             </child>
                           </object>

@@ -299,6 +299,14 @@ class PrivateChat:
         self.frame = chats.frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
+
+        self.ShowChatHelp.set_popover(self.AboutPrivateChatCommandsPopover)
+
+        if Gtk.get_major_version() == 4:
+            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
+        else:
+            self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
         self.autoreplied = False
         self.offlinemessage = False
@@ -426,24 +434,6 @@ class PrivateChat:
 
     def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
-
-    def on_show_chat_help(self, *args):
-
-        if not hasattr(self, "AboutPrivateChatCommandsPopover"):
-            load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
-
-            if Gtk.get_major_version() == 4:
-                self.AboutPrivateChatCommandsPopover.set_parent(self.ShowChatHelp)
-            else:
-                self.AboutPrivateChatCommandsPopover.set_relative_to(self.ShowChatHelp)
-
-        try:
-            self.AboutPrivateChatCommandsPopover.popup()
-
-        except AttributeError:
-            # GTK <3.22 support
-            self.AboutPrivateChatCommandsPopover.set_transitions_enabled(True)
-            self.AboutPrivateChatCommandsPopover.show()
 
     def show_message(self, text, newmessage=True, timestamp=None):
 
