@@ -163,7 +163,7 @@ class NicotineFrame:
 
         self.load_icons()
 
-        if self.images["n"]:
+        if self.images["n"] and Gtk.get_major_version() == 3:
             self.MainWindow.set_default_icon(self.images["n"])
         else:
             self.MainWindow.set_default_icon_name(GLib.get_prgname())
@@ -1309,7 +1309,12 @@ class NicotineFrame:
         self.AboutDialog.connect("activate-link", self.on_about_uri)
 
         if self.images["n"]:
-            self.AboutDialog.set_logo(self.images["n"])
+            logo = self.images["n"]
+
+            if Gtk.get_major_version() == 4:
+                logo = Gdk.Texture.new_for_pixbuf(logo)
+
+            self.AboutDialog.set_logo(logo)
         else:
             self.AboutDialog.set_logo_icon_name(GLib.get_prgname())
 

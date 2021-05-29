@@ -29,6 +29,7 @@ import time
 
 import gi
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -1372,17 +1373,27 @@ class IconsFrame(BuildFrame):
             }
         }
 
-        self.N.set_from_pixbuf(self.frame.images["n"])
-        self.Away.set_from_pixbuf(self.frame.images["away"])
-        self.Online.set_from_pixbuf(self.frame.images["online"])
-        self.Offline.set_from_pixbuf(self.frame.images["offline"])
-        self.Hilite.set_from_pixbuf(self.frame.images["hilite"])
-        self.Hilite3.set_from_pixbuf(self.frame.images["hilite3"])
-        self.Trayicon_Away.set_from_pixbuf(self.frame.images["trayicon_away"])
-        self.Trayicon_Connect.set_from_pixbuf(self.frame.images["trayicon_connect"])
-        self.Trayicon_Disconnect.set_from_pixbuf(self.frame.images["trayicon_disconnect"])
-        self.Trayicon_Msg.set_from_pixbuf(self.frame.images["trayicon_msg"])
-        self.Notify.set_from_pixbuf(self.frame.images["notify"])
+        liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
+        column_numbers = list(range(liststore.get_n_columns()))
+        self.IconView.set_model(liststore)
+
+        if Gtk.get_major_version() == 4:
+            liststore.insert_with_valuesv = liststore.insert_with_values
+
+        for row in (
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["online"]), _("Connected")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), _("Disconnected")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["away"]), _("Away")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite"]), _("Highlight")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite3"]), _("Highlight")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["n"]), _("Window")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["notify"]), _("Notification")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_connect"]), _("Connected (Tray)")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_disconnect"]), _("Disconnected (Tray)")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_away"]), _("Away (Tray)")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_msg"]), _("Message (Tray)")]
+        ):
+            liststore.insert_with_valuesv(-1, column_numbers, row)
 
     def set_settings(self):
 
