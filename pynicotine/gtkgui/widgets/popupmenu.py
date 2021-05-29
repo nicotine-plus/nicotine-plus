@@ -49,6 +49,7 @@ class PopupMenu(Gio.Menu):
         self.gesture_click = None
         self.gesture_press = None
         self.last_controller = None
+        self.menu_open = False
 
         if widget:
             self.connect_context_menu_events(widget)
@@ -299,19 +300,16 @@ class PopupMenu(Gio.Menu):
             return
 
         if Gtk.get_major_version() == 4:
-            if isinstance(self.widget, Gtk.TextView):
-                self.widget.set_extra_menu(self)
+            if not self.popup_menu:
+                self.popup_menu = Gtk.PopoverMenu.new_from_model(self)
+                self.popup_menu.set_has_arrow(False)
+                self.popup_menu.set_position(Gtk.PositionType.BOTTOM)
+                self.popup_menu.set_parent(parent)
 
-            else:
-                if not self.popup_menu:
-                    self.popup_menu = Gtk.PopoverMenu.new_from_model(self)
-                    self.popup_menu.set_has_arrow(False)
-                    self.popup_menu.set_position(Gtk.PositionType.BOTTOM)
-                    self.popup_menu.set_parent(parent)
-
-                self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
-                self.popup_menu.set_offset(x, y)
-                self.popup_menu.popup()
+            self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
+            self.popup_menu.set_offset(x, y)
+            self.popup_menu.present()
+            self.popup_menu.popup()
 
         else:
             if not self.popup_menu:
@@ -349,6 +347,13 @@ class PopupMenu(Gio.Menu):
 
         self.popup(self.widget, x, y)
 
+    def _callback_legacy(self, controller, event):
+
+        if isinstance(self.widget, Gtk.TextView) and self.menu_open:
+            # Prevent GTK's built-in context menu from showing
+            self.menu_open = False
+            return True
+
     def _callback_press(self, controller, x, y):
 
         if x and y and isinstance(self.widget, Gtk.TreeView):
@@ -362,6 +367,7 @@ class PopupMenu(Gio.Menu):
             x, y = self.widget.convert_widget_to_bin_window_coords(x, y)
 
         self._callback(controller, x, y)
+        self.menu_open = True
 
     def _callback_click(self, widget, event):
 
@@ -375,11 +381,15 @@ class PopupMenu(Gio.Menu):
     def connect_context_menu_events(self, widget):
 
         if Gtk.get_major_version() == 4:
+            self.legacy_controller = Gtk.EventControllerLegacy()
+            self.legacy_controller.connect("event", self._callback_legacy)
+
             self.gesture_press = Gtk.GestureLongPress()
             self.gesture_click = Gtk.GestureClick()
             self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
             self.gesture_click.connect("pressed", self._callback_click_new)
 
+            widget.add_controller(self.legacy_controller)
             widget.add_controller(self.gesture_press)
             widget.add_controller(self.gesture_click)
         else:
