@@ -29,7 +29,7 @@
                 <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="clicked" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
             <child>
@@ -39,7 +39,7 @@
                 <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="clicked" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
             <child>
@@ -49,7 +49,7 @@
                 <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="clicked" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
           </object>

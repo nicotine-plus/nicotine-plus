@@ -47,14 +47,15 @@ NICOTINE = None
 def load_ui_elements(ui_class, filename):
 
     try:
-        if Gtk.get_major_version() == 4:
-            builder = Gtk.Builder(ui_class)
-            Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
-        else:
-            builder = Gtk.Builder()
-
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(filename)
+        with open(filename, 'r') as f:
+            if Gtk.get_major_version() == 4:
+                builder = Gtk.Builder(ui_class)
+                builder.add_from_string(f.read().replace("GtkRadioButton", "GtkCheckButton"))
+                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
+            else:
+                builder = Gtk.Builder()
+                builder.add_from_string(f.read())
+                builder.connect_signals(ui_class)
 
         for obj in builder.get_objects():
             try:
@@ -65,9 +66,6 @@ def load_ui_elements(ui_class, filename):
 
             except TypeError:
                 pass
-
-        if Gtk.get_major_version() == 3:
-            builder.connect_signals(ui_class)
 
     except Exception as e:
         log.add(_("Failed to load ui file %(file)s: %(error)s"), {
