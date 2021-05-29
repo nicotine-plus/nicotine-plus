@@ -28,7 +28,6 @@
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="halign">start</property>
-                <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
