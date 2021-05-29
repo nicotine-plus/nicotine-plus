@@ -304,11 +304,14 @@ class PopupMenu(Gio.Menu):
                 self.popup_menu = Gtk.PopoverMenu.new_from_model(self)
                 self.popup_menu.set_has_arrow(False)
                 self.popup_menu.set_position(Gtk.PositionType.BOTTOM)
+
+                if isinstance(self.widget, (Gtk.TextView, Gtk.TreeView)):
+                    parent = parent.get_next_sibling()
+
                 self.popup_menu.set_parent(parent)
 
             self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
             self.popup_menu.set_offset(x, y)
-            self.popup_menu.present()
             self.popup_menu.popup()
 
         else:
