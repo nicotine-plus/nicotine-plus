@@ -433,7 +433,7 @@ class Transfers:
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
-        for i in self.downloads:
+        for i in self.downloads.copy():
             if msg.user == i.user and i.status in ("Queued", "Getting status", "Establishing connection", "User logged off", "Connection closed by peer", "Cannot connect"):
                 if msg.status <= 0:
                     i.status = "User logged off"

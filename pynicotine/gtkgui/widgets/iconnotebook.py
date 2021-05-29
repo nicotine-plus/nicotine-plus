@@ -242,7 +242,9 @@ class ImageLabel(Gtk.Box):
 class IconNotebook:
     """ This class implements a pseudo Gtk.Notebook
     On top of what a Gtk.Notebook provides:
-    - You can have icons on the notebook tab.
+    - Icons on the notebook tab
+    - Dropdown menu for unread tabs
+    - A few shortcuts
     """
 
     def __init__(self, images, tabclosers=False, show_hilite_image=True, reorderable=True, show_status_image=False, notebookraw=None):
