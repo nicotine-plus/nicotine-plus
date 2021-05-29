@@ -1259,7 +1259,9 @@ class Search:
         self.ExpandButton.set_visible(active)
 
         self.grouping_mode = mode
-        self.on_refilter()
+
+        if self.filters:
+            self.on_refilter()
 
         action.set_state(state)
 
