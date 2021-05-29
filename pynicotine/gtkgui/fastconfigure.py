@@ -170,9 +170,6 @@ class FastConfigureAssistant(object):
 
         self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual_name, path])
 
-    def on_prepare(self, *args):
-        self.reset_completeness()
-
     def on_entry_changed(self, *args):
         self.reset_completeness()
 
@@ -263,7 +260,10 @@ class FastConfigureAssistant(object):
     def on_set_up(self, *args):
         self.FastConfigureDialog.next_page()
 
-    def on_apply(self, *args):
+    def on_prepare(self, *args):
+        self.reset_completeness()
+
+    def on_close(self, *args):
 
         self.store()
         self.FastConfigureDialog.hide()
@@ -279,5 +279,5 @@ class FastConfigureAssistant(object):
         if not self.frame.np.active_server_conn:
             self.frame.on_connect()
 
-    def on_close(self, *args):
+    def on_cancel(self, *args):
         self.FastConfigureDialog.hide()
