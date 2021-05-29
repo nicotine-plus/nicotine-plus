@@ -57,13 +57,6 @@ To install Nicotine+ on Fedora, run the following:
 sudo dnf install nicotine+
 ```
 
-### Guix (Stable)
-To install Nicotine+ on Guix, run the following:
-
-```sh
-guix install nicotine+
-```
-
 ### Other Distributions
 If Nicotine+ isn't packaged for your distribution/operating system yet, there are other recommended ways of installing Nicotine+.
 
