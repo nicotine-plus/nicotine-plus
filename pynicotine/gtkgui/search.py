@@ -394,11 +394,6 @@ class Search:
 
         self.update_visuals()
 
-        """ Filters """
-
-        self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
-        self.populate_filters()
-
         """ Popup """
 
         self.popup_menu_users = PopupMenu(self.frame)
@@ -440,6 +435,11 @@ class Search:
 
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
 
+        """ Filters """
+
+        self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
+        self.populate_filters()
+
     def set_label(self, label):
         self.tab_menu.set_widget(label)
 
@@ -476,7 +476,7 @@ class Search:
             if len(sfilter) > 6:
                 self.FilterTypeEntry.set_text(str(sfilter[6]))
 
-            self.on_refilter(None)
+            self.on_refilter()
 
         for i in ['0', '128', '160', '192', '256', '320']:
             self.FilterBitrate.append_text(i)
