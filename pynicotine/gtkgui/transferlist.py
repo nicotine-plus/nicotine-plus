@@ -27,6 +27,8 @@ import os
 from sys import maxsize
 from time import time
 
+from gi.repository import Gio
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -44,6 +46,7 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
+from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.transfers import Transfer
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -63,13 +66,13 @@ class TransferList:
 
         if Gtk.get_major_version() == 4:
             getattr(frame, type + "svbox").append(self.Main)
-            getattr(frame, "ToggleButton%ss" % self.type.title()).set_icon_name("view-list-symbolic")
+            getattr(frame, "ToggleTree%ss" % self.type.title()).set_icon_name("view-list-symbolic")
 
             self.ClearTransfers.set_has_frame(False)
             self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
         else:
             getattr(frame, type + "svbox").add(self.Main)
-            getattr(frame, "ToggleButton%ss" % self.type.title()).set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            getattr(frame, "ToggleTree%ss" % self.type.title()).set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
 
@@ -156,11 +159,13 @@ class TransferList:
 
         widget.set_model(self.transfersmodel)
 
-        self.group_dropdown = getattr(frame, "ToggleTree%ss" % self.type.title())
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
-        self.group_dropdown.connect("changed", self.on_toggle_tree)
-        self.group_dropdown.set_active(config.sections["transfers"]["group%ss" % self.type])
+        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % self.type]))
+        action = Gio.SimpleAction.new_stateful("%sgrouping" % self.type, GLib.VariantType.new("s"), state)
+        action.connect("change-state", self.on_toggle_tree)
+        frame.MainWindow.add_action(action)
+        action.change_state(state)
 
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % self.type])
@@ -735,16 +740,19 @@ class TransferList:
         config.sections["transfers"]["%ssexpanded" % self.type] = expanded
         config.write_configuration()
 
-    def on_toggle_tree(self, widget):
+    def on_toggle_tree(self, action, state):
 
-        active = widget.get_active()
+        mode = state.get_string()
+        active = mode != "ungrouped"
 
-        config.sections["transfers"]["group%ss" % self.type] = active
+        config.sections["transfers"]["group%ss" % self.type] = mode
         self.widget.set_show_expanders(active)
         self.expand_button.set_visible(active)
 
-        self.tree_users = widget.get_active_id()
+        self.tree_users = mode
         self.rebuild_transfers()
+
+        action.set_state(state)
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
         return show_file_path_tooltip(widget, x, y, tooltip, 10)

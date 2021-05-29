@@ -64,6 +64,25 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
+def verify_grouping_mode(mode):
+
+    # Map legacy values
+    if mode == "0":
+        mode = "ungrouped"
+
+    elif mode == "1":
+        mode = "folder_grouping"
+
+    elif mode == "2":
+        mode = "user_grouping"
+
+    # Verify mode validity
+    elif mode not in ("ungrouped", "folder_grouping", "user_grouping"):
+        mode = "folder_grouping"
+
+    return mode
+
+
 def initialise_columns(treeview_name, treeview, *args):
 
     i = 0

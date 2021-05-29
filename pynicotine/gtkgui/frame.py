@@ -760,7 +760,7 @@ class NicotineFrame:
 
         state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
         self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
-        self.toggle_buddy_list_action.connect("activate", self.on_toggle_buddy_list)
+        self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
 
         # Shares

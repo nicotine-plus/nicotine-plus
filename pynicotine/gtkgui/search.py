@@ -28,6 +28,7 @@ import sre_constants
 
 from collections import defaultdict
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -51,6 +52,7 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
+from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
@@ -292,9 +294,9 @@ class Search:
         self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
 
         if Gtk.get_major_version() == 4:
-            self.ToggleButton.set_icon_name("view-list-symbolic")
+            self.ResultGrouping.set_icon_name("view-list-symbolic")
         else:
-            self.ToggleButton.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
 
         self.text = text
         self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
@@ -425,7 +427,12 @@ class Search:
 
         """ Grouping """
 
-        self.ResultGrouping.set_active(config.sections["searches"]["group_searches"])
+        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["searches"]["group_searches"]))
+        action = Gio.SimpleAction.new_stateful("searchgrouping", GLib.VariantType.new("s"), state)
+        action.connect("change-state", self.on_group)
+        self.frame.MainWindow.add_action(action)
+        action.change_state(state)
+
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
 
     def set_label(self, label):
@@ -641,7 +648,7 @@ class Search:
 
         iterator = self.add_row_to_model(row)
 
-        if self.ResultGrouping.get_active_id() != "ungrouped":
+        if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
             if self.ExpandButton.get_active():
@@ -653,14 +660,14 @@ class Search:
                 if path is not None:
                     self.ResultsList.expand_to_path(path)
             else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+                collapse_treeview(self.ResultsList, self.grouping_mode)
 
         return True
 
     def add_row_to_model(self, row):
         counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
 
-        if self.ResultGrouping.get_active_id() != "ungrouped":
+        if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
             empty_int = 0
@@ -694,7 +701,7 @@ class Search:
 
             parent = self.usersiters[user]
 
-            if self.ResultGrouping.get_active_id() == "folder_grouping":
+            if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
                 if directory not in self.directoryiters:
@@ -1236,16 +1243,20 @@ class Search:
             user, path = self.selected_results[0][:2]
             copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
 
-    def on_group(self, widget):
+    def on_group(self, action, state):
 
-        self.on_refilter(widget)
+        mode = state.get_string()
+        active = mode != "ungrouped"
 
-        active = widget.get_active()
-
-        self.ResultsList.set_show_expanders(active)
-        config.sections["searches"]["group_searches"] = active
+        config.sections["searches"]["group_searches"] = mode
         self.cols["id"].set_visible(not active)
+        self.ResultsList.set_show_expanders(active)
         self.ExpandButton.set_visible(active)
+
+        self.grouping_mode = mode
+        self.on_refilter()
+
+        action.set_state(state)
 
     def on_toggle_expand_all(self, widget):
 
@@ -1259,7 +1270,7 @@ class Search:
             else:
                 self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
         else:
-            collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+            collapse_treeview(self.ResultsList, self.grouping_mode)
 
             if Gtk.get_major_version() == 4:
                 self.expand.set_from_icon_name("go-down-symbolic")
@@ -1326,13 +1337,13 @@ class Search:
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country, f_type)
         self.ResultsList.set_model(self.resultsmodel)
 
-        if self.ResultGrouping.get_active_id() != "ungrouped":
+        if self.grouping_mode != "ungrouped":
             # Group by folder or user
 
             if self.ExpandButton.get_active():
                 self.ResultsList.expand_all()
             else:
-                collapse_treeview(self.ResultsList, self.ResultGrouping.get_active_id())
+                collapse_treeview(self.ResultsList, self.grouping_mode)
 
     def on_clear_filters(self, *args):
 

@@ -122,23 +122,30 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkComboBoxText" id="ResultGrouping">
+                  <object class="GtkMenuButton" id="ResultGrouping">
                     <property name="visible">1</property>
-                    <property name="has-entry">1</property>
+                    <property name="menu-model">ResultGroupingModel</property>
                     <property name="tooltip-text" translatable="yes">Result grouping mode</property>
-                    <signal name="changed" handler="on_group" swapped="no"/>
-                    <items>
-                      <item translatable="yes" id="ungrouped">Ungrouped</item>
-                      <item translatable="yes" id="folder_grouping">Group by Folder</item>
-                      <item translatable="yes" id="user_grouping">Group by User</item>
-                    </items>
-                    <child internal-child="entry">
-                      <object class="GtkEntry">
-                        <property name="visible">0</property>
-                      </object>
-                    </child>
-                    <child internal-child="button">
-                      <object class="GtkButton" id="ToggleButton"/>
+                    <child>
+                      <menu id="ResultGroupingModel">
+                        <section>
+                          <item>
+                            <attribute name="label" translatable="yes">Ungrouped</attribute>
+                            <attribute name="action">win.searchgrouping</attribute>
+                            <attribute name="target">ungrouped</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Group by Folder</attribute>
+                            <attribute name="action">win.searchgrouping</attribute>
+                            <attribute name="target">folder_grouping</attribute>
+                          </item>
+                          <item>
+                            <attribute name="label" translatable="yes">Group by User</attribute>
+                            <attribute name="action">win.searchgrouping</attribute>
+                            <attribute name="target">user_grouping</attribute>
+                          </item>
+                        </section>
+                      </menu>
                     </child>
                   </object>
                 </child>
