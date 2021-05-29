@@ -34,75 +34,72 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Chat username:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Chat username:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="UsernameStyle">
+                <property name="visible">1</property>
+                <property name="width-request">200</property>
+                <signal name="changed" handler="on_colors_changed"/>
+                <items>
+                  <item translatable="yes">bold</item>
+                  <item translatable="yes">italic</item>
+                  <item translatable="yes">underline</item>
+                  <item translatable="yes">normal</item>
+                </items>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="UsernameStyle">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="width-request">200</property>
-            <signal name="changed" handler="on_colors_changed"/>
-            <items>
-              <item translatable="yes">bold</item>
-              <item translatable="yes">italic</item>
-              <item translatable="yes">underline</item>
-              <item translatable="yes">normal</item>
-            </items>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Decimal separator:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="DecimalSep">
+                <property name="visible">1</property>
+                <property name="width-request">200</property>
+                <items>
+                  <item translatable="yes">&lt;None&gt;</item>
+                  <item>,</item>
+                  <item>.</item>
+                  <item translatable="yes">&lt;space&gt;</item>
+                </items>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Decimal separator:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="DecimalSep">
-            <property name="visible">1</property>
-            <property name="width-request">200</property>
-            <items>
-              <item translatable="yes">&lt;None&gt;</item>
-              <item>,</item>
-              <item>.</item>
-              <item translatable="yes">&lt;space&gt;</item>
-            </items>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -117,60 +114,62 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Global font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectGlobalFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">Global font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultGlobalFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectGlobalFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultGlobalFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -178,61 +177,59 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Chat font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectChatFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">Chat font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultChatFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectChatFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultChatFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -240,60 +237,59 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">List font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectListFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">List font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultListFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectListFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultListFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -301,60 +297,59 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Transfers font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectTransfersFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">Transfers font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultTransfersFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectTransfersFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultTransfersFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -362,60 +357,59 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Search font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectSearchFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">Search font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultSearchFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectSearchFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultSearchFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -423,60 +417,59 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Browse font:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">5</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFontButton" id="SelectBrowserFont">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="hexpand">1</property>
-                <property name="font">Sans 12</property>
-                <signal name="font-set" handler="on_fonts_changed"/>
+                <property name="label" translatable="yes">Browse font:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DefaultBrowserFont">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="clicked" handler="on_default_font"/>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFontButton" id="SelectBrowserFont">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="font">Sans 12</property>
+                    <signal name="font-set" handler="on_fonts_changed"/>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="DefaultBrowserFont">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <signal name="clicked" handler="on_default_font"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="icon-name">view-refresh-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Default</property>
-                        <property name="use-underline">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Default</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -484,10 +477,6 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">5</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -502,591 +491,519 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkCheckButton" id="UsernameHotspots">
+            <property name="label" translatable="yes">Colored and clickable usernames</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="label" translatable="yes">URL link text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
+            <property name="use-underline">1</property>
+            <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">4</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="EntryURL">
+          <object class="GtkCheckButton" id="DisplayAwayColors">
+            <property name="label" translatable="yes">Usernames also indicate away status</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
+            <signal name="toggled" handler="on_toggled_away_colors"/>
           </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">4</property>
-          </packing>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparator">
+        <property name="visible">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkEntry" id="EntryHighlight">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultURL">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Remote text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickRemote">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryRemote">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultRemote">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryAway">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">8</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryOffline">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryOnline">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryMe">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryLocal">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultAway">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">8</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultOffline">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultOnline">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultHighlight">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultMe">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultLocal">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultRemote">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryRemote">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Away:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">8</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Offline:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Online:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">6</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="orientation">vertical</property>
-            <property name="spacing">5</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkCheckButton" id="UsernameHotspots">
-                <property name="label" translatable="yes">Colored and clickable usernames</property>
+              <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
+                <property name="label" translatable="yes">Local text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="DisplayAwayColors">
-                <property name="label" translatable="yes">Usernames also indicate away status</property>
+              <object class="GtkColorButton" id="PickLocal">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryLocal">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <signal name="toggled" handler="on_toggled_away_colors"/>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultLocal">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">5</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Highlighted text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">/me text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickMe">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryMe">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultMe">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">3</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">/me text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Highlighted text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickHighlight">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryHighlight">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultHighlight">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Local text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">URL link text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickURL">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryURL">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultURL">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Remote text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Online:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickOnline">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryOnline">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultOnline">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickRemote">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Offline:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickOffline">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryOffline">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultOffline">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkColorButton" id="PickLocal">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Away:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickAway">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryAway">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultAway">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickMe">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickHighlight">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickURL">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">4</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickOffline">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">7</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickOnline">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">6</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickAway">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">8</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -1101,148 +1018,129 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkColorButton" id="PickQueue">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickImmediate">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultQueue">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">List text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickImmediate">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryImmediate">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultImmediate">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="EntryQueue">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">With queue:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultImmediate">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">With queue:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickQueue">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryQueue">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultQueue">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryImmediate">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">List text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -1257,148 +1155,129 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkColorButton" id="PickInput">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickBackground">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultInput">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Background:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickBackground">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryBackground">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultBackground">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkButton" id="DefaultBackground">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Text:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickInput">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryInput">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultInput">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryInput">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryBackground">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Text:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Background:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
       </object>
     </child>
@@ -1413,224 +1292,196 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">10</property>
-        <property name="column-spacing">10</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkColorButton" id="PickHighlightTab">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickChangedTab">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkColorButton" id="PickRegularTab">
-            <property name="visible">1</property>
-            <signal name="color-set" handler="on_color_set"/>
-          </object>
-          <packing>
-            <property name="left-attach">1</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultRegularTab">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Regular:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickRegularTab">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryRegularTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultRegularTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkButton" id="DefaultChangedTab">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Changed:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickChangedTab">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryChangedTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultChangedTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="EntryRegularTab">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Regular:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <property name="width-chars">15</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryChangedTab">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Changed:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultHighlightTab">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <signal name="clicked" handler="on_default_color"/>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">Highlighted:</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <property name="width-chars">15</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="PickHighlightTab">
+                <property name="visible">1</property>
+                <signal name="color-set" handler="on_color_set"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="EntryHighlightTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="width-chars">6</property>
+                <signal name="changed" handler="on_colors_changed"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DefaultHighlightTab">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <signal name="clicked" handler="on_default_color"/>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="icon-name">view-refresh-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Default</property>
-                    <property name="use-underline">1</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">1</property>
+                        <property name="icon-name">view-refresh-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Default</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
             </child>
           </object>
-          <packing>
-            <property name="left-attach">3</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="EntryHighlightTab">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="width-chars">6</property>
-            <signal name="changed" handler="on_colors_changed"/>
-          </object>
-          <packing>
-            <property name="left-attach">2</property>
-            <property name="top-attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Highlighted:</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">2</property>
-          </packing>
         </child>
       </object>
     </child>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkButton" id="DefaultColors">
             <property name="visible">1</property>
