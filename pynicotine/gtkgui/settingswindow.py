@@ -2721,6 +2721,7 @@ class PluginsFrame(BuildFrame):
             self.connect("response", self.on_response)
 
             content_area = self.get_content_area()
+            content_area.set_orientation(Gtk.Orientation.VERTICAL)
             content_area.set_margin_top(14)
             content_area.set_margin_bottom(14)
             content_area.set_margin_start(18)
@@ -2733,43 +2734,62 @@ class PluginsFrame(BuildFrame):
 
         def generate_label(self, text):
 
-            label = Gtk.Label(text)
+            label = Gtk.Label.new(text)
             label.set_hexpand(True)
             label.set_xalign(0)
-            label.set_line_wrap(True)
+
+            if Gtk.get_major_version() == 4:
+                label.set_wrap(True)
+            else:
+                label.set_line_wrap(True)
+
             return label
 
         def generate_widget_container(self, description, vertical=False):
 
-            container = Gtk.Box(False, 12)
+            container = Gtk.Box()
+            container.set_spacing(12)
 
             if vertical:
                 container.set_orientation(Gtk.Orientation.VERTICAL)
 
             label = self.generate_label(description)
-            container.add(label)
 
-            self.get_content_area().add(container)
+            if Gtk.get_major_version() == 4:
+                container.append(label)
+                self.get_content_area().append(container)
+            else:
+                container.add(label)
+                self.get_content_area().add(container)
+
             return container
 
         def generate_tree_view(self, name, description, value):
 
-            container = Gtk.Box(False, 5)
-            container.set_orientation(Gtk.Orientation.VERTICAL)
+            container = Gtk.Box()
+            container.set_spacing(6)
 
             scrolled_window = Gtk.ScrolledWindow()
             scrolled_window.set_hexpand(True)
             scrolled_window.set_vexpand(True)
             scrolled_window.set_min_content_height(200)
             scrolled_window.set_min_content_width(350)
-            scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
             scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
             self.tw[name] = Gtk.TreeView()
             self.tw[name].set_model(Gtk.ListStore(str))
-            scrolled_window.add(self.tw[name])
 
-            container.add(scrolled_window)
+            if Gtk.get_major_version() == 4:
+                scrolled_window.set_has_frame(True)
+
+                scrolled_window.set_child(self.tw[name])
+                container.append(scrolled_window)
+
+            else:
+                scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
+
+                scrolled_window.add(self.tw[name])
+                container.add(scrolled_window)
 
             cols = initialise_columns(
                 None, self.tw[name],
@@ -2781,15 +2801,24 @@ class PluginsFrame(BuildFrame):
             except Exception:
                 pass
 
-            self.add_button = Gtk.Button(_("Add"), Gtk.STOCK_ADD)
-            self.remove_button = Gtk.Button(_("Remove"), Gtk.STOCK_REMOVE)
+            self.add_button = Gtk.Button.new_with_label(_("Add"))
+            self.remove_button = Gtk.Button.new_with_label(_("Remove"))
 
-            box = Gtk.Box(False, 6)
-            box.add(self.add_button)
-            box.add(self.remove_button)
+            box = Gtk.Box()
+            box.set_spacing(6)
 
-            self.get_content_area().add(container)
-            self.get_content_area().add(box)
+            if Gtk.get_major_version() == 4:
+                box.append(self.add_button)
+                box.append(self.remove_button)
+
+                self.get_content_area().append(container)
+                self.get_content_area().append(box)
+            else:
+                box.add(self.add_button)
+                box.add(self.remove_button)
+
+                self.get_content_area().add(container)
+                self.get_content_area().add(box)
 
             renderers = cols[description].get_cells()
             for render in renderers:
@@ -2824,23 +2853,32 @@ class PluginsFrame(BuildFrame):
                 if data["type"] in ("integer", "int", "float"):
                     container = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment(0, 0, 99999, 1, 10, 0), 1, 2)
+                    self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment.new(0, 0, 99999, 1, 10, 0), 1, 2)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                    container.add(self.tw[name])
+
+                    if Gtk.get_major_version() == 4:
+                        container.append(self.tw[name])
+                    else:
+                        container.add(self.tw[name])
 
                 elif data["type"] in ("bool",):
-                    container = Gtk.Box(False)
-                    self.get_content_area().add(container)
+                    container = Gtk.Box()
 
-                    self.tw[name] = checkbutton = Gtk.CheckButton()
-                    checkbutton.set_label(data["description"])
-                    self.settings.set_widget(checkbutton, config.sections["plugins"][plugin][name])
-                    container.add(checkbutton)
+                    self.tw[name] = Gtk.CheckButton.new_with_label(data["description"])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+
+                    if Gtk.get_major_version() == 4:
+                        self.get_content_area().append(container)
+                        container.append(self.tw[name])
+                    else:
+                        self.get_content_area().add(container)
+                        container.add(self.tw[name])
 
                 elif data["type"] in ("radio",):
                     container = self.generate_widget_container(data["description"])
 
-                    vbox = Gtk.Box(False, 6)
+                    vbox = Gtk.Box()
+                    vbox.set_spacing(6)
                     vbox.set_orientation(Gtk.Orientation.VERTICAL)
                     container.add(vbox)
 
@@ -2871,7 +2909,11 @@ class PluginsFrame(BuildFrame):
                         self.tw[name].append_text(label)
 
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                    container.add(self.tw[name])
+
+                    if Gtk.get_major_version() == 4:
+                        container.append(self.tw[name])
+                    else:
+                        container.add(self.tw[name])
 
                 elif data["type"] in ("str", "string"):
                     container = self.generate_widget_container(data["description"])
@@ -2879,7 +2921,11 @@ class PluginsFrame(BuildFrame):
                     self.tw[name] = entry = Gtk.Entry()
                     entry.set_hexpand(True)
                     self.settings.set_widget(entry, config.sections["plugins"][plugin][name])
-                    container.add(entry)
+
+                    if Gtk.get_major_version() == 4:
+                        container.append(entry)
+                    else:
+                        container.add(entry)
 
                 elif data["type"] in ("textview"):
                     container = self.generate_widget_container(data["description"], vertical=True)
@@ -2892,10 +2938,18 @@ class PluginsFrame(BuildFrame):
                     scrolled_window.set_vexpand(True)
                     scrolled_window.set_min_content_height(200)
                     scrolled_window.set_min_content_width(600)
-                    scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
-                    scrolled_window.add(self.tw[name])
 
-                    container.add(scrolled_window)
+                    if Gtk.get_major_version() == 4:
+                        scrolled_window.set_has_frame(True)
+
+                        scrolled_window.set_child(self.tw[name])
+                        container.append(scrolled_window)
+
+                    else:
+                        scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
+
+                        scrolled_window.add(self.tw[name])
+                        container.add(scrolled_window)
 
                 elif data["type"] in ("list string",):
                     self.generate_tree_view(name, data["description"], value)
@@ -2913,12 +2967,17 @@ class PluginsFrame(BuildFrame):
 
                     self.tw[name] = FileChooserButton(button_widget, self, chooser)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
-                    container.add(button_widget)
+
+                    if Gtk.get_major_version() == 4:
+                        container.append(button_widget)
+                    else:
+                        container.add(button_widget)
 
                 else:
                     print("Unknown setting type '%s', data '%s'" % (name, data))
 
-            self.show_all()
+            if Gtk.get_major_version() == 3:
+                self.show_all()
 
         def on_add(self, widget, treeview):
 
