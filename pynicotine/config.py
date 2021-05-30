@@ -214,7 +214,7 @@ class Config:
 
             "searches": {
                 "expand_searches": True,
-                "group_searches": 1,
+                "group_searches": "folder_grouping",
                 "maxresults": 50,
                 "re_filter": False,
                 "history": [],
