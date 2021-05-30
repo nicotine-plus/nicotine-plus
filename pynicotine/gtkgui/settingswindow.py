@@ -3603,7 +3603,7 @@ class Settings:
         else:
             self.SettingsWindow.hide()
 
-    def on_delete(self, widget, event):
+    def on_delete(self, *args):
         self.SettingsWindow.hide()
         return True
 
