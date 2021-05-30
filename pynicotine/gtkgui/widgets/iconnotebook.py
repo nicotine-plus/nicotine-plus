@@ -356,8 +356,7 @@ class IconNotebook:
 
         else:
             label_tab.connect("button-press-event", self.on_tab_click_event, page)
-
-        label_tab.show()
+            label_tab.show()
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 

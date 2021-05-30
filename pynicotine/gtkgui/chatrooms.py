@@ -1020,7 +1020,7 @@ class ChatRoom:
 
             # Chat, Userlists use the normal popup system
             self.populate_user_menu(user)
-            self.popup_menu.popup(button=event.button.button)
+            self.popup_menu.popup(event.x, event.y, button=event.button.button)
 
         return True
 
