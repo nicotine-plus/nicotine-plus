@@ -82,6 +82,7 @@ class PopupMenu(Gio.Menu):
 
         if widget:
             self.connect_events(widget)
+            self.create_context_menu(widget)
             self.widget = widget
 
     def create_context_menu(self, widget):
