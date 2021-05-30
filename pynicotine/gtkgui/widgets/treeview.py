@@ -349,10 +349,10 @@ def header_toggle(action, state, treeview, columns, index):
     set_last_column_autosize(treeview)
 
 
-def set_treeview_selected_row(treeview, x, y):
+def set_treeview_selected_row(treeview, bin_x, bin_y):
     """ Handles row selection when right-clicking in a treeview """
 
-    pathinfo = treeview.get_path_at_pos(x, y)
+    pathinfo = treeview.get_path_at_pos(bin_x, bin_y)
     selection = treeview.get_selection()
 
     if pathinfo is not None:
