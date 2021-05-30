@@ -149,16 +149,13 @@ class NetworkEventProcessor:
 
         self.queue = deque()
 
-        # UPnP
-        self.upnp_timer = None
-        self.add_upnp_portmapping()
-
         self.away = False
         self.active_server_conn = None
         self.waitport = None
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
+        self.upnp_timer = None
         self.server_timeout_value = -1
 
         self.has_parent = False
@@ -297,6 +294,8 @@ class NetworkEventProcessor:
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
         self.pluginhandler = PluginHandler(self, config)
         self.now_playing = NowPlaying(config)
+
+        self.add_upnp_portmapping()
 
         port_range = config.sections["server"]["portrange"]
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
