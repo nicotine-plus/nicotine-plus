@@ -711,7 +711,7 @@ class NicotineFrame:
         action = Gio.SimpleAction.new("settings", None)
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
-        self.application.set_accels_for_action("app.settings", ["<Primary>p", "<Primary>comma"])
+        self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
 
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.on_quit)
