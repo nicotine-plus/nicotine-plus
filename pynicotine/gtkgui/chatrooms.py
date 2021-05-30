@@ -1164,10 +1164,10 @@ class ChatRoom:
             config.sections["logging"]["rooms"].append(self.room)
 
     def on_copy_all_activity_log(self, *args):
-        copy_all_text(self.RoomLog, self.frame.clipboard)
+        copy_all_text(self.RoomLog)
 
     def on_copy_all_room_log(self, *args):
-        copy_all_text(self.ChatScroll, self.frame.clipboard)
+        copy_all_text(self.ChatScroll)
 
     def on_copy_activity_log(self, *args):
         self.RoomLog.emit("copy-clipboard")

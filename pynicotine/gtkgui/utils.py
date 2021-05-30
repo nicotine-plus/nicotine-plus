@@ -310,23 +310,34 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 """ Clipboard """
 
 
-def copy_all_text(textview, clipboard):
+def copy_text(text):
+
+    if Gtk.get_major_version() == 4:
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.set(text)
+        return
+
+    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    clipboard.set_text(text, -1)
+
+
+def copy_all_text(textview):
 
     textbuffer = textview.get_buffer()
     start, end = textbuffer.get_bounds()
     text = textbuffer.get_text(start, end, True)
 
-    clipboard.set_text(text, -1)
+    copy_text(text)
 
 
-def copy_file_url(user, path, clipboard):
+def copy_file_url(user, path):
 
     import urllib.parse
     url = "slsk://" + urllib.parse.quote(
         "%s/%s" % (user, path.replace("\\", "/"))
     )
 
-    clipboard.set_text(url, -1)
+    copy_text(url)
 
 
 """ Chat """

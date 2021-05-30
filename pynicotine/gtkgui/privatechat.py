@@ -410,7 +410,7 @@ class PrivateChat:
         self.ChatScroll.emit("copy-clipboard")
 
     def on_copy_all_chat_log(self, *args):
-        copy_all_text(self.ChatScroll, self.frame.clipboard)
+        copy_all_text(self.ChatScroll)
 
     def on_view_chat_log(self, *args):
         open_log(config.sections["logging"]["privatelogsdir"], self.user)

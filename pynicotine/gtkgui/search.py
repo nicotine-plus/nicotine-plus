@@ -39,6 +39,7 @@ from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import parse_accelerator
@@ -1234,19 +1235,19 @@ class Search:
 
         if self.selected_results:
             user, path = self.selected_results[0][:2]
-            self.frame.clipboard.set_text(path, -1)
+            copy_text(path)
 
     def on_copy_url(self, *args):
 
         if self.selected_results:
             user, path = self.selected_results[0][:2]
-            copy_file_url(user, path, self.frame.clipboard)
+            copy_file_url(user, path)
 
     def on_copy_dir_url(self, *args):
 
         if self.selected_results:
             user, path = self.selected_results[0][:2]
-            copy_file_url(user, path.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
+            copy_file_url(user, path.rsplit('\\', 1)[0] + '\\')
 
     def on_group(self, action, state):
 
@@ -1293,7 +1294,7 @@ class Search:
         config.sections["searches"]["filters_visible"] = visible
 
     def on_copy_search_term(self, *args):
-        self.frame.clipboard.set_text(self.text, -1)
+        copy_text(self.text)
 
     def on_toggle_remember(self, widget):
 

@@ -33,6 +33,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
@@ -644,7 +645,7 @@ class UserBrowse:
         if is_file and self.selected_files:
             text = "\\".join([self.selected_folder, next(iter(self.selected_files))])
 
-        self.frame.clipboard.set_text(text, -1)
+        copy_text(text)
 
     def on_select_dir(self, selection):
 
@@ -1037,7 +1038,7 @@ class UserBrowse:
 
         if self.selected_files:
             path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-            copy_file_url(self.user, path, self.frame.clipboard)
+            copy_file_url(self.user, path)
 
     def on_copy_dir_url(self, *args):
 
@@ -1045,7 +1046,7 @@ class UserBrowse:
             return
 
         path = self.selected_folder + '\\'
-        copy_file_url(self.user, path, self.frame.clipboard)
+        copy_file_url(self.user, path)
 
     def on_file_manager(self, *args):
 

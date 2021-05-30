@@ -36,6 +36,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import parse_accelerator
@@ -904,21 +905,21 @@ class TransferList:
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            self.frame.clipboard.set_text(transfer.filename, -1)
+            copy_text(transfer.filename)
 
     def on_copy_url(self, *args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename, self.frame.clipboard)
+            copy_file_url(transfer.user, transfer.filename)
 
     def on_copy_dir_url(self, *args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\', self.frame.clipboard)
+            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
 
     def on_retry_transfer(self, *args):
         self.select_transfers()

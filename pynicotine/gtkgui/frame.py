@@ -103,11 +103,6 @@ class NicotineFrame:
         self.port = port
         utils.NICOTINE = self
 
-        if Gtk.get_major_version() == 4:
-            self.clipboard = Gdk.Display.get_default().get_clipboard()
-        else:
-            self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
         self.settingswindow = None
@@ -2200,7 +2195,7 @@ class NicotineFrame:
         self.LogWindow.emit("copy-clipboard")
 
     def on_copy_all_log_window(self, *args):
-        copy_all_text(self.LogWindow, self.clipboard)
+        copy_all_text(self.LogWindow)
 
     def on_view_debug_logs(self, *args):
 

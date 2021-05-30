@@ -30,6 +30,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 
@@ -510,7 +511,7 @@ class PopupMenu(Gio.Menu):
         self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
     def on_copy_user(self, *args):
-        self.frame.clipboard.set_text(self.user, -1)
+        copy_text(self.user)
 
     def on_give_privileges_response(self, dialog, response_id, data):
 
