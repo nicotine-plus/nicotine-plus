@@ -690,6 +690,16 @@ class TransferList:
             for transfer in self.list:
                 transfer.iter = None
 
+    def add_popup_menu_user(self, popup, user):
+
+        popup.setup_user_menu(user)
+        popup.setup(
+            ("", None),
+            ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
+        )
+
+        popup.toggle_user_items()
+
     def populate_popup_menu_users(self):
 
         self.popup_menu_users.clear()
@@ -697,18 +707,19 @@ class TransferList:
         if not self.selected_users:
             return
 
-        for user in self.selected_users:
-            popup = PopupMenu(self.frame)
-            popup.setup_user_menu(user)
-            popup.setup(
-                ("", None),
-                ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
-            )
+        # Multiple users, create submenus for each user
+        if len(self.selected_users) > 1:
+            for user in self.selected_users:
+                popup = PopupMenu(self.frame)
+                self.add_popup_menu_user(popup, user)
+                self.popup_menu_users.setup(
+                    (">" + user, popup)
+                )
+            return
 
-            popup.toggle_user_items()
-            self.popup_menu_users.setup(
-                (">" + user, popup)
-            )
+        # Single user, add items directly to "User(s)" submenu
+        user = next(iter(self.selected_users), None)
+        self.add_popup_menu_user(self.popup_menu_users, user)
 
     def expand(self, transfer_path, user_path):
 

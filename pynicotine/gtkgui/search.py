@@ -952,6 +952,16 @@ class Search:
         self.update_result_counter()
         self.update_filter_counter(self.active_filter_count)
 
+    def add_popup_menu_user(self, popup, user):
+
+        popup.setup_user_menu(user)
+        popup.setup(
+            ("", None),
+            ("#" + _("Select User's Transfers"), self.on_select_user_results, user)
+        )
+
+        popup.toggle_user_items()
+
     def populate_popup_menu_users(self):
 
         self.popup_menu_users.clear()
@@ -959,18 +969,18 @@ class Search:
         if not self.selected_users:
             return
 
-        for user in self.selected_users:
-            popup = PopupMenu(self.frame)
-            popup.setup_user_menu(user)
-            popup.setup(
-                ("", None),
-                ("#" + _("Select User's Transfers"), self.on_select_user_results, user)
-            )
+        # Multiple users, create submenus for each user
+        if len(self.selected_users) > 1:
+            for user in self.selected_users:
+                popup = PopupMenu(self.frame)
+                self.add_popup_menu_user(popup, user)
+                self.popup_menu_users.setup(
+                    (">" + user, popup)
+                )
+            return
 
-            popup.toggle_user_items()
-            self.popup_menu_users.setup(
-                (">" + user, popup)
-            )
+        # Single user, add items directly to "User(s)" submenu
+        self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
 
     def on_select_user_results(self, *args):
 
