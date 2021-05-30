@@ -92,7 +92,7 @@ class PopupMenu(Gio.Menu):
             if isinstance(widget, Gtk.TreeView):
                 widget = widget.get_next_sibling()
 
-            self.popup_menu = Gtk.PopoverMenu.new_from_model(self)
+            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)
             self.popup_menu.set_has_arrow(False)
             self.popup_menu.present()
