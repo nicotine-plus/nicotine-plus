@@ -380,6 +380,7 @@ class PopupMenu(Gio.Menu):
 
     def _callback_menu(self, widget):
         self._callback(None, None, None)
+        return True
 
     def connect_context_menu_events(self, widget):
 
