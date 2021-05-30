@@ -331,6 +331,34 @@ class IconNotebook:
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
 
+    def update_unread_pages_menu(self):
+
+        self.popup_menu_unread.clear()
+
+        for page in self.unread_pages:
+            tab_label, menu_label = self.get_labels(page)
+            self.popup_menu_unread.setup(
+                ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
+            )
+
+    def append_unread_page(self, page):
+
+        if page in self.unread_pages:
+            return
+
+        self.unread_pages.append(page)
+        self.update_unread_pages_menu()
+        self.unread_button.show()
+
+    def remove_unread_page(self, page):
+
+        if page in self.unread_pages:
+            self.unread_pages.remove(page)
+            self.update_unread_pages_menu()
+
+        if not self.unread_pages:
+            self.unread_button.hide()
+
     def append_page(self, page, label, onclose=None, fulltext=None, status=None):
 
         closebutton = self.tabclosers
@@ -371,6 +399,8 @@ class IconNotebook:
     def remove_page(self, page):
 
         Gtk.Notebook.remove_page(self.notebook, self.page_num(page))
+
+        self.remove_unread_page(page)
 
         if self.notebook.get_n_pages() == 0:
             self.notebook.set_show_tabs(False)
@@ -458,24 +488,10 @@ class IconNotebook:
 
         # Determine if button for unread notifications should be shown
         if image:
-            if page not in self.unread_pages:
-                self.unread_pages.append(page)
-                self.popup_menu_unread.clear()
-
-                for page in self.unread_pages:
-                    tab_label, menu_label = self.get_labels(page)
-                    self.popup_menu_unread.setup(
-                        ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
-                    )
-
-                self.unread_button.show()
+            self.append_unread_page(page)
             return
 
-        if page in self.unread_pages:
-            self.unread_pages.remove(page)
-
-        if not self.unread_pages:
-            self.unread_button.hide()
+        self.remove_unread_page(page)
 
     def set_text(self, page, label):
 
