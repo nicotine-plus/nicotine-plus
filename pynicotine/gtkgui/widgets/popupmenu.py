@@ -363,8 +363,9 @@ class PopupMenu(Gio.Menu):
 
     def _callback_legacy(self, controller, event):
 
-        if isinstance(self.widget, Gtk.TextView) and self.menu_open:
-            # Prevent GTK's built-in context menu from showing
+        if isinstance(self.widget, (Gtk.TextView, Gtk.TreeView)) and self.menu_open:
+            # Gtk.TextView: Prevent GTK's built-in context menu from showing
+            # Gtk.TreeView: Preserve multi-row selection when showing menu
             self.menu_open = False
             return True
 
