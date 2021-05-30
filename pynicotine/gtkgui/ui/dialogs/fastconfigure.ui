@@ -58,11 +58,17 @@
     <child>
       <object class="GtkButton">
         <property name="visible">1</property>
-        <property name="width-request">96</property>
         <property name="halign">center</property>
         <property name="margin-top">6</property>
-        <property name="label" translatable="yes">Set Up...</property>
         <signal name="clicked" handler="on_set_up" swapped="no"/>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Set Up...</property>
+            <property name="margin-start">14</property>
+            <property name="margin-end">14</property>
+          </object>
+        </child>
         <style>
           <class name="circular"/>
         </style>
